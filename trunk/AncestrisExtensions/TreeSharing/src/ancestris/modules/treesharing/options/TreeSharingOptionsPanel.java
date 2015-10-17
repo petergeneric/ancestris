@@ -20,6 +20,8 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -36,6 +38,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -83,6 +87,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+LOOSE_MATCH) 
     };
     
+    private TreeSharingOptionsPanel thisPanel = null;
     private Map<String, Boolean> jlist1 = null;
     private Map<String, Boolean> jlist2 = null;
     private MyTableModel model1 = null;
@@ -96,6 +101,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         this.controller = controller;
         initComponents();
         loading = false;
+        this.thisPanel = this;
     };
 
     /**
@@ -363,13 +369,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         jComboBox1.setSelectedIndex(getMatchType()-1);
         
         loadMembersLists();
-        model1 = new MyTableModel(jlist1);
-        model2 = new MyTableModel(jlist2);
-        jTable1.setModel(model1);
-        jTable2.setModel(model2);
-        setTable(jTable1);
-        setTable(jTable2);
-        
 
     }
 
@@ -644,8 +643,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         return ret;
     }
 
-    private void loadMembersLists() {
-        
+    public void loadMembersLists() {
+
         jlist1 = new TreeMap<String, Boolean>();
         jlist2 = new TreeMap<String, Boolean>();
         
@@ -656,9 +655,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             return;
         }
 
-        String key = "";
-        for (int i = 0; i < keys.length; i++) {
-            key = keys[i];
+        for (String key : keys) {
             if (key.startsWith("memberps-")) {
                 String pseudo = key.substring(9);
                 if (!getPseudo().equals(pseudo)) {
@@ -669,17 +666,40 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 jlist2.put(key.substring(9), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
             }
         }
+        refreshMembersLists();
+    }
         
+    public void refreshMembersLists() {
+
+        model1 = new MyTableModel(jlist1);
+        model2 = new MyTableModel(jlist2);
+        jTable1.setModel(model1);
+        jTable2.setModel(model2);
+        setTable(jTable1);
+        setTable(jTable2);
         
     }
 
     private void saveMembersLists() {
-        for (Iterator iterator = jlist1.keySet().iterator(); iterator.hasNext();) {
-            String item = (String) iterator.next();
+        // Remove list
+        String[] keys;
+        try {
+            keys = NbPreferences.forModule(TreeSharingOptionsPanel.class).keys();
+        } catch (BackingStoreException ex) {
+            return;
+        }
+
+        for (String key : keys) {
+            if (key.startsWith("memberps-") || key.startsWith("memberip-")) {
+                NbPreferences.forModule(TreeSharingOptionsPanel.class).remove(key);
+            }
+        }
+        
+        // Rebuild list
+        for (String item : jlist1.keySet()) {
             NbPreferences.forModule(TreeSharingOptionsPanel.class).put("memberps-"+item, jlist1.get(item) ? "1" : "0");
         }
-        for (Iterator iterator = jlist2.keySet().iterator(); iterator.hasNext();) {
-            String item = (String) iterator.next();
+        for (String item : jlist2.keySet()) {
             NbPreferences.forModule(TreeSharingOptionsPanel.class).put("memberip-"+item, jlist2.get(item) ? "1" : "0");
         }
     }
@@ -724,17 +744,24 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         
         // Set double click
         table.addMouseListener(new MouseAdapter() {
+            @Override
             public void mousePressed(MouseEvent me) {
                 JTable table = (JTable) me.getSource();
-                if (table != jTable2) {
-                    return;
-                }
+                MyTableModel model = (table == jTable1 ? model1 : model2);
+                Map<String, Boolean> list = (table == jTable1 ? jlist1 : jlist2);
                 Point p = me.getPoint();
                 int row = table.rowAtPoint(p);
+                String key = (String) model.getValueAt(row, 1);
                 if (me.getClickCount() == 2) {
-                    String key = (String) model2.getValueAt(row, 1);
                     TechInfoPanel.openIpLocator(key);
+                    return;
                 }
+                if (me.isPopupTrigger()) {
+                    PopUpMenu menu = new PopUpMenu(thisPanel, list, key);
+                    menu.show(me.getComponent(), me.getX(), me.getY());
+                    return;
+                }
+                
             }
         });
     }
@@ -761,6 +788,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
     }
 
+    
+    
+    
+    
+    
     class JComponentTableCellRenderer implements TableCellRenderer {
 
         @Override
@@ -778,8 +810,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         private MyTableModel(Map<String, Boolean> map) {
             data = new Object[map.size()][2];
             int i = 0;
-            for (Iterator iterator = map.keySet().iterator(); iterator.hasNext();) {
-                String item = (String) iterator.next();
+            for (String item : map.keySet()) {
                 data[i][0] = map.get(item);
                 data[i][1] = item;
                 i++;
@@ -803,12 +834,16 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
         @Override
         public Object getValueAt(int row, int col) {
-            return data[row][col];
+            if (data.length > 0) {
+                return data[row][col];
+            } else {
+                return null;
+            }
         }
 
         @Override
         public Class getColumnClass(int c) {
-            return getValueAt(0, c).getClass();
+            return (c == 0 ? Boolean.class : String.class);
         }
 
         @Override
@@ -822,5 +857,45 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             fireTableCellUpdated(row, col);
         }
 
+    }
+    
+    class PopUpMenu extends JPopupMenu {
+
+        JMenuItem eraseItem, eraseAllItems;
+
+        public PopUpMenu(TreeSharingOptionsPanel owner, Map<String, Boolean> list, String key) {
+            ActionListener actionListener = new PopupActionListener(owner, list, key);    
+            eraseItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseItem", key));
+            eraseItem.addActionListener(actionListener);
+            add(eraseItem);
+            eraseAllItems = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseAllItems"));
+            eraseAllItems.addActionListener(actionListener);
+            add(eraseAllItems);
+        }
+    }
+    
+    class PopupActionListener implements ActionListener {
+
+        TreeSharingOptionsPanel owner = null; 
+        Map<String, Boolean> list = null;
+        String key = "";
+
+        private PopupActionListener(TreeSharingOptionsPanel owner, Map<String, Boolean> list, String key) {
+            this.owner = owner;
+            this.list = list;
+            this.key = key;
+        }
+
+        public void actionPerformed(ActionEvent actionEvent) {
+            if (actionEvent.getActionCommand().contains(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseItem", key))) {
+                list.remove(key);
+                owner.refreshMembersLists();
+            }
+            if (actionEvent.getActionCommand().contains(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseAllItems"))) {
+                list.clear();
+                owner.refreshMembersLists();
+            }
+            
+        }
     }
 }
