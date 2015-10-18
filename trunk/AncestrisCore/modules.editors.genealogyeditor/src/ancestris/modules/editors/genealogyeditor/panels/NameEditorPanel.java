@@ -61,6 +61,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         if (contextToOpen != null) {
             Gedcom gedcom = contextToOpen.getGedcom();
 
+            // FIXME : aucocompletion does not respect case sensitivity. Remove for now. Some simple ways to do autocompletion seem to exist as an alternative.
 //            AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(gedcom, true), true);
 //            InputMap map = firstNameTextField.getInputMap();
 //            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
