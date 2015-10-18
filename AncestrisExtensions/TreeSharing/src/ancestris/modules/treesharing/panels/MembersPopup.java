@@ -150,7 +150,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
             Object data = model.getValueAt(row, column);
             if (column == 0) {
                 model.getAncestrisMember(row).setAllowed((Boolean) data);
-                table.setRowSorter(new TableRowSorter<TableModel>(model));
+                //table.setRowSorter(new TableRowSorter<TableModel>(model));
                 owner.rememberMembers();
                 // Member is activated or desactivated. If something else needs to be done, do it here.
             }
