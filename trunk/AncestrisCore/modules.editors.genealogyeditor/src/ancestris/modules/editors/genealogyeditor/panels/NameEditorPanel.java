@@ -4,6 +4,7 @@ import ancestris.modules.editors.genealogyeditor.models.NameTypeComboBoxModel;
 import genj.gedcom.*;
 import genj.util.ChangeSupport;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.InputMap;
@@ -13,6 +14,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.autocomplete.AutoCompleteDocument;
 import org.openide.util.Utilities;
 
 /**
@@ -59,12 +61,12 @@ public class NameEditorPanel extends javax.swing.JPanel {
         if (contextToOpen != null) {
             Gedcom gedcom = contextToOpen.getGedcom();
 
-            AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(gedcom, true), false);
-            InputMap map = firstNameTextField.getInputMap();
-            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
-            AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(gedcom, true), false);
-            map = familyNameTextField.getInputMap();
-            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+//            AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(gedcom, true), true);
+//            InputMap map = firstNameTextField.getInputMap();
+//            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
+//            AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(gedcom, true), true);
+//            map = familyNameTextField.getInputMap();
+//            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
         }
     }
 
