@@ -725,12 +725,10 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         // Resize first column
         table.getColumnModel().getColumn(0).setPreferredWidth(20);
         
-        // Set tooltip text for name column (is string and does not loose its format)
-        if (table == jTable2) {
-            DefaultTableCellRenderer rendererCol1 = new DefaultTableCellRenderer();
-            rendererCol1.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_DisplayMap"));
-            table.getColumnModel().getColumn(1).setCellRenderer(rendererCol1);
-        }
+        // Set tooltip text for name column (if string and does not loose its format)
+        DefaultTableCellRenderer rendererCol1 = new DefaultTableCellRenderer();
+        rendererCol1.setToolTipText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TIP_DisplayMenu"));
+        table.getColumnModel().getColumn(1).setCellRenderer(rendererCol1);
 
         // Remove grid lines
         table.setShowHorizontalLines(false);
@@ -863,13 +861,23 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
     
     class PopUpMenu extends JPopupMenu {
 
-        JMenuItem eraseItem, eraseAllItems;
+        JMenuItem showItem, eraseItem, eraseAllItems;
 
         public PopUpMenu(TreeSharingOptionsPanel owner, Map<String, Boolean> list, String key) {
             ActionListener actionListener = new PopupActionListener(owner, list, key);    
+            //
+            if (list != jlist1) {
+                showItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_ShowItem", key));
+                showItem.addActionListener(actionListener);
+                add(showItem);
+            }
+            //
             eraseItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseItem", key));
             eraseItem.addActionListener(actionListener);
             add(eraseItem);
+            //
+            addSeparator();
+            //
             eraseAllItems = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseAllItems"));
             eraseAllItems.addActionListener(actionListener);
             add(eraseAllItems);
@@ -889,6 +897,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
 
         public void actionPerformed(ActionEvent actionEvent) {
+            if (actionEvent.getActionCommand().contains(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_ShowItem", key))) {
+                TechInfoPanel.openIpLocator(key);
+            }
             if (actionEvent.getActionCommand().contains(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseItem", key))) {
                 list.remove(key);
                 owner.refreshMembersLists();
