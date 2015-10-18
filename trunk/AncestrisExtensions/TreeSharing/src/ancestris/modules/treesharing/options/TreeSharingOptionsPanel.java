@@ -30,7 +30,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
@@ -49,8 +48,6 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -761,7 +758,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 Point p = me.getPoint();
                 int row = table.convertRowIndexToModel(table.rowAtPoint(p));
                 String key = (String) model.getValueAt(row, 1);
-                if (me.getClickCount() == 2) {
+                if (model == model2 && me.getClickCount() == 2) {
                     TechInfoPanel.openIpLocator(key);
                     return;
                 }
