@@ -39,7 +39,7 @@ import java.util.logging.Logger;
 /*package*/ class Worker {
   
   /** max # hits */
-  private final static int MAX_HITS = 255;
+  public final static int MAX_HITS = 5000;
   
   /** one listener */
   private WorkerListener listener;

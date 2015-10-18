@@ -502,7 +502,7 @@ public class SearchView extends View {
     private static class Results extends AbstractListModel implements GedcomListener {
 
         /** the results */
-        private List<Hit> hits = new ArrayList<Hit>(255);
+        private List<Hit> hits = new ArrayList<Hit>(Worker.MAX_HITS);
 
         /**
          * clear the results (sync to EDT)
