@@ -29,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -643,10 +644,18 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         return ret;
     }
 
+    public Comparator<String> sortmap = new Comparator<String>() {
+
+        public int compare(String o1, String o2) {
+            return o1.toLowerCase().compareTo(o2.toLowerCase());
+        }
+    };
+
+    
     public void loadMembersLists() {
 
-        jlist1 = new TreeMap<String, Boolean>();
-        jlist2 = new TreeMap<String, Boolean>();
+        jlist1 = new TreeMap<String, Boolean>(sortmap);
+        jlist2 = new TreeMap<String, Boolean>(sortmap);
         
         String[] keys;
         try {
@@ -750,7 +759,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 MyTableModel model = (table == jTable1 ? model1 : model2);
                 Map<String, Boolean> list = (table == jTable1 ? jlist1 : jlist2);
                 Point p = me.getPoint();
-                int row = table.rowAtPoint(p);
+                int row = table.convertRowIndexToModel(table.rowAtPoint(p));
                 String key = (String) model.getValueAt(row, 1);
                 if (me.getClickCount() == 2) {
                     TechInfoPanel.openIpLocator(key);
@@ -774,15 +783,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         int column = e.getColumn();
         if (row >= 0 && row < model.getRowCount() && column >= 0 && column < model.getColumnCount()) {
             if (column == 0) {
-                Boolean isAllowed = (Boolean) model.getValueAt(row, 0);
-                String key = (String) model.getValueAt(row, 1);
                 if (model == model1) {
-                    jlist1.put(key, isAllowed);
-                    jTable1.setRowSorter(new TableRowSorter<TableModel>(model));
+                    jlist1.put((String) model.getValueAt(row, 1), (Boolean) model.getValueAt(row, 0));
                 }
                 if (model == model2) {
-                    jlist2.put(key, isAllowed);
-                    jTable2.setRowSorter(new TableRowSorter<TableModel>(model));
+                    jlist2.put((String) model.getValueAt(row, 1), (Boolean) model.getValueAt(row, 0));
                 }
             }
         }
