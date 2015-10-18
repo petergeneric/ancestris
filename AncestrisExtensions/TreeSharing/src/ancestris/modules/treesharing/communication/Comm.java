@@ -546,7 +546,9 @@ public class Comm {
         memberProfileEOF = false;
         call(member, CMD_GPFxx, null);
         MemberProfile mp = (MemberProfile) unwrapObject(memberProfile.toByteArray());
-        mp.ipaddress = memberIPaddress;
+        if (mp != null) {
+            mp.ipaddress = memberIPaddress;
+        }
         memberIPaddress = "";
         return mp;
     }
