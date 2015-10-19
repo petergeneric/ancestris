@@ -12,15 +12,10 @@
 package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.AncestrisEditor;
-import ancestris.modules.editors.standard.actions.AActions;
-import ancestris.modules.editors.standard.actions.ACreateChild;
-import ancestris.modules.editors.standard.actions.ACreateParent;
-import ancestris.modules.editors.standard.actions.ACreateSpouse;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import javax.swing.Action;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 

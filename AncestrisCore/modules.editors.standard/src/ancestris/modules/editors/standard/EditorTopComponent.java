@@ -13,28 +13,14 @@ package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
-import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
-import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
-import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
-import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
-import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
-import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
-import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
-import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
-import genj.gedcom.Indi;
-import genj.gedcom.Media;
-import genj.gedcom.Note;
 import genj.gedcom.Property;
-import genj.gedcom.Repository;
-import genj.gedcom.Source;
-import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -83,13 +69,7 @@ public class EditorTopComponent extends AncestrisTopComponent
 
     static {
         panels = new HashMap<Class<? extends Property>, Editor>();
-        panels.put(Fam.class, new FamilyEditor());
-        panels.put(Indi.class, new IndividualEditor());
-        panels.put(Note.class, new NoteEditor());
-        panels.put(Repository.class, new RepositoryEditor());
-        panels.put(Source.class, new SourceEditor());
-        panels.put(Submitter.class, new SubmitterEditor());
-        panels.put(Media.class, new MultiMediaObjectEditor());
+        //panels.put(Fam.class, new EntityEditor());
     }
 
     @Override
