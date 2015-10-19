@@ -5,26 +5,24 @@
 package ancestris.modules.geo;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.core.pluginservice.PluginInterface;
 //XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.gedcom.EditTopComponent;
 import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
-import ancestris.modules.editors.genealogyeditor.GenealogyEditorPlugin;
-import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
-import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.geoplace.MapPlaceEditor;
+import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
@@ -49,7 +47,7 @@ import org.openide.util.ImageUtilities;
 class GeoNode extends AbstractNode implements PropertyChangeListener {
 
     private final static String GEDCOM_EDITOR = NbBundle.getMessage(GedcomEditorPlugin.class, "OpenIDE-Module-Name");
-    private final static String ANCESTRIS_EDITOR = NbBundle.getMessage(GenealogyEditorPlugin.class, "OpenIDE-Module-Name");
+    private final static String ANCESTRIS_EDITOR = "Editor";   // FIXME
     
     public GeoNode(GeoPlacesList gpl) {
         super(new GeoChildrenNodes(gpl));
@@ -266,20 +264,29 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 etc.open();
                 etc.requestActive();
             } else if (actionName.equals("ACTION_EditEvent"+ANCESTRIS_EDITOR)) {
-                // Pop up editor
-                Entity entity = obj.getProperty().getEntity();
-                if (entity instanceof Fam) {
-                    Fam family = (Fam) entity;
-                    //XXX: use Editor API to find proper editor
-                    FamilyEditor familyEditor = new FamilyEditor();
-                    familyEditor.setContext(new Context(obj.getProperty()));
-                    familyEditor.showPanel();
-                } else if (entity instanceof Indi) {
-                    Indi child = (Indi) entity;
-                    //XXX: use Editor API to find proper editor
-                    IndividualEditor individualEditor = new IndividualEditor();
-                    individualEditor.setContext(new Context(obj.getProperty()));
-                    individualEditor.showPanel();
+                List<Class> openedViews = new ArrayList<Class>();
+                for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+                    openedViews.addAll(sInterface.getDefaultOpenedViews());
+                    }
+                TopComponent tc = null;
+                for (Class clazz : openedViews) {
+                    if (!clazz.getCanonicalName().contains("EditorTopComponent")) {
+                        continue;
+                    }
+                    try {
+                        tc = (TopComponent) clazz.newInstance();
+
+                        if (tc instanceof AncestrisViewInterface) {
+                            tc = ((AncestrisViewInterface) tc).create(new Context(obj.getProperty()));
+                        }
+                        tc.open();
+                    } catch (Exception ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                    if (tc != null) {
+                        tc.requestActive();
+                        break;
+                    }
                 }
             } else if (actionName.equals("ACTION_SelectEvent")) {
                 SelectionDispatcher.fireSelection(new Context(obj.getProperty()));
