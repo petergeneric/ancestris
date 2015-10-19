@@ -28,7 +28,7 @@ public class EditorPlugin extends AncestrisPlugin {
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
-        result.add(EditorTopComponent.class);
+//        result.add(EditorTopComponent.class);
         return result;
     }
 }
