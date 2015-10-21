@@ -9,8 +9,10 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
+import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -139,23 +141,23 @@ class GeoPlacesList implements GedcomListener {
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        reloadPlaces();
+        reloadPlaces(entity);
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        reloadPlaces();
+        reloadPlaces(entity);
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        reloadPlaces();
+        reloadPlaces(property);
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        reloadPlaces();
+        reloadPlaces(property);
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        reloadPlaces();
+        reloadPlaces(property);
     }
 
     @SuppressWarnings("unchecked")
@@ -178,6 +180,13 @@ class GeoPlacesList implements GedcomListener {
         notifyListeners(TYPEOFCHANGE_NAME);
     }
 
+    private void reloadPlaces(Property property) {
+        List<PropertyPlace> list = (List<PropertyPlace>) property.getEntity().getProperties(PropertyPlace.class);
+        if ((property instanceof PropertyName && !list.isEmpty()) || property instanceof PropertyPlace) {
+            reloadPlaces();
+        }
+    }
+    
     public void reloadPlaces() {
         if (!stopListening) {
             stopListening();
@@ -260,5 +269,5 @@ class GeoPlacesList implements GedcomListener {
     PropertyPlace getCopiedPlace() {
         return this.copiedPlace;
     }
-    
+
 }

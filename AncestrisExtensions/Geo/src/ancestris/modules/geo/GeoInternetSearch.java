@@ -132,8 +132,10 @@ class GeoInternetSearch {
             public void taskFinished(Task task) {
                 ph.finish();
                 result = ret.toArray(new GeoNodeObject[ret.size()]);
-                gplOwner.setPlaces(result);
-                gedcomSearchingList.remove(placesProps.get(0).getGedcom());
+                if (result.length > 0) {
+                    gplOwner.setPlaces(result);
+                    gedcomSearchingList.remove(placesProps.get(0).getGedcom());
+                }
                 isBusy = false;
             }
         });
