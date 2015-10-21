@@ -27,7 +27,7 @@ public class EditorActions {
         return AActions.alwaysEnabled(
                 new ACreateParent(child, sex, editor),
                 "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.createparent.title"),
+                org.openide.util.NbBundle.getMessage(OLD_EntityEditor.class, "action.createparent.title"),
                 "ancestris/modules/editors/standard/images/add-child.png", // NOI18N
                 true);
     }
@@ -36,7 +36,7 @@ public class EditorActions {
         return AActions.alwaysEnabled(
                 new ACreateSpouse(indi, editor),
                 "",
-                org.openide.util.NbBundle.getMessage(EntityEditor.class, "action.addspouse.title"),
+                org.openide.util.NbBundle.getMessage(OLD_EntityEditor.class, "action.addspouse.title"),
                 "ancestris/modules/editors/standard/images/add-spouse.png", // NOI18N
                 true);
     }
