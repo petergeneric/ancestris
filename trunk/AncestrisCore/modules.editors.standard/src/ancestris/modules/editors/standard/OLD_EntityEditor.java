@@ -24,15 +24,15 @@ import org.openide.util.lookup.ServiceProvider;
  * @author daniel
  */
 @ServiceProvider(service = AncestrisEditor.class,position = 100)
-public class EntityEditor extends AncestrisEditor {
+public class OLD_EntityEditor extends AncestrisEditor {
 
     public static Property editEntity(Fam fam, boolean isNew) {
         final FamPanel bean = new FamPanel();
 
         if (isNew) {
-            bean.setTitle(NbBundle.getMessage(EntityEditor.class, "dialog.fam.new.title", fam));
+            bean.setTitle(NbBundle.getMessage(OLD_EntityEditor.class, "dialog.fam.new.title", fam));
         } else {
-            bean.setTitle(NbBundle.getMessage(EntityEditor.class, "dialog.fam.edit.title", fam));
+            bean.setTitle(NbBundle.getMessage(OLD_EntityEditor.class, "dialog.fam.edit.title", fam));
         }
         bean.setContext(new Context(fam));
         return bean.showPanel()?fam:null;
@@ -45,9 +45,9 @@ public class EntityEditor extends AncestrisEditor {
         }
 
         if (isNew) {
-            bean.setTitle(NbBundle.getMessage(EntityEditor.class, "dialog.indi.new.title", indi));
+            bean.setTitle(NbBundle.getMessage(OLD_EntityEditor.class, "dialog.indi.new.title", indi));
         } else {
-            bean.setTitle(NbBundle.getMessage(EntityEditor.class, "dialog.indi.edit.title", indi));
+            bean.setTitle(NbBundle.getMessage(OLD_EntityEditor.class, "dialog.indi.edit.title", indi));
         }
         bean.setContext(new Context(indi));
         return bean.showPanel()?indi:null;

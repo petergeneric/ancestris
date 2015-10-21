@@ -23,14 +23,14 @@ import org.openide.util.NbBundle;
  *
  * @author daniel
  */
-public class ResourcesSupport {
+public class OLD_ResourcesSupport {
     static Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>(5);
-    static ImageIcon editorIcon = ResourcesSupport.getIcon("editeur_standard"); // NOI18N
+    static ImageIcon editorIcon = OLD_ResourcesSupport.getIcon("editeur_standard"); // NOI18N
 
     static ImageIcon getIcon(String name){
         if (iconCache.get(name)!=null)
             return iconCache.get(name);
-        ImageIcon icon = new ImageIcon(ResourcesSupport.class.getResource(name+".png")); // NOI18N
+        ImageIcon icon = new ImageIcon(OLD_ResourcesSupport.class.getResource(name+".png")); // NOI18N
         iconCache.put(name, icon);
         return icon;
     }
@@ -40,12 +40,12 @@ public class ResourcesSupport {
         String key = name + size;
         if (iconCache.get(key)!=null)
             return iconCache.get(key);
-        URL url = ResourcesSupport.class.getResource(key+".png"); // NOI18N
+        URL url = OLD_ResourcesSupport.class.getResource(key+".png"); // NOI18N
         ImageIcon icon;
         if (url != null) {
-            icon = new ImageIcon(ResourcesSupport.class.getResource(key+".png")); // NOI18N
+            icon = new ImageIcon(OLD_ResourcesSupport.class.getResource(key+".png")); // NOI18N
         } else {
-            icon = new ImageIcon(ResourcesSupport.class.getResource(name+".png")); // NOI18N
+            icon = new ImageIcon(OLD_ResourcesSupport.class.getResource(name+".png")); // NOI18N
             icon = new ImageIcon(icon.getImage().getScaledInstance(size, size, Image.SCALE_DEFAULT));
         }
         iconCache.put(key, icon);
@@ -53,6 +53,6 @@ public class ResourcesSupport {
     }
 
     public static String getTitle(String bundleKey) {
-        return NbBundle.getBundle(ResourcesSupport.class).getString(bundleKey+".title"); // NOI18N
+        return NbBundle.getBundle(OLD_ResourcesSupport.class).getString(bundleKey+".title"); // NOI18N
     }
 }

@@ -20,12 +20,12 @@ import genj.view.ViewContext;
 import java.awt.Component;
 import org.openide.util.Exceptions;
 
-public class GedcomPanel extends Editor {
+public class OLD_GedcomPanel extends Editor {
 
     private Context context;
 
     /** Creates new form FamillyVisualPanel */
-    public GedcomPanel() {
+    public OLD_GedcomPanel() {
         initComponents();
     }
 
@@ -68,7 +68,7 @@ public class GedcomPanel extends Editor {
 
     @Override
     public String getName() {
-        return org.openide.util.NbBundle.getMessage(GedcomPanel.class, "gedcom.properties.title");
+        return org.openide.util.NbBundle.getMessage(OLD_GedcomPanel.class, "gedcom.properties.title");
     }
 
     /** This method is called from within the constructor to
@@ -83,10 +83,10 @@ public class GedcomPanel extends Editor {
         jLabel1 = new javax.swing.JLabel();
         gedcomDescription = new ancestris.modules.beans.AMLEBean();
 
-        placeFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.placeFormat.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        placeFormat.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OLD_GedcomPanel.class, "OLD_GedcomPanel.placeFormat.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPanel.class, "GedcomPanel.jLabel1.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(OLD_GedcomPanel.class, "OLD_GedcomPanel.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

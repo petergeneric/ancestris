@@ -18,14 +18,14 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
 
-public final class EventBean extends PropertyBean {
+public final class OLD_EventBean extends PropertyBean {
 
     private Context context;
     private AEventBean eventDetailBean;
     private PropertyEvent event;
 
     /** Creates new form FamilyPanel */
-    public EventBean() {
+    public OLD_EventBean() {
         initComponents();
         eventDetailBean = new AEventBean();
         eventDetailBean.setDetailedView(true);
@@ -48,7 +48,7 @@ public final class EventBean extends PropertyBean {
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(EventBean.class, "EventBean.evtDetailPanel.TabConstraints.tabTitle"), evtDetailPanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(OLD_EventBean.class, "OLD_EventBean.evtDetailPanel.TabConstraints.tabTitle"), evtDetailPanel); // NOI18N
 
         javax.swing.GroupLayout evtNotePanelLayout = new javax.swing.GroupLayout(evtNotePanel);
         evtNotePanel.setLayout(evtNotePanelLayout);
@@ -58,10 +58,10 @@ public final class EventBean extends PropertyBean {
         );
         evtNotePanelLayout.setVerticalGroup(
             evtNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 439, Short.MAX_VALUE)
+            .addGap(0, 441, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(EventBean.class, "EventBean.evtNotePanel.TabConstraints.tabTitle"), evtNotePanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(OLD_EventBean.class, "OLD_EventBean.evtNotePanel.TabConstraints.tabTitle"), evtNotePanel); // NOI18N
 
         javax.swing.GroupLayout evtSourcePanelLayout = new javax.swing.GroupLayout(evtSourcePanel);
         evtSourcePanel.setLayout(evtSourcePanelLayout);
@@ -71,10 +71,10 @@ public final class EventBean extends PropertyBean {
         );
         evtSourcePanelLayout.setVerticalGroup(
             evtSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 439, Short.MAX_VALUE)
+            .addGap(0, 441, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(EventBean.class, "EventBean.evtSourcePanel.TabConstraints.tabTitle"), evtSourcePanel); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(OLD_EventBean.class, "OLD_EventBean.evtSourcePanel.TabConstraints.tabTitle"), evtSourcePanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
