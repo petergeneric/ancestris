@@ -18,7 +18,6 @@
 package ancestris.modules.wizards.newgedcom;
 
 import ancestris.api.editor.Editor;
-import ancestris.modules.editors.standard.GedcomPanel;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
 import java.awt.Component;
@@ -30,13 +29,13 @@ import java.awt.Component;
 public class GedcomVisualPanel extends Editor {
 
     private Context context;
-    private GedcomPanel gedcomPanel;
+    //private GedcomPanel gedcomPanel;
 
     /** Creates new form GedcomVisualPanel */
     public GedcomVisualPanel() {
         initComponents();
-        gedcomPanel = new GedcomPanel();
-        jPanel.add(gedcomPanel);
+//        gedcomPanel = new GedcomPanel();
+//        jPanel.add(gedcomPanel);
     }
 
     @Override
@@ -96,7 +95,7 @@ public class GedcomVisualPanel extends Editor {
     @Override
     protected void setContextImpl(Context context) {
         this.context = context;
-        gedcomPanel.setContext(context);
+//        gedcomPanel.setContext(context);
         jTextField1.setText(context.getGedcom().getName());
     }
 
@@ -108,7 +107,7 @@ public class GedcomVisualPanel extends Editor {
     @Override
     public void commit() {
         if (context != null) {
-            gedcomPanel.commit();
+//            gedcomPanel.commit();
             context.getGedcom().setName(jTextField1.getText());
         }
 
@@ -116,9 +115,9 @@ public class GedcomVisualPanel extends Editor {
 
     @Override
     public String getName() {
-        if (gedcomPanel != null) {
-            return gedcomPanel.getName();
-        }
+//        if (gedcomPanel != null) {
+//            return gedcomPanel.getName();
+//        }
         return "";
     }
 }
