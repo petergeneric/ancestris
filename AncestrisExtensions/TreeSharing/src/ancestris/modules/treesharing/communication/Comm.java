@@ -339,7 +339,7 @@ public class Comm {
             }
             in.close();
             connection.disconnect();
-        } catch (IOException ex) {
+        } catch (Exception ex) {
             //Exceptions.printStackTrace(ex);
             LOG.log(Level.INFO, "Error while querying the server : " + ex.getMessage());
         }
