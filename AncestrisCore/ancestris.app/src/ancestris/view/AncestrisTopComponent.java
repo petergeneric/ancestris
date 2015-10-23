@@ -492,8 +492,9 @@ public class AncestrisTopComponent extends TopComponent
         setName();
         setToolTipText();
         setContext(context);
-        if (getImageIcon() != null) {
-            setIcon(getImageIcon());
+        Image icon = getImageIcon();
+        if (icon != null) {
+            setIcon(icon);
         }
         if (context == null || context.getGedcom() == null) {
             return;
