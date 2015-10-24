@@ -22,15 +22,11 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
-import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.BorderFactory;
@@ -79,10 +75,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     @Override
     public void setName() {
         if (editor != null && editor.getName() != null) {
-            LOG.fine("setName = " + editor.getName());
             setName(editor.getName());
         } else {
-            LOG.fine("setName = super");
             super.setName();
         }
     }
@@ -93,10 +87,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     @Override
     public void setToolTipText() {
         if (editor != null && editor.getToolTipText() != null) {
-            LOG.fine("setToolTipText = " + editor.getToolTipText());
             setToolTipText(editor.getToolTipText());
         } else {
-            LOG.fine("setToolTipText = super");
             super.setToolTipText();
         }
     }
@@ -118,14 +110,12 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         LOG.fine("setContextImpl context = " + context.toString());
         this.context = context;
         
-        // Disconnect from last gedcom
-        if (gedcom != null && context.getGedcom() != gedcom) {
-            gedcom.removeGedcomListener(callback);
-            gedcom = null;
-        }
-
-        // Connect to gedcom
+        // Reconnect to gedcom if different
         if (context.getGedcom() != gedcom) {
+            // Disconnect if not null
+            if (gedcom != null) {
+                gedcom.removeGedcomListener(callback);
+            }
             gedcom = context.getGedcom();
             gedcom.addGedcomListener(callback);
         }
@@ -170,15 +160,12 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     public Image getImageIcon() {
         Image icon = null;
         if (editor != null) {
-            LOG.fine("getImageIcon = " + editor.getImageIcon());
             icon = editor.getImageIcon();
         }
         if (icon == null) {
-            LOG.fine("getImageIcon = editeur_standard");
             icon = getImageIcon("ancestris/modules/editors/standard/editeur_standard.png");
         }
         if (icon == null) {
-            LOG.fine("getImageIcon = super");
             icon = super.getImageIcon();
         }
         return icon;
@@ -225,8 +212,6 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
      */
     @Override
     public void componentOpened() {
-        LOG.fine("componentOpened");
-        
         undoRedoListener = new UndoRedoListener();
         UndoRedo undoRedo = getUndoRedo();
         undoRedo.addChangeListener(undoRedoListener);
@@ -247,25 +232,20 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 
     
     private void commit(boolean ask) {
-        LOG.fine("commit ask = " + ask);
-        
         // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
         // that the containing window was closed and we're not going to throw a dialog out there or do a change
         // behind the covers - we really would need a about-to-close hook for contained components here :(
         if (!isOpened()) {
-            LOG.fine("commit - not opened.");
             return;
         }
 
         // Changes?
         if (confirmPanel == null || !confirmPanel.hasChanged()) {
-            LOG.fine("commit - no change.");
             return;
         }
 
         // Do not commit for auto commit
         if (ask && !confirmPanel.isCommitChanges()) {
-            LOG.fine("commit - no auto commit.");
             cancel();
             confirmPanel.setChanged(false);
             return;
@@ -276,14 +256,12 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
             isChangeSource = true;
 
             if (gedcom.isWriteLocked()) {
-                LOG.fine("commit - commit now !");
                 editor.commit();
             } else {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        LOG.fine("commit - commit !");
                         editor.commit();
                     }
                 });
@@ -299,8 +277,6 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 
     
     private void cancel() {
-        LOG.fine("cancel");
-        
         // we only consider cancelling IF we're still in a visible top level ancestor (window) - otherwise we assume
         // that the containing window was closed and we're not going to throw a dialog out there or do a change
         // behind the covers - we really would need a about-to-close hook for contained components here :(
@@ -317,14 +293,10 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
     }
 
     public void okCallBack(ActionEvent event) {
-        LOG.fine("okCallBack event = " + event.toString());
-        
         commit(false);
     }
 
     public void cancelCallBack(ActionEvent event) {
-        LOG.fine("cancelCallBack event = " + event.toString());
-        
         cancel();
 
         // Re-set for cancel
@@ -334,8 +306,6 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 
     
     public TopComponent cloneComponent() {
-        LOG.fine("cloneComponent");
-
         if (getContext() == null) {
             return null;
         }
