@@ -39,7 +39,7 @@ public class OLD_EntityEditor extends AncestrisEditor {
     }
 
     public static Property editEntity(Indi indi, boolean isNew) {
-        final IndiPanel bean = new IndiPanel();
+        final OLD_IndiPanel bean = new OLD_IndiPanel();
         if (indi == null) {
             return null;
         }
