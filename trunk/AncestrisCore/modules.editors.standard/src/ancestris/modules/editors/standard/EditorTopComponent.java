@@ -19,19 +19,22 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
-import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
+import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.UndoRedo;
@@ -48,9 +51,8 @@ import org.openide.windows.TopComponent;
 public class EditorTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
-    private static EditorTopComponent factory;
 
-    /* package */ final static Logger LOG = Logger.getLogger("ancestris.editor");
+    final static Logger LOG = Logger.getLogger("ancestris.editor");
     
     // Main elements
     private Gedcom gedcom = null;
@@ -63,25 +65,12 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
 
     // Redo elements
     private int undoNb;
-    UndoRedoListener undoRedoListener;
+    private UndoRedoListener undoRedoListener;
     
     // Panel elements
-    private static final Map<Class<? extends Property>, Editor> panels;
-    static {
-        panels = new HashMap<Class<? extends Property>, Editor>();
-        panels.put(Indi.class, new IndiPanel());
-        //panels.put(Fam.class, new FamPanel());
-    }
     private ConfirmChangeWidget confirmPanel;
 
-    
-    public static synchronized EditorTopComponent getFactory() {
-        LOG.fine("getFactory");
-        if (factory == null) {
-            factory = new EditorTopComponent();
-        }
-        return factory;
-    }
+
     
     
     /**
@@ -141,8 +130,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             gedcom.addGedcomListener(callback);
         }
 
-        // Commit if necessary
-        commit();
+        // Commit if necessary without asking for confirmation
+        commit(false);
 
         // Prepare confirm panel
         if (confirmPanel == null) {
@@ -150,17 +139,18 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             confirmPanel.setChanged(false);
         }
         
-        // Clear old editor
-        if (editor != null) {
-            editor.removeChangeListener(confirmPanel);
-            editor.setContext(new Context());
-            editor = null;
-        }
-
         // Set the right editor panel to display
-        editor = panels.get(context.getEntity().getClass());
+        if (editor == null) {
+            if (context.getEntity().getTag().equals(Gedcom.INDI)) {
+                LOG.fine("setContextImpl create Indi panel");
+                editor = new IndiPanel();
+                editor.addChangeListener(confirmPanel);
+            } else {
+                return;
+            }
+        }
+        
         editor.setContext(context);
-        editor.addChangeListener(confirmPanel);
 
         // Save undo index for use in cancel
         undoNb = gedcom.getUndoNb();
@@ -202,14 +192,19 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
      */
     @Override
     public boolean createPanel() {
-        LOG.fine("createPanel");
+        LOG.fine("createPanel - editor.");
         if (editor == null) {
             return false;
         }
+        LOG.fine("createPanel - editor hashcdode = " + editor.hashCode());
         
         // Display editor
-        editor.add(confirmPanel);
-        setPanel(editor);
+        JPanel panelContainer = new JPanel(new BorderLayout());
+        panelContainer.add(editor, BorderLayout.PAGE_START);
+editor.setBorder(BorderFactory.createLineBorder(Color.red));
+        panelContainer.add(confirmPanel, BorderLayout.PAGE_END);
+confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+        setPanel(panelContainer);
         
         return true;
     }
