@@ -8,7 +8,6 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.view.ViewContext;
 import java.awt.Component;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -114,7 +113,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     @Override
     protected void setContextImpl(Context context) {
-        LOG.log(Level.FINE, "{0}: setContextImpl().start", TimingUtility.geInstance().getTime());
+        LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
         
         this.context = context;
         Entity entity = context.getEntity();
@@ -126,7 +125,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         loadData();
         
 
-        LOG.log(Level.FINE, "{0}: setContextImpl().finish", TimingUtility.geInstance().getTime());
+        LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
     }
 
     
