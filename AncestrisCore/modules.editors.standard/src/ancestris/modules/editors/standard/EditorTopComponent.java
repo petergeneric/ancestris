@@ -179,18 +179,16 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
      */
     @Override
     public boolean createPanel() {
-        LOG.fine("createPanel - editor.");
         if (editor == null) {
             return false;
         }
-        LOG.fine("createPanel - editor hashcdode = " + editor.hashCode());
         
         // Display editor
         JPanel panelContainer = new JPanel(new BorderLayout());
         panelContainer.add(editor, BorderLayout.PAGE_START);
-editor.setBorder(BorderFactory.createLineBorder(Color.red));
+//editor.setBorder(BorderFactory.createLineBorder(Color.red));
         panelContainer.add(confirmPanel, BorderLayout.PAGE_END);
-confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
+//confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
         setPanel(panelContainer);
         
         return true;
@@ -268,7 +266,7 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
             }
 
         } catch (Throwable t) {
-            LOG.log(Level.WARNING, "error committing editor", t);
+            LOG.log(Level.WARNING, "Error committing editor", t);
         } finally {
             isChangeSource = false;
             confirmPanel.setChanged(false);
@@ -326,8 +324,6 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 
         @Override
         public void gedcomWriteLockAcquired(Gedcom gedcom) {
-            LOG.fine("Callback - gedcomWriteLockAcquired");
-
             // Changes we have to commit?
             if (!isChangeSource) {
                 commit(false);
@@ -342,8 +338,6 @@ confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            LOG.fine("UndoRedoListener - stateChanged");
-            
             Context ctx = editor.getContext();
             editor.setContext(ctx);
         }
