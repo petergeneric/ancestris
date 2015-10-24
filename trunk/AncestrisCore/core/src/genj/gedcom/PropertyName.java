@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import ancestris.util.TimingUtility;
 import genj.crypto.Enigma;
 import genj.util.ReferenceSet;
 import genj.util.WordBuffer;
@@ -53,6 +54,9 @@ public class PropertyName extends Property {
     /** the name if unparsable */
     private String nameAsString;
     private boolean mutePC = false;
+    
+    // use busy flag to avoid loopings
+    private boolean isBusy = false;
 
     /**
      * need tag-argument constructor for all properties
@@ -385,13 +389,7 @@ public class PropertyName extends Property {
         return setName(getPropertyValue("NPFX"), first, getPropertyValue("SPFX"), last, suff, replaceAllLastNames);
     }
 
-    public PropertyName setName(
-            String nPfx,
-            String first,
-            String sPfx,
-            String last,
-            String suff,
-            boolean replaceAllLastNames) {
+    public PropertyName setName(String nPfx, String first, String sPfx, String last, String suff, boolean replaceAllLastNames) {
 
         // 20070128 don't bother with calculating old if this is happening in init()
         boolean hasParent = getParent() != null;
@@ -427,9 +425,9 @@ public class PropertyName extends Property {
         remember(first, last);
 
         // update GIVN|SURN - IF we have a parent
-        if (hasParent) {
+        if (hasParent && !isBusy) {
+            isBusy = true;
             boolean add = GedcomOptions.getInstance().getAddNameSubtags();
-
             addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);
             addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);
             addNameSubProperty(add, "NSFX", suff);
@@ -446,12 +444,13 @@ public class PropertyName extends Property {
         this.nameTagValue = null;
 
         // tell about it
-        if (old != null) {
+        if (old != null && !isBusy) {
             propagatePropertyChanged(this, old);
         }
 
         // Done
         mutePC = false;
+        isBusy = false;
         return this;
     }
 
@@ -475,7 +474,10 @@ public class PropertyName extends Property {
         if (sub == null) {
             sub = addProperty(tag, value);
         } else {
-            sub.setValue(value);
+            String oldValue = sub.getValue();
+            if (!value.equals(oldValue)) {
+                sub.setValue(value);
+            }
         }
         sub.setGuessed(!force);
         sub.setReadOnly(true);
