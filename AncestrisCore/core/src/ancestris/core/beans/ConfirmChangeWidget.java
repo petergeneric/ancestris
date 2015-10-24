@@ -18,12 +18,14 @@ import genj.util.Registry;
 import genj.util.swing.ButtonHelper;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.util.ResourceBundle;
 import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.util.NbBundle;
@@ -41,6 +43,9 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
     private Cancel cancel = new Cancel();
     public boolean hideIfUnchanged = true;
 
+    private KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+    private KeyStroke escStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
+
     public ConfirmChangeWidget(ConfirmChangeCallBack callback) {
         super(new FlowLayout(FlowLayout.RIGHT));
         ButtonHelper bh = new ButtonHelper().setInsets(0).setContainer(this);
@@ -48,6 +53,9 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         bh.create(cancel).setFocusable(false);
         this.callback = callback;
         setBorder(BorderFactory.createEtchedBorder());
+        
+        registerKeyboardAction(ok, enterStroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
+        registerKeyboardAction(cancel, escStroke, JComponent.WHEN_IN_FOCUSED_WINDOW);
     }
 
     /*
