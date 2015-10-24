@@ -293,7 +293,10 @@ public class Comm {
         List<AncestrisMember> ancestrisMembers = new ArrayList<AncestrisMember>();
         
         String outputString = getQueryResult(COMM_PROTOCOL + COMM_SERVER + CMD_GETMB + COMM_CREDENTIALS);
-
+        if (outputString.isEmpty()) {
+            return ancestrisMembers;
+        }
+        
         try {
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -320,7 +323,7 @@ public class Comm {
             //Exceptions.printStackTrace(ex);
             LOG.log(Level.INFO, "Error while getting ancestris members : " + ex.getMessage());
         }
-                
+        
         // Return list
         return ancestrisMembers;
     }
@@ -342,6 +345,7 @@ public class Comm {
         } catch (Exception ex) {
             //Exceptions.printStackTrace(ex);
             LOG.log(Level.INFO, "Error while querying the server : " + ex.getMessage());
+            ret = "";
         }
 
         return ret;
