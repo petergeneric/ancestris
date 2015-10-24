@@ -103,6 +103,6 @@ public final class FirstIndiVisualPanel extends JPanel{
     // End of variables declaration//GEN-END:variables
 
     public void applyNext() {
-        aIndiBean1.commit();
+        //aIndiBean1.commit();
     }
     }
