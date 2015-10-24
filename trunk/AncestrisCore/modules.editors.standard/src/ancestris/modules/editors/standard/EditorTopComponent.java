@@ -24,12 +24,10 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.UnitOfWork;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.BorderFactory;
 import javax.swing.JPanel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -107,7 +105,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         if (context == null || context.getEntity() == null || this.context == context) {
             return;
         }
-        LOG.fine("setContextImpl context = " + context.toString());
+        LOG.finer("setContextImpl context = " + context.toString());
         this.context = context;
         
         // Reconnect to gedcom if different
@@ -132,7 +130,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         // Set the right editor panel to display
         if (editor == null) {
             if (context.getEntity().getTag().equals(Gedcom.INDI)) {
-                LOG.fine("setContextImpl create Indi panel");
+                LOG.finer("setContextImpl create Indi panel");
                 editor = new IndiPanel();
                 editor.addChangeListener(confirmPanel);
             } else {
