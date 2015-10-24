@@ -10,7 +10,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package ancestris.modules.editors.standard;
+package ancestris.modules.editors.standard.actions;
 
 import java.awt.Image;
 import java.net.URL;
