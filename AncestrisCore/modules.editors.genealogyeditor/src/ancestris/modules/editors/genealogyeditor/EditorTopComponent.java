@@ -277,7 +277,7 @@ public class EditorTopComponent extends AncestrisTopComponent
         }
 
         // commit if necessary
-        commit();
+        commit(false);
         if (context.getEntity() == null) {
             return;
         }
