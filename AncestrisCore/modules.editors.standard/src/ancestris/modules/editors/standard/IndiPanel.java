@@ -59,25 +59,32 @@ public class IndiPanel extends Editor implements DocumentListener {
         lastnameText = new javax.swing.JTextField();
         title = new javax.swing.JLabel();
         photos = new javax.swing.JLabel();
-        scrollPhotos = new javax.swing.JScrollBar();
         scrollPanePhotos = new javax.swing.JScrollPane();
         textAreaPhotos = new javax.swing.JTextArea();
-        fatherButton = new javax.swing.JButton();
-        motherButton = new javax.swing.JButton();
+        scrollPhotos = new javax.swing.JScrollBar();
+        addMediaButton = new javax.swing.JButton();
+        delMediaButton = new javax.swing.JButton();
         maleRadioButton = new javax.swing.JRadioButton();
         femaleRadioButton = new javax.swing.JRadioButton();
         unknownRadioButton = new javax.swing.JRadioButton();
+        privateCheckBox = new javax.swing.JCheckBox();
+        fatherButton = new javax.swing.JButton();
+        motherButton = new javax.swing.JButton();
+        brothersButton = new javax.swing.JButton();
+        sistersButton = new javax.swing.JButton();
+        spousesButton = new javax.swing.JButton();
+        childrenButton = new javax.swing.JButton();
         idLabel = new javax.swing.JLabel();
         idText = new javax.swing.JTextField();
         sosaLabel = new javax.swing.JLabel();
         sosaText = new javax.swing.JTextField();
-        privateCheckBox = new javax.swing.JCheckBox();
-        childrenButton = new javax.swing.JButton();
-        spousesButton = new javax.swing.JButton();
         scrollPaneFamilies = new javax.swing.JScrollPane();
         familiesTable = new javax.swing.JTable();
-        brothersButton = new javax.swing.JButton();
-        sistersButton = new javax.swing.JButton();
+        scrollPaneNotes = new javax.swing.JScrollPane();
+        textAreaNotes = new javax.swing.JTextArea();
+        scrollNotes = new javax.swing.JScrollBar();
+        addNoteButton = new javax.swing.JButton();
+        delNoteButton = new javax.swing.JButton();
 
         org.openide.awt.Mnemonics.setLocalizedText(firstnamesLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.firstnamesLabel.text_1")); // NOI18N
 
@@ -96,8 +103,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         photos.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.photos.toolTipText")); // NOI18N
         photos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
-        scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
-
         textAreaPhotos.setColumns(20);
         textAreaPhotos.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
         textAreaPhotos.setLineWrap(true);
@@ -105,9 +110,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.text")); // NOI18N
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
-        org.openide.awt.Mnemonics.setLocalizedText(fatherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.fatherButton.text")); // NOI18N
+        scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
 
-        org.openide.awt.Mnemonics.setLocalizedText(motherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.motherButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addMediaButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addMediaButton.text")); // NOI18N
+        addMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        addMediaButton.setIconTextGap(0);
+        addMediaButton.setPreferredSize(new java.awt.Dimension(16, 16));
+
+        org.openide.awt.Mnemonics.setLocalizedText(delMediaButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delMediaButton.text")); // NOI18N
+        delMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        delMediaButton.setIconTextGap(0);
+        delMediaButton.setPreferredSize(new java.awt.Dimension(16, 16));
 
         buttonGender.add(maleRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(maleRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maleRadioButton.text")); // NOI18N
@@ -118,6 +131,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         buttonGender.add(unknownRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(unknownRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.unknownRadioButton.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(privateCheckBox, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.privateCheckBox.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(fatherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.fatherButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(motherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.motherButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(brothersButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.brothersButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(sistersButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sistersButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(spousesButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.spousesButton.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(childrenButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.childrenButton.text")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(idLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text")); // NOI18N
 
         idText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.idText.text")); // NOI18N
@@ -125,12 +152,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(sosaLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaLabel.text")); // NOI18N
 
         sosaText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaText.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(privateCheckBox, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.privateCheckBox.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(childrenButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.childrenButton.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(spousesButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.spousesButton.text")); // NOI18N
 
         familiesTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -145,9 +166,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         ));
         scrollPaneFamilies.setViewportView(familiesTable);
 
-        org.openide.awt.Mnemonics.setLocalizedText(brothersButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.brothersButton.text")); // NOI18N
+        textAreaNotes.setColumns(20);
+        textAreaNotes.setRows(5);
+        textAreaNotes.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.text")); // NOI18N
+        scrollPaneNotes.setViewportView(textAreaNotes);
 
-        org.openide.awt.Mnemonics.setLocalizedText(sistersButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sistersButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addNoteButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addNoteButton.text")); // NOI18N
+        addNoteButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        addNoteButton.setIconTextGap(0);
+        addNoteButton.setPreferredSize(new java.awt.Dimension(16, 16));
+
+        org.openide.awt.Mnemonics.setLocalizedText(delNoteButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteButton.text")); // NOI18N
+        delNoteButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        delNoteButton.setIconTextGap(0);
+        delNoteButton.setPreferredSize(new java.awt.Dimension(16, 16));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -158,52 +190,66 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(title, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(photos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                            .addComponent(scrollPanePhotos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(scrollPhotos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(firstnamesText)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(photos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(scrollPanePhotos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(fatherButton)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(idLabel)
+                                        .addComponent(scrollPhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(idText))
-                                    .addComponent(firstnamesLabel))
+                                        .addComponent(addMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(delMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(sosaLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(sosaText)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(motherButton))
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(firstnamesText)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(fatherButton)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(idLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(idText))
+                                            .addComponent(firstnamesLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(sosaLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(sosaText)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(motherButton))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lastnameLabel)
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                            .addComponent(lastnameText)))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lastnameLabel)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(lastnameText)))
+                                        .addComponent(maleRadioButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(femaleRadioButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(unknownRadioButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(privateCheckBox))
+                                    .addComponent(scrollPaneFamilies, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addComponent(brothersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(sistersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spousesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(childrenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGap(6, 6, 6))))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(maleRadioButton)
+                                .addComponent(scrollPaneNotes)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(femaleRadioButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(unknownRadioButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(privateCheckBox))
-                            .addComponent(scrollPaneFamilies, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(brothersButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(sistersButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spousesButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(childrenButton)
-                                .addGap(0, 6, Short.MAX_VALUE)))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(scrollNotes, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(addNoteButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(delNoteButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addContainerGap())))
         );
         layout.setVerticalGroup(
@@ -212,7 +258,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addContainerGap()
                 .addComponent(title)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
@@ -247,23 +293,40 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(femaleRadioButton)
                                 .addComponent(unknownRadioButton)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollPaneFamilies, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(scrollPaneFamilies, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(photos, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(scrollPanePhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(188, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(delMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(addMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(8, 8, 8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(scrollNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(delNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(scrollPaneNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addContainerGap(238, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton addMediaButton;
+    private javax.swing.JButton addNoteButton;
     private javax.swing.JButton brothersButton;
     private javax.swing.ButtonGroup buttonGender;
     private javax.swing.JButton childrenButton;
+    private javax.swing.JButton delMediaButton;
+    private javax.swing.JButton delNoteButton;
     private javax.swing.JTable familiesTable;
     private javax.swing.JButton fatherButton;
     private javax.swing.JRadioButton femaleRadioButton;
@@ -277,13 +340,16 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton motherButton;
     private javax.swing.JLabel photos;
     private javax.swing.JCheckBox privateCheckBox;
+    private javax.swing.JScrollBar scrollNotes;
     private javax.swing.JScrollPane scrollPaneFamilies;
+    private javax.swing.JScrollPane scrollPaneNotes;
     private javax.swing.JScrollPane scrollPanePhotos;
     private javax.swing.JScrollBar scrollPhotos;
     private javax.swing.JButton sistersButton;
     private javax.swing.JLabel sosaLabel;
     private javax.swing.JTextField sosaText;
     private javax.swing.JButton spousesButton;
+    private javax.swing.JTextArea textAreaNotes;
     private javax.swing.JTextArea textAreaPhotos;
     private javax.swing.JLabel title;
     private javax.swing.JRadioButton unknownRadioButton;
