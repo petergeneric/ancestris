@@ -29,6 +29,7 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.UndoRedo;
@@ -182,12 +183,12 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         }
         
         // Display editor
-        JPanel panelContainer = new JPanel(new BorderLayout());
-        panelContainer.add(editor, BorderLayout.PAGE_START);
-//editor.setBorder(BorderFactory.createLineBorder(Color.red));
-        panelContainer.add(confirmPanel, BorderLayout.PAGE_END);
-//confirmPanel.setBorder(BorderFactory.createLineBorder(Color.red));
-        setPanel(panelContainer);
+        JPanel panel = new JPanel(new BorderLayout());
+        JScrollPane editorContainer = new JScrollPane(editor);
+        editorContainer.getVerticalScrollBar().setUnitIncrement(50);
+        panel.add(editorContainer, BorderLayout.CENTER);        
+        panel.add(confirmPanel, BorderLayout.PAGE_END);        
+        setPanel(panel);
         
         return true;
     }
@@ -336,8 +337,10 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            Context ctx = editor.getContext();
-            editor.setContext(ctx);
+            if (editor != null) {
+                Context ctx = editor.getContext();
+                editor.setContext(ctx);
+            }
         }
     }
 }
