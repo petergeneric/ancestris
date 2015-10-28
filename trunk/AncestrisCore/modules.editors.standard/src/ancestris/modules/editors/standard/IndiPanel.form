@@ -29,16 +29,24 @@
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceImage" alignment="0" max="32767" attributes="0"/>
-                  <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                      <Component id="modificationLabel" min="-2" pref="201" max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="sourceImage" alignment="0" max="32767" attributes="0"/>
+                          <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="modificationLabel" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="89" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="eventBirtButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
@@ -96,7 +104,7 @@
               <EmptySpace max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="0" attributes="0">
-              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="scrollPaneNotes" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -189,12 +197,9 @@
               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
           </Group>
           <Group type="102" attributes="0">
-              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="eventMarrButton" min="-2" max="-2" attributes="0"/>
-                  <Component id="eventBirtButton" min="-2" max="-2" attributes="0"/>
-              </Group>
               <EmptySpace max="-2" attributes="0"/>
+              <Component id="eventMarrButton" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="eventBaptButton" min="-2" max="-2" attributes="0"/>
                   <Component id="eventRetiButton" min="-2" max="-2" attributes="0"/>
