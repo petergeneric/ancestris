@@ -33,9 +33,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="sourceImage" alignment="0" max="32767" attributes="0"/>
                   <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="modificationLabel" min="-2" pref="201" max="-2" attributes="0"/>
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <Component id="modificationLabel" min="-2" pref="201" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -71,23 +71,29 @@
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="repoText" max="32767" attributes="0"/>
                           <Component id="sourceScrollPane1" max="32767" attributes="0"/>
                           <Component id="assoComboBox" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="scrollSource" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="addSourceButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="delSourceButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="repoEditButton" min="-2" max="-2" attributes="0"/>
+                              <Group type="102" attributes="0">
+                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                                  <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="assoEditButton" alignment="1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="assoEditButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                          <Component id="addSourceButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="repoText" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="repoEditButton" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
-              <EmptySpace min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
@@ -266,7 +272,7 @@
                       <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
                       <Component id="photos" min="-2" pref="134" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="scrollPanePhotos" pref="100" max="32767" attributes="0"/>
+                      <Component id="scrollPanePhotos" pref="89" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="scrollPhotos" min="-2" max="-2" attributes="0"/>
@@ -317,7 +323,7 @@
                           <Component id="eventDetailsButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="eventNoteScrollPane" pref="75" max="32767" attributes="0"/>
+                      <Component id="eventNoteScrollPane" pref="65" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
@@ -332,31 +338,31 @@
                   </Group>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="scrollSource" max="32767" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addSourceButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                               <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="sourceScrollPane1" alignment="1" pref="124" max="32767" attributes="0"/>
+                          <Component id="sourceScrollPane1" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="repoText" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="repoEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
-                  <Component id="sourceImage" alignment="1" max="32767" attributes="0"/>
+                  <Component id="sourceImage" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="modificationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="assoComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="assoEditButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="assoComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="modificationLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
