@@ -397,6 +397,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="idText">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.idText.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -411,6 +412,7 @@
     </Component>
     <Component class="javax.swing.JTextField" name="sosaText">
       <Properties>
+        <Property name="editable" type="boolean" value="false"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.sosaText.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -550,6 +552,9 @@
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.maleRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="maleRadioButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="femaleRadioButton">
       <Properties>
@@ -560,6 +565,9 @@
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.femaleRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="femaleRadioButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="unknownRadioButton">
       <Properties>
@@ -570,6 +578,9 @@
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.unknownRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="unknownRadioButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JCheckBox" name="privateCheckBox">
       <Properties>
@@ -577,6 +588,9 @@
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.privateCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="privateCheckBoxActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="fatherButton">
       <Properties>
