@@ -430,7 +430,8 @@ public class Comm {
             }
             
         } catch (Exception e) {
-            Exceptions.printStackTrace(e);
+            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), e.getMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            //Exceptions.printStackTrace(e);
             return false;
         }
         if (socket != null) {
@@ -1152,7 +1153,8 @@ public class Comm {
                 
             }
         } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_CommunicationError"), ex.getMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            //Exceptions.printStackTrace(ex);
         }
 
     }
