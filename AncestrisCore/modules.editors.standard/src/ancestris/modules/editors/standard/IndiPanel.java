@@ -1,16 +1,21 @@
 package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
+import ancestris.gedcom.privacy.standard.Options;
 import ancestris.util.TimingUtility;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertySex;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.util.logging.Logger;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.openide.util.NbBundle;
 
 /*
  * Ancestris - http://www.ancestris.org
@@ -34,7 +39,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private Context context;
     private Indi indi;
-    
+
+    private String SOSA_TAG = "_SOSA";
+    private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
     
     /**
      * Creates new form IndiPanel
@@ -130,10 +137,12 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         org.openide.awt.Mnemonics.setLocalizedText(idLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text")); // NOI18N
 
+        idText.setEditable(false);
         idText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.idText.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(sosaLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaLabel.text")); // NOI18N
 
+        sosaText.setEditable(false);
         sosaText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaText.text")); // NOI18N
         sosaText.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaText.toolTipText")); // NOI18N
 
@@ -177,14 +186,34 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         buttonGender.add(maleRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(maleRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maleRadioButton.text")); // NOI18N
+        maleRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maleRadioButtonActionPerformed(evt);
+            }
+        });
 
         buttonGender.add(femaleRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(femaleRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.femaleRadioButton.text")); // NOI18N
+        femaleRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                femaleRadioButtonActionPerformed(evt);
+            }
+        });
 
         buttonGender.add(unknownRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(unknownRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.unknownRadioButton.text")); // NOI18N
+        unknownRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                unknownRadioButtonActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(privateCheckBox, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.privateCheckBox.text")); // NOI18N
+        privateCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                privateCheckBoxActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(fatherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.fatherButton.text")); // NOI18N
 
@@ -606,6 +635,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void maleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleRadioButtonActionPerformed
+        changes.setChanged(true);
+    }//GEN-LAST:event_maleRadioButtonActionPerformed
+
+    private void femaleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleRadioButtonActionPerformed
+        changes.setChanged(true);
+    }//GEN-LAST:event_femaleRadioButtonActionPerformed
+
+    private void unknownRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unknownRadioButtonActionPerformed
+        changes.setChanged(true);
+    }//GEN-LAST:event_unknownRadioButtonActionPerformed
+
+    private void privateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateCheckBoxActionPerformed
+        changes.setChanged(true);
+    }//GEN-LAST:event_privateCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMediaButton;
@@ -734,6 +779,10 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     
     
+
+    
+    
+    
     
     
     
@@ -743,11 +792,37 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     private void loadData() {
+        String str = "";
+        int i = 0;
+        boolean flag = false;
+        
+        //
+        title.setText(indi.getFirstName() + " " + indi.getLastName());
+        //
+        idText.setText(indi.getId());
+        str = indi.getPropertyDisplayValue(SOSA_TAG); // TODO : prévoir sosa daboville en référence utilisateur
+        if (str == null || str.isEmpty()) {
+            str = NO_SOSA;
+        }
+        sosaText.setText(str);
+        //
         firstnamesText.setText(indi.getFirstName());
         firstnamesText.getDocument().addDocumentListener(this);
-        
         lastnameText.setText(indi.getLastName());
         lastnameText.getDocument().addDocumentListener(this);
+        //
+        i = indi.getSex();
+        if (i == PropertySex.MALE) {
+            maleRadioButton.setSelected(true);
+        } else if (i == PropertySex.FEMALE) {
+            femaleRadioButton.setSelected(true);
+        } else {
+            unknownRadioButton.setSelected(true);
+        }
+        //
+        flag = (indi.getProperty(Options.getInstance().getPrivateTag()) != null); // TODO : utiliser le tag en parametre
+        privateCheckBox.setSelected(flag);
+        //
         
     }
 
@@ -755,4 +830,5 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void saveData() {
         indi.setName(firstnamesText.getText(), lastnameText.getText());
     }
+
 }
