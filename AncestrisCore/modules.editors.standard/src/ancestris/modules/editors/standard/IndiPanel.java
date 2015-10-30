@@ -714,7 +714,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
         chooseAndDisplayImage(mediaIndex);
-        firstnamesText.requestFocus();
+        textAreaPhotos.requestFocus();
     }//GEN-LAST:event_photosMouseClicked
 
     private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
@@ -722,6 +722,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollBusy = true;
         scrollPhotos.setMaximum(mediaSet.size());
         scrollBusy = false;
+        textAreaPhotos.requestFocus();
     }//GEN-LAST:event_addMediaButtonActionPerformed
 
     private void delMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaButtonActionPerformed
@@ -737,7 +738,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
         scrollPhotos.setMaximum(mediaSet.size());
-        displayPhoto();
+        displayPhoto();        
     }//GEN-LAST:event_delMediaButtonActionPerformed
 
 
@@ -918,6 +919,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPhotos.setBlockIncrement(1);
         scrollPhotos.setUnitIncrement(1);
         displayPhoto();
+        textAreaPhotos.getDocument().addDocumentListener(new photoTitleListener());
         //
         
     }
@@ -955,13 +957,16 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void setPhoto(MediaWrapper media, int sex) {
         
         File file = null;
+        String title = "";
         ImageIcon defaultIcon = (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
         ImageIcon imageIcon = null;
         
         if (media != null) {
             file = media.getFile();
+            title = media.getTitle();
         }
         
+        // Photo
         if (file != null && file.exists()) {
             try {
                 imageIcon = new ImageIcon(ImageIO.read(new FileInputStream(file)));
@@ -976,23 +981,26 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (imageIcon != null) {
             int imageWidth = imageIcon.getImage().getWidth(null);
             int imageHeight = imageIcon.getImage().getHeight(null);
-            if ((imageWidth <= 0) || (imageHeight <= 0)) {
-                return;
-            }
+            if ((imageWidth > 0) && (imageHeight > 0)) {
+                photos.setText("");
+                double imageRatio = (double) imageWidth / (double) imageHeight;
+                double targetWidth = 104;
+                double targetHeight = 134;
+                double targetRatio = targetWidth / targetHeight;
 
-            photos.setText("");
-            double imageRatio = (double) imageWidth / (double) imageHeight;
-            double targetWidth = 104;
-            double targetHeight = 134;
-            double targetRatio = targetWidth / targetHeight;
-
-            if (targetRatio < imageRatio) {
-                targetHeight = targetWidth / imageRatio;
-            } else {
-                targetWidth = targetHeight * imageRatio;
+                if (targetRatio < imageRatio) {
+                    targetHeight = targetWidth / imageRatio;
+                } else {
+                    targetWidth = targetHeight * imageRatio;
+                }
+                photos.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance((int) targetWidth, (int) targetHeight, Image.SCALE_DEFAULT)));
             }
-            photos.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance((int) targetWidth, (int) targetHeight, Image.SCALE_DEFAULT)));
         }
+        
+        // Title
+        textAreaPhotos.setText(title);
+            
+        // Update scroll
         scrollPhotos.setValue(mediaIndex);
         scrollPhotos.setToolTipText(getScrollPhotosLabel());
     }
@@ -1024,6 +1032,37 @@ public class IndiPanel extends Editor implements DocumentListener {
                 setPhoto(mediaSet.get(mediaIndex), indi.getSex());
                 changes.setChanged(true);
             }
+        }
+    }
+
+    private void updatePhotoTitle(int index) {
+        String title = textAreaPhotos.getText();
+        if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
+            mediaSet.get(index).setTitle(title);
+            mediaIndex = index;
+        } else {
+            MediaWrapper media = new MediaWrapper(title);
+            mediaSet.add(media);
+            mediaIndex = mediaSet.indexOf(media);
+        }
+    }
+
+    
+    
+    
+    
+    private class photoTitleListener implements DocumentListener {
+
+        public void insertUpdate(DocumentEvent e) {
+            updatePhotoTitle(mediaIndex);
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updatePhotoTitle(mediaIndex);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            updatePhotoTitle(mediaIndex);
         }
     }
 

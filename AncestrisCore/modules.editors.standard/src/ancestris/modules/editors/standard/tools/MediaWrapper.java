@@ -86,12 +86,19 @@ public class MediaWrapper {
     
     private Property media;
     private File file;
+    private String title;
     
+    // Constructors
     public MediaWrapper(Property media) {
         this.media = media;
         Property mediaFile = media.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
             this.file = ((PropertyFile) mediaFile).getFile();
+        }
+        this.title = "";
+        Property mediaTitle = media.getProperty("TITL");
+        if (mediaTitle != null) {
+            this.title = mediaTitle.getDisplayValue();
         }
     }
 
@@ -99,6 +106,17 @@ public class MediaWrapper {
         this.media = null;
         setFile(f);
     }
+    
+    public MediaWrapper(String title) {
+        this.media = null;
+        setTitle(title);
+    }
+
+    
+    
+    
+    
+    
     
     public File getFile() {
         return file;
@@ -108,8 +126,17 @@ public class MediaWrapper {
         this.file = f;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String str) {
+        this.title = str;
+    }
+
     public void flush() {
         this.media = null;
         this.file = null;
+        this.title = null;
     }
 }
