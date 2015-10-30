@@ -9,8 +9,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.Media;
-import genj.gedcom.Property;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
 import genj.util.Registry;
@@ -29,7 +27,6 @@ import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /*
@@ -62,6 +59,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private List<MediaWrapper> mediaSet = null;
     private int mediaIndex = 0;
+    private boolean scrollBusy = false;
 
     private String SOSA_TAG = "_SOSA";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
@@ -211,11 +209,21 @@ public class IndiPanel extends Editor implements DocumentListener {
         addMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         addMediaButton.setIconTextGap(0);
         addMediaButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        addMediaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addMediaButtonActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(delMediaButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delMediaButton.text")); // NOI18N
         delMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         delMediaButton.setIconTextGap(0);
         delMediaButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        delMediaButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delMediaButtonActionPerformed(evt);
+            }
+        });
 
         buttonGender.add(maleRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(maleRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maleRadioButton.text")); // NOI18N
@@ -694,16 +702,43 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_privateCheckBoxActionPerformed
 
     private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
-        if (mediaSet != null && !mediaSet.isEmpty()) {
-            mediaIndex = scrollPhotos.getValue();
-            setPhoto(mediaSet.get(mediaIndex), indi.getSex());
+        int i = scrollPhotos.getValue();
+        if (scrollBusy) {
+            return;
         }
+        if (mediaSet != null && !mediaSet.isEmpty() && (i >= 0) && (i < mediaSet.size())) {
+            mediaIndex = scrollPhotos.getValue();
+        }
+        displayPhoto();
     }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
         chooseAndDisplayImage(mediaIndex);
         firstnamesText.requestFocus();
     }//GEN-LAST:event_photosMouseClicked
+
+    private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
+        chooseAndDisplayImage(mediaSet.size());
+        scrollBusy = true;
+        scrollPhotos.setMaximum(mediaSet.size());
+        scrollBusy = false;
+    }//GEN-LAST:event_addMediaButtonActionPerformed
+
+    private void delMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaButtonActionPerformed
+        int i = scrollPhotos.getValue();
+        if (mediaSet != null && !mediaSet.isEmpty() && (i >= 0) && (i < mediaSet.size())) {
+            MediaWrapper media = mediaSet.get(mediaIndex);
+            mediaSet.remove(media);
+            media.flush();
+            media = null;
+            mediaIndex--;
+            if (mediaIndex < 0) {
+                mediaIndex = 0;
+            }
+        }
+        scrollPhotos.setMaximum(mediaSet.size());
+        displayPhoto();
+    }//GEN-LAST:event_delMediaButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -879,13 +914,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         privateCheckBox.setSelected(flag);
         //
         mediaSet = getMedia(indi);
-        if (mediaSet.isEmpty()) {
-            setPhoto(null, indi.getSex());
-        } else {
-            scrollPhotos.setMinimum(0);
-            scrollPhotos.setMaximum(mediaSet.size());
-            setPhoto(mediaSet.get(mediaIndex), indi.getSex());
-        }
+        scrollPhotos.setMinimum(0);
+        scrollPhotos.setBlockIncrement(1);
+        scrollPhotos.setUnitIncrement(1);
+        displayPhoto();
+        //
         
     }
 
@@ -909,12 +942,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         return ret;
     }
 
+    private void displayPhoto() {
+        if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
+            scrollPhotos.setMaximum(mediaSet.size());
+            setPhoto(mediaSet.get(mediaIndex), indi.getSex());
+        } else {
+            scrollPhotos.setMaximum(0);
+            setPhoto(null, indi.getSex());
+        }
+    }
+    
     private void setPhoto(MediaWrapper media, int sex) {
         
         File file = null;
         ImageIcon defaultIcon = (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
         ImageIcon imageIcon = null;
-
+        
         if (media != null) {
             file = media.getFile();
         }
@@ -950,7 +993,12 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             photos.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance((int) targetWidth, (int) targetHeight, Image.SCALE_DEFAULT)));
         }
-        
+        scrollPhotos.setValue(mediaIndex);
+        scrollPhotos.setToolTipText(getScrollPhotosLabel());
+    }
+
+    private String getScrollPhotosLabel() {
+        return String.valueOf(mediaSet.size() > 0 ? mediaIndex + 1 : mediaIndex) + "/" + String.valueOf(mediaSet.size());
     }
 
     private void chooseAndDisplayImage(int index) {
@@ -965,7 +1013,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             File f = jfc.getSelectedFile();
             registry.put("mediaPath", f);
             if (f != null) {
-                if (mediaSet != null && !mediaSet.isEmpty()) {
+                if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
                     mediaSet.get(index).setFile(f);
                     mediaIndex = index;
                 } else {
@@ -973,13 +1021,12 @@ public class IndiPanel extends Editor implements DocumentListener {
                     mediaSet.add(media);
                     mediaIndex = mediaSet.indexOf(media);
                 }
-                
+                setPhoto(mediaSet.get(mediaIndex), indi.getSex());
+                changes.setChanged(true);
             }
         }
-        setPhoto(mediaSet.get(mediaIndex), indi.getSex());
-        changes.setChanged(true);
     }
-    
+
     
 
 }
