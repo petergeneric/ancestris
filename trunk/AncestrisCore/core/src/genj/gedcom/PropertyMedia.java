@@ -37,7 +37,7 @@ public class PropertyMedia extends PropertyXRef {
     assertTag("OBJE");
   }
 
-  /*package*/ PropertyMedia() {
+  /*package*/ public PropertyMedia() {
     super("OBJE");
   }
 
