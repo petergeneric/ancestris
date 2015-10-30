@@ -2,19 +2,34 @@ package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
+import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.util.TimingUtility;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
+import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
+import java.awt.Image;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Logger;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
+import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /*
@@ -37,8 +52,16 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private static final Logger LOG = Logger.getLogger("ancestris.editor.indi");
     
+    private final ImageIcon PHOTO_MALE = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_male.png"));
+    private final ImageIcon PHOTO_FEMALE = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_female.png"));
+    private final ImageIcon PHOTO_UNKNOWN = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_unknown.png"));
+    
     private Context context;
+    private Gedcom gedcom;
     private Indi indi;
+    
+    private List<MediaWrapper> mediaSet = null;
+    private int mediaIndex = 0;
 
     private String SOSA_TAG = "_SOSA";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
@@ -164,6 +187,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(photos, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.photos.text")); // NOI18N
         photos.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.photos.toolTipText")); // NOI18N
         photos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        photos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                photosMouseClicked(evt);
+            }
+        });
 
         textAreaPhotos.setColumns(20);
         textAreaPhotos.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
@@ -173,6 +201,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
         scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+        scrollPhotos.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                scrollPhotosAdjustmentValueChanged(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(addMediaButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addMediaButton.text")); // NOI18N
         addMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
@@ -637,19 +670,40 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void maleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleRadioButtonActionPerformed
         changes.setChanged(true);
+        if (mediaSet == null || mediaSet.isEmpty()) {
+            setPhoto(null, PropertySex.MALE);
+        }
     }//GEN-LAST:event_maleRadioButtonActionPerformed
 
     private void femaleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleRadioButtonActionPerformed
         changes.setChanged(true);
+        if (mediaSet == null || mediaSet.isEmpty()) {
+            setPhoto(null, PropertySex.FEMALE);
+        }
     }//GEN-LAST:event_femaleRadioButtonActionPerformed
 
     private void unknownRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unknownRadioButtonActionPerformed
         changes.setChanged(true);
+        if (mediaSet == null || mediaSet.isEmpty()) {
+            setPhoto(null, PropertySex.UNKNOWN);
+        }
     }//GEN-LAST:event_unknownRadioButtonActionPerformed
 
     private void privateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateCheckBoxActionPerformed
         changes.setChanged(true);
     }//GEN-LAST:event_privateCheckBoxActionPerformed
+
+    private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
+        if (mediaSet != null && !mediaSet.isEmpty()) {
+            mediaIndex = scrollPhotos.getValue();
+            setPhoto(mediaSet.get(mediaIndex), indi.getSex());
+        }
+    }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
+
+    private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
+        chooseAndDisplayImage(mediaIndex);
+        firstnamesText.requestFocus();
+    }//GEN-LAST:event_photosMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -743,6 +797,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         }
         this.indi = (Indi) entity;
+        this.gedcom = indi.getGedcom();
         
         loadData();
         
@@ -820,9 +875,17 @@ public class IndiPanel extends Editor implements DocumentListener {
             unknownRadioButton.setSelected(true);
         }
         //
-        flag = (indi.getProperty(Options.getInstance().getPrivateTag()) != null); // TODO : utiliser le tag en parametre
+        flag = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         privateCheckBox.setSelected(flag);
         //
+        mediaSet = getMedia(indi);
+        if (mediaSet.isEmpty()) {
+            setPhoto(null, indi.getSex());
+        } else {
+            scrollPhotos.setMinimum(0);
+            scrollPhotos.setMaximum(mediaSet.size());
+            setPhoto(mediaSet.get(mediaIndex), indi.getSex());
+        }
         
     }
 
@@ -830,5 +893,93 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void saveData() {
         indi.setName(firstnamesText.getText(), lastnameText.getText());
     }
+
+    
+    
+    
+    
+    
+    private List<MediaWrapper> getMedia(Indi indi) {
+        List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
+        
+        for (PropertyMedia propMedia : indi.getProperties(PropertyMedia.class)) {
+            ret.add(new MediaWrapper(propMedia));
+        }
+
+        return ret;
+    }
+
+    private void setPhoto(MediaWrapper media, int sex) {
+        
+        File file = null;
+        ImageIcon defaultIcon = (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
+        ImageIcon imageIcon = null;
+
+        if (media != null) {
+            file = media.getFile();
+        }
+        
+        if (file != null && file.exists()) {
+            try {
+                imageIcon = new ImageIcon(ImageIO.read(new FileInputStream(file)));
+            } catch (IOException ex) {
+                //Exceptions.printStackTrace(ex);
+                imageIcon = defaultIcon;
+            }
+        } else {
+            imageIcon = defaultIcon;
+        }
+
+        if (imageIcon != null) {
+            int imageWidth = imageIcon.getImage().getWidth(null);
+            int imageHeight = imageIcon.getImage().getHeight(null);
+            if ((imageWidth <= 0) || (imageHeight <= 0)) {
+                return;
+            }
+
+            photos.setText("");
+            double imageRatio = (double) imageWidth / (double) imageHeight;
+            double targetWidth = 104;
+            double targetHeight = 134;
+            double targetRatio = targetWidth / targetHeight;
+
+            if (targetRatio < imageRatio) {
+                targetHeight = targetWidth / imageRatio;
+            } else {
+                targetWidth = targetHeight * imageRatio;
+            }
+            photos.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance((int) targetWidth, (int) targetHeight, Image.SCALE_DEFAULT)));
+        }
+        
+    }
+
+    private void chooseAndDisplayImage(int index) {
+        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(getClass(), "ImageTypes"), "jpg", "jpeg", "png", "gif");
+        Registry registry = Registry.get(getClass());
+        JFileChooser jfc = new JFileChooser();
+        jfc.setFileFilter(imageFileFilter);
+        jfc.setAcceptAllFileFilterUsed(true);
+        jfc.setSelectedFile(new File(registry.get("mediaPath", ".")));
+        int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserTitle"));
+        if (ret == JFileChooser.APPROVE_OPTION) {
+            File f = jfc.getSelectedFile();
+            registry.put("mediaPath", f);
+            if (f != null) {
+                if (mediaSet != null && !mediaSet.isEmpty()) {
+                    mediaSet.get(index).setFile(f);
+                    mediaIndex = index;
+                } else {
+                    MediaWrapper media = new MediaWrapper(f);  
+                    mediaSet.add(media);
+                    mediaIndex = mediaSet.indexOf(media);
+                }
+                
+            }
+        }
+        setPhoto(mediaSet.get(mediaIndex), indi.getSex());
+        changes.setChanged(true);
+    }
+    
+    
 
 }

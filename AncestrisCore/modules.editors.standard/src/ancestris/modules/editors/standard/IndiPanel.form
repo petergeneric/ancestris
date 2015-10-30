@@ -483,6 +483,9 @@
           </Border>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="photosMouseClicked"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="scrollPanePhotos">
       <AuxValues>
@@ -510,6 +513,9 @@
       <Properties>
         <Property name="orientation" type="int" value="0"/>
       </Properties>
+      <Events>
+        <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="scrollPhotosAdjustmentValueChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="addMediaButton">
       <Properties>
