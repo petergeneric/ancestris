@@ -703,23 +703,18 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_privateCheckBoxActionPerformed
 
     private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
-        int i = scrollPhotos.getValue();
         if (scrollBusy) {
             return;
         }
+        int i = scrollPhotos.getValue();
         if (mediaSet != null && !mediaSet.isEmpty() && i >= 0 && i < mediaSet.size() && i != mediaIndex) {
             mediaIndex = scrollPhotos.getValue();
-            scrollBusy = true;
             displayPhoto();
-            scrollBusy = false;
         }
     }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
         if (chooseImage(mediaIndex)) {
-            scrollBusy = true;
-            scrollPhotos.setMaximum(mediaSet.size());
-            scrollBusy = false;
             displayPhoto();
             textAreaPhotos.requestFocus();
         }
@@ -727,9 +722,6 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
         if (chooseImage(mediaSet.size())) {
-            scrollBusy = true;
-            scrollPhotos.setMaximum(mediaSet.size());
-            scrollBusy = false;
             displayPhoto();
             textAreaPhotos.requestFocus();
         }
@@ -738,7 +730,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void delMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaButtonActionPerformed
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
             MediaWrapper media = mediaSet.get(mediaIndex);
-            mediaSet.remove(media);
+            mediaSet.remove(mediaIndex);
             media.flush();
             media = null;
             mediaIndex--;
@@ -746,9 +738,6 @@ public class IndiPanel extends Editor implements DocumentListener {
                 mediaIndex = 0;
             }
         }
-        scrollBusy = true;
-        scrollPhotos.setMaximum(mediaSet.size());
-        scrollBusy = false;
         displayPhoto();        
     }//GEN-LAST:event_delMediaButtonActionPerformed
 
@@ -929,6 +918,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPhotos.setMinimum(0);
         scrollPhotos.setBlockIncrement(1);
         scrollPhotos.setUnitIncrement(1);
+        mediaIndex = 0;
         displayPhoto();
         textAreaPhotos.getDocument().addDocumentListener(new photoTitleListener());
         //
@@ -956,6 +946,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private void displayPhoto() {
+        scrollBusy = true;
+        scrollPhotos.setMaximum(mediaSet.size());
+        scrollBusy = false;
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
             //scrollPhotos.setMaximum(mediaSet.size());
             setPhoto(mediaSet.get(mediaIndex), indi.getSex());
