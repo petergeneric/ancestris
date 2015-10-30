@@ -107,4 +107,9 @@ public class MediaWrapper {
     public void setFile(File f) {
         this.file = f;
     }
+
+    public void flush() {
+        this.media = null;
+        this.file = null;
+    }
 }
