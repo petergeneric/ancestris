@@ -196,6 +196,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.setLineWrap(true);
         textAreaPhotos.setRows(4);
         textAreaPhotos.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.text")); // NOI18N
+        textAreaPhotos.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.toolTipText")); // NOI18N
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
         scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
@@ -706,28 +707,36 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (scrollBusy) {
             return;
         }
-        if (mediaSet != null && !mediaSet.isEmpty() && (i >= 0) && (i < mediaSet.size())) {
+        if (mediaSet != null && !mediaSet.isEmpty() && i >= 0 && i < mediaSet.size() && i != mediaIndex) {
             mediaIndex = scrollPhotos.getValue();
+            scrollBusy = true;
+            displayPhoto();
+            scrollBusy = false;
         }
-        displayPhoto();
     }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
-        chooseAndDisplayImage(mediaIndex);
-        textAreaPhotos.requestFocus();
+        if (chooseImage(mediaIndex)) {
+            scrollBusy = true;
+            scrollPhotos.setMaximum(mediaSet.size());
+            scrollBusy = false;
+            displayPhoto();
+            textAreaPhotos.requestFocus();
+        }
     }//GEN-LAST:event_photosMouseClicked
 
     private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
-        chooseAndDisplayImage(mediaSet.size());
-        scrollBusy = true;
-        scrollPhotos.setMaximum(mediaSet.size());
-        scrollBusy = false;
-        textAreaPhotos.requestFocus();
+        if (chooseImage(mediaSet.size())) {
+            scrollBusy = true;
+            scrollPhotos.setMaximum(mediaSet.size());
+            scrollBusy = false;
+            displayPhoto();
+            textAreaPhotos.requestFocus();
+        }
     }//GEN-LAST:event_addMediaButtonActionPerformed
 
     private void delMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaButtonActionPerformed
-        int i = scrollPhotos.getValue();
-        if (mediaSet != null && !mediaSet.isEmpty() && (i >= 0) && (i < mediaSet.size())) {
+        if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
             MediaWrapper media = mediaSet.get(mediaIndex);
             mediaSet.remove(media);
             media.flush();
@@ -737,7 +746,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                 mediaIndex = 0;
             }
         }
+        scrollBusy = true;
         scrollPhotos.setMaximum(mediaSet.size());
+        scrollBusy = false;
         displayPhoto();        
     }//GEN-LAST:event_delMediaButtonActionPerformed
 
@@ -946,10 +957,10 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void displayPhoto() {
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
-            scrollPhotos.setMaximum(mediaSet.size());
+            //scrollPhotos.setMaximum(mediaSet.size());
             setPhoto(mediaSet.get(mediaIndex), indi.getSex());
         } else {
-            scrollPhotos.setMaximum(0);
+            //scrollPhotos.setMaximum(0);
             setPhoto(null, indi.getSex());
         }
     }
@@ -1009,7 +1020,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         return String.valueOf(mediaSet.size() > 0 ? mediaIndex + 1 : mediaIndex) + "/" + String.valueOf(mediaSet.size());
     }
 
-    private void chooseAndDisplayImage(int index) {
+    private boolean chooseImage(int index) {
+        boolean b = false;
+        
         FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(getClass(), "ImageTypes"), "jpg", "jpeg", "png", "gif");
         Registry registry = Registry.get(getClass());
         JFileChooser jfc = new JFileChooser();
@@ -1027,12 +1040,13 @@ public class IndiPanel extends Editor implements DocumentListener {
                 } else {
                     MediaWrapper media = new MediaWrapper(f);  
                     mediaSet.add(media);
-                    mediaIndex = mediaSet.indexOf(media);
+                    mediaIndex = mediaSet.size()-1;
                 }
-                setPhoto(mediaSet.get(mediaIndex), indi.getSex());
                 changes.setChanged(true);
+                b = true;
             }
         }
+        return b;
     }
 
     private void updatePhotoTitle(int index) {
@@ -1043,8 +1057,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             MediaWrapper media = new MediaWrapper(title);
             mediaSet.add(media);
-            mediaIndex = mediaSet.indexOf(media);
+            mediaIndex = mediaSet.size()-1;
         }
+        changes.setChanged(true);
     }
 
     
