@@ -48,6 +48,8 @@ import org.openide.util.NbBundle;
 public class IndiPanel extends Editor implements DocumentListener {
 
     private static final Logger LOG = Logger.getLogger("ancestris.editor.indi");
+    private boolean listernersOn = false;
+    
     
     private final ImageIcon PHOTO_MALE = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_male.png"));
     private final ImageIcon PHOTO_FEMALE = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_female.png"));
@@ -59,7 +61,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private List<MediaWrapper> mediaSet = null;
     private int mediaIndex = 0;
-    private boolean scrollBusy = false;
+    private boolean isBusy = false;
 
     private String SOSA_TAG = "_SOSA";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
@@ -703,7 +705,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_privateCheckBoxActionPerformed
 
     private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
-        if (scrollBusy) {
+        if (isBusy) {
             return;
         }
         int i = scrollPhotos.getValue();
@@ -837,6 +839,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         loadData();
         
+        if (!listernersOn) {
+            addListeners();
+            listernersOn = true;
+        }
+        
 
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
     }
@@ -898,9 +905,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         sosaText.setText(str);
         //
         firstnamesText.setText(indi.getFirstName());
-        firstnamesText.getDocument().addDocumentListener(this);
         lastnameText.setText(indi.getLastName());
-        lastnameText.getDocument().addDocumentListener(this);
         //
         i = indi.getSex();
         if (i == PropertySex.MALE) {
@@ -914,17 +919,27 @@ public class IndiPanel extends Editor implements DocumentListener {
         flag = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         privateCheckBox.setSelected(flag);
         //
+        if (mediaSet != null) {
+            mediaSet.clear();
+        }
         mediaSet = getMedia(indi);
         scrollPhotos.setMinimum(0);
         scrollPhotos.setBlockIncrement(1);
         scrollPhotos.setUnitIncrement(1);
         mediaIndex = 0;
         displayPhoto();
-        textAreaPhotos.getDocument().addDocumentListener(new photoTitleListener());
+
         //
         
     }
 
+    private void addListeners() {
+        firstnamesText.getDocument().addDocumentListener(this);
+        lastnameText.getDocument().addDocumentListener(this);
+        textAreaPhotos.getDocument().addDocumentListener(new photoTitleListener());
+    }
+
+    
     
     private void saveData() {
         indi.setName(firstnamesText.getText(), lastnameText.getText());
@@ -946,9 +961,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private void displayPhoto() {
-        scrollBusy = true;
+        isBusy = true;
         scrollPhotos.setMaximum(mediaSet.size());
-        scrollBusy = false;
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
             //scrollPhotos.setMaximum(mediaSet.size());
             setPhoto(mediaSet.get(mediaIndex), indi.getSex());
@@ -956,6 +970,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             //scrollPhotos.setMaximum(0);
             setPhoto(null, indi.getSex());
         }
+        isBusy = false;
     }
     
     private void setPhoto(MediaWrapper media, int sex) {
@@ -1003,6 +1018,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Title
         textAreaPhotos.setText(title);
+        
             
         // Update scroll
         scrollPhotos.setValue(mediaIndex);
@@ -1043,18 +1059,24 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private void updatePhotoTitle(int index) {
-        String title = textAreaPhotos.getText();
+        if (isBusy) {
+            return;
+        }
+        String photoTitle = textAreaPhotos.getText();
         if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
-            mediaSet.get(index).setTitle(title);
+            mediaSet.get(index).setTitle(photoTitle);
             mediaIndex = index;
         } else {
-            MediaWrapper media = new MediaWrapper(title);
+            MediaWrapper media = new MediaWrapper(photoTitle);
             mediaSet.add(media);
             mediaIndex = mediaSet.size()-1;
         }
         changes.setChanged(true);
     }
 
+    
+    
+    
     
     
     
