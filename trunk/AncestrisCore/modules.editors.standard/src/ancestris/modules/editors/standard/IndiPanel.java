@@ -9,6 +9,8 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
 import genj.util.Registry;
@@ -187,6 +189,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(photos, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.photos.text")); // NOI18N
         photos.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.photos.toolTipText")); // NOI18N
         photos.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        photos.setPreferredSize(new java.awt.Dimension(104, 134));
         photos.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 photosMouseClicked(evt);
@@ -475,7 +478,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(photos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(scrollPanePhotos, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollPhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
+                        .addComponent(scrollPhotos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(addMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -567,7 +570,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addGap(35, 35, 35)
                         .addComponent(photos, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 114, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -644,7 +647,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                             .addComponent(eventPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(eventDetailsButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 55, Short.MAX_VALUE))
+                        .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(eventMarrButton)
@@ -949,25 +952,62 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
-    
     private List<MediaWrapper> getMedia(Indi indi) {
         List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
         
+        // Look for media directly attached to indi (media always have a file, so look for all files underneath OBJE but not underneath SOUR)
+        for (PropertyFile prop : indi.getProperties(PropertyFile.class)) {
+            if (!parentTagsContains(prop, "SOUR")) {
+                Property propObje = getParentTag(prop, "OBJE");
+                ret.add(new MediaWrapper(propObje));
+            }
+        }
+        
+        // Look for media as links to entities
         for (PropertyMedia propMedia : indi.getProperties(PropertyMedia.class)) {
             ret.add(new MediaWrapper(propMedia));
         }
-
+        
         return ret;
     }
 
+    private boolean parentTagsContains(Property prop, String tag) {
+        if (prop == null) {
+            return false;
+        }
+        Property parent = prop.getParent();
+        if (parent == null) {
+            return false;
+        }
+        if (parent.getTag().equals(tag)) {
+            return true;
+        }
+        return parentTagsContains(parent, tag);
+    }
+
+    
+    private Property getParentTag(Property prop, String tag) {
+        if (prop == null) {
+            return null;
+        }
+        Property parent = prop.getParent();
+        if (parent == null) {
+            return null;
+        }
+        if (parent.getTag().equals(tag)) {
+            return parent;
+        }
+        return getParentTag(parent, tag);
+    }
+
+    
+    
+    
     private void displayPhoto() {
         isBusy = true;
-        scrollPhotos.setMaximum(mediaSet.size());
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
-            //scrollPhotos.setMaximum(mediaSet.size());
             setPhoto(mediaSet.get(mediaIndex), indi.getSex());
         } else {
-            //scrollPhotos.setMaximum(0);
             setPhoto(null, indi.getSex());
         }
         isBusy = false;
@@ -1021,7 +1061,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
             
         // Update scroll
-        scrollPhotos.setValue(mediaIndex);
+        scrollPhotos.setValues(mediaIndex, 1, 0, mediaSet.size());
         scrollPhotos.setToolTipText(getScrollPhotosLabel());
     }
 
@@ -1031,19 +1071,21 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private boolean chooseImage(int index) {
         boolean b = false;
+        boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
         
         FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(getClass(), "ImageTypes"), "jpg", "jpeg", "png", "gif");
         Registry registry = Registry.get(getClass());
         JFileChooser jfc = new JFileChooser();
+        jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
         jfc.setFileFilter(imageFileFilter);
         jfc.setAcceptAllFileFilterUsed(true);
-        jfc.setSelectedFile(new File(registry.get("mediaPath", ".")));
-        int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserTitle"));
+        jfc.setSelectedFile(exists ? mediaSet.get(index).getFile() : new File(registry.get("mediaPath", ".")));
+        int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserOKButton"));
         if (ret == JFileChooser.APPROVE_OPTION) {
             File f = jfc.getSelectedFile();
             registry.put("mediaPath", f);
             if (f != null) {
-                if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
+                if (exists) {
                     mediaSet.get(index).setFile(f);
                     mediaIndex = index;
                 } else {
@@ -1054,6 +1096,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                 changes.setChanged(true);
                 b = true;
             }
+        } else {
+            textAreaPhotos.requestFocus();
         }
         return b;
     }
@@ -1074,6 +1118,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         changes.setChanged(true);
     }
 
+
+
+    
     
     
     

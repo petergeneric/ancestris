@@ -14,6 +14,7 @@ package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyMedia;
 import java.io.File;
 
 
@@ -21,9 +22,9 @@ import java.io.File;
 //  MULTIMEDIA_LINK: 5.5
 //
 //  [          /* embedded form*/
-//  n  OBJE @<XREF:OBJE>@  {1:1}
+//  n  OBJE @<XREF:OBJE>@  {1:1}                        ==> PropertyMedia to entity
 //  |          /* linked form*/ 
-//  n  OBJE           {1:1}
+//  n  OBJE           {1:1}                             ==> Direct
 //    +1 FORM <MULTIMEDIA_FORMAT>  {1:1}
 //    +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
 //    +1 FILE <MULTIMEDIA_FILE_REFERENCE>  {1:1}
@@ -31,9 +32,9 @@ import java.io.File;
 //  ]
 //
 //  MULTIMEDIA_LINK: 5.5.1
-//  n OBJE @<XREF:OBJE>@  {1:1}
+//  n OBJE @<XREF:OBJE>@  {1:1}                         ==> PropertyMedia to entity
 //  |
-//  n OBJE 
+//  n OBJE                                              ==> Direct
 //    +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
 //        +2 FORM <MULTIMEDIA_FORMAT>     {1:1}
 //            +3 MEDI <SOURCE_MEDIA_TYPE>  {0:1}
@@ -42,7 +43,7 @@ import java.io.File;
 //
 ////////////////////////////////////////////////////////////
 //
-//  MULTIMEDIA_RECORD: 5.5
+//  MULTIMEDIA_RECORD: 5.5                              ==> BLOB (not supported)
 //  n @<XREF:OBJE>@ OBJE  {1:1}
 //    +1 FORM <MULTIMEDIA_FORMAT>  {1:1}
 //    +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
@@ -56,7 +57,7 @@ import java.io.File;
 //    +1 RIN <AUTOMATED_RECORD_ID>  {0:1}
 //    +1 <<CHANGE_DATE>>  {0:1}
 //
-//  MULTIMEDIA_RECORD: 5.5.1
+//  MULTIMEDIA_RECORD: 5.5.1                            ==> FILE (supported)
 //  n @XREF:OBJE@ OBJE {1:1}
 //    +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
 //        +2 FORM <MULTIMEDIA_FORMAT> {1:1}
@@ -84,31 +85,50 @@ public class MediaWrapper {
     private int TYPE_PROPERTY = 1;  // embedded form : PropertyMedia (MULTIMEDIA_LINK)
     private int TYPE_DIRECT = 2;    // linked form   : OBJE property (MULTIMEDIA_LINK)
     
-    private Property media;
-    private File file;
-    private String title;
+    private Property media = null;
+    private File file = null;
+    private String title = "";
     
     // Constructors
-    public MediaWrapper(Property media) {
-        this.media = media;
-        Property mediaFile = media.getProperty("FILE", true);
+    public MediaWrapper(PropertyMedia propertyMedia) {
+        if (propertyMedia == null) {
+            return;
+        }
+        this.media = propertyMedia;
+        Property targetEntity = propertyMedia.getTargetEntity();
+        if (targetEntity == null) {
+            return;
+        }
+        Property mediaFile = targetEntity.getProperty("FILE", true);
+        if (mediaFile != null && mediaFile instanceof PropertyFile) {
+            this.file = ((PropertyFile) mediaFile).getFile();
+            Property mediaTitle = mediaFile.getProperty("TITL");
+            if (mediaTitle != null) {
+                this.title = mediaTitle.getDisplayValue();
+            }
+        }
+    }
+
+    public MediaWrapper(Property propertyObje) {
+        if (propertyObje == null) {
+            return;
+        }
+        this.media = propertyObje;
+        Property mediaFile = propertyObje.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
             this.file = ((PropertyFile) mediaFile).getFile();
         }
-        this.title = "";
-        Property mediaTitle = media.getProperty("TITL");
+        Property mediaTitle = propertyObje.getProperty("TITL");
         if (mediaTitle != null) {
             this.title = mediaTitle.getDisplayValue();
         }
     }
 
     public MediaWrapper(File f) {
-        this.media = null;
         setFile(f);
     }
     
     public MediaWrapper(String title) {
-        this.media = null;
         setTitle(title);
     }
 
