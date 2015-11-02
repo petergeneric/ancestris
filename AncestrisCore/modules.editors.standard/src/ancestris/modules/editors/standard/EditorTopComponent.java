@@ -135,6 +135,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
                 editor = new IndiPanel();
                 editor.addChangeListener(confirmPanel);
             } else {
+                LOG.info("setContextImpl ¤¤¤ Editor not able to edit entity of type " + context.getEntity().getTag());
                 return;
             }
         }
