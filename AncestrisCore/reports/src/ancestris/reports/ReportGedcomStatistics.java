@@ -18,6 +18,7 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.Delta;
 import genj.report.Report;
 import genj.util.ReferenceSet;
+import org.openide.util.lookup.ServiceProvider;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -26,14 +27,15 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * GenJ - Report
+ * Ancestris - Report
  * Note: this report requires Java2
  * $Header: /cygdrive/c/temp/cvs/genj/genj/src/report/ReportGedcomStatistics.java,v 1.73 2010-01-24 16:08:39 nmeier Exp $
- * @author Francois Massonneau <fmas@celtes.com>
+ * @author Francois Massonneau <francois@ancestris.org>
  * @author Carsten Muessig <carsten.muessig@gmx.net>
  * @version 2.2
  */
 @SuppressWarnings("unchecked")
+@ServiceProvider(service=Report.class)
 public class ReportGedcomStatistics extends Report {
 
     /** if individuals should be analyzed */
