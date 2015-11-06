@@ -2,8 +2,13 @@ package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
+import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
+import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
+import static ancestris.modules.editors.standard.tools.Utils.getImageIconFromFile;
+import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
 import ancestris.util.TimingUtility;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -18,17 +23,19 @@ import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.Image;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.DialogDescriptor;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /*
@@ -53,9 +60,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean listernersOn = false;
     
     
-    private final ImageIcon PHOTO_MALE = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_male.png"));
-    private final ImageIcon PHOTO_FEMALE = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_female.png"));
-    private final ImageIcon PHOTO_UNKNOWN = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/profile_unknown.png"));
+    private Image PHOTO_MALE = null;
+    private Image PHOTO_FEMALE = null;
+    private Image PHOTO_UNKNOWN = null;
     
     private Context context;
     private Gedcom gedcom;
@@ -72,6 +79,13 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Creates new form IndiPanel
      */
     public IndiPanel() {
+        try {
+            this.PHOTO_MALE = ImageIO.read(new File("/ancestris/modules/editors/standard/images/profile_male.png"));
+            this.PHOTO_FEMALE = ImageIO.read(new File("/ancestris/modules/editors/standard/images/profile_female.png"));
+            this.PHOTO_UNKNOWN = ImageIO.read(new File("/ancestris/modules/editors/standard/images/profile_unknown.png"));
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
         initComponents();
     }
     
@@ -202,6 +216,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.setRows(4);
         textAreaPhotos.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.text")); // NOI18N
         textAreaPhotos.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaPhotos.toolTipText")); // NOI18N
+        textAreaPhotos.setWrapStyleWord(true);
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
         scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
@@ -290,6 +305,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaNotes.setColumns(20);
         textAreaNotes.setRows(5);
         textAreaNotes.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.text")); // NOI18N
+        textAreaNotes.setWrapStyleWord(true);
         scrollPaneNotes.setViewportView(textAreaNotes);
 
         org.openide.awt.Mnemonics.setLocalizedText(addNoteButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addNoteButton.text")); // NOI18N
@@ -361,6 +377,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventNote.setColumns(20);
         eventNote.setRows(3);
         eventNote.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventNote.text")); // NOI18N
+        eventNote.setWrapStyleWord(true);
         eventNoteScrollPane.setViewportView(eventNote);
 
         org.openide.awt.Mnemonics.setLocalizedText(dayOfWeek, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.dayOfWeek.text")); // NOI18N
@@ -374,6 +391,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         sourceText.setColumns(20);
         sourceText.setRows(5);
         sourceText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sourceText.text")); // NOI18N
+        sourceText.setWrapStyleWord(true);
         sourceScrollPane1.setViewportView(sourceText);
 
         org.openide.awt.Mnemonics.setLocalizedText(addSourceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addSourceButton.text")); // NOI18N
@@ -719,14 +737,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
-        if (chooseImage(mediaIndex)) {
+        if (chooseMedia(mediaIndex)) {
             displayPhoto();
             textAreaPhotos.requestFocus();
         }
     }//GEN-LAST:event_photosMouseClicked
 
     private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
-        if (chooseImage(mediaSet.size())) {
+        if (chooseMedia(mediaSet.size())) {
             displayPhoto();
             textAreaPhotos.requestFocus();
         }
@@ -1016,21 +1034,19 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void setPhoto(MediaWrapper media, int sex) {
         
         File file = null;
-        String title = "";
-        ImageIcon defaultIcon = (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
+        String localTitle = "";
+        ImageIcon defaultIcon = new ImageIcon(getSexImage(sex));
         ImageIcon imageIcon = null;
         
         if (media != null) {
             file = media.getFile();
-            title = media.getTitle();
+            localTitle = media.getTitle();
         }
         
         // Photo
         if (file != null && file.exists()) {
-            try {
-                imageIcon = new ImageIcon(ImageIO.read(new FileInputStream(file)));
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
+            imageIcon = getImageIconFromFile(file);
+            if (imageIcon == null) {
                 imageIcon = defaultIcon;
             }
         } else {
@@ -1038,26 +1054,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
 
         if (imageIcon != null) {
-            int imageWidth = imageIcon.getImage().getWidth(null);
-            int imageHeight = imageIcon.getImage().getHeight(null);
-            if ((imageWidth > 0) && (imageHeight > 0)) {
-                photos.setText("");
-                double imageRatio = (double) imageWidth / (double) imageHeight;
-                double targetWidth = 104;
-                double targetHeight = 134;
-                double targetRatio = targetWidth / targetHeight;
-
-                if (targetRatio < imageRatio) {
-                    targetHeight = targetWidth / imageRatio;
-                } else {
-                    targetWidth = targetHeight * imageRatio;
-                }
-                photos.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance((int) targetWidth, (int) targetHeight, Image.SCALE_DEFAULT)));
-            }
+            photos.setIcon(getResizedIcon(imageIcon, 104, 134));   // preferred size of photo label but getPreferredSize() does not return those values...
+            photos.setText("");
         }
         
         // Title
-        textAreaPhotos.setText(title);
+        textAreaPhotos.setText(localTitle);
         
             
         // Update scroll
@@ -1069,7 +1071,44 @@ public class IndiPanel extends Editor implements DocumentListener {
         return String.valueOf(mediaSet.size() > 0 ? mediaIndex + 1 : mediaIndex) + "/" + String.valueOf(mediaSet.size());
     }
 
-    private boolean chooseImage(int index) {
+    private Image getSexImage(int sex) {
+        return (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
+    }
+
+    private boolean chooseMedia(int index) {
+        boolean b = false;
+        boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
+        
+        
+        MediaChooser mediaChooser = new MediaChooser(gedcom, 
+                 exists ? getImageFromFile(mediaSet.get(index).getFile()) : getSexImage(indi.getSex()),
+                 exists ? mediaSet.get(index).getTitle() : "");
+        JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
+        JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
+        Object[] options = new Object[] { mediaButton, fileButton, DialogDescriptor.CANCEL_OPTION };
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle"), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == mediaButton) {
+            Property property = mediaChooser.getSelectedEntity();
+            if (exists) {
+                mediaSet.get(index).setMedia(property);
+                mediaIndex = index;
+            } else {
+                MediaWrapper media = new MediaWrapper(property);
+                mediaSet.add(media);
+                mediaIndex = mediaSet.size() - 1;
+            }
+            changes.setChanged(true);
+            b = true;
+        } else if (o == fileButton) {
+            return chooseFileImage(index);
+        }
+        
+        return b;
+    }
+    
+    
+    
+    private boolean chooseFileImage(int index) {
         boolean b = false;
         boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
         
@@ -1117,6 +1156,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         changes.setChanged(true);
     }
+
+
 
 
 
