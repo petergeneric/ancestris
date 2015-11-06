@@ -96,17 +96,7 @@ public class MediaWrapper {
         }
         this.media = propertyMedia;
         Property targetEntity = propertyMedia.getTargetEntity();
-        if (targetEntity == null) {
-            return;
-        }
-        Property mediaFile = targetEntity.getProperty("FILE", true);
-        if (mediaFile != null && mediaFile instanceof PropertyFile) {
-            this.file = ((PropertyFile) mediaFile).getFile();
-            Property mediaTitle = mediaFile.getProperty("TITL");
-            if (mediaTitle != null) {
-                this.title = mediaTitle.getDisplayValue();
-            }
-        }
+        setMedia(targetEntity);
     }
 
     public MediaWrapper(Property propertyObje) {
@@ -138,6 +128,20 @@ public class MediaWrapper {
     
     
     
+    public void setMedia(Property property) {
+        if (property == null) {
+            return;
+        }
+        Property mediaFile = property.getProperty("FILE", true);
+        if (mediaFile != null && mediaFile instanceof PropertyFile) {
+            this.file = ((PropertyFile) mediaFile).getFile();
+            Property mediaTitle = mediaFile.getProperty("TITL");
+            if (mediaTitle != null) {
+                this.title = mediaTitle.getDisplayValue();
+            }
+        }
+    }
+
     public File getFile() {
         return file;
     }
@@ -159,4 +163,5 @@ public class MediaWrapper {
         this.file = null;
         this.title = null;
     }
+
 }
