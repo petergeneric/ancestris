@@ -82,7 +82,7 @@
         <EventHandler event="componentResized" listener="java.awt.event.ComponentListener" parameters="java.awt.event.ComponentEvent" handler="labelPhotoComponentResized"/>
       </Events>
       <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JLabel() {&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        super.paintComponent(g);&#xa;        if (scaledImage != null) {&#xa;            ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);&#xa;        }&#xa;    }&#xa;&#xa;}"/>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JLabel() {&#xa;    @Override&#xa;    protected void paintComponent(Graphics g) {&#xa;        super.paintComponent(g);&#xa;        if (scaledImage != null) {&#xa;            ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);&#xa;            registry.put(&quot;mediaWindowWidth&quot;, getParent().getWidth());&#xa;            registry.put(&quot;mediaWindowHeight&quot;, getParent().getHeight());&#xa;        }&#xa;    }&#xa;&#xa;}"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="photoTitle">
