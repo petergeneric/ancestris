@@ -80,9 +80,9 @@ public class IndiPanel extends Editor implements DocumentListener {
      */
     public IndiPanel() {
         try {
-            this.PHOTO_MALE = ImageIO.read(new File("/ancestris/modules/editors/standard/images/profile_male.png"));
-            this.PHOTO_FEMALE = ImageIO.read(new File("/ancestris/modules/editors/standard/images/profile_female.png"));
-            this.PHOTO_UNKNOWN = ImageIO.read(new File("/ancestris/modules/editors/standard/images/profile_unknown.png"));
+            this.PHOTO_MALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_male.png"));
+            this.PHOTO_FEMALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_female.png"));
+            this.PHOTO_UNKNOWN = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_unknown.png"));
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -1026,7 +1026,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
             setPhoto(mediaSet.get(mediaIndex), indi.getSex());
         } else {
-            setPhoto(null, indi.getSex());
+            setPhoto(null, getSex());
         }
         isBusy = false;
     }
@@ -1053,10 +1053,8 @@ public class IndiPanel extends Editor implements DocumentListener {
             imageIcon = defaultIcon;
         }
 
-        if (imageIcon != null) {
-            photos.setIcon(getResizedIcon(imageIcon, 104, 134));   // preferred size of photo label but getPreferredSize() does not return those values...
-            photos.setText("");
-        }
+        photos.setIcon(getResizedIcon(imageIcon, 104, 134));   // preferred size of photo label but getPreferredSize() does not return those values...
+        photos.setText("");
         
         // Title
         textAreaPhotos.setText(localTitle);
@@ -1071,6 +1069,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         return String.valueOf(mediaSet.size() > 0 ? mediaIndex + 1 : mediaIndex) + "/" + String.valueOf(mediaSet.size());
     }
 
+    private int getSex() {
+        return maleRadioButton.isSelected() ? PropertySex.MALE : femaleRadioButton.isSelected() ? PropertySex.FEMALE : PropertySex.UNKNOWN;
+    }
+
     private Image getSexImage(int sex) {
         return (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
     }
@@ -1079,13 +1081,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean b = false;
         boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
         
-        
-        MediaChooser mediaChooser = new MediaChooser(gedcom, 
-                 exists ? getImageFromFile(mediaSet.get(index).getFile()) : getSexImage(indi.getSex()),
-                 exists ? mediaSet.get(index).getTitle() : "");
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         Object[] options = new Object[] { mediaButton, fileButton, DialogDescriptor.CANCEL_OPTION };
+        MediaChooser mediaChooser = new MediaChooser(gedcom, 
+                 exists ? getImageFromFile(mediaSet.get(index).getFile()) : getSexImage(getSex()),
+                 exists ? mediaSet.get(index).getTitle() : "",
+                mediaButton
+        );
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle"), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == mediaButton) {
             Property property = mediaChooser.getSelectedEntity();

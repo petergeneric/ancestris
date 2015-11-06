@@ -17,6 +17,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.util.Registry;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.util.Collection;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
@@ -39,24 +41,32 @@ public class MediaChooser extends javax.swing.JPanel {
     private static int THUMB_WIDTH = 50;
     private static int THUMB_HEIGHT = 70;
     
+    private Registry registry = null;
     private DefaultListModel model = new DefaultListModel();
     
     private Image mainImage = null;
     private Image scaledImage = null;
     private String mainTitle = null;
+    private JButton okButton = null;
     
     /**
      * Creates new form MediaChooser
      */
-    public MediaChooser(Gedcom gedcom, Image image, String title) {
+    public MediaChooser(Gedcom gedcom, Image image, String title, JButton okButton) {
         mainImage = image;
         mainTitle = title;
+        this.okButton = okButton;
         createMediaThumbs((Collection<Entity>) gedcom.getEntities(Gedcom.OBJE));
         
+        registry = Registry.get(getClass());
         initComponents();
+        this.setPreferredSize(new Dimension(registry.get("mediaWindowWidth", this.getPreferredSize().width), registry.get("mediaWindowHeight", this.getPreferredSize().height)));
         labelPhoto.setText("");
         displayIconAndTitle();
         mediaList.setCellRenderer(new ListEntryCellRenderer());
+        if (mediaList.isSelectionEmpty()) {
+            okButton.setEnabled(false);
+        }
     }
 
 
@@ -92,6 +102,8 @@ public class MediaChooser extends javax.swing.JPanel {
                 super.paintComponent(g);
                 if (scaledImage != null) {
                     ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
+                    registry.put("mediaWindowWidth", getParent().getWidth());
+                    registry.put("mediaWindowHeight", getParent().getHeight());
                 }
             }
 
@@ -174,6 +186,7 @@ public class MediaChooser extends javax.swing.JPanel {
         mainImage = media.getImage();
         mainTitle = media.title;
         displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
+        okButton.setEnabled(true);
     }//GEN-LAST:event_mediaListValueChanged
 
     private void labelPhotoComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_labelPhotoComponentResized
