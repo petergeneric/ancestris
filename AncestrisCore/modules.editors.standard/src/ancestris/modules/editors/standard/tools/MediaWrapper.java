@@ -12,10 +12,16 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import java.io.File;
+import org.openide.util.Exceptions;
 
 
 //    
@@ -80,11 +86,6 @@ import java.io.File;
  */
 public class MediaWrapper {
 
-    // Different forms of media
-    private int TYPE_ENTITY = 0;    // entity form   : Media (MULTIMEDIA_RECORD)
-    private int TYPE_PROPERTY = 1;  // embedded form : PropertyMedia (MULTIMEDIA_LINK)
-    private int TYPE_DIRECT = 2;    // linked form   : OBJE property (MULTIMEDIA_LINK)
-    
     private Property media = null;
     private File file = null;
     private String title = "";
@@ -142,6 +143,72 @@ public class MediaWrapper {
         }
     }
 
+    
+    public void update(Indi indi) {
+        // If media is null, create Media as standalone Media entity
+        if (media == null) {
+            try {
+                this.media = indi.getGedcom().createEntity(Gedcom.OBJE);
+                indi.addMedia((Media) media);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+                return;
+            }
+        }
+        
+        Entity entity = media.getEntity();
+        // Case of property directly written within INDI
+        if ((entity instanceof Indi) && !(media instanceof PropertyMedia)) {
+            Property mediaFile = media.getProperty("FILE", true);
+            if (mediaFile == null) {
+                mediaFile = media.addProperty("FILE", "");
+            }
+            ((PropertyFile) mediaFile).addFile(this.file);
+            Property mediaTitle = media.getProperty("TITL");
+            if (mediaTitle == null) {
+                mediaTitle = media.addProperty("TITL", "");
+            }
+            if (mediaTitle != null) {
+                mediaTitle.setValue(this.title);
+            }
+        } else 
+        // Case of propertyMedia written within INDI
+        if ((entity instanceof Indi) && (media instanceof PropertyMedia)) {
+            Property targetEntity = ((PropertyMedia)media).getTargetEntity();
+            putMedia(targetEntity);
+        } else
+        // Case of property as Media entity
+        if (entity instanceof Media) {
+            putMedia(media);
+        }
+    }
+    
+    private void putMedia(Property property) {
+        Property mediaFile = property.getProperty("FILE", true);
+        if (mediaFile == null) {
+            mediaFile = property.addProperty("FILE", "");
+        }
+        ((PropertyFile) mediaFile).addFile(this.file);
+        Property mediaTitle = mediaFile.getProperty("TITL");
+        if (mediaTitle == null) {
+            mediaTitle = mediaFile.addProperty("TITL", "");
+        }
+        if (mediaTitle != null) {
+            mediaTitle.setValue(this.title);
+        }
+    }
+
+    public void remove(Indi indi) {
+        if (media == null) {
+            return;
+        }
+        Entity entity = media.getEntity();
+        if ((Indi)entity == indi) {
+            media.getParent().delProperty(media);
+        }
+    }
+
+    
     public File getFile() {
         return file;
     }
@@ -158,10 +225,5 @@ public class MediaWrapper {
         this.title = str;
     }
 
-    public void flush() {
-        this.media = null;
-        this.file = null;
-        this.title = null;
-    }
 
 }

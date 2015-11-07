@@ -92,6 +92,9 @@
           <ResourceString bundle="ancestris/modules/editors/standard/tools/Bundle.properties" key="MediaChooser.photoTitle.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="verticalAlignment" type="int" value="1"/>
+        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+          <Connection code="BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(0,5,10,5))" type="code"/>
+        </Property>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="filterLabel">
@@ -125,10 +128,11 @@
             <Property name="visibleRowCount" type="int" value="-1"/>
           </Properties>
           <Events>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="mediaListMouseClicked"/>
             <EventHandler event="valueChanged" listener="javax.swing.event.ListSelectionListener" parameters="javax.swing.event.ListSelectionEvent" handler="mediaListValueChanged"/>
           </Events>
           <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JList(model)"/>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JList(filteredModel)"/>
           </AuxValues>
         </Component>
       </SubComponents>

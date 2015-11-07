@@ -46,7 +46,6 @@ import org.openide.windows.TopComponent;
 public class EditorTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
-
     final static Logger LOG = Logger.getLogger("ancestris.editor");
     
     // Main elements
@@ -63,10 +62,10 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     private UndoRedoListener undoRedoListener;
     
     // Panel elements
+    private JScrollPane editorContainer;
     private ConfirmChangeWidget confirmPanel;
 
 
-    
     
     /**
      * Initializers (#1)
@@ -128,19 +127,31 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             confirmPanel.setChanged(false);
         }
         
-        // Set the right editor panel to display
-        if (editor == null) {
-            if (context.getEntity().getTag().equals(Gedcom.INDI)) {
-                LOG.finer("setContextImpl create Indi panel");
-                editor = new IndiPanel();
-                editor.addChangeListener(confirmPanel);
-            } else {
-                LOG.info("setContextImpl ¤¤¤ Editor not able to edit entity of type " + context.getEntity().getTag());
-                return;
-            }
+        // Reset editor if not suitable for new context
+        if (editor != null && (!editor.getContext().getEntity().getTag().equals(context.getEntity().getTag()))) {
+            editor.removeChangeListener(confirmPanel);
+            editor = null;
         }
         
+        // Set the right editor panel to display depending on newt context
+        if (editor == null) {
+            String type = context.getEntity().getTag();
+            if (type.equals(Gedcom.INDI)) {
+                editor = new IndiPanel();
+            }
+            if (!type.equals(Gedcom.INDI)) {
+                editor = new BlankPanel();
+            }
+            editor.addChangeListener(confirmPanel);
+        }
+        
+        // Fill in editor with new context
         editor.setContext(context);
+        
+        // Redisplay editor in panel
+        if (editorContainer != null) {
+            editorContainer.setViewportView(editor);
+        }
 
         // Save undo index for use in cancel
         undoNb = gedcom.getUndoNb();
@@ -185,7 +196,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         
         // Display editor
         JPanel panel = new JPanel(new BorderLayout());
-        JScrollPane editorContainer = new JScrollPane(editor);
+        editorContainer = new JScrollPane(editor);
         editorContainer.getVerticalScrollBar().setUnitIncrement(50);
         panel.add(editorContainer, BorderLayout.CENTER);        
         panel.add(confirmPanel, BorderLayout.PAGE_END);        

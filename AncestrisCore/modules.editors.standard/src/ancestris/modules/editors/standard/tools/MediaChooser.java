@@ -24,13 +24,21 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+import java.util.TreeSet;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 /**
  *
@@ -42,7 +50,9 @@ public class MediaChooser extends javax.swing.JPanel {
     private static int THUMB_HEIGHT = 70;
     
     private Registry registry = null;
-    private DefaultListModel model = new DefaultListModel();
+    private ThumbComparator thumbComparator = new ThumbComparator();
+    private TreeSet<MediaThumb> allMedia = new TreeSet<MediaThumb>(thumbComparator);
+    private DefaultListModel filteredModel = new DefaultListModel();
     
     private Image mainImage = null;
     private Image scaledImage = null;
@@ -67,6 +77,14 @@ public class MediaChooser extends javax.swing.JPanel {
         if (mediaList.isSelectionEmpty()) {
             okButton.setEnabled(false);
         }
+        textFilter.getDocument().addDocumentListener(new DocumentListener() {
+            @Override public void insertUpdate(DocumentEvent e) { filter(); }
+            @Override public void removeUpdate(DocumentEvent e) { filter(); }
+            @Override public void changedUpdate(DocumentEvent e) {}
+            private void filter() {
+                filterModel(textFilter.getText());
+            }
+        });
     }
 
 
@@ -84,7 +102,7 @@ public class MediaChooser extends javax.swing.JPanel {
         }
         labelPhoto.repaint(); 
         photoTitle.setText("<html><center>" + mainTitle + "</center></html>");
-        photoTitle.setPreferredSize(new Dimension(width, photoTitle.getHeight()));
+        photoTitle.setPreferredSize(new Dimension(width, -1));
     }
     
     /**
@@ -112,7 +130,7 @@ public class MediaChooser extends javax.swing.JPanel {
         filterLabel = new javax.swing.JLabel();
         textFilter = new javax.swing.JTextField();
         jScrollPaneMedia = new javax.swing.JScrollPane();
-        mediaList = new javax.swing.JList(model);
+        mediaList = new javax.swing.JList(filteredModel);
 
         labelPhoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(labelPhoto, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.labelPhoto.text")); // NOI18N
@@ -128,6 +146,7 @@ public class MediaChooser extends javax.swing.JPanel {
         photoTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(photoTitle, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.photoTitle.text")); // NOI18N
         photoTitle.setVerticalAlignment(javax.swing.SwingConstants.TOP);
+        photoTitle.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(0,5,10,5)));
 
         org.openide.awt.Mnemonics.setLocalizedText(filterLabel, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.filterLabel.text")); // NOI18N
 
@@ -137,6 +156,11 @@ public class MediaChooser extends javax.swing.JPanel {
         mediaList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         mediaList.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
         mediaList.setVisibleRowCount(-1);
+        mediaList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                mediaListMouseClicked(evt);
+            }
+        });
         mediaList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 mediaListValueChanged(evt);
@@ -182,16 +206,26 @@ public class MediaChooser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void mediaListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_mediaListValueChanged
-        MediaThumb media = (MediaThumb) model.get(mediaList.getSelectedIndex());
-        mainImage = media.getImage();
-        mainTitle = media.title;
-        displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
-        okButton.setEnabled(true);
+        if (!mediaList.isSelectionEmpty()) {
+            MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+            mainImage = media.getImage();
+            mainTitle = media.title;
+            displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
+            okButton.setEnabled(true);
+        } else {
+            okButton.setEnabled(false);
+        }
     }//GEN-LAST:event_mediaListValueChanged
 
     private void labelPhotoComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_labelPhotoComponentResized
         displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
     }//GEN-LAST:event_labelPhotoComponentResized
+
+    private void mediaListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mediaListMouseClicked
+        if (evt.getClickCount() == 2) {
+            okButton.doClick();
+        }
+    }//GEN-LAST:event_mediaListMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -207,7 +241,8 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     private void createMediaThumbs(Collection<Entity> entities) {
-        model.clear();
+        // Get all media
+        allMedia.clear();
         for (Entity entity : entities) {
             File file = null;
             String title = "";
@@ -220,18 +255,33 @@ public class MediaChooser extends javax.swing.JPanel {
                 }
             }
             MediaThumb media = new MediaThumb(entity, file, title);
-            model.addElement(media);
+            allMedia.add(media);
         }
+        
+        // Put them in model in sorted order
+        filteredModel.clear();
+        for (MediaThumb item : allMedia) {
+            filteredModel.addElement(item);
+        }
+        
     }
 
     public Entity getSelectedEntity() {
-        MediaThumb media = (MediaThumb) model.get(mediaList.getSelectedIndex());
+        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
         return media == null ? null : media.entity;
     }
 
 
     
-    
+    public void filterModel(String filter) {
+        mediaList.clearSelection();
+        filteredModel.clear();
+        for (MediaThumb item : allMedia) {
+            if (item.title.contains(filter)) {
+                filteredModel.addElement(item);
+            }
+        }
+    }    
   
     
     
@@ -269,6 +319,7 @@ public class MediaChooser extends javax.swing.JPanel {
         }
     }
 
+
     
     
     
@@ -296,5 +347,11 @@ public class MediaChooser extends javax.swing.JPanel {
 
 
     
+    private class ThumbComparator implements Comparator<MediaThumb> {
+
+        public int compare(MediaThumb o1, MediaThumb o2) {
+            return o1.title.toLowerCase().compareTo(o2.title.toLowerCase());
+        }
+    }
     
 }
