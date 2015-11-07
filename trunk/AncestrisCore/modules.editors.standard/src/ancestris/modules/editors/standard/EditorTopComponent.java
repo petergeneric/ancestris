@@ -119,7 +119,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         }
 
         // Commit if necessary without asking for confirmation
-        commit(false);
+        //commit(false);
 
         // Prepare confirm panel
         if (confirmPanel == null) {

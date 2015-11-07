@@ -14,6 +14,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
@@ -1126,12 +1127,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         );
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle"), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == mediaButton) {
-            Property property = mediaChooser.getSelectedEntity();
+            Media entity = mediaChooser.getSelectedEntity();
             if (exists) {
-                mediaSet.get(index).setMedia(property);
+                mediaSet.get(index).setTargetEntity(entity);
                 mediaIndex = index;
             } else {
-                MediaWrapper media = new MediaWrapper(property);
+                MediaWrapper media = new MediaWrapper(entity);
                 mediaSet.add(media);
                 mediaIndex = mediaSet.size() - 1;
             }

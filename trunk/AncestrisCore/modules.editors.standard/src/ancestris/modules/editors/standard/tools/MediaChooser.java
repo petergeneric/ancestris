@@ -15,6 +15,7 @@ import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.util.Registry;
@@ -24,11 +25,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
 import java.util.TreeSet;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -66,7 +64,7 @@ public class MediaChooser extends javax.swing.JPanel {
         mainImage = image;
         mainTitle = title;
         this.okButton = okButton;
-        createMediaThumbs((Collection<Entity>) gedcom.getEntities(Gedcom.OBJE));
+        createMediaThumbs((Collection<Media>) gedcom.getEntities(Gedcom.OBJE));
         
         registry = Registry.get(getClass());
         initComponents();
@@ -240,10 +238,10 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     
-    private void createMediaThumbs(Collection<Entity> entities) {
+    private void createMediaThumbs(Collection<Media> entities) {
         // Get all media
         allMedia.clear();
-        for (Entity entity : entities) {
+        for (Media entity : entities) {
             File file = null;
             String title = "";
             Property mediaFile = entity.getProperty("FILE", true);
@@ -266,7 +264,7 @@ public class MediaChooser extends javax.swing.JPanel {
         
     }
 
-    public Entity getSelectedEntity() {
+    public Media getSelectedEntity() {
         MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
         return media == null ? null : media.entity;
     }
@@ -296,7 +294,7 @@ public class MediaChooser extends javax.swing.JPanel {
             setVerticalAlignment(JLabel.TOP);
 
             int labelWidth = THUMB_WIDTH + 30;
-            int nbLines = getFontMetrics(getFont()).stringWidth(entry.title) / labelWidth + 2; // +1 for rounding and +1 again to compensate for average line breaks
+            int nbLines = getFontMetrics(getFont()).stringWidth(entry.title) / labelWidth + 3; // +1 for rounding and +2 again to compensate for average line breaks
             int labelHeight = THUMB_HEIGHT + 12 * nbLines;  // 12 pixels per line for font size 10 set in component netbeans parameters
             
             setPreferredSize(new Dimension(labelWidth, labelHeight));
@@ -327,12 +325,12 @@ public class MediaChooser extends javax.swing.JPanel {
     
     private class MediaThumb {
         
-        public Entity entity = null;
+        public Media entity = null;
         public File file = null;
         public ImageIcon icon = null;
         public String title = "";
         
-        public MediaThumb(Entity entity, File file, String title) {
+        public MediaThumb(Media entity, File file, String title) {
             this.entity = entity;
             this.file = file;
             this.icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
