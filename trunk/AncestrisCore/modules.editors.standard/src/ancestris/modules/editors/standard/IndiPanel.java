@@ -71,6 +71,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<MediaWrapper> mediaSet = null;
     private int mediaIndex = 0;
     private boolean isBusy = false;
+    private List<MediaWrapper> mediaRemovedSet = null;
 
     private String SOSA_TAG = "_SOSA";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
@@ -753,13 +754,13 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void delMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaButtonActionPerformed
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
             MediaWrapper media = mediaSet.get(mediaIndex);
+            mediaRemovedSet.add(media);
             mediaSet.remove(mediaIndex);
-            media.flush();
-            media = null;
             mediaIndex--;
             if (mediaIndex < 0) {
                 mediaIndex = 0;
             }
+            changes.setChanged(true);
         }
         displayPhoto();        
     }//GEN-LAST:event_delMediaButtonActionPerformed
@@ -852,19 +853,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         this.context = context;
         Entity entity = context.getEntity();
-        if (entity == null || !(entity instanceof Indi)) {
-            return;
+        if (entity != null && (entity instanceof Indi)) {
+            this.indi = (Indi) entity;
+            this.gedcom = indi.getGedcom();
+
+            loadData();
+
+            if (!listernersOn) {
+                addListeners();
+                listernersOn = true;
+            }
         }
-        this.indi = (Indi) entity;
-        this.gedcom = indi.getGedcom();
-        
-        loadData();
-        
-        if (!listernersOn) {
-            addListeners();
-            listernersOn = true;
-        }
-        
 
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
     }
@@ -913,7 +912,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void loadData() {
         String str = "";
         int i = 0;
-        boolean flag = false;
+        boolean privateTagFound = false;
         
         //
         title.setText(indi.getFirstName() + " " + indi.getLastName());
@@ -937,20 +936,26 @@ public class IndiPanel extends Editor implements DocumentListener {
             unknownRadioButton.setSelected(true);
         }
         //
-        flag = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
-        privateCheckBox.setSelected(flag);
+        privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
+        privateCheckBox.setSelected(privateTagFound);
         //
         if (mediaSet != null) {
             mediaSet.clear();
+            mediaSet = null;
+        }
+        if (mediaRemovedSet != null) {
+            mediaRemovedSet.clear();
+            mediaRemovedSet = null;
         }
         mediaSet = getMedia(indi);
+        mediaRemovedSet = new ArrayList<MediaWrapper>();
         scrollPhotos.setMinimum(0);
         scrollPhotos.setBlockIncrement(1);
         scrollPhotos.setUnitIncrement(1);
         mediaIndex = 0;
         displayPhoto();
-
         //
+        //.......................................
         
     }
 
@@ -964,6 +969,23 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void saveData() {
         indi.setName(firstnamesText.getText(), lastnameText.getText());
+        //
+        indi.setSex(getSex());
+        //
+        boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
+        if (privateCheckBox.isSelected()) {
+            if (!privateTagFound) {
+                indi.addProperty(Options.getInstance().getPrivateTag(), "");
+            }
+        } else {
+            if (privateTagFound) {
+                indi.delProperty(indi.getProperty(Options.getInstance().getPrivateTag()));
+            }
+        }
+        //
+        putMedia();
+        //
+        //.......................................
     }
 
     
@@ -989,6 +1011,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         return ret;
     }
 
+    
+    private void putMedia() {
+        //mediaSet
+        for (MediaWrapper media : mediaSet) {
+            media.update(indi);
+        }
+        for (MediaWrapper media : mediaRemovedSet) {
+            media.remove(indi);
+        }
+    }
+
+    
+    
     private boolean parentTagsContains(Property prop, String tag) {
         if (prop == null) {
             return false;
