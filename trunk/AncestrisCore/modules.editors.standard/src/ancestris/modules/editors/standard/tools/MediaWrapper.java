@@ -195,23 +195,19 @@ public class MediaWrapper {
             
         // Case of propertyMedia written within INDI
         if ((entity instanceof Indi) && (hostingProperty instanceof PropertyMedia)) {
-            System.out.println("¤¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤ hostingProperty is a PropertyMedia");
-            System.out.println("¤¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤ hostingProperty = " + hostingProperty.toString());
             PropertyMedia pm = (PropertyMedia) hostingProperty;
-            System.out.println("¤¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤ pm = " + pm.toString());
             Property parent = pm.getParent();
-            System.out.println("¤¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤ parent = " + parent.toString());
             // add new link from parent
-            System.out.println("¤¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤ targetMedia = " + targetMedia.toString());
             parent.addMedia((Media) targetMedia);
+            putMedia(targetMedia);
             // remove old link
-            System.out.println("¤¤¤¤¤¤¤¤¤¤ DEBUG ¤¤¤¤¤¤¤¤¤¤ deleting hostingProperty");
             parent.delProperty(hostingProperty);
         } else
             
         // Case of property as Media entity (added chosen from MediaChooseer)
         if (entity instanceof Media) {
             indi.addMedia((Media) targetMedia);
+            putMedia(targetMedia);
         }
     }
     

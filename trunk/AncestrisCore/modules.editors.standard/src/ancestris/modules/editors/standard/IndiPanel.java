@@ -4,8 +4,8 @@ import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
+import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
-import static ancestris.modules.editors.standard.tools.Utils.getImageIconFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
@@ -1210,7 +1210,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Photo
         if (file != null && file.exists()) {
-            imageIcon = getImageIconFromFile(file);
+            imageIcon = new ImageIcon(getImageFromFile(file, getClass()));
             if (imageIcon == null) {
                 imageIcon = defaultIcon;
             }
@@ -1250,7 +1250,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         Object[] options = new Object[] { mediaButton, fileButton, DialogDescriptor.CANCEL_OPTION };
         MediaChooser mediaChooser = new MediaChooser(gedcom, 
-                 exists ? getImageFromFile(mediaSet.get(index).getFile()) : getSexImage(getSex()),
+                 exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
                  exists ? mediaSet.get(index).getTitle() : "",
                 mediaButton
         );
@@ -1280,11 +1280,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean b = false;
         boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
         
-        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(getClass(), "ImageTypes"), "jpg", "jpeg", "png", "gif");
         Registry registry = Registry.get(getClass());
         JFileChooser jfc = new JFileChooser();
         jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
-        jfc.setFileFilter(imageFileFilter);
+        FileNameExtensionFilter imageFileFilter = Utils.getImageFilter();
+        FileNameExtensionFilter videoFileFilter = Utils.getVideoFilter();
+        FileNameExtensionFilter soundFileFilter = Utils.getSoundFilter();
+        jfc.addChoosableFileFilter(imageFileFilter);
+        jfc.addChoosableFileFilter(videoFileFilter);
+        jfc.addChoosableFileFilter(soundFileFilter);
         jfc.setAcceptAllFileFilterUsed(true);
         jfc.setSelectedFile(exists ? mediaSet.get(index).getFile() : new File(registry.get("mediaPath", ".")));
         int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserOKButton"));
