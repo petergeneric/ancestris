@@ -87,7 +87,7 @@ public class Utils {
         } else {
             image = IMG_INVALID_PHOTO;
         }
-        
+    
         return image;
     }
 
@@ -117,4 +117,6 @@ public class Utils {
         }
         return ext;
     }
+    
+    
 }

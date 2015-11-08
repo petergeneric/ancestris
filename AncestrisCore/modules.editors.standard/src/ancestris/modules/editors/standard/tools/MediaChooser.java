@@ -19,11 +19,14 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.util.Registry;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.TreeSet;
@@ -51,6 +54,7 @@ public class MediaChooser extends javax.swing.JPanel {
     private TreeSet<MediaThumb> allMedia = new TreeSet<MediaThumb>(thumbComparator);
     private DefaultListModel filteredModel = new DefaultListModel();
     
+    private File mainFile = null;
     private Image mainImage = null;
     private Image scaledImage = null;
     private String mainTitle = null;
@@ -59,7 +63,8 @@ public class MediaChooser extends javax.swing.JPanel {
     /**
      * Creates new form MediaChooser
      */
-    public MediaChooser(Gedcom gedcom, Image image, String title, JButton okButton) {
+    public MediaChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton) {
+        mainFile = file;
         mainImage = image;
         mainTitle = title;
         this.okButton = okButton;
@@ -136,6 +141,11 @@ public class MediaChooser extends javax.swing.JPanel {
         labelPhoto.setToolTipText(org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.labelPhoto.toolTipText")); // NOI18N
         labelPhoto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         labelPhoto.setPreferredSize(new java.awt.Dimension(232, 352));
+        labelPhoto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                labelPhotoMouseClicked(evt);
+            }
+        });
         labelPhoto.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 labelPhotoComponentResized(evt);
@@ -225,6 +235,17 @@ public class MediaChooser extends javax.swing.JPanel {
             okButton.doClick();
         }
     }//GEN-LAST:event_mediaListMouseClicked
+
+    private void labelPhotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelPhotoMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1 && mainFile != null) {
+            try {
+                Desktop.getDesktop().open(mainFile);
+            } catch (IOException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+        }
+
+    }//GEN-LAST:event_labelPhotoMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
