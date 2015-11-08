@@ -13,7 +13,6 @@ package ancestris.modules.editors.standard.tools;
 
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
@@ -92,7 +91,9 @@ public class MediaChooser extends javax.swing.JPanel {
     
     private void displayIconAndTitle(int width, int height) {
         if (mainImage != null) {
-            if (width< height) {
+            double imageRatio = (double) mainImage.getWidth(null) / (double) mainImage.getHeight(null);
+            double targetRatio = (double) width / (double) height;
+            if (targetRatio < imageRatio) {
                 scaledImage = mainImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
             } else {
                 scaledImage = mainImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
