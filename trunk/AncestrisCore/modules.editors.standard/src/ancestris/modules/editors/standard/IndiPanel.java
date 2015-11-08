@@ -22,7 +22,9 @@ import genj.gedcom.PropertySex;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Image;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -828,9 +830,19 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
-        if (chooseMedia(mediaIndex)) {
-            displayPhoto();
-            textAreaPhotos.requestFocus();
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            if (chooseMedia(mediaIndex)) {
+                displayPhoto();
+                textAreaPhotos.requestFocus();
+            }
+        } else if (evt.getButton() == MouseEvent.BUTTON3) {
+            if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
+                try {
+                    Desktop.getDesktop().open(mediaSet.get(mediaIndex).getFile());
+                } catch (IOException ex) {
+                    //Exceptions.printStackTrace(ex);
+                }
+            }
         }
     }//GEN-LAST:event_photosMouseClicked
 
@@ -1249,7 +1261,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         Object[] options = new Object[] { mediaButton, fileButton, DialogDescriptor.CANCEL_OPTION };
-        MediaChooser mediaChooser = new MediaChooser(gedcom, 
+        MediaChooser mediaChooser = new MediaChooser(gedcom, mediaSet.get(index).getFile(),
                  exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
                  exists ? mediaSet.get(index).getTitle() : "",
                 mediaButton
