@@ -25,13 +25,13 @@ import javax.swing.ImageIcon;
 public class Utils {
     
     
-    public static ImageIcon getResizedIcon(ImageIcon imageIcon, int width, int length) {
+    public static ImageIcon getResizedIcon(ImageIcon imageIcon, int width, int height) {
         int imageWidth = imageIcon.getImage().getWidth(null);
         int imageHeight = imageIcon.getImage().getHeight(null);
         if ((imageWidth > 0) && (imageHeight > 0)) {
             double imageRatio = (double) imageWidth / (double) imageHeight;
             double targetWidth = width;
-            double targetHeight = length;
+            double targetHeight = height;
             double targetRatio = targetWidth / targetHeight;
 
             if (targetRatio < imageRatio) {
