@@ -340,6 +340,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         childrenButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/children.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(childrenButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.childrenButton.text")); // NOI18N
+        childrenButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.childrenButton.toolTipText")); // NOI18N
         childrenButton.setPreferredSize(new java.awt.Dimension(105, 27));
         childrenButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1087,6 +1088,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         //
         //
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + indi.getLastChange().getDisplayValue());
+        //
         //.......................................
         
     }
