@@ -28,74 +28,6 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="eventBirtButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
-                  <Component id="modificationLabel" alignment="0" max="32767" attributes="0"/>
-                  <Component id="sourceImage" alignment="0" max="32767" attributes="0"/>
-                  <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventNoteScrollPane" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Component id="datelabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                              <Component id="eventDate" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" alignment="0" attributes="0">
-                              <Component id="placeLabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" attributes="0">
-                                      <Component id="dayOfWeek" min="-2" max="-2" attributes="0"/>
-                                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="ageAtEvent" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                                  <Group type="102" attributes="0">
-                                      <Component id="eventPlace" max="32767" attributes="0"/>
-                                      <EmptySpace min="-2" max="-2" attributes="0"/>
-                                      <Component id="eventDetailsButton" min="-2" max="-2" attributes="0"/>
-                                  </Group>
-                              </Group>
-                              <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="eventTitle" alignment="0" max="32767" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="sourceScrollPane1" max="32767" attributes="0"/>
-                          <Component id="assoComboBox" max="32767" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                  <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="assoEditButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Component id="addSourceButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Component id="repoText" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="repoEditButton" min="-2" max="-2" attributes="0"/>
-                  </Group>
-              </Group>
-              <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
-          </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="scrollPaneNotes" max="32767" attributes="0"/>
@@ -126,9 +58,9 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="firstnamesText" alignment="1" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="fatherButton" pref="122" max="32767" attributes="0"/>
+                      <Component id="fatherButton" max="32767" attributes="0"/>
                       <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
-                      <Component id="idLabel" pref="30" max="32767" attributes="0"/>
+                      <Component id="idLabel" max="32767" attributes="0"/>
                   </Group>
                   <Component id="firstnamesLabel" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -141,9 +73,9 @@
                   </Group>
                   <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="sosaLabel" pref="54" max="32767" attributes="0"/>
+                          <Component id="sosaLabel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="69" max="-2" attributes="0"/>
-                          <Component id="motherButton" pref="128" max="32767" attributes="0"/>
+                          <Component id="motherButton" max="32767" attributes="0"/>
                       </Group>
                       <Component id="lastnameText" max="32767" attributes="0"/>
                   </Group>
@@ -154,31 +86,6 @@
               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
               <Component id="separator" max="32767" attributes="0"/>
               <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="eventMarrButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventRetiButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="eventBaptButton" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventOccuButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="eventOthersButton" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventDummyButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="eventDeatButton" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventBuriButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                  <Component id="eventRemoveButton" alignment="0" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="32767" attributes="0"/>
           </Group>
           <Group type="102" alignment="1" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
@@ -211,6 +118,105 @@
               <Component id="scrollPaneFamilies" pref="0" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="eventBirtButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                  </Group>
+                  <Component id="modificationLabel" alignment="0" pref="183" max="32767" attributes="0"/>
+                  <Component id="sourceImage" alignment="0" max="32767" attributes="0"/>
+                  <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="eventMarrButton" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="eventRetiButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventBaptButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="eventOccuButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventOthersButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="eventDummyButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventDeatButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="eventBuriButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventRemoveButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventNoteScrollPane" max="32767" attributes="0"/>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="placeLabel" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" attributes="0">
+                                              <Component id="dayOfWeek" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                                              <Component id="ageAtEvent" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" attributes="0">
+                                              <Component id="eventPlace" max="32767" attributes="0"/>
+                                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                                              <Component id="eventDetailsButton" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                      <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="sourceScrollPane1" max="32767" attributes="0"/>
+                                  <Component id="assoComboBox" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="102" attributes="0">
+                                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                                          <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="assoEditButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="addSourceButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="repoText" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="repoEditButton" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="eventTitle" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="datelabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                      <Component id="eventDate" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="35" max="32767" attributes="0"/>
+                  </Group>
+              </Group>
+          </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -221,7 +227,7 @@
                       <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
                       <Component id="photos" min="-2" pref="134" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="scrollPanePhotos" max="32767" attributes="0"/>
+                      <Component id="scrollPanePhotos" pref="108" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="scrollPhotos" min="-2" max="-2" attributes="0"/>
@@ -293,14 +299,19 @@
                   <Component id="eventOccuButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventDeatButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventBuriButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="eventTitle" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="eventMarrButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventRetiButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventOthersButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventDummyButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventRemoveButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="2" groupAlignment="0" attributes="0">
+                      <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
+                      <Component id="datelabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
@@ -316,7 +327,7 @@
                           <Component id="eventDetailsButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="eventNoteScrollPane" max="32767" attributes="0"/>
+                      <Component id="eventNoteScrollPane" pref="102" max="32767" attributes="0"/>
                   </Group>
                   <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -348,22 +359,6 @@
                   <Component id="modificationLabel" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" attributes="0">
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <EmptySpace min="407" pref="407" max="-2" attributes="0"/>
-                      <Component id="eventTitle" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" alignment="2" attributes="0">
-                      <EmptySpace min="-2" pref="439" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
-                          <Component id="datelabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-              </Group>
-              <EmptySpace min="-2" pref="329" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
