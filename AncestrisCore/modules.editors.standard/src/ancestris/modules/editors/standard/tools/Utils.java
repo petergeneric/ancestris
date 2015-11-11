@@ -108,6 +108,9 @@ public class Utils {
      * Get the extension of a file.
      */
     private static String getExtension(File f) {
+        if (f == null) {
+            return "";
+        }
         String ext = null;
         String s = f.getName();
         int i = s.lastIndexOf('.');
