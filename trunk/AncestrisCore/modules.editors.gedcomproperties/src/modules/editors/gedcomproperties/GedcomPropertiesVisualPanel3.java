@@ -60,6 +60,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
         jRadioButton3 = new javax.swing.JRadioButton();
         jRadioButton4 = new javax.swing.JRadioButton();
         jRadioButton5 = new javax.swing.JRadioButton();
+        jCheckBox2 = new javax.swing.JCheckBox();
 
         setBorder(null);
         setAutoscrolls(true);
@@ -121,6 +122,9 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
         buttonGroup2.add(jRadioButton5);
         org.openide.awt.Mnemonics.setLocalizedText(jRadioButton5, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jRadioButton5.TempleReady"));
 
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, mode == CREATION ? "Panel3.jCheckBox2.create" : "Panel3.jCheckBox2.update"));
+        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel3.class, "Panel3.jCheckBox2.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -130,14 +134,10 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jRadioButton2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox1))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addComponent(jRadioButton3)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -148,10 +148,15 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
                                 .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 332, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jRadioButton1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jRadioButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jCheckBox1))
+                            .addComponent(jCheckBox2))
+                        .addGap(0, 6, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -174,7 +179,9 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
                     .addComponent(jRadioButton1)
                     .addComponent(jRadioButton2)
                     .addComponent(jCheckBox1))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBox2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -211,6 +218,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JCheckBox jCheckBox1;
+    private javax.swing.JCheckBox jCheckBox2;
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
@@ -229,6 +237,10 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
 
     public boolean getConversionToBeDone() {
         return jCheckBox1.isSelected();
+    }
+
+    public String getMediaTransformation() {
+        return jCheckBox2.isSelected() && jRadioButton1.isSelected() ? "1" : "0";
     }
 
     public void setLANG(String str) {
@@ -283,6 +295,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
         jLabel5.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, jComboBox2.getSelectedItem().toString() + "_label"));
         boolean canBeConverted = (mode == UPDATE) && !getVERS().equals(parent.getOriginalVersion());
         jCheckBox1.setVisible(canBeConverted);
+        jCheckBox2.setVisible(jRadioButton1.isSelected());
         parent.warnVersionChange(canBeConverted);
     }
     

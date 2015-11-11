@@ -13,19 +13,33 @@ package modules.editors.gedcomproperties.utils;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
+import genj.gedcom.Indi;
+import genj.gedcom.Media;
 import genj.gedcom.MetaProperty;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyMedia;
+import genj.gedcom.PropertyNote;
+import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
+import genj.gedcom.Source;
+import genj.gedcom.Submitter;
+import genj.util.ReferenceSet;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -39,12 +53,13 @@ public class GedcomVersionConverter {
     Grammar fromGrammar = null, toGrammar = null;
     boolean isConvertible = false;
     boolean upgrade = false;
+    boolean isMediaConvert = false;
 
     private List<Property> invalidPropsInvalidTags;           // Will store properties with invalid tags, and not starting with "_"
     private List<Property> invalidPropsMultipleTags;          // Will store properties which should be singleton and are not, and not starting with "_"
     private Map<Property, String[]> invalidPropsMissingTags;  // Will store properties where a child tag is missing. Map is list of missing tags for that parent property
 
-    public GedcomVersionConverter(Gedcom gedcom, String fromGrammar, String toGrammar) {
+    public GedcomVersionConverter(Gedcom gedcom, String fromGrammar, String toGrammar, String mediaConvert) {
         this.gedcom = gedcom;
         isConvertible = false;
         if (fromGrammar.equals(Grammar.GRAMMAR55) && toGrammar.equals(Grammar.GRAMMAR551)) {
@@ -58,6 +73,7 @@ public class GedcomVersionConverter {
             upgrade = false;
             isConvertible = true;
         }
+        this.isMediaConvert = mediaConvert.equals("1");
 
     }
 
@@ -86,28 +102,34 @@ public class GedcomVersionConverter {
      */
     public boolean convert() {
 
-        // Let's define list of properties which will be invalid according to grammar
-        invalidPropsInvalidTags = new LinkedList<Property>();
-        invalidPropsMultipleTags = new LinkedList<Property>();
-        invalidPropsMissingTags = new LinkedHashMap<Property, String[]>();
+        if (isConvertible) {
+            // Let's define list of properties which will be invalid according to grammar
+            invalidPropsInvalidTags = new LinkedList<Property>();
+            invalidPropsMultipleTags = new LinkedList<Property>();
+            invalidPropsMissingTags = new LinkedHashMap<Property, String[]>();
 
-        // Collect anomalies
-        getAnomalies(false);
+            // Collect anomalies
+            getAnomalies(false);
 
-        // Process anomalies to try to fix them according to new norm
-        if (upgrade) {
-            upgradeGedcom();
-        } else {
-            downgradeGedcom();
+            // Process anomalies to try to fix them according to new norm
+            if (upgrade) {
+                upgradeGedcom();
+            } else {
+                downgradeGedcom();
+            }
+
+            // Refresh anomalies
+            getAnomalies(true);
+
+            // Return
+            if (!invalidPropsInvalidTags.isEmpty() || !invalidPropsMultipleTags.isEmpty() || !invalidPropsMissingTags.isEmpty()) {
+                error = new Exception(NbBundle.getMessage(GedcomVersionConverter.class, "ERR_VersionErrors"));
+                return false;
+            }
         }
-
-        // Refresh anomalies
-        getAnomalies(true);
-
-        // Return
-        if (!invalidPropsInvalidTags.isEmpty() || !invalidPropsMultipleTags.isEmpty() || !invalidPropsMissingTags.isEmpty()) {
-            error = new Exception(NbBundle.getMessage(GedcomVersionConverter.class, "ERR_VersionErrors"));
-            return false;
+        
+        if (isMediaConvert) {
+            transformMedia();
         }
 
         return true;
@@ -345,7 +367,7 @@ public class GedcomVersionConverter {
     }
 
     public boolean isConvertible() {
-        return isConvertible;
+        return isConvertible || isMediaConvert;
     }
 
     public boolean isWithError() {
@@ -500,6 +522,293 @@ public class GedcomVersionConverter {
         return null;
     }
 
+    
+    /**
+     * Transform media, notes and sources (for 5.5.1 only)
+     * 
+     * =======================================================================
+     * NOTES FROM :
+     * ============
+     * NOTE_STRUCTURE:=
+     * [
+     * n NOTE @<XREF:NOTE>@ {1:1}
+     * |
+     * n NOTE [<SUBMITTER_TEXT> | <NULL>] {1:1}
+     *    +1 [CONC|CONT] <SUBMITTER_TEXT> {0:M}
+     * ]
+     * 
+     * TO:
+     * ===
+     * NOTE_RECORD:=
+     * n @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT> {1:1}
+     *    +1 [CONC|CONT] <SUBMITTER_TEXT> {0:M}
+     *    +1 REFN <USER_REFERENCE_NUMBER> {0:M}
+     *       +2 TYPE <USER_REFERENCE_TYPE> {0:1}
+     *    +1 RIN <AUTOMATED_RECORD_ID> {0:1}
+     *    +1 <<SOURCE_CITATION>> {0:M}
+     *    +1 <<CHANGE_DATE>> {0:1}
+     * 
+     * ==>  1 Find all notes properties recursively across all entities 
+     *      2 If it is not a XREF entity, continue
+     *      3    create NOTE record
+     *      4    attach it as link in PropertyNote
+     *      5    move value to NOTE:value
+     * 
+     * 
+     * =======================================================================
+     * MEDIA FROM :
+     * ==========
+     * MULTIMEDIA_LINK:=
+     * n OBJE @<XREF:OBJE>@ {1:1} (FL: no need to convert from here)
+     * |
+     * n OBJE (FL : to be converted)
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
+     *    +2 FORM <MULTIMEDIA_FORMAT> {1:1}
+     *       +3 MEDI <SOURCE_MEDIA_TYPE> {0:1}
+     * +1 TITL <DESCRIPTIVE_TITLE>
+     * 
+     * TO:
+     * ===
+     * MULTIMEDIA_RECORD:=
+     * n @XREF:OBJE@ OBJE {1:1}
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
+     *    +2 FORM <MULTIMEDIA_FORMAT> {1:1}
+     *       +3 TYPE <SOURCE_MEDIA_TYPE> {0:1}
+     *    +2 TITL <DESCRIPTIVE_TITLE> {0:1}
+     * +1 REFN <USER_REFERENCE_NUMBER> {0:M}
+     *    +2 TYPE <USER_REFERENCE_TYPE> {0:1}
+     * +1 RIN <AUTOMATED_RECORD_ID> {0:1}
+     * +1 <<NOTE_STRUCTURE>> {0:M}
+     * +1 <<SOURCE_CITATION>> {0:M}
+     * +1 <<CHANGE_DATE>> {0:1}
+     * 
+     * ==>  1 Find all PropertyFile of gedcom 
+     *      2 If it does not belong to a OBJE entity, continue
+     *      3    create OBJE record
+     *      4    attach it as link PropertyMedia
+     *      5    move FILE, FORM, MEDI to OBJE:FILE, OBJE:FILE:FORM, OBJE:FILE:FORM:TYPE
+     *      6    move TITL to OBJE:FILE:TITL
+     * 
+     * 
+     * =======================================================================
+     * SOURCES FROM :
+     * ============
+     * SOURCE_CITATION:=
+     * [
+     * pointer to source record (preferred) (FL: not to be converted)
+     * n SOUR @<XREF:SOUR>@ {1:1}
+     *    +1 PAGE <WHERE_WITHIN_SOURCE> {0:1}
+     *    +1 EVEN <EVENT_TYPE_CITED_FROM> {0:1}
+     *       +2 ROLE <ROLE_IN_EVENT> {0:1}
+     *    +1 DATA {0:1}
+     *       +2 DATE <ENTRY_RECORDING_DATE> {0:1}
+     *       +2 TEXT <TEXT_FROM_SOURCE> {0:M}
+     *          +3 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
+     *    +1 <<MULTIMEDIA_LINK>> {0:M}
+     *    +1 <<NOTE_STRUCTURE>> {0:M}
+     *    +1 QUAY <CERTAINTY_ASSESSMENT> {0:1}
+     * |
+     *  Systems not using source records (FL : to be converted)
+     * n SOUR <SOURCE_DESCRIPTION> {1:1}
+     *    +1 [CONC|CONT] <SOURCE_DESCRIPTION> {0:M}
+     *    +1 TEXT <TEXT_FROM_SOURCE> {0:M}
+     *       +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
+     *    +1 <<MULTIMEDIA_LINK>> {0:M}
+     *    +1 <<NOTE_STRUCTURE>> {0:M}
+     *    +1 QUAY <CERTAINTY_ASSESSMENT> {0:1}
+     * ]
+     * 
+     * TO:
+     * ===
+     * SOURCE_RECORD:=
+     * n @<XREF:SOUR>@ SOUR {1:1}
+     *    +1 DATA {0:1}
+     *       +2 EVEN <EVENTS_RECORDED> {0:M}
+     *          +3 DATE <DATE_PERIOD> {0:1}
+     *          +3 PLAC <SOURCE_JURISDICTION_PLACE> {0:1}
+     *       +2 AGNC <RESPONSIBLE_AGENCY> {0:1}
+     *       +2 <<NOTE_STRUCTURE>> {0:M}
+     *    +1 AUTH <SOURCE_ORIGINATOR> {0:1}
+     *       +2 [CONC|CONT] <SOURCE_ORIGINATOR> {0:M}
+     *    +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}
+     *       +2 [CONC|CONT] <SOURCE_DESCRIPTIVE_TITLE> {0:M}
+     *    +1 ABBR <SOURCE_FILED_BY_ENTRY> {0:1}
+     *    +1 PUBL <SOURCE_PUBLICATION_FACTS> {0:1}
+     *       +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS> {0:M}
+     *    +1 TEXT <TEXT_FROM_SOURCE> {0:1}
+     *       +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
+     *    +1 <<SOURCE_REPOSITORY_CITATION>> {0:M}
+     *    +1 REFN <USER_REFERENCE_NUMBER> {0:M}
+     *       +2 TYPE <USER_REFERENCE_TYPE> {0:1}
+     *    +1 RIN <AUTOMATED_RECORD_ID> {0:1}
+     *    +1 <<CHANGE_DATE>> {0:1}
+     *    +1 <<NOTE_STRUCTURE>> {0:M}
+     *    +1 <<MULTIMEDIA_LINK>> {0:M}
+     *  
+     * 
+     * ==>  1 Find all sources properties recursively across all entities (indi, fam, note, obje)
+     *      2 If it is not a XREF entity, continue
+     *      3    create SOUR record
+     *      4    attach it as link PropertySource
+     *      5    move source_description value to SOUR:TITL
+     *      6    move source_text to SOUR:TEXT
+     *      7    move OBJE link to OBJE link in PropertySource
+     *      8    move NOTE link to NOTE link in PropertySource
+     *      9    move QUAY to QUAY in PropertySource
+     * 
+     * =======================================================================
+     * 
+     */
+    
+
+    
+    
+    private void transformMedia() {
+        
+        // Get all properties
+        List<Property> allProps = new ArrayList<Property>();
+        List<Entity> allEntities = gedcom.getEntities();
+        for (Entity entity : allEntities) {
+            if (entity.getTag().equals("HEAD")) {
+                continue; 
+            }
+            getPropertiesRecursively(entity, allProps);
+        }
+
+        // Get all NOTE & OBJE & SOUR to transform
+        List<Property> listOfNotes = new ArrayList<Property>();
+        List<Property> listOfMedia = new ArrayList<Property>();
+        List<Property> listOfSources = new ArrayList<Property>();
+        
+        for (Property property : allProps) {
+            if (property.getTag().equals("NOTE") && !(property instanceof PropertyNote) && (!property.getEntity().getTag().equals(Gedcom.NOTE))) {
+                listOfNotes.add(property);
+            }
+            if (property.getTag().equals("OBJE") && !(property instanceof PropertyMedia) && (!property.getEntity().getTag().equals(Gedcom.OBJE))) {
+                listOfMedia.add(property);
+            }
+            if (property.getTag().equals("SOUR") && !(property instanceof PropertySource) && (!property.getEntity().getTag().equals(Gedcom.SOUR))) {
+                listOfSources.add(property);
+            }
+        }
+        
+        
+        // Transform NOTE
+        Map<String, Note> notesMap = new HashMap<String, Note>();
+        Note noteRecord = null;
+        try {
+            for (Property property : listOfNotes) {
+                Property parent = property.getParent();
+                String itemNote = property.getValue();
+                if (!itemNote.isEmpty()) {
+                    noteRecord = notesMap.get(itemNote);
+                    if (noteRecord == null) {
+                        noteRecord = (Note) gedcom.createEntity(Gedcom.NOTE);
+                        noteRecord.setValue(property.getValue());
+                        notesMap.put(itemNote, noteRecord);
+                    }
+                    parent.addNote(noteRecord);
+                }
+                parent.delProperty(property);
+            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        // Transform OBJE
+        Media mediaRecord = null;
+        try {
+            for (Property property : listOfMedia) {
+                Property parent = property.getParent();
+                mediaRecord = (Media) gedcom.createEntity(Gedcom.OBJE);
+                Property propTitle = property.getProperty("TITL");
+                List<PropertyFile> fileProps = property.getProperties(PropertyFile.class);
+                for (PropertyFile fileProp : fileProps) {
+                    Property toProp = mediaRecord.addProperty("FILE", fileProp.getValue());
+                    if (propTitle != null) {
+                        toProp.addProperty("TITL", propTitle.getValue());
+                    }
+                    Property fromProp = fileProp.getProperty("FORM");  
+                    if (fromProp != null) {
+                        toProp = toProp.addProperty("FORM", fromProp.getValue());
+                        fromProp = fromProp.getProperty("MEDI");
+                        if (fromProp != null) {
+                            toProp.addProperty("TYPE", fromProp.getValue());
+                        }
+                    }
+                }
+                parent.addMedia(mediaRecord);
+                parent.delProperty(property);
+            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+
+        
+        
+        // Transform SOUR
+        Source sourceRecord = null;
+        try {
+            for (Property property : listOfSources) {
+                Property parent = property.getParent();
+                sourceRecord = (Source) gedcom.createEntity(Gedcom.SOUR);
+                Property fromProp = property.getProperty("TEXT");
+                if (fromProp != null) {
+                    sourceRecord.addProperty("TEXT", fromProp.getValue());
+                }
+                fromProp = property.getProperty("NOTE");
+                if (fromProp != null) {
+                    String value = fromProp.getValue();
+                    if (value.startsWith("@")) {
+                        Property xref = sourceRecord.addProperty("NOTE", value);
+                        try {
+                            ((PropertyNote) xref).link();
+                        } catch (GedcomException e) {
+                            sourceRecord.delProperty(xref);
+                        }
+                    } else {
+                        sourceRecord.addProperty("NOTE", value);
+                    }
+                }
+                Property xref = parent.addProperty("SOUR", '@' + sourceRecord.getId() + '@');
+                try {
+                    ((PropertySource) xref).link();
+                } catch (GedcomException e) {
+                    parent.delProperty(xref);
+                }
+                parent.delProperty(property);
+            }
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+        
+        
+        
+        
+        
+
+        
+        
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private class Tab {
 
         public Property fromProp;
