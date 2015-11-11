@@ -92,6 +92,7 @@ public class GedcomPropertiesWizardPanel3 implements WizardDescriptor.Validating
         wiz.putProperty(CONV_VERSION, getComponent().getConversionToBeDone() ? CONVERSION : NO_CONVERSION);
         wiz.putProperty(CONV_VERSION_FROM, originalVersion);
         wiz.putProperty(CONV_VERSION_TO, getComponent().getVERS());
+        wiz.putProperty(CONV_MEDIA, getComponent().getMediaTransformation());
     }
 
     @Override

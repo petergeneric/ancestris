@@ -56,6 +56,8 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     private WizardDescriptor wiz = null;
     private int mode = CREATION_OR_UPDATE;
     
+    private String emaiTag = "";
+    private String wwwTag = "";
     
     @Override
     public boolean isReady() {
@@ -71,6 +73,13 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     public Context create() {
         // Create brand new gedcom and head property
         gedcom = new Gedcom();
+        if (gedcom.getGrammar().equals(Grammar.V551)) {
+            emaiTag = EMAI;
+            wwwTag = WWW;
+        } else {
+            emaiTag = "_" + EMAI;
+            wwwTag = "_" + WWW;
+        }
 
         // Initiate key entities
         Property prop_HEAD;
@@ -150,6 +159,13 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
     public Context update(Context context) {
         // Get selected gedcom
         gedcom = context.getGedcom();
+        if (gedcom.getGrammar().equals(Grammar.V551)) {
+            emaiTag = EMAI;
+            wwwTag = WWW;
+        } else {
+            emaiTag = "_" + EMAI;
+            wwwTag = "_" + WWW;
+        }
         
         // Create wizard and feed its data properties from gedcom
         mode = UPDATE;
@@ -220,8 +236,8 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         copyGedPropToWizProp(SUBM + ":" + ADDR + ":" + STAE, CREATION, submPref.get(SUBM_STAE, ""));
         copyGedPropToWizProp(SUBM + ":" + ADDR + ":" + CTRY, CREATION, submPref.get(SUBM_CTRY, ""));
         copyGedPropToWizProp(SUBM + ":" + PHON, CREATION, submPref.get(SUBM_PHON, ""));
-        copyGedPropToWizProp(SUBM + ":" + EMAI, CREATION, submPref.get(SUBM_EMAI, ""));
-        copyGedPropToWizProp(SUBM + ":" + WWW, CREATION, submPref.get(SUBM_WWW, ""));
+        copyGedPropToWizProp(SUBM + ":" + emaiTag, SUBM + ":" + EMAI, CREATION, submPref.get(SUBM_EMAI, ""));
+        copyGedPropToWizProp(SUBM + ":" + wwwTag, SUBM + ":" + WWW, CREATION, submPref.get(SUBM_WWW, ""));
         copyGedPropToWizProp(HEADER + ":" + COPR, CREATION, defaultCopr);
 
         copyGedPropToWizProp(HEADER + ":" + LANG, CREATION_OR_UPDATE, Locale.getDefault().getDisplayLanguage(new Locale("en", "EN")));
@@ -273,7 +289,15 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         
         gedcom.setLanguage((String) wiz.getProperty(HEADER + ":" + LANG));
         gedcom.setEncoding((String) wiz.getProperty(HEADER + ":" + CHAR));
-        gedcom.setGrammar(((String) wiz.getProperty(HEADER + ":" + GEDC + ":" + VERS)).equals(Grammar.GRAMMAR551) ? Grammar.V551 : Grammar.V55);
+        if (((String) wiz.getProperty(HEADER + ":" + GEDC + ":" + VERS)).equals(Grammar.GRAMMAR551)) {
+            emaiTag = EMAI;
+            wwwTag = WWW;
+            gedcom.setGrammar(Grammar.V551);
+        } else {
+            emaiTag = "_" + EMAI;
+            wwwTag = "_" + WWW;
+            gedcom.setGrammar(Grammar.V55);
+        }
         gedcom.setDestination((String) wiz.getProperty(HEADER + ":" + DEST));
         gedcom.setPlaceFormat((String) wiz.getProperty(HEADER + ":" + PLAC + ":" + FORM));
 
@@ -292,8 +316,17 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         if (!submitter.getState().equals((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + STAE))) { submitter.setState((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + STAE)); chg = true; }
         if (!submitter.getCountry().equals((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CTRY))) { submitter.setCountry((String) wiz.getProperty(SUBM + ":" + ADDR + ":" + CTRY)); chg = true; }
         if (!submitter.getPhone().equals((String) wiz.getProperty(SUBM + ":" + PHON))) { submitter.setPhone((String) wiz.getProperty(SUBM + ":" + PHON)); chg = true; }
-        if (!submitter.getEmail().equals((String) wiz.getProperty(SUBM + ":" + EMAI))) { submitter.setEmail((String) wiz.getProperty(SUBM + ":" + EMAI)); chg = true; }
-        if (!submitter.getWeb().equals((String) wiz.getProperty(SUBM + ":" + WWW))) { submitter.setWeb((String) wiz.getProperty(SUBM + ":" + WWW)); chg = true; }
+        
+        TagPath path = new TagPath(SUBM +":" + emaiTag);
+        if (!submitter.getValue(path, "").equals((String) wiz.getProperty(SUBM + ":" + EMAI))) { 
+            submitter.setValue(path, (String) wiz.getProperty(SUBM + ":" + EMAI)); 
+            chg = true; 
+        }
+        path = new TagPath(SUBM +":" + wwwTag);
+        if (!submitter.getValue(path, "").equals((String) wiz.getProperty(SUBM + ":" + WWW))) { 
+            submitter.setValue(new TagPath(SUBM + ":" + wwwTag), (String) wiz.getProperty(SUBM + ":" + WWW)); 
+            chg = true; 
+        }
         
         
         // Update gedcom first individual
@@ -318,14 +351,29 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         } 
         
         // Convert gedcom version if requested
-        if (wiz.getProperty(CONV_VERSION) == CONVERSION) {
-            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionChanged", wiz.getProperty(CONV_VERSION_FROM), wiz.getProperty(CONV_VERSION_TO)); 
-            versionConverter = new GedcomVersionConverter(gedcom, wiz.getProperty(CONV_VERSION_FROM).toString(), wiz.getProperty(CONV_VERSION_TO).toString());
+        if (wiz.getProperty(CONV_VERSION) == CONVERSION || wiz.getProperty(CONV_MEDIA) == CONVERSION) {
+            if (wiz.getProperty(CONV_VERSION) == CONVERSION) {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionChanged", wiz.getProperty(CONV_VERSION_FROM), wiz.getProperty(CONV_VERSION_TO)); 
+            }
+            if (wiz.getProperty(CONV_MEDIA) == CONVERSION) {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaChanged"); 
+            }
+            versionConverter = new GedcomVersionConverter(gedcom, wiz.getProperty(CONV_VERSION_FROM).toString(), wiz.getProperty(CONV_VERSION_TO).toString(), wiz.getProperty(CONV_MEDIA).toString());
             if (versionConverter.isConvertible() && versionConverter.convert()) {
-                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionSuccessChanged");
+                if (wiz.getProperty(CONV_VERSION) == CONVERSION) {
+                    message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionSuccessChanged");
+                }
+                if (wiz.getProperty(CONV_MEDIA) == CONVERSION) {
+                    message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaSuccessChanged");
+                }
                 chg = true;
             } else {
-                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionFailureChanged");
+                if (wiz.getProperty(CONV_VERSION) == CONVERSION) {
+                    message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_VersionFailureChanged");
+                }
+                if (wiz.getProperty(CONV_MEDIA) == CONVERSION) {
+                    message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaFailureChanged");
+                }
                 withVersionErrors = true;
             }
         }
@@ -369,16 +417,20 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
 
     
     
-    
     private void copyGedPropToWizProp(String tagPath, int modeForDefault, String defaultvalue) {
-        Property[] props = getProperties(tagPath, false);
+        copyGedPropToWizProp(tagPath, tagPath, modeForDefault, defaultvalue);
+    }
+
+    
+    private void copyGedPropToWizProp(String tagPath1, String tagPath2, int modeForDefault, String defaultvalue) {
+        Property[] props = getProperties(tagPath1, false);
         String str = "";
         if (modeForDefault == CREATION_OR_UPDATE) {
             str = defaultvalue;
         } else {
             str = mode == modeForDefault ? defaultvalue : "";
         }
-        wiz.putProperty(tagPath, props != null && props.length != 0 ? props[0].getDisplayValue() : str);
+        wiz.putProperty(tagPath2, props != null && props.length != 0 ? props[0].getDisplayValue() : str);
     }
 
     private void copyGedPropertiesToWizProp(String tagPath, int modeForDefault, String defaultvalue) {

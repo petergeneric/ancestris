@@ -83,8 +83,8 @@ public interface Constants {
     static final String STAE = "STAE";
     static final String CTRY = "CTRY";
     static final String PHON = "PHON";
-    static final String EMAI = "_EMAIL";
-    static final String WWW = "_WWW";
+    static final String EMAI = "EMAIL";
+    static final String WWW = "WWW";
     
     final static String SUBM_NAME = "submName";
     final static String SUBM_ADDR = "submAddress";
@@ -110,6 +110,7 @@ public interface Constants {
     static final String CONV_VERSION = "ConversionVersion";
     static final String CONV_VERSION_FROM = "ConversionVersionFrom";
     static final String CONV_VERSION_TO = "ConversionVersionTo";
+    static final String CONV_MEDIA = "ConversionMedia";
 
     static final String CONV_PLACE = "ConversionPlaceFormat";
     static final String CONV_PLACE_FROM = "ConversionPlaceFormatFrom";
