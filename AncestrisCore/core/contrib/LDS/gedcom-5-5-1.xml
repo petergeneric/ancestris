@@ -41,8 +41,10 @@
     <QUAY xref="1" type="PropertyQuality" img="Blob" cardinality="0:1"/>
     <OBJE xref="1" type="PropertyMedia|PropertySimpleReadOnly" img="Media">
      <TITL default="1" xref="0" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
-     <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="0:M">
-       <FORM default="1" xref="0" type="PropertyChoiceValue" img="Format" cardinality="1:1"/>
+     <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="1:M">
+       <FORM default="1" xref="0" type="PropertyChoiceValue" img="Format" cardinality="1:1">
+           <MEDI type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
+       </FORM>    
      </FILE>
      <NOTE default="1" xref="0" type="PropertyNote|PropertyMultilineValue" img="Note" cardinality="0:1"/>
     </OBJE>
@@ -283,8 +285,10 @@
  ************    Medias   ************
  *************************************
  <OBJE type="Media" img="Media">
-  <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="0:M">
-    <FORM default="1" type="PropertyChoiceValue" img="Format" cardinality="1:1"/>
+  <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="1:M">
+    <FORM default="1" type="PropertyChoiceValue" img="Format" cardinality="1:1">
+        <TYPE type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
+    </FORM>
     <TITL default="1" type="PropertySimpleValue" img="Attribute" cardinality="0:1"/>
   </FILE>
   +++++++++++++ References +++++++++++++
