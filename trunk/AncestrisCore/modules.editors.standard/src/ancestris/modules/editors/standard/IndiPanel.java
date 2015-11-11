@@ -1261,7 +1261,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         Object[] options = new Object[] { mediaButton, fileButton, DialogDescriptor.CANCEL_OPTION };
-        MediaChooser mediaChooser = new MediaChooser(gedcom, mediaSet.get(index).getFile(),
+        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? mediaSet.get(index).getFile() : null,
                  exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
                  exists ? mediaSet.get(index).getTitle() : "",
                 mediaButton

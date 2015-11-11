@@ -219,6 +219,7 @@ public class MediaChooser extends javax.swing.JPanel {
             MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
             mainImage = media.getImage();
             mainTitle = media.title;
+            mainFile = media.file;
             displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
             okButton.setEnabled(true);
         } else {
