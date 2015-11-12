@@ -78,6 +78,13 @@ public abstract class PropertyXRef extends Property {
     }
 
     /**
+     * Returns the parent
+     */
+    public Property getTargetParent() {
+        return target == null ? null : target.getParent();
+    }
+
+    /**
      * Tries to find candidate entity to link to
      */
     protected Entity getCandidate() throws GedcomException {
