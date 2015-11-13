@@ -30,7 +30,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeSet;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -50,6 +52,8 @@ public class MediaChooser extends javax.swing.JPanel {
 
     private static int THUMB_WIDTH = 50;
     private static int THUMB_HEIGHT = 70;
+    
+    private static Map<String, ImageIcon> cacheIcon = new HashMap<String, ImageIcon>();
     
     private Registry registry = null;
     private ThumbComparator thumbComparator = new ThumbComparator();
@@ -98,6 +102,7 @@ public class MediaChooser extends javax.swing.JPanel {
                 filterModel(textFilter.getText());
             }
         });
+        
     }
 
 
@@ -452,7 +457,11 @@ public class MediaChooser extends javax.swing.JPanel {
         }
         
         public void setIcon() {
-            this.icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
+            icon = cacheIcon.get(file.getAbsolutePath());
+            if (icon == null) {
+                icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
+                cacheIcon.put(file.getAbsolutePath(), icon);
+            }
         }
     }
 

@@ -25,6 +25,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
+
+
+
 /**
  *
  * @author frederic
@@ -38,8 +41,6 @@ public class Utils {
     private static String[] imgExtensions =   { "jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg" };
     private static String[] videoExtensions = { "mp4", "flv", "ogg", "avi", "mov", "mpeg" };
     private static String[] soundExtensions = { "mp3", "wav", "ogg", "flac" };
-    
-    
     
     public static boolean parentTagsContains(Property prop, String tag) {
         if (prop == null) {
