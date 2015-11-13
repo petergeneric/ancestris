@@ -12,6 +12,8 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import java.awt.Image;
 import java.io.File;
 import java.io.FileInputStream;
@@ -38,6 +40,25 @@ public class Utils {
     private static String[] soundExtensions = { "mp3", "wav", "ogg", "flac" };
     
     
+    
+    public static boolean parentTagsContains(Property prop, String tag) {
+        if (prop == null) {
+            return false;
+        }
+        Property parent;
+        if (prop instanceof PropertyXRef) {
+            parent = ((PropertyXRef) prop).getTargetParent();
+        } else {
+            parent = prop.getParent();
+        }
+        if (parent == null) {
+            return false;
+        }
+        if (parent.getTag().equals(tag)) {
+            return true;
+        }
+        return parentTagsContains(parent, tag);
+    }
     
     
     public static ImageIcon getResizedIcon(ImageIcon imageIcon, int width, int height) {
@@ -121,5 +142,5 @@ public class Utils {
         return ext;
     }
     
-    
+
 }

@@ -838,7 +838,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
             if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
                 try {
-                    Desktop.getDesktop().open(mediaSet.get(mediaIndex).getFile());
+                    if (mediaSet.get(mediaIndex) != null && mediaSet.get(mediaIndex).getFile() != null) {
+                        Desktop.getDesktop().open(mediaSet.get(mediaIndex).getFile());
+                    }
                 } catch (IOException ex) {
                     //Exceptions.printStackTrace(ex);
                 }
@@ -1139,7 +1141,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Look for media directly attached to indi (media always have a file, so look for all files underneath OBJE but not underneath SOUR)
         for (PropertyFile prop : indi.getProperties(PropertyFile.class)) {
-            if (!parentTagsContains(prop, "SOUR")) {
+            if (!Utils.parentTagsContains(prop, "SOUR")) {
                 Property propObje = getParentTag(prop, "OBJE");
                 ret.add(new MediaWrapper(propObje));
             }
@@ -1166,19 +1168,6 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     
     
-    private boolean parentTagsContains(Property prop, String tag) {
-        if (prop == null) {
-            return false;
-        }
-        Property parent = prop.getParent();
-        if (parent == null) {
-            return false;
-        }
-        if (parent.getTag().equals(tag)) {
-            return true;
-        }
-        return parentTagsContains(parent, tag);
-    }
 
     
     private Property getParentTag(Property prop, String tag) {
@@ -1266,7 +1255,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                  exists ? mediaSet.get(index).getTitle() : "",
                 mediaButton
         );
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle"), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        int size = mediaChooser.getNbMedia();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle", size), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == mediaButton) {
             Media entity = mediaChooser.getSelectedEntity();
             if (exists) {
