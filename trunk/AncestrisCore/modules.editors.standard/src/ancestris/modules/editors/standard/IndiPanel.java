@@ -1212,9 +1212,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Photo
         if (file != null && file.exists()) {
             imageIcon = new ImageIcon(getImageFromFile(file, getClass()));
-            if (imageIcon == null) {
-                imageIcon = defaultIcon;
-            }
         } else {
             imageIcon = defaultIcon;
         }
