@@ -17,6 +17,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyXRef;
 import genj.util.Registry;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -29,6 +30,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.TreeSet;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
@@ -68,17 +70,26 @@ public class MediaChooser extends javax.swing.JPanel {
         mainImage = image;
         mainTitle = title;
         this.okButton = okButton;
+        
+        // Run media collection from separate thread
         createMediaThumbs((Collection<Media>) gedcom.getEntities(Gedcom.OBJE));
+        Thread mediaThread = new Thread() {
+            @Override
+            public void run() {
+                displayMediaThumbs();
+            }
+        };
+        mediaThread.setName("Media reading thread");
+        mediaThread.start();
         
         registry = Registry.get(getClass());
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("mediaWindowWidth", this.getPreferredSize().width), registry.get("mediaWindowHeight", this.getPreferredSize().height)));
+        jSplitPane.setDividerLocation(registry.get("mediaSplitDividerLocation", jSplitPane.getDividerLocation()));
         labelPhoto.setText("");
         displayIconAndTitle();
         mediaList.setCellRenderer(new ListEntryCellRenderer());
-        if (mediaList.isSelectionEmpty()) {
-            okButton.setEnabled(false);
-        }
+        okButton.setEnabled(false);
         textFilter.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { filter(); }
             @Override public void removeUpdate(DocumentEvent e) { filter(); }
@@ -118,23 +129,40 @@ public class MediaChooser extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jSplitPane = new javax.swing.JSplitPane();
+        jPanel1 = new javax.swing.JPanel();
         labelPhoto = new javax.swing.JLabel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 if (scaledImage != null) {
                     ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
-                    registry.put("mediaWindowWidth", getParent().getWidth());
-                    registry.put("mediaWindowHeight", getParent().getHeight());
+                    //registry.put("mediaWindowWidth", getParent().getWidth());
+                    //registry.put("mediaWindowHeight", getParent().getHeight());
                 }
             }
 
         };
         photoTitle = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
         filterLabel = new javax.swing.JLabel();
         textFilter = new javax.swing.JTextField();
         jScrollPaneMedia = new javax.swing.JScrollPane();
         mediaList = new javax.swing.JList(filteredModel);
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+
+        jSplitPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jSplitPanePropertyChange(evt);
+            }
+        });
+
+        jPanel1.setPreferredSize(new java.awt.Dimension(200, 383));
 
         labelPhoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(labelPhoto, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.labelPhoto.text")); // NOI18N
@@ -152,10 +180,34 @@ public class MediaChooser extends javax.swing.JPanel {
             }
         });
 
+        photoTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         photoTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(photoTitle, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.photoTitle.text")); // NOI18N
         photoTitle.setVerticalAlignment(javax.swing.SwingConstants.TOP);
-        photoTitle.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(0,5,10,5)));
+        photoTitle.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(5,5,5,5)));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(photoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(labelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(photoTitle))
+        );
+
+        jSplitPane.setLeftComponent(jPanel1);
+
+        jPanel2.setPreferredSize(new java.awt.Dimension(200, 58));
 
         org.openide.awt.Mnemonics.setLocalizedText(filterLabel, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.filterLabel.text")); // NOI18N
 
@@ -177,40 +229,41 @@ public class MediaChooser extends javax.swing.JPanel {
         });
         jScrollPaneMedia.setViewportView(mediaList);
 
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPaneMedia)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(filterLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterLabel)
+                    .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPaneMedia))
+        );
+
+        jSplitPane.setRightComponent(jPanel2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(photoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneMedia)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(filterLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)))
-                .addContainerGap())
+            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(filterLabel)
-                            .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPaneMedia))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(labelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(photoTitle)))
-                .addContainerGap())
+            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -248,10 +301,22 @@ public class MediaChooser extends javax.swing.JPanel {
 
     }//GEN-LAST:event_labelPhotoMouseClicked
 
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put("mediaWindowWidth", evt.getComponent().getWidth());
+        registry.put("mediaWindowHeight", evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
+
+    private void jSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSplitPanePropertyChange
+        registry.put("mediaSplitDividerLocation", jSplitPane.getDividerLocation());
+    }//GEN-LAST:event_jSplitPanePropertyChange
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPaneMedia;
+    private javax.swing.JSplitPane jSplitPane;
     private javax.swing.JLabel labelPhoto;
     private javax.swing.JList mediaList;
     private javax.swing.JLabel photoTitle;
@@ -262,9 +327,13 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     private void createMediaThumbs(Collection<Media> entities) {
+        
         // Get all media
         allMedia.clear();
         for (Media entity : entities) {
+            if (isSourceOnly(entity)) {
+                continue;
+            }
             File file = null;
             String title = "";
             Property mediaFile = entity.getProperty("FILE", true);
@@ -279,9 +348,14 @@ public class MediaChooser extends javax.swing.JPanel {
             allMedia.add(media);
         }
         
+        // for (String type : Gedcom.ENTITIES) {
+    }
+
+    private void displayMediaThumbs() {
         // Put them in model in sorted order
         filteredModel.clear();
         for (MediaThumb item : allMedia) {
+            item.setIcon();
             filteredModel.addElement(item);
         }
         
@@ -303,6 +377,20 @@ public class MediaChooser extends javax.swing.JPanel {
             }
         }
     }    
+
+    private boolean isSourceOnly(Media entity) {
+        List<PropertyXRef> references = entity.getProperties(PropertyXRef.class);
+        for (PropertyXRef refProp : references) {
+            if (!Utils.parentTagsContains(refProp, "SOUR")) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public int getNbMedia() {
+        return allMedia.size();
+    }
   
     
     
@@ -356,12 +444,15 @@ public class MediaChooser extends javax.swing.JPanel {
         public MediaThumb(Media entity, File file, String title) {
             this.entity = entity;
             this.file = file;
-            this.icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
             this.title = title;
         }
         
         public Image getImage() {
             return getImageFromFile(file, getClass());
+        }
+        
+        public void setIcon() {
+            this.icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
         }
     }
 
@@ -371,7 +462,15 @@ public class MediaChooser extends javax.swing.JPanel {
     private class ThumbComparator implements Comparator<MediaThumb> {
 
         public int compare(MediaThumb o1, MediaThumb o2) {
-            return o1.title.toLowerCase().compareTo(o2.title.toLowerCase());
+            File file1 = o1.file;
+            File file2 = o2.file;
+            String str1 = file1 != null ? file1.getAbsolutePath() : "";
+            String str2 = file2 != null ? file2.getAbsolutePath() : "";
+            String id1 = o1.entity.getId();
+            String id2 = o2.entity.getId();
+            String total1 = o1.title.toLowerCase() + str1 + id1;
+            String total2 = o2.title.toLowerCase() + str2 + id2;
+            return total1.compareTo(total2);
         }
     }
     
