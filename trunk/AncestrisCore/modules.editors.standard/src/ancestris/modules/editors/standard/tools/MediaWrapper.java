@@ -87,7 +87,6 @@ import org.openide.util.Exceptions;
  */
 public class MediaWrapper {
 
-    private boolean isNew = false;
     private Property hostingProperty = null;
     private Entity targetMedia = null;
     private File file = null;
@@ -98,7 +97,6 @@ public class MediaWrapper {
         if (propertyObje == null) {
             return;
         }
-        isNew = false;
         this.hostingProperty = propertyObje;
         Property mediaFile = propertyObje.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
@@ -115,7 +113,6 @@ public class MediaWrapper {
         if (propertyMedia == null) {
             return;
         }
-        isNew = false;
         this.hostingProperty = propertyMedia;
         setTargetEntity((Media) propertyMedia.getTargetEntity());
     }
@@ -125,26 +122,22 @@ public class MediaWrapper {
         if (entity == null) {
             return;
         }
-        isNew = false;
         this.targetMedia = entity;
         setInfo(entity);
     }
     
     // Constructor from choose file
     public MediaWrapper(File f) {
-        isNew = true;
         setFile(f);
     }
     
     // Constructor from change title
     public MediaWrapper(String title) {
-        isNew = true;
         setTitle(title);
     }
 
     // Constructor from choose file/title
     public MediaWrapper(File f, String title) {
-        isNew = true;
         setFile(f);
         setTitle(title);
     }
@@ -182,15 +175,17 @@ public class MediaWrapper {
      */
     public void update(Indi indi) {
         // If it is a creation...
-        if (isNew) {
+        if (hostingProperty == null) {
             Gedcom gedcom = indi.getGedcom();
             if (gedcom.getGrammar().equals(Grammar.V55)) {
                 putMediaIntegrated(indi.addProperty("OBJE", ""));
             } else {
                 try {
-                    this.targetMedia = indi.getGedcom().createEntity(Gedcom.OBJE);
-                    putMediaLinked((Media) targetMedia);
+                    if (this.targetMedia == null) {
+                        this.targetMedia = indi.getGedcom().createEntity(Gedcom.OBJE);
+                    }
                     indi.addMedia((Media) targetMedia);
+                    putMediaLinked((Media) targetMedia);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }

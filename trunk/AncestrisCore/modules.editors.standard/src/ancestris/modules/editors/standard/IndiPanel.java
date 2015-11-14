@@ -1247,36 +1247,39 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
-        Object[] options = new Object[] { mediaButton, fileButton, DialogDescriptor.CANCEL_OPTION };
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { mediaButton, fileButton, cancelButton };
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? mediaSet.get(index).getFile() : null,
-                 exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
-                 exists ? mediaSet.get(index).getTitle() : "",
-                mediaButton
+                exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
+                exists ? mediaSet.get(index).getTitle() : "",
+                mediaButton, cancelButton
         );
         int size = mediaChooser.getNbMedia();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle", size), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == mediaButton) {
+            File file = mediaChooser.getSelectedFile();
+            String mediaTitle = mediaChooser.getSelectedTitle();
             if (mediaChooser.isSelectedEntityMedia()) {
                 Media entity = (Media) mediaChooser.getSelectedEntity();
                 if (exists) {
                     mediaSet.get(index).setTargetEntity(entity);
+                    mediaSet.get(index).setTitle(mediaTitle);
                     mediaIndex = index;
                 } else {
                     MediaWrapper media = new MediaWrapper(entity);
+                    media.setTitle(mediaTitle);
                     mediaSet.add(media);
                     mediaIndex = mediaSet.size() - 1;
                 }
                 changes.setChanged(true);
                 b = true;
             } else {
-                File file = mediaChooser.getSelectedFile();
-                String title = mediaChooser.getSelectedTitle();
                 if (exists) {
                     mediaSet.get(index).setFile(file);
-                    mediaSet.get(index).setTitle(title);
+                    mediaSet.get(index).setTitle(mediaTitle);
                     mediaIndex = index;
                 } else {
-                    MediaWrapper media = new MediaWrapper(file, title);
+                    MediaWrapper media = new MediaWrapper(file, mediaTitle);
                     mediaSet.add(media);
                     mediaIndex = mediaSet.size() - 1;
                 }

@@ -118,8 +118,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             gedcom.addGedcomListener(callback);
         }
 
-        // Commit if necessary without asking for confirmation
-        //commit(false);
+        // Commit if necessary without asking for confirmation (in case context changes, we do not want to loose the changes made)
+        commit(false);
 
         // Prepare confirm panel
         if (confirmPanel == null) {
