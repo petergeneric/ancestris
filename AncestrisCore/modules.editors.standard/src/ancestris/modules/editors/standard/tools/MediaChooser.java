@@ -13,6 +13,8 @@ package ancestris.modules.editors.standard.tools;
 
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Grammar;
@@ -27,13 +29,14 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -43,6 +46,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -69,16 +74,18 @@ public class MediaChooser extends javax.swing.JPanel {
     private Image scaledImage = null;
     private String mainTitle = null;
     private JButton okButton = null;
+    private JButton cancelButton = null;
     
     /**
      * Creates new form MediaChooser
      */
-    public MediaChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton) {
+    public MediaChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton, JButton cancelButton) {
         this.gedcom = gedcom;
         mainFile = file;
         mainImage = image;
         mainTitle = title;
         this.okButton = okButton;
+        this.cancelButton = cancelButton;
         
         // Run media collection from separate thread
         createMediaThumbs();
@@ -231,6 +238,9 @@ public class MediaChooser extends javax.swing.JPanel {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 mediaListMouseClicked(evt);
             }
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                mediaListMousePressed(evt);
+            }
         });
         mediaList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
@@ -320,6 +330,42 @@ public class MediaChooser extends javax.swing.JPanel {
         registry.put("mediaSplitDividerLocation", jSplitPane.getDividerLocation());
     }//GEN-LAST:event_jSplitPanePropertyChange
 
+    private void mediaListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mediaListMousePressed
+        if (evt.getButton() == MouseEvent.BUTTON3) { 
+            mediaList.setSelectedIndex(mediaList.locationToIndex(evt.getPoint()));
+            JPopupMenu menu = new JPopupMenu();
+            final MediaThumb media = getSelectedThumb();
+            final Entity entity = media.entity; 
+            if (media.isMedia) {
+                Entity[] ents = PropertyXRef.getReferences(media.entity);
+                for (Entity ent : ents) {
+                    JMenuItem menuItem = new JMenuItem("Editer " + ent.toString(true));
+                    menu.add(menuItem);
+                    final Entity finalEntity = ent;
+                    menuItem.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent ae) {
+                            edit(finalEntity);
+                        }
+
+                    });
+                }
+            } else {
+                JMenuItem menuItem = new JMenuItem("Editer " + entity.toString(true));
+                menu.add(menuItem);
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        edit(entity);
+                    }
+                });
+            }
+            menu.show(mediaList, evt.getX(), evt.getY()); 
+        }
+    }//GEN-LAST:event_mediaListMousePressed
+
+    private void edit(Entity entity) {
+        cancelButton.doClick();
+        SelectionDispatcher.fireSelection(new Context(entity));
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
@@ -354,10 +400,16 @@ public class MediaChooser extends javax.swing.JPanel {
                     String title = "";
                     File file = mediaFile.getFile();
                     Property mediaTitle = mediaFile.getParent().getProperty("TITL");
-                    if (mediaTitle != null) {
-                        title = mediaTitle.getDisplayValue();
+                    boolean flag = false;
+                    if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
+                        title = mediaTitle.getDisplayValue().trim();
+                        flag = true;
+                    } else {
+                        title = entity.toString(false).trim();
+                        flag = false;
                     }
                     MediaThumb media = new MediaThumb(entity, file, title);
+                    media.setTrueTitle(flag);
                     allMedia.add(media);
                 }
             }
@@ -375,14 +427,26 @@ public class MediaChooser extends javax.swing.JPanel {
                 File file = null;
                 String title = "";
                 Property mediaFile = entity.getProperty("FILE", true);
+                boolean flag = false;
                 if (mediaFile != null && mediaFile instanceof PropertyFile) {
                     file = ((PropertyFile) mediaFile).getFile();
                     Property mediaTitle = mediaFile.getProperty("TITL");
-                    if (mediaTitle != null) {
-                        title = mediaTitle.getDisplayValue();
+                    if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
+                        title = mediaTitle.getDisplayValue().trim();
+                        flag = true;
+                    } else {
+                        Entity[] ents = PropertyXRef.getReferences(entity);
+                        if (ents.length > 0) {
+                            title = ents[0].toString(false).trim();
+                            flag = false;
+                        } else {
+                            title = entity.toString(false).trim();
+                            flag = false;
+                        }
                     }
                 }
                 MediaThumb media = new MediaThumb(entity, file, title);
+                media.setTrueTitle(flag);
                 allMedia.add(media);
             }
         }
@@ -399,25 +463,31 @@ public class MediaChooser extends javax.swing.JPanel {
         
     }
 
+    private MediaThumb getSelectedThumb() {
+        return (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+    }
     
-    
+    private void setSelectedThumb(MediaThumb media) {
+        filteredModel.setElementAt(media, mediaList.getSelectedIndex());
+    }
+
     public boolean isSelectedEntityMedia() {
-        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        MediaThumb media = getSelectedThumb();
         return media == null ? false : media.isMedia;
     }
 
     public Entity getSelectedEntity() {
-        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        MediaThumb media = getSelectedThumb();
         return media == null ? null : media.entity;
     }
 
     public File getSelectedFile() {
-        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        MediaThumb media = getSelectedThumb();
         return media == null ? null : media.file;
     }
 
     public String getSelectedTitle() {
-        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        MediaThumb media = getSelectedThumb();
         return media == null ? "" : media.title;
     }
 
@@ -472,7 +542,7 @@ public class MediaChooser extends javax.swing.JPanel {
             int labelHeight = THUMB_HEIGHT + 12 * nbLines;  // 12 pixels per line for font size 10 set in component netbeans parameters
             
             setPreferredSize(new Dimension(labelWidth, labelHeight));
-            setText("<html><center>" + entry.title + "</center></html>");
+            setText("<html><center>" + (entry.isTrueTitle ?  "<font color=black>" : "<font color=blue>") + entry.title + "</font></center></html>");
             setIcon(entry.icon);
 
             if (isSelected) {
@@ -504,6 +574,7 @@ public class MediaChooser extends javax.swing.JPanel {
         public File file = null;
         public ImageIcon icon = null;
         public String title = "";
+        public boolean isTrueTitle = true;
         
         public MediaThumb(Media entity, File file, String title) {
             this.isMedia = true;
@@ -529,6 +600,10 @@ public class MediaChooser extends javax.swing.JPanel {
                 icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
                 cacheIcon.put(file.getAbsolutePath(), icon);
             }
+        }
+
+        private void setTrueTitle(boolean flag) {
+            isTrueTitle = flag;
         }
     }
 
