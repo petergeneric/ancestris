@@ -15,6 +15,7 @@ package ancestris.modules.editors.standard.tools;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
@@ -31,9 +32,9 @@ import org.openide.util.Exceptions;
 //  n  OBJE @<XREF:OBJE>@  {1:1}                        ==> PropertyMedia to entity
 //  |          /* linked form*/ 
 //  n  OBJE           {1:1}                             ==> Direct
+//    +1 FILE <MULTIMEDIA_FILE_REFERENCE>  {1:1}
 //    +1 FORM <MULTIMEDIA_FORMAT>  {1:1}
 //    +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
-//    +1 FILE <MULTIMEDIA_FILE_REFERENCE>  {1:1}
 //    +1 <<NOTE_STRUCTURE>>  {0:M}
 //  ]
 //
@@ -86,6 +87,7 @@ import org.openide.util.Exceptions;
  */
 public class MediaWrapper {
 
+    private boolean isNew = false;
     private Property hostingProperty = null;
     private Entity targetMedia = null;
     private File file = null;
@@ -96,6 +98,7 @@ public class MediaWrapper {
         if (propertyObje == null) {
             return;
         }
+        isNew = false;
         this.hostingProperty = propertyObje;
         Property mediaFile = propertyObje.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
@@ -112,6 +115,7 @@ public class MediaWrapper {
         if (propertyMedia == null) {
             return;
         }
+        isNew = false;
         this.hostingProperty = propertyMedia;
         setTargetEntity((Media) propertyMedia.getTargetEntity());
     }
@@ -121,22 +125,30 @@ public class MediaWrapper {
         if (entity == null) {
             return;
         }
+        isNew = false;
         this.targetMedia = entity;
         setInfo(entity);
     }
     
-
-    
-    
-    
+    // Constructor from choose file
     public MediaWrapper(File f) {
+        isNew = true;
         setFile(f);
     }
     
+    // Constructor from change title
     public MediaWrapper(String title) {
+        isNew = true;
         setTitle(title);
     }
 
+    // Constructor from choose file/title
+    public MediaWrapper(File f, String title) {
+        isNew = true;
+        setFile(f);
+        setTitle(title);
+    }
+    
     
     
     
@@ -161,36 +173,36 @@ public class MediaWrapper {
         }
     }
 
-    
+    /**
+     * Creates or Updates the OBJE media property
+     *    - Creation in 55  : integrated property (BLOB not supported)
+     *    - Creation in 551 : separate media entity
+     *    - Update : where it is
+     * @param indi 
+     */
     public void update(Indi indi) {
-        // If media is null, if came from a media file, so create Media as standalone Media entity and add link to indi
-        if (hostingProperty == null) {
-            try {
-                this.targetMedia = indi.getGedcom().createEntity(Gedcom.OBJE);
-                putMedia((Media) targetMedia);
-                indi.addMedia((Media) targetMedia);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-                return;
+        // If it is a creation...
+        if (isNew) {
+            Gedcom gedcom = indi.getGedcom();
+            if (gedcom.getGrammar().equals(Grammar.V55)) {
+                putMediaIntegrated(indi.addProperty("OBJE", ""));
+            } else {
+                try {
+                    this.targetMedia = indi.getGedcom().createEntity(Gedcom.OBJE);
+                    putMediaLinked((Media) targetMedia);
+                    indi.addMedia((Media) targetMedia);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
             }
             return;
         }
         
+        // ... or else a modification
         Entity entity = hostingProperty.getEntity();
         // Case of property directly written within INDI
         if ((entity instanceof Indi) && !(hostingProperty instanceof PropertyMedia)) {
-            Property mediaFile = hostingProperty.getProperty("FILE", true);
-            if (mediaFile == null) {
-                mediaFile = hostingProperty.addProperty("FILE", "");
-            }
-            ((PropertyFile) mediaFile).addFile(this.file);
-            Property mediaTitle = hostingProperty.getProperty("TITL");
-            if (mediaTitle == null) {
-                mediaTitle = hostingProperty.addProperty("TITL", "");
-            }
-            if (mediaTitle != null) {
-                mediaTitle.setValue(this.title);
-            }
+            putMediaIntegrated(hostingProperty);
         } else 
             
         // Case of propertyMedia written within INDI
@@ -199,7 +211,7 @@ public class MediaWrapper {
             Property parent = pm.getParent();
             // add new link from parent
             parent.addMedia((Media) targetMedia);
-            putMedia(targetMedia);
+            putMediaLinked(targetMedia);
             // remove old link
             parent.delProperty(hostingProperty);
         } else
@@ -207,11 +219,23 @@ public class MediaWrapper {
         // Case of property as Media entity (added chosen from MediaChooseer)
         if (entity instanceof Media) {
             indi.addMedia((Media) targetMedia);
-            putMedia(targetMedia);
+            putMediaLinked(targetMedia);
         }
     }
-    
-    private void putMedia(Property property) {
+
+    /**
+     * Writes the media tags of a Media Entity
+     * 
+     * 5.5:
+     *   Not supported
+     * 
+     * 5.5.1:
+     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
+     *      +2 TITL <DESCRIPTIVE_TITLE> {0:1}
+     * 
+     * @param property 
+     */
+    private void putMediaLinked(Property property) {
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
@@ -220,6 +244,30 @@ public class MediaWrapper {
         Property mediaTitle = mediaFile.getProperty("TITL");
         if (mediaTitle == null) {
             mediaTitle = mediaFile.addProperty("TITL", "");
+        }
+        if (mediaTitle != null) {
+            mediaTitle.setValue(this.title);
+        }
+    }
+
+    /**
+     * Writes the media tags of an integrated media property
+     * 
+     * 5.5 and 5.5.1:
+     *  +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
+     *  +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
+     * 
+     * @param property 
+     */
+    private void putMediaIntegrated(Property property) {
+        Property mediaFile = property.getProperty("FILE", true);
+        if (mediaFile == null) {
+            mediaFile = property.addProperty("FILE", "");
+        }
+        ((PropertyFile) mediaFile).addFile(this.file);
+        Property mediaTitle = property.getProperty("TITL");
+        if (mediaTitle == null) {
+            mediaTitle = property.addProperty("TITL", "");
         }
         if (mediaTitle != null) {
             mediaTitle.setValue(this.title);

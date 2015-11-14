@@ -13,7 +13,9 @@ package ancestris.modules.editors.standard.tools;
 
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Grammar;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
@@ -31,6 +33,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
@@ -60,6 +63,7 @@ public class MediaChooser extends javax.swing.JPanel {
     private TreeSet<MediaThumb> allMedia = new TreeSet<MediaThumb>(thumbComparator);
     private DefaultListModel filteredModel = new DefaultListModel();
     
+    private Gedcom gedcom = null;
     private File mainFile = null;
     private Image mainImage = null;
     private Image scaledImage = null;
@@ -70,13 +74,14 @@ public class MediaChooser extends javax.swing.JPanel {
      * Creates new form MediaChooser
      */
     public MediaChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton) {
+        this.gedcom = gedcom;
         mainFile = file;
         mainImage = image;
         mainTitle = title;
         this.okButton = okButton;
         
         // Run media collection from separate thread
-        createMediaThumbs((Collection<Media>) gedcom.getEntities(Gedcom.OBJE));
+        createMediaThumbs();
         Thread mediaThread = new Thread() {
             @Override
             public void run() {
@@ -331,29 +336,57 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     
-    private void createMediaThumbs(Collection<Media> entities) {
+    private void createMediaThumbs() {
         
-        // Get all media
+        // Clear media list
         allMedia.clear();
-        for (Media entity : entities) {
-            if (isSourceOnly(entity)) {
-                continue;
-            }
-            File file = null;
-            String title = "";
-            Property mediaFile = entity.getProperty("FILE", true);
-            if (mediaFile != null && mediaFile instanceof PropertyFile) {
-                file = ((PropertyFile) mediaFile).getFile();
-                Property mediaTitle = mediaFile.getProperty("TITL");
-                if (mediaTitle != null) {
-                    title = mediaTitle.getDisplayValue();
+        
+        // Get all media throughout the whole gedcom, excluding those underneath SOUR only
+        String[] ENTITIES = { Gedcom.INDI, Gedcom.FAM, Gedcom.SUBM };
+        for (String type : ENTITIES) {
+            Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(type);
+            for (Entity entity : entities) {
+                List<PropertyFile> properties = entity.getProperties(PropertyFile.class);
+                for (PropertyFile mediaFile : properties) {
+                    if (isSourceOnly(mediaFile)) {
+                        continue;
+                    }
+                    String title = "";
+                    File file = mediaFile.getFile();
+                    Property mediaTitle = mediaFile.getParent().getProperty("TITL");
+                    if (mediaTitle != null) {
+                        title = mediaTitle.getDisplayValue();
+                    }
+                    MediaThumb media = new MediaThumb(entity, file, title);
+                    allMedia.add(media);
                 }
             }
-            MediaThumb media = new MediaThumb(entity, file, title);
-            allMedia.add(media);
         }
         
-        // for (String type : Gedcom.ENTITIES) {
+
+        
+        // Get all media entities (OBJE)
+        if (gedcom.getGrammar().equals(Grammar.V551)) {
+            Collection<Media> entities = (Collection<Media>) gedcom.getEntities(Gedcom.OBJE);
+            for (Media entity : entities) {
+                if (isSourceOnly(entity)) {
+                    continue;
+                }
+                File file = null;
+                String title = "";
+                Property mediaFile = entity.getProperty("FILE", true);
+                if (mediaFile != null && mediaFile instanceof PropertyFile) {
+                    file = ((PropertyFile) mediaFile).getFile();
+                    Property mediaTitle = mediaFile.getProperty("TITL");
+                    if (mediaTitle != null) {
+                        title = mediaTitle.getDisplayValue();
+                    }
+                }
+                MediaThumb media = new MediaThumb(entity, file, title);
+                allMedia.add(media);
+            }
+        }
+        
     }
 
     private void displayMediaThumbs() {
@@ -366,12 +399,32 @@ public class MediaChooser extends javax.swing.JPanel {
         
     }
 
-    public Media getSelectedEntity() {
+    
+    
+    public boolean isSelectedEntityMedia() {
+        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        return media == null ? false : media.isMedia;
+    }
+
+    public Entity getSelectedEntity() {
         MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
         return media == null ? null : media.entity;
     }
 
+    public File getSelectedFile() {
+        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        return media == null ? null : media.file;
+    }
 
+    public String getSelectedTitle() {
+        MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+        return media == null ? "" : media.title;
+    }
+
+
+    
+    
+    
     
     public void filterModel(String filter) {
         mediaList.clearSelection();
@@ -383,6 +436,10 @@ public class MediaChooser extends javax.swing.JPanel {
         }
     }    
 
+    private boolean isSourceOnly(Property property) {
+        return Utils.parentTagsContains(property, "SOUR");
+    }
+    
     private boolean isSourceOnly(Media entity) {
         List<PropertyXRef> references = entity.getProperties(PropertyXRef.class);
         for (PropertyXRef refProp : references) {
@@ -396,6 +453,7 @@ public class MediaChooser extends javax.swing.JPanel {
     public int getNbMedia() {
         return allMedia.size();
     }
+
   
     
     
@@ -441,12 +499,21 @@ public class MediaChooser extends javax.swing.JPanel {
     
     private class MediaThumb {
         
-        public Media entity = null;
+        public boolean isMedia = false;
+        public Entity entity = null;
         public File file = null;
         public ImageIcon icon = null;
         public String title = "";
         
         public MediaThumb(Media entity, File file, String title) {
+            this.isMedia = true;
+            this.entity = entity;
+            this.file = file;
+            this.title = title;
+        }
+
+        private MediaThumb(Entity entity, File file, String title) {
+            this.isMedia = (entity instanceof Media);
             this.entity = entity;
             this.file = file;
             this.title = title;

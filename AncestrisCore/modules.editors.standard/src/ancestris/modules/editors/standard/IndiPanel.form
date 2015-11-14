@@ -121,35 +121,37 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="eventBirtButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                  </Group>
                   <Component id="modificationLabel" alignment="0" pref="183" max="32767" attributes="0"/>
                   <Component id="sourceImage" alignment="0" max="32767" attributes="0"/>
                   <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="eventMarrButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventRetiButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="eventBaptButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventBirtButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="eventMarrButton" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventRetiButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="eventBaptButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventOccuButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="eventOthersButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventDummyButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="eventDeatButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="eventBuriButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="eventRemoveButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventOccuButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="eventOthersButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventDummyButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="eventDeatButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventBuriButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="eventRemoveButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                      <EmptySpace min="0" pref="11" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -213,7 +215,7 @@
                       <Component id="datelabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                       <Component id="eventDate" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="35" max="32767" attributes="0"/>
+                      <EmptySpace pref="36" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -263,11 +265,13 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="privateCheckBox" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="spousesButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="brothersButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                                  <Component id="sistersButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="childrenButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="3" attributes="0">
+                                      <Component id="spousesButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="sistersButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="childrenButton" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="103" alignment="0" groupAlignment="3" attributes="0">
@@ -308,10 +312,8 @@
                   <Component id="eventOthersButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventDummyButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventRemoveButton" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Group type="103" alignment="2" groupAlignment="0" attributes="0">
-                      <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
-                      <Component id="datelabel" alignment="2" min="-2" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="datelabel" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
