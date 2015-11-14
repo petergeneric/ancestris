@@ -295,7 +295,7 @@ public final class GedcomPropertiesVisualPanel3 extends JPanel implements Consta
         jLabel5.setText(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, jComboBox2.getSelectedItem().toString() + "_label"));
         boolean canBeConverted = (mode == UPDATE) && !getVERS().equals(parent.getOriginalVersion());
         jCheckBox1.setVisible(canBeConverted);
-        jCheckBox2.setVisible(jRadioButton1.isSelected());
+        jCheckBox2.setVisible(jRadioButton1.isSelected() && canBeConverted);
         parent.warnVersionChange(canBeConverted);
     }
     
