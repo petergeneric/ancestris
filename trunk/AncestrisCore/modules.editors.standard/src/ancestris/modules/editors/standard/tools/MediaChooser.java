@@ -336,8 +336,8 @@ public class MediaChooser extends javax.swing.JPanel {
             JPopupMenu menu = new JPopupMenu();
             final MediaThumb media = getSelectedThumb();
             final Entity entity = media.entity; 
-            if (media.isMedia) {
-                Entity[] ents = PropertyXRef.getReferences(media.entity);
+            Entity[] ents = PropertyXRef.getReferences(media.entity);
+            if (media.isMedia && ents.length > 0) {
                 for (Entity ent : ents) {
                     JMenuItem menuItem = new JMenuItem("Editer " + ent.toString(true));
                     menu.add(menuItem);
@@ -346,7 +346,6 @@ public class MediaChooser extends javax.swing.JPanel {
                         public void actionPerformed(ActionEvent ae) {
                             edit(finalEntity);
                         }
-
                     });
                 }
             } else {
@@ -447,6 +446,8 @@ public class MediaChooser extends javax.swing.JPanel {
                 }
                 MediaThumb media = new MediaThumb(entity, file, title);
                 media.setTrueTitle(flag);
+                Entity[] ents = PropertyXRef.getReferences(entity);
+                media.setUnused(ents.length == 0); 
                 allMedia.add(media);
             }
         }
@@ -467,10 +468,6 @@ public class MediaChooser extends javax.swing.JPanel {
         return (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
     }
     
-    private void setSelectedThumb(MediaThumb media) {
-        filteredModel.setElementAt(media, mediaList.getSelectedIndex());
-    }
-
     public boolean isSelectedEntityMedia() {
         MediaThumb media = getSelectedThumb();
         return media == null ? false : media.isMedia;
@@ -511,13 +508,16 @@ public class MediaChooser extends javax.swing.JPanel {
     }
     
     private boolean isSourceOnly(Media entity) {
+        boolean ret = false;
         List<PropertyXRef> references = entity.getProperties(PropertyXRef.class);
         for (PropertyXRef refProp : references) {
-            if (!Utils.parentTagsContains(refProp, "SOUR")) {
+            if (Utils.parentTagsContains(refProp, "SOUR")) {
+                ret = true;
+            } else {
                 return false;
             }
         }
-        return true;
+        return ret;
     }
 
     public int getNbMedia() {
@@ -542,7 +542,8 @@ public class MediaChooser extends javax.swing.JPanel {
             int labelHeight = THUMB_HEIGHT + 12 * nbLines;  // 12 pixels per line for font size 10 set in component netbeans parameters
             
             setPreferredSize(new Dimension(labelWidth, labelHeight));
-            setText("<html><center>" + (entry.isTrueTitle ?  "<font color=black>" : "<font color=blue>") + entry.title + "</font></center></html>");
+            String color = entry.isTrueTitle && !entry.isUnused ? "black" : !entry.isTrueTitle && !entry.isUnused ? "blue" : "red";
+            setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
             setIcon(entry.icon);
 
             if (isSelected) {
@@ -575,6 +576,7 @@ public class MediaChooser extends javax.swing.JPanel {
         public ImageIcon icon = null;
         public String title = "";
         public boolean isTrueTitle = true;
+        public boolean isUnused = false;
         
         public MediaThumb(Media entity, File file, String title) {
             this.isMedia = true;
@@ -595,15 +597,21 @@ public class MediaChooser extends javax.swing.JPanel {
         }
         
         public void setIcon() {
-            icon = cacheIcon.get(file.getAbsolutePath());
+            icon = (file == null ? null : cacheIcon.get(file.getAbsolutePath()));
             if (icon == null) {
                 icon = getResizedIcon(new ImageIcon(getImage()), THUMB_WIDTH, THUMB_HEIGHT);
-                cacheIcon.put(file.getAbsolutePath(), icon);
+                if (file != null) {
+                    cacheIcon.put(file.getAbsolutePath(), icon);
+                }
             }
         }
 
         private void setTrueTitle(boolean flag) {
             isTrueTitle = flag;
+        }
+
+        private void setUnused(boolean b) {
+            isUnused = b;
         }
     }
 
