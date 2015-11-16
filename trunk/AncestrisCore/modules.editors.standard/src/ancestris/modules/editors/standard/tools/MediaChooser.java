@@ -543,7 +543,7 @@ public class MediaChooser extends javax.swing.JPanel {
             
             setPreferredSize(new Dimension(labelWidth, labelHeight));
             String color = entry.isTrueTitle && !entry.isUnused ? "black" : !entry.isTrueTitle && !entry.isUnused ? "blue" : "red";
-            setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
+                setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
             setIcon(entry.icon);
 
             if (isSelected) {
