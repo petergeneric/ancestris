@@ -111,7 +111,7 @@ public class NodeWrapper {
             Indi husband = fam.getHusband();
             Indi wife = fam.getWife();
             ret.append(getName(husband));
-            ret.append(m).append(fam.getMarriageDate().getDisplayValue()).append(" ");
+            ret.append(m).append(fam.getMarriageDate() != null ? fam.getMarriageDate().getDisplayValue() : "").append(" ");
             ret.append(getName(wife));
             this.entity = husband; 
             
