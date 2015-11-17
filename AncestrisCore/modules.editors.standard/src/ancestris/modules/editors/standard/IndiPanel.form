@@ -158,17 +158,19 @@
                                   <Component id="sourceScrollPane1" max="32767" attributes="0"/>
                                   <Component id="assoComboBox" max="32767" attributes="0"/>
                               </Group>
-                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" attributes="0">
-                                          <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                                          <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="assoEditButton" min="-2" max="-2" attributes="0"/>
+                                          <Component id="addSourceButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
                                       </Group>
-                                      <Component id="assoEditButton" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="addSourceButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                                      <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="1" attributes="0">
@@ -325,7 +327,7 @@
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="dayOfWeek" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ageAtEvent" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -336,17 +338,17 @@
                           <Component id="eventPlace" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="eventDetailsButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="eventNoteScrollPane" pref="125" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <Component id="eventNoteScrollPane" pref="83" max="32767" attributes="0"/>
                   </Group>
                   <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Component id="scrollSource" min="-2" max="-2" attributes="0"/>
+                              <Component id="scrollSource" min="-2" pref="90" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="addSourceButton" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
@@ -387,6 +389,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="idLabel">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="4"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.idLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
