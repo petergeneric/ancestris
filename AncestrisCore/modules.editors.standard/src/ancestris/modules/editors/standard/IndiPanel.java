@@ -1376,12 +1376,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         familyTop.setUserObject(new NodeWrapper(NodeWrapper.PARENTS, indi.getFamilyWhereBiologicalChild()));
         DefaultMutableTreeNode meNode = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.MEUNKNOWN, indi));
         Indi[] siblings = indi.getSiblings(true);
-        for (Indi sibling : siblings) {
-            if (!sibling.equals(indi)) {
-                familyTop.add(new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.SIBLING, sibling)));
-            } else {
-                familyTop.add(meNode);
+        if (siblings.length > 0) {
+            for (Indi sibling : siblings) {
+                if (!sibling.equals(indi)) {
+                    familyTop.add(new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.SIBLING, sibling)));
+                } else {
+                    familyTop.add(meNode);
+                }
             }
+        } else {
+            familyTop.add(meNode);
         }
         Fam[] fams = indi.getFamiliesWhereSpouse();
         for (Fam fam : fams) {
