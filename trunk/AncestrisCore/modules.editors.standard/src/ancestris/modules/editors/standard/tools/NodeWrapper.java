@@ -154,10 +154,18 @@ public class NodeWrapper {
     }
 
     private String getName(Indi indi) {
+        if (indi == null) {
+            return "";
+        }
+        String ln = (indi.getLastName() != null) ? indi.getLastName() : "";
+        String fn = (indi.getFirstName() != null) ? indi.getFirstName() : "";
+        String bd = (indi.getBirthAsString() != null) ? indi.getBirthAsString() : "";
+        String dd = (indi.getDeathAsString() != null) ? indi.getDeathAsString() : "";
+        
         StringBuilder ret = new StringBuilder("");
-        ret.append(indi.getLastName()).append(", ").append(indi.getFirstName());
-        ret.append(" (").append(b).append(indi.getBirthAsString()).append(" ");
-        ret.append(d).append(indi.getDeathAsString()).append(") ");
+        ret.append(ln).append(", ").append(fn);
+        ret.append(" (").append(b).append(bd).append(" ");
+        ret.append(d).append(dd).append(") ");
         return ret.toString();
     }
 
