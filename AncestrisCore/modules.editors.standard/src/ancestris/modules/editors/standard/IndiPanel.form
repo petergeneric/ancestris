@@ -123,11 +123,11 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="eventOccuButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="eventOthersButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="eventResiButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="eventDummyButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="eventOthersButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="eventDeatButton" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
@@ -319,8 +319,8 @@
               <Group type="103" groupAlignment="2" attributes="0">
                   <Component id="eventMarrButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventRetiButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="eventResiButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventOthersButton" alignment="2" min="-2" max="-2" attributes="0"/>
-                  <Component id="eventDummyButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventRemoveButton" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
                   <Component id="datelabel" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -935,6 +935,25 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eventBuriButtonActionPerformed"/>
       </Events>
     </Component>
+    <Component class="javax.swing.JButton" name="eventResiButton">
+      <Properties>
+        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+          <Image iconType="3" name="/ancestris/modules/editors/standard/images/residency.png"/>
+        </Property>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventResiButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventResiButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventResiButton.actionCommand" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+          <Dimension value="[30, 26]"/>
+        </Property>
+      </Properties>
+    </Component>
     <Component class="javax.swing.JButton" name="eventOthersButton">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -948,22 +967,6 @@
         </Property>
         <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventOthersButton.actionCommand" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-        <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-          <Dimension value="[30, 26]"/>
-        </Property>
-      </Properties>
-    </Component>
-    <Component class="javax.swing.JButton" name="eventDummyButton">
-      <Properties>
-        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventDummyButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventDummyButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-        <Property name="actionCommand" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventDummyButton.actionCommand" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[30, 26]"/>
