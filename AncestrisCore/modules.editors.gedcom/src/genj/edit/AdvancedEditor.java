@@ -22,10 +22,13 @@
 package genj.edit;
 
 import ancestris.api.editor.Editor;
+import ancestris.app.App;
+import ancestris.app.StartupFiles;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
+import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.common.SelectEntityWidget;
@@ -89,6 +92,7 @@ import javax.swing.event.TreeWillExpandListener;
 import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 import org.openide.nodes.Node;
+import org.openide.windows.WindowManager;
 
 /**
  * Our advanced version of the editor allowing low-level
@@ -841,7 +845,12 @@ import org.openide.nodes.Node;
     } //InteractionListener
 
     /**
-     * Intercept focus policy requests to automate tree node traversal on TAB
+     * Intercept focus policy requests to automate tree node traversal on TAB.
+     * 
+     * FL: 2015-11-21 : Fix : Pressing TAB key continuously on the editor used to freeze the keyboard
+     * With the fix (do the selection in a invokewheUiReady), I cannot reproduce it when pressing TAB continuously for nearly a minute or two
+     * Same for Shift+TAB although I stop it on first property. Indeed, if Shift+TAB is pressed continuously going backwards AND looping around,
+     * it does still freeze the keyboard after a few seconds (I do not know why !?!?)
      */
     private class FocusPolicy extends LayoutFocusTraversalPolicy {
 
@@ -856,9 +865,13 @@ import org.openide.nodes.Node;
             //  - a bean is still displayed at the moment
             //  - next component is not part of that bean
             if (bean != null && !SwingUtilities.isDescendingFrom(result, bean)) {
-                int[] selection = tree.getSelectionRows();
+                final int[] selection = tree.getSelectionRows();
                 if (selection != null && selection.length > 0) {
-                    tree.setSelectionRow((selection[0] + 1) % tree.getRowCount());
+                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                        public void run() {
+                            tree.setSelectionRow((selection[0] + 1) % tree.getRowCount());
+                        }
+                    });
                 }
             }
             // done for me
@@ -876,7 +889,17 @@ import org.openide.nodes.Node;
             //  - a bean is still displayed at the moment
             //  - prev component is not part of that bean
             if (bean != null && !SwingUtilities.isDescendingFrom(result, bean)) {
-                tree.setSelectionRow((tree.getSelectionRows()[0] - 1) % tree.getRowCount());
+                final int[] selection = tree.getSelectionRows();
+                if (selection != null && selection.length > 0) {
+                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                        public void run() {
+                            int i = selection[0] - 1;
+                            if (i >= 0) {
+                                tree.setSelectionRow(i % tree.getRowCount());
+                            }
+                        }
+                    });
+                }
             }
             // done for me
             return result;
