@@ -259,13 +259,15 @@ public class MediaWrapper {
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
-        ((PropertyFile) mediaFile).addFile(this.file);
+        if (this.file != null) {
+            ((PropertyFile) mediaFile).addFile(this.file);
+        }
         Property mediaTitle = property.getProperty("TITL");
         if (mediaTitle == null) {
             mediaTitle = property.addProperty("TITL", "");
         }
         if (mediaTitle != null) {
-            mediaTitle.setValue(this.title);
+            mediaTitle.setValue(this.title != null ? this.title : "");
         }
     }
 
