@@ -856,6 +856,12 @@ import org.openide.windows.WindowManager;
 
         @Override
         public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
+            // FL : 2015-11-22 - There seems to be an illegal exception on swing plaf Basic UI
+            if (focusCycleRoot.isFocusCycleRoot() && !aComponent.isFocusCycleRoot(focusCycleRoot)) {
+                System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Container : focusCycleRoot=" + focusCycleRoot.toString());
+                System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Component : aComponent=" + aComponent.toString());
+                return aComponent;
+            }
             // let super find out who's getting focus - this might be null!
             Component result = super.getComponentAfter(focusCycleRoot, aComponent);
             if (result == null) {
