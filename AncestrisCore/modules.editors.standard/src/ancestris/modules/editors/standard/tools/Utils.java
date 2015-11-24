@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -144,4 +145,16 @@ public class Utils {
     }
     
 
+    
+    public static void getPropertiesRecursively(Property parent, String tag, List props) {
+        Property[] children = parent.getProperties();
+        for (Property child : children) {
+            if (child.getTag().equals(tag)) {
+                props.add(child);
+            }
+            getPropertiesRecursively(child, tag, props);
+        }
+    }
+    
+    
 }
