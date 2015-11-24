@@ -208,7 +208,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="scrollPaneNotes" max="32767" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="delNoteButton" min="-2" max="-2" attributes="0"/>
                   <Group type="103" alignment="0" groupAlignment="1" attributes="0">
@@ -279,7 +279,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="scrollPanePhotos" pref="85" max="32767" attributes="0"/>
+                      <Component id="scrollPanePhotos" pref="84" max="32767" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="1" attributes="0">
                           <Component id="scrollPhotos" min="-2" max="-2" attributes="0"/>
@@ -297,10 +297,10 @@
               </Group>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="scrollNotes" min="-2" pref="36" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="scrollNotes" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="addNoteButton" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="delNoteButton" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="scrollPaneNotes" pref="0" max="32767" attributes="0"/>
@@ -339,7 +339,7 @@
                           <Component id="eventDetailsButton" alignment="2" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="eventNoteScrollPane" pref="83" max="32767" attributes="0"/>
+                      <Component id="eventNoteScrollPane" pref="80" max="32767" attributes="0"/>
                   </Group>
                   <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
               </Group>
@@ -354,7 +354,7 @@
                               <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
                               <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="sourceScrollPane1" max="32767" attributes="0"/>
+                          <Component id="sourceScrollPane1" pref="136" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -757,7 +757,8 @@
         <Component class="javax.swing.JTextArea" name="textAreaNotes">
           <Properties>
             <Property name="columns" type="int" value="20"/>
-            <Property name="rows" type="int" value="5"/>
+            <Property name="lineWrap" type="boolean" value="true"/>
+            <Property name="rows" type="int" value="4"/>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.textAreaNotes.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
@@ -767,6 +768,13 @@
       </SubComponents>
     </Container>
     <Component class="javax.swing.JScrollBar" name="scrollNotes">
+      <Properties>
+        <Property name="blockIncrement" type="int" value="1"/>
+        <Property name="visibleAmount" type="int" value="5"/>
+      </Properties>
+      <Events>
+        <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="scrollNotesAdjustmentValueChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="addNoteButton">
       <Properties>

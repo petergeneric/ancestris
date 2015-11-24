@@ -6,6 +6,7 @@ import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.modules.editors.standard.tools.NodeWrapper;
+import ancestris.modules.editors.standard.tools.NoteWrapper;
 import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
@@ -77,15 +78,23 @@ public class IndiPanel extends Editor implements DocumentListener {
     private Gedcom gedcom;
     private Indi indi;
     
-    private List<MediaWrapper> mediaSet = null;
-    private int mediaIndex = 0;
-    private boolean isBusy = false;
-    private List<MediaWrapper> mediaRemovedSet = null;
-    
     private DefaultMutableTreeNode familyTop = null;
 
     private String SOSA_TAG = "_SOSA";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
+    
+    // Media
+    private List<MediaWrapper> mediaSet = null;
+    private int mediaIndex = 0;
+    private boolean isBusyMedia = false;
+    private List<MediaWrapper> mediaRemovedSet = null;
+    
+    // Notes
+    private List<NoteWrapper> noteSet = null;
+    private int noteIndex = 0;
+    private boolean isBusyNote = false;
+    private List<NoteWrapper> noteRemovedSet = null;
+    
     
     /**
      * Creates new form IndiPanel
@@ -365,10 +374,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPaneFamily.setViewportView(familyTree);
 
         textAreaNotes.setColumns(20);
-        textAreaNotes.setRows(5);
+        textAreaNotes.setLineWrap(true);
+        textAreaNotes.setRows(4);
         textAreaNotes.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.text")); // NOI18N
         textAreaNotes.setWrapStyleWord(true);
         scrollPaneNotes.setViewportView(textAreaNotes);
+
+        scrollNotes.setBlockIncrement(1);
+        scrollNotes.setVisibleAmount(5);
+        scrollNotes.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                scrollNotesAdjustmentValueChanged(evt);
+            }
+        });
 
         addNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(addNoteButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addNoteButton.text")); // NOI18N
@@ -671,7 +689,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(scrollPaneNotes)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(3, 3, 3)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(delNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -726,7 +744,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
+                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -739,10 +757,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(scrollNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
                         .addComponent(addNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(1, 1, 1)
                         .addComponent(delNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(scrollPaneNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -775,7 +793,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                             .addComponent(eventPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(eventDetailsButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
+                        .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -787,7 +805,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(7, 7, 7)
                                 .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(sourceScrollPane1))
+                            .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -828,7 +846,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_privateCheckBoxActionPerformed
 
     private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
-        if (isBusy) {
+        if (isBusyMedia) {
             return;
         }
         int i = scrollPhotos.getValue();
@@ -913,6 +931,17 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void eventBuriButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBuriButtonActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_eventBuriButtonActionPerformed
+
+    private void scrollNotesAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollNotesAdjustmentValueChanged
+        if (isBusyNote) {
+            return;
+        }
+        int i = scrollNotes.getValue();
+        if (noteSet != null && !noteSet.isEmpty() && i >= 0 && i < noteSet.size() && i != noteIndex) {
+            noteIndex = scrollNotes.getValue();
+            displayNote();
+        }
+    }//GEN-LAST:event_scrollNotesAdjustmentValueChanged
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1113,6 +1142,21 @@ public class IndiPanel extends Editor implements DocumentListener {
         familyTree.repaint();
         
         // Notes of individual
+        if (noteSet != null) {
+            noteSet.clear();
+            noteSet = null;
+        }
+        if (noteRemovedSet != null) {
+            noteRemovedSet.clear();
+            noteRemovedSet = null;
+        }
+        noteSet = getNotes(indi);
+        noteRemovedSet = new ArrayList<NoteWrapper>();
+        scrollNotes.setMinimum(0);
+        scrollNotes.setBlockIncrement(1);
+        scrollNotes.setUnitIncrement(1);
+        noteIndex = 0;
+        displayNote();
         
         
         
@@ -1152,12 +1196,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         //
         putMedia();
         //
+        putNotes();
         //.......................................
     }
 
     
     
-    
+    /**
+     * Media
+     * @param indi
+     * @return 
+     */
     
     private List<MediaWrapper> getMedia(Indi indi) {
         List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
@@ -1211,13 +1260,13 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     private void displayPhoto() {
-        isBusy = true;
+        isBusyMedia = true;
         if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
             setPhoto(mediaSet.get(mediaIndex), indi.getSex());
         } else {
             setPhoto(null, getSex());
         }
-        isBusy = false;
+        isBusyMedia = false;
     }
     
     private void setPhoto(MediaWrapper media, int sex) {
@@ -1355,7 +1404,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private void updatePhotoTitle(int index) {
-        if (isBusy) {
+        if (isBusyMedia) {
             return;
         }
         String photoTitle = textAreaPhotos.getText();
@@ -1405,6 +1454,72 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
 
+    /**
+     * Notes
+     * 
+     * We get notes *only as linked entities* to individuals
+     * 
+     * @param indi
+     * @return 
+     */
+    
+    private List<NoteWrapper> getNotes(Indi indi) {
+        List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
+                
+        // Look for notes directly attached to indi
+        List<Property> noteProps = new ArrayList<Property>();
+        Utils.getPropertiesRecursively(indi, "NOTE", noteProps);
+        for (Property prop : noteProps) {
+            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+                ret.add(new NoteWrapper(prop));
+            }
+        }
+        
+        return ret;
+    }
+
+    
+    private void putNotes() {
+        //noteSet
+        for (NoteWrapper note : noteSet) {
+            note.update(indi);
+        }
+        for (NoteWrapper note : noteRemovedSet) {
+            note.remove(indi);
+        }
+    }
+
+    
+    private void displayNote() {
+        isBusyNote = true;
+        if (noteSet != null && !noteSet.isEmpty() && (noteIndex >= 0) && (noteIndex < noteSet.size())) {        
+            setNote(noteSet.get(noteIndex));
+        } else {
+            setNote(null);
+        }
+        isBusyNote = false;
+    }
+    
+    private void setNote(NoteWrapper note) {
+        
+        String localText = "";
+        
+        if (note != null) {
+            localText = note.getText();
+        }
+        
+        // Title
+        textAreaNotes.setText(localText);
+        
+        // Update scroll
+        scrollNotes.setValues(noteIndex, 1, 0, noteSet.size());
+        scrollNotes.setToolTipText(getScrollNotesLabel());
+    }
+
+
+    private String getScrollNotesLabel() {
+        return String.valueOf(noteSet.size() > 0 ? noteIndex + 1 : noteIndex) + "/" + String.valueOf(noteSet.size());
+    }
 
     
     
