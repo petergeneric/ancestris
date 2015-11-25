@@ -7,6 +7,7 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
+import genj.gedcom.Media;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
@@ -36,7 +37,7 @@ public class TestCardinality extends Test {
     void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report) {
 
         MetaProperty itsmeta = prop.getMetaProperty();
-
+        
         // check children that occur more than once
         Map <String, Property>seen = new HashMap<String, Property>();
         for (int i = 0, j = prop.getNoOfProperties(); i < j; i++) {
@@ -52,6 +53,10 @@ public class TestCardinality extends Test {
                         seen.put(tag, null);
                         issues.add(new ViewContext(first).setText(NbBundle.getMessage(this.getClass(), "err.cardinality.max", prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality())));
                     }
+                }
+            } else {
+                if (!seen.containsKey(tag)) {
+                    seen.put(tag, child);
                 }
             }
         }
