@@ -857,30 +857,39 @@ import org.openide.windows.WindowManager;
         @Override
         public Component getComponentAfter(Container focusCycleRoot, Component aComponent) {
             // FL : 2015-11-22 - There seems to be an illegal exception on swing plaf Basic UI
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ getComponentAfter : focusCycleRoot=" + focusCycleRoot.toString());
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Container : focusCycleRoot=" + focusCycleRoot.toString());
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Component : aComponent=" + aComponent.toString());
             if (focusCycleRoot.isFocusCycleRoot() && !aComponent.isFocusCycleRoot(focusCycleRoot)) {
-                System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Container : focusCycleRoot=" + focusCycleRoot.toString());
-                System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Component : aComponent=" + aComponent.toString());
+                System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Condition vraie, retourner aComponent");
                 return aComponent;
             }
             // let super find out who's getting focus - this might be null!
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Condition fausse, continuer avec super");
             Component result = super.getComponentAfter(focusCycleRoot, aComponent);
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ après super");
             if (result == null) {
+                System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ result est null");
                 return null;
             }
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ result n'est pas nul");
             // choose next row in tree IF
             //  - a bean is still displayed at the moment
             //  - next component is not part of that bean
             if (bean != null && !SwingUtilities.isDescendingFrom(result, bean)) {
                 final int[] selection = tree.getSelectionRows();
                 if (selection != null && selection.length > 0) {
+                    System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Il y a un truc à sélectionner. Lancement du runnable.");
                     WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                         public void run() {
                             tree.setSelectionRow((selection[0] + 1) % tree.getRowCount());
+                            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ on sélectionne la ligne selection[0]+1 = " + selection[0]+1);
                         }
                     });
                 }
             }
             // done for me
+            System.out.println("¤¤¤¤ DEBUG POUR JEANNOT ¤¤¤¤ Fin normal, result = " + result);
             return result;
         }
 
