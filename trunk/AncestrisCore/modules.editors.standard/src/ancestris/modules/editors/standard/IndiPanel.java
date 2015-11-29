@@ -253,6 +253,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
         scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+        scrollPhotos.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                scrollPhotosMouseWheelMoved(evt);
+            }
+        });
         scrollPhotos.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 scrollPhotosAdjustmentValueChanged(evt);
@@ -688,14 +693,6 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addComponent(placeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventPlace)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventDetailsButton)
-                        .addGap(1, 1, 1))
                     .addComponent(eventTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
@@ -718,6 +715,13 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(1, 1, 1)
+                                .addComponent(placeLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eventPlace)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eventDetailsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(datelabel)
                                 .addGap(10, 10, 10)
@@ -1058,6 +1062,26 @@ public class IndiPanel extends Editor implements DocumentListener {
         int notches = evt.getWheelRotation();
         scrollNotes(notches);
     }//GEN-LAST:event_scrollNotesMouseWheelMoved
+
+    private void scrollPhotosMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollPhotosMouseWheelMoved
+        int notches = evt.getWheelRotation();
+        if (isBusyMedia) {
+            return;
+        }
+        if (mediaSet != null && !mediaSet.isEmpty()) {
+            int i = mediaIndex + notches;
+            if (i >= mediaSet.size()) {
+                i = mediaSet.size() - 1;
+            }
+            if (i < 0) {
+                i = 0;
+            }
+            mediaIndex = i;
+            displayPhoto();
+        }
+        
+        
+    }//GEN-LAST:event_scrollPhotosMouseWheelMoved
 
     
     private void scrollNotes(int notches) {
