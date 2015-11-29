@@ -1046,20 +1046,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void textAreaNotesMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_textAreaNotesMouseWheelMoved
         int notches = evt.getWheelRotation();
         if (evt.isControlDown()) {
-            if (isBusyNote) {
-                return;
-            }
-            if (noteSet != null && !noteSet.isEmpty()) {
-                int i = noteIndex + notches;
-                if (i >= noteSet.size()) {
-                    i = noteSet.size() - 1;
-                }
-                if (i < 0) {
-                    i = 0;
-                }
-                noteIndex = i;
-                displayNote();
-            }
+            scrollNotes(notches);
         } else {
             JScrollBar vbar = scrollPaneNotes.getVerticalScrollBar();
             int currentPosition = vbar.getValue();
@@ -1069,6 +1056,11 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void scrollNotesMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollNotesMouseWheelMoved
         int notches = evt.getWheelRotation();
+        scrollNotes(notches);
+    }//GEN-LAST:event_scrollNotesMouseWheelMoved
+
+    
+    private void scrollNotes(int notches) {
         if (isBusyNote) {
             return;
         }
@@ -1083,9 +1075,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             noteIndex = i;
             displayNote();
         }
-    }//GEN-LAST:event_scrollNotesMouseWheelMoved
-
-    
+    }
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1737,6 +1727,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         return b;
     }
+
 
     
     
