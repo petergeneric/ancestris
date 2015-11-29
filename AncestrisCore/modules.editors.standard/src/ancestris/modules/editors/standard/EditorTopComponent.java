@@ -54,6 +54,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     private Context context = null;
     
     // Update control
+    private boolean isBusyCommitting = false;
     private final Callback callback = new Callback();
     private boolean isChangeSource = false;
 
@@ -260,6 +261,11 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             return;
         }
 
+        // Is busy committing ?
+        if (isBusyCommitting) {
+            return;
+        }
+        isBusyCommitting = true;
         try {
 
             isChangeSource = true;
@@ -281,6 +287,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         } finally {
             isChangeSource = false;
             confirmPanel.setChanged(false);
+            isBusyCommitting = false;
         }
     }
 
