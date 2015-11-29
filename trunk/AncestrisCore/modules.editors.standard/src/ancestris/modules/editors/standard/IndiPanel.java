@@ -6,6 +6,7 @@ import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.modules.editors.standard.tools.NodeWrapper;
+import ancestris.modules.editors.standard.tools.NoteChooser;
 import ancestris.modules.editors.standard.tools.NoteWrapper;
 import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
@@ -20,6 +21,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Media;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
@@ -40,6 +42,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JScrollBar;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -110,7 +113,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
         initComponents();
         familyTree.setCellRenderer(new FamilyTreeRenderer());
-        //familyTree.setRowHeight(22);
         familyTree.addMouseListener(new FamilyTreeMouseListener());
     }
     
@@ -189,6 +191,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         modificationLabel = new javax.swing.JLabel();
         assoComboBox = new javax.swing.JComboBox();
         assoEditButton = new javax.swing.JButton();
+        delNoteEventButton = new javax.swing.JButton();
+        addNoteEventButton = new javax.swing.JButton();
+        scrollNotesEvent = new javax.swing.JScrollBar();
 
         setMaximumSize(new java.awt.Dimension(32767, 500));
         setPreferredSize(new java.awt.Dimension(557, 800));
@@ -377,11 +382,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaNotes.setLineWrap(true);
         textAreaNotes.setRows(4);
         textAreaNotes.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.text")); // NOI18N
+        textAreaNotes.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.toolTipText")); // NOI18N
         textAreaNotes.setWrapStyleWord(true);
+        textAreaNotes.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                textAreaNotesMouseWheelMoved(evt);
+            }
+        });
         scrollPaneNotes.setViewportView(textAreaNotes);
 
         scrollNotes.setBlockIncrement(1);
         scrollNotes.setVisibleAmount(5);
+        scrollNotes.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                scrollNotesMouseWheelMoved(evt);
+            }
+        });
         scrollNotes.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 scrollNotesAdjustmentValueChanged(evt);
@@ -394,6 +410,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         addNoteButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         addNoteButton.setIconTextGap(0);
         addNoteButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        addNoteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addNoteButtonActionPerformed(evt);
+            }
+        });
 
         delNoteButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(delNoteButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteButton.text")); // NOI18N
@@ -401,6 +422,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         delNoteButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         delNoteButton.setIconTextGap(0);
         delNoteButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        delNoteButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delNoteButtonActionPerformed(evt);
+            }
+        });
 
         eventBirtButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/birth.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventBirtButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBirtButton.text")); // NOI18N
@@ -545,6 +571,38 @@ public class IndiPanel extends Editor implements DocumentListener {
         assoEditButton.setIconTextGap(0);
         assoEditButton.setPreferredSize(new java.awt.Dimension(18, 18));
 
+        delNoteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(delNoteEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.text")); // NOI18N
+        delNoteEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.toolTipText")); // NOI18N
+        delNoteEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        delNoteEventButton.setIconTextGap(0);
+        delNoteEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        delNoteEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delNoteEventButtonActionPerformed(evt);
+            }
+        });
+
+        addNoteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addNoteEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addNoteEventButton.text")); // NOI18N
+        addNoteEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addNoteEventButton.toolTipText")); // NOI18N
+        addNoteEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        addNoteEventButton.setIconTextGap(0);
+        addNoteEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        addNoteEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addNoteEventButtonActionPerformed(evt);
+            }
+        });
+
+        scrollNotesEvent.setBlockIncrement(1);
+        scrollNotesEvent.setVisibleAmount(5);
+        scrollNotesEvent.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                scrollNotesEventAdjustmentValueChanged(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -592,24 +650,14 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(116, 116, 116)
-                .addComponent(brothersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(brothersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sistersButton, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                .addComponent(sistersButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(spousesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(childrenButton, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                .addComponent(spousesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(3, 3, 3)
+                .addComponent(childrenButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(8, 8, 8))
-            .addGroup(layout.createSequentialGroup()
-                .addGap(116, 116, 116)
-                .addComponent(maleRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(femaleRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(unknownRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(privateCheckBox)
-                .addContainerGap())
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -648,49 +696,67 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventDetailsButton)
                         .addGap(1, 1, 1))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
-                            .addComponent(assoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(eventTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(sourceScrollPane1, javax.swing.GroupLayout.Alignment.LEADING))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(3, 3, 3)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                                     .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(scrollSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(scrollSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(scrollNotesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(5, 5, 5))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(repoText)
-                        .addGap(3, 3, 3)
-                        .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(datelabel)
-                        .addGap(10, 10, 10)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(dayOfWeek)
-                                .addGap(18, 18, 18)
-                                .addComponent(ageAtEvent))
-                            .addComponent(eventDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(eventNoteScrollPane))
-                .addContainerGap())
+                                .addComponent(datelabel)
+                                .addGap(10, 10, 10)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGap(6, 6, 6)
+                                        .addComponent(dayOfWeek)
+                                        .addGap(18, 18, 18)
+                                        .addComponent(ageAtEvent))
+                                    .addComponent(eventDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(assoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(repoText))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(scrollPaneNotes)
-                .addGap(3, 3, 3)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(delNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(separator)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(116, 116, 116)
+                        .addComponent(maleRadioButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(femaleRadioButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(unknownRadioButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(privateCheckBox))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(scrollPaneNotes)
+                        .addGap(3, 3, 3)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(delNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(addNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(scrollNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(separator)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -736,7 +802,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -747,9 +813,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(scrollPaneFamily, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollNotes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(scrollNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(3, 3, 3)
                         .addComponent(addNoteButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(3, 3, 3)
@@ -775,6 +841,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(datelabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dayOfWeek)
@@ -785,18 +852,26 @@ public class IndiPanel extends Editor implements DocumentListener {
                             .addComponent(eventPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(eventDetailsButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE))
-                    .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                .addGap(3, 3, 3)
+                                .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(3, 3, 3)
+                                .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+                        .addGap(1, 1, 1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(scrollSource, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(scrollSource, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
                                 .addGap(3, 3, 3)
                                 .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(3, 3, 3)
-                                .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(9, 9, 9))
                             .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
@@ -935,10 +1010,88 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_scrollNotesAdjustmentValueChanged
 
+    private void addNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteButtonActionPerformed
+        if (chooseNote(noteSet.size())) {
+            displayNote();
+            textAreaNotes.requestFocus();
+        }
+    }//GEN-LAST:event_addNoteButtonActionPerformed
+
+    private void delNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delNoteButtonActionPerformed
+        if (noteSet != null && !noteSet.isEmpty() && (noteIndex >= 0) && (noteIndex < noteSet.size())) {
+            NoteWrapper note = noteSet.get(noteIndex);
+            noteRemovedSet.add(note);
+            noteSet.remove(noteIndex);
+            noteIndex--;
+            if (noteIndex < 0) {
+                noteIndex = 0;
+            }
+            changes.setChanged(true);
+        }
+        displayNote();        
+    }//GEN-LAST:event_delNoteButtonActionPerformed
+
+    private void delNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delNoteEventButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_delNoteEventButtonActionPerformed
+
+    private void addNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteEventButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addNoteEventButtonActionPerformed
+
+    private void scrollNotesEventAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollNotesEventAdjustmentValueChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_scrollNotesEventAdjustmentValueChanged
+
+    private void textAreaNotesMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_textAreaNotesMouseWheelMoved
+        int notches = evt.getWheelRotation();
+        if (evt.isControlDown()) {
+            if (isBusyNote) {
+                return;
+            }
+            if (noteSet != null && !noteSet.isEmpty()) {
+                int i = noteIndex + notches;
+                if (i >= noteSet.size()) {
+                    i = noteSet.size() - 1;
+                }
+                if (i < 0) {
+                    i = 0;
+                }
+                noteIndex = i;
+                displayNote();
+            }
+        } else {
+            JScrollBar vbar = scrollPaneNotes.getVerticalScrollBar();
+            int currentPosition = vbar.getValue();
+            vbar.setValue(currentPosition + notches * vbar.getBlockIncrement() * 3);
+        }
+    }//GEN-LAST:event_textAreaNotesMouseWheelMoved
+
+    private void scrollNotesMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollNotesMouseWheelMoved
+        int notches = evt.getWheelRotation();
+        if (isBusyNote) {
+            return;
+        }
+        if (noteSet != null && !noteSet.isEmpty()) {
+            int i = noteIndex + notches;
+            if (i >= noteSet.size()) {
+                i = noteSet.size() - 1;
+            }
+            if (i < 0) {
+                i = 0;
+            }
+            noteIndex = i;
+            displayNote();
+        }
+    }//GEN-LAST:event_scrollNotesMouseWheelMoved
+
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMediaButton;
     private javax.swing.JButton addNoteButton;
+    private javax.swing.JButton addNoteEventButton;
     private javax.swing.JButton addSourceButton;
     private javax.swing.JLabel ageAtEvent;
     private javax.swing.JComboBox assoComboBox;
@@ -950,6 +1103,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JLabel dayOfWeek;
     private javax.swing.JButton delMediaButton;
     private javax.swing.JButton delNoteButton;
+    private javax.swing.JButton delNoteEventButton;
     private javax.swing.JButton delSourceButton;
     private javax.swing.JButton eventBaptButton;
     private javax.swing.JButton eventBirtButton;
@@ -987,6 +1141,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton repoEditButton;
     private javax.swing.JTextField repoText;
     private javax.swing.JScrollBar scrollNotes;
+    private javax.swing.JScrollBar scrollNotesEvent;
     private javax.swing.JScrollPane scrollPaneFamily;
     private javax.swing.JScrollPane scrollPaneNotes;
     private javax.swing.JScrollPane scrollPanePhotos;
@@ -1166,6 +1321,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         firstnamesText.getDocument().addDocumentListener(this);
         lastnameText.getDocument().addDocumentListener(this);
         textAreaPhotos.getDocument().addDocumentListener(new photoTitleListener());
+        textAreaNotes.getDocument().addDocumentListener(new noteTextListener());
     }
 
     
@@ -1458,14 +1614,22 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<NoteWrapper> getNotes(Indi indi) {
         List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
                 
-        // Look for notes directly attached to indi
-        List<Property> noteProps = new ArrayList<Property>();
-        Utils.getPropertiesRecursively(indi, "NOTE", noteProps);
+        // Look for only general notes directly attached to indi
+        Property[] noteProps = indi.getProperties("NOTE");
         for (Property prop : noteProps) {
             if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
                 ret.add(new NoteWrapper(prop));
             }
         }
+
+//        // Look for all notes attached to indi
+//        List<Property> noteProps = new ArrayList<Property>();
+//        Utils.getPropertiesRecursively(indi, "NOTE", noteProps);
+//        for (Property prop : noteProps) {
+//            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+//                ret.add(new NoteWrapper(prop));
+//            }
+//        }
         
         return ret;
     }
@@ -1514,7 +1678,66 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
+    private void updateNoteText(int index) {
+        if (isBusyNote) {
+            return;
+        }
+        String noteText = textAreaNotes.getText();
+        if ((noteSet != null) && (!noteSet.isEmpty()) && (index >= 0) && (index < noteSet.size())) {
+            noteSet.get(index).setText(noteText);
+            noteIndex = index;
+        } else {
+            NoteWrapper note = new NoteWrapper(noteText);
+            noteSet.add(note);
+            noteIndex = noteSet.size()-1;
+        }
+        changes.setChanged(true);
+    }
+
     
+    private boolean chooseNote(int index) {
+        boolean b = false;
+        boolean exists = (noteSet != null) && (!noteSet.isEmpty()) && (index >= 0) && (index < noteSet.size());
+        
+        JButton noteButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseNote"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { noteButton, cancelButton };
+        NoteChooser noteChooser = new NoteChooser(gedcom, exists ? noteSet.get(index) : null, noteButton, cancelButton);
+        int size = noteChooser.getNbNotes();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseNoteTitle", size), noteChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == noteButton) {
+            String noteText = noteChooser.getSelectedText();
+            if (noteChooser.isSelectedEntityNote()) {
+                Note entity = (Note) noteChooser.getSelectedEntity();
+                if (exists) {
+                    noteSet.get(index).setTargetEntity(entity);
+                    noteSet.get(index).setText(noteText);
+                    noteIndex = index;
+                } else {
+                    NoteWrapper note = new NoteWrapper(entity);
+                    note.setText(noteText);
+                    noteSet.add(note);
+                    noteIndex = noteSet.size() - 1;
+                }
+                changes.setChanged(true);
+                b = true;
+            } else {
+                if (exists) {
+                    noteSet.get(index).setText(noteText);
+                    noteIndex = index;
+                } else {
+                    NoteWrapper note = new NoteWrapper(noteText);
+                    noteSet.add(note);
+                    noteIndex = noteSet.size() - 1;
+                }
+                changes.setChanged(true);
+                b = true;
+            }
+        }
+        
+        return b;
+    }
+
     
     
     
@@ -1536,6 +1759,24 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
+    
+    private class noteTextListener implements DocumentListener {
+
+        public void insertUpdate(DocumentEvent e) {
+            updateNoteText(noteIndex);
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updateNoteText(noteIndex);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            updateNoteText(noteIndex);
+        }
+    }
+
+
+    
     
     private class FamilyTreeMouseListener implements MouseListener {
 

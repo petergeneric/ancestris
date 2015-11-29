@@ -22,53 +22,6 @@ import genj.gedcom.PropertyNote;
 import org.openide.util.Exceptions;
 
 
-//    
-//NOTE_STRUCTURE: 5.5 =
-//
-//  [
-//  n  NOTE @<XREF:NOTE>@  {1:1}
-//    +1 SOUR @<XREF:SOUR>@  {0:M}
-//  |
-//  n  NOTE [<SUBMITTER_TEXT> | <NULL>]  {1:1}
-//    +1 [ CONC | CONT ] <SUBMITTER_TEXT>  {0:M}
-//    +1 SOUR @<XREF:SOUR>@  {0:M}
-//  ]
-//
-//
-//  NOTE_STRUCTURE: 5.5.1 = 5.5 (more or less the source)
-//  [
-//  n NOTE @<XREF:NOTE>@ {1:1}
-//  |
-//  n NOTE [<SUBMITTER_TEXT> | <NULL>] {1:1}
-//  +1 [CONC|CONT] <SUBMITTER_TEXT> {0:M}
-//  ]
-//
-//
-////////////////////////////////////////////////////////////
-//
-//NOTE_RECORD: 5.5 =
-//
-//  n  @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT>  {1:1}
-//    +1 [ CONC | CONT] <SUBMITTER_TEXT>  {0:M}
-//    +1 <<SOURCE_CITATION>>  {0:M}
-//    +1 REFN <USER_REFERENCE_NUMBER>  {0:M}
-//      +2 TYPE <USER_REFERENCE_TYPE>  {0:1}
-//    +1 RIN <AUTOMATED_RECORD_ID>  {0:1}
-//    +1 <<CHANGE_DATE>>  {0:1}
-//
-//NOTE_RECORD: 5.5.1 = 5.5 !
-//
-//    n @<XREF:NOTE>@ NOTE <SUBMITTER_TEXT> {1:1}
-//    +1 [CONC|CONT] <SUBMITTER_TEXT> {0:M}
-//    +1 <<SOURCE_CITATION>> {0:M}
-//    +1 REFN <USER_REFERENCE_NUMBER> {0:M}
-//        +2 TYPE <USER_REFERENCE_TYPE> {0:1}
-//    +1 RIN <AUTOMATED_RECORD_ID> {0:1}
-//    +1 <<CHANGE_DATE>> {0:1}
-//
-//
-
-
 
 /**
  *
@@ -92,6 +45,7 @@ public class NoteWrapper {
             setText(this.targetNote.getValue().trim());
         } else {
             this.hostingProperty = property.getParent();
+            this.targetNote = this.hostingProperty.getEntity();
             setText(property.getValue().trim());
         }
     }
@@ -199,6 +153,11 @@ public class NoteWrapper {
     public void setText(String str) {
         this.text = str;
     }
+
+    public void setTargetEntity(Note entity) {
+        this.targetNote = entity;
+    }
+
 
 
 }

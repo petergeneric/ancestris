@@ -51,6 +51,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -342,7 +343,7 @@ public class MediaChooser extends javax.swing.JPanel {
             Entity[] ents = PropertyXRef.getReferences(media.entity);
             if (media.isMedia && ents.length > 0) {
                 for (Entity ent : ents) {
-                    JMenuItem menuItem = new JMenuItem("Editer " + ent.toString(true));
+                    JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", ent.toString(true)));
                     menu.add(menuItem);
                     final Entity finalEntity = ent;
                     menuItem.addActionListener(new ActionListener() {
@@ -352,7 +353,7 @@ public class MediaChooser extends javax.swing.JPanel {
                     });
                 }
             } else {
-                JMenuItem menuItem = new JMenuItem("Editer " + entity.toString(true));
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditMedia"));
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
@@ -498,12 +499,14 @@ public class MediaChooser extends javax.swing.JPanel {
     
     public void filterModel(String filter) {
         mediaList.clearSelection();
+        mediaList.setModel(new DefaultListModel());
         filteredModel.clear();
         for (MediaThumb item : allMedia) {
             if (item.title.contains(filter)) {
                 filteredModel.addElement(item);
             }
         }
+        mediaList.setModel(filteredModel);
     }    
 
     private boolean isSourceOnly(Property property) {
@@ -546,7 +549,7 @@ public class MediaChooser extends javax.swing.JPanel {
             
             setPreferredSize(new Dimension(labelWidth, labelHeight));
             String color = entry.isTrueTitle && !entry.isUnused ? "black" : !entry.isTrueTitle && !entry.isUnused ? "blue" : "red";
-                setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
+            setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
             setIcon(entry.icon);
 
             if (isSelected) {
