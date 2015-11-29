@@ -1431,6 +1431,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Title
         textAreaPhotos.setText(localTitle);
+        textAreaPhotos.setCaretPosition(0);
         
             
         // Update scroll
@@ -1654,8 +1655,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             localText = note.getText();
         }
         
-        // Title
+        // Text
         textAreaNotes.setText(localText);
+        textAreaNotes.setCaretPosition(0);
         
         // Update scroll
         scrollNotes.setValues(noteIndex, 1, 0, noteSet.size());
