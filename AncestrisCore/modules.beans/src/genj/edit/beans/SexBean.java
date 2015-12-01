@@ -56,8 +56,9 @@ public class SexBean extends PropertyBean {
   public SexBean() {
     
     // use our layout
-// disposition verticale (au moins pour le gedcom)    setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-      setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+    //setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+    // disposition verticale (au moins pour le gedcom)    
+    setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
     
     add(male);
     add(female);
