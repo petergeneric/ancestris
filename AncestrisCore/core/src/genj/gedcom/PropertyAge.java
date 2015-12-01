@@ -125,12 +125,12 @@ public class PropertyAge extends Property {
     return age.toString();
     }
 
-    public String getDecimalValue() {
+    public String getDecimalValue(String format) {
         double d = age.getYears();
         d += ((double) age.getMonths()) / 12;
         d += ((double) age.getDays()) / 365;
 
-        DecimalFormat df = new DecimalFormat("#.##");
+        DecimalFormat df = new DecimalFormat(format);
         df.setRoundingMode(RoundingMode.FLOOR);
         return df.format(d);
     }
