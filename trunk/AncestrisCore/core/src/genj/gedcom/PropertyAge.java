@@ -21,8 +21,10 @@ package genj.gedcom;
 
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
+import java.math.RoundingMode;
 
 import java.text.Collator;
+import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 
@@ -123,7 +125,22 @@ public class PropertyAge extends Property {
     return age.toString();
     }
 
-  /**
+    public String getDecimalValue() {
+        double d = age.getYears();
+        d += ((double) age.getMonths()) / 12;
+        d += ((double) age.getDays()) / 365;
+
+        DecimalFormat df = new DecimalFormat("#.##");
+        df.setRoundingMode(RoundingMode.FLOOR);
+        return df.format(d);
+    }
+
+  public void getAge(Entity e, Property propEvent) {
+      updateAge(Delta.get(getEarlier(e, propEvent), getLater(propEvent)));
+  }
+    
+    
+    /**
    * Accessor Value
    */
   public void setValue(String newValue) {
@@ -160,11 +177,14 @@ public class PropertyAge extends Property {
    * Update the age
    */
   public boolean updateAge() {
+    // calc delta
+      return updateAge(Delta.get(getEarlier(), getLater()));
+  }
+  
+  public boolean updateAge(Delta delta) {
     
     String old  = getValue();
 
-    // calc delta
-    Delta delta = Delta.get(getEarlier(), getLater());
     if (delta == null)
       return false;
       
@@ -198,10 +218,13 @@ public class PropertyAge extends Property {
    *  FAM:MARR:WIFE:AGE -> FAM:WIFE -> INDI:BIRT:DATE
    */
   public PointInTime getEarlier() {
-    Entity e = getEntity();
+    return getEarlier(getEntity(), getParent());
+  }
+  
+  public PointInTime getEarlier(Entity e, Property parent) {
+    
     // might FAM:MARR:WIFE|HUSB:AGE
     if (e instanceof Fam) {
-      Property parent = getParent();
       if (parent.getTag().equals("HUSB"))
         e = ((Fam) e).getHusband();
       if (parent.getTag().equals("WIFE"))
@@ -226,16 +249,28 @@ public class PropertyAge extends Property {
    *
    */
   public PointInTime getLater() {
-    Property parent = getParent();
+    return getLater(getParent());
+  }
+  
+  public PointInTime getLater(Property parent) {
+    
     // might FAM:MARR:WIFE|HUSB:AGE
     if (parent.getTag().equals("HUSB") || parent.getTag().equals("WIFE")) {
       // one more up
       parent = parent.getParent();
     }
     // check event
-    if (!(parent instanceof PropertyEvent))
+//    if (!(parent instanceof PropertyEvent))
+//      return null;
+//    PropertyDate date = ((PropertyEvent) parent).getDate();
+    Property prop = parent.getProperty("DATE",true);
+    if (prop==null) 
       return null;
-    PropertyDate date = ((PropertyEvent) parent).getDate();
+
+    if (!(prop instanceof PropertyDate))
+      return null;
+    PropertyDate date = (PropertyDate) prop;
+
     // start of date
     return date != null ? date.getStart() : null;
   }
