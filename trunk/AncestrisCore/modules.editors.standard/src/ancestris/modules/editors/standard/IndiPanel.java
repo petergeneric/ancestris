@@ -3,6 +3,8 @@ package ancestris.modules.editors.standard;
 import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
+import ancestris.modules.editors.standard.tools.EventTableModel;
+import ancestris.modules.editors.standard.tools.EventWrapper;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.modules.editors.standard.tools.NodeWrapper;
@@ -35,17 +37,29 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
 import javax.swing.JScrollBar;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.openide.util.Exceptions;
@@ -97,6 +111,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     private int noteIndex = 0;
     private boolean isBusyNote = false;
     private List<NoteWrapper> noteRemovedSet = null;
+    
+    // Events
+    private List<EventWrapper> eventSet = null;
+    private int eventIndex = 0;
+    private boolean isBusyEvent = false;
+    private List<EventWrapper> eventRemovedSet = null;
     
     
     /**
@@ -499,13 +519,10 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         eventTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+
             }
         ));
         eventScrollPane.setViewportView(eventTable);
@@ -806,7 +823,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                        .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
                         .addGap(3, 3, 3)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -843,14 +860,14 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(datelabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(dayOfWeek)
                             .addComponent(ageAtEvent))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(8, 8, 8)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(placeLabel)
                             .addComponent(eventPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -863,20 +880,20 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(3, 3, 3)
                                 .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+                            .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 83, Short.MAX_VALUE))
                         .addGap(1, 1, 1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(scrollSource, javax.swing.GroupLayout.DEFAULT_SIZE, 90, Short.MAX_VALUE)
+                                .addComponent(scrollSource, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
                                 .addGap(3, 3, 3)
                                 .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(3, 3, 3)
                                 .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(9, 9, 9))
-                            .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE))
+                            .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                             .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1319,6 +1336,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         noteIndex = 0;
         displayNote();
         
+        // Events
+        if (eventSet != null) {
+            eventSet.clear();
+            eventSet = null;
+        }
+        if (eventRemovedSet != null) {
+            eventRemovedSet.clear();
+            eventRemovedSet = null;
+        }
+        eventSet = getEvents(indi);
+        eventRemovedSet = new ArrayList<EventWrapper>();
+        eventIndex = 0;
+        displayEventTable();
+        displayEvent();
         
         
         //
@@ -1334,8 +1365,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void addListeners() {
         firstnamesText.getDocument().addDocumentListener(this);
         lastnameText.getDocument().addDocumentListener(this);
-        textAreaPhotos.getDocument().addDocumentListener(new photoTitleListener());
-        textAreaNotes.getDocument().addDocumentListener(new noteTextListener());
+        textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
+        textAreaNotes.getDocument().addDocumentListener(new NoteTextListener());
     }
 
     
@@ -1363,6 +1394,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
+    
+    
+    //
+    //
+    //
+
     
     /**
      * Media
@@ -1616,7 +1653,11 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
 
+    //
+    //
+    //
 
+    
     /**
      * Notes
      * 
@@ -1756,12 +1797,170 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
     
+    //
+    //
+    //
+
+    
+    
+    /**
+     * Events
+     * 
+     * We get events of Indi and related Fams
+     * 
+     * @param indi
+     * @return 
+     */
+    
+    private List<EventWrapper> getEvents(Indi indi) {
+        List<EventWrapper> ret = new ArrayList<EventWrapper>();
+                
+        // Look for all individual events
+        // - INDIVIDUAL_EVENT_STRUCTURE (birth, etc.)
+        // - INDIVIDUAL_ATTRIBUTE_STRUCTURE (occu, resi, etc.)
+        //
+        String[] INDI_TAGS = { "BIRT","CHR","DEAT","BURI","CREM","ADOP","BAPM","BARM","BASM","BLES","CHRA","CONF","FCOM",
+            "ORDN","NATU","EMIG","IMMI","CENS","PROB","WILL","GRAD","RETI","EVEN",
+            "CAST","DSCR","EDUC","IDNO","NATI","NCHI","NMR","OCCU","PROP","RELI","RESI","SSN","TITL","FACT" };
+        for (String tag : INDI_TAGS) {
+            Property[] eventProps = indi.getProperties(tag);
+            for (Property prop : eventProps) {
+                if (prop != null) {
+                    ret.add(new EventWrapper(prop, indi));
+                }
+            }
+        }
+        
+        // Look for all family events in which indi is a spouse
+        // - FAMILY_EVENT_STRUCTURE (marr, etc.)
+        //
+        String[] FAM_TAGS = { "ANUL","CENS","DIV","DIVF","ENGA","MARR","MARB","MARC","MARL","MARS","EVEN", "RESI" };
+        Fam[] fams = indi.getFamiliesWhereSpouse();
+        for (Fam fam : fams) {
+            for (String tag : FAM_TAGS) {
+                Property[] eventProps = fam.getProperties(tag);
+                for (Property prop : eventProps) {
+                    if (prop != null) {
+                        ret.add(new EventWrapper(prop, indi));
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    
+    private void putEvents() {
+        //eventSet
+        for (EventWrapper event : eventSet) {
+            event.update(indi);
+        }
+        for (EventWrapper event : eventRemovedSet) {
+            event.remove(indi);
+        }
+    }
+
+
+    private void displayEventTable() {
+        EventTableModel etm = new EventTableModel(eventSet);
+        eventTable.setModel(etm);    
+        eventTable.setAutoCreateRowSorter(true);
+        TableRowSorter sorter = new TableRowSorter<EventTableModel>(etm);
+        sorter.setComparator(0, new Comparator<JLabel>() {
+            public int compare(JLabel l1, JLabel l2) {
+                return l1.getText().compareTo(l2.getText());
+            }
+        });
+        sorter.setComparator(2, new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                try {
+                    Double d1 = new DecimalFormat("#.###").parse(s1).doubleValue();
+                    Double d2 = new DecimalFormat("#.###").parse(s2).doubleValue();
+                    return d1.compareTo(d2);
+                } catch (ParseException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return 0;
+                }
+            }
+        });
+        eventTable.setRowSorter(sorter);
+        eventTable.getRowSorter().toggleSortOrder(2);
+        
+        int maxWidth = 0;
+        for (EventWrapper event : eventSet) {
+            maxWidth = Math.max(maxWidth, getFontMetrics(getFont()).stringWidth(event.eventLabel.getText()));
+        }
+        eventTable.getColumnModel().getColumn(0).setPreferredWidth(maxWidth + 15); // add icon size
+        eventTable.getColumnModel().getColumn(1).setPreferredWidth(getFontMetrics(getFont()).stringWidth(" 9999 "));
+        eventTable.getColumnModel().getColumn(2).setPreferredWidth(getFontMetrics(getFont()).stringWidth(" 99.9 "));
+
+        eventTable.setShowHorizontalLines(false);
+        eventTable.setShowVerticalLines(false);
+
+        eventTable.getColumnModel().getColumn(0).setCellRenderer(new IconTextCellRenderer());
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        eventTable.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+
+        eventTable.getColumnModel().getColumn(2).setCellRenderer(new DoubleCellRenderer());
+
+        DefaultTableCellRenderer centerHRenderer = new DefaultTableCellRenderer();
+        centerHRenderer.setToolTipText(NbBundle.getMessage(EventTableModel.class, "TIP_Sort"));
+        centerHRenderer.setHorizontalAlignment(SwingConstants.CENTER);
+        eventTable.getColumnModel().getColumn(0).setHeaderRenderer(centerHRenderer);
+        eventTable.getColumnModel().getColumn(1).setHeaderRenderer(centerHRenderer);
+        eventTable.getColumnModel().getColumn(2).setHeaderRenderer(centerHRenderer);
+        
+        eventTable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+        eventTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (!isBusyEvent && eventTable.getSelectedRow() != -1) {
+                    eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
+                    displayEvent();
+                }
+            }
+        });
+        if (eventTable.getRowCount() > 0) {
+            eventTable.setRowSelectionInterval(0, 0);
+        }
+    }
+
+    
+    private void displayEvent() {
+        isBusyEvent = true;
+        if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {        
+            EventWrapper event = eventSet.get(eventIndex);
+            
+            // Title
+            eventTitle.setText(event.title);
+            
+            // Date
+            if (event.date != null) {
+                eventDate.setPropertyImpl(event.date);
+            }
+            ageAtEvent.setText(event.age);
+            dayOfWeek.setText(event.dayOfWeek);
+            
+            // Place
+            if (event.place != null) {
+                eventPlace.setText(event.place.getDisplayValue());    
+            }
+            
+        }
+        isBusyEvent = false;
+    }
+
     
     
     
+    //
+    //
+    //
     
     
-    private class photoTitleListener implements DocumentListener {
+    private class PhotoTitleListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
             updatePhotoTitle(mediaIndex);
@@ -1777,7 +1976,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    private class noteTextListener implements DocumentListener {
+    private class NoteTextListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
             updateNoteText(noteIndex);
@@ -1814,6 +2013,34 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
 
+    private class IconTextCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            setIcon(((JLabel)value).getIcon());
+            setText(((JLabel)value).getText());
+        return this;
+        }
+    }
     
+    
+    private class DoubleCellRenderer extends DefaultTableCellRenderer {
+
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            String text = (String) value;
+            try {
+                Double d = new DecimalFormat("#").parse(text).doubleValue();
+                DecimalFormat df = new DecimalFormat("#.#");
+                setText(df.format(d));
+            } catch (ParseException ex) {
+                //Exceptions.printStackTrace(ex);
+                setText(text);
+            }
+            setHorizontalAlignment(SwingConstants.CENTER);
+            return this;
+        }
+    }
     
 }
