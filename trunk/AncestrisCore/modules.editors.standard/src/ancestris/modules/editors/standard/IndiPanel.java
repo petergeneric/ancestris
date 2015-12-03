@@ -189,6 +189,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventOthersButton = new javax.swing.JButton();
         eventRemoveButton = new javax.swing.JButton();
         eventTitle = new javax.swing.JLabel();
+        eventDescription = new javax.swing.JTextField();
         eventScrollPane = new javax.swing.JScrollPane();
         eventTable = new javax.swing.JTable();
         datelabel = new javax.swing.JLabel();
@@ -517,6 +518,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(eventTitle, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventTitle.text")); // NOI18N
 
+        eventDescription.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDescription.text")); // NOI18N
+        eventDescription.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDescription.toolTipText")); // NOI18N
+
         eventTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -707,10 +711,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(eventBuriButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 19, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.Alignment.LEADING)
@@ -752,10 +755,15 @@ public class IndiPanel extends Editor implements DocumentListener {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(assoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(repoText))
+                                    .addComponent(repoText, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(eventTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eventDescription)
+                        .addGap(6, 6, 6))))
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -812,10 +820,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(brothersButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(spousesButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(sistersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(childrenButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(spousesButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sistersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(childrenButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(maleRadioButton)
                                 .addComponent(femaleRadioButton)
@@ -850,7 +857,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventOccuButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventDeatButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventBuriButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eventTitle))
+                    .addComponent(eventTitle)
+                    .addComponent(eventDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(eventMarrButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1141,6 +1149,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton eventBuriButton;
     private genj.edit.beans.DateBean eventDate;
     private javax.swing.JButton eventDeatButton;
+    private javax.swing.JTextField eventDescription;
     private javax.swing.JButton eventDetailsButton;
     private javax.swing.JButton eventMarrButton;
     private javax.swing.JTextArea eventNote;
@@ -1819,9 +1828,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         // - INDIVIDUAL_EVENT_STRUCTURE (birth, etc.)
         // - INDIVIDUAL_ATTRIBUTE_STRUCTURE (occu, resi, etc.)
         //
-        String[] INDI_TAGS = { "BIRT","CHR","DEAT","BURI","CREM","ADOP","BAPM","BARM","BASM","BLES","CHRA","CONF","FCOM",
-            "ORDN","NATU","EMIG","IMMI","CENS","PROB","WILL","GRAD","RETI","EVEN",
-            "CAST","DSCR","EDUC","IDNO","NATI","NCHI","NMR","OCCU","PROP","RELI","RESI","SSN","TITL","FACT" };
+        String[] INDI_TAGS = { "BIRT","CHR","DEAT","BURI","CREM","ADOP","BAPM","BARM","BASM","BLES","CHRA","CONF","FCOM",   // attributes with type and no description
+            "ORDN","NATU","EMIG","IMMI","CENS","PROB","WILL","GRAD","RETI","EVEN",                                          // attributes with type and no description, including EVEN
+            "CAST","DSCR","EDUC","IDNO","NATI","NCHI","NMR","OCCU","PROP","RELI","RESI","SSN","TITL","FACT" };              // attributes with type and a description
         for (String tag : INDI_TAGS) {
             Property[] eventProps = indi.getProperties(tag);
             for (Property prop : eventProps) {
@@ -1834,7 +1843,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Look for all family events in which indi is a spouse
         // - FAMILY_EVENT_STRUCTURE (marr, etc.)
         //
-        String[] FAM_TAGS = { "ANUL","CENS","DIV","DIVF","ENGA","MARR","MARB","MARC","MARL","MARS","EVEN", "RESI" };
+        String[] FAM_TAGS = { "ANUL","CENS","DIV","DIVF","ENGA","MARR","MARB","MARC","MARL","MARS","EVEN", "RESI" };        // attributes with type and no description, except EVEN
         Fam[] fams = indi.getFamiliesWhereSpouse();
         for (Fam fam : fams) {
             for (String tag : FAM_TAGS) {
@@ -1935,10 +1944,13 @@ public class IndiPanel extends Editor implements DocumentListener {
             
             // Title
             eventTitle.setText(event.title);
+            eventDescription.setText(event.description);
             
             // Date
             if (event.date != null) {
                 eventDate.setPropertyImpl(event.date);
+            } else {
+                eventDate.setPropertyImpl(null);
             }
             ageAtEvent.setText(event.age);
             dayOfWeek.setText(event.dayOfWeek);
@@ -1946,6 +1958,8 @@ public class IndiPanel extends Editor implements DocumentListener {
             // Place
             if (event.place != null) {
                 eventPlace.setText(event.place.getDisplayValue());    
+            } else {
+                eventPlace.setText("");
             }
             
         }
