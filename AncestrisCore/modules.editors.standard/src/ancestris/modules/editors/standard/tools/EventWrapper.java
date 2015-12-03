@@ -40,6 +40,8 @@ public class EventWrapper {
     public String eventAge = "";                // for table and label
     
     public String title = "";  
+    public String description = "";
+    public boolean showDesc = false;
     public PropertyDate date = null;
     public String dayOfWeek = null;
     public String age = "";
@@ -64,14 +66,20 @@ public class EventWrapper {
         }
         this.eventLabel.setIcon(property.getImage());
         
-        // Type
+        // Title and description
+        this.title = this.eventLabel.getText();
+        String desc = property.getDisplayValue();
         Property type = property.getProperty("TYPE");
-        this.title = this.eventLabel.getText() + " " + (type != null ? type.getDisplayValue() : "");              // FIXME : put in editable field, not title
+        this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");
 
         // Event date
         this.date = (PropertyDate) property.getProperty("DATE");
         try {
-            this.dayOfWeek = date.getStart().getDayOfWeek(true);
+            if (date != null && date.getStart() != null) {
+                this.dayOfWeek = date.getStart().getDayOfWeek(true);
+            } else {
+                this.dayOfWeek = "";
+            }
         } catch (GedcomException ex) {
             //Exceptions.printStackTrace(ex);
             this.dayOfWeek = "";
@@ -88,12 +96,15 @@ public class EventWrapper {
             PropertyAge propAge = (PropertyAge) prop;
             propAge.updateAge();
             this.eventAge = propAge.getDecimalValue("#.###");
-            this.age = propAge.getDisplayValue();
+            this.age = "(" + propAge.getPropertyName() + ": " + propAge.getDisplayValue() + ")";
         } else {
             PropertyAge propAge = new PropertyAge("AGE");
             propAge.getAge(indi, eventProperty);
             this.eventAge = propAge.getDecimalValue("#.###");
-            this.age = propAge.getDisplayValue();
+            this.age = "(" + propAge.getPropertyName() + ": " + propAge.getDisplayValue() + ")";
+        }
+        if (this.date == null) {
+            this.age = "";
         }
         
         // Place of event
