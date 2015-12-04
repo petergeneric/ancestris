@@ -51,7 +51,6 @@ import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.SwingConstants;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -117,6 +116,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     private int eventIndex = 0;
     private boolean isBusyEvent = false;
     private List<EventWrapper> eventRemovedSet = null;
+    
+    // Event Notes
+    private List<NoteWrapper> eventNoteSet = null;
+    private int eventNoteIndex = 0;
+    private boolean isBusyEventNote = false;
+    private List<NoteWrapper> eventNoteRemovedSet = null;
     
     
     /**
@@ -544,7 +549,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventNote.setColumns(20);
         eventNote.setRows(3);
         eventNote.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventNote.text")); // NOI18N
+        eventNote.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.toolTipText")); // NOI18N
         eventNote.setWrapStyleWord(true);
+        eventNote.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                eventNoteMouseWheelMoved(evt);
+            }
+        });
         eventNoteScrollPane.setViewportView(eventNote);
 
         org.openide.awt.Mnemonics.setLocalizedText(dayOfWeek, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.dayOfWeek.text")); // NOI18N
@@ -623,6 +634,11 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         scrollNotesEvent.setBlockIncrement(1);
         scrollNotesEvent.setVisibleAmount(5);
+        scrollNotesEvent.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                scrollNotesEventMouseWheelMoved(evt);
+            }
+        });
         scrollNotesEvent.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 scrollNotesEventAdjustmentValueChanged(evt);
@@ -1061,15 +1077,35 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_delNoteButtonActionPerformed
 
     private void delNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delNoteEventButtonActionPerformed
-        // TODO add your handling code here:
+        if (eventNoteSet != null && !eventNoteSet.isEmpty() && (eventNoteIndex >= 0) && (eventNoteIndex < eventNoteSet.size())) {
+            NoteWrapper note = eventNoteSet.get(eventNoteIndex);
+            eventNoteRemovedSet.add(note);
+            eventNoteSet.remove(eventNoteIndex);
+            eventNoteIndex--;
+            if (eventNoteIndex < 0) {
+                eventNoteIndex = 0;
+            }
+            changes.setChanged(true);
+        }
+        displayEventNote();        
     }//GEN-LAST:event_delNoteEventButtonActionPerformed
 
     private void addNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteEventButtonActionPerformed
-        // TODO add your handling code here:
+        if (chooseEventNote(eventNoteSet.size())) {
+            displayEventNote();
+            eventNote.requestFocus();
+        }
     }//GEN-LAST:event_addNoteEventButtonActionPerformed
 
     private void scrollNotesEventAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollNotesEventAdjustmentValueChanged
-        // TODO add your handling code here:
+        if (isBusyEventNote) {
+            return;
+        }
+        int i = scrollNotesEvent.getValue();
+        if (eventNoteSet != null && !eventNoteSet.isEmpty() && i >= 0 && i < eventNoteSet.size() && i != eventNoteIndex) {
+            eventNoteIndex = scrollNotesEvent.getValue();
+            displayEventNote();
+        }
     }//GEN-LAST:event_scrollNotesEventAdjustmentValueChanged
 
     private void textAreaNotesMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_textAreaNotesMouseWheelMoved
@@ -1108,6 +1144,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         
     }//GEN-LAST:event_scrollPhotosMouseWheelMoved
 
+    private void eventNoteMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_eventNoteMouseWheelMoved
+        int notches = evt.getWheelRotation();
+        if (evt.isControlDown()) {
+            scrollEventNotes(notches);
+        } else {
+            JScrollBar vbar = eventNoteScrollPane.getVerticalScrollBar();
+            int currentPosition = vbar.getValue();
+            vbar.setValue(currentPosition + notches * vbar.getBlockIncrement() * 3);
+        }
+    }//GEN-LAST:event_eventNoteMouseWheelMoved
+
+    private void scrollNotesEventMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollNotesEventMouseWheelMoved
+        int notches = evt.getWheelRotation();
+        scrollEventNotes(notches);
+    }//GEN-LAST:event_scrollNotesEventMouseWheelMoved
+
     
     private void scrollNotes(int notches) {
         if (isBusyNote) {
@@ -1126,6 +1178,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
     
+    private void scrollEventNotes(int notches) {
+        if (isBusyEventNote) {
+            return;
+        }
+        if (eventNoteSet != null && !eventNoteSet.isEmpty()) {
+            int i = eventNoteIndex + notches;
+            if (i >= eventNoteSet.size()) {
+                i = eventNoteSet.size() - 1;
+            }
+            if (i < 0) {
+                i = 0;
+            }
+            eventNoteIndex = i;
+            displayEventNote();
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMediaButton;
@@ -1376,6 +1444,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         lastnameText.getDocument().addDocumentListener(this);
         textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
         textAreaNotes.getDocument().addDocumentListener(new NoteTextListener());
+        eventDescription.getDocument().addDocumentListener(this);
+        eventDate.addChangeListener(changes);
+        eventPlace.getDocument().addDocumentListener(this);
+        eventNote.getDocument().addDocumentListener(new EventNoteTextListener());
     }
 
     
@@ -1686,16 +1758,6 @@ public class IndiPanel extends Editor implements DocumentListener {
                 ret.add(new NoteWrapper(prop));
             }
         }
-
-//        // Look for all notes attached to indi
-//        List<Property> noteProps = new ArrayList<Property>();
-//        Utils.getPropertiesRecursively(indi, "NOTE", noteProps);
-//        for (Property prop : noteProps) {
-//            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
-//                ret.add(new NoteWrapper(prop));
-//            }
-//        }
-        
         return ret;
     }
 
@@ -1961,11 +2023,159 @@ public class IndiPanel extends Editor implements DocumentListener {
             } else {
                 eventPlace.setText("");
             }
+
+            // Notes
+            if (eventNoteSet != null) {
+                eventNoteSet.clear();
+                eventNoteSet = null;
+            }
+            if (eventNoteRemovedSet != null) {
+                eventNoteRemovedSet.clear();
+                eventNoteRemovedSet = null;
+            }
+            eventNoteSet = getEventNotes(event.eventProperty);
+            eventNoteRemovedSet = new ArrayList<NoteWrapper>();
+            scrollNotesEvent.setMinimum(0);
+            scrollNotesEvent.setBlockIncrement(1);
+            scrollNotesEvent.setUnitIncrement(1);
+            eventNoteIndex = 0;
+            displayEventNote();
+        
+            
+            // Sources - Media
+            
+            // Sources - Text
+            
+            // Sources - Repositories
+            
+            
+            
             
         }
         isBusyEvent = false;
     }
 
+    
+
+    private List<NoteWrapper> getEventNotes(Property event) {
+        List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
+                
+        // Look for only general notes directly attached to indi
+        Property[] noteProps = event.getProperties("NOTE");
+        for (Property prop : noteProps) {
+            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+                ret.add(new NoteWrapper(prop));
+            }
+        }
+        return ret;
+    }
+
+    
+    private void putEventNotes() {
+//        //noteSet
+//        for (NoteWrapper note : eventNoteSet) {
+//            note.update(indi);
+//        }
+//        for (NoteWrapper note : noteRemovedSet) {
+//            note.remove(indi);
+//        }
+    }
+
+    
+    private void displayEventNote() {
+        isBusyEventNote = true;
+        if (eventNoteSet != null && !eventNoteSet.isEmpty() && (eventNoteIndex >= 0) && (eventNoteIndex < eventNoteSet.size())) {        
+            setEventNote(eventNoteSet.get(eventNoteIndex));
+        } else {
+            setEventNote(null);
+        }
+        isBusyEventNote = false;
+    }
+    
+    private void setEventNote(NoteWrapper note) {
+        
+        String localText = "";
+        
+        if (note != null) {
+            localText = note.getText();
+        }
+        
+        // Text
+        eventNote.setText(localText);
+        eventNote.setCaretPosition(0);
+        
+        // Update scroll
+        scrollNotesEvent.setValues(eventNoteIndex, 1, 0, eventNoteSet.size());
+        scrollNotesEvent.setToolTipText(getScrollEventNotesLabel());
+    }
+
+
+    private String getScrollEventNotesLabel() {
+        return String.valueOf(eventNoteSet.size() > 0 ? eventNoteIndex + 1 : eventNoteIndex) + "/" + String.valueOf(eventNoteSet.size());
+    }
+
+    
+    private void updateEventNoteText(int index) {
+        if (isBusyEventNote) {
+            return;
+        }
+        String noteText = eventNote.getText();
+        if ((eventNoteSet != null) && (!eventNoteSet.isEmpty()) && (index >= 0) && (index < eventNoteSet.size())) {
+            eventNoteSet.get(index).setText(noteText);
+            eventNoteIndex = index;
+        } else {
+            NoteWrapper note = new NoteWrapper(noteText);
+            eventNoteSet.add(note);
+            eventNoteIndex = eventNoteSet.size()-1;
+        }
+        changes.setChanged(true);
+    }
+
+    
+    private boolean chooseEventNote(int index) {
+        boolean b = false;
+        boolean exists = (eventNoteSet != null) && (!eventNoteSet.isEmpty()) && (index >= 0) && (index < eventNoteSet.size());
+        
+        JButton noteButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseNote"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { noteButton, cancelButton };
+        NoteChooser noteChooser = new NoteChooser(gedcom, exists ? eventNoteSet.get(index) : null, noteButton, cancelButton);
+        int size = noteChooser.getNbNotes();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseNoteTitle", size), noteChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == noteButton) {
+            String noteText = noteChooser.getSelectedText();
+            if (noteChooser.isSelectedEntityNote()) {
+                Note entity = (Note) noteChooser.getSelectedEntity();
+                if (exists) {
+                    eventNoteSet.get(index).setTargetEntity(entity);
+                    eventNoteSet.get(index).setText(noteText);
+                    eventNoteIndex = index;
+                } else {
+                    NoteWrapper note = new NoteWrapper(entity);
+                    note.setText(noteText);
+                    eventNoteSet.add(note);
+                    eventNoteIndex = eventNoteSet.size() - 1;
+                }
+                changes.setChanged(true);
+                b = true;
+            } else {
+                if (exists) {
+                    eventNoteSet.get(index).setText(noteText);
+                    eventNoteIndex = index;
+                } else {
+                    NoteWrapper note = new NoteWrapper(noteText);
+                    eventNoteSet.add(note);
+                    eventNoteIndex = eventNoteSet.size() - 1;
+                }
+                changes.setChanged(true);
+                b = true;
+            }
+        }
+        
+        return b;
+    }
+
+    
     
     
     
@@ -2002,6 +2212,21 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         public void changedUpdate(DocumentEvent e) {
             updateNoteText(noteIndex);
+        }
+    }
+
+    private class EventNoteTextListener implements DocumentListener {
+
+        public void insertUpdate(DocumentEvent e) {
+            updateEventNoteText(eventNoteIndex);
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updateEventNoteText(eventNoteIndex);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            updateEventNoteText(eventNoteIndex);
         }
     }
 
