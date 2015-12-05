@@ -103,7 +103,7 @@ public class EventWrapper {
             this.eventAge = propAge.getDecimalValue("#.###");
             this.age = "(" + propAge.getPropertyName() + ": " + propAge.getDisplayValue() + ")";
         }
-        if (this.date == null) {
+        if (this.date == null || property.getTag().equals("BIRT")) {
             this.age = "";
         }
         
