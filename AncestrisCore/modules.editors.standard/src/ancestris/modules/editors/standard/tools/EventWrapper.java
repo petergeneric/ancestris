@@ -13,7 +13,6 @@
 package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -22,7 +21,6 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import java.util.List;
 import javax.swing.JLabel;
-import org.openide.util.Exceptions;
 
 
 
@@ -60,9 +58,9 @@ public class EventWrapper {
         // Event short description
         String str = property.getPropertyName();
         if (str.contains(" ")) {
-            this.eventLabel = new JLabel(str.substring(0, str.indexOf(" "))); // only take first word
+            this.eventLabel = new EventLabel(property.getTag(), str.substring(0, str.indexOf(" "))); // only take first word
         } else {
-            this.eventLabel = new JLabel(str);
+            this.eventLabel = new EventLabel(property.getTag(), str);
         }
         this.eventLabel.setIcon(property.getImage());
         
