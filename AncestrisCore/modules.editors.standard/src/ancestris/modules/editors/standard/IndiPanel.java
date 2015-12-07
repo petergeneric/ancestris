@@ -1462,15 +1462,21 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Document listener methods
      */
     public void insertUpdate(DocumentEvent e) {
-        changes.setChanged(true);
+        if (!isBusyEvent) {
+            changes.setChanged(true);
+        }
     }
 
     public void removeUpdate(DocumentEvent e) {
-        changes.setChanged(true);
+        if (!isBusyEvent) {
+            changes.setChanged(true);
+        }
     }
 
     public void changedUpdate(DocumentEvent e) {
-        changes.setChanged(true);
+        if (!isBusyEvent) {
+            changes.setChanged(true);
+        }
     }
 
     
@@ -1592,7 +1598,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
         textAreaNotes.getDocument().addDocumentListener(new NoteTextListener());
         eventDescription.getDocument().addDocumentListener(this);
-        eventDate.addChangeListener(changes);
+        // eventDate.addChangeListener(changes); // this statement is taken care of in "displayEvent"
         eventPlace.getDocument().addDocumentListener(this);
         eventNote.getDocument().addDocumentListener(new EventNoteTextListener());
     }
@@ -2153,6 +2159,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void displayEvent() {
         isBusyEvent = true;
+        eventDate.removeChangeListener(changes);
         if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {        
             EventWrapper event = eventSet.get(eventIndex);
             
@@ -2207,6 +2214,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             
         }
         isBusyEvent = false;
+        eventDate.addChangeListener(changes);
     }
 
     
@@ -2270,7 +2278,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     
     private void updateEventNoteText(int index) {
-        if (isBusyEventNote) {
+        if (isBusyEvent || isBusyEventNote) {
             return;
         }
         String noteText = eventNote.getText();
