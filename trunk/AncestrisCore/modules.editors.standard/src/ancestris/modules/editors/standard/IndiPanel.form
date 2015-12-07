@@ -1164,13 +1164,13 @@
                               <Component id="placeLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" max="-2" attributes="0"/>
                               <Component id="eventPlace" max="32767" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="eventDetailsButton" min="-2" pref="35" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="datelabel" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="102" attributes="0">
                                       <Component id="dayOfWeek" min="-2" max="-2" attributes="0"/>
@@ -1179,15 +1179,16 @@
                                       <EmptySpace min="184" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="eventDate" max="32767" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
+                                      <Component id="eventDate" pref="297" max="32767" attributes="0"/>
+                                      <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="eventTitle" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
                               <Component id="eventDescription" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1200,7 +1201,7 @@
                           <Component id="eventDescription" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="eventTitle" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="eventDate" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="datelabel" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -1209,7 +1210,7 @@
                           <Component id="dayOfWeek" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ageAtEvent" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="placeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="eventPlace" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -1235,7 +1236,7 @@
                               <EmptySpace min="-2" pref="3" max="-2" attributes="0"/>
                               <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="sourceScrollPane1" pref="110" max="32767" attributes="0"/>
+                          <Component id="sourceScrollPane1" pref="115" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
