@@ -43,7 +43,7 @@ public class Repository extends Entity {
   /**
    * Returns the name of this repository
    */
-  private String getRepositoryName() {
+  public String getRepositoryName() {
     Property name = getProperty("NAME");
     return name!=null ? name.getValue() : ""; 
   }
