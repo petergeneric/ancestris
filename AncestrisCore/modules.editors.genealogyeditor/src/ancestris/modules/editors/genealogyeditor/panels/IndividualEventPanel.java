@@ -479,7 +479,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         }
                     }); // end of doUnitOfWork
 
-                    placeTextField.setText(mPlace.getDisplayValue());
+                    placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : "");
 
                     addPlaceButton.setVisible(false);
                     editPlaceButton.setVisible(true);
