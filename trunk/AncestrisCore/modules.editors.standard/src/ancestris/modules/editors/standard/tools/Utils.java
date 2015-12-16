@@ -14,7 +14,10 @@ package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
+import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -38,6 +41,7 @@ public class Utils {
     private static Image IMG_INVALID_PHOTO = null;
     private static Image IMG_VIDEO = null;
     private static Image IMG_SOUND = null;
+    private static Image IMG_NO_SOURCE_MEDIA = null;
     
     private static String[] imgExtensions =   { "jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg" };
     private static String[] videoExtensions = { "mp4", "flv", "ogg", "avi", "mov", "mpeg" };
@@ -62,33 +66,18 @@ public class Utils {
         return parentTagsContains(parent, tag);
     }
     
-    
-    public static ImageIcon getResizedIcon(ImageIcon imageIcon, int width, int height) {
-        int imageWidth = imageIcon.getImage().getWidth(null);
-        int imageHeight = imageIcon.getImage().getHeight(null);
-        if ((imageWidth > 0) && (imageHeight > 0)) {
-            double imageRatio = (double) imageWidth / (double) imageHeight;
-            double targetWidth = width;
-            double targetHeight = height;
-            double targetRatio = targetWidth / targetHeight;
-
-            if (targetRatio < imageRatio) {
-                targetHeight = targetWidth / imageRatio;
-            } else {
-                targetWidth = targetHeight * imageRatio;
-            }
-            return new ImageIcon(imageIcon.getImage().getScaledInstance((int) targetWidth, (int) targetHeight, Image.SCALE_DEFAULT));
-        }
-        return null;
-    }
-
     public static Image getImageFromFile(File file, Class clazz) {
+        return getImageFromFile(file, clazz, false);
+    }
+    
+    public static Image getImageFromFile(File file, Class clazz, boolean noText) {
         
         if (clazz != null) {
             try {
                 IMG_INVALID_PHOTO = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/invalid_photo.png"));
                 IMG_VIDEO = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/video.png"));
                 IMG_SOUND = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/sound.png"));
+                IMG_NO_SOURCE_MEDIA = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/source_no_media.png"));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -96,6 +85,9 @@ public class Utils {
 
         Image image = null;
 
+        if (file == null) {
+            return clazz == SourceChooser.SourceThumb.class && !noText ? IMG_NO_SOURCE_MEDIA : IMG_INVALID_PHOTO;
+        }
         if (Arrays.asList(imgExtensions).contains(getExtension(file))) {
             try {
                 image = ImageIO.read(new FileInputStream(file));
@@ -109,6 +101,9 @@ public class Utils {
             image = IMG_SOUND;
         } else {
             image = IMG_INVALID_PHOTO;
+        }
+        if ((image.getWidth(null) <= 0) || (image.getHeight(null) <= 0)) {
+            return IMG_INVALID_PHOTO;
         }
     
         return image;
@@ -156,5 +151,59 @@ public class Utils {
         }
     }
     
+    
+    public static Image scaleImage(File f, Class clazz, int width, int height) {
+        return scaleImage(f, clazz, width, height, false);
+    }
+    
+    public static Image scaleImage(File f, Class clazz, int width, int height, boolean noText) {
+        Image image = getImageFromFile(f, clazz, noText);
+        return scaleImage(image, width, height);
+    }
+    
+    public static ImageIcon getResizedIcon(ImageIcon imageIcon, int targetWidth, int targetHeight) {
+        return new ImageIcon(scaleImage(imageIcon.getImage(), targetWidth, targetHeight));
+    }
+    
+    private static BufferedImage scaleImage(Image image, int targetWidth, int targetHeight) {
+
+        int imageWidth = image.getWidth(null);
+        int imageHeight = image.getHeight(null);
+        if ((imageWidth <= 0) || (imageHeight <= 0)) {
+            image.flush();
+            return null;
+        }
+        
+        double imageRatio = (double) imageWidth / (double) imageHeight;
+        double targetRatio = (double) targetWidth / (double) targetHeight;
+        if (targetRatio < imageRatio) {
+            targetHeight = (int) (targetWidth / imageRatio);
+        } else {
+            targetWidth = (int) (targetHeight * imageRatio);
+        }
+
+        return resizeImage(image, targetWidth, targetHeight);
+    }
+
+     
+    private static BufferedImage resizeImage(Image img, int width, int height) {
+        BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = dimg.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g.drawImage(img, 0, 0, width, height, null);
+        g.dispose();
+        return dimg;
+    }
+
+    
+    private static String removeExtension(String name) {
+        String ret = name;
+        int dotIndex = name.lastIndexOf('.');
+        if (dotIndex >= 0) { // to prevent exception if there is no dot
+            ret = name.substring(0, dotIndex);
+        }
+        return ret;
+    }
+
     
 }

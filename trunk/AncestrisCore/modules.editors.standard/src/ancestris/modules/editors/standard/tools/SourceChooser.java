@@ -11,16 +11,17 @@
  */
 package ancestris.modules.editors.standard.tools;
 
-import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.scaleImage;
+import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Grammar;
 import genj.gedcom.Media;
+import genj.gedcom.Source;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyXRef;
 import genj.util.Registry;
 import java.awt.Component;
@@ -52,12 +53,13 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 /**
  *
  * @author frederic
  */
-public class MediaChooser extends javax.swing.JPanel {
+public class SourceChooser extends javax.swing.JPanel {
 
     private static int THUMB_WIDTH = 50;
     private static int THUMB_HEIGHT = 70;
@@ -66,7 +68,7 @@ public class MediaChooser extends javax.swing.JPanel {
     
     private Registry registry = null;
     private ThumbComparator thumbComparator = new ThumbComparator();
-    private TreeSet<MediaThumb> allMedia = new TreeSet<MediaThumb>(thumbComparator);
+    private TreeSet<SourceThumb> allSource = new TreeSet<SourceThumb>(thumbComparator);
     private DefaultListModel filteredModel = new DefaultListModel();
     
     private Gedcom gedcom = null;
@@ -74,13 +76,14 @@ public class MediaChooser extends javax.swing.JPanel {
     private Image mainImage = null;
     private Image scaledImage = null;
     private String mainTitle = null;
+    private String mainText = null;
     private JButton okButton = null;
     private JButton cancelButton = null;
     
     /**
-     * Creates new form MediaChooser
+     * Creates new form SourceChooser
      */
-    public MediaChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton, JButton cancelButton) {
+    public SourceChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton, JButton cancelButton) {
         this.gedcom = gedcom;
         mainFile = file;
         mainImage = image;
@@ -88,24 +91,24 @@ public class MediaChooser extends javax.swing.JPanel {
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
-        // Run media collection from separate thread
-        createMediaThumbs();
-        Thread mediaThread = new Thread() {
+        // Run source collection from separate thread
+        createSourceThumbs();
+        Thread sourceThread = new Thread() {
             @Override
             public void run() {
-                displayMediaThumbs();
+                displaySourceThumbs();
             }
         };
-        mediaThread.setName("Media reading thread");
-        mediaThread.start();
+        sourceThread.setName("Source reading thread");
+        sourceThread.start();
         
         registry = Registry.get(getClass());
         initComponents();
-        this.setPreferredSize(new Dimension(registry.get("mediaWindowWidth", this.getPreferredSize().width), registry.get("mediaWindowHeight", this.getPreferredSize().height)));
-        jSplitPane.setDividerLocation(registry.get("mediaSplitDividerLocation", jSplitPane.getDividerLocation()));
-        labelPhoto.setText("");
+        this.setPreferredSize(new Dimension(registry.get("sourceWindowWidth", this.getPreferredSize().width), registry.get("sourceWindowHeight", this.getPreferredSize().height)));
+        jSplitPane.setDividerLocation(registry.get("sourceSplitDividerLocation", jSplitPane.getDividerLocation()));
+        sourceMedia.setText("");
         displayIconAndTitle();
-        mediaList.setCellRenderer(new ListEntryCellRenderer());
+        sourceList.setCellRenderer(new ListEntryCellRenderer());
         okButton.setEnabled(false);
         textFilter.getDocument().addDocumentListener(new DocumentListener() {
             @Override public void insertUpdate(DocumentEvent e) { filter(); }
@@ -120,11 +123,29 @@ public class MediaChooser extends javax.swing.JPanel {
 
 
     private void displayIconAndTitle() {
-        displayIconAndTitle(labelPhoto.getPreferredSize().width, labelPhoto.getPreferredSize().height);
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                displayIconAndTitle(sourceMedia.getWidth(), sourceMedia.getHeight());
+            }
+        });
     }
     
     private void displayIconAndTitle(int width, int height) {
-        if (mainImage != null) {
+        if (mainFile == null && !mainText.isEmpty()) {
+            sourceMedia.setVisible(false);
+            sourceText.setVisible(true);
+            sourceText.setText(mainText);
+            sourceText.setCaretPosition(0);
+        } else if (mainImage != null) {
+            sourceText.setText("");
+            sourceText.setVisible(false);
+            sourceMedia.setVisible(true);
+            if (width == 0 || height == 0) {
+                scaledImage = null;
+                sourceMedia.repaint();
+                return;
+            }
             double imageRatio = (double) mainImage.getWidth(null) / (double) mainImage.getHeight(null);
             double targetRatio = (double) width / (double) height;
             if (targetRatio < imageRatio) {
@@ -133,7 +154,8 @@ public class MediaChooser extends javax.swing.JPanel {
                 scaledImage = mainImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
             }
         }
-        labelPhoto.repaint(); 
+        jLayeredPane1.revalidate();
+        jLayeredPane1.repaint();
         photoTitle.setText("<html><center>" + mainTitle + "</center></html>");
         photoTitle.setPreferredSize(new Dimension(width, -1));
     }
@@ -149,7 +171,8 @@ public class MediaChooser extends javax.swing.JPanel {
 
         jSplitPane = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        labelPhoto = new javax.swing.JLabel() {
+        jLayeredPane1 = new javax.swing.JLayeredPane();
+        sourceMedia = new javax.swing.JLabel() {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -161,12 +184,14 @@ public class MediaChooser extends javax.swing.JPanel {
             }
 
         };
+        jScrollPane1 = new javax.swing.JScrollPane();
+        sourceText = new javax.swing.JTextArea();
         photoTitle = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         filterLabel = new javax.swing.JLabel();
         textFilter = new javax.swing.JTextField();
-        jScrollPaneMedia = new javax.swing.JScrollPane();
-        mediaList = new javax.swing.JList(filteredModel);
+        jScrollPaneSource = new javax.swing.JScrollPane();
+        sourceList = new javax.swing.JList(filteredModel);
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -182,25 +207,55 @@ public class MediaChooser extends javax.swing.JPanel {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(200, 383));
 
-        labelPhoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(labelPhoto, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.labelPhoto.text")); // NOI18N
-        labelPhoto.setToolTipText(org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.labelPhoto.toolTipText")); // NOI18N
-        labelPhoto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        labelPhoto.setPreferredSize(new java.awt.Dimension(232, 352));
-        labelPhoto.addMouseListener(new java.awt.event.MouseAdapter() {
+        sourceMedia.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(sourceMedia, org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.sourceMedia.text")); // NOI18N
+        sourceMedia.setToolTipText(org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.sourceMedia.toolTipText")); // NOI18N
+        sourceMedia.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        sourceMedia.setPreferredSize(new java.awt.Dimension(232, 352));
+        sourceMedia.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                labelPhotoMouseClicked(evt);
+                sourceMediaMouseClicked(evt);
             }
         });
-        labelPhoto.addComponentListener(new java.awt.event.ComponentAdapter() {
+        sourceMedia.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
-                labelPhotoComponentResized(evt);
+                sourceMediaComponentResized(evt);
             }
         });
 
+        sourceText.setEditable(false);
+        sourceText.setColumns(20);
+        sourceText.setFont(new java.awt.Font("DejaVu Sans", 2, 12)); // NOI18N
+        sourceText.setLineWrap(true);
+        sourceText.setRows(5);
+        sourceText.setText(org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.sourceText.text")); // NOI18N
+        sourceText.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(sourceText);
+
+        javax.swing.GroupLayout jLayeredPane1Layout = new javax.swing.GroupLayout(jLayeredPane1);
+        jLayeredPane1.setLayout(jLayeredPane1Layout);
+        jLayeredPane1Layout.setHorizontalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                .addComponent(sourceMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addContainerGap())
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                    .addContainerGap()))
+        );
+        jLayeredPane1Layout.setVerticalGroup(
+            jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sourceMedia, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
+        );
+        jLayeredPane1.setLayer(sourceMedia, javax.swing.JLayeredPane.DEFAULT_LAYER);
+        jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
+
         photoTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         photoTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(photoTitle, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.photoTitle.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(photoTitle, org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.photoTitle.text")); // NOI18N
         photoTitle.setVerticalAlignment(javax.swing.SwingConstants.TOP);
         photoTitle.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(), BorderFactory.createEmptyBorder(5,5,5,5)));
 
@@ -211,15 +266,16 @@ public class MediaChooser extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelPhoto, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(photoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(jLayeredPane1)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(photoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(labelPhoto, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+                .addComponent(jLayeredPane1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(photoTitle))
         );
@@ -228,29 +284,29 @@ public class MediaChooser extends javax.swing.JPanel {
 
         jPanel2.setPreferredSize(new java.awt.Dimension(200, 58));
 
-        org.openide.awt.Mnemonics.setLocalizedText(filterLabel, org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.filterLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(filterLabel, org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.filterLabel.text")); // NOI18N
 
-        textFilter.setText(org.openide.util.NbBundle.getMessage(MediaChooser.class, "MediaChooser.textFilter.text")); // NOI18N
+        textFilter.setText(org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.textFilter.text")); // NOI18N
 
-        mediaList.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
-        mediaList.setFont(new java.awt.Font("DejaVu Sans Condensed", 0, 10)); // NOI18N
-        mediaList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        mediaList.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
-        mediaList.setVisibleRowCount(-1);
-        mediaList.addMouseListener(new java.awt.event.MouseAdapter() {
+        sourceList.setBorder(javax.swing.BorderFactory.createEmptyBorder(3, 3, 3, 3));
+        sourceList.setFont(new java.awt.Font("DejaVu Sans Condensed", 0, 10)); // NOI18N
+        sourceList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        sourceList.setLayoutOrientation(javax.swing.JList.HORIZONTAL_WRAP);
+        sourceList.setVisibleRowCount(-1);
+        sourceList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                mediaListMouseClicked(evt);
+                sourceListMouseClicked(evt);
             }
             public void mousePressed(java.awt.event.MouseEvent evt) {
-                mediaListMousePressed(evt);
+                sourceListMousePressed(evt);
             }
         });
-        mediaList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+        sourceList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                mediaListValueChanged(evt);
+                sourceListValueChanged(evt);
             }
         });
-        jScrollPaneMedia.setViewportView(mediaList);
+        jScrollPaneSource.setViewportView(sourceList);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -259,7 +315,7 @@ public class MediaChooser extends javax.swing.JPanel {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneMedia)
+                    .addComponent(jScrollPaneSource)
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(filterLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -274,7 +330,7 @@ public class MediaChooser extends javax.swing.JPanel {
                     .addComponent(filterLabel)
                     .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneMedia, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE))
+                .addComponent(jScrollPaneSource, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE))
         );
 
         jSplitPane.setRightComponent(jPanel2);
@@ -291,30 +347,31 @@ public class MediaChooser extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void mediaListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_mediaListValueChanged
-        if (!mediaList.isSelectionEmpty()) {
-            MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
-            mainImage = media.getImage();
-            mainTitle = media.title;
-            mainFile = media.file;
-            displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
+    private void sourceListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_sourceListValueChanged
+        if (!sourceList.isSelectionEmpty()) {
+            SourceThumb source = (SourceThumb) filteredModel.get(sourceList.getSelectedIndex());
+            mainImage = source.getImage();
+            mainTitle = source.title;
+            mainFile = source.file;
+            mainText = source.text;
+            displayIconAndTitle();
             okButton.setEnabled(true);
         } else {
             okButton.setEnabled(false);
         }
-    }//GEN-LAST:event_mediaListValueChanged
+    }//GEN-LAST:event_sourceListValueChanged
 
-    private void labelPhotoComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_labelPhotoComponentResized
-        displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
-    }//GEN-LAST:event_labelPhotoComponentResized
+    private void sourceMediaComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_sourceMediaComponentResized
+        displayIconAndTitle();
+    }//GEN-LAST:event_sourceMediaComponentResized
 
-    private void mediaListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mediaListMouseClicked
+    private void sourceListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceListMouseClicked
         if (evt.getClickCount() == 2) {
             okButton.doClick();
         }
-    }//GEN-LAST:event_mediaListMouseClicked
+    }//GEN-LAST:event_sourceListMouseClicked
 
-    private void labelPhotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelPhotoMouseClicked
+    private void sourceMediaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceMediaMouseClicked
         if (evt.getButton() == MouseEvent.BUTTON1 && mainFile != null) {
             try {
                 Desktop.getDesktop().open(mainFile);
@@ -323,25 +380,25 @@ public class MediaChooser extends javax.swing.JPanel {
             }
         }
 
-    }//GEN-LAST:event_labelPhotoMouseClicked
+    }//GEN-LAST:event_sourceMediaMouseClicked
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("mediaWindowWidth", evt.getComponent().getWidth());
-        registry.put("mediaWindowHeight", evt.getComponent().getHeight());
+        registry.put("sourceWindowWidth", evt.getComponent().getWidth());
+        registry.put("sourceWindowHeight", evt.getComponent().getHeight());
     }//GEN-LAST:event_formComponentResized
 
     private void jSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSplitPanePropertyChange
-        registry.put("mediaSplitDividerLocation", jSplitPane.getDividerLocation());
+        registry.put("sourceSplitDividerLocation", jSplitPane.getDividerLocation());
     }//GEN-LAST:event_jSplitPanePropertyChange
 
-    private void mediaListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mediaListMousePressed
+    private void sourceListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceListMousePressed
         if (evt.getButton() == MouseEvent.BUTTON3) { 
-            mediaList.setSelectedIndex(mediaList.locationToIndex(evt.getPoint()));
+            sourceList.setSelectedIndex(sourceList.locationToIndex(evt.getPoint()));
             JPopupMenu menu = new JPopupMenu();
-            final MediaThumb media = getSelectedThumb();
-            final Entity entity = media.entity; 
-            Entity[] ents = PropertyXRef.getReferences(media.entity);
-            if (media.isMedia && ents.length > 0) {
+            final SourceThumb source = getSelectedThumb();
+            final Entity entity = source.entity; 
+            Entity[] ents = PropertyXRef.getReferences(source.entity);
+            if (source.isSource && ents.length > 0) {
                 for (Entity ent : ents) {
                     JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", ent.toString(true)));
                     menu.add(menuItem);
@@ -353,7 +410,7 @@ public class MediaChooser extends javax.swing.JPanel {
                     });
                 }
             } else {
-                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditMedia"));
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditSource"));
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
@@ -361,9 +418,9 @@ public class MediaChooser extends javax.swing.JPanel {
                     }
                 });
             }
-            menu.show(mediaList, evt.getX(), evt.getY()); 
+            menu.show(sourceList, evt.getX(), evt.getY()); 
         }
-    }//GEN-LAST:event_mediaListMousePressed
+    }//GEN-LAST:event_sourceListMousePressed
 
     private void edit(Entity entity) {
         cancelButton.doClick();
@@ -372,124 +429,125 @@ public class MediaChooser extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
+    private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JScrollPane jScrollPaneMedia;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPaneSource;
     private javax.swing.JSplitPane jSplitPane;
-    private javax.swing.JLabel labelPhoto;
-    private javax.swing.JList mediaList;
     private javax.swing.JLabel photoTitle;
+    private javax.swing.JList sourceList;
+    private javax.swing.JLabel sourceMedia;
+    private javax.swing.JTextArea sourceText;
     private javax.swing.JTextField textFilter;
     // End of variables declaration//GEN-END:variables
 
     
     
     
-    private void createMediaThumbs() {
+    private void createSourceThumbs() {
         
-        // Clear media list
-        allMedia.clear();
+        // Clear source list
+        allSource.clear();
         
-        // Get all media throughout the whole gedcom, excluding those underneath SOUR only
+        // Get all source throughout the whole gedcom, excluding those underneath SOUR only
         String[] ENTITIES = { Gedcom.INDI, Gedcom.FAM, Gedcom.SUBM };
         for (String type : ENTITIES) {
             Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(type);
             for (Entity entity : entities) {
                 List<PropertyFile> properties = entity.getProperties(PropertyFile.class);
-                for (PropertyFile mediaFile : properties) {
-                    if (isSourceOnly(mediaFile)) {
+                for (PropertyFile sourceFile : properties) {
+                    if (!Utils.parentTagsContains(sourceFile, "SOUR")) {
                         continue;
                     }
                     String title = "";
-                    File file = mediaFile.getFile();
-                    Property mediaTitle = mediaFile.getParent().getProperty("TITL");
+                    File file = sourceFile.getFile();
+                    Property sourceTitle = sourceFile.getParent().getProperty("TITL");
                     boolean flag = false;
-                    if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
-                        title = mediaTitle.getDisplayValue().trim();
+                    if (sourceTitle != null && !sourceTitle.getDisplayValue().trim().isEmpty()) {
+                        title = sourceTitle.getDisplayValue().trim();
                         flag = true;
                     } else {
                         title = entity.toString(false).trim();
                         flag = false;
                     }
-                    MediaThumb media = new MediaThumb(entity, file, title);
-                    media.setTrueTitle(flag);
-                    allMedia.add(media);
+                    String text = "";
+                    Property sourceText = sourceFile.getParent().getProperty("TEXT");
+                    if (sourceText != null && !sourceText.getDisplayValue().trim().isEmpty()) {
+                        text = sourceText.getDisplayValue().trim();
+                    }
+                    SourceThumb source = new SourceThumb(entity, file, title, text);
+                    source.setTrueTitle(flag);
+                    allSource.add(source);
                 }
             }
         }
         
 
         
-        // Get all media entities (OBJE)
-        if (gedcom.getGrammar().equals(Grammar.V551)) {
-            Collection<Media> entities = (Collection<Media>) gedcom.getEntities(Gedcom.OBJE);
-            for (Media entity : entities) {
-                if (isSourceOnly(entity)) {
-                    continue;
-                }
-                File file = null;
-                String title = "";
-                Property mediaFile = entity.getProperty("FILE", true);
-                boolean flag = false;
-                if (mediaFile != null && mediaFile instanceof PropertyFile) {
-                    file = ((PropertyFile) mediaFile).getFile();
-                    Property mediaTitle = mediaFile.getProperty("TITL");
-                    if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
-                        title = mediaTitle.getDisplayValue().trim();
-                        flag = true;
-                    } else {
-                        Entity[] ents = PropertyXRef.getReferences(entity);
-                        if (ents.length > 0) {
-                            title = ents[0].toString(false).trim();
-                            flag = false;
-                        } else {
-                            title = entity.toString(false).trim();
-                            flag = false;
-                        }
-                    }
-                }
-                MediaThumb media = new MediaThumb(entity, file, title);
-                media.setTrueTitle(flag);
-                Entity[] ents = PropertyXRef.getReferences(entity);
-                media.setUnused(ents.length == 0); 
-                allMedia.add(media);
+        // Get all source entities (SOURCE)
+        Collection<Source> entities = (Collection<Source>) gedcom.getEntities(Gedcom.SOUR);
+        for (Source entity : entities) {
+            File file = null;
+            String title = "";
+            boolean flag = false;
+            
+            Property propTitle = entity.getProperty("TITL", true);
+            if (propTitle != null) {
+                title = propTitle.getDisplayValue().trim();
+                flag = true;
             }
+            String text = "";
+            Property propText = entity.getProperty("TEXT");
+            if (propText != null && !propText.getDisplayValue().trim().isEmpty()) {
+                text = propText.getDisplayValue().trim();
+            }
+            Property propMedia = entity.getProperty("OBJE", true);
+            if (propMedia != null && propMedia instanceof PropertyMedia) {
+                PropertyMedia pm = (PropertyMedia) propMedia;
+                file = ((Media) pm.getTargetEntity()).getFile();
+            }
+            SourceThumb source = new SourceThumb(entity, file, title, text);
+            source.setTrueTitle(flag);
+            Entity[] ents = PropertyXRef.getReferences(entity);
+            source.setUnused(ents.length == 0);
+            allSource.add(source);
         }
         
     }
 
-    private void displayMediaThumbs() {
+    private void displaySourceThumbs() {
         // Put them in model in sorted order
         filteredModel.clear();
-        for (MediaThumb item : allMedia) {
+        for (SourceThumb item : allSource) {
             item.setIcon();
             filteredModel.addElement(item);
         }
         
     }
 
-    private MediaThumb getSelectedThumb() {
-        return (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
+    private SourceThumb getSelectedThumb() {
+        return (SourceThumb) filteredModel.get(sourceList.getSelectedIndex());
     }
     
-    public boolean isSelectedEntityMedia() {
-        MediaThumb media = getSelectedThumb();
-        return media == null ? false : media.isMedia;
+    public boolean isSelectedEntitySource() {
+        SourceThumb source = getSelectedThumb();
+        return source == null ? false : source.isSource;
     }
 
     public Entity getSelectedEntity() {
-        MediaThumb media = getSelectedThumb();
-        return media == null ? null : media.entity;
+        SourceThumb source = getSelectedThumb();
+        return source == null ? null : source.entity;
     }
 
     public File getSelectedFile() {
-        MediaThumb media = getSelectedThumb();
-        return media == null ? null : media.file;
+        SourceThumb source = getSelectedThumb();
+        return source == null ? null : source.file;
     }
 
     public String getSelectedTitle() {
-        MediaThumb media = getSelectedThumb();
-        return media == null ? "" : media.title;
+        SourceThumb source = getSelectedThumb();
+        return source == null ? "" : source.title;
     }
 
 
@@ -498,36 +556,19 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     public void filterModel(String filter) {
-        mediaList.clearSelection();
-        mediaList.setModel(new DefaultListModel());
+        sourceList.clearSelection();
+        sourceList.setModel(new DefaultListModel());
         filteredModel.clear();
-        for (MediaThumb item : allMedia) {
+        for (SourceThumb item : allSource) {
             if (item.title.contains(filter)) {
                 filteredModel.addElement(item);
             }
         }
-        mediaList.setModel(filteredModel);
+        sourceList.setModel(filteredModel);
     }    
 
-    private boolean isSourceOnly(Property property) {
-        return Utils.parentTagsContains(property, "SOUR");
-    }
-    
-    private boolean isSourceOnly(Media entity) {
-        boolean ret = false;
-        List<PropertyXRef> references = entity.getProperties(PropertyXRef.class);
-        for (PropertyXRef refProp : references) {
-            if (Utils.parentTagsContains(refProp, "SOUR")) {
-                ret = true;
-            } else {
-                return false;
-            }
-        }
-        return ret;
-    }
-
-    public int getNbMedia() {
-        return allMedia.size();
+    public int getNbSource() {
+        return allSource.size();
     }
 
   
@@ -536,7 +577,7 @@ public class MediaChooser extends javax.swing.JPanel {
     private static class ListEntryCellRenderer extends JLabel implements ListCellRenderer {
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            MediaThumb entry = (MediaThumb) value;
+            SourceThumb entry = (SourceThumb) value;
 
             setHorizontalTextPosition(JLabel.CENTER);
             setVerticalTextPosition(JLabel.BOTTOM);
@@ -574,28 +615,31 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     
-    private class MediaThumb {
+    public class SourceThumb {
         
-        public boolean isMedia = false;
+        public boolean isSource = false;
         public Entity entity = null;
         public File file = null;
         public ImageIcon icon = null;
         public String title = "";
+        public String text = "";
         public boolean isTrueTitle = true;
         public boolean isUnused = false;
         
-        public MediaThumb(Media entity, File file, String title) {
-            this.isMedia = true;
+        public SourceThumb(Source entity, File file, String title, String text) {
+            this.isSource = true;
             this.entity = entity;
             this.file = file;
             this.title = title;
+            this.text = text;
         }
 
-        private MediaThumb(Entity entity, File file, String title) {
-            this.isMedia = (entity instanceof Media);
+        private SourceThumb(Entity entity, File file, String title, String text) {
+            this.isSource = (entity instanceof Source);
             this.entity = entity;
             this.file = file;
             this.title = title;
+            this.text = text;
         }
         
         public Image getImage() {
@@ -605,7 +649,7 @@ public class MediaChooser extends javax.swing.JPanel {
         public void setIcon() {
             icon = (file == null ? null : cacheIcon.get(file.getAbsolutePath()));
             if (icon == null) {
-                icon = new ImageIcon(scaleImage(file , getClass(), THUMB_WIDTH, THUMB_HEIGHT));
+                icon = new ImageIcon(scaleImage(file , getClass(), THUMB_WIDTH, THUMB_HEIGHT, text.trim().isEmpty()));
                 if (file != null) {
                     cacheIcon.put(file.getAbsolutePath(), icon);
                 }
@@ -624,9 +668,9 @@ public class MediaChooser extends javax.swing.JPanel {
 
 
     
-    private class ThumbComparator implements Comparator<MediaThumb> {
+    private class ThumbComparator implements Comparator<SourceThumb> {
 
-        public int compare(MediaThumb o1, MediaThumb o2) {
+        public int compare(SourceThumb o1, SourceThumb o2) {
             File file1 = o1.file;
             File file2 = o2.file;
             String str1 = file1 != null ? file1.getAbsolutePath() : "";
