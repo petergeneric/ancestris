@@ -7,11 +7,14 @@ import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
+import ancestris.modules.editors.standard.tools.ImagePanel;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.modules.editors.standard.tools.NodeWrapper;
 import ancestris.modules.editors.standard.tools.NoteChooser;
 import ancestris.modules.editors.standard.tools.NoteWrapper;
+import ancestris.modules.editors.standard.tools.SourceChooser;
+import ancestris.modules.editors.standard.tools.SourceWrapper;
 import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
@@ -30,6 +33,8 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
+import genj.gedcom.PropertySource;
+import genj.gedcom.Source;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
@@ -105,7 +110,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private DefaultMutableTreeNode familyTop = null;
     private Registry registry = null;
 
-    private String SOSA_TAG = "_SOSA";
+    private String SOSA_TAG = "_SOSA";                                                              // FIXME : use existing parameter
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
     
     private static Map<String, EventUsage> eventUsages = null;
@@ -135,6 +140,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEventNote = false;
     private List<NoteWrapper> eventNoteRemovedSet = null;
     
+    // Event Sources with Media and Text and Repo
+    private List<SourceWrapper> eventSourceSet = null;
+    private int eventSourceIndex = 0;
+    private boolean isBusyEventSource = false;
+    private List<SourceWrapper> eventSourceRemovedSet = null;
+    private ImagePanel imagePanel = null;
     
     /**
      * Creates new form IndiPanel
@@ -147,12 +158,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
+        
         eventUsages = new HashMap<String, EventUsage>();
         EventUsage.init(eventUsages);
+        
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
+        
         initComponents();
+        
         familyTree.setCellRenderer(new FamilyTreeRenderer());
         familyTree.addMouseListener(new FamilyTreeMouseListener());
+        
         registry = Registry.get(getClass());
         eventSplitPane.setDividerLocation(registry.get("eventSplitDividerLocation", eventSplitPane.getDividerLocation()));
 
@@ -219,8 +235,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventRemoveButton = new javax.swing.JButton();
         eventScrollPane = new javax.swing.JScrollPane();
         eventTable = new javax.swing.JTable();
-        sourceImage = new javax.swing.JLabel();
         modificationLabel = new javax.swing.JLabel();
+        sourcePanel = new javax.swing.JPanel();
+        imagePanel = new ImagePanel(this);
+        sourceImagePanel = imagePanel;
         eventRight = new javax.swing.JPanel();
         eventTitle = new javax.swing.JLabel();
         eventDescription = new javax.swing.JTextField();
@@ -230,21 +248,25 @@ public class IndiPanel extends Editor implements DocumentListener {
         ageAtEvent = new javax.swing.JLabel();
         placeLabel = new javax.swing.JLabel();
         eventPlace = new javax.swing.JTextField();
-        eventDetailsButton = new javax.swing.JButton();
-        delNoteEventButton = new javax.swing.JButton();
-        addNoteEventButton = new javax.swing.JButton();
+        eventPlaceButton = new javax.swing.JButton();
+        eventNotePanel = new javax.swing.JPanel();
         eventNoteScrollPane = new javax.swing.JScrollPane();
         eventNote = new javax.swing.JTextArea();
+        delNoteEventButton = new javax.swing.JButton();
+        addNoteEventButton = new javax.swing.JButton();
+        scrollNotesEvent = new javax.swing.JScrollBar();
+        eventSourcePanel = new javax.swing.JPanel();
+        eventSourceTitle = new javax.swing.JTextField();
         sourceScrollPane1 = new javax.swing.JScrollPane();
-        sourceText = new javax.swing.JTextArea();
-        scrollSource = new javax.swing.JScrollBar();
-        addSourceButton = new javax.swing.JButton();
-        delSourceButton = new javax.swing.JButton();
+        eventSourceText = new javax.swing.JTextArea();
+        repoPanel = new javax.swing.JPanel();
         repoText = new javax.swing.JTextField();
         repoEditButton = new javax.swing.JButton();
+        scrollSourcesEvent = new javax.swing.JScrollBar();
+        addSourceButton = new javax.swing.JButton();
+        delSourceButton = new javax.swing.JButton();
         assoComboBox = new javax.swing.JComboBox();
         assoEditButton = new javax.swing.JButton();
-        scrollNotesEvent = new javax.swing.JScrollBar();
 
         setMaximumSize(new java.awt.Dimension(32767, 500));
         setPreferredSize(new java.awt.Dimension(557, 800));
@@ -656,7 +678,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
-        eventLeft.setPreferredSize(new java.awt.Dimension(200, 106));
+        eventLeft.setPreferredSize(new java.awt.Dimension(200, 306));
 
         eventBirtButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/birth.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventBirtButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBirtButton.text")); // NOI18N
@@ -728,13 +750,34 @@ public class IndiPanel extends Editor implements DocumentListener {
         ));
         eventScrollPane.setViewportView(eventTable);
 
-        sourceImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(sourceImage, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sourceImage.text")); // NOI18N
-        sourceImage.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-
         modificationLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
         modificationLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(modificationLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text")); // NOI18N
+
+        sourcePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        sourcePanel.setPreferredSize(new java.awt.Dimension(197, 140));
+
+        javax.swing.GroupLayout sourceImagePanelLayout = new javax.swing.GroupLayout(sourceImagePanel);
+        sourceImagePanel.setLayout(sourceImagePanelLayout);
+        sourceImagePanelLayout.setHorizontalGroup(
+            sourceImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        sourceImagePanelLayout.setVerticalGroup(
+            sourceImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 164, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout sourcePanelLayout = new javax.swing.GroupLayout(sourcePanel);
+        sourcePanel.setLayout(sourcePanelLayout);
+        sourcePanelLayout.setHorizontalGroup(
+            sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sourceImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        sourcePanelLayout.setVerticalGroup(
+            sourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(sourceImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
 
         javax.swing.GroupLayout eventLeftLayout = new javax.swing.GroupLayout(eventLeft);
         eventLeft.setLayout(eventLeftLayout);
@@ -762,14 +805,16 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(0, 26, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventLeftLayout.createSequentialGroup()
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(sourceImage, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, eventLeftLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(2, 2, 2))
+            .addGroup(eventLeftLayout.createSequentialGroup()
+                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE)
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -789,9 +834,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 132, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourceImage, javax.swing.GroupLayout.DEFAULT_SIZE, 154, Short.MAX_VALUE)
+                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 168, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationLabel))
         );
@@ -817,9 +862,22 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         eventPlace.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlace.text")); // NOI18N
 
-        eventDetailsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/place.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(eventDetailsButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDetailsButton.text")); // NOI18N
-        eventDetailsButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDetailsButton.toolTipText")); // NOI18N
+        eventPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/place.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(eventPlaceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlaceButton.text")); // NOI18N
+        eventPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlaceButton.toolTipText")); // NOI18N
+
+        eventNote.setColumns(20);
+        eventNote.setLineWrap(true);
+        eventNote.setRows(3);
+        eventNote.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventNote.text")); // NOI18N
+        eventNote.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.toolTipText")); // NOI18N
+        eventNote.setWrapStyleWord(true);
+        eventNote.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                eventNoteMouseWheelMoved(evt);
+            }
+        });
+        eventNoteScrollPane.setViewportView(eventNote);
 
         delNoteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(delNoteEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.text")); // NOI18N
@@ -845,58 +903,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
-        eventNote.setColumns(20);
-        eventNote.setLineWrap(true);
-        eventNote.setRows(3);
-        eventNote.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventNote.text")); // NOI18N
-        eventNote.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.textAreaNotes.toolTipText")); // NOI18N
-        eventNote.setWrapStyleWord(true);
-        eventNote.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                eventNoteMouseWheelMoved(evt);
-            }
-        });
-        eventNoteScrollPane.setViewportView(eventNote);
-
-        sourceText.setColumns(20);
-        sourceText.setRows(5);
-        sourceText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sourceText.text")); // NOI18N
-        sourceText.setWrapStyleWord(true);
-        sourceText.setPreferredSize(new java.awt.Dimension(232, 50));
-        sourceScrollPane1.setViewportView(sourceText);
-
-        addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(addSourceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addSourceButton.text")); // NOI18N
-        addSourceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addSourceButton.toolTipText")); // NOI18N
-        addSourceButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        addSourceButton.setIconTextGap(0);
-        addSourceButton.setPreferredSize(new java.awt.Dimension(16, 16));
-
-        delSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(delSourceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delSourceButton.text")); // NOI18N
-        delSourceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delSourceButton.toolTipText")); // NOI18N
-        delSourceButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        delSourceButton.setIconTextGap(0);
-        delSourceButton.setPreferredSize(new java.awt.Dimension(16, 16));
-
-        repoText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoText.text")); // NOI18N
-
-        repoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/repository.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(repoEditButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoEditButton.text")); // NOI18N
-        repoEditButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoEditButton.toolTipText")); // NOI18N
-        repoEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        repoEditButton.setIconTextGap(0);
-        repoEditButton.setPreferredSize(new java.awt.Dimension(18, 18));
-
-        assoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "asso 1", "asso 2", "asso 3", "asso 4" }));
-
-        assoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/association.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(assoEditButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditButton.text")); // NOI18N
-        assoEditButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditButton.toolTipText")); // NOI18N
-        assoEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        assoEditButton.setIconTextGap(0);
-        assoEditButton.setPreferredSize(new java.awt.Dimension(18, 18));
-
         scrollNotesEvent.setBlockIncrement(1);
         scrollNotesEvent.setVisibleAmount(5);
         scrollNotesEvent.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
@@ -910,46 +916,137 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
+        javax.swing.GroupLayout eventNotePanelLayout = new javax.swing.GroupLayout(eventNotePanel);
+        eventNotePanel.setLayout(eventNotePanelLayout);
+        eventNotePanelLayout.setHorizontalGroup(
+            eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventNotePanelLayout.createSequentialGroup()
+                .addComponent(eventNoteScrollPane)
+                .addGap(2, 2, 2)
+                .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(scrollNotesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        eventNotePanelLayout.setVerticalGroup(
+            eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventNotePanelLayout.createSequentialGroup()
+                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 56, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
+                .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addComponent(eventNoteScrollPane)
+        );
+
+        eventSourceTitle.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceTitle.text")); // NOI18N
+
+        eventSourceText.setColumns(20);
+        eventSourceText.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        eventSourceText.setLineWrap(true);
+        eventSourceText.setRows(3);
+        eventSourceText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceText.text")); // NOI18N
+        eventSourceText.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventSourceText.toolTipText")); // NOI18N
+        eventSourceText.setWrapStyleWord(true);
+        sourceScrollPane1.setViewportView(eventSourceText);
+
+        repoText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoText.text")); // NOI18N
+
+        repoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/repository.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(repoEditButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoEditButton.text")); // NOI18N
+        repoEditButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoEditButton.toolTipText")); // NOI18N
+        repoEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        repoEditButton.setIconTextGap(0);
+        repoEditButton.setPreferredSize(new java.awt.Dimension(18, 18));
+
+        javax.swing.GroupLayout repoPanelLayout = new javax.swing.GroupLayout(repoPanel);
+        repoPanel.setLayout(repoPanelLayout);
+        repoPanelLayout.setHorizontalGroup(
+            repoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(repoPanelLayout.createSequentialGroup()
+                .addGap(0, 0, 0)
+                .addComponent(repoText)
+                .addGap(2, 2, 2)
+                .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        repoPanelLayout.setVerticalGroup(
+            repoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, repoPanelLayout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addGroup(repoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(repoText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+
+        addSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addSourceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addSourceButton.text")); // NOI18N
+        addSourceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addSourceButton.toolTipText")); // NOI18N
+        addSourceButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        addSourceButton.setIconTextGap(0);
+        addSourceButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        addSourceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addSourceButtonActionPerformed(evt);
+            }
+        });
+
+        delSourceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(delSourceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delSourceButton.text")); // NOI18N
+        delSourceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delSourceButton.toolTipText")); // NOI18N
+        delSourceButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        delSourceButton.setIconTextGap(0);
+        delSourceButton.setPreferredSize(new java.awt.Dimension(16, 16));
+
+        javax.swing.GroupLayout eventSourcePanelLayout = new javax.swing.GroupLayout(eventSourcePanel);
+        eventSourcePanel.setLayout(eventSourcePanelLayout);
+        eventSourcePanelLayout.setHorizontalGroup(
+            eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventSourcePanelLayout.createSequentialGroup()
+                .addGroup(eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(eventSourceTitle)
+                    .addComponent(sourceScrollPane1)
+                    .addComponent(repoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(2, 2, 2)
+                .addGroup(eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+        );
+        eventSourcePanelLayout.setVerticalGroup(
+            eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(eventSourcePanelLayout.createSequentialGroup()
+                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
+                .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(eventSourcePanelLayout.createSequentialGroup()
+                .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 77, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        assoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "asso 1", "asso 2", "asso 3", "asso 4" }));
+
+        assoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/association.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(assoEditButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditButton.text")); // NOI18N
+        assoEditButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditButton.toolTipText")); // NOI18N
+        assoEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        assoEditButton.setIconTextGap(0);
+        assoEditButton.setPreferredSize(new java.awt.Dimension(18, 18));
+
         javax.swing.GroupLayout eventRightLayout = new javax.swing.GroupLayout(eventRight);
         eventRight.setLayout(eventRightLayout);
         eventRightLayout.setHorizontalGroup(
             eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventRightLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(scrollSource, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2))
             .addGroup(eventRightLayout.createSequentialGroup()
                 .addGap(2, 2, 2)
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(eventRightLayout.createSequentialGroup()
-                        .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(sourceScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
-                        .addGap(1, 1, 1)
-                        .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                                .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(repoEditButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(assoEditButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(2, 2, 2))
-                    .addGroup(eventRightLayout.createSequentialGroup()
-                        .addComponent(repoText)
-                        .addGap(22, 22, 22))
-                    .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(assoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(22, 22, 22))
-                    .addGroup(eventRightLayout.createSequentialGroup()
-                        .addComponent(placeLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventPlace)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventDetailsButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2))
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(datelabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -960,12 +1057,28 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(ageAtEvent)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
+                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(2, 2, 2))))
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(eventTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventDescription)
+                        .addGap(2, 2, 2))
+                    .addGroup(eventRightLayout.createSequentialGroup()
+                        .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(eventRightLayout.createSequentialGroup()
+                                .addComponent(placeLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eventPlace)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(eventRightLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(2, 2, 2))
+                    .addGroup(eventRightLayout.createSequentialGroup()
+                        .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2))))
         );
         eventRightLayout.setVerticalGroup(
@@ -985,29 +1098,11 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(placeLabel)
                     .addComponent(eventPlace, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eventDetailsButton))
+                    .addComponent(eventPlaceButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(eventRightLayout.createSequentialGroup()
-                        .addComponent(scrollNotesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(2, 2, 2)
-                        .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(2, 2, 2)
-                .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(eventRightLayout.createSequentialGroup()
-                        .addComponent(scrollSource, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(3, 3, 3)
-                        .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(3, 3, 3)
-                        .addComponent(delSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(sourceScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 115, Short.MAX_VALUE))
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(repoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(repoText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(assoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1058,7 +1153,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(mediaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(4, 4, 4)))
                 .addGap(2, 2, 2)
-                .addComponent(NotePanel, javax.swing.GroupLayout.PREFERRED_SIZE, 68, Short.MAX_VALUE)
+                .addComponent(NotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
@@ -1297,7 +1392,12 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void eventSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_eventSplitPanePropertyChange
         registry.put("eventSplitDividerLocation", eventSplitPane.getDividerLocation());
+        imagePanel.redraw();
     }//GEN-LAST:event_eventSplitPanePropertyChange
+
+    private void addSourceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_addSourceButtonActionPerformed
 
     
     private void scrollNotes(int notches) {
@@ -1360,19 +1460,23 @@ public class IndiPanel extends Editor implements DocumentListener {
     private genj.edit.beans.DateBean eventDate;
     private javax.swing.JButton eventDeatButton;
     private javax.swing.JTextField eventDescription;
-    private javax.swing.JButton eventDetailsButton;
     private javax.swing.JPanel eventLeft;
     private javax.swing.JButton eventMarrButton;
     private javax.swing.JTextArea eventNote;
+    private javax.swing.JPanel eventNotePanel;
     private javax.swing.JScrollPane eventNoteScrollPane;
     private javax.swing.JButton eventOccuButton;
     private javax.swing.JButton eventOthersButton;
     private javax.swing.JTextField eventPlace;
+    private javax.swing.JButton eventPlaceButton;
     private javax.swing.JButton eventRemoveButton;
     private javax.swing.JButton eventResiButton;
     private javax.swing.JButton eventRetiButton;
     private javax.swing.JPanel eventRight;
     private javax.swing.JScrollPane eventScrollPane;
+    private javax.swing.JPanel eventSourcePanel;
+    private javax.swing.JTextArea eventSourceText;
+    private javax.swing.JTextField eventSourceTitle;
     private javax.swing.JSplitPane eventSplitPane;
     private javax.swing.JTable eventTable;
     private javax.swing.JLabel eventTitle;
@@ -1394,6 +1498,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JLabel placeLabel;
     private javax.swing.JCheckBox privateCheckBox;
     private javax.swing.JButton repoEditButton;
+    private javax.swing.JPanel repoPanel;
     private javax.swing.JTextField repoText;
     private javax.swing.JScrollBar scrollNotes;
     private javax.swing.JScrollBar scrollNotesEvent;
@@ -1401,13 +1506,13 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JScrollPane scrollPaneNotes;
     private javax.swing.JScrollPane scrollPanePhotos;
     private javax.swing.JScrollBar scrollPhotos;
-    private javax.swing.JScrollBar scrollSource;
+    private javax.swing.JScrollBar scrollSourcesEvent;
     private javax.swing.JSeparator separator;
     private javax.swing.JButton sistersButton;
     private javax.swing.JLabel sosaLabel;
-    private javax.swing.JLabel sourceImage;
+    private javax.swing.JPanel sourceImagePanel;
+    private javax.swing.JPanel sourcePanel;
     private javax.swing.JScrollPane sourceScrollPane1;
-    private javax.swing.JTextArea sourceText;
     private javax.swing.JButton spousesButton;
     private javax.swing.JTextArea textAreaNotes;
     private javax.swing.JTextArea textAreaPhotos;
@@ -2203,14 +2308,22 @@ public class IndiPanel extends Editor implements DocumentListener {
             displayEventNote();
         
             
-            // Sources - Media
-            
-            // Sources - Text
-            
-            // Sources - Repositories
-            
-            
-            
+            // Sources - Media & Text & Repo
+            if (eventSourceSet != null) {
+                eventSourceSet.clear();
+                eventSourceSet = null;
+            }
+            if (eventSourceRemovedSet != null) {
+                eventSourceRemovedSet.clear();
+                eventSourceRemovedSet = null;
+            }
+            eventSourceSet = getEventSource(event.eventProperty);
+            eventSourceRemovedSet = new ArrayList<SourceWrapper>();
+            scrollSourcesEvent.setMinimum(0);
+            scrollSourcesEvent.setBlockIncrement(1);
+            scrollSourcesEvent.setUnitIncrement(1);
+            eventSourceIndex = 0;
+            displayEventSource();
             
         }
         isBusyEvent = false;
@@ -2222,7 +2335,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<NoteWrapper> getEventNotes(Property event) {
         List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
                 
-        // Look for only general notes directly attached to indi
+        // Look for notes attached to event
         Property[] noteProps = event.getProperties("NOTE");
         for (Property prop : noteProps) {
             if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
@@ -2337,6 +2450,137 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
+    
+    
+    
+    
+    
+    private List<SourceWrapper> getEventSource(Property event) {
+        List<SourceWrapper> ret = new ArrayList<SourceWrapper>();
+                
+        // Look for sources attached to event (source_citation as links to a source entity)
+        for (PropertySource propSource : event.getProperties(PropertySource.class)) {
+            ret.add(new SourceWrapper(propSource));
+        }
+        // Look for sources attached to event (source_citation included underneath SOUR tag)
+        Property[] sourceProps = event.getProperties("SOUR");
+        for (Property prop : sourceProps) {
+            if (prop != null) {
+                ret.add(new SourceWrapper(prop));
+            }
+        }
+        
+        // Read only ! : Look for general sources directly attached to indi
+        // Look for sources attached to indi as links to source entities
+        for (PropertySource propSource : event.getProperties(PropertySource.class)) {
+            ret.add(new SourceWrapper(propSource));
+        }
+        // Look for sources attached to indi (source_citation included underneath SOUR tag)
+        sourceProps = indi.getProperties("SOUR");
+        for (Property prop : sourceProps) {
+            if (prop != null) {
+                ret.add(new SourceWrapper(prop));
+            }
+        }
+        
+        return ret;
+    }
+
+    
+    
+    
+    private void displayEventSource() {
+        isBusyEventSource = true;
+        if (eventSourceSet != null && !eventSourceSet.isEmpty() && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size())) {        
+            setEventSource(eventSourceSet.get(eventSourceIndex));
+        } else {
+            setEventSource(null);
+        }
+        isBusyEventSource = false;
+    }
+
+    private void setEventSource(SourceWrapper source) {
+        
+        // Title
+        eventSourceTitle.setText(source == null ? "" : source.getTitle());
+        eventSourceTitle.setCaretPosition(0);
+        
+        // Text
+        eventSourceText.setText(source == null ? "" : source.getText());
+        eventSourceText.setCaretPosition(0);
+        
+        // Media
+        imagePanel.setMedia(source != null ? source.getFile() : null);
+        
+        // Repositoryname
+        repoText.setText(source == null ? "" : source.getRepoName());
+        repoText.setCaretPosition(0);
+        
+        // Update scroll
+        scrollSourcesEvent.setValues(eventSourceIndex, 1, 0, eventSourceSet.size());
+        scrollSourcesEvent.setToolTipText(getScrollEventSourcesLabel());
+    }
+
+    private String getScrollEventSourcesLabel() {
+        return String.valueOf(eventSourceSet.size() > 0 ? eventSourceIndex + 1 : eventSourceIndex) + "/" + String.valueOf(eventSourceSet.size());
+    }
+
+    public boolean chooseSource() {
+        boolean b = false;
+        
+        JButton sourceButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseSource"));
+        JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { sourceButton, fileButton, cancelButton };
+        SourceChooser sourceChooser = new SourceChooser(gedcom, imagePanel.getFile(), imagePanel.getImage(), eventSourceTitle.getText(), sourceButton, cancelButton);
+        int size = sourceChooser.getNbSource();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseSourceTitle", size), sourceChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == sourceButton) {
+            if (sourceChooser.isSelectedEntitySource()) {
+                Source entity = (Source) sourceChooser.getSelectedEntity();
+                SourceWrapper source = new SourceWrapper(entity);
+                eventSourceSet.set(eventSourceIndex, source);
+                setEventSource(source);
+                changes.setChanged(true);
+                b = true;
+            }
+        } else if (o == fileButton) {
+            return chooseSourceFile();
+        }
+        
+        return b;
+    }
+    
+    
+    
+    private boolean chooseSourceFile() {
+        boolean b = false;
+        
+        Registry registry = Registry.get(getClass());
+        JFileChooser jfc = new JFileChooser();
+        jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
+        FileNameExtensionFilter imageFileFilter = Utils.getImageFilter();
+        FileNameExtensionFilter videoFileFilter = Utils.getVideoFilter();
+        FileNameExtensionFilter soundFileFilter = Utils.getSoundFilter();
+        jfc.addChoosableFileFilter(imageFileFilter);
+        jfc.addChoosableFileFilter(videoFileFilter);
+        jfc.addChoosableFileFilter(soundFileFilter);
+        jfc.setAcceptAllFileFilterUsed(true);
+        jfc.setSelectedFile(new File(registry.get("sourcePath", ".")));
+        int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserOKButton"));
+        if (ret == JFileChooser.APPROVE_OPTION) {
+            File f = jfc.getSelectedFile();
+            registry.put("sourcePath", f);
+            if (f != null) {
+                SourceWrapper source = new SourceWrapper(f);  
+                eventSourceSet.set(eventSourceIndex, source);
+                imagePanel.setMedia(source.getFile());
+                changes.setChanged(true);
+                b = true;
+            }
+        }
+        return b;
+    }
     
     
     

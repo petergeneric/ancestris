@@ -31,7 +31,7 @@ import javax.swing.JLabel;
 public class EventWrapper {
 
     private Entity hostingEntity = null;     // INDI or FAM the event belongs to
-    public Property eventProperty = null;   // the event
+    public Property eventProperty = null;    // the event
     
     public JLabel eventLabel = null;            // for table
     public int eventYear = 0;                   // for table
