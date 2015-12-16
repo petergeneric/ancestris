@@ -643,7 +643,7 @@ public class SourceChooser extends javax.swing.JPanel {
         }
         
         public Image getImage() {
-            return getImageFromFile(file, getClass());
+            return getImageFromFile(file, getClass(), text.trim().isEmpty());
         }
         
         public void setIcon() {
