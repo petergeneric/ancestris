@@ -66,6 +66,9 @@ public class ImagePanel extends javax.swing.JPanel {
         }
         this.image = IMG_NO_SOURCE_MEDIA;
         initComponents();
+        if (callingPanel == null) {
+            setToolTipText(org.openide.util.NbBundle.getMessage(ImagePanel.class, "ImagePanel.toolTipText2"));
+        }
     }
 
     public void setMedia(File file) {
@@ -172,9 +175,15 @@ public class ImagePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1) {
+        if (evt.getButton() == MouseEvent.BUTTON1 && callingPanel != null) {
             callingPanel.chooseSource();
         } else if (evt.getButton() == MouseEvent.BUTTON3 && file != null && file.exists()) {
+            try {
+                Desktop.getDesktop().open(file);
+            } catch (IOException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+        } else if (callingPanel == null && evt.getButton() == MouseEvent.BUTTON1 && file != null && file.exists()) {
             try {
                 Desktop.getDesktop().open(file);
             } catch (IOException ex) {
