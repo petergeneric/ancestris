@@ -25,16 +25,12 @@ import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyXRef;
 import genj.util.Registry;
 import java.awt.Component;
-import java.awt.Desktop;
 import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -74,11 +70,12 @@ public class SourceChooser extends javax.swing.JPanel {
     private Gedcom gedcom = null;
     private File mainFile = null;
     private Image mainImage = null;
-    private Image scaledImage = null;
     private String mainTitle = null;
     private String mainText = null;
     private JButton okButton = null;
     private JButton cancelButton = null;
+    
+    private ImagePanel imagePanel = null;
     
     /**
      * Creates new form SourceChooser
@@ -88,6 +85,7 @@ public class SourceChooser extends javax.swing.JPanel {
         mainFile = file;
         mainImage = image;
         mainTitle = title;
+        mainText = "";
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
@@ -106,7 +104,6 @@ public class SourceChooser extends javax.swing.JPanel {
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("sourceWindowWidth", this.getPreferredSize().width), registry.get("sourceWindowHeight", this.getPreferredSize().height)));
         jSplitPane.setDividerLocation(registry.get("sourceSplitDividerLocation", jSplitPane.getDividerLocation()));
-        sourceMedia.setText("");
         displayIconAndTitle();
         sourceList.setCellRenderer(new ListEntryCellRenderer());
         okButton.setEnabled(false);
@@ -132,7 +129,7 @@ public class SourceChooser extends javax.swing.JPanel {
     }
     
     private void displayIconAndTitle(int width, int height) {
-        if (mainFile == null && !mainText.isEmpty()) {
+        if (mainFile == null && mainText != null && !mainText.isEmpty()) {
             sourceMedia.setVisible(false);
             sourceText.setVisible(true);
             sourceText.setText(mainText);
@@ -141,18 +138,7 @@ public class SourceChooser extends javax.swing.JPanel {
             sourceText.setText("");
             sourceText.setVisible(false);
             sourceMedia.setVisible(true);
-            if (width == 0 || height == 0) {
-                scaledImage = null;
-                sourceMedia.repaint();
-                return;
-            }
-            double imageRatio = (double) mainImage.getWidth(null) / (double) mainImage.getHeight(null);
-            double targetRatio = (double) width / (double) height;
-            if (targetRatio < imageRatio) {
-                scaledImage = mainImage.getScaledInstance(width, -1, Image.SCALE_DEFAULT);
-            } else {
-                scaledImage = mainImage.getScaledInstance(-1, height, Image.SCALE_DEFAULT);
-            }
+            imagePanel.setMedia(mainFile);
         }
         jLayeredPane1.revalidate();
         jLayeredPane1.repaint();
@@ -172,18 +158,8 @@ public class SourceChooser extends javax.swing.JPanel {
         jSplitPane = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
         jLayeredPane1 = new javax.swing.JLayeredPane();
-        sourceMedia = new javax.swing.JLabel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                if (scaledImage != null) {
-                    ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
-                    //registry.put("mediaWindowWidth", getParent().getWidth());
-                    //registry.put("mediaWindowHeight", getParent().getHeight());
-                }
-            }
-
-        };
+        imagePanel = new ImagePanel(null);
+        sourceMedia = imagePanel;
         jScrollPane1 = new javax.swing.JScrollPane();
         sourceText = new javax.swing.JTextArea();
         photoTitle = new javax.swing.JLabel();
@@ -207,21 +183,24 @@ public class SourceChooser extends javax.swing.JPanel {
 
         jPanel1.setPreferredSize(new java.awt.Dimension(200, 383));
 
-        sourceMedia.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(sourceMedia, org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.sourceMedia.text")); // NOI18N
-        sourceMedia.setToolTipText(org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.sourceMedia.toolTipText")); // NOI18N
-        sourceMedia.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        sourceMedia.setPreferredSize(new java.awt.Dimension(232, 352));
-        sourceMedia.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                sourceMediaMouseClicked(evt);
-            }
-        });
+        jLayeredPane1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+
         sourceMedia.addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 sourceMediaComponentResized(evt);
             }
         });
+
+        javax.swing.GroupLayout sourceMediaLayout = new javax.swing.GroupLayout(sourceMedia);
+        sourceMedia.setLayout(sourceMediaLayout);
+        sourceMediaLayout.setHorizontalGroup(
+            sourceMediaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 184, Short.MAX_VALUE)
+        );
+        sourceMediaLayout.setVerticalGroup(
+            sourceMediaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 356, Short.MAX_VALUE)
+        );
 
         sourceText.setEditable(false);
         sourceText.setColumns(20);
@@ -236,19 +215,19 @@ public class SourceChooser extends javax.swing.JPanel {
         jLayeredPane1.setLayout(jLayeredPane1Layout);
         jLayeredPane1Layout.setHorizontalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                .addComponent(sourceMedia, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
+            .addGap(0, 0, Short.MAX_VALUE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jLayeredPane1Layout.createSequentialGroup()
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
-                    .addContainerGap()))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(sourceMedia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPane1Layout.setVerticalGroup(
             jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(sourceMedia, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
+            .addGap(0, 352, Short.MAX_VALUE)
             .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE))
+            .addGroup(jLayeredPane1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(sourceMedia, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jLayeredPane1.setLayer(sourceMedia, javax.swing.JLayeredPane.DEFAULT_LAYER);
         jLayeredPane1.setLayer(jScrollPane1, javax.swing.JLayeredPane.DEFAULT_LAYER);
@@ -263,13 +242,12 @@ public class SourceChooser extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLayeredPane1)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(photoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE)
-                        .addContainerGap())))
+                    .addComponent(photoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 188, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -361,26 +339,11 @@ public class SourceChooser extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_sourceListValueChanged
 
-    private void sourceMediaComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_sourceMediaComponentResized
-        displayIconAndTitle();
-    }//GEN-LAST:event_sourceMediaComponentResized
-
     private void sourceListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceListMouseClicked
         if (evt.getClickCount() == 2) {
             okButton.doClick();
         }
     }//GEN-LAST:event_sourceListMouseClicked
-
-    private void sourceMediaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceMediaMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1 && mainFile != null) {
-            try {
-                Desktop.getDesktop().open(mainFile);
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
-            }
-        }
-
-    }//GEN-LAST:event_sourceMediaMouseClicked
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
         registry.put("sourceWindowWidth", evt.getComponent().getWidth());
@@ -422,6 +385,10 @@ public class SourceChooser extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_sourceListMousePressed
 
+    private void sourceMediaComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_sourceMediaComponentResized
+        displayIconAndTitle();
+    }//GEN-LAST:event_sourceMediaComponentResized
+
     private void edit(Entity entity) {
         cancelButton.doClick();
         SelectionDispatcher.fireSelection(new Context(entity));
@@ -437,7 +404,7 @@ public class SourceChooser extends javax.swing.JPanel {
     private javax.swing.JSplitPane jSplitPane;
     private javax.swing.JLabel photoTitle;
     private javax.swing.JList sourceList;
-    private javax.swing.JLabel sourceMedia;
+    private javax.swing.JPanel sourceMedia;
     private javax.swing.JTextArea sourceText;
     private javax.swing.JTextField textFilter;
     // End of variables declaration//GEN-END:variables
