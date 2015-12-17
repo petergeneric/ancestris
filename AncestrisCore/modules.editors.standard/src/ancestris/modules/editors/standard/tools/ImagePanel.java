@@ -175,9 +175,9 @@ public class ImagePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1 && callingPanel != null) {
+        if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON1) {
             callingPanel.chooseSource();
-        } else if (evt.getButton() == MouseEvent.BUTTON3 && file != null && file.exists()) {
+        } else if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && file != null && file.exists()) {
             try {
                 Desktop.getDesktop().open(file);
             } catch (IOException ex) {

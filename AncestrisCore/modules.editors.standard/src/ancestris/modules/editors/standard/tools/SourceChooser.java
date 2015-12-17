@@ -16,7 +16,9 @@ import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Source;
 import genj.gedcom.Property;
@@ -57,7 +59,7 @@ import org.openide.windows.WindowManager;
  */
 public class SourceChooser extends javax.swing.JPanel {
 
-    private static int THUMB_WIDTH = 50;
+    private static int THUMB_WIDTH = 90;
     private static int THUMB_HEIGHT = 70;
     
     private static Map<String, ImageIcon> cacheIcon = new HashMap<String, ImageIcon>();
@@ -597,7 +599,23 @@ public class SourceChooser extends javax.swing.JPanel {
             this.isSource = true;
             this.entity = entity;
             this.file = file;
-            this.title = title;
+            String name = "";
+            Entity[] ents = PropertyXRef.getReferences(entity);
+            for (Entity ent : ents) {
+                if (ent instanceof Indi){
+                    name = " - " + ((Indi)ent).toString(true);
+                    break;
+                }
+            }
+            if (name.isEmpty()) {
+                for (Entity ent : ents) {
+                    if (ent instanceof Fam) {
+                        name = " - " + ((Fam) ent).toString(true);
+                        break;
+                    }
+                }
+            }
+            this.title = title + name;
             this.text = text;
         }
 
