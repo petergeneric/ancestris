@@ -2321,6 +2321,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         sorter.setComparator(2, new Comparator<String>() {
             public int compare(String s1, String s2) {
                 try {
+                    if (s1.equals("-")) {
+                        s1 = "0";
+                    }
+                    if (s2.equals("-")) {
+                        s2 = "0";
+                    }
                     Double d1 = new DecimalFormat("#.###").parse(s1).doubleValue();
                     Double d2 = new DecimalFormat("#.###").parse(s2).doubleValue();
                     return d1.compareTo(d2);
