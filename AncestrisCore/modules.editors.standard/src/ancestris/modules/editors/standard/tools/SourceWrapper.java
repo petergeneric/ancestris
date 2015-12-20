@@ -259,22 +259,32 @@ public class SourceWrapper {
         Property propTitle = property.getProperty("TITL", true);
         if (propTitle != null) {
             this.title = propTitle.getDisplayValue();
+        } else {
+            this.title = "";
         }
         Property propText = property.getProperty("TEXT", true);
         if (propText != null) {
             this.text = propText.getDisplayValue();
+        } else {
+            this.text = "";
         }
         Property propMedia = property.getProperty("OBJE", true);
         if (propMedia != null && propMedia instanceof PropertyMedia) {
             PropertyMedia pm = (PropertyMedia) propMedia;
             this.targetMedia = (Media) pm.getTargetEntity();
             this.file = targetMedia.getFile();
+        } else {
+            this.targetMedia = null;
+            this.file = null;
         }
         Property propRepository = property.getProperty("REPO", true);
         if (propRepository != null && propRepository instanceof PropertyRepository) {
             PropertyRepository pr = (PropertyRepository) propRepository;
             this.targetRepo = (Repository) pr.getTargetEntity();
             this.repoName = targetRepo.getRepositoryName();
+        } else {
+            this.targetRepo = null;
+            this.repoName = "";
         }
     }
 
@@ -391,6 +401,10 @@ public class SourceWrapper {
     }
 
     
+    public Entity getTargetSource() {
+        return targetSource;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -421,6 +435,19 @@ public class SourceWrapper {
 
     public void setRepoName(String name) {
         this.repoName = name;
+    }
+
+    public void setRepo(Repository entity) {
+        this.targetRepo = entity;
+        if (entity == null) {
+            this.repoName = "";
+        } else {
+            this.repoName = targetRepo.getRepositoryName();
+        }
+    }
+
+    public Repository getRepo() {
+        return targetRepo;
     }
 
 
