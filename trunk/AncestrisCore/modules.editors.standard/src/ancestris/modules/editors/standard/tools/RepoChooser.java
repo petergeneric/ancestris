@@ -87,7 +87,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
     public RepoChooser(Gedcom gedcom, SourceWrapper source, JButton okButton, JButton cancelButton) {
         this.gedcom = gedcom;
         this.source = source;
-        this.repo = source.getRepo();
+        this.repo = source != null ? source.getRepo() : null;
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
@@ -913,7 +913,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         if (sourceList.getSelectedIndex() != -1) {
             sourceToSave = (Source) sourceListModel.getElementAt(sourceList.getSelectedIndex());
         } else {
-            sourceToSave = (Source) source.getTargetSource();
+            sourceToSave = source != null ? (Source) source.getTargetSource() : null;
         }
         if (sourceToSave != null) {
             Property pRepo = sourceToSave.getProperty("REPO");

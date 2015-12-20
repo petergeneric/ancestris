@@ -226,6 +226,10 @@ public class SourceWrapper {
         setTargetEntity(entity);
     }
     
+    public SourceWrapper(Repository repo) {
+        setRepo(repo);
+    }
+
     // Constructor from choose file
     public SourceWrapper(File f) {
         setFile(f);
