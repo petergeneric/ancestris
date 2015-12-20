@@ -1039,7 +1039,10 @@ public class RepoChooser extends JPanel implements DocumentListener {
                     this.text += ", " + prop.getDisplayValue();
                 }
                 if (!pAddr.getDisplayValue().trim().isEmpty()) {
-                    this.text += "<br>&bull;&nbsp;" + pAddr.getDisplayValue().substring(0, 16) + ".";
+                    String str = pAddr.getDisplayValue();
+                    if (str.length()>0) {
+                        this.text += "<br>&bull;&nbsp;" + str.substring(0, Math.min(16, str.length()-1)) + ".";
+                    }
                 }
             }
             Property prop = entity.getProperty("NOTE");
