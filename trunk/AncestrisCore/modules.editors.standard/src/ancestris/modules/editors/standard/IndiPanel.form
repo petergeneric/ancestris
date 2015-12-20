@@ -1177,7 +1177,7 @@
                                       <EmptySpace min="184" max="32767" attributes="0"/>
                                   </Group>
                                   <Group type="102" attributes="0">
-                                      <Component id="eventDate" max="32767" attributes="0"/>
+                                      <Component id="eventDate" pref="297" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   </Group>
                               </Group>
@@ -1567,7 +1567,7 @@
                         </Property>
                         <Property name="iconTextGap" type="int" value="0"/>
                         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                          <Dimension value="[18, 18]"/>
+                          <Dimension value="[28, 24]"/>
                         </Property>
                       </Properties>
                       <Events>

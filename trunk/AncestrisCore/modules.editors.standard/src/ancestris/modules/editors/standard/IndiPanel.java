@@ -966,7 +966,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         repoEditButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoEditButton.toolTipText")); // NOI18N
         repoEditButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         repoEditButton.setIconTextGap(0);
-        repoEditButton.setPreferredSize(new java.awt.Dimension(18, 18));
+        repoEditButton.setPreferredSize(new java.awt.Dimension(28, 24));
         repoEditButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 repoEditButtonActionPerformed(evt);
@@ -1092,7 +1092,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(ageAtEvent)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                                 .addGap(2, 2, 2))))
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(eventTitle)
