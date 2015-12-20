@@ -12,6 +12,7 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import ancestris.modules.editors.standard.IndiPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
@@ -21,6 +22,7 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import java.util.List;
 import javax.swing.JLabel;
+import org.openide.util.NbBundle;
 
 
 
@@ -44,8 +46,6 @@ public class EventWrapper {
     public String dayOfWeek = null;
     public String age = "";
     public PropertyPlace place = null;
-    private List<NoteWrapper> notes = null;
-    private List<NoteWrapper> sources = null;
     
     
     public EventWrapper(Property property, Indi indi) {
@@ -94,12 +94,18 @@ public class EventWrapper {
             PropertyAge propAge = (PropertyAge) prop;
             propAge.updateAge();
             this.eventAge = propAge.getDecimalValue("#.###");
-            this.age = "(" + propAge.getPropertyName() + ": " + propAge.getDisplayValue() + ")";
+            if (eventAge.equals("0")) {
+                eventAge = "-";
+            }
+            this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
         } else {
             PropertyAge propAge = new PropertyAge("AGE");
             propAge.getAge(indi, eventProperty);
             this.eventAge = propAge.getDecimalValue("#.###");
-            this.age = "(" + propAge.getPropertyName() + ": " + propAge.getDisplayValue() + ")";
+            if (eventAge.equals("0")) {
+                eventAge = "-";
+            }
+            this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
         }
         if (this.date == null || property.getTag().equals("BIRT")) {
             this.age = "";
@@ -109,6 +115,13 @@ public class EventWrapper {
         this.place = (PropertyPlace) property.getProperty("PLAC");
     }
 
+    
+    private boolean isValidBirthDate(Indi indi) {
+        PropertyDate birthDate = indi.getBirthDate();
+        return birthDate != null && birthDate.isValid();
+    }
+
+    
     
     
     public void update(Indi indi) {
@@ -123,6 +136,7 @@ public class EventWrapper {
         }
         hostingEntity.delProperty(eventProperty);  // FIXME : recursively
     }
+
 
 
 
