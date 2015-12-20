@@ -2750,17 +2750,25 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     public boolean chooseRepository() {
         boolean b = false;
-        
         JButton repoButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseRepo"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { repoButton, cancelButton };
-        RepoChooser repoChooser = new RepoChooser(gedcom, eventSourceSet.get(eventSourceIndex), repoButton, cancelButton);
+        SourceWrapper source = eventSourceSet.isEmpty() ?  null : eventSourceSet.get(eventSourceIndex);
+        RepoChooser repoChooser = new RepoChooser(gedcom, source, repoButton, cancelButton);
         int size = repoChooser.getNbRepos();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseRepoTitle", size), repoChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == repoButton) {
             if (repoChooser.isSelectedEntityRepo()) {
-                Repository entity = (Repository) repoChooser.getSelectedEntity();
-                eventSourceSet.get(eventSourceIndex).setRepo(entity);
+                boolean exists = (eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size());
+                if (exists) {
+                    Repository entity = (Repository) repoChooser.getSelectedEntity();
+                    eventSourceSet.get(eventSourceIndex).setRepo(entity);
+                } else {
+                    Repository entity = (Repository) repoChooser.getSelectedEntity();
+                    source = new SourceWrapper(entity);  
+                    eventSourceSet.add(source);
+                    eventSourceIndex = eventSourceSet.size()-1;
+                }
                 changes.setChanged(true);
                 b = true;
             }
