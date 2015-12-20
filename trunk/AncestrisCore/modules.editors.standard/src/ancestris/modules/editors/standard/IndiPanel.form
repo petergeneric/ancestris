@@ -1447,14 +1447,14 @@
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="eventSourceTitle" alignment="0" max="32767" attributes="0"/>
-                              <Component id="sourceScrollPane1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="eventSourceScrollPane" alignment="0" max="32767" attributes="0"/>
                               <Component id="repoPanel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="scrollSourcesEvent" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="addSourceButton" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="delSourceButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="addSourceEventButton" alignment="2" min="-2" max="-2" attributes="0"/>
+                              <Component id="delSourceEventButton" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -1464,14 +1464,14 @@
                       <Group type="102" attributes="0">
                           <Component id="scrollSourcesEvent" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="addSourceButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="addSourceEventButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="delSourceButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="delSourceEventButton" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" attributes="0">
                           <Component id="eventSourceTitle" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="sourceScrollPane1" pref="77" max="32767" attributes="0"/>
+                          <Component id="eventSourceScrollPane" pref="77" max="32767" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="repoPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -1486,7 +1486,7 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Container class="javax.swing.JScrollPane" name="sourceScrollPane1">
+                <Container class="javax.swing.JScrollPane" name="eventSourceScrollPane">
                   <AuxValues>
                     <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
                   </AuxValues>
@@ -1509,6 +1509,9 @@
                         </Property>
                         <Property name="wrapStyleWord" type="boolean" value="true"/>
                       </Properties>
+                      <Events>
+                        <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="eventSourceTextMouseWheelMoved"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
@@ -1540,6 +1543,7 @@
                   <SubComponents>
                     <Component class="javax.swing.JTextField" name="repoText">
                       <Properties>
+                        <Property name="editable" type="boolean" value="false"/>
                         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.repoText.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                         </Property>
@@ -1566,21 +1570,28 @@
                           <Dimension value="[18, 18]"/>
                         </Property>
                       </Properties>
+                      <Events>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="repoEditButtonActionPerformed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>
                 <Component class="javax.swing.JScrollBar" name="scrollSourcesEvent">
+                  <Events>
+                    <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="scrollSourcesEventMouseWheelMoved"/>
+                    <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="scrollSourcesEventAdjustmentValueChanged"/>
+                  </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="addSourceButton">
+                <Component class="javax.swing.JButton" name="addSourceEventButton">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/ancestris/modules/editors/standard/images/add.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addSourceButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addSourceEventButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addSourceButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addSourceEventButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -1593,19 +1604,19 @@
                     </Property>
                   </Properties>
                   <Events>
-                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addSourceButtonActionPerformed"/>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addSourceEventButtonActionPerformed"/>
                   </Events>
                 </Component>
-                <Component class="javax.swing.JButton" name="delSourceButton">
+                <Component class="javax.swing.JButton" name="delSourceEventButton">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/ancestris/modules/editors/standard/images/remove.png"/>
                     </Property>
                     <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delSourceButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delSourceEventButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delSourceButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                      <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delSourceEventButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                     <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                       <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -1617,6 +1628,9 @@
                       <Dimension value="[16, 16]"/>
                     </Property>
                   </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delSourceEventButtonActionPerformed"/>
+                  </Events>
                 </Component>
               </SubComponents>
             </Container>
@@ -1653,6 +1667,9 @@
                   <Dimension value="[18, 18]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="assoEditButtonActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
