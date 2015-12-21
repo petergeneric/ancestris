@@ -91,6 +91,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
+        createRepoThumbs();
         registry = Registry.get(getClass());
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("repoWindowWidth", this.getPreferredSize().width), registry.get("repoWindowHeight", this.getPreferredSize().height)));
@@ -112,7 +113,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         Thread repoThread = new Thread() {
             @Override
             public void run() {
-                refreshAll(repo);
+                displayRepoThumbs();
+                selectRepo(repo);
             }
         };
         repoThread.setName("Repo reading thread");
@@ -167,7 +169,10 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private void refreshAll(Repository selectedRepo) {
         createRepoThumbs();
         displayRepoThumbs();
-        
+        selectRepo(selectedRepo);
+    }
+
+    private void selectRepo(Repository selectedRepo) {
         RepoThumb selectedRepotb = null;
         for (RepoThumb repotb : allRepo) {
             if (repotb.entity == null && selectedRepo == null) {
@@ -188,10 +193,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 }
             });
         }
-
     }
-
-
     
     private void clearForm() {
         jTextName.setText("");
@@ -982,7 +984,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
             setPreferredSize(new Dimension(labelWidth, labelHeight));
             String color = entry.isRepo && !entry.isUnused ? "black" : !entry.isRepo && !entry.isUnused ? "blue" : "red";
             if (entry.entity == null) { // new note
-                text = "<br><br><br><br>&lt;<b>" + text + "</b>&gt;";
+                text = "<center><font size=+0><br><br><i><b>" + text + "</b></i></font></center>";
             }
             setText("<html><font color="+color+">" + text + "</font></html>");
 
