@@ -4,6 +4,7 @@ import ancestris.modules.editors.standard.tools.EventUsage;
 import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
+import ancestris.modules.editors.standard.tools.AssoManager;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
@@ -1473,7 +1474,11 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_repoEditButtonActionPerformed
 
     private void assoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assoEditButtonActionPerformed
-        // TODO add your handling code here:
+        if (manageAssociations()) {
+            displayEventSource();
+        }
+        eventSourceTitle.requestFocus();
+
     }//GEN-LAST:event_assoEditButtonActionPerformed
 
     private void eventSourceTextMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_eventSourceTextMouseWheelMoved
@@ -2769,6 +2774,25 @@ public class IndiPanel extends Editor implements DocumentListener {
                 changes.setChanged(true);
                 b = true;
             }
+        }
+        return b;
+    }
+
+    
+    
+    
+    
+    private boolean manageAssociations() {
+        boolean b = false;
+        JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { okButton, cancelButton };
+        EventWrapper event = eventSet.get(eventIndex);
+        AssoManager assoManager = new AssoManager(event, okButton, cancelButton);
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle"), assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == okButton) {
+            changes.setChanged(true);
+            b = true;
         }
         return b;
     }
