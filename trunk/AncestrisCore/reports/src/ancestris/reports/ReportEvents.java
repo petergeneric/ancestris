@@ -61,6 +61,8 @@ public class ReportEvents extends Report {
     public boolean reportNaturalization = true;
     /** whether deaths should be reported */
     public boolean reportDeath = true;
+    /** whether burials should be reported */
+    public boolean reportBurial = true;
     /** whether the output should be in icalendar format */
     public boolean isOutputICal = false;
 
@@ -96,7 +98,7 @@ public class ReportEvents extends Report {
     public void start(Gedcom gedcom) throws GedcomException {
 
         // check that something is selected
-        if ((!reportBirth) && (!reportBaptism) && (!reportDeath) && (!reportMarriage) && (!reportDivorce) && (!reportEmigration) && (!reportImmigration) && (!reportNaturalization))
+        if ((!reportBirth) && (!reportBaptism) && (!reportDeath) && (!reportBurial) && (!reportMarriage) && (!reportDivorce) && (!reportEmigration) && (!reportImmigration) && (!reportNaturalization))
             return;
         
         // initialize timestamp
@@ -114,6 +116,7 @@ public class ReportEvents extends Report {
         if (reportImmigration) tag2events.put("IMMI", new ArrayList<Hit>());
         if (reportNaturalization) tag2events.put("NATU", new ArrayList<Hit>());
         if (reportDeath) tag2events.put("DEAT", new ArrayList<Hit>());
+        if (reportBurial) tag2events.put("BURI", new ArrayList<Hit>());
 
         // loop individuals
         for (Entity indi : (Collection<Entity>)gedcom.getEntities(Gedcom.INDI)) {
