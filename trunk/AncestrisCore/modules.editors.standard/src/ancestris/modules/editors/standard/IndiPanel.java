@@ -1801,7 +1801,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         //
         //
         //
-        modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + indi.getLastChange().getDisplayValue());
+        modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
         //
         //.......................................
         
