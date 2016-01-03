@@ -99,7 +99,7 @@ public class PropertyRelationship extends PropertyChoiceValue {
    * Compute anchor
    * @return might be null
    */
-  /*package*/ TagPath getAnchor() {
+  public TagPath getAnchor() {
 
     // try to find accurate target base on target's parent
     Property target = getTarget();

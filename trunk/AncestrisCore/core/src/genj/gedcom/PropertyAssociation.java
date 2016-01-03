@@ -44,6 +44,10 @@ public class PropertyAssociation extends PropertyXRef {
    * @see genj.gedcom.PropertyXRef#getDisplayValue()
    */
   public String getDisplayValue() {
+      return getDisplayValue(true);
+  }
+  
+  public String getDisplayValue(boolean fullDisplay) {
     
     // find target
     PropertyXRef target = getTarget();
@@ -58,17 +62,38 @@ public class PropertyAssociation extends PropertyXRef {
     // collect some info e.g.
     //  Meier, Nils (I008) - Birth - 25 May 1970 - Rendsburg
     WordBuffer result = new WordBuffer(" - ");
-    result.append(parent.getEntity());
+    if (fullDisplay) {
+        result.append(parent.getEntity());
+    }
     
-    result.append(Gedcom.getName(parent.getTag()));
+    String fullName = Gedcom.getName(parent.getTag());
+    String shortName = "";
+    if (fullName.contains(" ")) {
+        shortName = fullName.substring(0, fullName.indexOf(" "));
+    } else {
+        shortName = fullName;
+    }
+    result.append(fullDisplay ? fullName : shortName);
     
     Property date = parent.getProperty("DATE");
-    if (date!=null)
-      result.append(date);
+    if (date!=null) {
+      if (fullDisplay)  {
+        result.append(date);
+      } else {
+        PropertyDate pDate = (PropertyDate) date;
+        result.append(pDate.getStart().getValue());
+      }
+    }
     
     Property place = parent.getProperty("PLAC");
-    if (place!=null)
-      result.append(place);
+    if (place!=null) {
+      if (fullDisplay)  {
+        result.append(place);
+      } else {
+        PropertyPlace pPlace = (PropertyPlace) place;
+        result.append(pPlace.getCity());
+      }
+    }
     
     // done
     return result.toString();
