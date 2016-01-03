@@ -12,7 +12,6 @@
 
 package ancestris.modules.editors.standard.tools;
 
-import ancestris.modules.editors.standard.IndiPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
@@ -20,7 +19,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
-import java.util.List;
 import javax.swing.JLabel;
 import org.openide.util.NbBundle;
 

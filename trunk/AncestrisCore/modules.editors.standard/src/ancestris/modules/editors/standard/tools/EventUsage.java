@@ -13,6 +13,7 @@
 package ancestris.modules.editors.standard.tools;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +23,7 @@ import java.util.Set;
  * @author frederic
  */
 public class EventUsage {
-
+    
     public static void init(Map<String, EventUsage> eventUsages) {
         eventUsages.put("BIRT", new EventUsage( 1, "INDI"));    // The event of entering into life.
 
@@ -102,6 +103,13 @@ public class EventUsage {
         }
         return ret.toArray(new String[ret.size()]);
         
+    }
+    
+    public static boolean isEventTag(String tag) {
+        Map<String, EventUsage> eventUsages = new HashMap<String, EventUsage>();
+        EventUsage.init(eventUsages);
+        Set<String> keys = eventUsages.keySet();
+        return keys.contains(tag);
     }
     
     

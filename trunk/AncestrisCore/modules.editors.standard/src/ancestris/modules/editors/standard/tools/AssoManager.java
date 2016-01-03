@@ -11,7 +11,15 @@
  */
 package ancestris.modules.editors.standard.tools;
 
+import genj.gedcom.Fam;
+import genj.gedcom.Indi;
+import genj.gedcom.PropertyForeignXRef;
+import genj.util.Registry;
+import java.awt.Dimension;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.JButton;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -19,11 +27,63 @@ import javax.swing.JButton;
  */
 public class AssoManager extends javax.swing.JPanel {
 
+    private Registry registry = null;
+    private Indi indi = null;
+    
+    // Association With indi and Of indi
+    private List<AssoWrapper> assoWithSet = null;
+    private List<AssoWrapper> assoOfSet = null;
+    private AssoWithTableModel awtm = null;
+    
     /**
      * Creates new form AssoManager
      */
     public AssoManager(EventWrapper event, JButton okButton, JButton cancelButton) {
+        registry = Registry.get(getClass());
         initComponents();
+
+        this.setPreferredSize(new Dimension(registry.get("assoWindowWidth", this.getPreferredSize().width), registry.get("assoWindowHeight", this.getPreferredSize().height)));
+        assoSplitPanel.setDividerLocation(registry.get("assoSplitDividerLocation", assoSplitPanel.getDividerLocation()));
+
+        // Get associations of both types
+        this.indi = (Indi) event.eventProperty.getEntity();
+        assoWithSet = new ArrayList<AssoWrapper>();
+        getAssociationsWith(indi);
+        assoOfSet = new ArrayList<AssoWrapper>();
+        getAssociationOf(indi);
+        
+        // Build lists
+        awtm = new AssoWithTableModel(assoWithSet);
+        assoWithTable.setModel(awtm);    
+        assoWithTable.setAutoCreateRowSorter(true);
+        
+        // Resize columns
+        assoWithTable.getColumnModel().getColumn(0).setPreferredWidth(getMaxWidth(awtm, 0));
+        assoWithTable.getColumnModel().getColumn(1).setPreferredWidth(getMaxWidth(awtm, 1));
+        assoWithTable.getColumnModel().getColumn(2).setPreferredWidth(getMaxWidth(awtm, 2));
+        assoWithTable.getColumnModel().getColumn(3).setPreferredWidth(getMaxWidth(awtm, 3));
+        assoWithTable.getColumnModel().getColumn(4).setPreferredWidth(getMaxWidth(awtm, 4));
+        assoWithTable.getColumnModel().getColumn(5).setPreferredWidth(30);
+        assoWithTable.getColumnModel().getColumn(6).setPreferredWidth(getMaxWidth(awtm, 6));
+        
+        // Resize table based on its number of lines
+        Dimension preferredSize = assoWithTable.getPreferredSize();
+        preferredSize.height = assoWithTable.getRowHeight() * awtm.getRowCount() + 1;
+        //assoWithTable.setPreferredScrollableViewportSize(preferredSize);
+        assoWithTable.setPreferredSize(preferredSize);
+        assoWithTable.revalidate();
+        assoWithTable.repaint();
+        
+
+        
+        
+        // Titles
+        assoWithIndiTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoWithIndiTitle.text", getIndi()));
+        assoOfIndoTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoOfIndoTitle.text", getIndi()));
+        
+        
+        ////////////////////////// check displayEventTable in IndiPanel
+
     }
 
     /**
@@ -35,19 +95,217 @@ public class AssoManager extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        assoSplitPanel = new javax.swing.JSplitPane();
+        assoWithIndiPanel = new javax.swing.JPanel();
+        assoWithIndiTitle = new javax.swing.JLabel();
+        assoListScrollPane = new javax.swing.JScrollPane();
+        assoWithTable = new javax.swing.JTable();
+        addLineButton = new javax.swing.JButton();
+        removeLineButton = new javax.swing.JButton();
+        AssoOfIndiPanel = new javax.swing.JPanel();
+        assoOfIndoTitle = new javax.swing.JLabel();
+        relaListScrollPane = new javax.swing.JScrollPane();
+        assoOfTable = new javax.swing.JTable();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+
+        assoSplitPanel.setDividerLocation(275);
+        assoSplitPanel.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        assoSplitPanel.setResizeWeight(0.5);
+        assoSplitPanel.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                assoSplitPanelPropertyChange(evt);
+            }
+        });
+
+        assoWithIndiPanel.setPreferredSize(new java.awt.Dimension(468, 273));
+
+        assoWithIndiTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(assoWithIndiTitle, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.assoWithIndiTitle.text")); // NOI18N
+
+        assoWithTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+
+            }
+        ));
+        assoWithTable.setPreferredSize(new java.awt.Dimension(300, 10));
+        assoWithTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        assoListScrollPane.setViewportView(assoWithTable);
+
+        addLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addLineButton, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.addLineButton.text")); // NOI18N
+        addLineButton.setToolTipText(org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.addLineButton.toolTipText")); // NOI18N
+        addLineButton.setPreferredSize(new java.awt.Dimension(24, 24));
+
+        removeLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(removeLineButton, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.removeLineButton.text")); // NOI18N
+        removeLineButton.setToolTipText(org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.removeLineButton.toolTipText")); // NOI18N
+        removeLineButton.setPreferredSize(new java.awt.Dimension(24, 24));
+
+        javax.swing.GroupLayout assoWithIndiPanelLayout = new javax.swing.GroupLayout(assoWithIndiPanel);
+        assoWithIndiPanel.setLayout(assoWithIndiPanelLayout);
+        assoWithIndiPanelLayout.setHorizontalGroup(
+            assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(assoWithIndiPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, assoWithIndiPanelLayout.createSequentialGroup()
+                        .addComponent(assoWithIndiTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
+                        .addComponent(removeLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(addLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(assoListScrollPane))
+                .addContainerGap())
+        );
+        assoWithIndiPanelLayout.setVerticalGroup(
+            assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(assoWithIndiPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(addLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(removeLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(assoWithIndiTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(assoListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        assoSplitPanel.setTopComponent(assoWithIndiPanel);
+
+        AssoOfIndiPanel.setPreferredSize(new java.awt.Dimension(268, 160));
+
+        assoOfIndoTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(assoOfIndoTitle, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.assoOfIndoTitle.text")); // NOI18N
+
+        relaListScrollPane.setPreferredSize(new java.awt.Dimension(256, 175));
+
+        assoOfTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        relaListScrollPane.setViewportView(assoOfTable);
+
+        javax.swing.GroupLayout AssoOfIndiPanelLayout = new javax.swing.GroupLayout(AssoOfIndiPanel);
+        AssoOfIndiPanel.setLayout(AssoOfIndiPanelLayout);
+        AssoOfIndiPanelLayout.setHorizontalGroup(
+            AssoOfIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AssoOfIndiPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(AssoOfIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(assoOfIndoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(relaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        AssoOfIndiPanelLayout.setVerticalGroup(
+            AssoOfIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(AssoOfIndiPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(assoOfIndoTitle)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(relaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        assoSplitPanel.setRightComponent(AssoOfIndiPanel);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addComponent(assoSplitPanel)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(assoSplitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put("assoWindowWidth", evt.getComponent().getWidth());
+        registry.put("assoWindowHeight", evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
+
+    private void assoSplitPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_assoSplitPanelPropertyChange
+        registry.put("assoSplitDividerLocation", assoSplitPanel.getDividerLocation());
+    }//GEN-LAST:event_assoSplitPanelPropertyChange
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel AssoOfIndiPanel;
+    private javax.swing.JButton addLineButton;
+    private javax.swing.JScrollPane assoListScrollPane;
+    private javax.swing.JLabel assoOfIndoTitle;
+    private javax.swing.JTable assoOfTable;
+    private javax.swing.JSplitPane assoSplitPanel;
+    private javax.swing.JPanel assoWithIndiPanel;
+    private javax.swing.JLabel assoWithIndiTitle;
+    private javax.swing.JTable assoWithTable;
+    private javax.swing.JScrollPane relaListScrollPane;
+    private javax.swing.JButton removeLineButton;
     // End of variables declaration//GEN-END:variables
+
+    private void getAssociationsWith(Indi indi) {
+        assoWithSet.clear();
+        
+        // Get ASSO tags from entities where Indi is referenced
+        List<PropertyForeignXRef> assoList = indi.getProperties(PropertyForeignXRef.class);
+        for (PropertyForeignXRef assoProp : assoList) {
+            AssoWrapper asso = new AssoWrapper(assoProp);
+            assoWithSet.add(asso);
+        }
+        
+        // Get ASSO tags from entities where Fam is referenced (although is not Gedcom compliant)
+        Fam[] fams = indi.getFamiliesWhereSpouse();
+        for (Fam fam : fams) {
+            assoList = fam.getProperties(PropertyForeignXRef.class);
+            for (PropertyForeignXRef assoProp : assoList) {
+                AssoWrapper asso = new AssoWrapper(assoProp);
+                assoWithSet.add(asso);
+            }
+            
+        }
+        
+    }
+
+    private void getAssociationOf(Indi indi) {
+        
+    }
+
+    public String getIndi() {
+        return indi.toString();
+    }
+
+    private int getMaxWidth(AssoWithTableModel model, int column) {
+        int ret = getFontMetrics(getFont()).stringWidth(model.getColumnName(column));
+        int rows = model.getRowCount();
+        for (int i = 0; i < rows; i++) {
+            String str = model.getValueAt(i, column).toString();
+            int width = getFontMetrics(getFont()).stringWidth(str);
+            if (width > ret) {
+                ret = width;
+            }
+        }
+        return ret;
+    }
+
+
+
+
+
 }

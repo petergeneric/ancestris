@@ -848,7 +848,7 @@
                               <Component id="modificationLabel" max="32767" attributes="0"/>
                           </Group>
                           <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="sourcePanel" alignment="0" pref="196" max="32767" attributes="0"/>
+                          <Component id="sourcePanel" alignment="0" pref="198" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
                   </Group>
@@ -1195,7 +1195,7 @@
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                       <Component id="assoEditButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="eventNotePanel" pref="335" max="32767" attributes="0"/>
+                                  <Component id="eventNotePanel" pref="333" max="32767" attributes="0"/>
                                   <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
                               </Group>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -1470,7 +1470,7 @@
                       <Group type="102" attributes="0">
                           <Component id="eventSourceTitle" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventSourceScrollPane" pref="145" max="32767" attributes="0"/>
+                          <Component id="eventSourceScrollPane" pref="141" max="32767" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="repoPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
