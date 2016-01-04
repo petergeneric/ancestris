@@ -59,9 +59,7 @@ import javax.imageio.ImageIO;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
-import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -2346,7 +2344,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         int maxWidth = 0;
         for (EventWrapper event : eventSet) {
-            maxWidth = Math.max(maxWidth, getFontMetrics(getFont()).stringWidth(event.eventLabel.getText()));
+            maxWidth = Math.max(maxWidth, getFontMetrics(getFont()).stringWidth(event.eventLabel.getShortLabel()));
         }
         eventTable.getColumnModel().getColumn(0).setPreferredWidth(maxWidth + 15); // add icon size
         eventTable.getColumnModel().getColumn(1).setPreferredWidth(getFontMetrics(getFont()).stringWidth(" 9999 "));
@@ -2785,8 +2783,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { okButton, cancelButton };
-        EventWrapper event = eventSet.get(eventIndex);
-        AssoManager assoManager = new AssoManager(event, okButton, cancelButton);
+        AssoManager assoManager = new AssoManager(eventSet, eventIndex, okButton, cancelButton);
         String indiStr = assoManager.getIndi();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle", indiStr), assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == okButton) {
@@ -2892,8 +2889,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            setIcon(((JLabel)value).getIcon());
-            setText(((JLabel)value).getText());
+            setIcon(((EventLabel)value).getIcon());
+            setText(((EventLabel)value).getShortLabel());
         return this;
         }
     }

@@ -30,9 +30,6 @@ class AssoWrapper {
 
     public PropertyAssociation assoProp = null; // The association property with the ASSO tag
     public String assoTxt = "";                 // The association text
-    private String assoTag = "";                // The event TAG the association is supposingly refering to, regardless of whether the association is underneath an event or directly underneath INDI
-    private Property[] assoEvents = null;       // The events with the TAG within the target entity, in case several events have the same tag
-    private int assoSeqNb = 0;                  // The association sequence nb in case the association refers to several events with same event tag
     
     public Indi assoIndi = null;                // Indi the ASSO tag belongs to. The Gedcom norm only allows for INDI to have ASSO tags.
     public String assoLastname = "";            // The associated individual lastname
@@ -43,21 +40,20 @@ class AssoWrapper {
     private Entity targetEntity = null;         // Entity the association refers to. The Gedcom norm only allows for INDI to be pointed to by an ASSO tag. However, Ancestris allows FAM to be referenced too.
     private Indi targetIndi1 = null;            // First indi the association refers to. Itself in case of targetEntity is an INDI, husband if it is a FAM.
     private Indi targetIndi2 = null;            // Second indi the association refers to. Null in case of targetEntity is an INDI, wife if it is a FAM.
-    private Property targetEventProp = null;    // Event of the entity, the association refers to.
+    public EventWrapper targetEvent = null;     // Event of the entity, the association refers to.
     private String targetEventTag = "";         // Event tag of the associated event
     public String targetEventDesc = "";         // The event text to be displayed
     
 
-    public AssoWrapper(PropertyForeignXRef xrefProperty) {
+    public AssoWrapper(PropertyForeignXRef xrefProperty, EventWrapper event) {
 
         if (xrefProperty == null) {
             return;
         }
         
         Indi associatedIndi = (Indi) xrefProperty.getTargetEntity();
-        Property referredToProperty = xrefProperty.getParent();
         PropertyAssociation assoProperty = (PropertyAssociation) xrefProperty.getTarget();
-        setValues(associatedIndi, assoProperty, referredToProperty);
+        setValues(associatedIndi, assoProperty, event);
         
     }
 
@@ -68,13 +64,13 @@ class AssoWrapper {
      * @param assoProperty : the ASSO property
      * @param referedToProperty : the event property pointed to by the ASSO relation (RELA)
      */
-    private void setValues(Indi associatedIndi, PropertyAssociation assoProperty, Property referredToProperty) {
+    private void setValues(Indi associatedIndi, PropertyAssociation assoProperty, EventWrapper event) {
 
         // Get key elements
         assoProp = assoProperty;
         assoIndi = associatedIndi;
-        targetEntity = referredToProperty.getEntity();
-        targetEventProp = referredToProperty;
+        targetEntity = event.eventProperty.getEntity();
+        targetEvent = event;
         
         // Get table elements
         assoLastname = assoIndi.getLastName();

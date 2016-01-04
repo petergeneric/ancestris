@@ -13,12 +13,27 @@ package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyForeignXRef;
 import genj.util.Registry;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableCellRenderer;
 import org.openide.util.NbBundle;
 
 /**
@@ -29,6 +44,8 @@ public class AssoManager extends javax.swing.JPanel {
 
     private Registry registry = null;
     private Indi indi = null;
+    private List<EventWrapper> eventSet = null;
+    private int eventIndex = 0;
     
     // Association With indi and Of indi
     private List<AssoWrapper> assoWithSet = null;
@@ -38,7 +55,12 @@ public class AssoManager extends javax.swing.JPanel {
     /**
      * Creates new form AssoManager
      */
-    public AssoManager(EventWrapper event, JButton okButton, JButton cancelButton) {
+    public AssoManager(List<EventWrapper> eventSet, int eventIndex, JButton okButton, JButton cancelButton) {
+        
+        this.eventSet = eventSet;
+        this.eventIndex = eventIndex;
+        this.indi = (Indi) eventSet.get(eventIndex).eventProperty.getEntity();
+
         registry = Registry.get(getClass());
         initComponents();
 
@@ -46,25 +68,29 @@ public class AssoManager extends javax.swing.JPanel {
         assoSplitPanel.setDividerLocation(registry.get("assoSplitDividerLocation", assoSplitPanel.getDividerLocation()));
 
         // Get associations of both types
-        this.indi = (Indi) event.eventProperty.getEntity();
         assoWithSet = new ArrayList<AssoWrapper>();
         getAssociationsWith(indi);
         assoOfSet = new ArrayList<AssoWrapper>();
         getAssociationOf(indi);
         
-        // Build lists
+        // Titles
+        assoWithIndiTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoWithIndiTitle.text", getIndi()));
+        assoOfIndoTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoOfIndoTitle.text", getIndi()));
+        
+        //
+        // assoWithTable:
+        //
+        
+        // Build list
         awtm = new AssoWithTableModel(assoWithSet);
         assoWithTable.setModel(awtm);    
         assoWithTable.setAutoCreateRowSorter(true);
         
         // Resize columns
-        assoWithTable.getColumnModel().getColumn(0).setPreferredWidth(getMaxWidth(awtm, 0));
-        assoWithTable.getColumnModel().getColumn(1).setPreferredWidth(getMaxWidth(awtm, 1));
-        assoWithTable.getColumnModel().getColumn(2).setPreferredWidth(getMaxWidth(awtm, 2));
-        assoWithTable.getColumnModel().getColumn(3).setPreferredWidth(getMaxWidth(awtm, 3));
-        assoWithTable.getColumnModel().getColumn(4).setPreferredWidth(getMaxWidth(awtm, 4));
-        assoWithTable.getColumnModel().getColumn(5).setPreferredWidth(30);
-        assoWithTable.getColumnModel().getColumn(6).setPreferredWidth(getMaxWidth(awtm, 6));
+        FontMetrics fm = getFontMetrics(getFont());
+        for (int i = 0; i < assoWithTable.getColumnCount(); i++) {
+            assoWithTable.getColumnModel().getColumn(i).setPreferredWidth(awtm.getMaxWidth(fm, i));
+        }
         
         // Resize table based on its number of lines
         Dimension preferredSize = assoWithTable.getPreferredSize();
@@ -74,16 +100,29 @@ public class AssoManager extends javax.swing.JPanel {
         assoWithTable.revalidate();
         assoWithTable.repaint();
         
+        // Cell renderers
+        assoWithTable.getColumnModel().getColumn(0).setCellRenderer(new IconTextCellRenderer());
+        
+        // Set event column as a combobox
+        EventWrapper[] arrayEvents = eventSet.toArray(new EventWrapper[eventSet.size()]);
+        Arrays.sort(arrayEvents, new Comparator() {
+            public int compare(Object e1, Object e2) {
+                String s1 = ((EventWrapper)e1).eventLabel.getLongLabel().toLowerCase();
+                String s2 = ((EventWrapper)e2).eventLabel.getLongLabel().toLowerCase();
+                return s1.compareTo(s2);
+            }
+        });
+        JComboBox comboBoxEvents = new JComboBox(arrayEvents);
+        ComboBoxEventsRenderer renderer = new ComboBoxEventsRenderer();
+        comboBoxEvents.setRenderer(renderer);
+        comboBoxEvents.setMaximumRowCount(10);
+        assoWithTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(comboBoxEvents));
 
-        
-        
-        // Titles
-        assoWithIndiTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoWithIndiTitle.text", getIndi()));
-        assoOfIndoTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoOfIndoTitle.text", getIndi()));
-        
+        //
+        // assoOfTable:
+        //
         
         ////////////////////////// check displayEventTable in IndiPanel
-
     }
 
     /**
@@ -266,7 +305,9 @@ public class AssoManager extends javax.swing.JPanel {
         // Get ASSO tags from entities where Indi is referenced
         List<PropertyForeignXRef> assoList = indi.getProperties(PropertyForeignXRef.class);
         for (PropertyForeignXRef assoProp : assoList) {
-            AssoWrapper asso = new AssoWrapper(assoProp);
+            Property eventProp = assoProp.getParent();
+            EventWrapper event = getEventWherePropIs(eventProp);
+            AssoWrapper asso = new AssoWrapper(assoProp, event);
             assoWithSet.add(asso);
         }
         
@@ -275,7 +316,9 @@ public class AssoManager extends javax.swing.JPanel {
         for (Fam fam : fams) {
             assoList = fam.getProperties(PropertyForeignXRef.class);
             for (PropertyForeignXRef assoProp : assoList) {
-                AssoWrapper asso = new AssoWrapper(assoProp);
+                Property eventProp = assoProp.getParent();
+                EventWrapper event = getEventWherePropIs(eventProp);
+                AssoWrapper asso = new AssoWrapper(assoProp, event);
                 assoWithSet.add(asso);
             }
             
@@ -291,17 +334,69 @@ public class AssoManager extends javax.swing.JPanel {
         return indi.toString();
     }
 
-    private int getMaxWidth(AssoWithTableModel model, int column) {
-        int ret = getFontMetrics(getFont()).stringWidth(model.getColumnName(column));
-        int rows = model.getRowCount();
-        for (int i = 0; i < rows; i++) {
-            String str = model.getValueAt(i, column).toString();
-            int width = getFontMetrics(getFont()).stringWidth(str);
-            if (width > ret) {
-                ret = width;
+    private EventWrapper getEventWherePropIs(Property eventProp) {
+        for (EventWrapper event : eventSet) {
+            if (event.eventProperty == eventProp) {
+                return event;
             }
         }
-        return ret;
+        return null;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+
+    private class IconTextCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            EventWrapper event = (EventWrapper) value;
+            setIcon(event.eventLabel.getIcon());
+            setText(event.eventLabel.getLongLabel());
+        return this;
+        }
+    }
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    private class ComboBoxEventsRenderer extends JLabel implements ListCellRenderer {
+
+        public ComboBoxEventsRenderer() {
+            setOpaque(true);
+            setHorizontalAlignment(LEFT);
+            setVerticalAlignment(CENTER);
+        }
+
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            EventWrapper event = (EventWrapper) value;
+            if (isSelected) {
+                setBackground(list.getSelectionBackground());
+                setForeground(list.getSelectionForeground());
+            } else {
+                setBackground(list.getBackground());
+                setForeground(list.getForeground());
+            }
+            setIcon(event.eventLabel.getIcon());
+            setText(event.eventLabel.getLongLabel());
+            return this;
+        }
     }
 
 
