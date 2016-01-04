@@ -12,7 +12,9 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
+import java.awt.FontMetrics;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
@@ -44,7 +46,7 @@ class AssoWithTableModel extends AbstractTableModel {
         data = new Object[assoSet.size()][NBCOLUMNS];
         int i = 0;
         for (AssoWrapper asso : assoSet) {
-            data[i][0] = asso.targetEventDesc;
+            data[i][0] = asso.targetEvent;
             data[i][1] = asso.assoTxt;
             data[i][2] = asso.assoIndi;
             data[i][3] = asso.assoLastname;
@@ -82,7 +84,7 @@ class AssoWithTableModel extends AbstractTableModel {
 
         @Override
         public boolean isCellEditable(int row, int col) {
-            return false;
+            return true;
         }
 
         @Override
@@ -90,6 +92,46 @@ class AssoWithTableModel extends AbstractTableModel {
             data[row][col] = value;
             fireTableCellUpdated(row, col);
         }
+
+        public int getMaxWidth(FontMetrics fm, int column) {
+            int ret = fm.stringWidth(getColumnName(column));
+            int rows = getRowCount();
+            String str = "";
+            for (int i = 0; i < rows; i++) {
+                Object o = getValueAt(i, column);
+                switch (column) {
+                    case 0:
+                        str = ((EventWrapper)o).eventLabel.getLongLabel() + "MM";  // add size of an icon
+                        break;
+                    case 1:
+                        str = ((String)o);
+                        break;
+                    case 2:
+                        str = ((Indi)o).toString();
+                        break;
+                    case 3:
+                        str = ((String)o);
+                        break;
+                    case 4:
+                        str = ((String)o);
+                        break;
+                    case 5:
+                        str = "MM"; // size of a sex icon
+                        break;
+                    case 6:
+                        str = ((String)o);
+                        break;
+                    default:
+                        str = o.toString();
+                        break;
+                }
+                int width = fm.stringWidth(str);
+                if (width > ret) {
+                    ret = width;
+                }
+            }
+            return ret;
+    }
 
 
 
