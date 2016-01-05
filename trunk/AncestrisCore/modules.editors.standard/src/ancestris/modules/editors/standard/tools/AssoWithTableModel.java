@@ -99,6 +99,9 @@ class AssoWithTableModel extends AbstractTableModel {
             String str = "";
             for (int i = 0; i < rows; i++) {
                 Object o = getValueAt(i, column);
+                if (o == null) {
+                    return 50;
+                }
                 switch (column) {
                     case 0:
                         str = ((EventWrapper)o).eventLabel.getLongLabel() + "MM";  // add size of an icon

@@ -37,6 +37,7 @@ public class EventLabel extends JLabel {
         } else {
             this.shortLabel = str;
         }
+        setText(shortLabel);
         
         WordBuffer buffer = new WordBuffer(" - ");
 

@@ -58,7 +58,7 @@ public class EventWrapper {
         this.eventLabel.setIcon(property.getImage());
         
         // Title and description
-        this.title = this.eventLabel.getText();
+        this.title = this.eventLabel.getShortLabel();
         String desc = property.getDisplayValue();
         Property type = property.getProperty("TYPE");
         this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");
