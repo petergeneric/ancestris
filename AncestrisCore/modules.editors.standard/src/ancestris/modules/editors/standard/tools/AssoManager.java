@@ -22,9 +22,7 @@ import java.awt.FontMetrics;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,7 +31,6 @@ import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import org.openide.util.NbBundle;
 
 /**
@@ -359,9 +356,11 @@ public class AssoManager extends javax.swing.JPanel {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            EventWrapper event = (EventWrapper) value;
-            setIcon(event.eventLabel.getIcon());
-            setText(event.eventLabel.getLongLabel());
+            if (value != null) {
+                EventWrapper event = (EventWrapper) value;
+                setIcon(event.eventLabel.getIcon());
+                setText(event.eventLabel.getLongLabel());
+            }
         return this;
         }
     }
@@ -385,16 +384,18 @@ public class AssoManager extends javax.swing.JPanel {
         }
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            EventWrapper event = (EventWrapper) value;
-            if (isSelected) {
-                setBackground(list.getSelectionBackground());
-                setForeground(list.getSelectionForeground());
-            } else {
-                setBackground(list.getBackground());
-                setForeground(list.getForeground());
+            if (value != null) {
+                EventWrapper event = (EventWrapper) value;
+                if (isSelected) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+                setIcon(event.eventLabel.getIcon());
+                setText(event.eventLabel.getLongLabel());
             }
-            setIcon(event.eventLabel.getIcon());
-            setText(event.eventLabel.getLongLabel());
             return this;
         }
     }
