@@ -26,7 +26,7 @@ import genj.gedcom.time.PointInTime;
  *
  * @author frederic
  */
-class AssoWrapper {
+public class AssoWrapper {
 
     public PropertyAssociation assoProp = null; // The association property with the ASSO tag
     public String assoTxt = "";                 // The association text
@@ -44,6 +44,10 @@ class AssoWrapper {
     private String targetEventTag = "";         // Event tag of the associated event
     public String targetEventDesc = "";         // The event text to be displayed
     
+
+    public AssoWrapper(String text) {
+        assoTxt = text;
+    }
 
     public AssoWrapper(PropertyForeignXRef xrefProperty, EventWrapper event) {
 
