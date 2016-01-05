@@ -52,11 +52,11 @@ public class AssoManager extends javax.swing.JPanel {
     /**
      * Creates new form AssoManager
      */
-    public AssoManager(List<EventWrapper> eventSet, int eventIndex, JButton okButton, JButton cancelButton) {
+    public AssoManager(Indi indi, List<EventWrapper> eventSet, int eventIndex, List<AssoWrapper> assoSet, AssoWrapper selectedAsso, JButton okButton, JButton cancelButton) {
         
         this.eventSet = eventSet;
         this.eventIndex = eventIndex;
-        this.indi = (Indi) eventSet.get(eventIndex).eventProperty.getEntity();
+        this.indi = indi;
 
         registry = Registry.get(getClass());
         initComponents();
@@ -65,8 +65,7 @@ public class AssoManager extends javax.swing.JPanel {
         assoSplitPanel.setDividerLocation(registry.get("assoSplitDividerLocation", assoSplitPanel.getDividerLocation()));
 
         // Get associations of both types
-        assoWithSet = new ArrayList<AssoWrapper>();
-        getAssociationsWith(indi);
+        assoWithSet = assoSet;
         assoOfSet = new ArrayList<AssoWrapper>();
         getAssociationOf(indi);
         
@@ -114,6 +113,15 @@ public class AssoManager extends javax.swing.JPanel {
         comboBoxEvents.setRenderer(renderer);
         comboBoxEvents.setMaximumRowCount(10);
         assoWithTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(comboBoxEvents));
+
+        // Select appropriate association
+        int row = 0;
+        for (AssoWrapper asso : assoWithSet) {
+            if (asso == selectedAsso) {
+                assoWithTable.setRowSelectionInterval(row, row);
+            }
+            row++;
+        }
 
         //
         // assoOfTable:
@@ -296,32 +304,6 @@ public class AssoManager extends javax.swing.JPanel {
     private javax.swing.JButton removeLineButton;
     // End of variables declaration//GEN-END:variables
 
-    private void getAssociationsWith(Indi indi) {
-        assoWithSet.clear();
-        
-        // Get ASSO tags from entities where Indi is referenced
-        List<PropertyForeignXRef> assoList = indi.getProperties(PropertyForeignXRef.class);
-        for (PropertyForeignXRef assoProp : assoList) {
-            Property eventProp = assoProp.getParent();
-            EventWrapper event = getEventWherePropIs(eventProp);
-            AssoWrapper asso = new AssoWrapper(assoProp, event);
-            assoWithSet.add(asso);
-        }
-        
-        // Get ASSO tags from entities where Fam is referenced (although is not Gedcom compliant)
-        Fam[] fams = indi.getFamiliesWhereSpouse();
-        for (Fam fam : fams) {
-            assoList = fam.getProperties(PropertyForeignXRef.class);
-            for (PropertyForeignXRef assoProp : assoList) {
-                Property eventProp = assoProp.getParent();
-                EventWrapper event = getEventWherePropIs(eventProp);
-                AssoWrapper asso = new AssoWrapper(assoProp, event);
-                assoWithSet.add(asso);
-            }
-            
-        }
-        
-    }
 
     private void getAssociationOf(Indi indi) {
         
@@ -331,14 +313,6 @@ public class AssoManager extends javax.swing.JPanel {
         return indi.toString();
     }
 
-    private EventWrapper getEventWherePropIs(Property eventProp) {
-        for (EventWrapper event : eventSet) {
-            if (event.eventProperty == eventProp) {
-                return event;
-            }
-        }
-        return null;
-    }
     
     
     

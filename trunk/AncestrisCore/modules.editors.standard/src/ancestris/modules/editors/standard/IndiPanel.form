@@ -1646,6 +1646,9 @@
                     <StringItem index="3" value="asso 4"/>
                   </StringArray>
                 </Property>
+                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.assoComboBox.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JButton" name="assoEditButton">

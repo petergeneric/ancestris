@@ -5,6 +5,7 @@ import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.AssoManager;
+import ancestris.modules.editors.standard.tools.AssoWrapper;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
@@ -33,6 +34,7 @@ import genj.gedcom.Media;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
@@ -50,18 +52,23 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
+import javax.swing.ListCellRenderer;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
@@ -148,6 +155,10 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEventSource = false;
     private List<SourceWrapper> eventSourceRemovedSet = null;
     private ImagePanel imagePanel = null;
+    
+    // Associations
+    private List<AssoWrapper> assoSet = null;
+
     
     /**
      * Creates new form IndiPanel
@@ -1062,6 +1073,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         );
 
         assoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "asso 1", "asso 2", "asso 3", "asso 4" }));
+        assoComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoComboBox.toolTipText")); // NOI18N
 
         assoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/association.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(assoEditButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditButton.text")); // NOI18N
@@ -1471,7 +1483,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void assoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assoEditButtonActionPerformed
         if (manageAssociations()) {
-            displayEventSource();
+            selectAssociation();
         }
         eventSourceTitle.requestFocus();
 
@@ -1792,11 +1804,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         displayEventTable();
         displayEvent();
         
+        // Associations
+        if (assoSet != null) {
+            assoSet.clear();
+            assoSet = null;
+        }
+        assoSet = getAssociations(indi);
+        displayAssociationsComboBox();
+        selectAssociation();
         
-        //
-        //
-        //
-        //
+        // Modification timestamp
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
         //
         //.......................................
@@ -2374,6 +2391,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 if (!isBusyEvent && eventTable.getSelectedRow() != -1) {
                     eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
                     displayEvent();
+                    selectAssociation();
                 }
             }
         });
@@ -2776,14 +2794,81 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     
     
+    private List<AssoWrapper> getAssociations(Indi indi) {
+        List<AssoWrapper> ret = new ArrayList<AssoWrapper>();
+        
+        // Get ASSO tags from entities where Indi is referenced
+        List<PropertyForeignXRef> assoList = indi.getProperties(PropertyForeignXRef.class);
+        for (PropertyForeignXRef assoProp : assoList) {
+            Property eventProp = assoProp.getParent();
+            EventWrapper event = getEventWherePropIs(eventProp);
+            AssoWrapper asso = new AssoWrapper(assoProp, event);
+            ret.add(asso);
+        }
+        
+        // Get ASSO tags from entities where Fam is referenced (although is not Gedcom compliant)
+        Fam[] fams = indi.getFamiliesWhereSpouse();
+        for (Fam fam : fams) {
+            assoList = fam.getProperties(PropertyForeignXRef.class);
+            for (PropertyForeignXRef assoProp : assoList) {
+                Property eventProp = assoProp.getParent();
+                EventWrapper event = getEventWherePropIs(eventProp);
+                AssoWrapper asso = new AssoWrapper(assoProp, event);
+                ret.add(asso);
+            }
+        }
+        return ret;
+    }
     
+    private EventWrapper getEventWherePropIs(Property eventProp) {
+        for (EventWrapper event : eventSet) {
+            if (event.eventProperty == eventProp) {
+                return event;
+            }
+        }
+        return null;
+    }
+    
+    
+    private void displayAssociationsComboBox() {
+        // Set comboBox with associations corresponding to event selected plus associations not linked to any event
+        DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
+        for (AssoWrapper asso : assoSet) {
+            cbModel.addElement(asso);
+        }
+        if (cbModel.getSize() == 0) {
+            cbModel.addElement(new AssoWrapper(NbBundle.getMessage(getClass(), "No_Association_Text")));
+        }
+        assoComboBox.setModel(cbModel);
+        ComboBoxAssosRenderer renderer = new ComboBoxAssosRenderer();
+        assoComboBox.setRenderer(renderer);
+        assoComboBox.setMaximumRowCount(10);
+        assoEditButton.setEnabled(!(eventSet.isEmpty() && assoSet.isEmpty()));
+        
+    }
+
+    
+    private void selectAssociation() {
+        if (eventSet == null || assoSet == null) {
+            return;
+        }
+        EventWrapper event = eventSet.get(eventIndex);
+        if (assoComboBox.getModel().getSize() > 0) {
+            for (AssoWrapper asso : assoSet) {
+                if (asso.targetEvent.eventProperty == event.eventProperty) {
+                    assoComboBox.setSelectedItem(asso);
+                }
+            }
+        }
+    }
+
     
     private boolean manageAssociations() {
         boolean b = false;
         JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { okButton, cancelButton };
-        AssoManager assoManager = new AssoManager(eventSet, eventIndex, okButton, cancelButton);
+        AssoManager assoManager = new AssoManager(indi, eventSet, eventIndex, assoSet, (AssoWrapper) assoComboBox.getSelectedItem(), okButton, cancelButton);
         String indiStr = assoManager.getIndi();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle", indiStr), assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == okButton) {
@@ -2793,7 +2878,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
-    
+
     
     
     
@@ -2914,5 +2999,32 @@ public class IndiPanel extends Editor implements DocumentListener {
             return this;
         }
     }
+    
+    private class ComboBoxAssosRenderer extends JLabel implements ListCellRenderer {
+
+        public ComboBoxAssosRenderer() {
+            setOpaque(true);
+            setHorizontalAlignment(LEFT);
+            setVerticalAlignment(CENTER);
+        }
+
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            if (value != null) {
+                AssoWrapper asso = (AssoWrapper) value;
+                if (isSelected) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+                setIcon(null);
+                String name = (asso.assoLastname + " " + asso.assoFirstname).trim();
+                setText((!name.isEmpty() ? name + " | " : "") + asso.assoTxt);
+            }
+            return this;
+        }
+    }
+
     
 }
