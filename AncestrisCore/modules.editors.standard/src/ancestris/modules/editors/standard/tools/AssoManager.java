@@ -11,10 +11,7 @@
  */
 package ancestris.modules.editors.standard.tools;
 
-import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyForeignXRef;
 import genj.util.Registry;
 import java.awt.Component;
 import java.awt.Dimension;

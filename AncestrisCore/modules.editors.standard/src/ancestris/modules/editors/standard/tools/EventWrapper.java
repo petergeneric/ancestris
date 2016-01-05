@@ -19,7 +19,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
-import javax.swing.JLabel;
 import org.openide.util.NbBundle;
 
 
