@@ -87,24 +87,11 @@ public class AssoManager extends javax.swing.JPanel {
         assoWithTable.setModel(awtm);    
         assoWithTable.setAutoCreateRowSorter(true);
         
-        // Resize columns
-        FontMetrics fm = getFontMetrics(getFont());
-        for (int i = 0; i < assoWithTable.getColumnCount(); i++) {
-            assoWithTable.getColumnModel().getColumn(i).setPreferredWidth(awtm.getMaxWidth(fm, i));
-        }
+
         
-        // Resize table based on its number of lines
-        Dimension preferredSize = assoWithTable.getPreferredSize();
-        preferredSize.height = assoWithTable.getRowHeight() * awtm.getRowCount() + 1;
-        //assoWithTable.setPreferredScrollableViewportSize(preferredSize);
-        assoWithTable.setPreferredSize(preferredSize);
-        assoWithTable.revalidate();
-        assoWithTable.repaint();
-        
-        // Cell renderers
-        assoWithTable.getColumnModel().getColumn(0).setCellRenderer(new IconTextCellRenderer());
         
         // Set event column as a combobox
+        assoWithTable.getColumnModel().getColumn(0).setCellRenderer(new IconTextCellRenderer());
         EventWrapper[] arrayEvents = eventSet.toArray(new EventWrapper[eventSet.size()]);
         Arrays.sort(arrayEvents, new Comparator() {
             public int compare(Object e1, Object e2) {
@@ -142,7 +129,7 @@ public class AssoManager extends javax.swing.JPanel {
         };
         JComboBox comboBoxSexs = new JComboBox(arraySexs);
         comboBoxSexs.setRenderer(new ComboBoxSexsRenderer());
-        comboBoxRelas.setMaximumRowCount(3);
+        comboBoxSexs.setMaximumRowCount(3);
         assoWithTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(comboBoxSexs));
         
         // Set occu column as editable combobox
@@ -154,6 +141,26 @@ public class AssoManager extends javax.swing.JPanel {
         comboBoxOccus.setMaximumRowCount(10);
         comboBoxOccus.setEditable(true);
         assoWithTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(comboBoxOccus));
+
+        // Rowheight to fit in comboboxes
+        int rowHeight = comboBoxOccus.getPreferredSize().height;
+        assoWithTable.setRowHeight(rowHeight);
+
+        
+        // Resize columns
+        FontMetrics fm = getFontMetrics(getFont());
+        for (int i = 0; i < assoWithTable.getColumnCount(); i++) {
+            assoWithTable.getColumnModel().getColumn(i).setPreferredWidth(awtm.getMaxWidth(fm, i));
+        }
+        
+        // Resize table based on its number of lines
+        Dimension preferredSize = assoWithTable.getPreferredSize();
+        preferredSize.height = rowHeight * awtm.getRowCount() + 1;
+        assoWithTable.setPreferredSize(preferredSize);
+        assoWithTable.revalidate();
+        assoWithTable.repaint();
+        
+
         
         // Select appropriate association
         int row = 0;
@@ -164,6 +171,7 @@ public class AssoManager extends javax.swing.JPanel {
             row++;
         }
 
+        
         //
         // assoOfTable:
         //
