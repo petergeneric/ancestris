@@ -2830,7 +2830,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     private void displayAssociationsComboBox() {
-        // Set comboBox with associations corresponding to event selected plus associations not linked to any event
         DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
         for (AssoWrapper asso : assoSet) {
             cbModel.addElement(asso);
@@ -2843,7 +2842,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         assoComboBox.setRenderer(renderer);
         assoComboBox.setMaximumRowCount(10);
         assoEditButton.setEnabled(!(eventSet.isEmpty() && assoSet.isEmpty()));
-        
     }
 
     

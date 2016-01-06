@@ -11,8 +11,14 @@
  */
 package ancestris.modules.editors.standard.tools;
 
+import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
+import genj.util.ReferenceSet;
 import genj.util.Registry;
+import genj.util.swing.ImageIcon;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -37,6 +43,7 @@ import org.openide.util.NbBundle;
 public class AssoManager extends javax.swing.JPanel {
 
     private Registry registry = null;
+    private Gedcom gedcom = null;
     private Indi indi = null;
     private List<EventWrapper> eventSet = null;
     private int eventIndex = 0;
@@ -54,6 +61,7 @@ public class AssoManager extends javax.swing.JPanel {
         this.eventSet = eventSet;
         this.eventIndex = eventIndex;
         this.indi = indi;
+        this.gedcom = indi.getGedcom();
 
         registry = Registry.get(getClass());
         initComponents();
@@ -106,11 +114,47 @@ public class AssoManager extends javax.swing.JPanel {
             }
         });
         JComboBox comboBoxEvents = new JComboBox(arrayEvents);
-        ComboBoxEventsRenderer renderer = new ComboBoxEventsRenderer();
-        comboBoxEvents.setRenderer(renderer);
+        comboBoxEvents.setRenderer(new ComboBoxEventsRenderer());
         comboBoxEvents.setMaximumRowCount(10);
         assoWithTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(comboBoxEvents));
 
+        // Set rela column as editable combobox
+        ReferenceSet<String, Property> relaRefSet = gedcom.getReferenceSet("RELA");
+        List<String> relaKeys = relaRefSet.getKeys();
+        String[] arrayRelas = relaKeys.toArray(new String[relaKeys.size()]);
+        Arrays.sort(arrayRelas);
+        JComboBox comboBoxRelas = new JComboBox(arrayRelas);
+        comboBoxRelas.setMaximumRowCount(10);
+        comboBoxRelas.setEditable(true);
+        assoWithTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxRelas));
+        
+        // Set indi column as combobox
+        Entity[] arrayIndis = gedcom.getEntities("INDI", "INDI:NAME");
+        JComboBox comboBoxIndis = new JComboBox(arrayIndis);
+        comboBoxRelas.setMaximumRowCount(20);
+        assoWithTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBoxIndis));
+        
+        // Set sex column as combobox
+        ImageIcon[] arraySexs = new ImageIcon[] {
+            PropertySex.getImage(PropertySex.MALE),
+            PropertySex.getImage(PropertySex.FEMALE),
+            PropertySex.getImage(PropertySex.UNKNOWN)
+        };
+        JComboBox comboBoxSexs = new JComboBox(arraySexs);
+        comboBoxSexs.setRenderer(new ComboBoxSexsRenderer());
+        comboBoxRelas.setMaximumRowCount(3);
+        assoWithTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(comboBoxSexs));
+        
+        // Set occu column as editable combobox
+        ReferenceSet<String, Property> occuRefSet = gedcom.getReferenceSet("OCCU");
+        List<String> occuKeys = occuRefSet.getKeys();
+        String[] arrayOccus = occuKeys.toArray(new String[occuKeys.size()]);
+        Arrays.sort(arrayOccus);
+        JComboBox comboBoxOccus = new JComboBox(arrayOccus);
+        comboBoxOccus.setMaximumRowCount(10);
+        comboBoxOccus.setEditable(true);
+        assoWithTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(comboBoxOccus));
+        
         // Select appropriate association
         int row = 0;
         for (AssoWrapper asso : assoWithSet) {
@@ -335,16 +379,7 @@ public class AssoManager extends javax.swing.JPanel {
         return this;
         }
     }
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
+   
     
     private class ComboBoxEventsRenderer extends JLabel implements ListCellRenderer {
 
@@ -372,7 +407,30 @@ public class AssoManager extends javax.swing.JPanel {
     }
 
 
+    private class ComboBoxSexsRenderer  extends JLabel implements ListCellRenderer {
 
+        public ComboBoxSexsRenderer() {
+            setOpaque(true);
+            setHorizontalAlignment(LEFT);
+            setVerticalAlignment(CENTER);
+        }
 
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            if (value != null) {
+                ImageIcon icon = (ImageIcon) value;
+                if (isSelected) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+                setHorizontalAlignment(JLabel.CENTER);
+                setIcon(icon);
+                setText(icon == PropertySex.getImage(PropertySex.MALE) ? PropertySex.TXT_MALE : icon == PropertySex.getImage(PropertySex.FEMALE) ? PropertySex.TXT_FEMALE : PropertySex.TXT_UNKNOWN);
+            }
+            return this;
+        }
+    }
 
 }
