@@ -2802,8 +2802,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         for (PropertyForeignXRef assoProp : assoList) {
             Property eventProp = assoProp.getParent();
             EventWrapper event = getEventWherePropIs(eventProp);
-            AssoWrapper asso = new AssoWrapper(assoProp, event);
-            ret.add(asso);
+            if (event != null) {
+                AssoWrapper asso = new AssoWrapper(assoProp, event);
+                ret.add(asso);
+            }
         }
         
         // Get ASSO tags from entities where Fam is referenced (although is not Gedcom compliant)
@@ -2813,8 +2815,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             for (PropertyForeignXRef assoProp : assoList) {
                 Property eventProp = assoProp.getParent();
                 EventWrapper event = getEventWherePropIs(eventProp);
-                AssoWrapper asso = new AssoWrapper(assoProp, event);
-                ret.add(asso);
+                if (event != null) {
+                    AssoWrapper asso = new AssoWrapper(assoProp, event);
+                    ret.add(asso);
+                }
             }
         }
         return ret;
@@ -2825,6 +2829,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (event.eventProperty == eventProp) {
                 return event;
             }
+        }
+        if (eventProp instanceof Entity) {
+            return new EventWrapper((Entity) eventProp);
         }
         return null;
     }

@@ -32,9 +32,9 @@ public class EventWrapper {
     private Entity hostingEntity = null;     // INDI or FAM the event belongs to
     public Property eventProperty = null;    // the event
     
-    public EventLabel eventLabel = null;            // for table
-    public int eventYear = 0;                   // for table
-    public String eventAge = "";                // for table and label
+    public EventLabel eventLabel = null;     // for table
+    public int eventYear = 0;                // for table
+    public String eventAge = "";             // for table and label
     
     public String title = "";  
     public String description = "";
@@ -105,6 +105,14 @@ public class EventWrapper {
         
         // Place of event
         this.place = (PropertyPlace) property.getProperty("PLAC");
+    }
+
+    public EventWrapper(Entity entity) {
+        this.hostingEntity = entity;
+        this.eventProperty = entity;
+        this.eventLabel = new EventLabel(entity);
+        this.eventLabel.setIcon(entity.getImage());
+        this.title = this.eventLabel.getShortLabel();
     }
 
     
