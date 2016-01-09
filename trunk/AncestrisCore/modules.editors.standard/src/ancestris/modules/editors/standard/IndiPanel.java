@@ -1482,6 +1482,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void assoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assoEditButtonActionPerformed
         if (manageAssociations()) {
+            displayAssociationsComboBox();
             selectAssociation();
         }
         eventSourceTitle.requestFocus();
@@ -2865,10 +2866,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { okButton, cancelButton };
-        AssoManager assoManager = new AssoManager(indi, eventSet, eventIndex, assoSet, (AssoWrapper) assoComboBox.getSelectedItem(), okButton, cancelButton);
+        AssoManager assoManager = new AssoManager(indi, eventSet, assoSet, (AssoWrapper) assoComboBox.getSelectedItem(), okButton, cancelButton);
         String indiStr = assoManager.getIndi();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle", indiStr), assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
-        if (o == okButton) {
+        if (o == okButton && assoManager.hasChanged()) {
+            assoSet = assoManager.clone(assoManager.getSet());
             changes.setChanged(true);
             b = true;
         }

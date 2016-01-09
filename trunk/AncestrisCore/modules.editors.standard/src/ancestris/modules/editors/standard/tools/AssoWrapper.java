@@ -61,6 +61,22 @@ public class AssoWrapper {
         
     }
 
+    private AssoWrapper(AssoWrapper asso) {
+        assoProp = asso.assoProp;
+        assoTxt = asso.assoTxt;
+        assoIndi = asso.assoIndi;
+        assoLastname = asso.assoLastname;
+        assoFirstname = asso.assoFirstname;
+        assoSex = asso.assoSex;
+        assoOccupation = asso.assoOccupation;
+        targetEntity = asso.targetEntity;
+        targetIndi1 = asso.targetIndi1;
+        targetIndi2 = asso.targetIndi2;
+        targetEvent = asso.targetEvent;
+        targetEventTag = asso.targetEventTag;
+        targetEventDesc = asso.targetEventDesc;
+    }
+
     /**
      * Set values based on ASSO tag and reference
      * 
@@ -86,7 +102,7 @@ public class AssoWrapper {
         assoTxt = relaP.getDisplayValue();
     }
 
-    private String getOccupation(Indi indi) {
+    public String getOccupation(Indi indi) {
         String occu = "";
         // Select latest occupation
         Property props[] = indi.getProperties("OCCU");
@@ -109,6 +125,9 @@ public class AssoWrapper {
         }
         return occu;
     }
-    
+
+    public static AssoWrapper clone(AssoWrapper asso) {
+        return new AssoWrapper(asso);
+    }
     
 }

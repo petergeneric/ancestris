@@ -19,6 +19,7 @@ import genj.gedcom.PropertySex;
 import genj.util.ReferenceSet;
 import genj.util.Registry;
 import genj.util.swing.ImageIcon;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
@@ -26,6 +27,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,6 +35,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import org.openide.util.NbBundle;
 
@@ -40,28 +44,34 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class AssoManager extends javax.swing.JPanel {
+public class AssoManager extends javax.swing.JPanel implements TableModelListener{
 
     private Registry registry = null;
+    private boolean hasChanged = false;
+    private JButton okButton = null;
+    private boolean isValid = true;
+    private boolean isBusy = false;
+    
     private Gedcom gedcom = null;
     private Indi indi = null;
     private List<EventWrapper> eventSet = null;
-    private int eventIndex = 0;
     
     // Association With indi and Of indi
     private List<AssoWrapper> assoWithSet = null;
-    private List<AssoWrapper> assoOfSet = null;
     private AssoWithTableModel awtm = null;
+    private int rowHeight = 18;
+    
+    private List<AssoWrapper> assoOfSet = null;
     
     /**
      * Creates new form AssoManager
      */
-    public AssoManager(Indi indi, List<EventWrapper> eventSet, int eventIndex, List<AssoWrapper> assoSet, AssoWrapper selectedAsso, JButton okButton, JButton cancelButton) {
+    public AssoManager(Indi indi, List<EventWrapper> eventSet, List<AssoWrapper> assoSet, AssoWrapper selectedAsso, JButton okButton, JButton cancelButton) {
         
         this.eventSet = eventSet;
-        this.eventIndex = eventIndex;
         this.indi = indi;
         this.gedcom = indi.getGedcom();
+        this.okButton = okButton;
 
         registry = Registry.get(getClass());
         initComponents();
@@ -70,7 +80,7 @@ public class AssoManager extends javax.swing.JPanel {
         assoSplitPanel.setDividerLocation(registry.get("assoSplitDividerLocation", assoSplitPanel.getDividerLocation()));
 
         // Get associations of both types
-        assoWithSet = assoSet;
+        assoWithSet = clone(assoSet);
         assoOfSet = new ArrayList<AssoWrapper>();
         getAssociationOf(indi);
         
@@ -91,7 +101,6 @@ public class AssoManager extends javax.swing.JPanel {
         
         
         // Set event column as a combobox
-        assoWithTable.getColumnModel().getColumn(0).setCellRenderer(new IconTextCellRenderer());
         EventWrapper[] arrayEvents = eventSet.toArray(new EventWrapper[eventSet.size()]);
         Arrays.sort(arrayEvents, new Comparator() {
             public int compare(Object e1, Object e2) {
@@ -104,6 +113,7 @@ public class AssoManager extends javax.swing.JPanel {
         comboBoxEvents.setRenderer(new ComboBoxEventsRenderer());
         comboBoxEvents.setMaximumRowCount(10);
         assoWithTable.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(comboBoxEvents));
+        assoWithTable.getColumnModel().getColumn(0).setCellRenderer(new EventCellRenderer());
 
         // Set rela column as editable combobox
         ReferenceSet<String, Property> relaRefSet = gedcom.getReferenceSet("RELA");
@@ -114,12 +124,18 @@ public class AssoManager extends javax.swing.JPanel {
         comboBoxRelas.setMaximumRowCount(10);
         comboBoxRelas.setEditable(true);
         assoWithTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxRelas));
+        assoWithTable.getColumnModel().getColumn(1).setCellRenderer(new OtherCellRenderer());
         
         // Set indi column as combobox
         Entity[] arrayIndis = gedcom.getEntities("INDI", "INDI:NAME");
         JComboBox comboBoxIndis = new JComboBox(arrayIndis);
         comboBoxRelas.setMaximumRowCount(20);
         assoWithTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBoxIndis));
+        assoWithTable.getColumnModel().getColumn(2).setCellRenderer(new OtherCellRenderer());
+
+        // Last name and FirstName
+        assoWithTable.getColumnModel().getColumn(3).setCellRenderer(new OtherCellRenderer());
+        assoWithTable.getColumnModel().getColumn(4).setCellRenderer(new OtherCellRenderer());
         
         // Set sex column as combobox
         ImageIcon[] arraySexs = new ImageIcon[] {
@@ -142,41 +158,43 @@ public class AssoManager extends javax.swing.JPanel {
         comboBoxOccus.setEditable(true);
         assoWithTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(comboBoxOccus));
 
-        // Rowheight to fit in comboboxes
-        int rowHeight = comboBoxOccus.getPreferredSize().height;
-        assoWithTable.setRowHeight(rowHeight);
-
-        
         // Resize columns
         FontMetrics fm = getFontMetrics(getFont());
         for (int i = 0; i < assoWithTable.getColumnCount(); i++) {
             assoWithTable.getColumnModel().getColumn(i).setPreferredWidth(awtm.getMaxWidth(fm, i));
         }
         
-        // Resize table based on its number of lines
-        Dimension preferredSize = assoWithTable.getPreferredSize();
-        preferredSize.height = rowHeight * awtm.getRowCount() + 1;
-        assoWithTable.setPreferredSize(preferredSize);
-        assoWithTable.revalidate();
-        assoWithTable.repaint();
-        
+        // Rowheight to fit in comboboxes
+        rowHeight = comboBoxOccus.getPreferredSize().height;
+        assoWithTable.setRowHeight(rowHeight);
 
+        // Resize table based on its number of lines
+        resizeTable();
         
         // Select appropriate association
         int row = 0;
-        for (AssoWrapper asso : assoWithSet) {
+        for (AssoWrapper asso : assoSet) {   // do not replace with cloned set
             if (asso == selectedAsso) {
                 assoWithTable.setRowSelectionInterval(row, row);
             }
             row++;
         }
 
+        awtm.addTableModelListener(this);
         
         //
         // assoOfTable:
         //
         
         ////////////////////////// check displayEventTable in IndiPanel
+    }
+
+    private void resizeTable() {
+        Dimension preferredSize = assoWithTable.getPreferredSize();
+        preferredSize.height = rowHeight * awtm.getRowCount() + 1;
+        assoWithTable.setPreferredSize(preferredSize);
+        assoWithTable.revalidate();
+        assoWithTable.repaint();
     }
 
     /**
@@ -232,15 +250,25 @@ public class AssoManager extends javax.swing.JPanel {
         assoWithTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         assoListScrollPane.setViewportView(assoWithTable);
 
-        addLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
+        addLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(addLineButton, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.addLineButton.text")); // NOI18N
         addLineButton.setToolTipText(org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.addLineButton.toolTipText")); // NOI18N
         addLineButton.setPreferredSize(new java.awt.Dimension(24, 24));
+        addLineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                addLineButtonActionPerformed(evt);
+            }
+        });
 
-        removeLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
+        removeLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(removeLineButton, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.removeLineButton.text")); // NOI18N
         removeLineButton.setToolTipText(org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.removeLineButton.toolTipText")); // NOI18N
         removeLineButton.setPreferredSize(new java.awt.Dimension(24, 24));
+        removeLineButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeLineButtonActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout assoWithIndiPanelLayout = new javax.swing.GroupLayout(assoWithIndiPanel);
         assoWithIndiPanel.setLayout(assoWithIndiPanelLayout);
@@ -252,9 +280,9 @@ public class AssoManager extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, assoWithIndiPanelLayout.createSequentialGroup()
                         .addComponent(assoWithIndiTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(removeLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(removeLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(assoListScrollPane))
                 .addContainerGap())
         );
@@ -264,8 +292,8 @@ public class AssoManager extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(assoWithIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(addLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(removeLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(removeLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addLineButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(assoWithIndiTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(assoListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 232, Short.MAX_VALUE)
@@ -311,7 +339,7 @@ public class AssoManager extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(assoOfIndoTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(relaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                .addComponent(relaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -325,7 +353,7 @@ public class AssoManager extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(assoSplitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
+            .addComponent(assoSplitPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -337,6 +365,35 @@ public class AssoManager extends javax.swing.JPanel {
     private void assoSplitPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_assoSplitPanelPropertyChange
         registry.put("assoSplitDividerLocation", assoSplitPanel.getDividerLocation());
     }//GEN-LAST:event_assoSplitPanelPropertyChange
+
+    private void addLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addLineButtonActionPerformed
+        int index = assoWithTable.getSelectedRow();   // selected line
+        int row = assoWithTable.getRowSorter().convertRowIndexToModel(index);  // row in model
+        awtm.addRow(row); 
+        index = assoWithTable.getRowSorter().convertRowIndexToView(row+1); // because rows could be sorted, added row will not be at index+1
+        assoWithTable.setRowSelectionInterval(index, index);  
+        resizeTable();
+        assoListScrollPane.repaint();
+        updateOK();
+        hasChanged = true;
+    }//GEN-LAST:event_addLineButtonActionPerformed
+
+    private void removeLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLineButtonActionPerformed
+        int index = assoWithTable.getSelectedRow();
+        int row = assoWithTable.getRowSorter().convertRowIndexToModel(index);
+        awtm.removeRow(row);
+        if (index >= assoWithTable.getRowCount()) {
+            index--;
+        }
+        if (index < 0) {
+            awtm.addRow(index);
+            index = 0;
+        } 
+        assoWithTable.setRowSelectionInterval(index, index);
+        resizeTable();
+        assoListScrollPane.repaint();
+        hasChanged = true;
+    }//GEN-LAST:event_removeLineButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -358,10 +415,69 @@ public class AssoManager extends javax.swing.JPanel {
         
     }
 
+
+    
+    
+    public void tableChanged(TableModelEvent e) {
+        int row = e.getFirstRow();
+        int column = e.getColumn();
+        if (row >= 0 && row < awtm.getRowCount() && column >= 0 && column < awtm.getColumnCount()) {
+            Object data = awtm.getValueAt(row, column);
+            if (data != null && !isBusy) {
+                if (column == 2) {
+                    isBusy = true;
+                    awtm.setIndiValues((Indi) data, row);
+                    isBusy = false;
+                }
+                if (column >=3 && column <= 6) {
+                    isBusy = true;
+                    awtm.setValueAt(null, row, 2);
+                    isBusy = false;
+                }
+            }
+            awtm.updateList(data, row, column);
+            updateOK();
+            hasChanged = true;
+        }
+    }
+
+    private void updateOK() {
+        isValid = true;
+        for (AssoWrapper asso : assoWithSet) {
+            if (asso.targetEvent == null || asso.assoTxt.trim().isEmpty()) {
+                isValid = false;
+                break;
+            }
+            if (asso.assoIndi == null && (asso.assoLastname.trim().isEmpty() || asso.assoFirstname.trim().isEmpty())) {
+                isValid = false;
+                break;
+            }
+        }
+        okButton.setEnabled(isValid);
+    }
+    
+    
     public String getIndi() {
         return indi.toString();
     }
 
+    public List<AssoWrapper> getSet() {
+        return awtm.getSet();
+    }
+
+    public boolean hasChanged() {
+        return hasChanged;
+    }
+
+    public List<AssoWrapper> clone(List<AssoWrapper> assoSet) {
+        List<AssoWrapper> ret = new ArrayList<AssoWrapper>();
+        for (AssoWrapper asso : assoSet) {
+            ret.add(AssoWrapper.clone(asso));
+        }
+        return ret;
+    }
+    
+
     
     
     
@@ -375,7 +491,7 @@ public class AssoManager extends javax.swing.JPanel {
     
     
 
-    private class IconTextCellRenderer extends DefaultTableCellRenderer {
+    private class EventCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -383,9 +499,53 @@ public class AssoManager extends javax.swing.JPanel {
                 EventWrapper event = (EventWrapper) value;
                 setIcon(event.eventLabel.getIcon());
                 setText(event.eventLabel.getLongLabel());
+            } else {
+                setBorder(BorderFactory.createLineBorder(Color.red));
             }
         return this;
         }
+    }
+   
+    private class OtherCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            if (column == 0 && value == null) {  
+                setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+            if (column == 1) { // rela
+                updateEmptyBorder(value);
+            }
+            if (column == 2) { // indi : red if indi is null && ln and fn are null
+                Object o = awtm.getValueAt(row, 2);
+                if (o == null) {
+                    updateIndiBorder(row);
+                }
+            }
+            if (column == 3 || column == 4) { 
+                Object o = awtm.getValueAt(row, 2);
+                if (o == null) {
+                    updateEmptyBorder(value);
+                }
+            }
+        return this;
+        }
+
+        private void updateEmptyBorder(Object value) {
+            String str = (String) value;
+            if (str.trim().isEmpty()) {
+                setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+        }
+
+        private void updateIndiBorder(int row) {
+            String ln = (String) awtm.getValueAt(row, 3);
+            String fn = (String) awtm.getValueAt(row, 4);
+            if (ln.trim().isEmpty() && fn.trim().isEmpty()) {
+                setBorder(BorderFactory.createLineBorder(Color.red));
+            }
+        }
+
     }
    
     
