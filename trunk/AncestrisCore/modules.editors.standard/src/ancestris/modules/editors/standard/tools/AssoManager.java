@@ -29,6 +29,7 @@ import java.util.Comparator;
 import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -60,7 +61,11 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private List<AssoWrapper> assoWithSet = null;
     private AssoWithTableModel awtm = null;
     private int rowHeight = 18;
-    
+    private String[] arrayRelas = null;
+    private JComboBox comboBoxRelas = null;
+    private String[] arrayOccus = null;
+    private JComboBox comboBoxOccus = null;
+            
     private List<AssoWrapper> assoOfSet = null;
     
     /**
@@ -118,9 +123,9 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         // Set rela column as editable combobox
         ReferenceSet<String, Property> relaRefSet = gedcom.getReferenceSet("RELA");
         List<String> relaKeys = relaRefSet.getKeys();
-        String[] arrayRelas = relaKeys.toArray(new String[relaKeys.size()]);
+        arrayRelas = relaKeys.toArray(new String[relaKeys.size()]);
         Arrays.sort(arrayRelas);
-        JComboBox comboBoxRelas = new JComboBox(arrayRelas);
+        comboBoxRelas = new JComboBox(new DefaultComboBoxModel(arrayRelas));
         comboBoxRelas.setMaximumRowCount(10);
         comboBoxRelas.setEditable(true);
         assoWithTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxRelas));
@@ -151,9 +156,9 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         // Set occu column as editable combobox
         ReferenceSet<String, Property> occuRefSet = gedcom.getReferenceSet("OCCU");
         List<String> occuKeys = occuRefSet.getKeys();
-        String[] arrayOccus = occuKeys.toArray(new String[occuKeys.size()]);
+        arrayOccus = occuKeys.toArray(new String[occuKeys.size()]);
         Arrays.sort(arrayOccus);
-        JComboBox comboBoxOccus = new JComboBox(arrayOccus);
+        comboBoxOccus = new JComboBox(new DefaultComboBoxModel(arrayOccus));
         comboBoxOccus.setMaximumRowCount(10);
         comboBoxOccus.setEditable(true);
         assoWithTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(comboBoxOccus));
@@ -447,6 +452,16 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                     awtm.setValueAt(null, row, 2);
                     isBusy = false;
                 }
+                if (column == 1) { // add rela value to combobox if different
+                    if ((((DefaultComboBoxModel) comboBoxRelas.getModel()).getIndexOf((String) data)) == -1) {
+                        comboBoxRelas.addItem(data);
+                    }
+                }
+                if (column == 6) { // add occu value to combobox if different
+                    if ((((DefaultComboBoxModel) comboBoxOccus.getModel()).getIndexOf((String) data)) == -1) {
+                        comboBoxOccus.addItem(data);
+                    }
+                }
             }
             awtm.updateList(data, row, column);
             updateOK();
@@ -488,6 +503,15 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
             ret.add(AssoWrapper.clone(asso));
         }
         return ret;
+    }
+
+    private boolean isIncluded(String[] array, String item) {
+        for (String str : array) {
+            if (str.equals(item)) {
+                return true;
+            }
+        }
+        return false;
     }
     
 
