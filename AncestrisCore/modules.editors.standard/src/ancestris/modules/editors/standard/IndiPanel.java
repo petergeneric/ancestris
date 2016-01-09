@@ -62,6 +62,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -76,6 +77,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.event.PopupMenuEvent;
+import javax.swing.event.PopupMenuListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
@@ -183,6 +186,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         registry = Registry.get(getClass());
         eventSplitPane.setDividerLocation(registry.get("eventSplitDividerLocation", eventSplitPane.getDividerLocation()));
+        
+        assoComboBox.addPopupMenuListener(new AssociationPopupListener());
 
     }
     
@@ -2973,6 +2978,30 @@ public class IndiPanel extends Editor implements DocumentListener {
         public void mouseEntered(MouseEvent e) { }
         public void mouseExited(MouseEvent e) { }
         
+    }
+
+    private class AssociationPopupListener implements PopupMenuListener {
+        
+        private boolean isCancelled = false;
+
+        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
+            isCancelled = false;
+        }
+
+        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
+            if (!isCancelled) {
+                AssoWrapper asso = (AssoWrapper) assoComboBox.getSelectedItem();
+                if (asso.assoIndi != null) {
+                    // TODO : save changes before going to another indi
+                    SelectionDispatcher.fireSelection(new Context(asso.assoIndi));
+                }
+            }
+        }
+
+        public void popupMenuCanceled(PopupMenuEvent e) {
+            isCancelled = true;
+        }
+
     }
 
 
