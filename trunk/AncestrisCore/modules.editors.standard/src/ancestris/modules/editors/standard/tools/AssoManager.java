@@ -173,13 +173,22 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         
         // Select appropriate association
         int row = 0;
+        boolean selected = false;
         for (AssoWrapper asso : assoSet) {   // do not replace with cloned set
             if (asso == selectedAsso) {
                 assoWithTable.setRowSelectionInterval(row, row);
+                selected = true;
             }
             row++;
         }
+        if (!selected && assoWithTable.getRowCount() != 0) {
+            assoWithTable.setRowSelectionInterval(0, 0);
+        }
+        
+        // Update button
+        updateOK();
 
+        // Detect data changes
         awtm.addTableModelListener(this);
         
         //
@@ -370,7 +379,11 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         int index = assoWithTable.getSelectedRow();   // selected line
         int row = assoWithTable.getRowSorter().convertRowIndexToModel(index);  // row in model
         awtm.addRow(row); 
-        index = assoWithTable.getRowSorter().convertRowIndexToView(row+1); // because rows could be sorted, added row will not be at index+1
+        if (assoWithTable.getRowCount() > 1) {
+            index = assoWithTable.getRowSorter().convertRowIndexToView(row+1); // because rows could be sorted, added row will not be at index+1
+        } else {
+            index = 0;
+        }
         assoWithTable.setRowSelectionInterval(index, index);  
         resizeTable();
         assoListScrollPane.repaint();
@@ -510,6 +523,8 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            
+            int cRow = assoWithTable.getRowSorter().convertRowIndexToModel(row);
             if (column == 0 && value == null) {  
                 setBorder(BorderFactory.createLineBorder(Color.red));
             }
@@ -517,13 +532,13 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 updateEmptyBorder(value);
             }
             if (column == 2) { // indi : red if indi is null && ln and fn are null
-                Object o = awtm.getValueAt(row, 2);
+                Object o = awtm.getValueAt(cRow, 2);
                 if (o == null) {
-                    updateIndiBorder(row);
+                    updateIndiBorder(cRow);
                 }
             }
             if (column == 3 || column == 4) { 
-                Object o = awtm.getValueAt(row, 2);
+                Object o = awtm.getValueAt(cRow, 2);
                 if (o == null) {
                     updateEmptyBorder(value);
                 }
