@@ -54,15 +54,16 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
+import javax.swing.Action;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -1669,11 +1670,29 @@ public class IndiPanel extends Editor implements DocumentListener {
                 addListeners();
                 listernersOn = true;
             }
+            
+            selectPropertyContext(context);
         }
 
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
     }
 
+    
+    private void selectPropertyContext(Context context) {
+        if (eventSet != null) {
+            Property propertyToDisplay = context.getProperty();
+            for (EventWrapper event : eventSet) {
+                if (event.eventProperty.equals(propertyToDisplay)) {
+                    int index = eventSet.indexOf(event);
+                    if (index != -1) {
+                        int row = eventTable.convertRowIndexToView(index);
+                        eventTable.setRowSelectionInterval(row, row);
+                    }
+                }
+            }
+        }
+    }
+    
     
     @Override
     public void commit() throws GedcomException {
@@ -2888,6 +2907,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return b;
     }
+
 
 
     
