@@ -121,43 +121,43 @@ class AssoWithTableModel extends AbstractTableModel {
     }
 
     public int getMaxWidth(FontMetrics fm, int column) {
-        int ret = fm.stringWidth(getColumnName(column));
+        int ret = fm.stringWidth(getColumnName(column)) + 4;
         int rows = getRowCount();
         String str = "";
         for (int i = 0; i < rows; i++) {
+            int width = 0;
             Object o = getValueAt(i, column);
-            if (o == null) {
-                return 50;
-            }
-            switch (column) {
-                case 0:
-                    str = ((EventWrapper) o).eventLabel.getLongLabel() + "MM";  // add size of an icon
-                    break;
-                case 1:
-                    str = ((String) o);
-                    break;
-                case 2:
-                    str = ((Indi) o).toString();
-                    break;
-                case 3:
-                    str = ((String) o);
-                    break;
-                case 4:
-                    str = ((String) o);
-                    break;
-                case 5:
-                    str = PropertySex.TXT_UNKNOWN + "MM"; // size of sex icon and label
-                    break;
-                case 6:
-                    str = ((String) o);
-                    break;
-                default:
-                    str = o.toString();
-                    break;
-            }
-            int width = fm.stringWidth(str);
-            if (width > ret) {
-                ret = width;
+            if (o != null) {
+                switch (column) {
+                    case 0:
+                        str = ((EventWrapper) o).eventLabel.getLongLabel() + "MM";  // add size of an icon
+                        break;
+                    case 1:
+                        str = ((String) o);
+                        break;
+                    case 2:
+                        str = ((Indi) o).toString();
+                        break;
+                    case 3:
+                        str = ((String) o);
+                        break;
+                    case 4:
+                        str = ((String) o);
+                        break;
+                    case 5:
+                        str = PropertySex.TXT_UNKNOWN + "MM"; // size of sex icon and label
+                        break;
+                    case 6:
+                        str = ((String) o);
+                        break;
+                    default:
+                        str = o.toString();
+                        break;
+                }
+                width = fm.stringWidth(str) + 4;
+                if (width > ret) {
+                    ret = width;
+                }
             }
         }
         return ret;

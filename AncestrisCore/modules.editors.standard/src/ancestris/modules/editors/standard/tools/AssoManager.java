@@ -164,10 +164,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         assoWithTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(comboBoxOccus));
 
         // Resize columns
-        FontMetrics fm = getFontMetrics(getFont());
-        for (int i = 0; i < assoWithTable.getColumnCount(); i++) {
-            assoWithTable.getColumnModel().getColumn(i).setPreferredWidth(awtm.getMaxWidth(fm, i));
-        }
+        resizeColumns();
         
         // Rowheight to fit in comboboxes
         rowHeight = comboBoxOccus.getPreferredSize().height;
@@ -211,6 +208,13 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         assoWithTable.repaint();
     }
 
+    private void resizeColumns() {
+        FontMetrics fm = getFontMetrics(getFont());
+        for (int i = 0; i < assoWithTable.getColumnCount(); i++) {
+            assoWithTable.getColumnModel().getColumn(i).setPreferredWidth(awtm.getMaxWidth(fm, i));
+        }
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -394,23 +398,25 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         assoListScrollPane.repaint();
         updateOK();
         hasChanged = true;
+        resizeColumns();
     }//GEN-LAST:event_addLineButtonActionPerformed
 
     private void removeLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLineButtonActionPerformed
         int index = assoWithTable.getSelectedRow();
         int row = assoWithTable.getRowSorter().convertRowIndexToModel(index);
         awtm.removeRow(row);
-        if (index >= assoWithTable.getRowCount()) {
-            index--;
-        }
+        index--;
         if (index < 0) {
-            awtm.addRow(index);
+            if (assoWithTable.getRowCount() == 0) {
+                awtm.addRow(index);
+            }
             index = 0;
         } 
         assoWithTable.setRowSelectionInterval(index, index);
         resizeTable();
         assoListScrollPane.repaint();
         hasChanged = true;
+        resizeColumns();
     }//GEN-LAST:event_removeLineButtonActionPerformed
 
 
@@ -449,7 +455,8 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 }
                 if (column >=3 && column <= 6) {
                     isBusy = true;
-                    awtm.setValueAt(null, row, 2);
+                    Indi indiCreated = new Indi("INDI", NbBundle.getMessage(getClass(), "AssoManager.inditobecreated"));
+                    awtm.setValueAt(indiCreated, row, 2);
                     isBusy = false;
                 }
                 if (column == 1) { // add rela value to combobox if different
@@ -505,15 +512,6 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         return ret;
     }
 
-    private boolean isIncluded(String[] array, String item) {
-        for (String str : array) {
-            if (str.equals(item)) {
-                return true;
-            }
-        }
-        return false;
-    }
-    
 
     
     
