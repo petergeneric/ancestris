@@ -11,18 +11,25 @@
  */
 package ancestris.modules.editors.standard.tools;
 
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertySex;
 import genj.util.ReferenceSet;
 import genj.util.Registry;
+import genj.util.WordBuffer;
 import genj.util.swing.ImageIcon;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -30,10 +37,13 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JTable;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.TableModelEvent;
@@ -57,7 +67,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private Indi indi = null;
     private List<EventWrapper> eventSet = null;
     
-    // Association With indi and Of indi
+    // Associations With indi
     private List<AssoWrapper> assoWithSet = null;
     private AssoWithTableModel awtm = null;
     private int rowHeight = 18;
@@ -66,44 +76,39 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private String[] arrayOccus = null;
     private JComboBox comboBoxOccus = null;
             
-    private List<AssoWrapper> assoOfSet = null;
+    // Associations Of indi
+    private DefaultListModel assoOfSet = null;
     
     /**
      * Creates new form AssoManager
      */
-    public AssoManager(Indi indi, List<EventWrapper> eventSet, List<AssoWrapper> assoSet, AssoWrapper selectedAsso, JButton okButton, JButton cancelButton) {
+    public AssoManager(Indi indi, List<EventWrapper> list, List<AssoWrapper> assoSet, AssoWrapper selectedAsso, JButton okButton, JButton cancelButton) {
         
-        this.eventSet = eventSet;
+        this.eventSet = list;
         this.indi = indi;
         this.gedcom = indi.getGedcom();
         this.okButton = okButton;
 
         registry = Registry.get(getClass());
+
+        // Get associations of both types
+        assoWithSet = clone(assoSet);
+        assoOfSet = getAssociationOf(indi);
+
         initComponents();
 
         this.setPreferredSize(new Dimension(registry.get("assoWindowWidth", this.getPreferredSize().width), registry.get("assoWindowHeight", this.getPreferredSize().height)));
         assoSplitPanel.setDividerLocation(registry.get("assoSplitDividerLocation", assoSplitPanel.getDividerLocation()));
 
-        // Get associations of both types
-        assoWithSet = clone(assoSet);
-        assoOfSet = new ArrayList<AssoWrapper>();
-        getAssociationOf(indi);
         
         // Titles
         assoWithIndiTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoWithIndiTitle.text", getIndi()));
         assoOfIndoTitle.setText(NbBundle.getMessage(getClass(), "AssoManager.assoOfIndoTitle.text", getIndi()));
         
-        //
-        // assoWithTable:
-        //
-        
-        // Build list
+        // Build table
         awtm = new AssoWithTableModel(assoWithSet);
         assoWithTable.setModel(awtm);    
         assoWithTable.setAutoCreateRowSorter(true);
-        
-
-        
         
         // Set event column as a combobox
         EventWrapper[] arrayEvents = eventSet.toArray(new EventWrapper[eventSet.size()]);
@@ -193,11 +198,6 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         // Detect data changes
         awtm.addTableModelListener(this);
         
-        //
-        // assoOfTable:
-        //
-        
-        ////////////////////////// check displayEventTable in IndiPanel
     }
 
     private void resizeTable() {
@@ -233,8 +233,8 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         removeLineButton = new javax.swing.JButton();
         AssoOfIndiPanel = new javax.swing.JPanel();
         assoOfIndoTitle = new javax.swing.JLabel();
-        relaListScrollPane = new javax.swing.JScrollPane();
-        assoOfTable = new javax.swing.JTable();
+        assoOfScrollPane = new javax.swing.JScrollPane();
+        assoOfList = new javax.swing.JList();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -264,8 +264,14 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
 
             }
         ));
+        assoWithTable.setToolTipText(org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.assoWithTable.toolTipText")); // NOI18N
         assoWithTable.setPreferredSize(new java.awt.Dimension(300, 10));
         assoWithTable.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        assoWithTable.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                assoWithTableMousePressed(evt);
+            }
+        });
         assoListScrollPane.setViewportView(assoWithTable);
 
         addLineButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
@@ -325,30 +331,26 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         assoOfIndoTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(assoOfIndoTitle, org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.assoOfIndoTitle.text")); // NOI18N
 
-        relaListScrollPane.setPreferredSize(new java.awt.Dimension(256, 175));
-
-        assoOfTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+        assoOfList.setModel(assoOfSet);
+        assoOfList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        assoOfList.setToolTipText(org.openide.util.NbBundle.getMessage(AssoManager.class, "AssoManager.assoOfList.toolTipText")); // NOI18N
+        assoOfList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                assoOfListMousePressed(evt);
             }
-        ));
-        relaListScrollPane.setViewportView(assoOfTable);
+        });
+        assoOfScrollPane.setViewportView(assoOfList);
+        assoOfList.setCellRenderer(new ListRenderer());
 
         javax.swing.GroupLayout AssoOfIndiPanelLayout = new javax.swing.GroupLayout(AssoOfIndiPanel);
         AssoOfIndiPanel.setLayout(AssoOfIndiPanelLayout);
         AssoOfIndiPanelLayout.setHorizontalGroup(
             AssoOfIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(AssoOfIndiPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AssoOfIndiPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(AssoOfIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(assoOfIndoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(relaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(AssoOfIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(assoOfScrollPane)
+                    .addComponent(assoOfIndoTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         AssoOfIndiPanelLayout.setVerticalGroup(
@@ -357,7 +359,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 .addContainerGap()
                 .addComponent(assoOfIndoTitle)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(relaListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
+                .addComponent(assoOfScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -393,12 +395,14 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         } else {
             index = 0;
         }
+        
+        // wrap up
         assoWithTable.setRowSelectionInterval(index, index);  
         resizeTable();
         assoListScrollPane.repaint();
-        updateOK();
         hasChanged = true;
         resizeColumns();
+        updateOK();        
     }//GEN-LAST:event_addLineButtonActionPerformed
 
     private void removeLineButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeLineButtonActionPerformed
@@ -412,12 +416,53 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
             }
             index = 0;
         } 
+
+        // wrap up
         assoWithTable.setRowSelectionInterval(index, index);
         resizeTable();
         assoListScrollPane.repaint();
         hasChanged = true;
         resizeColumns();
+        updateOK();
     }//GEN-LAST:event_removeLineButtonActionPerformed
+
+    private void assoWithTableMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_assoWithTableMousePressed
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            int row = assoWithTable.rowAtPoint(evt.getPoint());
+            AssoWrapper asso = (AssoWrapper) assoWithSet.get(row);
+            if (asso != null) {
+                final Entity ent = asso.assoIndi;
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "AssoManager.ShowEntity", ent.toString(true)));
+                menu.add(menuItem);
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        SelectionDispatcher.fireSelection(new Context(ent));
+                    }
+                });
+                menu.show(assoWithTable, evt.getX(), evt.getY());
+            }
+        }
+    }//GEN-LAST:event_assoWithTableMousePressed
+
+    private void assoOfListMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_assoOfListMousePressed
+        if (evt.getButton() == MouseEvent.BUTTON3) {
+            int index = assoOfList.locationToIndex(evt.getPoint());
+            AssoWrapper asso = (AssoWrapper) assoOfList.getModel().getElementAt(index);
+            if (asso != null) {
+                final Property targetProperty = asso.targetEvent != null ? asso.targetEvent.eventProperty : null;
+                JPopupMenu menu = new JPopupMenu();
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "AssoManager.ShowEntity", asso.targetEvent.eventLabel.getLongLabel()));
+                menu.add(menuItem);
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        SelectionDispatcher.fireSelection(new Context(targetProperty));
+                    }
+                });
+                menu.show(assoOfList, evt.getX(), evt.getY());
+            }
+        }
+    }//GEN-LAST:event_assoOfListMousePressed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -425,20 +470,30 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private javax.swing.JButton addLineButton;
     private javax.swing.JScrollPane assoListScrollPane;
     private javax.swing.JLabel assoOfIndoTitle;
-    private javax.swing.JTable assoOfTable;
+    private javax.swing.JList assoOfList;
+    private javax.swing.JScrollPane assoOfScrollPane;
     private javax.swing.JSplitPane assoSplitPanel;
     private javax.swing.JPanel assoWithIndiPanel;
     private javax.swing.JLabel assoWithIndiTitle;
     private javax.swing.JTable assoWithTable;
-    private javax.swing.JScrollPane relaListScrollPane;
     private javax.swing.JButton removeLineButton;
     // End of variables declaration//GEN-END:variables
 
 
-    private void getAssociationOf(Indi indi) {
+    private DefaultListModel getAssociationOf(Indi indi) {
+        DefaultListModel ret = new DefaultListModel();
+
+        // Get ASSO tags from indi (can only be attached to root)
+        List<PropertyAssociation> assoList = indi.getProperties(PropertyAssociation.class);
+        for (PropertyAssociation assoProp : assoList) {
+            ret.addElement(new AssoWrapper(assoProp));
+        }
         
+        return ret;
     }
 
+    
+    
 
     
     
@@ -612,7 +667,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     }
 
 
-    private class ComboBoxSexsRenderer  extends JLabel implements ListCellRenderer {
+    private class ComboBoxSexsRenderer extends JLabel implements ListCellRenderer {
 
         public ComboBoxSexsRenderer() {
             setOpaque(true);
@@ -638,4 +693,40 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         }
     }
 
+    
+    
+    private class ListRenderer extends JLabel implements ListCellRenderer {
+
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            if (value != null) {
+                AssoWrapper asso = (AssoWrapper) value;
+          
+                setHorizontalAlignment(JLabel.LEFT);
+                setIcon(asso.assoProp.getImage());
+                WordBuffer sb = new WordBuffer(" ");
+                sb.append(asso.assoTxt + ", ");
+                sb.append(NbBundle.getMessage(getClass(), "AssoManager.label_event"));
+                sb.append(asso.targetEvent.eventLabel.getLongLabel() + ", ");
+                sb.append(NbBundle.getMessage(getClass(), "AssoManager.label_of"));
+                sb.append(asso.targetEvent.eventProperty.getEntity());
+                setText(sb.toString());
+
+                if (isSelected) {
+                    setBackground(list.getSelectionBackground());
+                    setForeground(list.getSelectionForeground());
+                } else {
+                    setBackground(list.getBackground());
+                    setForeground(list.getForeground());
+                }
+                setEnabled(list.isEnabled());
+                setFont(list.getFont());
+                setOpaque(true);
+            
+            }
+            return this;
+        }
+
+    }
+
+    
 }

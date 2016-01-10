@@ -46,7 +46,7 @@ public class EventWrapper {
     
     
     public EventWrapper(Property property, Indi indi) {
-        if (property == null || indi == null) {
+        if (property == null) {
             return;
         }
         this.hostingEntity = property.getEntity();
@@ -78,6 +78,11 @@ public class EventWrapper {
         // Event year
         if (this.date != null) {
             this.eventYear = date.getStart() == null ? 0 : date.getStart().getYear();
+        }
+        
+        //
+        if (indi == null) {
+            return;
         }
         
         // Age of related indi at time of event

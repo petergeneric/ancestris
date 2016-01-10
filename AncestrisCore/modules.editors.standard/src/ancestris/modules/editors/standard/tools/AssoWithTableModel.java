@@ -15,8 +15,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import genj.util.swing.ImageIcon;
 import java.awt.FontMetrics;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;

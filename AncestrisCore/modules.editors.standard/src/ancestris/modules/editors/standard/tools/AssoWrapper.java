@@ -13,6 +13,7 @@
 package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
@@ -38,8 +39,6 @@ public class AssoWrapper {
     public String assoOccupation = "";          // The associated individual occupation
 
     private Entity targetEntity = null;         // Entity the association refers to. The Gedcom norm only allows for INDI to be pointed to by an ASSO tag. However, Ancestris allows FAM to be referenced too.
-    private Indi targetIndi1 = null;            // First indi the association refers to. Itself in case of targetEntity is an INDI, husband if it is a FAM.
-    private Indi targetIndi2 = null;            // Second indi the association refers to. Null in case of targetEntity is an INDI, wife if it is a FAM.
     public EventWrapper targetEvent = null;     // Event of the entity, the association refers to.
     private String targetEventTag = "";         // Event tag of the associated event
     public String targetEventDesc = "";         // The event text to be displayed
@@ -61,6 +60,19 @@ public class AssoWrapper {
         
     }
 
+    public AssoWrapper(PropertyAssociation assoProperty) {
+
+        if (assoProperty == null) {
+            return;
+        }
+        
+        Indi associatedIndi = (Indi) assoProperty.getEntity();
+        Property eventProp = assoProperty.getTargetParent();
+        EventWrapper event = new EventWrapper(eventProp, null);
+        setValues(associatedIndi, assoProperty, event);
+        
+    }
+
     private AssoWrapper(AssoWrapper asso) {
         assoProp = asso.assoProp;
         assoTxt = asso.assoTxt;
@@ -70,8 +82,6 @@ public class AssoWrapper {
         assoSex = asso.assoSex;
         assoOccupation = asso.assoOccupation;
         targetEntity = asso.targetEntity;
-        targetIndi1 = asso.targetIndi1;
-        targetIndi2 = asso.targetIndi2;
         targetEvent = asso.targetEvent;
         targetEventTag = asso.targetEventTag;
         targetEventDesc = asso.targetEventDesc;
