@@ -19,13 +19,19 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
@@ -139,8 +145,26 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             String type = context.getEntity().getTag();
             if (type.equals(Gedcom.INDI)) {
                 editor = new IndiPanel();
-            }
-            if (!type.equals(Gedcom.INDI)) {
+            } else if (type.equals(Gedcom.FAM)) {
+                Fam fam = (Fam) context.getEntity();
+                Indi indi = fam.getHusband();
+                if (indi == null) {
+                    indi = fam.getWife();
+                }
+                if (indi != null) {
+                    List<Entity> entities = new ArrayList<Entity>();
+                    entities.add(indi);
+                    List<Property> properties = (List<Property>) context.getProperties();
+                    Property union = fam.getProperty("MARR");
+                    if ((properties == null || properties.isEmpty()) && (union != null)) {
+                        properties = new ArrayList<Property>();
+                        properties.add(union);
+                    }
+                    Context newContext = new Context(context.getGedcom(), entities, properties);
+                    editor = new IndiPanel();
+                    context = newContext;
+                }
+            } else {
                 editor = new BlankPanel();
             }
             editor.addChangeListener(confirmPanel);
