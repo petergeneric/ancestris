@@ -702,6 +702,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 AssoWrapper asso = (AssoWrapper) value;
           
                 setHorizontalAlignment(JLabel.LEFT);
+                setVerticalAlignment(JLabel.CENTER);
                 setIcon(asso.assoProp.getImage());
                 WordBuffer sb = new WordBuffer(" ");
                 sb.append(asso.assoTxt + ", ");
