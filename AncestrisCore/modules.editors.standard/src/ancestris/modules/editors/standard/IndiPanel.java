@@ -44,9 +44,12 @@ import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -54,12 +57,11 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
@@ -2068,6 +2070,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         Registry registry = Registry.get(getClass());
         JFileChooser jfc = new JFileChooser();
         jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
+        jfc.setAccessory(new ImagePreviewer(jfc));
         FileNameExtensionFilter imageFileFilter = Utils.getImageFilter();
         FileNameExtensionFilter videoFileFilter = Utils.getVideoFilter();
         FileNameExtensionFilter soundFileFilter = Utils.getSoundFilter();
@@ -2738,6 +2741,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         Registry registry = Registry.get(getClass());
         JFileChooser jfc = new JFileChooser();
         jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
+        jfc.setAccessory(new ImagePreviewer(jfc));
         FileNameExtensionFilter imageFileFilter = Utils.getImageFilter();
         FileNameExtensionFilter videoFileFilter = Utils.getVideoFilter();
         FileNameExtensionFilter soundFileFilter = Utils.getSoundFilter();
@@ -3022,6 +3026,28 @@ public class IndiPanel extends Editor implements DocumentListener {
             isCancelled = true;
         }
 
+    }
+
+
+    private static class ImagePreviewer extends JLabel {
+
+        public ImagePreviewer(JFileChooser chooser) {
+            final int size = 120;
+            setPreferredSize(new Dimension(size, size));
+            setBorder(BorderFactory.createEtchedBorder());
+            chooser.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+                        File f = (File) evt.getNewValue();
+                        ImageIcon icon = new ImageIcon(f.getPath());
+                        if (icon.getIconWidth() > size) {
+                            icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
+                        }
+                        setIcon(icon);
+                    }
+                }
+            });
+        }
     }
 
 
