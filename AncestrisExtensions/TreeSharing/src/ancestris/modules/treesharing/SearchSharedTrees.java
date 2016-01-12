@@ -19,11 +19,13 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import ancestris.modules.treesharing.panels.AncestrisFriend;
 import ancestris.modules.treesharing.panels.FriendGedcomEntity;
 import ancestris.modules.treesharing.panels.SharedGedcom;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertySex;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -73,6 +75,7 @@ public class SearchSharedTrees extends Thread {
     private void getAllMatchingEntities(List<SharedGedcom> sharedGedcoms, List<AncestrisMember> ancestrisMembers) {
         
         // Initialize variables
+        boolean searchedOnce = false;
         AncestrisFriend friend = null;
         boolean profileExchanged = false;
         int matchType = TreeSharingOptionsPanel.getMatchType();
@@ -87,6 +90,7 @@ public class SearchSharedTrees extends Thread {
             if (!member.isAllowed() || member.getMemberName().equals(owner.getPreferredPseudo())) {
                 continue;
             }
+            searchedOnce = true;
 
             // Reset exchange
             friend = null;
@@ -180,6 +184,11 @@ public class SearchSharedTrees extends Thread {
 
         owner.getCommHandler().setCommunicationInProgress(false);
         stopGracefully();
+        
+        if (!searchedOnce) {
+            DialogManager.create(NbBundle.getMessage(getClass(), "TITL_NoOtherAuthorizedUsers"), 
+                NbBundle.getMessage(getClass(), "MSG_NoOtherAuthorizedUsers")).setMessageType(DialogManager.INFORMATION_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+        }
     }
     
     

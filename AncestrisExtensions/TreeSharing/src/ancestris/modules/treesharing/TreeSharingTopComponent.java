@@ -80,6 +80,7 @@ import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * 
@@ -242,6 +243,8 @@ public class TreeSharingTopComponent extends TopComponent {
             initResults();
 
             initRefreshMembersThread();
+            
+            showWelcomeMessages();
     }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
@@ -1148,6 +1151,20 @@ public class TreeSharingTopComponent extends TopComponent {
         dialog.setLocationRelativeTo(frame);
         dialog.setVisible(true);
 
+    }
+
+    private void showWelcomeMessages() {
+        if ("1".equals(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Welcome", "1"))) {
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Welcome"),
+                            new WelcomePanel()).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                    NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Welcome", "0");
+                    settings.displayOptionsPanel();
+                }
+            });
+        }
     }
     
     
