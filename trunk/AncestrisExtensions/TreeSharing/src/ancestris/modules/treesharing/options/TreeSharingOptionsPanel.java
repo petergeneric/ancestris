@@ -16,6 +16,9 @@ import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.TechInfoPanel;
 import ancestris.util.swing.DialogManager;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FileDialog;
+import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -25,6 +28,8 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -34,6 +39,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
@@ -430,7 +436,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
      */
     private void chooseAndDisplayImage() {
         JFileChooser jfc = new JFileChooser();
-        int ret = jfc.showDialog(jfc, NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"));
+        jfc.setDialogTitle(NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"));
+        jfc.setAccessory(new ImagePreviewer(jfc));
+        int ret = jfc.showDialog(jfc, NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserButton"));
         if (ret == JFileChooser.APPROVE_OPTION) {
             if (processImage(jfc.getSelectedFile())) {
                 jLabel8.setText("");
@@ -788,7 +796,27 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
     }
 
-    
+    private static class ImagePreviewer extends JLabel {
+
+        public ImagePreviewer(JFileChooser chooser) {
+            final int size = 120;
+            setPreferredSize(new Dimension(size, size));
+            setBorder(BorderFactory.createEtchedBorder());
+            chooser.addPropertyChangeListener(new PropertyChangeListener() {
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+                        File f = (File) evt.getNewValue();
+                        ImageIcon icon = new ImageIcon(f.getPath());
+                        if (icon.getIconWidth() > size) {
+                            icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
+                        }
+                        setIcon(icon);
+                    }
+                }
+            });
+        }
+    }
+
     
     
     
