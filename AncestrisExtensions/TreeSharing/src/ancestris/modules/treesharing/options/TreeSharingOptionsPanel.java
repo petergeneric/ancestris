@@ -806,11 +806,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 public void propertyChange(PropertyChangeEvent evt) {
                     if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
                         File f = (File) evt.getNewValue();
-                        ImageIcon icon = new ImageIcon(f.getPath());
-                        if (icon.getIconWidth() > size) {
-                            icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
+                        if (f != null) {
+                            ImageIcon icon = new ImageIcon(f.getPath());
+                            if (icon.getIconWidth() > size) {
+                                icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
+                            }
+                            setIcon(icon);
                         }
-                        setIcon(icon);
                     }
                 }
             });
