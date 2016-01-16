@@ -217,6 +217,7 @@
             <file name="ServerManagerAction3.instance_hidden"/>
             <file name="org-netbeans-modules-xml-catalog-CatalogAction.instance_hidden"/>
             <file name="PaletteManager.instance_hidden"/>
+            <file name="org-netbeans-modules-templates-actions-TemplatesAction.shadow_hidden"/> <!-- 2016-01-16 - the tag of the Modeles menuitem (FL) -->
             <file name="org-netbeans-modules-options-OptionsWindowAction.shadow_hidden"/>   <!-- the tag of the options menuitem (FL) -->
             <file name="SeparatorMaxiTools.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
