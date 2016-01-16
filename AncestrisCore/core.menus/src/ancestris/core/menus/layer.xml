@@ -20,8 +20,8 @@
                 <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Menu/Tools/Multimedia"/>
             </folder>
         </folder>
--->       
     </folder>
+-->       
     <folder name="Ancestris">
         <folder name="Actions">
             <folder name="GedcomProperty">
