@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
-    <folder name="Menu">
+<!-- FL : 2016-01-16 : menu should not appear without any content
+
+        <folder name="Menu">
         <folder name="File">
             <folder name="Import">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
@@ -18,6 +20,7 @@
                 <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Menu/Tools/Multimedia"/>
             </folder>
         </folder>
+-->       
     </folder>
     <folder name="Ancestris">
         <folder name="Actions">
