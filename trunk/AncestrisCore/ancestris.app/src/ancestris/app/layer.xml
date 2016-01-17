@@ -289,6 +289,7 @@
         <folder name="Window">
             <file name="GedcomExplorerAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-explorer-GedcomExplorerAction.instance"/>
+                <attr name="position" intvalue="100"/>
             </file>
             <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
             <file name="Tools_hidden"/>
