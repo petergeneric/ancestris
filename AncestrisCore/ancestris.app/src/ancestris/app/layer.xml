@@ -406,6 +406,7 @@
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
         <file name="Standard.xml" url="Standard.xml"/>
         <folder name="Nav">
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Nav"/>
             <file name="ancestris-app-ActionHistory.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/ancestris-app-ActionHistory.instance"/>
                 <attr name="position" intvalue="100"/>
@@ -416,6 +417,7 @@
             </file>
         </folder>
         <folder name="Help">
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Help"/>
             <file name="MyOptions.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
                 <attr name="position" intvalue="100"/>
