@@ -36,7 +36,7 @@ id = "ancestris.modules.gedcom.history.ClearHistoryAction")
 displayName = "#CTL_ClearHistoryAction",
 iconBase = "ancestris/modules/gedcom/history/ClearHistoryIcon.png")
 @ActionReferences({
-    @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3333)
+    @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3334)
 })
 public final class ClearHistoryAction implements ActionListener {
 
