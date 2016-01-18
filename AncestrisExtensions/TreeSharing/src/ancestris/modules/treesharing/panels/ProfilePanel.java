@@ -173,9 +173,9 @@ public class ProfilePanel extends javax.swing.JPanel {
         try {
             Desktop.getDesktop().browse(new URI(uriStr));
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            /* TODO: error handling */ 
         } catch (URISyntaxException ex) {
-            Exceptions.printStackTrace(ex);
+            /* TODO: error handling */ 
         }
     }
 
