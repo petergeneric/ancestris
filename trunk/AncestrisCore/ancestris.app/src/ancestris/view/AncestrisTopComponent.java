@@ -94,7 +94,7 @@ public class AncestrisTopComponent extends TopComponent
     private static final String PREFERRED_ID = "AncestrisTopComponent";
     private javax.swing.JComponent panel;
     private boolean isRestored = false;
-    private final static Logger LOG = Logger.getLogger("genj.app");
+    private final static Logger LOG = Logger.getLogger("ancestris.app");
     private Context context;
 //    InstanceContent ic = new InstanceContent();
 //    Lookup tcLookup = new AbstractLookup(ic);
