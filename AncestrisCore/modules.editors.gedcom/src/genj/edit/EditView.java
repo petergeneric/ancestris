@@ -43,7 +43,6 @@ import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.JToggleButton;
 
 /**
@@ -51,7 +50,7 @@ import javax.swing.JToggleButton;
  */
 public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeCallBack {
 
-    /* package */ final static Logger LOG = Logger.getLogger("genj.edit");
+    /* package */ final static Logger LOG = Logger.getLogger("ancestris.edit");
     private final static Registry REGISTRY = Registry.get(EditView.class);
     static final Resources RESOURCES = Resources.get(EditView.class);
     private Mode mode = new Mode();

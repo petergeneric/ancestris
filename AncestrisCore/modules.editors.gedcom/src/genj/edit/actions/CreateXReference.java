@@ -57,7 +57,7 @@ public class CreateXReference extends CreateRelationship {
             }
             return ((PropertyXRef) sample).getTargetType();
         } catch (GedcomException e) {
-            Logger.getLogger("genj.edit.actions").log(Level.SEVERE, "couldn't determine target type", e);
+            Logger.getLogger("ancestris.edit.actions").log(Level.SEVERE, "couldn't determine target type", e);
             throw new RuntimeException("Couldn't determine target type for source tag " + sourceTag);
         }
     }

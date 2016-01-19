@@ -19,17 +19,14 @@
  */
 package genj.edit;
 
-import ancestris.core.actions.RunExternal;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import genj.edit.actions.CreateAssociation;
-import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
-import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
 
 
@@ -42,7 +39,7 @@ public class EditPlugin
 {
   
 //  private final static Resources RESOURCES = Resources.get(EditPlugin.class);
-//  private final static Logger LOG = Logger.getLogger("genj.edit");
+//  private final static Logger LOG = Logger.getLogger("ancestris.edit");
 //  
 //  private String ACC_UNDO = "ctrl Z", ACC_REDO = "ctrl Y";
   
