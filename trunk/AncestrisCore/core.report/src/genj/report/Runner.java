@@ -33,7 +33,7 @@ import java.util.logging.Logger;
  */
 /*package*/ class Runner implements Runnable {
   
-  private final static Logger LOG = Logger.getLogger("genj.report");
+  private final static Logger LOG = Logger.getLogger("ancestris.report");
 
   private final static long FLUSH_WAIT = 500;
 

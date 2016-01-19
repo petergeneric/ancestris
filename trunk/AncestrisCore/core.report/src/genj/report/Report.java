@@ -75,7 +75,7 @@ public abstract class Report implements Cloneable,ResourcesProvider {
   
   private final static PrintWriter NUL = new PrintWriter(new OutputStream() { @Override public void write(int b) { }} );
 
-  protected final static Logger LOG = Logger.getLogger("genj.report");
+  protected final static Logger LOG = Logger.getLogger("ancestris.report");
 
   /** global report options */
   protected TextOptions OPTIONS = TextOptions.getInstance();
