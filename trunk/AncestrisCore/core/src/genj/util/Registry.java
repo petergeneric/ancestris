@@ -53,7 +53,7 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
   private String prefix;
   
   private static Map<File, Registry> file2registry = new HashMap<File, Registry>();
-  private final static Logger LOG =Logger.getLogger("genj");
+  private final static Logger LOG =Logger.getLogger("ancestris");
 
   private IRegistryStorage storage = null;
 

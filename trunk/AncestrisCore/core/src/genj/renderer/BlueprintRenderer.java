@@ -82,7 +82,7 @@ public class BlueprintRenderer {
 
   private final static ImageIcon BROKEN = new ImageIcon(BlueprintEditor.class, "Broken.png");
   
-  private final static Logger LOG = Logger.getLogger("genj.renderer");
+  private final static Logger LOG = Logger.getLogger("ancestris.renderer");
   
   public static final String HINT_KEY_TXT = "txt";
   public static final String HINT_KEY_IMG = "img";
@@ -174,7 +174,7 @@ public class BlueprintRenderer {
       reader.flush();      
       
     } catch (Throwable t) {
-      Logger.getLogger("genj.renderer").log(Level.WARNING, "can't parse blueprint "+bp, t);
+      Logger.getLogger("ancestris.renderer").log(Level.WARNING, "can't parse blueprint "+bp, t);
     }
 
     // create the root view

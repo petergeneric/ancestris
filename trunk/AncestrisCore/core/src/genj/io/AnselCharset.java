@@ -32,7 +32,7 @@ import java.util.logging.Logger;
  */
 /*package*/ class AnselCharset extends Charset {
   
-  private final static Logger LOG = Logger.getLogger("genj.io");
+  private final static Logger LOG = Logger.getLogger("ancestris.io");
   
 
 /**

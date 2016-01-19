@@ -48,7 +48,7 @@ import org.openide.util.Lookup;
 public class GedcomWriter implements IGedcomWriter {
 
     private final static Resources RESOURCES = Resources.get(GedcomWriter.class);
-    private static Logger LOG = Logger.getLogger("genj.io");
+    private static Logger LOG = Logger.getLogger("ancestris.io");
     /** lots of state */
     private Gedcom gedcom;
     private BufferedWriter out;

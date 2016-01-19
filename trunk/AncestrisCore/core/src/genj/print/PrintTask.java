@@ -70,7 +70,7 @@ import javax.print.attribute.standard.OrientationRequested;
   /** our flavor */
   /*package*/ final static DocFlavor FLAVOR = DocFlavor.SERVICE_FORMATTED.PRINTABLE;
   /*package*/ final static Resources RESOURCES = Resources.get(PrintTask.class);
-  /*package*/ final static Logger LOG = Logger.getLogger("genj.print");
+  /*package*/ final static Logger LOG = Logger.getLogger("ancestris.print");
   
   /** our print service */
   private PrintService service;

@@ -29,7 +29,7 @@ import javax.imageio.spi.ServiceRegistry;
 
 public class ServiceLookup {
   
-  private static Logger LOG = Logger.getLogger("genj.util");
+  private static Logger LOG = Logger.getLogger("ancestris.util");
 
   public static <X> List<X> lookup(Class<X> service) {
     List<X> result = new ArrayList<X>();

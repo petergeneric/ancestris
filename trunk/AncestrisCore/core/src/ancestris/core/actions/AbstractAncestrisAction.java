@@ -37,7 +37,7 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
             KEY_ENABLED = "enabled",
             KEY_MNEMONIC = Action.MNEMONIC_KEY,
             KEY_ICON = Action.SMALL_ICON, KEY_SELECTED = "SwingSelectedKey"; // XXX: maybe we can remove this by using BooleanStateAction
-    private final static Logger LOG = Logger.getLogger("genj.actions");
+    private final static Logger LOG = Logger.getLogger("ancestris.actions");
     /** predefined strings */
     public final static String TXT_YES = UIManager.getString("OptionPane.yesButtonText"),
             TXT_NO = UIManager.getString("OptionPane.noButtonText"),

@@ -35,7 +35,7 @@ import javax.swing.event.HyperlinkListener;
  */
 public class EditorHyperlinkSupport implements HyperlinkListener {
 
-  private final static Logger LOG = Logger.getLogger("genj.log");
+  private final static Logger LOG = Logger.getLogger("ancestris.log");
   
   private JEditorPane editor;
   

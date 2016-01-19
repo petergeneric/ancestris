@@ -92,7 +92,7 @@ public class RunExternal extends AbstractAncestrisContextAction {
         try {
             Desktop.getDesktop().open(file);
         } catch (Throwable t) {
-            Logger.getLogger("genj.edit.actions").log(Level.INFO, "can't open " + file, t);
+            Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + file, t);
         }
     }
 } //RunExternal

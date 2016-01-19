@@ -113,12 +113,12 @@ public class NestedBlockLayout implements LayoutManager2, Cloneable {
     try {
       return SAXParserFactory.newInstance().newSAXParser();
     } catch (Throwable t) {
-      Logger.getLogger("genj.util.swing").log(Level.SEVERE, "Can't initialize SAX parser", t);
+      Logger.getLogger("ancestris.util.swing").log(Level.SEVERE, "Can't initialize SAX parser", t);
       throw new Error("Can't initialize SAX parser", t);
     }
   }
   
-  private final static Logger LOG = Logger.getLogger("genj.util");
+  private final static Logger LOG = Logger.getLogger("ancestris.util");
 
   /** whether we've been invalidated recently */
   private boolean invalidated = true;

@@ -52,7 +52,7 @@ import javax.imageio.stream.ImageInputStream;
  */
 public class MediaRenderer {
 
-  private final static Logger LOG = Logger.getLogger("genj.renderer");
+  private final static Logger LOG = Logger.getLogger("ancestris.renderer");
   
   private final static Map<Property, CacheEntry> CACHE = new WeakHashMap<Property, CacheEntry>();
   

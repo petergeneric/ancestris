@@ -53,7 +53,7 @@ import java.util.logging.Logger;
 //TODO: enlever la comparaison de deux gedcom
 public class Gedcom implements Comparable {
 
-    final static Logger LOG = Logger.getLogger("genj.gedcom");
+    final static Logger LOG = Logger.getLogger("ancestris.gedcom");
     final static private Random seed = new Random();
     final static Resources resources = Resources.get(Gedcom.class);
 

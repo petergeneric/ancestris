@@ -47,7 +47,7 @@ import org.xml.sax.helpers.DefaultHandler;
  */
 public class Grammar {
 
-  private final static Logger LOG = Logger.getLogger("genj.gedcom"); // make sure logger is initialized before other statics
+  private final static Logger LOG = Logger.getLogger("ancestris.gedcom"); // make sure logger is initialized before other statics
   
   /** singleton */
   public final static Grammar 

@@ -183,7 +183,7 @@ public class BlueprintEditor extends JSplitPane {
         // mark unchanged
         isChanged = false;
       } catch (IOException e) {
-        Logger.getLogger("genj.renderer").log(Level.WARNING, "can't save blueprint", e);
+        Logger.getLogger("ancestris.renderer").log(Level.WARNING, "can't save blueprint", e);
       }
     }
   }

@@ -36,7 +36,7 @@ public abstract class PrintAction extends AbstractAncestrisAction {
   
   private final static Resources RES = Resources.get(PrintAction.class);
   private final static ImageIcon IMG = new ImageIcon(PrintAction.class, "images/Print.png");
-  private final static Logger LOG = Logger.getLogger("genj.print");
+  private final static Logger LOG = Logger.getLogger("ancestris.print");
   
   private String title;
   
