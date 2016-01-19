@@ -103,7 +103,7 @@ import java.util.logging.Logger;
             search(Worker.this.gedcom);
             flush();
           } catch (Throwable t) {
-            Logger.getLogger("genj.search").log(Level.FINE, "worker bailed", t);
+            Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
           } finally {
             synchronized (lock) {
               thread = null;

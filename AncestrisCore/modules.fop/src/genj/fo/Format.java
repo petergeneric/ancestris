@@ -45,7 +45,7 @@ import javax.xml.transform.stream.StreamSource;
  */
 public abstract class Format {
   
-  protected final static Logger LOG = Logger.getLogger("genj.fo");
+  protected final static Logger LOG = Logger.getLogger("ancestris.fo");
   
   /** available formats */
   private static Format[] formats;
