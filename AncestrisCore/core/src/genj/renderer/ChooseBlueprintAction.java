@@ -149,7 +149,7 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
         blueprints.setListData(MGR.getBlueprints(recipient.getTag()).toArray());
         blueprints.setSelectedValue(blueprint, true);
       } catch (IOException ex) {
-        Logger.getLogger("genj.renderer").log(Level.WARNING, "can't add blueprint "+name, ex);
+        Logger.getLogger("ancestris.renderer").log(Level.WARNING, "can't add blueprint "+name, ex);
       }
       // done
     }
@@ -174,7 +174,7 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
       try {
         MGR.delBlueprint(selection);
       } catch (IOException ex) {
-        Logger.getLogger("genj.renderer").log(Level.WARNING, "can't delete blueprint "+selection, ex);
+        Logger.getLogger("ancestris.renderer").log(Level.WARNING, "can't delete blueprint "+selection, ex);
       }
       blueprints.setListData(MGR.getBlueprints(recipient.getTag()).toArray());
       if (blueprints.getModel().getSize()>0)

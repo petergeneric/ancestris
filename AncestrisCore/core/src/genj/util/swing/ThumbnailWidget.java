@@ -88,7 +88,7 @@ public class ThumbnailWidget extends JComponent {
     IMG_ZOOM_FIT = new ImageIcon(ThumbnailWidget.class, "ZoomFit.png"),
     IMG_ZOOM_ALL = new ImageIcon(ThumbnailWidget.class, "ZoomAll.png");
   
-  private final static Logger LOG = Logger.getLogger("genj.util.swing");
+  private final static Logger LOG = Logger.getLogger("ancestris.util.swing");
   private final static BlockingQueue<Runnable> executorQueue = new LinkedBlockingDeque<Runnable>();
   private final static Executor executor = new ThreadPoolExecutor(1, 1, 0, TimeUnit.SECONDS, executorQueue);
 

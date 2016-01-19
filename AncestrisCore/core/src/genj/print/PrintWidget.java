@@ -67,7 +67,7 @@ import javax.swing.event.ChangeListener;
 public class PrintWidget extends JTabbedPane {
   
   /*package*/ final static Resources RESOURCES = Resources.get(PrintWidget.class);
-  /*package*/ final static Logger LOG = Logger.getLogger("genj.print");
+  /*package*/ final static Logger LOG = Logger.getLogger("ancestris.print");
   
   private PrintTask task;
   private ChoiceWidget services;

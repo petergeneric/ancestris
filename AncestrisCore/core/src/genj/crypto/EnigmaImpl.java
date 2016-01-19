@@ -36,7 +36,7 @@ import javax.crypto.spec.DESKeySpec;
  */
 /*package*/ class EnigmaImpl extends Enigma {
 
-  private final static Logger LOG = Logger.getLogger("genj.crypto");
+  private final static Logger LOG = Logger.getLogger("ancestris.crypto");
   
   /** the SecretKey we're using */
   private SecretKey key;

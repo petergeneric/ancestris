@@ -245,9 +245,9 @@ public class ChoiceWidget extends JComboBox {
                     doc.insertString(0, text, null);
                     getTextEditor().setDocument(doc);
                 } catch (Throwable retry) {
-                    Logger.getLogger("genj.util.swing").log(Level.FINE, "Couldn't retry " + getTextEditor().getClass() + ".setText(" + text + ")", retry);
+                    Logger.getLogger("ancestris.util.swing").log(Level.FINE, "Couldn't retry " + getTextEditor().getClass() + ".setText(" + text + ")", retry);
                     // as reported by Peter this might fail in PlainView - putting in debugging for that case
-                    Logger.getLogger("genj.util.swing").log(Level.WARNING, "Couldn't call " + getTextEditor().getClass() + ".setText(" + text + ") - giving up", t);
+                    Logger.getLogger("ancestris.util.swing").log(Level.WARNING, "Couldn't call " + getTextEditor().getClass() + ".setText(" + text + ") - giving up", t);
                     //  java.lang.NullPointerException
                     //  at javax.swing.text.PlainView.getLineWidth(PlainView.java:631)
                     //  at javax.swing.text.PlainView.updateDamage(PlainView.java:534)

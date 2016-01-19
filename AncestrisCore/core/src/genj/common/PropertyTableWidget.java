@@ -69,7 +69,7 @@ import javax.swing.table.TableModel;
  */
 public class PropertyTableWidget extends JPanel {
 
-    private final static Logger LOG = Logger.getLogger("genj.common");
+    private final static Logger LOG = Logger.getLogger("ancestris.common");
     private Table table;
     private boolean ignoreSelection = false;
     private int visibleRowCount = -1;

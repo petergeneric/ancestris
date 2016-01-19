@@ -49,7 +49,7 @@ import javax.swing.JFileChooser;
  */
 public class FileAssociation {
 
-    private static Logger LOG = Logger.getLogger("genj.io");
+    private static Logger LOG = Logger.getLogger("ancestris.io");
     /** instances */
     private static List<FileAssociation> associations = new LinkedList<FileAssociation>();
     /** suffix */

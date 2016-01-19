@@ -67,7 +67,7 @@ public class BlueprintManager {
    { "REPO", "default", "complete" }
   };
 
-  /*package*/ final static Logger LOG = Logger.getLogger("genj.renderer");
+  /*package*/ final static Logger LOG = Logger.getLogger("ancestris.renderer");
 
   /** blueprints per entity */
   private Map<String, List<Blueprint>> tag2blueprints = new HashMap<String, List<Blueprint>>();

@@ -44,7 +44,7 @@ import java.util.regex.Pattern;
  */
 public class EnvironmentChecker {
   
-  private static Logger LOG = Logger.getLogger("genj.util");
+  private static Logger LOG = Logger.getLogger("ancestris.util");
 
   private final static String[] SYSTEM_PROPERTIES = {
         "java.vendor", "java.vendor.url",

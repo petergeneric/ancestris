@@ -100,7 +100,7 @@ public class ScreenshotAction extends AbstractAncestrisAction {
     } catch (OutOfMemoryError oom) {
       long max = Runtime.getRuntime().maxMemory()/1024/1000;
       String msg = RES.getString("screenshot.oom", r.width*r.height*4/1024/1000, max, String.valueOf(max));
-      Logger.getLogger("genj.view").log(Level.WARNING, msg, oom);
+      Logger.getLogger("ancestris.view").log(Level.WARNING, msg, oom);
       DialogManager.createError(getTip(), msg).show();
     }
     

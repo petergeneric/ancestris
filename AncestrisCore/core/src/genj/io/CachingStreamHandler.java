@@ -39,7 +39,7 @@ public class CachingStreamHandler extends URLStreamHandler {
   
   private final static long EXPIRE_MILLIS = 24*60*60*1000;
   
-  private final static Logger LOG = Logger.getLogger("genj.io");
+  private final static Logger LOG = Logger.getLogger("ancestris.io");
   private File cache;
   
   /**

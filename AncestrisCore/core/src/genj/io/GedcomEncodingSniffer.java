@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  */
 public class GedcomEncodingSniffer extends BufferedInputStream {
 
-    private final static Logger LOG = Logger.getLogger("genj.io");
+    private final static Logger LOG = Logger.getLogger("ancestris.io");
     static final byte[] BOM_UTF8 = {(byte) 0xEF, (byte) 0xBB, (byte) 0xBF}, BOM_UTF16BE = {(byte) 0xFE, (byte) 0xFF}, BOM_UTF16LE = {(byte) 0xFF, (byte) 0xFE};
     private boolean deterministic = true;
     private String encoding;

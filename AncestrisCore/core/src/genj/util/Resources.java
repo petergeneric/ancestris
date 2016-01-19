@@ -24,7 +24,7 @@ import org.openide.util.NbBundle;
  */
 public class Resources {
 
-    private static final Logger LOG = Logger.getLogger("genj.util");
+    private static final Logger LOG = Logger.getLogger("ancestris.util");
     /** bundle objet to delegate if not a report resource */
     private ResourceBundle bundle = null;
     private String description = "";
