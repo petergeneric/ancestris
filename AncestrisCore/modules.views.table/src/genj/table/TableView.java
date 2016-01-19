@@ -63,7 +63,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
  */
 public class TableView extends View {
 
-    private final static Logger LOG = Logger.getLogger("genj.table");
+    private final static Logger LOG = Logger.getLogger("ancestris.table");
     private final static Registry REGISTRY = Registry.get(TableView.class);
     /** a static set of resources */
     private final Resources resources = Resources.get(this);
