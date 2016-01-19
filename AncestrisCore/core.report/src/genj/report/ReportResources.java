@@ -53,7 +53,7 @@ import org.openide.util.NbBundle;
  * </il>
  */
 public class ReportResources extends Resources{
-    private static final Logger LOG = Logger.getLogger("genj.util");
+    private static final Logger LOG = Logger.getLogger("ancestris.util");
   
   /** keep track of loaded resources */
   private static Map<String, ReportResources> instances = new HashMap<String, ReportResources>();
@@ -93,7 +93,7 @@ public class ReportResources extends Resources{
       keys = new ArrayList<String>(1000);
       load(in);
     } catch (IOException e) {
-      Logger.getLogger("genj.util").log(Level.FINE, "can't read resources", e);
+      Logger.getLogger("ancestris.util").log(Level.FINE, "can't read resources", e);
       key2string = null;
       keys = null;
     }

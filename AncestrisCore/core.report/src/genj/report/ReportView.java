@@ -57,7 +57,7 @@ import spin.Spin;
 public class ReportView extends View {
 
     /* package */
-    static final Logger LOG = Logger.getLogger("genj.report");
+    static final Logger LOG = Logger.getLogger("ancestris.report");
     /** statics */
     private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
             imgStop = new ImageIcon(ReportView.class, "Stop");
@@ -346,7 +346,7 @@ public class ReportView extends View {
                     try {
                         Desktop.getDesktop().open(file);
                     } catch (Throwable t) {
-                        Logger.getLogger("genj.report").log(Level.INFO, "can't open " + file, t);
+                        Logger.getLogger("ancestris.report").log(Level.INFO, "can't open " + file, t);
                         output.add("*** can't open file " + file);
                     }
                     return;
