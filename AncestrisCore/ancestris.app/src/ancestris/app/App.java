@@ -61,7 +61,7 @@ public class App {
                 // patch up Ancestris for Mac if applicable (has to be in the main thread)
                 // see http://stackoverflow.com/questions/307024/native-swing-menu-bar-support-for-macos-x-in-java
                 if (EnvironmentChecker.isMac()) {
-                    LOG.info("Setting up MacOs adjustments");
+                    //LOG.info("Setting up MacOs adjustments");
                     System.setProperty("apple.laf.useScreenMenuBar", "true");
                     System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");
                     
