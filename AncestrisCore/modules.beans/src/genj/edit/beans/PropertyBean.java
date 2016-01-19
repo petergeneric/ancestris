@@ -62,7 +62,7 @@ import javax.swing.event.ChangeListener;
 public abstract class PropertyBean extends JPanel {
 
     protected final static Resources RESOURCES = Resources.get(PropertyBean.class);
-    protected final static Logger LOG = Logger.getLogger("genj.edit.beans");
+    protected final static Logger LOG = Logger.getLogger("ancestris.edit.beans");
     protected final static Registry REGISTRY = Registry.get(PropertyBean.class);
     private final static Class<?>[] PROPERTY2BEANTYPE = { // TODO beans could be resolved dynamically to allow plugin overrides
         Entity.class, EntityBean.class,
