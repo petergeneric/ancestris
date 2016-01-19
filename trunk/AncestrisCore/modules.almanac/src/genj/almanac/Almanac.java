@@ -57,7 +57,7 @@ import org.openide.util.Exceptions;
  */
 public class Almanac {
 
-    private final static Logger LOG = Logger.getLogger("genj.almanac");
+    private final static Logger LOG = Logger.getLogger("ancestris.almanac");
     private final static Resources RESOURCES = Resources.get(Almanac.class);
     /** language we use for events */
     private final static String LANG = Locale.getDefault().getLanguage();
