@@ -78,10 +78,12 @@ public class App {
                     int i = 0;
                     for (Menu menu : menus) {
                         LOG.info("***DEBUG*** menu(" + i + ") = getText:" + menu.getText() + " - toString:" + menu.toString());
+                        i++;
                         ObservableList<MenuItem> items = menu.getItems();
                         int j = 0;
                         for (MenuItem item : items) {
                             LOG.info("***DEBUG***      item(" + j + ") = getText:" + item.getText() + " - toString:" + item.toString());
+                            j++;
                         }
                     }
                 }
