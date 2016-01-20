@@ -25,12 +25,17 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javafx.collections.ObservableList;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
+import javafx.scene.control.MenuItem;
 import javax.swing.SwingUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -67,6 +72,18 @@ public class App {
                     LOG.info("Setting up MacOs adjustments");
                     System.setProperty("apple.laf.useScreenMenuBar", "true");
                     System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");
+                    MenuBar menuBar = new MenuBar();
+                    menuBar.useSystemMenuBarProperty().set(true);
+                    ObservableList<Menu> menus = menuBar.getMenus();
+                    int i = 0;
+                    for (Menu menu : menus) {
+                        LOG.info("***DEBUG*** menu(" + i + ") = getText:" + menu.getText() + " - toString:" + menu.toString());
+                        ObservableList<MenuItem> items = menu.getItems();
+                        int j = 0;
+                        for (MenuItem item : items) {
+                            LOG.info("***DEBUG***      item(" + j + ") = getText:" + item.getText() + " - toString:" + item.toString());
+                        }
+                    }
                 }
 
                 // run startup
