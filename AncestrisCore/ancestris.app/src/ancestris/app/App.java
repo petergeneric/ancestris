@@ -178,8 +178,7 @@ public class App {
                 // setup control center
                 center = new ControlCenter();
                 
-                // Patch up Ancestris for Mac if applicable (has to be in the main thread)
-                // see http://stackoverflow.com/questions/307024/native-swing-menu-bar-support-for-macos-x-in-java
+                // Patch up Ancestris for Mac if applicable
                 if (EnvironmentChecker.isMac()) {
                     LOG.info("Setting up MacOs adjustments");
                     new JFXPanel();
