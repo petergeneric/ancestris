@@ -69,7 +69,16 @@ public class EnvironmentChecker {
    * Check for Mac
    */
   public static boolean isMac() {
-    return getProperty("mrj.version", null, "isMac()")!=null;
+    //return getProperty("mrj.version", null, "isMac()")!=null;     
+    // FL : 2016-01-21 : obsolete
+    // Another System property provided by Apple, mrj.version, can be used to a similar end. 
+    // However, it is a legacy system property dating back to the Classic Mac OS, 
+    // and is not guaranteed to have a deterministic format through future releases. 
+    // Furthermore, Apple is trying to stay as close to the standard Java functionality as possible. 
+    // For these reasons, we recommend that you instead use the more standard os.name 
+    // and java.runtime.version properties for Macintosh identification in all ongoing 
+    // Java development, as outlined in this Technical Note.
+    return getProperty("os.name", "", "isMac()").toLowerCase().indexOf("mac")>-1;
   }
   
   /**
