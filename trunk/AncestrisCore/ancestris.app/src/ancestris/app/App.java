@@ -25,7 +25,6 @@ import java.io.StringWriter;
 import java.text.MessageFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -45,7 +44,7 @@ import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Main Class for GenJ Application
+ * Main Class for Ancestris Application
  */
 public class App {
 
@@ -56,7 +55,7 @@ public class App {
     public static ControlCenter center;
 
     /**
-     * GenJ Main Method
+     * Ancestris Main Method
      */
     public static void main(final String[] args) {
 
@@ -178,7 +177,7 @@ public class App {
                 // setup control center
                 center = new ControlCenter();
                 
-                // Patch up Ancestris for Mac if applicable
+                // Patch up Ancestris menu for Mac if applicable
                 if (EnvironmentChecker.isMac()) {
                     LOG.info("Setting up MacOs adjustments");
                     new JFXPanel();
@@ -223,7 +222,7 @@ public class App {
         Level level = Level.INFO;
 
         try {
-            // allow command line override of debug level - set non-genj level a tad higher
+            // allow command line override of debug level - set non-ancestris level a tad higher
             level = Level.parse(logLevel);
         } catch (IllegalArgumentException t) {
         }
