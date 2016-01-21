@@ -37,7 +37,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
- * The central component of the GenJ application
+ * The central component of the Ancestris application
  */
 // XXX: this entire class must be at least redesigned or removed
 public class ControlCenter {
