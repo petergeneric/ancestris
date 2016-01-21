@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javafx.collections.ObservableList;
+import javafx.embed.swing.JFXPanel;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -63,31 +64,13 @@ public class App {
         synchronized (App.class) {
             if (startup == null) {
 
-                // prepare our master log and own LogManager for Ancestris
-                LOG = Logger.getLogger("ancestris");
-
-                // patch up Ancestris for Mac if applicable (has to be in the main thread)
+                // Patch up Ancestris for Mac if applicable (has to be in the main thread)
                 // see http://stackoverflow.com/questions/307024/native-swing-menu-bar-support-for-macos-x-in-java
                 if (EnvironmentChecker.isMac()) {
-                    LOG.info("Setting up MacOs adjustments");
                     System.setProperty("apple.laf.useScreenMenuBar", "true");
                     System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");
-                    MenuBar menuBar = new MenuBar();
-                    menuBar.useSystemMenuBarProperty().set(true);
-                    ObservableList<Menu> menus = menuBar.getMenus();
-                    int i = 0;
-                    for (Menu menu : menus) {
-                        LOG.info("***DEBUG*** menu(" + i + ") = getText:" + menu.getText() + " - toString:" + menu.toString());
-                        i++;
-                        ObservableList<MenuItem> items = menu.getItems();
-                        int j = 0;
-                        for (MenuItem item : items) {
-                            LOG.info("***DEBUG***      item(" + j + ") = getText:" + item.getText() + " - toString:" + item.toString());
-                            j++;
-                        }
-                    }
                 }
-
+                    
                 // run startup
                 startup = new Startup();
                 SwingUtilities.invokeLater(startup);
@@ -146,6 +129,9 @@ public class App {
             // Catch anything that might happen
             try {
 
+                // prepare our master log and own LogManager for Ancestris
+                LOG = Logger.getLogger("ancestris");
+
                 // create our home directory
                 File home = new File(EnvironmentChecker.getProperty("user.home.ancestris", null, "determining home directory"));
                 home.mkdirs();
@@ -191,6 +177,29 @@ public class App {
                 //TODO: demander une version >1.6 dans NB
                 // setup control center
                 center = new ControlCenter();
+                
+                // Patch up Ancestris for Mac if applicable (has to be in the main thread)
+                // see http://stackoverflow.com/questions/307024/native-swing-menu-bar-support-for-macos-x-in-java
+                if (EnvironmentChecker.isMac()) {
+                    LOG.info("Setting up MacOs adjustments");
+                    new JFXPanel();
+                    MenuBar menuBar = new MenuBar();
+                    menuBar.useSystemMenuBarProperty().set(true);
+                    ObservableList<Menu> menus = menuBar.getMenus();
+                    LOG.info("***DEBUG*** menu size =" + menus.size());
+                    int i = 0;
+                    for (Menu menu : menus) {
+                        LOG.info("***DEBUG*** menu(" + i + ") = getText:" + menu.getText() + " - toString:" + menu.toString());
+                        i++;
+                        ObservableList<MenuItem> items = menu.getItems();
+                        int j = 0;
+                        for (MenuItem item : items) {
+                            LOG.info("***DEBUG***      item(" + j + ") = getText:" + item.getText() + " - toString:" + item.toString());
+                            j++;
+                        }
+                    }
+                }
+                
 
                 // done
                 LOG.info("/Startup");
