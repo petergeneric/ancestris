@@ -168,16 +168,12 @@ public class App {
                 }
 
                 // Startup Information
-                LOG.info("version = " + Lookup.getDefault().lookup(Version.class).getBuildString());
-                LOG.info("date = " + new Date());
+                LOG.info("Version = " + Lookup.getDefault().lookup(Version.class).getBuildString());
+                LOG.info("Date = " + new Date());
                 EnvironmentChecker.log();
 
-                // check VM version
-                //TODO: demander une version >1.6 dans NB
-                // setup control center
-                center = new ControlCenter();
-                
                 // Patch up Ancestris menu for Mac if applicable
+                LOG.info("Controlling OS...");
                 if (EnvironmentChecker.isMac()) {
                     LOG.info("Setting up MacOs adjustments");
                     new JFXPanel();
@@ -199,8 +195,15 @@ public class App {
                 }
                 
 
+                // check VM version
+                //TODO: demander une version >1.6 dans NB
+                // setup control center
+                LOG.info("Launching control center...");
+                center = new ControlCenter();
+                
                 // done
                 LOG.info("/Startup");
+                LOG.info("   ");
 
             } catch (Throwable t) {
                 LOG.log(Level.SEVERE, "Cannot instantiate App", t);
