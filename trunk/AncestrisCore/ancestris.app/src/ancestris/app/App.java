@@ -13,6 +13,7 @@ package ancestris.app;
 
 import ancestris.api.core.Version;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.util.MacMenu;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
@@ -176,22 +177,8 @@ public class App {
                 LOG.info("Controlling OS...");
                 if (EnvironmentChecker.isMac()) {
                     LOG.info("Setting up MacOs adjustments");
-                    new JFXPanel();
-                    MenuBar menuBar = new MenuBar();
-                    menuBar.useSystemMenuBarProperty().set(true);
-                    ObservableList<Menu> menus = menuBar.getMenus();
-                    LOG.info("***DEBUG*** menu size =" + menus.size());
-                    int i = 0;
-                    for (Menu menu : menus) {
-                        LOG.info("***DEBUG*** menu(" + i + ") = getText:" + menu.getText() + " - toString:" + menu.toString());
-                        i++;
-                        ObservableList<MenuItem> items = menu.getItems();
-                        int j = 0;
-                        for (MenuItem item : items) {
-                            LOG.info("***DEBUG***      item(" + j + ") = getText:" + item.getText() + " - toString:" + item.toString());
-                            j++;
-                        }
-                    }
+                    MacMenu macMenu = new MacMenu();
+                    macMenu.setUp();
                 }
                 
 
@@ -206,7 +193,7 @@ public class App {
                 LOG.info("   ");
 
             } catch (Throwable t) {
-                LOG.log(Level.SEVERE, "Cannot instantiate App", t);
+                LOG.log(Level.SEVERE, "Cannot instantiate the Ancestris application", t);
                 System.exit(1);
                 return;
             }
