@@ -7,10 +7,11 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "Advanced",
-displayName = "#AdvancedOption_DisplayName_ConsoleOptions",
-keywords = "#AdvancedOption_Keywords_ConsoleOptions",
-keywordsCategory = "Extensions/ConsoleOptions")
+// FL : 2016-01-23 - de-activate until usage bu useer can be found, accessible and documented
+//@OptionsPanelController.SubRegistration(location = "Advanced",
+//displayName = "#AdvancedOption_DisplayName_ConsoleOptions",
+//keywords = "#AdvancedOption_Keywords_ConsoleOptions",
+//keywordsCategory = "Extensions/ConsoleOptions")
 public final class ConsoleOptionsPanelController extends OptionsPanelController {
 
     private ConsoleOptionsPanel panel;
