@@ -12,7 +12,7 @@
 package ancestris.app;
 
 import ancestris.api.newgedcom.ModifyGedcom;
-import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.view.Images;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
@@ -34,7 +34,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_ActionProperties"
 )
 @ActionReference(path = "Menu/File", position = 2050)
-public final class ActionProperties extends AbstractAncestrisAction implements ActionListener {
+public final class ActionProperties extends AbstractAncestrisContextAction implements ActionListener {
 
     /** gedcom */
     private Context contextBeingModified = null;
@@ -53,6 +53,13 @@ public final class ActionProperties extends AbstractAncestrisAction implements A
     }
 
 
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    
     
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -68,5 +75,9 @@ public final class ActionProperties extends AbstractAncestrisAction implements A
                 return;
             }
         }
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
     }
 }

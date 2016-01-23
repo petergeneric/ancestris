@@ -8,7 +8,7 @@ package ancestris.app;
 import ancestris.gedcom.GedcomDirectory;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
@@ -17,7 +17,7 @@ import org.openide.util.Utilities;
   /**
    * Action - Save
    */
-  public class ActionSaveAs extends AbstractAncestrisAction {
+  public class ActionSaveAs extends AbstractAncestrisContextAction {
     /** gedcom */
     protected Gedcom gedcomBeingSaved;
 
@@ -34,6 +34,16 @@ import org.openide.util.Utilities;
     @Override
     public void actionPerformed(ActionEvent e) {
         GedcomDirectory.getDefault().saveAsGedcom(Utilities.actionsGlobalContext().lookup(Context.class));
+    }
+
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
     }
 
   } // ActionSave
