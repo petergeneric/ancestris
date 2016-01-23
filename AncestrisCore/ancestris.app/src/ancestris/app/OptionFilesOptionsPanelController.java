@@ -30,6 +30,8 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
     public void applyChanges() {
         getPanel().store();
         App.setLogLevel(getPanel().getLogLevel());
+        ActionOpenDefault action = Lookup.getDefault().lookup(ActionOpenDefault.class);
+        action.getName();
         changed = false;
     }
 
