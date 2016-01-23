@@ -85,6 +85,7 @@ public class EnvironmentChecker {
     int i = str2.indexOf("mac");
     System.out.println("*** DEBUG *** - i = " + i);
     boolean isMac = str.toLowerCase().indexOf("mac")>-1;
+    System.out.println("*** DEBUG *** - return  = " + isMac);
     return isMac;
     //return getProperty("os.name", "", "isMac()").toLowerCase().indexOf("mac")>-1;
   }
