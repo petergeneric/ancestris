@@ -5,11 +5,8 @@
 package ancestris.app;
 
 import ancestris.gedcom.GedcomDirectory;
-import java.io.File;
 import java.net.URL;
 import javax.swing.JMenuItem;
-import org.netbeans.api.actions.Openable;
-import org.openide.awt.StatusDisplayer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.filesystems.URLMapper;
@@ -54,9 +51,9 @@ public final class ActionOpenDefault extends CookieAction {//implements Openable
     @Override
     public String getName() {
         String name = getDefaultFile(true);
+        setEnabled((name != null && !name.isEmpty()));
         String str = "";
-        str = (name == null || name.isEmpty()) ? 
-            NbBundle.getMessage(ActionOpenDefault.class, "ActionOpenDefault.NoFile") : name;
+        str = (name == null || name.isEmpty()) ? NbBundle.getMessage(ActionOpenDefault.class, "ActionOpenDefault.NoFile") : name;
         return NbBundle.getMessage(ActionOpenDefault.class, "CTL_ActionOpenDefault") + " " + str;
     }
 
