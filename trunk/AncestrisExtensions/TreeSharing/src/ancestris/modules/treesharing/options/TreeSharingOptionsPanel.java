@@ -17,8 +17,6 @@ import ancestris.modules.treesharing.panels.TechInfoPanel;
 import ancestris.util.swing.DialogManager;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FileDialog;
-import java.awt.Frame;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -627,15 +625,15 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
     
     public static int getMatchType() {
-        int ret = EXACT_MATCH;
+        int ret = LOOSE_MATCH;
         String str = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", "");
         try {
             ret = Integer.valueOf(str);
             if (ret < EXACT_MATCH || ret > MAX_MATCH) {
-                ret = EXACT_MATCH;
+                ret = LOOSE_MATCH;
             }
         } catch (Exception e) {
-            ret = EXACT_MATCH;
+            ret = LOOSE_MATCH;
         }
         return ret;
     }
