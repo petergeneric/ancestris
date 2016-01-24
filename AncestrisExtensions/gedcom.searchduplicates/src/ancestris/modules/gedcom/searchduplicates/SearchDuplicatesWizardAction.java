@@ -1,12 +1,12 @@
 package ancestris.modules.gedcom.searchduplicates;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.CTL_CheckDuplicatesAction;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicates_runing;
 import ancestris.modules.gedcom.utilities.matchers.MatcherOptions;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.TreeMap;
@@ -22,23 +22,36 @@ import org.openide.awt.ActionRegistration;
 import org.openide.util.*;
 
 @ActionID(id = "ancestris.modules.gedcom.checkduplicates.CheckDuplicatesWizardAction", category = "Tools")
-@ActionRegistration(iconInMenu = true,
-displayName = "#CTL_CheckDuplicatesAction",
-iconBase = "ancestris/modules/gedcom/searchduplicates/CheckDuplicateIcon.png")
-@ActionReference(path = "Menu/Tools/Gedcom")
+@ActionRegistration(
+        displayName = "#CTL_CheckDuplicatesAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "SearchDuplicatesWizardAction", position = 400)
 @NbBundle.Messages({"CTL_CheckDuplicatesAction=Search Duplicate",
     "CheckDuplicates.runing=Searching duplicates"})
-public final class SearchDuplicatesWizardAction implements ActionListener {
+public final class SearchDuplicatesWizardAction extends AbstractAncestrisContextAction {
 
     private static final Logger log = Logger.getLogger(SearchDuplicatesPlugin.class.getName());
     private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
     private RequestProcessor.Task theTask = null;
 
+    public SearchDuplicatesWizardAction() {
+        super();
+        setImage("ancestris/modules/gedcom/searchduplicates/CheckDuplicateIcon.png");
+        setText(NbBundle.getMessage(SearchDuplicatesWizardAction.class, "CTL_CheckDuplicatesAction"));
+    }
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Context context;
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
+
+        if (contextToOpen != null) {
             SearchDuplicatesWizardIterator searchDuplicatesWizardIterator = new SearchDuplicatesWizardIterator();
             WizardDescriptor wizardDescriptor = new WizardDescriptor(searchDuplicatesWizardIterator);
             searchDuplicatesWizardIterator.initialize(wizardDescriptor);
@@ -49,7 +62,7 @@ public final class SearchDuplicatesWizardAction implements ActionListener {
             if (DialogDisplayer.getDefault().notify(wizardDescriptor) == WizardDescriptor.FINISH_OPTION) {
 
                 TreeMap<String, MatcherOptions> selectedOptions = new TreeMap();
-                Gedcom myGedcom = context.getGedcom();
+                Gedcom myGedcom = contextToOpen.getGedcom();
                 List<String> entities2Ckeck = (List<String>) wizardDescriptor.getProperty("selectedEntities");
                 selectedOptions.put(Gedcom.INDI, ((MatcherOptions) wizardDescriptor.getProperty("individualSelectedOptions")));
                 selectedOptions.put(Gedcom.FAM, ((MatcherOptions) wizardDescriptor.getProperty("familySelectedOptions")));
