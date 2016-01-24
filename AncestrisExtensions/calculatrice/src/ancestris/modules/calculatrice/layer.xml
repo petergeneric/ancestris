@@ -15,7 +15,7 @@
         <folder name="Tools">
             <file name="CalcAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-calculatrice-CalcAction.instance"/>
-                <attr name="position" intvalue="80"/>
+                <attr name="position" intvalue="10"/>
             </file>
         </folder>
     </folder>
