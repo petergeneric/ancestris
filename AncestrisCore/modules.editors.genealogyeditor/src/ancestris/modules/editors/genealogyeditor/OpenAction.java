@@ -25,7 +25,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_EditorGenealogyAction",
         iconInMenu = false,
         lazy = false)
-@ActionReference(path = "Menu/View", name = "AncestrisEditorGenealogyAction", position = -505)
+@ActionReference(path = "Menu/View", name = "AncestrisEditorGenealogyAction", position = -490)
 public final class OpenAction extends AbstractAncestrisContextAction {
 
     public OpenAction() {

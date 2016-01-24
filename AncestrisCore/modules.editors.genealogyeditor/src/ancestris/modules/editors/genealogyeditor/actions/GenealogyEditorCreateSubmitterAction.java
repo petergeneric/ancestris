@@ -18,7 +18,7 @@ import org.openide.util.Utilities;
 @ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/submitter_add.png",
         displayName = "#CTL_GenealogyEditorCreateSubmitterAction")
 @ActionReferences({
-    @ActionReference(path = "Toolbars/GenealogyEditor", position = 600)
+    @ActionReference(path = "Toolbars/GenealogyEditor", position = 700)
 })
 @Messages("CTL_GenealogyEditorCreateSubmitterAction=Create a new submitter")
 public final class GenealogyEditorCreateSubmitterAction implements ActionListener {
