@@ -1,0 +1,1594 @@
+#
+# A fatal error has been detected by the Java Runtime Environment:
+#
+#  SIGBUS (0x7) at pc=0x00000036ef745e36, pid=6803, tid=140691645150976
+#
+# JRE version: Java(TM) SE Runtime Environment (8.0_31-b13) (build 1.8.0_31-b13)
+# Java VM: Java HotSpot(TM) 64-Bit Server VM (25.31-b07 mixed mode linux-amd64 compressed oops)
+# Problematic frame:
+# C  [libc.so.6+0x145e36]
+#
+# Failed to write core dump. Core dumps have been disabled. To enable core dumping, try "ulimit -c unlimited" before starting Java again
+#
+# If you would like to submit a bug report, please visit:
+#   http://bugreport.java.com/bugreport/crash.jsp
+# The crash happened outside the Java Virtual Machine in native code.
+# See problematic frame for where to report the bug.
+#
+
+---------------  T H R E A D  ---------------
+
+Current thread (0x00007ff558123800):  JavaThread "AWT-EventQueue-0" [_thread_in_native, id=6829, stack(0x00007ff553783000,0x00007ff553884000)]
+
+siginfo: si_signo: 7 (SIGBUS), si_code: 2 (BUS_ADRERR), si_addr: 0x00007ff552eb6000
+
+Registers:
+RAX=0x00007ff5380b3000, RBX=0x0000000000006e45, RCX=0x0000000000005616, RDX=0x0000000000006e45
+RSP=0x00007ff55387ec48, RBP=0x00007ff55387eca0, RSI=0x00007ff552eb6000, RDI=0x00007ff5380b482f
+R8 =0x0000000000000000, R9 =0x00007ff5380000f8, R10=0x0000000000006e51, R11=0x0000000000000006
+R12=0x00007ff552eb47a3, R13=0x00007ff538424f30, R14=0x0000000000006974, R15=0x00007ff5587186b0
+RIP=0x00000036ef745e36, EFLAGS=0x0000000000010283, CSGSFS=0x0000000000000033, ERR=0x0000000000000004
+  TRAPNO=0x000000000000000e
+
+Top of Stack: (sp=0x00007ff55387ec48)
+0x00007ff55387ec48:   00007ff5b4a25954 00007ff55387ecf0
+0x00007ff55387ec58:   797474f500000000 0000000000006e45
+0x00007ff55387ec68:   00000000646f4e65 00007ff538424f30
+0x00007ff55387ec78:   00007ff558750610 00007ff538404bb0
+0x00007ff55387ec88:   00007ff5587186b0 0000000077fa45dd
+0x00007ff55387ec98:   000000000000001d 00007ff55387ed00
+0x00007ff55387eca8:   00007ff5b4a25f2f 00007ff558123800
+0x00007ff55387ecb8:   01007ff558123800 00007ff55387ed20
+0x00007ff55387ecc8:   00007ff55387ed3e 00007ff55387ed3c
+0x00007ff55387ecd8:   00007ff55387ed20 000000000000001d
+0x00007ff55387ece8:   00007ff5581239e8 00007ff55387f178
+0x00007ff55387ecf8:   0000000000000001 00007ff55387f160
+0x00007ff55387ed08:   00007ff5b4a17d30 000000000000001c
+0x00007ff55387ed18:   00007ff5587186b0 6972747365636e61
+0x00007ff55387ed28:   65532f7070612f73 2e65726f6870616d
+0x00007ff55387ed38:   0000007373616c63 00007f0000000009
+0x00007ff55387ed48:   0000000000000003 00007ff55811d640
+0x00007ff55387ed58:   00007ff56c000c20 00007ff56c000c30
+0x00007ff55387ed68:   00007ff56c001008 00000000000003d8
+0x00007ff55387ed78:   0000000000000013 00007ff5bd3eb7b0
+0x00007ff55387ed88:   0000000000000017 0000000000000000
+0x00007ff55387ed98:   0000000000000000 00007ff558123800
+0x00007ff55387eda8:   00007ff558123800 00000000c9894e48
+0x00007ff55387edb8:   00000000c8196a70 00007ff5581239e8
+0x00007ff55387edc8:   0000000000000003 00000000f688d3d0
+0x00007ff55387edd8:   00000000c86354b0 00000000f688d198
+0x00007ff55387ede8:   00000000f688d3a0 00000000f688d2c0
+0x00007ff55387edf8:   00000000c8611ad8 00000000f688b018
+0x00007ff55387ee08:   00000000c9e48f20 0000000000000031
+0x00007ff55387ee18:   00000000f688d2c0 000000000000001c
+0x00007ff55387ee28:   00007ff599a98acc 00000000f688d1c8
+0x00007ff55387ee38:   00000001001f1bb0 00000000c8479370 
+
+Instructions: (pc=0x00000036ef745e36)
+0x00000036ef745e16:   c0 c3 0f 1f 84 00 00 00 00 00 48 8b 0d 11 14 27
+0x00000036ef745e26:   00 48 c1 e1 03 48 39 ca 73 10 48 89 d1 48 89 d1
+0x00000036ef745e36:   f3 a4 c3 0f 1f 80 00 00 00 00 48 8d 0c 16 c5 fe
+0x00000036ef745e46:   6f 26 c5 fa 6f 6c 16 80 c5 fa 6f 71 90 c5 fa 6f 
+
+Register to memory mapping:
+
+RAX=0x00007ff5380b3000 is an unknown value
+RBX=0x0000000000006e45 is an unknown value
+RCX=0x0000000000005616 is an unknown value
+RDX=0x0000000000006e45 is an unknown value
+RSP=0x00007ff55387ec48 is pointing into the stack for thread: 0x00007ff558123800
+RBP=0x00007ff55387eca0 is pointing into the stack for thread: 0x00007ff558123800
+RSI=0x00007ff552eb6000 is an unknown value
+RDI=0x00007ff5380b482f is an unknown value
+R8 =0x0000000000000000 is an unknown value
+R9 =0x00007ff5380000f8 is an unknown value
+R10=0x0000000000006e51 is an unknown value
+R11=0x0000000000000006 is an unknown value
+R12=0x00007ff552eb47a3 is an unknown value
+R13=0x00007ff538424f30 is an unknown value
+R14=0x0000000000006974 is an unknown value
+R15=0x00007ff5587186b0 is an unknown value
+
+
+Stack: [0x00007ff553783000,0x00007ff553884000],  sp=0x00007ff55387ec48,  free space=1007k
+Native frames: (J=compiled Java code, j=interpreted, Vv=VM code, C=native code)
+C  [libc.so.6+0x145e36]
+C  [libzip.so+0x11f2f]  ZIP_GetEntry2+0xff
+C  [libzip.so+0x3d30]  Java_java_util_zip_ZipFile_getEntry+0xf0
+J 298  java.util.zip.ZipFile.getEntry(J[BZ)J (0 bytes) @ 0x00007ff5991a918e [0x00007ff5991a90c0+0xce]
+J 3163 C2 java.util.jar.JarFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry; (22 bytes) @ 0x00007ff5992d9b98 [0x00007ff5992d9860+0x338]
+
+Java frames: (J=compiled Java code, j=interpreted, Vv=VM code)
+J 298  java.util.zip.ZipFile.getEntry(J[BZ)J (0 bytes) @ 0x00007ff5991a9118 [0x00007ff5991a90c0+0x58]
+J 3163 C2 java.util.jar.JarFile.getEntry(Ljava/lang/String;)Ljava/util/zip/ZipEntry; (22 bytes) @ 0x00007ff5992d9b98 [0x00007ff5992d9860+0x338]
+J 3402 C2 org.netbeans.JarClassLoader$JarSource.resource(Ljava/lang/String;)[B (215 bytes) @ 0x00007ff599957fe8 [0x00007ff599957b20+0x4c8]
+J 3400 C2 org.netbeans.Archive.getData(Lorg/netbeans/ArchiveResources;Ljava/lang/String;)[B (225 bytes) @ 0x00007ff5999eeb40 [0x00007ff5999ecd60+0x1de0]
+J 1737 C1 org.netbeans.JarClassLoader$JarSource.readClass(Ljava/lang/String;)[B (20 bytes) @ 0x00007ff599661e8c [0x00007ff599661de0+0xac]
+J 1736 C1 org.netbeans.JarClassLoader$Source.getClassData(Ljava/lang/String;)[B (38 bytes) @ 0x00007ff599664b0c [0x00007ff599664a00+0x10c]
+J 4892 C1 org.netbeans.JarClassLoader.doLoadClass(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Class; (336 bytes) @ 0x00007ff599a4b4f4 [0x00007ff599a4b260+0x294]
+J 5497 C2 org.netbeans.ProxyClassLoader.loadClass(Ljava/lang/String;Z)Ljava/lang/Class; (612 bytes) @ 0x00007ff59a092f90 [0x00007ff59a091540+0x1a50]
+J 4604 C2 java.lang.ClassLoader.loadClass(Ljava/lang/String;)Ljava/lang/Class; (7 bytes) @ 0x00007ff599c0f460 [0x00007ff599c0f420+0x40]
+v  ~StubRoutines::call_stub
+j  ancestris.app.MyLifecycleManager.exit()V+0
+j  org.netbeans.core.windows.view.ui.MainWindow$9.windowClosing(Ljava/awt/event/WindowEvent;)V+3
+j  java.awt.AWTEventMulticaster.windowClosing(Ljava/awt/event/WindowEvent;)V+8
+j  java.awt.AWTEventMulticaster.windowClosing(Ljava/awt/event/WindowEvent;)V+8
+j  java.awt.AWTEventMulticaster.windowClosing(Ljava/awt/event/WindowEvent;)V+8
+j  java.awt.Window.processWindowEvent(Ljava/awt/event/WindowEvent;)V+68
+j  javax.swing.JFrame.processWindowEvent(Ljava/awt/event/WindowEvent;)V+2
+j  java.awt.Window.processEvent(Ljava/awt/AWTEvent;)V+69
+J 5307 C1 java.awt.Component.dispatchEventImpl(Ljava/awt/AWTEvent;)V (883 bytes) @ 0x00007ff599dc6cf4 [0x00007ff599dc1820+0x54d4]
+J 8867 C2 java.awt.Container.dispatchEventImpl(Ljava/awt/AWTEvent;)V (129 bytes) @ 0x00007ff59a7c6188 [0x00007ff59a7c5b80+0x608]
+J 7028 C1 java.awt.Window.dispatchEventImpl(Ljava/awt/AWTEvent;)V (23 bytes) @ 0x00007ff59a2ea6c4 [0x00007ff59a2ea0e0+0x5e4]
+J 6166 C1 java.awt.EventQueue.dispatchEventImpl(Ljava/awt/AWTEvent;Ljava/lang/Object;)V (149 bytes) @ 0x00007ff59a0788ac [0x00007ff59a077240+0x166c]
+J 6165 C1 java.awt.EventQueue$3.run()Ljava/lang/Void; (60 bytes) @ 0x00007ff59a076a44 [0x00007ff59a076840+0x204]
+J 7593 C1 java.awt.EventQueue$3.run()Ljava/lang/Object; (5 bytes) @ 0x00007ff5997e19cc [0x00007ff5997e1940+0x8c]
+v  ~StubRoutines::call_stub
+J 856  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object; (0 bytes) @ 0x00007ff599325de3 [0x00007ff599325d80+0x63]
+J 6293 C1 java.security.ProtectionDomain$1.doIntersectionPrivilege(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;Ljava/security/AccessControlContext;)Ljava/lang/Object; (32 bytes) @ 0x00007ff59a0da5bc [0x00007ff59a0da2c0+0x2fc]
+J 6627 C1 java.awt.EventQueue$4.run()Ljava/lang/Object; (5 bytes) @ 0x00007ff599939c14 [0x00007ff599939820+0x3f4]
+v  ~StubRoutines::call_stub
+J 856  java.security.AccessController.doPrivileged(Ljava/security/PrivilegedAction;Ljava/security/AccessControlContext;)Ljava/lang/Object; (0 bytes) @ 0x00007ff599325de3 [0x00007ff599325d80+0x63]
+J 7592 C1 java.awt.EventQueue.dispatchEvent(Ljava/awt/AWTEvent;)V (80 bytes) @ 0x00007ff599d472f4 [0x00007ff599d46640+0xcb4]
+J 6312 C1 org.netbeans.core.TimableEventQueue.dispatchEvent(Ljava/awt/AWTEvent;)V (43 bytes) @ 0x00007ff59a0eafc4 [0x00007ff59a0eaec0+0x104]
+J 7594 C1 java.awt.EventDispatchThread.pumpOneEventForFilters(I)V (295 bytes) @ 0x00007ff599acdf24 [0x00007ff599acc140+0x1de4]
+j  java.awt.EventDispatchThread.pumpEventsForFilter(ILjava/awt/Conditional;Ljava/awt/EventFilter;)V+35
+j  java.awt.EventDispatchThread.pumpEventsForHierarchy(ILjava/awt/Conditional;Ljava/awt/Component;)V+11
+j  java.awt.EventDispatchThread.pumpEvents(ILjava/awt/Conditional;)V+4
+j  java.awt.EventDispatchThread.pumpEvents(Ljava/awt/Conditional;)V+3
+j  java.awt.EventDispatchThread.run()V+9
+v  ~StubRoutines::call_stub
+
+---------------  P R O C E S S  ---------------
+
+Java Threads: ( => current thread )
+  0x00007ff5200ef800 JavaThread "Inactive RequestProcessor thread [Was:Refresh-After-WindowActivated/org.netbeans.core.ui.warmup.MenuWarmUpTask$NbWindowsAdapter]" daemon [_thread_blocked, id=7052, stack(0x00007ff5515e9000,0x00007ff5516ea000)]
+  0x00007ff5380ae000 JavaThread "Inactive RequestProcessor thread [Was:System clipboard synchronizer/org.netbeans.NbClipboard$GetContents]" daemon [_thread_blocked, id=7051, stack(0x00007ff553203000,0x00007ff553304000)]
+  0x00007ff538421800 JavaThread "RequestProcessor queue manager" daemon [_thread_blocked, id=7050, stack(0x00007ff59802e000,0x00007ff59812f000)]
+  0x00007ff5a88e1800 JavaThread "DestroyJavaVM" [_thread_blocked, id=6805, stack(0x00007ff5b5277000,0x00007ff5b5378000)]
+  0x00007ff558814000 JavaThread "TimerQueue" daemon [_thread_blocked, id=6840, stack(0x00007ff551be6000,0x00007ff551ce7000)]
+  0x00007ff55805c000 JavaThread "Thread-1" daemon [_thread_blocked, id=6839, stack(0x00007ff551ce7000,0x00007ff551de8000)]
+  0x00007ff53c1e1000 JavaThread "File Watcher" daemon [_thread_in_native, id=6832, stack(0x00007ff55298b000,0x00007ff552a8c000)]
+=>0x00007ff558123800 JavaThread "AWT-EventQueue-0" [_thread_in_native, id=6829, stack(0x00007ff553783000,0x00007ff553884000)]
+  0x00007ff558121800 JavaThread "AWT-Shutdown" [_thread_blocked, id=6828, stack(0x00007ff553884000,0x00007ff553985000)]
+  0x00007ff55811e000 JavaThread "AWT-XAWT" daemon [_thread_in_native, id=6827, stack(0x00007ff553985000,0x00007ff553a86000)]
+  0x00007ff5580fc000 JavaThread "Java2D Disposer" daemon [_thread_blocked, id=6826, stack(0x00007ff553a86000,0x00007ff553b87000)]
+  0x00007ff5a88b6800 JavaThread "CLI Requests Server" daemon [_thread_in_native, id=6822, stack(0x00007ff59885c000,0x00007ff59895d000)]
+  0x00007ff5a8897800 JavaThread "Active Reference Queue Daemon" daemon [_thread_blocked, id=6819, stack(0x00007ff59895d000,0x00007ff598a5e000)]
+  0x00007ff5a82a0000 JavaThread "Service Thread" daemon [_thread_blocked, id=6817, stack(0x00007ff5ac053000,0x00007ff5ac154000)]
+  0x00007ff5a8298800 JavaThread "C1 CompilerThread2" daemon [_thread_blocked, id=6816, stack(0x00007ff5ac154000,0x00007ff5ac255000)]
+  0x00007ff5a8296800 JavaThread "C2 CompilerThread1" daemon [_thread_blocked, id=6815, stack(0x00007ff5ac255000,0x00007ff5ac356000)]
+  0x00007ff5a8293800 JavaThread "C2 CompilerThread0" daemon [_thread_blocked, id=6814, stack(0x00007ff5ac356000,0x00007ff5ac457000)]
+  0x00007ff5a8291800 JavaThread "Signal Dispatcher" daemon [_thread_blocked, id=6813, stack(0x00007ff5ac457000,0x00007ff5ac558000)]
+  0x00007ff5a8265000 JavaThread "Finalizer" daemon [_thread_blocked, id=6812, stack(0x00007ff5ac558000,0x00007ff5ac659000)]
+  0x00007ff5a8263000 JavaThread "Reference Handler" daemon [_thread_blocked, id=6811, stack(0x00007ff5ac659000,0x00007ff5ac75a000)]
+
+Other Threads:
+  0x00007ff5a825d800 VMThread [stack: 0x00007ff5ac75a000,0x00007ff5ac85b000] [id=6810]
+  0x00007ff5a82a2800 WatcherThread [stack: 0x00007ff598eff000,0x00007ff599000000] [id=6818]
+
+VM state:not at safepoint (normal execution)
+
+VM Mutex/Monitor currently owned by a thread: None
+
+Heap:
+ PSYoungGen      total 208896K, used 182099K [0x00000000ed580000, 0x00000000fee00000, 0x0000000100000000)
+  eden space 182272K, 88% used [0x00000000ed580000,0x00000000f730fc00,0x00000000f8780000)
+  from space 26624K, 77% used [0x00000000f8780000,0x00000000f9bc51b8,0x00000000fa180000)
+  to   space 29184K, 0% used [0x00000000fd180000,0x00000000fd180000,0x00000000fee00000)
+ ParOldGen       total 101888K, used 53446K [0x00000000c8000000, 0x00000000ce380000, 0x00000000ed580000)
+  object space 101888K, 52% used [0x00000000c8000000,0x00000000cb4319d0,0x00000000ce380000)
+ Metaspace       used 47945K, capacity 51044K, committed 51456K, reserved 1093632K
+  class space    used 6582K, capacity 7584K, committed 7680K, reserved 1048576K
+
+Card table byte_map: [0x00007ff5b4493000,0x00007ff5b4654000] byte_map_base: 0x00007ff5b3e53000
+
+Marking Bits: (ParMarkBitMap*) 0x00007ff5bd4462a0
+ Begin Bits: [0x00007ff5ae2ff000, 0x00007ff5af0ff000)
+ End Bits:   [0x00007ff5af0ff000, 0x00007ff5afeff000)
+
+Polling page: 0x00007ff5bd6a7000
+
+CodeCache: size=245760Kb used=24201Kb max_used=24227Kb free=221558Kb
+ bounds [0x00007ff599000000, 0x00007ff59a7e0000, 0x00007ff5a8000000]
+ total_blobs=7867 nmethods=7111 adapters=665
+ compilation: enabled
+
+Compilation events (10 events):
+Event: 354,279 Thread 0x00007ff5a8296800 8883       4       org.openide.filesystems.AbstractFolder::refresh (24 bytes)
+Event: 354,283 Thread 0x00007ff5a8296800 nmethod 8883 0x00007ff59a7a42d0 code [0x00007ff59a7a4460, 0x00007ff59a7a4628]
+Event: 354,284 Thread 0x00007ff5a8298800 nmethod 8882 0x00007ff5991d3090 code [0x00007ff5991d3220, 0x00007ff5991d36a8]
+Event: 354,285 Thread 0x00007ff5a8296800 8884       4       java.io.UnixFileSystem::resolve (103 bytes)
+Event: 354,286 Thread 0x00007ff5a8298800 8885       3       java.util.Collections$SynchronizedCollection::iterator (10 bytes)
+Event: 354,286 Thread 0x00007ff5a8298800 nmethod 8885 0x00007ff59a7ad4d0 code [0x00007ff59a7ad640, 0x00007ff59a7ad868]
+Event: 354,288 Thread 0x00007ff5a8293800 nmethod 8881 0x00007ff59929c450 code [0x00007ff59929c5c0, 0x00007ff59929cbb8]
+Event: 354,295 Thread 0x00007ff5a8296800 nmethod 8884 0x00007ff59a7c4550 code [0x00007ff59a7c4700, 0x00007ff59a7c4f58]
+Event: 354,297 Thread 0x00007ff5a8293800 8886       4       org.openide.util.Enumerations$QEn::hasMoreElements (13 bytes)
+Event: 354,297 Thread 0x00007ff5a8293800 nmethod 8886 0x00007ff599f12a90 code [0x00007ff599f12be0, 0x00007ff599f12c58]
+
+GC Heap History (10 events):
+Event: 5,516 GC heap before
+{Heap before GC invocations=9 (full 1):
+ PSYoungGen      total 105472K, used 101931K [0x00000000ed580000, 0x00000000f7600000, 0x0000000100000000)
+  eden space 98304K, 100% used [0x00000000ed580000,0x00000000f3580000,0x00000000f3580000)
+  from space 7168K, 50% used [0x00000000f3580000,0x00000000f390ac98,0x00000000f3c80000)
+  to   space 7168K, 0% used [0x00000000f6f00000,0x00000000f6f00000,0x00000000f7600000)
+ ParOldGen       total 65536K, used 10354K [0x00000000c8000000, 0x00000000cc000000, 0x00000000ed580000)
+  object space 65536K, 15% used [0x00000000c8000000,0x00000000c8a1ca00,0x00000000cc000000)
+ Metaspace       used 26679K, capacity 27916K, committed 28160K, reserved 1073152K
+  class space    used 3153K, capacity 3513K, committed 3584K, reserved 1048576K
+Event: 5,543 GC heap after
+Heap after GC invocations=9 (full 1):
+ PSYoungGen      total 157184K, used 5333K [0x00000000ed580000, 0x00000000f7600000, 0x0000000100000000)
+  eden space 150016K, 0% used [0x00000000ed580000,0x00000000ed580000,0x00000000f6800000)
+  from space 7168K, 74% used [0x00000000f6f00000,0x00000000f74354f8,0x00000000f7600000)
+  to   space 7168K, 0% used [0x00000000f6800000,0x00000000f6800000,0x00000000f6f00000)
+ ParOldGen       total 65536K, used 28587K [0x00000000c8000000, 0x00000000cc000000, 0x00000000ed580000)
+  object space 65536K, 43% used [0x00000000c8000000,0x00000000c9beae30,0x00000000cc000000)
+ Metaspace       used 26679K, capacity 27916K, committed 28160K, reserved 1073152K
+  class space    used 3153K, capacity 3513K, committed 3584K, reserved 1048576K
+}
+Event: 8,034 GC heap before
+{Heap before GC invocations=10 (full 1):
+ PSYoungGen      total 157184K, used 155349K [0x00000000ed580000, 0x00000000f7600000, 0x0000000100000000)
+  eden space 150016K, 100% used [0x00000000ed580000,0x00000000f6800000,0x00000000f6800000)
+  from space 7168K, 74% used [0x00000000f6f00000,0x00000000f74354f8,0x00000000f7600000)
+  to   space 7168K, 0% used [0x00000000f6800000,0x00000000f6800000,0x00000000f6f00000)
+ ParOldGen       total 65536K, used 28587K [0x00000000c8000000, 0x00000000cc000000, 0x00000000ed580000)
+  object space 65536K, 43% used [0x00000000c8000000,0x00000000c9beae30,0x00000000cc000000)
+ Metaspace       used 32240K, capacity 33598K, committed 33920K, reserved 1079296K
+  class space    used 4056K, capacity 4425K, committed 4480K, reserved 1048576K
+Event: 8,050 GC heap after
+Heap after GC invocations=10 (full 1):
+ PSYoungGen      total 157184K, used 7160K [0x00000000ed580000, 0x00000000fb200000, 0x0000000100000000)
+  eden space 150016K, 0% used [0x00000000ed580000,0x00000000ed580000,0x00000000f6800000)
+  from space 7168K, 99% used [0x00000000f6800000,0x00000000f6efe360,0x00000000f6f00000)
+  to   space 16896K, 0% used [0x00000000fa180000,0x00000000fa180000,0x00000000fb200000)
+ ParOldGen       total 65536K, used 51775K [0x00000000c8000000, 0x00000000cc000000, 0x00000000ed580000)
+  object space 65536K, 79% used [0x00000000c8000000,0x00000000cb28fd88,0x00000000cc000000)
+ Metaspace       used 32240K, capacity 33598K, committed 33920K, reserved 1079296K
+  class space    used 4056K, capacity 4425K, committed 4480K, reserved 1048576K
+}
+Event: 8,050 GC heap before
+{Heap before GC invocations=11 (full 2):
+ PSYoungGen      total 157184K, used 7160K [0x00000000ed580000, 0x00000000fb200000, 0x0000000100000000)
+  eden space 150016K, 0% used [0x00000000ed580000,0x00000000ed580000,0x00000000f6800000)
+  from space 7168K, 99% used [0x00000000f6800000,0x00000000f6efe360,0x00000000f6f00000)
+  to   space 16896K, 0% used [0x00000000fa180000,0x00000000fa180000,0x00000000fb200000)
+ ParOldGen       total 65536K, used 51775K [0x00000000c8000000, 0x00000000cc000000, 0x00000000ed580000)
+  object space 65536K, 79% used [0x00000000c8000000,0x00000000cb28fd88,0x00000000cc000000)
+ Metaspace       used 32240K, capacity 33598K, committed 33920K, reserved 1079296K
+  class space    used 4056K, capacity 4425K, committed 4480K, reserved 1048576K
+Event: 8,110 GC heap after
+Heap after GC invocations=11 (full 2):
+ PSYoungGen      total 157184K, used 0K [0x00000000ed580000, 0x00000000fb200000, 0x0000000100000000)
+  eden space 150016K, 0% used [0x00000000ed580000,0x00000000ed580000,0x00000000f6800000)
+  from space 7168K, 0% used [0x00000000f6800000,0x00000000f6800000,0x00000000f6f00000)
+  to   space 16896K, 0% used [0x00000000fa180000,0x00000000fa180000,0x00000000fb200000)
+ ParOldGen       total 101888K, used 33508K [0x00000000c8000000, 0x00000000ce380000, 0x00000000ed580000)
+  object space 101888K, 32% used [0x00000000c8000000,0x00000000ca0b9370,0x00000000ce380000)
+ Metaspace       used 32240K, capacity 33598K, committed 33920K, reserved 1079296K
+  class space    used 4056K, capacity 4425K, committed 4480K, reserved 1048576K
+}
+Event: 11,272 GC heap before
+{Heap before GC invocations=12 (full 2):
+ PSYoungGen      total 157184K, used 149271K [0x00000000ed580000, 0x00000000fb200000, 0x0000000100000000)
+  eden space 150016K, 99% used [0x00000000ed580000,0x00000000f6745f88,0x00000000f6800000)
+  from space 7168K, 0% used [0x00000000f6800000,0x00000000f6800000,0x00000000f6f00000)
+  to   space 16896K, 0% used [0x00000000fa180000,0x00000000fa180000,0x00000000fb200000)
+ ParOldGen       total 101888K, used 33508K [0x00000000c8000000, 0x00000000ce380000, 0x00000000ed580000)
+  object space 101888K, 32% used [0x00000000c8000000,0x00000000ca0b9370,0x00000000ce380000)
+ Metaspace       used 44068K, capacity 46968K, committed 47360K, reserved 1089536K
+  class space    used 6229K, capacity 7099K, committed 7168K, reserved 1048576K
+Event: 11,291 GC heap after
+Heap after GC invocations=12 (full 2):
+ PSYoungGen      total 199168K, used 16873K [0x00000000ed580000, 0x00000000fc800000, 0x0000000100000000)
+  eden space 182272K, 0% used [0x00000000ed580000,0x00000000ed580000,0x00000000f8780000)
+  from space 16896K, 99% used [0x00000000fa180000,0x00000000fb1fa4a8,0x00000000fb200000)
+  to   space 26624K, 0% used [0x00000000f8780000,0x00000000f8780000,0x00000000fa180000)
+ ParOldGen       total 101888K, used 53438K [0x00000000c8000000, 0x00000000ce380000, 0x00000000ed580000)
+  object space 101888K, 52% used [0x00000000c8000000,0x00000000cb42f9d0,0x00000000ce380000)
+ Metaspace       used 44068K, capacity 46968K, committed 47360K, reserved 1089536K
+  class space    used 6229K, capacity 7099K, committed 7168K, reserved 1048576K
+}
+Event: 66,167 GC heap before
+{Heap before GC invocations=13 (full 2):
+ PSYoungGen      total 199168K, used 199145K [0x00000000ed580000, 0x00000000fc800000, 0x0000000100000000)
+  eden space 182272K, 100% used [0x00000000ed580000,0x00000000f8780000,0x00000000f8780000)
+  from space 16896K, 99% used [0x00000000fa180000,0x00000000fb1fa4a8,0x00000000fb200000)
+  to   space 26624K, 0% used [0x00000000f8780000,0x00000000f8780000,0x00000000fa180000)
+ ParOldGen       total 101888K, used 53438K [0x00000000c8000000, 0x00000000ce380000, 0x00000000ed580000)
+  object space 101888K, 52% used [0x00000000c8000000,0x00000000cb42f9d0,0x00000000ce380000)
+ Metaspace       used 46929K, capacity 49976K, committed 50304K, reserved 1091584K
+  class space    used 6528K, capacity 7448K, committed 7552K, reserved 1048576K
+Event: 66,187 GC heap after
+Heap after GC invocations=13 (full 2):
+ PSYoungGen      total 208896K, used 20756K [0x00000000ed580000, 0x00000000fee00000, 0x0000000100000000)
+  eden space 182272K, 0% used [0x00000000ed580000,0x00000000ed580000,0x00000000f8780000)
+  from space 26624K, 77% used [0x00000000f8780000,0x00000000f9bc51b8,0x00000000fa180000)
+  to   space 29184K, 0% used [0x00000000fd180000,0x00000000fd180000,0x00000000fee00000)
+ ParOldGen       total 101888K, used 53446K [0x00000000c8000000, 0x00000000ce380000, 0x00000000ed580000)
+  object space 101888K, 52% used [0x00000000c8000000,0x00000000cb4319d0,0x00000000ce380000)
+ Metaspace       used 46929K, capacity 49976K, committed 50304K, reserved 1091584K
+  class space    used 6528K, capacity 7448K, committed 7552K, reserved 1048576K
+}
+
+Deoptimization events (10 events):
+Event: 152,913 Thread 0x00007ff558067000 Uncommon trap: reason=null_check action=make_not_entrant pc=0x00007ff59a5b1bb0 method=org.openide.util.RequestProcessor$TickTac.obtainFirst()Lorg/openide/util/RequestProcessor$Item; @ 19
+Event: 182,352 Thread 0x00007ff558123800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff59a4e3088 method=java.awt.EventQueue.cacheEQItem(Lsun/awt/EventQueueItem;)V @ 23
+Event: 182,668 Thread 0x00007ff55811e000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007ff59a67f75c method=sun.awt.X11.XBaseWindow.dispatchEvent(Lsun/awt/X11/XEvent;)V @ 278
+Event: 183,489 Thread 0x00007ff55811e000 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007ff59a67f75c method=sun.awt.X11.XBaseWindow.dispatchEvent(Lsun/awt/X11/XEvent;)V @ 278
+Event: 184,150 Thread 0x00007ff5200f1800 Uncommon trap: reason=class_check action=maybe_recompile pc=0x00007ff599fc92e8 method=org.openide.filesystems.AbstractFileObject.isFolder()Z @ 18
+Event: 234,014 Thread 0x00007ff55811e000 Uncommon trap: reason=null_check action=make_not_entrant pc=0x00007ff5994cfb08 method=sun.awt.X11.XAtom.lookup(J)Lsun/awt/X11/XAtom; @ 15
+Event: 234,014 Thread 0x00007ff55811e000 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff599792778 method=sun.awt.X11.XAtom.getName()Ljava/lang/String; @ 4
+Event: 234,014 Thread 0x00007ff55811e000 Uncommon trap: reason=null_check action=make_not_entrant pc=0x00007ff59a6af10c method=java.awt.datatransfer.SystemFlavorMap.getFlavorsForNative(Ljava/lang/String;)Ljava/util/List; @ 10
+Event: 234,014 Thread 0x00007ff55811e000 Uncommon trap: reason=null_check action=make_not_entrant pc=0x00007ff599622d28 method=sun.awt.X11.XAtom.lookup(J)Lsun/awt/X11/XAtom; @ 15
+Event: 353,259 Thread 0x00007ff558123800 Uncommon trap: reason=unreached action=reinterpret pc=0x00007ff59a6472b0 method=javax.swing.JComponent.rectangleIsObscured(IIII)Z @ 100
+
+Internal exceptions (10 events):
+Event: 101,616 Thread 0x00007ff5a88da800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f2825030) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 101,960 Thread 0x00007ff5a88da800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f2840c90) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 101,960 Thread 0x00007ff5a88da800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f28489a8) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 111,646 Thread 0x00007ff5a88da800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f36d5dd8) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 111,646 Thread 0x00007ff5a88da800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f36ddaf0) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 115,839 Thread 0x00007ff558123800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f3fcea20) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 115,839 Thread 0x00007ff558123800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f3fd9640) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 122,918 Thread 0x00007ff554077800 Exception <a 'java/security/PrivilegedActionException'> (0x00000000f4731dc8) thrown at [/HUDSON/workspace/8-2-build-linux-amd64/jdk8u31/2394/hotspot/src/share/vm/prims/jvm.cpp, line 1312]
+Event: 234,014 Thread 0x00007ff55811e000 Implicit null exception at 0x00007ff5994cf4a7 to 0x00007ff5994cfad1
+Event: 234,014 Thread 0x00007ff55811e000 Implicit null exception at 0x00007ff599622bbb to 0x00007ff599622d1b
+
+Events (10 events):
+Event: 354,292 Executing VM operation: RevokeBias done
+Event: 354,292 Executing VM operation: RevokeBias
+Event: 354,292 Executing VM operation: RevokeBias done
+Event: 354,292 Executing VM operation: RevokeBias
+Event: 354,292 Executing VM operation: RevokeBias done
+Event: 354,292 Executing VM operation: BulkRevokeBias
+Event: 354,292 Executing VM operation: BulkRevokeBias done
+Event: 354,296 Thread 0x00007ff5a8296800 flushing nmethod 0x00007ff599853950
+Event: 354,298 Thread 0x00007ff5a8293800 flushing nmethod 0x00007ff5999a7c10
+Event: 354,298 Thread 0x00007ff5a8293800 flushing nmethod 0x00007ff5999a8e50
+
+
+Dynamic libraries:
+00400000-00401000 r-xp 00000000 08:03 273008                             /usr/java/jdk1.8.0_31/bin/java
+00600000-00601000 rw-p 00000000 08:03 273008                             /usr/java/jdk1.8.0_31/bin/java
+01b19000-01c35000 rw-p 00000000 00:00 0                                  [heap]
+c8000000-ce380000 rw-p 00000000 00:00 0 
+ce380000-ed580000 ---p 00000000 00:00 0 
+ed580000-fee00000 rw-p 00000000 00:00 0 
+fee00000-100000000 ---p 00000000 00:00 0 
+100000000-100780000 rw-p 00000000 00:00 0 
+100780000-140000000 ---p 00000000 00:00 0 
+30bba00000-30bba07000 r-xp 00000000 08:03 130739                         /usr/lib64/libffi.so.6.0.2
+30bba07000-30bbc06000 ---p 00007000 08:03 130739                         /usr/lib64/libffi.so.6.0.2
+30bbc06000-30bbc07000 r--p 00006000 08:03 130739                         /usr/lib64/libffi.so.6.0.2
+30bbc07000-30bbc08000 rw-p 00007000 08:03 130739                         /usr/lib64/libffi.so.6.0.2
+30bbe00000-30bbe4f000 r-xp 00000000 08:03 134376                         /usr/lib64/libgobject-2.0.so.0.4200.1
+30bbe4f000-30bc04f000 ---p 0004f000 08:03 134376                         /usr/lib64/libgobject-2.0.so.0.4200.1
+30bc04f000-30bc050000 r--p 0004f000 08:03 134376                         /usr/lib64/libgobject-2.0.so.0.4200.1
+30bc050000-30bc051000 rw-p 00050000 08:03 134376                         /usr/lib64/libgobject-2.0.so.0.4200.1
+30bc200000-30bc36f000 r-xp 00000000 08:03 134938                         /usr/lib64/libgio-2.0.so.0.4200.1
+30bc36f000-30bc56f000 ---p 0016f000 08:03 134938                         /usr/lib64/libgio-2.0.so.0.4200.1
+30bc56f000-30bc573000 r--p 0016f000 08:03 134938                         /usr/lib64/libgio-2.0.so.0.4200.1
+30bc573000-30bc575000 rw-p 00173000 08:03 134938                         /usr/lib64/libgio-2.0.so.0.4200.1
+30bc575000-30bc577000 rw-p 00000000 00:00 0 
+30bc600000-30bc624000 r-xp 00000000 08:03 134939                         /usr/lib64/libgdk_pixbuf-2.0.so.0.3100.1
+30bc624000-30bc823000 ---p 00024000 08:03 134939                         /usr/lib64/libgdk_pixbuf-2.0.so.0.3100.1
+30bc823000-30bc824000 r--p 00023000 08:03 134939                         /usr/lib64/libgdk_pixbuf-2.0.so.0.3100.1
+30bc824000-30bc825000 rw-p 00024000 08:03 134939                         /usr/lib64/libgdk_pixbuf-2.0.so.0.3100.1
+30bca00000-30bca25000 r-xp 00000000 08:03 131229                         /usr/lib64/libglapi.so.0.0.0
+30bca25000-30bcc25000 ---p 00025000 08:03 131229                         /usr/lib64/libglapi.so.0.0.0
+30bcc25000-30bcc28000 r--p 00025000 08:03 131229                         /usr/lib64/libglapi.so.0.0.0
+30bcc28000-30bcc29000 rw-p 00028000 08:03 131229                         /usr/lib64/libglapi.so.0.0.0
+30bcc29000-30bcc2a000 rw-p 00000000 00:00 0 
+30bce00000-30bce96000 r-xp 00000000 08:03 134011                         /usr/lib64/libGL.so.1.2.0
+30bce96000-30bd095000 ---p 00096000 08:03 134011                         /usr/lib64/libGL.so.1.2.0
+30bd095000-30bd098000 r--p 00095000 08:03 134011                         /usr/lib64/libGL.so.1.2.0
+30bd098000-30bd099000 rw-p 00098000 08:03 134011                         /usr/lib64/libGL.so.1.2.0
+30bd099000-30bd09a000 rw-p 00000000 00:00 0 
+30bd200000-30bd204000 r-xp 00000000 08:03 139524                         /usr/lib64/libcanberra-gtk.so.0.1.9
+30bd204000-30bd403000 ---p 00004000 08:03 139524                         /usr/lib64/libcanberra-gtk.so.0.1.9
+30bd403000-30bd404000 r--p 00003000 08:03 139524                         /usr/lib64/libcanberra-gtk.so.0.1.9
+30bd404000-30bd405000 rw-p 00004000 08:03 139524                         /usr/lib64/libcanberra-gtk.so.0.1.9
+30bd600000-30bd649000 r-xp 00000000 08:03 134382                         /usr/lib64/libpango-1.0.so.0.3600.8
+30bd649000-30bd848000 ---p 00049000 08:03 134382                         /usr/lib64/libpango-1.0.so.0.3600.8
+30bd848000-30bd84a000 r--p 00048000 08:03 134382                         /usr/lib64/libpango-1.0.so.0.3600.8
+30bd84a000-30bd84b000 rw-p 0004a000 08:03 134382                         /usr/lib64/libpango-1.0.so.0.3600.8
+30bda00000-30bda28000 r-xp 00000000 08:03 131680                         /usr/lib64/libEGL.so.1.0.0
+30bda28000-30bdc27000 ---p 00028000 08:03 131680                         /usr/lib64/libEGL.so.1.0.0
+30bdc27000-30bdc28000 r--p 00027000 08:03 131680                         /usr/lib64/libEGL.so.1.0.0
+30bdc28000-30bdc29000 rw-p 00028000 08:03 131680                         /usr/lib64/libEGL.so.1.0.0
+30bdc29000-30bdc2a000 rw-p 00000000 00:00 0 
+30bde00000-30bde0f000 r-xp 00000000 08:03 131008                         /usr/lib64/libwayland-server.so.0.1.0
+30bde0f000-30be00f000 ---p 0000f000 08:03 131008                         /usr/lib64/libwayland-server.so.0.1.0
+30be00f000-30be011000 r--p 0000f000 08:03 131008                         /usr/lib64/libwayland-server.so.0.1.0
+30be011000-30be012000 rw-p 00011000 08:03 131008                         /usr/lib64/libwayland-server.so.0.1.0
+30be200000-30be20c000 r-xp 00000000 08:03 130816                         /usr/lib64/libwayland-client.so.0.3.0
+30be20c000-30be40b000 ---p 0000c000 08:03 130816                         /usr/lib64/libwayland-client.so.0.3.0
+30be40b000-30be40d000 r--p 0000b000 08:03 130816                         /usr/lib64/libwayland-client.so.0.3.0
+30be40d000-30be40e000 rw-p 0000d000 08:03 130816                         /usr/lib64/libwayland-client.so.0.3.0
+30be600000-30be623000 r-xp 00000000 08:03 134943                         /usr/lib64/libatk-1.0.so.0.21409.1
+30be623000-30be822000 ---p 00023000 08:03 134943                         /usr/lib64/libatk-1.0.so.0.21409.1
+30be822000-30be825000 r--p 00022000 08:03 134943                         /usr/lib64/libatk-1.0.so.0.21409.1
+30be825000-30be826000 rw-p 00025000 08:03 134943                         /usr/lib64/libatk-1.0.so.0.21409.1
+30bea00000-30bea0c000 r-xp 00000000 08:03 134928                         /usr/lib64/libpangocairo-1.0.so.0.3600.8
+30bea0c000-30bec0b000 ---p 0000c000 08:03 134928                         /usr/lib64/libpangocairo-1.0.so.0.3600.8
+30bec0b000-30bec0c000 r--p 0000b000 08:03 134928                         /usr/lib64/libpangocairo-1.0.so.0.3600.8
+30bec0c000-30bec0d000 rw-p 0000c000 08:03 134928                         /usr/lib64/libpangocairo-1.0.so.0.3600.8
+30bee00000-30bef07000 r-xp 00000000 08:03 134362                         /usr/lib64/libcairo.so.2.11301.0
+30bef07000-30bf107000 ---p 00107000 08:03 134362                         /usr/lib64/libcairo.so.2.11301.0
+30bf107000-30bf10a000 r--p 00107000 08:03 134362                         /usr/lib64/libcairo.so.2.11301.0
+30bf10a000-30bf10c000 rw-p 0010a000 08:03 134362                         /usr/lib64/libcairo.so.2.11301.0
+30bf10c000-30bf10d000 rw-p 00000000 00:00 0 
+30bf200000-30bf214000 r-xp 00000000 08:03 134516                         /usr/lib64/libpangoft2-1.0.so.0.3600.8
+30bf214000-30bf413000 ---p 00014000 08:03 134516                         /usr/lib64/libpangoft2-1.0.so.0.3600.8
+30bf413000-30bf414000 r--p 00013000 08:03 134516                         /usr/lib64/libpangoft2-1.0.so.0.3600.8
+30bf414000-30bf415000 rw-p 00014000 08:03 134516                         /usr/lib64/libpangoft2-1.0.so.0.3600.8
+30bf600000-30bf60d000 r-xp 00000000 08:03 131312                         /usr/lib64/libgbm.so.1.0.0
+30bf60d000-30bf80c000 ---p 0000d000 08:03 131312                         /usr/lib64/libgbm.so.1.0.0
+30bf80c000-30bf80d000 r--p 0000c000 08:03 131312                         /usr/lib64/libgbm.so.1.0.0
+30bf80d000-30bf80e000 rw-p 0000d000 08:03 131312                         /usr/lib64/libgbm.so.1.0.0
+30bfe00000-30bfebc000 r-xp 00000000 08:03 147219                         /usr/lib64/libgdk-x11-2.0.so.0.2400.25
+30bfebc000-30c00bc000 ---p 000bc000 08:03 147219                         /usr/lib64/libgdk-x11-2.0.so.0.2400.25
+30c00bc000-30c00c0000 r--p 000bc000 08:03 147219                         /usr/lib64/libgdk-x11-2.0.so.0.2400.25
+30c00c0000-30c00c2000 rw-p 000c0000 08:03 147219                         /usr/lib64/libgdk-x11-2.0.so.0.2400.25
+30c0200000-30c067e000 r-xp 00000000 08:03 147220                         /usr/lib64/libgtk-x11-2.0.so.0.2400.25
+30c067e000-30c087e000 ---p 0047e000 08:03 147220                         /usr/lib64/libgtk-x11-2.0.so.0.2400.25
+30c087e000-30c0885000 r--p 0047e000 08:03 147220                         /usr/lib64/libgtk-x11-2.0.so.0.2400.25
+30c0885000-30c0889000 rw-p 00485000 08:03 147220                         /usr/lib64/libgtk-x11-2.0.so.0.2400.25
+30c0889000-30c088c000 rw-p 00000000 00:00 0 
+30c3000000-30c3078000 r-xp 00000000 08:03 136385                         /usr/lib64/libfreebl3.so
+30c3078000-30c3277000 ---p 00078000 08:03 136385                         /usr/lib64/libfreebl3.so
+30c3277000-30c3279000 r--p 00077000 08:03 136385                         /usr/lib64/libfreebl3.so
+30c3279000-30c327a000 rw-p 00079000 08:03 136385                         /usr/lib64/libfreebl3.so
+30c327a000-30c327e000 rw-p 00000000 00:00 0 
+30c3400000-30c3407000 r-xp 00000000 08:03 147223                         /usr/lib64/libcrypt-2.20.so
+30c3407000-30c3606000 ---p 00007000 08:03 147223                         /usr/lib64/libcrypt-2.20.so
+30c3606000-30c3607000 r--p 00006000 08:03 147223                         /usr/lib64/libcrypt-2.20.so
+30c3607000-30c3608000 rw-p 00007000 08:03 147223                         /usr/lib64/libcrypt-2.20.so
+30c3608000-30c3636000 rw-p 00000000 00:00 0 
+30c5200000-30c5214000 r-xp 00000000 08:03 137703                         /usr/lib64/libtdb.so.1.3.1
+30c5214000-30c5413000 ---p 00014000 08:03 137703                         /usr/lib64/libtdb.so.1.3.1
+30c5413000-30c5414000 r--p 00013000 08:03 137703                         /usr/lib64/libtdb.so.1.3.1
+30c5414000-30c5415000 rw-p 00014000 08:03 137703                         /usr/lib64/libtdb.so.1.3.1
+30c6600000-30c6611000 r-xp 00000000 08:03 147288                         /usr/lib64/libcanberra.so.0.2.5
+30c6611000-30c6810000 ---p 00011000 08:03 147288                         /usr/lib64/libcanberra.so.0.2.5
+30c6810000-30c6811000 r--p 00010000 08:03 147288                         /usr/lib64/libcanberra.so.0.2.5
+30c6811000-30c6812000 rw-p 00011000 08:03 147288                         /usr/lib64/libcanberra.so.0.2.5
+36eee00000-36eee21000 r-xp 00000000 08:03 130971                         /usr/lib64/ld-2.20.so
+36ef021000-36ef022000 r--p 00021000 08:03 130971                         /usr/lib64/ld-2.20.so
+36ef022000-36ef023000 rw-p 00022000 08:03 130971                         /usr/lib64/ld-2.20.so
+36ef023000-36ef024000 rw-p 00000000 00:00 0 
+36ef200000-36ef203000 r-xp 00000000 08:03 131153                         /usr/lib64/libdl-2.20.so
+36ef203000-36ef402000 ---p 00003000 08:03 131153                         /usr/lib64/libdl-2.20.so
+36ef402000-36ef403000 r--p 00002000 08:03 131153                         /usr/lib64/libdl-2.20.so
+36ef403000-36ef404000 rw-p 00003000 08:03 131153                         /usr/lib64/libdl-2.20.so
+36ef600000-36ef7b4000 r-xp 00000000 08:03 130991                         /usr/lib64/libc-2.20.so
+36ef7b4000-36ef9b3000 ---p 001b4000 08:03 130991                         /usr/lib64/libc-2.20.so
+36ef9b3000-36ef9b7000 r--p 001b3000 08:03 130991                         /usr/lib64/libc-2.20.so
+36ef9b7000-36ef9b9000 rw-p 001b7000 08:03 130991                         /usr/lib64/libc-2.20.so
+36ef9b9000-36ef9bd000 rw-p 00000000 00:00 0 
+36efa00000-36efa17000 r-xp 00000000 08:03 131034                         /usr/lib64/libpthread-2.20.so
+36efa17000-36efc16000 ---p 00017000 08:03 131034                         /usr/lib64/libpthread-2.20.so
+36efc16000-36efc17000 r--p 00016000 08:03 131034                         /usr/lib64/libpthread-2.20.so
+36efc17000-36efc18000 rw-p 00017000 08:03 131034                         /usr/lib64/libpthread-2.20.so
+36efc18000-36efc1c000 rw-p 00000000 00:00 0 
+36efe00000-36efe15000 r-xp 00000000 08:03 131040                         /usr/lib64/libz.so.1.2.8
+36efe15000-36f0014000 ---p 00015000 08:03 131040                         /usr/lib64/libz.so.1.2.8
+36f0014000-36f0015000 r--p 00014000 08:03 131040                         /usr/lib64/libz.so.1.2.8
+36f0015000-36f0016000 rw-p 00015000 08:03 131040                         /usr/lib64/libz.so.1.2.8
+36f0200000-36f0307000 r-xp 00000000 08:03 130998                         /usr/lib64/libm-2.20.so
+36f0307000-36f0506000 ---p 00107000 08:03 130998                         /usr/lib64/libm-2.20.so
+36f0506000-36f0507000 r--p 00106000 08:03 130998                         /usr/lib64/libm-2.20.so
+36f0507000-36f0508000 rw-p 00107000 08:03 130998                         /usr/lib64/libm-2.20.so
+36f0600000-36f0624000 r-xp 00000000 08:03 131258                         /usr/lib64/liblzma.so.5.0.99
+36f0624000-36f0823000 ---p 00024000 08:03 131258                         /usr/lib64/liblzma.so.5.0.99
+36f0823000-36f0824000 r--p 00023000 08:03 131258                         /usr/lib64/liblzma.so.5.0.99
+36f0824000-36f0825000 rw-p 00024000 08:03 131258                         /usr/lib64/liblzma.so.5.0.99
+36f0a00000-36f0a6c000 r-xp 00000000 08:03 131253                         /usr/lib64/libpcre.so.1.2.3
+36f0a6c000-36f0c6b000 ---p 0006c000 08:03 131253                         /usr/lib64/libpcre.so.1.2.3
+36f0c6b000-36f0c6c000 r--p 0006b000 08:03 131253                         /usr/lib64/libpcre.so.1.2.3
+36f0c6c000-36f0c6d000 rw-p 0006c000 08:03 131253                         /usr/lib64/libpcre.so.1.2.3
+36f0e00000-36f0e22000 r-xp 00000000 08:03 131288                         /usr/lib64/libselinux.so.1
+36f0e22000-36f1021000 ---p 00022000 08:03 131288                         /usr/lib64/libselinux.so.1
+36f1021000-36f1022000 r--p 00021000 08:03 131288                         /usr/lib64/libselinux.so.1
+36f1022000-36f1023000 rw-p 00022000 08:03 131288                         /usr/lib64/libselinux.so.1
+36f1023000-36f1025000 rw-p 00000000 00:00 0 
+36f1200000-36f1217000 r-xp 00000000 08:03 131864                         /usr/lib64/libresolv-2.20.so
+36f1217000-36f1416000 ---p 00017000 08:03 131864                         /usr/lib64/libresolv-2.20.so
+36f1416000-36f1417000 r--p 00016000 08:03 131864                         /usr/lib64/libresolv-2.20.so
+36f1417000-36f1418000 rw-p 00017000 08:03 131864                         /usr/lib64/libresolv-2.20.so
+36f1418000-36f141a000 rw-p 00000000 00:00 0 
+36f1600000-36f1616000 r-xp 00000000 08:03 131811                         /usr/lib64/libgcc_s-4.9.2-20141101.so.1
+36f1616000-36f1815000 ---p 00016000 08:03 131811                         /usr/lib64/libgcc_s-4.9.2-20141101.so.1
+36f1815000-36f1816000 r--p 00015000 08:03 131811                         /usr/lib64/libgcc_s-4.9.2-20141101.so.1
+36f1816000-36f1817000 rw-p 00016000 08:03 131811                         /usr/lib64/libgcc_s-4.9.2-20141101.so.1
+36f1a00000-36f1b37000 r-xp 00000000 08:03 131688                         /usr/lib64/libglib-2.0.so.0.4200.1
+36f1b37000-36f1d36000 ---p 00137000 08:03 131688                         /usr/lib64/libglib-2.0.so.0.4200.1
+36f1d36000-36f1d37000 r--p 00136000 08:03 131688                         /usr/lib64/libglib-2.0.so.0.4200.1
+36f1d37000-36f1d38000 rw-p 00137000 08:03 131688                         /usr/lib64/libglib-2.0.so.0.4200.1
+36f1d38000-36f1d39000 rw-p 00000000 00:00 0 
+36f2200000-36f220f000 r-xp 00000000 08:03 131062                         /usr/lib64/libbz2.so.1.0.6
+36f220f000-36f240e000 ---p 0000f000 08:03 131062                         /usr/lib64/libbz2.so.1.0.6
+36f240e000-36f240f000 r--p 0000e000 08:03 131062                         /usr/lib64/libbz2.so.1.0.6
+36f240f000-36f2410000 rw-p 0000f000 08:03 131062                         /usr/lib64/libbz2.so.1.0.6
+36f2a00000-36f2a03000 r-xp 00000000 08:03 131783                         /usr/lib64/libgmodule-2.0.so.0.4200.1
+36f2a03000-36f2c02000 ---p 00003000 08:03 131783                         /usr/lib64/libgmodule-2.0.so.0.4200.1
+36f2c02000-36f2c03000 r--p 00002000 08:03 131783                         /usr/lib64/libgmodule-2.0.so.0.4200.1
+36f2c03000-36f2c04000 rw-p 00003000 08:03 131783                         /usr/lib64/libgmodule-2.0.so.0.4200.1
+36f2e00000-36f2e07000 r-xp 00000000 08:03 131244                         /usr/lib64/librt-2.20.so
+36f2e07000-36f3006000 ---p 00007000 08:03 131244                         /usr/lib64/librt-2.20.so
+36f3006000-36f3007000 r--p 00006000 08:03 131244                         /usr/lib64/librt-2.20.so
+36f3007000-36f3008000 rw-p 00007000 08:03 131244                         /usr/lib64/librt-2.20.so
+36f3600000-36f373c000 r-xp 00000000 08:03 131158                         /usr/lib64/libX11.so.6.3.0
+36f373c000-36f393b000 ---p 0013c000 08:03 131158                         /usr/lib64/libX11.so.6.3.0
+36f393b000-36f393d000 r--p 0013b000 08:03 131158                         /usr/lib64/libX11.so.6.3.0
+36f393d000-36f3942000 rw-p 0013d000 08:03 131158                         /usr/lib64/libX11.so.6.3.0
+36f3942000-36f3943000 rw-p 00000000 00:00 0 
+36f3a00000-36f3a21000 r-xp 00000000 08:03 131149                         /usr/lib64/libxcb.so.1.1.0
+36f3a21000-36f3c20000 ---p 00021000 08:03 131149                         /usr/lib64/libxcb.so.1.1.0
+36f3c20000-36f3c21000 r--p 00020000 08:03 131149                         /usr/lib64/libxcb.so.1.1.0
+36f3c21000-36f3c22000 rw-p 00021000 08:03 131149                         /usr/lib64/libxcb.so.1.1.0
+36f3e00000-36f3e02000 r-xp 00000000 08:03 131135                         /usr/lib64/libXau.so.6.0.0
+36f3e02000-36f4002000 ---p 00002000 08:03 131135                         /usr/lib64/libXau.so.6.0.0
+36f4002000-36f4003000 r--p 00002000 08:03 131135                         /usr/lib64/libXau.so.6.0.0
+36f4003000-36f4004000 rw-p 00003000 08:03 131135                         /usr/lib64/libXau.so.6.0.0
+36f4200000-36f4211000 r-xp 00000000 08:03 131411                         /usr/lib64/libXext.so.6.4.0
+36f4211000-36f4410000 ---p 00011000 08:03 131411                         /usr/lib64/libXext.so.6.4.0
+36f4410000-36f4411000 r--p 00010000 08:03 131411                         /usr/lib64/libXext.so.6.4.0
+36f4411000-36f4412000 rw-p 00011000 08:03 131411                         /usr/lib64/libXext.so.6.4.0
+36f4600000-36f4632000 r-xp 00000000 08:03 131095                         /usr/lib64/libpng16.so.16.10.0
+36f4632000-36f4831000 ---p 00032000 08:03 131095                         /usr/lib64/libpng16.so.16.10.0
+36f4831000-36f4832000 r--p 00031000 08:03 131095                         /usr/lib64/libpng16.so.16.10.0
+36f4832000-36f4833000 rw-p 00032000 08:03 131095                         /usr/lib64/libpng16.so.16.10.0
+36f4a00000-36f4aa3000 r-xp 00000000 08:03 131115                         /usr/lib64/libfreetype.so.6.11.2
+36f4aa3000-36f4ca3000 ---p 000a3000 08:03 131115                         /usr/lib64/libfreetype.so.6.11.2
+36f4ca3000-36f4ca9000 r--p 000a3000 08:03 131115                         /usr/lib64/libfreetype.so.6.11.2
+36f4ca9000-36f4caa000 rw-p 000a9000 08:03 131115                         /usr/lib64/libfreetype.so.6.11.2
+36f4e00000-36f4e26000 r-xp 00000000 08:03 131121                         /usr/lib64/libexpat.so.1.6.0
+36f4e26000-36f5026000 ---p 00026000 08:03 131121                         /usr/lib64/libexpat.so.1.6.0
+36f5026000-36f5029000 r--p 00026000 08:03 131121                         /usr/lib64/libexpat.so.1.6.0
+36f5029000-36f502a000 rw-p 00029000 08:03 131121                         /usr/lib64/libexpat.so.1.6.0
+36f5200000-36f5209000 r-xp 00000000 08:03 131374                         /usr/lib64/libXrender.so.1.3.0
+36f5209000-36f5408000 ---p 00009000 08:03 131374                         /usr/lib64/libXrender.so.1.3.0
+36f5408000-36f5409000 r--p 00008000 08:03 131374                         /usr/lib64/libXrender.so.1.3.0
+36f5409000-36f540a000 rw-p 00009000 08:03 131374                         /usr/lib64/libXrender.so.1.3.0
+36f5600000-36f563c000 r-xp 00000000 08:03 131122                         /usr/lib64/libfontconfig.so.1.8.0
+36f563c000-36f583c000 ---p 0003c000 08:03 131122                         /usr/lib64/libfontconfig.so.1.8.0
+36f583c000-36f583e000 r--p 0003c000 08:03 131122                         /usr/lib64/libfontconfig.so.1.8.0
+36f583e000-36f583f000 rw-p 0003e000 08:03 131122                         /usr/lib64/libfontconfig.so.1.8.0
+36f6600000-36f6605000 r-xp 00000000 08:03 131673                         /usr/lib64/libXxf86vm.so.1.0.0
+36f6605000-36f6804000 ---p 00005000 08:03 131673                         /usr/lib64/libXxf86vm.so.1.0.0
+36f6804000-36f6805000 r--p 00004000 08:03 131673                         /usr/lib64/libXxf86vm.so.1.0.0
+36f6805000-36f6806000 rw-p 00005000 08:03 131673                         /usr/lib64/libXxf86vm.so.1.0.0
+36f7200000-36f7205000 r-xp 00000000 08:03 131434                         /usr/lib64/libXfixes.so.3.1.0
+36f7205000-36f7404000 ---p 00005000 08:03 131434                         /usr/lib64/libXfixes.so.3.1.0
+36f7404000-36f7405000 r--p 00004000 08:03 131434                         /usr/lib64/libXfixes.so.3.1.0
+36f7405000-36f7406000 rw-p 00005000 08:03 131434                         /usr/lib64/libXfixes.so.3.1.0
+36f7600000-36f7601000 r-xp 00000000 08:03 131182                         /usr/lib64/libX11-xcb.so.1.0.0
+36f7601000-36f7800000 ---p 00001000 08:03 131182                         /usr/lib64/libX11-xcb.so.1.0.0
+36f7800000-36f7801000 r--p 00000000 08:03 131182                         /usr/lib64/libX11-xcb.so.1.0.0
+36f7801000-36f7802000 rw-p 00001000 08:03 131182                         /usr/lib64/libX11-xcb.so.1.0.0
+36f7a00000-36f7a06000 r-xp 00000000 08:03 131197                         /usr/lib64/libxcb-xfixes.so.0.0.0
+36f7a06000-36f7c06000 ---p 00006000 08:03 131197                         /usr/lib64/libxcb-xfixes.so.0.0.0
+36f7c06000-36f7c07000 r--p 00006000 08:03 131197                         /usr/lib64/libxcb-xfixes.so.0.0.0
+36f7c07000-36f7c08000 rw-p 00007000 08:03 131197                         /usr/lib64/libxcb-xfixes.so.0.0.0
+36f7e00000-36f7e0c000 r-xp 00000000 08:03 131644                         /usr/lib64/libxcb-randr.so.0.1.0
+36f7e0c000-36f800c000 ---p 0000c000 08:03 131644                         /usr/lib64/libxcb-randr.so.0.1.0
+36f800c000-36f800d000 r--p 0000c000 08:03 131644                         /usr/lib64/libxcb-randr.so.0.1.0
+36f800d000-36f800e000 rw-p 0000d000 08:03 131644                         /usr/lib64/libxcb-randr.so.0.1.0
+36f8200000-36f8217000 r-xp 00000000 08:03 131512                         /usr/lib64/libxcb-glx.so.0.0.0
+36f8217000-36f8416000 ---p 00017000 08:03 131512                         /usr/lib64/libxcb-glx.so.0.0.0
+36f8416000-36f8418000 r--p 00016000 08:03 131512                         /usr/lib64/libxcb-glx.so.0.0.0
+36f8418000-36f8419000 rw-p 00018000 08:03 131512                         /usr/lib64/libxcb-glx.so.0.0.0
+36f8a00000-36f8a0b000 r-xp 00000000 08:03 131322                         /usr/lib64/libdrm.so.2.4.0
+36f8a0b000-36f8c0a000 ---p 0000b000 08:03 131322                         /usr/lib64/libdrm.so.2.4.0
+36f8c0a000-36f8c0b000 r--p 0000a000 08:03 131322                         /usr/lib64/libdrm.so.2.4.0
+36f8c0b000-36f8c0c000 rw-p 0000b000 08:03 131322                         /usr/lib64/libdrm.so.2.4.0
+36f8e00000-36f8e09000 r-xp 00000000 08:03 131219                         /usr/lib64/libxcb-render.so.0.0.0
+36f8e09000-36f9008000 ---p 00009000 08:03 131219                         /usr/lib64/libxcb-render.so.0.0.0
+36f9008000-36f9009000 r--p 00008000 08:03 131219                         /usr/lib64/libxcb-render.so.0.0.0
+36f9009000-36f900a000 rw-p 00009000 08:03 131219                         /usr/lib64/libxcb-render.so.0.0.0
+36f9200000-36f9201000 r-xp 00000000 08:03 131670                         /usr/lib64/libxshmfence.so.1.0.0
+36f9201000-36f9401000 ---p 00001000 08:03 131670                         /usr/lib64/libxshmfence.so.1.0.0
+36f9401000-36f9402000 r--p 00001000 08:03 131670                         /usr/lib64/libxshmfence.so.1.0.0
+36f9402000-36f9403000 rw-p 00002000 08:03 131670                         /usr/lib64/libxshmfence.so.1.0.0
+36f9600000-36f9602000 r-xp 00000000 08:03 131618                         /usr/lib64/libxcb-present.so.0.0.0
+36f9602000-36f9801000 ---p 00002000 08:03 131618                         /usr/lib64/libxcb-present.so.0.0.0
+36f9801000-36f9802000 r--p 00001000 08:03 131618                         /usr/lib64/libxcb-present.so.0.0.0
+36f9802000-36f9803000 rw-p 00002000 08:03 131618                         /usr/lib64/libxcb-present.so.0.0.0
+36f9a00000-36f9a05000 r-xp 00000000 08:03 131646                         /usr/lib64/libxcb-sync.so.1.0.0
+36f9a05000-36f9c05000 ---p 00005000 08:03 131646                         /usr/lib64/libxcb-sync.so.1.0.0
+36f9c05000-36f9c06000 r--p 00005000 08:03 131646                         /usr/lib64/libxcb-sync.so.1.0.0
+36f9c06000-36f9c07000 rw-p 00006000 08:03 131646                         /usr/lib64/libxcb-sync.so.1.0.0
+36f9e00000-36f9e02000 r-xp 00000000 08:03 131531                         /usr/lib64/libxcb-dri3.so.0.0.0
+36f9e02000-36fa001000 ---p 00002000 08:03 131531                         /usr/lib64/libxcb-dri3.so.0.0.0
+36fa001000-36fa002000 r--p 00001000 08:03 131531                         /usr/lib64/libxcb-dri3.so.0.0.0
+36fa002000-36fa003000 rw-p 00002000 08:03 131531                         /usr/lib64/libxcb-dri3.so.0.0.0
+36fa600000-36fa602000 r-xp 00000000 08:03 131492                         /usr/lib64/libXdamage.so.1.1.0
+36fa602000-36fa801000 ---p 00002000 08:03 131492                         /usr/lib64/libXdamage.so.1.1.0
+36fa801000-36fa802000 r--p 00001000 08:03 131492                         /usr/lib64/libXdamage.so.1.1.0
+36fa802000-36fa803000 rw-p 00002000 08:03 131492                         /usr/lib64/libXdamage.so.1.1.0
+36faa00000-36faa04000 r-xp 00000000 08:03 131185                         /usr/lib64/libxcb-dri2.so.0.0.0
+36faa04000-36fac03000 ---p 00004000 08:03 131185                         /usr/lib64/libxcb-dri2.so.0.0.0
+36fac03000-36fac04000 r--p 00003000 08:03 131185                         /usr/lib64/libxcb-dri2.so.0.0.0
+36fac04000-36fac05000 rw-p 00004000 08:03 131185                         /usr/lib64/libxcb-dri2.so.0.0.0
+36fae00000-36fae03000 r-xp 00000000 08:03 131225                         /usr/lib64/libxcb-shape.so.0.0.0
+36fae03000-36fb002000 ---p 00003000 08:03 131225                         /usr/lib64/libxcb-shape.so.0.0.0
+36fb002000-36fb003000 r--p 00002000 08:03 131225                         /usr/lib64/libxcb-shape.so.0.0.0
+36fb003000-36fb004000 rw-p 00003000 08:03 131225                         /usr/lib64/libxcb-shape.so.0.0.0
+36fba00000-36fba01000 r-xp 00000000 08:03 131787                         /usr/lib64/libgthread-2.0.so.0.4200.1
+36fba01000-36fbc00000 ---p 00001000 08:03 131787                         /usr/lib64/libgthread-2.0.so.0.4200.1
+36fbc00000-36fbc01000 r--p 00000000 08:03 131787                         /usr/lib64/libgthread-2.0.so.0.4200.1
+36fbc01000-36fbc02000 rw-p 00001000 08:03 131787                         /usr/lib64/libgthread-2.0.so.0.4200.1
+36fc200000-36fc202000 r-xp 00000000 08:03 131977                         /usr/lib64/libXcomposite.so.1.0.0
+36fc202000-36fc401000 ---p 00002000 08:03 131977                         /usr/lib64/libXcomposite.so.1.0.0
+36fc401000-36fc402000 r--p 00001000 08:03 131977                         /usr/lib64/libXcomposite.so.1.0.0
+36fc402000-36fc403000 rw-p 00002000 08:03 131977                         /usr/lib64/libXcomposite.so.1.0.0
+36fc600000-36fc602000 r-xp 00000000 08:03 131915                         /usr/lib64/libXinerama.so.1.0.0
+36fc602000-36fc801000 ---p 00002000 08:03 131915                         /usr/lib64/libXinerama.so.1.0.0
+36fc801000-36fc802000 r--p 00001000 08:03 131915                         /usr/lib64/libXinerama.so.1.0.0
+36fc802000-36fc803000 rw-p 00002000 08:03 131915                         /usr/lib64/libXinerama.so.1.0.0
+36fca00000-36fca09000 r-xp 00000000 08:03 131963                         /usr/lib64/libXrandr.so.2.2.0
+36fca09000-36fcc08000 ---p 00009000 08:03 131963                         /usr/lib64/libXrandr.so.2.2.0
+36fcc08000-36fcc09000 r--p 00008000 08:03 131963                         /usr/lib64/libXrandr.so.2.2.0
+36fcc09000-36fcc0a000 rw-p 00009000 08:03 131963                         /usr/lib64/libXrandr.so.2.2.0
+36fd600000-36fd60f000 r-xp 00000000 08:03 131920                         /usr/lib64/libXi.so.6.1.0
+36fd60f000-36fd80e000 ---p 0000f000 08:03 131920                         /usr/lib64/libXi.so.6.1.0
+36fd80e000-36fd80f000 r--p 0000e000 08:03 131920                         /usr/lib64/libXi.so.6.1.0
+36fd80f000-36fd810000 rw-p 0000f000 08:03 131920                         /usr/lib64/libXi.so.6.1.0
+36fe200000-36fe20a000 r-xp 00000000 08:03 131975                         /usr/lib64/libXcursor.so.1.0.2
+36fe20a000-36fe409000 ---p 0000a000 08:03 131975                         /usr/lib64/libXcursor.so.1.0.2
+36fe409000-36fe40a000 r--p 00009000 08:03 131975                         /usr/lib64/libXcursor.so.1.0.2
+36fe40a000-36fe40b000 rw-p 0000a000 08:03 131975                         /usr/lib64/libXcursor.so.1.0.2
+36fe600000-36fe61c000 r-xp 00000000 08:03 131823                         /usr/lib64/libgraphite2.so.3.0.1
+36fe61c000-36fe81b000 ---p 0001c000 08:03 131823                         /usr/lib64/libgraphite2.so.3.0.1
+36fe81b000-36fe81d000 r--p 0001b000 08:03 131823                         /usr/lib64/libgraphite2.so.3.0.1
+36fe81d000-36fe81e000 rw-p 0001d000 08:03 131823                         /usr/lib64/libgraphite2.so.3.0.1
+36ffa00000-36ffa56000 r-xp 00000000 08:03 131830                         /usr/lib64/libharfbuzz.so.0.936.0
+36ffa56000-36ffc55000 ---p 00056000 08:03 131830                         /usr/lib64/libharfbuzz.so.0.936.0
+36ffc55000-36ffc57000 r--p 00055000 08:03 131830                         /usr/lib64/libharfbuzz.so.0.936.0
+36ffc57000-36ffc58000 rw-p 00057000 08:03 131830                         /usr/lib64/libharfbuzz.so.0.936.0
+3700200000-3700202000 r-xp 00000000 08:03 131363                         /usr/lib64/libxcb-shm.so.0.0.0
+3700202000-3700402000 ---p 00002000 08:03 131363                         /usr/lib64/libxcb-shm.so.0.0.0
+3700402000-3700403000 r--p 00002000 08:03 131363                         /usr/lib64/libxcb-shm.so.0.0.0
+3700403000-3700404000 rw-p 00003000 08:03 131363                         /usr/lib64/libxcb-shm.so.0.0.0
+3700600000-37006a5000 r-xp 00000000 08:03 131038                         /usr/lib64/libpixman-1.so.0.32.6
+37006a5000-37008a4000 ---p 000a5000 08:03 131038                         /usr/lib64/libpixman-1.so.0.32.6
+37008a4000-37008ac000 r--p 000a4000 08:03 131038                         /usr/lib64/libpixman-1.so.0.32.6
+37008ac000-37008ad000 rw-p 000ac000 08:03 131038                         /usr/lib64/libpixman-1.so.0.32.6
+370bc00000-370bc06000 r-xp 00000000 08:03 134459                         /usr/lib64/libogg.so.0.8.0
+370bc06000-370be05000 ---p 00006000 08:03 134459                         /usr/lib64/libogg.so.0.8.0
+370be05000-370be06000 r--p 00005000 08:03 134459                         /usr/lib64/libogg.so.0.8.0
+370be06000-370be07000 rw-p 00006000 08:03 134459                         /usr/lib64/libogg.so.0.8.0
+370c800000-370c809000 r-xp 00000000 08:03 134906                         /usr/lib64/libltdl.so.7.3.0
+370c809000-370ca08000 ---p 00009000 08:03 134906                         /usr/lib64/libltdl.so.7.3.0
+370ca08000-370ca09000 r--p 00008000 08:03 134906                         /usr/lib64/libltdl.so.7.3.0
+370ca09000-370ca0a000 rw-p 00009000 08:03 134906                         /usr/lib64/libltdl.so.7.3.0
+370cc00000-370cc2b000 r-xp 00000000 08:03 134465                         /usr/lib64/libvorbis.so.0.4.7
+370cc2b000-370ce2b000 ---p 0002b000 08:03 134465                         /usr/lib64/libvorbis.so.0.4.7
+370ce2b000-370ce2c000 r--p 0002b000 08:03 134465                         /usr/lib64/libvorbis.so.0.4.7
+370ce2c000-370ce2d000 rw-p 0002c000 08:03 134465                         /usr/lib64/libvorbis.so.0.4.7
+370f600000-370f608000 r-xp 00000000 08:03 131112                         /usr/lib64/libvorbisfile.so.3.3.6
+370f608000-370f807000 ---p 00008000 08:03 131112                         /usr/lib64/libvorbisfile.so.3.3.6
+370f807000-370f808000 r--p 00007000 08:03 131112                         /usr/lib64/libvorbisfile.so.3.3.6
+370f808000-370f809000 rw-p 00008000 08:03 131112                         /usr/lib64/libvorbisfile.so.3.3.6
+370fe00000-370fe05000 r-xp 00000000 08:03 134287                         /usr/lib64/libXtst.so.6.1.0
+370fe05000-3710004000 ---p 00005000 08:03 134287                         /usr/lib64/libXtst.so.6.1.0
+3710004000-3710005000 r--p 00004000 08:03 134287                         /usr/lib64/libXtst.so.6.1.0
+3710005000-3710006000 rw-p 00005000 08:03 134287                         /usr/lib64/libXtst.so.6.1.0
+7ff51d9d4000-7ff51d9d7000 ---p 00000000 00:00 0 
+7ff51d9d7000-7ff51dcd5000 rw-p 00000000 00:00 0 
+7ff51dcd5000-7ff51ded5000 rw-p 00000000 00:00 0 
+7ff51ded5000-7ff51e0d5000 rw-p 00000000 00:00 0 
+7ff51e0d5000-7ff51e2d5000 rw-p 00000000 00:00 0 
+7ff51e2d5000-7ff51e2d8000 ---p 00000000 00:00 0 
+7ff51e2d8000-7ff51e3d6000 rw-p 00000000 00:00 0 
+7ff51e43f000-7ff51e444000 r-xp 00000000 08:03 131695                     /usr/lib64/libnss_dns-2.20.so
+7ff51e444000-7ff51e643000 ---p 00005000 08:03 131695                     /usr/lib64/libnss_dns-2.20.so
+7ff51e643000-7ff51e644000 r--p 00004000 08:03 131695                     /usr/lib64/libnss_dns-2.20.so
+7ff51e644000-7ff51e645000 rw-p 00005000 08:03 131695                     /usr/lib64/libnss_dns-2.20.so
+7ff51e645000-7ff51e647000 r-xp 00000000 08:03 139261                     /usr/lib64/libnss_mdns4_minimal.so.2
+7ff51e647000-7ff51e846000 ---p 00002000 08:03 139261                     /usr/lib64/libnss_mdns4_minimal.so.2
+7ff51e846000-7ff51e847000 r--p 00001000 08:03 139261                     /usr/lib64/libnss_mdns4_minimal.so.2
+7ff51e847000-7ff51e848000 rw-p 00002000 08:03 139261                     /usr/lib64/libnss_mdns4_minimal.so.2
+7ff51e848000-7ff51e84b000 ---p 00000000 00:00 0 
+7ff51e84b000-7ff51e949000 rw-p 00000000 00:00 0 
+7ff51e949000-7ff51e94c000 ---p 00000000 00:00 0 
+7ff51e94c000-7ff51ec4a000 rw-p 00000000 00:00 0 
+7ff51ec4a000-7ff51ec7c000 r-xp 00000000 08:03 274253                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libsunec.so
+7ff51ec7c000-7ff51ee7b000 ---p 00032000 08:03 274253                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libsunec.so
+7ff51ee7b000-7ff51ee81000 rw-p 00031000 08:03 274253                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libsunec.so
+7ff51ee81000-7ff51f091000 rw-p 00000000 00:00 0 
+7ff51f091000-7ff51f099000 r-xp 00000000 08:03 274241                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libmanagement.so
+7ff51f099000-7ff51f299000 ---p 00008000 08:03 274241                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libmanagement.so
+7ff51f299000-7ff51f29a000 rw-p 00008000 08:03 274241                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libmanagement.so
+7ff51fd1f000-7ff51fddf000 rw-p 00000000 00:00 0 
+7ff51fddf000-7ff51ff1f000 ---p 00000000 00:00 0 
+7ff520000000-7ff520133000 rw-p 00000000 00:00 0 
+7ff520133000-7ff524000000 ---p 00000000 00:00 0 
+7ff524000000-7ff5241c9000 rw-p 00000000 00:00 0 
+7ff5241c9000-7ff528000000 ---p 00000000 00:00 0 
+7ff528000000-7ff528021000 rw-p 00000000 00:00 0 
+7ff528021000-7ff52c000000 ---p 00000000 00:00 0 
+7ff52c000000-7ff52c021000 rw-p 00000000 00:00 0 
+7ff52c021000-7ff530000000 ---p 00000000 00:00 0 
+7ff530000000-7ff530021000 rw-p 00000000 00:00 0 
+7ff530021000-7ff534000000 ---p 00000000 00:00 0 
+7ff534000000-7ff534021000 rw-p 00000000 00:00 0 
+7ff534021000-7ff538000000 ---p 00000000 00:00 0 
+7ff538000000-7ff539b3a000 rw-p 00000000 00:00 0 
+7ff539b3a000-7ff53c000000 ---p 00000000 00:00 0 
+7ff53c000000-7ff53c256000 rw-p 00000000 00:00 0 
+7ff53c256000-7ff540000000 ---p 00000000 00:00 0 
+7ff540000000-7ff540281000 rw-p 00000000 00:00 0 
+7ff540281000-7ff544000000 ---p 00000000 00:00 0 
+7ff544000000-7ff544021000 rw-p 00000000 00:00 0 
+7ff544021000-7ff548000000 ---p 00000000 00:00 0 
+7ff548000000-7ff548021000 rw-p 00000000 00:00 0 
+7ff548021000-7ff54c000000 ---p 00000000 00:00 0 
+7ff54c000000-7ff54c021000 rw-p 00000000 00:00 0 
+7ff54c021000-7ff550000000 ---p 00000000 00:00 0 
+7ff55004d000-7ff550050000 ---p 00000000 00:00 0 
+7ff550050000-7ff55014e000 rw-p 00000000 00:00 0 
+7ff55014e000-7ff550178000 r-xp 00000000 08:03 274208                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libdcpr.so
+7ff550178000-7ff550378000 ---p 0002a000 08:03 274208                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libdcpr.so
+7ff550378000-7ff55037b000 rw-p 0002a000 08:03 274208                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libdcpr.so
+7ff55037b000-7ff550454000 r-xp 00000000 08:03 274242                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libmlib_image.so
+7ff550454000-7ff550654000 ---p 000d9000 08:03 274242                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libmlib_image.so
+7ff550654000-7ff550655000 rw-p 000d9000 08:03 274242                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libmlib_image.so
+7ff550655000-7ff550855000 rw-p 00000000 00:00 0 
+7ff550855000-7ff550858000 ---p 00000000 00:00 0 
+7ff550858000-7ff550b56000 rw-p 00000000 00:00 0 
+7ff550b56000-7ff550d56000 rw-p 00000000 00:00 0 
+7ff550d56000-7ff550da8000 r-xp 00000000 08:03 274240                     /usr/java/jdk1.8.0_31/jre/lib/amd64/liblcms.so
+7ff550da8000-7ff550fa7000 ---p 00052000 08:03 274240                     /usr/java/jdk1.8.0_31/jre/lib/amd64/liblcms.so
+7ff550fa7000-7ff550fac000 rw-p 00051000 08:03 274240                     /usr/java/jdk1.8.0_31/jre/lib/amd64/liblcms.so
+7ff550fac000-7ff550fe6000 r-xp 00000000 08:03 274234                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libjpeg.so
+7ff550fe6000-7ff5511e6000 ---p 0003a000 08:03 274234                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libjpeg.so
+7ff5511e6000-7ff5511e7000 rw-p 0003a000 08:03 274234                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libjpeg.so
+7ff5511e7000-7ff5513e7000 rw-p 00000000 00:00 0 
+7ff5513e7000-7ff5513ea000 ---p 00000000 00:00 0 
+7ff5513ea000-7ff5514e8000 rw-p 00000000 00:00 0 
+7ff5514e8000-7ff5514eb000 ---p 00000000 00:00 0 
+7ff5514eb000-7ff5515e9000 rw-p 00000000 00:00 0 
+7ff5515e9000-7ff5515ec000 ---p 00000000 00:00 0 
+7ff5515ec000-7ff5518ea000 rw-p 00000000 00:00 0                          [stack:7052]
+7ff5518ea000-7ff551aea000 rw-p 00000000 00:00 0 
+7ff551aea000-7ff551af0000 r--p 00000000 08:03 1047952                    /usr/share/locale/fr/LC_MESSAGES/gdk-pixbuf.mo
+7ff551af0000-7ff551b10000 r--s 00000000 08:03 524668                     /usr/share/mime/mime.cache
+7ff551b10000-7ff551b11000 r--s 00000000 fd:00 40895564                   /home/frederic/.local/share/mime/mime.cache
+7ff551b12000-7ff551b20000 r--p 00000000 08:03 528835                     /usr/share/fonts/abattis-cantarell/Cantarell-Regular.otf
+7ff551be6000-7ff551be9000 ---p 00000000 00:00 0 
+7ff551be9000-7ff551ce7000 rw-p 00000000 00:00 0                          [stack:6840]
+7ff551ce7000-7ff551cea000 ---p 00000000 00:00 0 
+7ff551cea000-7ff551de8000 rw-p 00000000 00:00 0                          [stack:6839]
+7ff551de8000-7ff551dea000 r--s 00000000 08:03 284975                     /var/cache/fontconfig/87f5e051180a7a75f16eb6fe7dbd3749-le64.cache-4
+7ff551dea000-7ff551df5000 r--s 00000000 08:03 283788                     /var/cache/fontconfig/b79f3aaa7d385a141ab53ec885cc22a8-le64.cache-4
+7ff551df5000-7ff551df6000 r--s 00000000 08:03 285017                     /var/cache/fontconfig/60542f0bb9f94eae9d378d7cecc69283-le64.cache-4
+7ff551df6000-7ff551df9000 r--s 00000000 08:03 285016                     /var/cache/fontconfig/0b1bcc92b4d25cc154d77dafe3bceaa0-le64.cache-4
+7ff551df9000-7ff551dfc000 r--s 00000000 08:03 285015                     /var/cache/fontconfig/2e1514a9fdd499050989183bb65136db-le64.cache-4
+7ff551dfc000-7ff551dfd000 r--s 00000000 08:03 285014                     /var/cache/fontconfig/09757cce9f40703a72dac2999fc1cdb3-le64.cache-4
+7ff551dfd000-7ff551dff000 r--s 00000000 08:03 285013                     /var/cache/fontconfig/3f821257dd33660ba7bbb45c32deb84c-le64.cache-4
+7ff551dff000-7ff551e00000 r--s 00000000 08:03 285012                     /var/cache/fontconfig/94d8f76e13e63dfbf98c7a45df55c1a1-le64.cache-4
+7ff551e00000-7ff551e03000 r--s 00000000 08:03 285011                     /var/cache/fontconfig/830f035fa84a65ce80e050178dbb630d-le64.cache-4
+7ff551e03000-7ff551e04000 r--s 00000000 08:03 285010                     /var/cache/fontconfig/81a173283b451552b599cfaafd6236bd-le64.cache-4
+7ff551e04000-7ff551e05000 r--s 00000000 08:03 285009                     /var/cache/fontconfig/a01c43f7cd08244f295d2d5376628d67-le64.cache-4
+7ff551e05000-7ff551e06000 r--s 00000000 08:03 285008                     /var/cache/fontconfig/ac68f755438cc3dc5a526084839fc7ca-le64.cache-4
+7ff551e06000-7ff551e07000 r--s 00000000 08:03 285007                     /var/cache/fontconfig/f951a6bc01c50d58ac4af16a0108457e-le64.cache-4
+7ff551e07000-7ff551e08000 r--s 00000000 08:03 285006                     /var/cache/fontconfig/12513961c6e7090f8648812f9eaf65d6-le64.cache-4
+7ff551e08000-7ff551e0b000 r--s 00000000 08:03 285005                     /var/cache/fontconfig/e26bf336397aae6fcef4d3803472adec-le64.cache-4
+7ff551e0b000-7ff551e0c000 r--s 00000000 08:03 285004                     /var/cache/fontconfig/17e60ccdf2eb53b214a9a5d6663eb217-le64.cache-4
+7ff551e0c000-7ff551e0d000 r--s 00000000 08:03 285003                     /var/cache/fontconfig/6fcb01a03a016cc71057b587cdea6709-le64.cache-4
+7ff551e0d000-7ff551e0e000 r--s 00000000 08:03 285002                     /var/cache/fontconfig/808084b99cc6d2dafdbe941f4fc10e5e-le64.cache-4
+7ff551e0e000-7ff551e0f000 r--s 00000000 08:03 285001                     /var/cache/fontconfig/406539cfa4772f138dbfe570ea21dd78-le64.cache-4
+7ff551e0f000-7ff551e10000 r--s 00000000 08:03 285000                     /var/cache/fontconfig/63ddee8290ea8b0ca61a4ae5d5fbe2e4-le64.cache-4
+7ff551e10000-7ff551e14000 r--s 00000000 08:03 284998                     /var/cache/fontconfig/8aa05f52519ebacbdf5713e01a6153b0-le64.cache-4
+7ff551e14000-7ff551e15000 r--s 00000000 08:03 284997                     /var/cache/fontconfig/b887eea8f1b96e1d899b44ed6681fc27-le64.cache-4
+7ff551e15000-7ff551e16000 r--s 00000000 08:03 284996                     /var/cache/fontconfig/860639f272b8b4b3094f9e399e41bccd-le64.cache-4
+7ff551e16000-7ff551e17000 r--s 00000000 08:03 284993                     /var/cache/fontconfig/5d33f04e74a97395cf88bbd83847f1f1-le64.cache-4
+7ff551e17000-7ff551e18000 r--s 00000000 08:03 284992                     /var/cache/fontconfig/df893b4576ad6107f9397134092c4059-le64.cache-4
+7ff551e18000-7ff551e19000 r--s 00000000 08:03 284991                     /var/cache/fontconfig/1e1e03b57ed9f0c723c5aeafda46c3fb-le64.cache-4
+7ff551e19000-7ff551e1a000 r--s 00000000 08:03 284990                     /var/cache/fontconfig/900402270e15d763a6e008bb2d4c7686-le64.cache-4
+7ff551e1a000-7ff551e1b000 r--s 00000000 08:03 284989                     /var/cache/fontconfig/47f48679023f44a4d1e44699a69464f6-le64.cache-4
+7ff551e1b000-7ff551e1c000 r--s 00000000 08:03 284988                     /var/cache/fontconfig/2881ed3fd21ca306ddad6f9b0dd3189f-le64.cache-4
+7ff551e1c000-7ff551e1d000 r--s 00000000 08:03 284987                     /var/cache/fontconfig/3c3fb04d32a5211b073874b125d29701-le64.cache-4
+7ff551e1d000-7ff551e1e000 r--s 00000000 08:03 284986                     /var/cache/fontconfig/e61abf8156cc476151baa07d67337cae-le64.cache-4
+7ff551e1e000-7ff551e25000 r--s 00000000 08:03 284985                     /var/cache/fontconfig/b67b32625a2bb51b023d3814a918f351-le64.cache-4
+7ff551e25000-7ff551e27000 r--s 00000000 08:03 284984                     /var/cache/fontconfig/d3379abda271c4acd2ad0c01f565d0b0-le64.cache-4
+7ff551e27000-7ff551e28000 r--s 00000000 08:03 284983                     /var/cache/fontconfig/b4d0b56f766d89640448751fcd18ec1e-le64.cache-4
+7ff551e28000-7ff551e2a000 r--s 00000000 08:03 284982                     /var/cache/fontconfig/99a1ce9f8b6a0434aadb01d3779b0780-le64.cache-4
+7ff551e2a000-7ff551e2c000 r--s 00000000 08:03 284981                     /var/cache/fontconfig/f9d379b867d7c69c85310a4f24e5228f-le64.cache-4
+7ff551e2c000-7ff551e3f000 r--s 00000000 08:03 284980                     /var/cache/fontconfig/614d1caaa4d7914789410f6367de37ca-le64.cache-4
+7ff551e3f000-7ff551e40000 r--s 00000000 08:03 284979                     /var/cache/fontconfig/9210bfe778075f01d9a6ad78273d3551-le64.cache-4
+7ff551e40000-7ff551e41000 r--s 00000000 08:03 284978                     /var/cache/fontconfig/efb3709cb5cd8da903fd39752511227a-le64.cache-4
+7ff551e41000-7ff551e42000 r--s 00000000 08:03 284977                     /var/cache/fontconfig/176f9478df015a2a7380e60868cc6e98-le64.cache-4
+7ff551e42000-7ff551e4d000 r--s 00000000 08:03 284976                     /var/cache/fontconfig/12b26b760a24f8b4feb03ad48a333a72-le64.cache-4
+7ff551e4d000-7ff551e55000 r--s 00000000 08:03 284973                     /var/cache/fontconfig/928306c3ad40271d946e41014a49fc28-le64.cache-4
+7ff551e55000-7ff551e56000 r--s 00000000 08:03 284972                     /var/cache/fontconfig/510a39962a0e99fa91ab9b1702749d8e-le64.cache-4
+7ff551e56000-7ff551e59000 r--s 00000000 08:03 284971                     /var/cache/fontconfig/f9f93cc4e2db99836059d4354ce671d8-le64.cache-4
+7ff551e59000-7ff551e5a000 r--s 00000000 08:03 283801                     /var/cache/fontconfig/3640555adad8a8f6978400293cfce7ab-le64.cache-4
+7ff551e5a000-7ff551e5c000 r--s 00000000 fd:00 38928462                   /home/frederic/.cache/fontconfig/0b1b7b6af87b6a70fb6e4de0948c37d6-le64.cache-4
+7ff551e5c000-7ff551e60000 r--s 00000000 08:03 285018                     /var/cache/fontconfig/beeeeb3dfe132a8a0633a017c99ce0c0-le64.cache-4
+7ff551e96000-7ff551f16000 rw-s 00000000 00:04 398360591                  /SYSV00000000 (deleted)
+7ff551f16000-7ff551f19000 ---p 00000000 00:00 0 
+7ff551f19000-7ff551f4f000 rw-p 00000000 00:00 0 
+7ff551f4f000-7ff551f64000 r--s 000ff000 08:03 274503                     /usr/java/jdk1.8.0_31/jre/lib/resources.jar
+7ff551f64000-7ff552164000 rw-p 00000000 00:00 0 
+7ff552164000-7ff552169000 r-xp 00000000 08:03 396821                     /usr/lib64/gtk-2.0/modules/libcanberra-gtk-module.so
+7ff552169000-7ff552369000 ---p 00005000 08:03 396821                     /usr/lib64/gtk-2.0/modules/libcanberra-gtk-module.so
+7ff552369000-7ff55236a000 r--p 00005000 08:03 396821                     /usr/lib64/gtk-2.0/modules/libcanberra-gtk-module.so
+7ff55236a000-7ff55236b000 rw-p 00006000 08:03 396821                     /usr/lib64/gtk-2.0/modules/libcanberra-gtk-module.so
+7ff55236b000-7ff55236c000 r-xp 00000000 08:03 393005                     /usr/lib64/gtk-2.0/modules/libpk-gtk-module.so
+7ff55236c000-7ff55256b000 ---p 00001000 08:03 393005                     /usr/lib64/gtk-2.0/modules/libpk-gtk-module.so
+7ff55256b000-7ff55256c000 r--p 00000000 08:03 393005                     /usr/lib64/gtk-2.0/modules/libpk-gtk-module.so
+7ff55256c000-7ff55256d000 rw-p 00001000 08:03 393005                     /usr/lib64/gtk-2.0/modules/libpk-gtk-module.so
+7ff55256d000-7ff552570000 r-xp 00000000 08:03 400615                     /usr/lib64/gtk-2.0/2.10.0/engines/libadwaita.so
+7ff552570000-7ff55276f000 ---p 00003000 08:03 400615                     /usr/lib64/gtk-2.0/2.10.0/engines/libadwaita.so
+7ff55276f000-7ff552770000 r--p 00002000 08:03 400615                     /usr/lib64/gtk-2.0/2.10.0/engines/libadwaita.so
+7ff552770000-7ff552771000 rw-p 00003000 08:03 400615                     /usr/lib64/gtk-2.0/2.10.0/engines/libadwaita.so
+7ff552771000-7ff55277b000 r-xp 00000000 08:03 398251                     /usr/lib64/gtk-2.0/2.10.0/engines/libpixmap.so
+7ff55277b000-7ff55297a000 ---p 0000a000 08:03 398251                     /usr/lib64/gtk-2.0/2.10.0/engines/libpixmap.so
+7ff55297a000-7ff55297b000 r--p 00009000 08:03 398251                     /usr/lib64/gtk-2.0/2.10.0/engines/libpixmap.so
+7ff55297b000-7ff55297c000 rw-p 0000a000 08:03 398251                     /usr/lib64/gtk-2.0/2.10.0/engines/libpixmap.so
+7ff55297c000-7ff55298b000 r--p 00000000 08:03 1047592                    /usr/share/locale/fr/LC_MESSAGES/gtk20.mo
+7ff55298b000-7ff55298e000 ---p 00000000 00:00 0 
+7ff55298e000-7ff552a8c000 rw-p 00000000 00:00 0                          [stack:6832]
+7ff552a8c000-7ff552aa3000 r-xp 00000000 fd:00 48628954                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/lib/amd64/linux/libjnidispatch-410.so
+7ff552aa3000-7ff552ba2000 ---p 00017000 fd:00 48628954                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/lib/amd64/linux/libjnidispatch-410.so
+7ff552ba2000-7ff552ba4000 rw-p 00016000 fd:00 48628954                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/lib/amd64/linux/libjnidispatch-410.so
+7ff552ba4000-7ff552da4000 rw-p 00000000 00:00 0 
+7ff552da4000-7ff552da6000 r--s 00001000 08:03 274383                     /usr/java/jdk1.8.0_31/jre/lib/ext/dnsns.jar
+7ff552da6000-7ff552dae000 r--s 00078000 fd:00 47711719                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/felix-4.2.1.jar
+7ff552dae000-7ff552daf000 r--s 00000000 fd:00 47974499                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-libs-felix_fr.jar
+7ff552daf000-7ff552db1000 r--s 00000000 fd:00 47580598                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-libs-felix.jar
+7ff552db1000-7ff552db2000 r--s 00005000 fd:00 46663813                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-core-menus.jar
+7ff552db2000-7ff552db4000 r--s 0000c000 fd:00 46664022                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-core-modules-nav.jar
+7ff552db4000-7ff552db7000 r--s 0000e000 fd:00 46664038                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ext/ilf-gpl.jar
+7ff552db7000-7ff552db9000 r--s 00004000 fd:00 46664037                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-lnf-ilf.jar
+7ff552db9000-7ff552dca000 r--s 000d2000 fd:00 46664007                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ext/JTattoo.jar
+7ff552dca000-7ff552dcc000 r--s 0004c000 fd:00 46664004                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-lnf-jtattoo.jar
+7ff552dcc000-7ff552dcf000 r--s 00049000 fd:00 46664216                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-almanac.jar
+7ff552dcf000-7ff552dd1000 r--s 00022000 fd:00 46664084                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/docs/ancestris-modules-calculatrice.jar
+7ff552dd1000-7ff552dd3000 r--s 0000b000 fd:00 46664083                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-calculatrice.jar
+7ff552dd3000-7ff552dd4000 r--s 0003d000 fd:00 46664029                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/docs/ancestris-modules-commonAncestor.jar
+7ff552dd4000-7ff552dd9000 r--s 00046000 fd:00 46664028                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-commonAncestor.jar
+7ff552dd9000-7ff552ddb000 r--s 000b2000 fd:00 46664091                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/docs/ancestris-modules-datulette.jar
+7ff552ddb000-7ff552ddd000 r--s 00011000 fd:00 46664090                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-datulette.jar
+7ff552ddd000-7ff552dee000 r--s 0019c000 fd:00 46664403                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-editors-genealogyeditor.jar
+7ff552dee000-7ff552df2000 r--s 00026000 fd:00 46664081                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-editors-placeeditor.jar
+7ff552df2000-7ff552df4000 r--s 00017000 fd:00 46664015                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-exports-cousinsgenweb.jar
+7ff552df4000-7ff552df6000 r--s 0004d000 fd:00 46664011                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-exports-geneanet.jar
+7ff552df6000-7ff552df9000 r--s 000ea000 fd:00 46664020                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-exports-website.jar
+7ff552df9000-7ff552dfb000 r--s 0002c000 fd:00 46664040                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-familygroups.jar
+7ff552dfb000-7ff552dfe000 r--s 00040000 fd:00 46663994                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-feedback.jar
+7ff552dfe000-7ff552dff000 r--s 00015000 fd:00 46663996                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-flashlist.jar
+7ff552dff000-7ff552e02000 r--s 00036000 fd:00 46664086                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-gedcomvalidate.jar
+7ff552e02000-7ff552e04000 r--s 0000f000 fd:00 46663998                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-history.jar
+7ff552e04000-7ff552e06000 r--s 0001d000 fd:00 46664044                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-mergefile.jar
+7ff552e06000-7ff552e07000 r--s 00005000 fd:00 46664026                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-removetag.jar
+7ff552e07000-7ff552e0a000 r--s 00027000 fd:00 46664031                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-searchduplicates.jar
+7ff552e0a000-7ff552e0b000 r--s 00009000 fd:00 46664009                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-sosanumbers.jar
+7ff552e0b000-7ff552e0c000 r--s 00003000 fd:00 46664002                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/docs/ancestris-modules-geo.jar
+7ff552e0c000-7ff552e0f000 r--s 0005c000 fd:00 46664000                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-geo.jar
+7ff552e0f000-7ff552e12000 r--s 00047000 fd:00 46664207                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-editors-geoplace.jar
+7ff552e12000-7ff552e18000 r--s 00030000 fd:00 46663884                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/swingx-beaninfo-1.6.jar
+7ff552e18000-7ff552e20000 r--s 00049000 fd:00 46663885                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/swingx-ws-1.0.jar
+7ff552e20000-7ff552e39000 r--s 00123000 fd:00 46663883                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/swingx-1.6.jar
+7ff552e39000-7ff552e3a000 r--s 00000000 fd:00 46663881                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-swingx.jar
+7ff552e3a000-7ff552e3c000 r--s 00047000 fd:00 46664033                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-help-faq.jar
+7ff552e3c000-7ff552e3e000 r--s 00003000 fd:00 46664101                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-imports-generic.jar
+7ff552e3e000-7ff552e3f000 r--s 00004000 fd:00 46664076                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-imports-heredis.jar
+7ff552e3f000-7ff552e41000 r--s 00007000 fd:00 46664088                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-imports-wizard.jar
+7ff552e41000-7ff552e43000 r--s 00005000 fd:00 46664035                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-api-imports.jar
+7ff552e43000-7ff552e44000 r--s 00003000 fd:00 46663900                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-console.jar
+7ff552e44000-7ff552e45000 r--s 00003000 fd:00 46664183                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-place-geonames.jar
+7ff552e45000-7ff552e46000 r--s 00000000 fd:00 46664139                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-api-place.jar
+7ff552e46000-7ff552e47000 r--s 00007000 fd:00 46664136                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/geonames-1.1.11.jar
+7ff552e47000-7ff552e48000 r--s 00003000 fd:00 46664135                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-geonames.jar
+7ff552e48000-7ff552e4a000 r--s 00023000 fd:00 46663873                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/jdom-1.1.3.jar
+7ff552e4a000-7ff552e4b000 r--s 00000000 fd:00 46663872                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-jdom.jar
+7ff552e4b000-7ff552e4f000 r--s 0001f000 fd:00 46664097                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ext/swingbits.jar
+7ff552e4f000-7ff552e50000 r--s 000ea000 fd:00 46664096                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/docs/ancestris-modules-releve.jar
+7ff552e50000-7ff552e5d000 r--s 00195000 fd:00 46664094                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-releve.jar
+7ff552e5d000-7ff552e5f000 r--s 00003000 fd:00 46664049                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-reports-relatives.jar
+7ff552e5f000-7ff552e65000 r--s 00097000 fd:00 46663992                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-treesharing.jar
+7ff552e65000-7ff552e67000 r--s 00001000 fd:00 46664042                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-optionspanel.jar
+7ff552e67000-7ff552e69000 r--s 00016000 fd:00 46664167                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-utilities-search.jar
+7ff552e69000-7ff552e6b000 r--s 00012000 fd:00 46664078                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-viewers-entityviewer.jar
+7ff552e6b000-7ff552e70000 r--s 00056000 fd:00 46664024                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-gedcom-utilities.jar
+7ff552e70000-7ff552e72000 r--s 00006000 fd:00 46664170                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-views-entity.jar
+7ff552e72000-7ff552e74000 r--s 00012000 fd:00 46664213                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-views-table.jar
+7ff552e74000-7ff552e77000 r--s 0003b000 fd:00 46664162                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-views-tree.jar
+7ff552e77000-7ff552e79000 r--s 00007000 fd:00 46664018                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/docs/ancestris-modules-webbook.jar
+7ff552e79000-7ff552e7f000 r--s 0011e000 fd:00 46664017                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ancestris-modules-webbook.jar
+7ff552e7f000-7ff552e81000 r--s 0001c000 fd:00 46664400                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-wizards-newgedcom.jar
+7ff552e81000-7ff552e83000 r--s 00010000 fd:00 46664396                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-nav.jar
+7ff552e83000-7ff552e8a000 r--s 00173000 fd:00 46664392                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-editors-standard.jar
+7ff552e8a000-7ff552e8c000 r--s 0000b000 fd:00 46664210                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-gedcom-privacy-standard.jar
+7ff552e8c000-7ff552e90000 r--s 0006b000 fd:00 46664387                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-editors-gedcom.jar
+7ff552e90000-7ff552e91000 r--s 00008000 fd:00 46664128                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-renderer-velocity.jar
+7ff552e91000-7ff552e94000 r--s 0002c000 fd:00 46664199                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-report-svgtree.jar
+7ff552e94000-7ff552e9a000 r--s 001fc000 fd:00 46664202                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-reports.jar
+7ff552e9a000-7ff552e9d000 r--s 0002e000 fd:00 46664195                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-core-report.jar
+7ff552e9d000-7ff552e9f000 r--s 00010000 fd:00 46664190                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-document-view.jar
+7ff552e9f000-7ff552ea1000 r--s 00016000 fd:00 46664186                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-fop.jar
+7ff552ea1000-7ff552ea3000 r--s 00004000 fd:00 46663907                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-sample-bourbon.jar
+7ff552ea3000-7ff552ea5000 r--s 00004000 fd:00 46664065                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-sample-kennedy.jar
+7ff552ea5000-7ff552eab000 r--s 004aa000 fd:00 46664219                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-welcome.jar
+7ff552eab000-7ff552eb2000 r--s 00375000 fd:00 46664158                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/docs/ancestris-app.jar
+7ff552eb2000-7ff552eb7000 r--s 000d6000 fd:00 46664156                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-app.jar
+7ff552eb7000-7ff552eba000 r--s 0003b000 fd:00 46664146                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-modules-beans.jar
+7ff552eba000-7ff552ebb000 r--s 00003000 fd:00 46664142                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-api-editor.jar
+7ff552ebb000-7ff552ebc000 r--s 00005000 fd:00 46663797                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-api-lnf.jar
+7ff552ebc000-7ff552ebd000 r--s 00000000 fd:00 46663810                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-api-sample.jar
+7ff552ebd000-7ff552ec4000 r--s 00072000 fd:00 46664059                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/ext/mail.jar
+7ff552ec4000-7ff552ec5000 r--s 00000000 fd:00 46664051                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/testuserdir/modules/com-sun-mail.jar
+7ff552ec5000-7ff552ec8000 r--s 0004d000 fd:00 46664383                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/modules-editors-gedcomproperties.jar
+7ff552ec8000-7ff552ec9000 r--s 00000000 fd:00 46664131                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-api-newgedcom.jar
+7ff552ec9000-7ff552edd000 r--s 0028a000 fd:00 46664124                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-core.jar
+7ff552edd000-7ff552ede000 r--s 00012000 fd:00 46664108                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/miglayout-4.0-swing.jar
+7ff552ede000-7ff552edf000 r--s 00000000 fd:00 46664107                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/lib-miglayout.jar
+7ff552edf000-7ff552ee0000 r--s 00002000 fd:00 46663825                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-core-pluginservice.jar
+7ff552ee0000-7ff552ee3000 r--s 0001b000 fd:00 46663865                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/junit.jar
+7ff552ee3000-7ff552ee5000 r--s 0000e000 fd:00 46663867                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/swingx-0.7.jar
+7ff552ee5000-7ff552ef6000 r--s 0014c000 fd:00 46663864                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/jfreechart-1.0.13.jar
+7ff552ef6000-7ff552ef8000 r--s 00008000 fd:00 46663862                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/graphj.jar
+7ff552ef8000-7ff552efe000 r--s 00046000 fd:00 46663863                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/jcommon-1.0.16.jar
+7ff552efe000-7ff552f00000 r--s 00000000 fd:00 46663861                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-genj.jar
+7ff552f00000-7ff552f04000 r--s 00026000 fd:00 46663836                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-gvt.jar
+7ff552f04000-7ff552f0c000 r--s 00033000 fd:00 46663833                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-css.jar
+7ff552f0c000-7ff552f18000 r--s 0005d000 fd:00 46663837                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-svg-dom.jar
+7ff552f18000-7ff552f1d000 r--s 0000e000 fd:00 46663835                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-ext.jar
+7ff552f1d000-7ff552f26000 r--s 00052000 fd:00 46663831                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-awt-util.jar
+7ff552f26000-7ff552f2a000 r--s 00012000 fd:00 46663830                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/avalon-framework-4.2.0.jar
+7ff552f2a000-7ff552f45000 r--s 0018f000 fd:00 46663848                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/fop.jar
+7ff552f45000-7ff552f46000 r--s 00004000 fd:00 46663845                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-xml.jar
+7ff552f46000-7ff552f4b000 r--s 00024000 fd:00 46663838                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-svggen.jar
+7ff552f4b000-7ff552f4d000 r--s 0000a000 fd:00 46663846                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/commons-io-1.0.jar
+7ff552f4d000-7ff552f50000 r--s 00013000 fd:00 46663834                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-dom.jar
+7ff552f50000-7ff552f52000 r--s 00005000 fd:00 46663847                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/commons-logging-api-1.0.4.jar
+7ff552f52000-7ff552f58000 r--s 0003e000 fd:00 46663832                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-bridge.jar
+7ff552f58000-7ff552f5a000 r--s 00012000 fd:00 46663844                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/batik-util.jar
+7ff552f5a000-7ff552f5b000 r--s 00001000 fd:00 46663828                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-apache-fop.jar
+7ff552f5b000-7ff552f63000 r--s 00066000 fd:00 46663857                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/velocity-1.7.jar
+7ff552f63000-7ff552f66000 r--s 0002c000 fd:00 46663858                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/velocity-tools-generic-2.0.jar
+7ff552f66000-7ff552f6a000 r--s 0003c000 fd:00 46663853                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/commons-lang-2.4.jar
+7ff552f6a000-7ff552f78000 r--s 0007f000 fd:00 46663852                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/commons-collections-3.2.1.jar
+7ff552f78000-7ff552f7a000 r--s 0000e000 fd:00 46663854                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/oro-2.0.8.jar
+7ff552f7a000-7ff552f7c000 r--s 00000000 fd:00 46663851                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-apache-velocity.jar
+7ff552f7c000-7ff552f7f000 r--s 0000e000 fd:00 46663866                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ext/spin-1.5.jar
+7ff552f7f000-7ff552f80000 r--s 00000000 fd:00 46663878                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/ancestris-libs-spin.jar
+7ff552f80000-7ff552f81000 r--s 00000000 fd:00 47973920                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-io-ui_fr.jar
+7ff552f81000-7ff552f83000 r--s 00009000 fd:00 47580430                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-io-ui.jar
+7ff552f83000-7ff552f84000 r--s 00000000 fd:00 49286137                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-multitabs_fr.jar
+7ff552f84000-7ff552f87000 r--s 00035000 fd:00 47580417                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-multitabs.jar
+7ff552f87000-7ff552f89000 r--s 00000000 fd:00 47974560                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-multiview_fr.jar
+7ff552f89000-7ff552f8a000 r--s 00000000 fd:00 46663735                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-core-multiview_ancestris_fr.jar
+7ff552f8a000-7ff552f8d000 r--s 00041000 fd:00 47580602                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-multiview.jar
+7ff552f8d000-7ff552f8e000 r--s 00000000 fd:00 47974640                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-nativeaccess_fr.jar
+7ff552f8e000-7ff552f90000 r--s 00001000 fd:00 47580606                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-nativeaccess.jar
+7ff552f90000-7ff552f91000 r--s 00000000 fd:00 47974347                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-netigso_fr.jar
+7ff552f91000-7ff552f92000 r--s 0000d000 fd:00 47580590                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-netigso.jar
+7ff552f92000-7ff552f93000 r--s 00000000 fd:00 47974512                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-network_fr.jar
+7ff552f93000-7ff552f95000 r--s 00017000 fd:00 47580599                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-network.jar
+7ff552f95000-7ff552f96000 r--s 00001000 fd:00 47974212                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-output2_fr.jar
+7ff552f96000-7ff552f9a000 r--s 0007f000 fd:00 47580580                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-output2.jar
+7ff552f9a000-7ff552fab000 r--s 00155000 fd:00 47711716                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/jna-platform-4.1.0.jar
+7ff552fab000-7ff552fac000 r--s 00000000 fd:00 47974136                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-libs-jna-platform_fr.jar
+7ff552fac000-7ff552fae000 r--s 00000000 fd:00 47580574                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-libs-jna-platform.jar
+7ff552fae000-7ff552faf000 r--s 00000000 fd:00 47974192                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-core-kit_fr.jar
+7ff552faf000-7ff552fb0000 r--s 00000000 fd:00 47580579                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-core-kit.jar
+7ff552fb0000-7ff552fb1000 r--s 00000000 fd:00 46663790                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-modules-autoupdate-ui_ancestris.jar
+7ff552fb1000-7ff552fb2000 r--s 00002000 fd:00 46663736                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-modules-autoupdate-ui_ancestris_fr.jar
+7ff552fb2000-7ff552fb3000 r--s 00002000 fd:00 47975146                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-autoupdate-ui_fr.jar
+7ff552fb3000-7ff552fbc000 r--s 000fa000 fd:00 47580420                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-autoupdate-ui.jar
+7ff552fbc000-7ff552fc4000 r--s 0005e000 fd:00 47711715                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/osgi.core-5.0.0.jar
+7ff552fc4000-7ff552fcb000 r--s 0002f000 fd:00 47711714                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/osgi.cmpn-4.2.jar
+7ff552fcb000-7ff552fcc000 r--s 00000000 fd:00 47974083                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-libs-osgi_fr.jar
+7ff552fcc000-7ff552fcd000 r--s 00000000 fd:00 47580571                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-libs-osgi.jar
+7ff552fcd000-7ff552fcf000 r--s 00002000 fd:00 47974120                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-ui_fr.jar
+7ff552fcf000-7ff552fd4000 r--s 0005f000 fd:00 47580573                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-ui.jar
+7ff552fd4000-7ff552fd6000 r--s 00004000 fd:00 47974040                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core-windows_fr.jar
+7ff552fd6000-7ff552fd7000 r--s 00000000 fd:00 46663784                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-core-windows_ancestris.jar
+7ff552fd7000-7ff552fd8000 r--s 00000000 fd:00 46663591                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-core-windows_ancestris_fr.jar
+7ff552fd8000-7ff552fe8000 r--s 0023c000 fd:00 47580568                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core-windows.jar
+7ff552fe8000-7ff552fe9000 r--s 00000000 fd:00 47974248                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-autoupdate-cli_fr.jar
+7ff552fe9000-7ff552fea000 r--s 0000a000 fd:00 47580582                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-autoupdate-cli.jar
+7ff552fea000-7ff552fec000 r--s 0003e000 fd:00 47711710                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/updater.jar
+7ff552fec000-7ff552fed000 r--s 00000000 fd:00 6030718                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/locale/updater_fr.jar
+7ff552fed000-7ff552fee000 r--s 00000000 fd:00 47974304                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-autoupdate-services_fr.jar
+7ff552fee000-7ff552ff3000 r--s 000bc000 fd:00 47580587                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-autoupdate-services.jar
+7ff552ff3000-7ff552ff4000 r--s 00000000 fd:00 47974060                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-editor-mimelookup-impl_fr.jar
+7ff552ff4000-7ff552ff6000 r--s 0000b000 fd:00 47580569                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-editor-mimelookup-impl.jar
+7ff552ff6000-7ff552ff7000 r--s 00000000 fd:00 47974100                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-favorites_fr.jar
+7ff552ff7000-7ff552ff9000 r--s 0001a000 fd:00 47580572                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-favorites.jar
+7ff552ff9000-7ff553003000 r--s 0007e000 fd:00 47711713                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/jhall-2.0_05.jar
+7ff553003000-7ff553203000 rw-p 00000000 00:00 0 
+7ff553203000-7ff553206000 ---p 00000000 00:00 0 
+7ff553206000-7ff553304000 rw-p 00000000 00:00 0                          [stack:7051]
+7ff553304000-7ff55336d000 r-xp 00000000 08:03 274254                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libt2k.so
+7ff55336d000-7ff55356c000 ---p 00069000 08:03 274254                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libt2k.so
+7ff55356c000-7ff553573000 rw-p 00068000 08:03 274254                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libt2k.so
+7ff553573000-7ff553783000 rw-p 00000000 00:00 0 
+7ff553783000-7ff553786000 ---p 00000000 00:00 0 
+7ff553786000-7ff553884000 rw-p 00000000 00:00 0                          [stack:6829]
+7ff553884000-7ff553887000 ---p 00000000 00:00 0 
+7ff553887000-7ff553985000 rw-p 00000000 00:00 0                          [stack:6828]
+7ff553985000-7ff553988000 ---p 00000000 00:00 0 
+7ff553988000-7ff553a86000 rw-p 00000000 00:00 0                          [stack:6827]
+7ff553a86000-7ff553a89000 ---p 00000000 00:00 0 
+7ff553a89000-7ff553d87000 rw-p 00000000 00:00 0                          [stack:6826]
+7ff553d87000-7ff553dec000 r-xp 00000000 08:03 274212                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libfontmanager.so
+7ff553dec000-7ff553feb000 ---p 00065000 08:03 274212                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libfontmanager.so
+7ff553feb000-7ff553fef000 rw-p 00064000 08:03 274212                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libfontmanager.so
+7ff553fef000-7ff554000000 rw-p 00000000 00:00 0 
+7ff554000000-7ff554096000 rw-p 00000000 00:00 0 
+7ff554096000-7ff558000000 ---p 00000000 00:00 0 
+7ff558000000-7ff558893000 rw-p 00000000 00:00 0 
+7ff558893000-7ff55c000000 ---p 00000000 00:00 0 
+7ff55c000000-7ff55c021000 rw-p 00000000 00:00 0 
+7ff55c021000-7ff560000000 ---p 00000000 00:00 0 
+7ff560000000-7ff560021000 rw-p 00000000 00:00 0 
+7ff560021000-7ff564000000 ---p 00000000 00:00 0 
+7ff564000000-7ff564021000 rw-p 00000000 00:00 0 
+7ff564021000-7ff568000000 ---p 00000000 00:00 0 
+7ff568000000-7ff568021000 rw-p 00000000 00:00 0 
+7ff568021000-7ff56c000000 ---p 00000000 00:00 0 
+7ff56c000000-7ff56e078000 rw-p 00000000 00:00 0 
+7ff56e078000-7ff570000000 ---p 00000000 00:00 0 
+7ff570000000-7ff570aff000 rw-p 00000000 00:00 0 
+7ff570aff000-7ff574000000 ---p 00000000 00:00 0 
+7ff574000000-7ff574021000 rw-p 00000000 00:00 0 
+7ff574021000-7ff578000000 ---p 00000000 00:00 0 
+7ff578000000-7ff5795ca000 rw-p 00000000 00:00 0 
+7ff5795ca000-7ff57c000000 ---p 00000000 00:00 0 
+7ff57c000000-7ff57c021000 rw-p 00000000 00:00 0 
+7ff57c021000-7ff580000000 ---p 00000000 00:00 0 
+7ff580000000-7ff580021000 rw-p 00000000 00:00 0 
+7ff580021000-7ff584000000 ---p 00000000 00:00 0 
+7ff584000000-7ff584021000 rw-p 00000000 00:00 0 
+7ff584021000-7ff588000000 ---p 00000000 00:00 0 
+7ff588000000-7ff5880fa000 rw-p 00000000 00:00 0 
+7ff5880fa000-7ff58c000000 ---p 00000000 00:00 0 
+7ff58c000000-7ff58c021000 rw-p 00000000 00:00 0 
+7ff58c021000-7ff590000000 ---p 00000000 00:00 0 
+7ff590000000-7ff590021000 rw-p 00000000 00:00 0 
+7ff590021000-7ff594000000 ---p 00000000 00:00 0 
+7ff594000000-7ff594021000 rw-p 00000000 00:00 0 
+7ff594021000-7ff598000000 ---p 00000000 00:00 0 
+7ff598000000-7ff598002000 r--s 00001000 fd:00 47974000                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-javahelp_fr.jar
+7ff598002000-7ff598005000 r--s 00030000 fd:00 47580434                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-javahelp.jar
+7ff598005000-7ff598006000 r--s 00000000 fd:00 47973719                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-keyring-impl_fr.jar
+7ff598006000-7ff598008000 r--s 00008000 fd:00 47580413                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-keyring-impl.jar
+7ff598008000-7ff598009000 r--s 00000000 fd:00 47974140                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-keyring-fallback_fr.jar
+7ff598009000-7ff59800b000 r--s 00008000 fd:00 47580575                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-keyring-fallback.jar
+7ff59800b000-7ff59800c000 r--s 00000000 fd:00 47974276                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-masterfs-linux_fr.jar
+7ff59800c000-7ff59800d000 r--s 00002000 fd:00 47580585                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-masterfs-linux.jar
+7ff59800d000-7ff598010000 r--s 000dc000 fd:00 47711711                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/ext/jna-4.1.0.jar
+7ff598010000-7ff598011000 r--s 00000000 fd:00 47973872                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-libs-jna_fr.jar
+7ff598011000-7ff598012000 r--s 00001000 fd:00 47580426                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-libs-jna.jar
+7ff598012000-7ff598013000 r--s 00000000 fd:00 47973864                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-masterfs-nio2_fr.jar
+7ff598013000-7ff598014000 r--s 00001000 fd:00 47580425                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-masterfs-nio2.jar
+7ff598014000-7ff598015000 r--s 00001000 fd:00 47974328                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-masterfs_fr.jar
+7ff598015000-7ff59801a000 r--s 00070000 fd:00 47580589                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-masterfs.jar
+7ff59801a000-7ff59801b000 r--s 00000000 fd:00 46663783                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-modules-options-keymap_ancestris.jar
+7ff59801b000-7ff59801c000 r--s 00000000 fd:00 46663553                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-modules-options-keymap_ancestris_fr.jar
+7ff59801c000-7ff59801e000 r--s 00000000 fd:00 47974232                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-options-keymap_fr.jar
+7ff59801e000-7ff598022000 r--s 00067000 fd:00 47580581                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-options-keymap.jar
+7ff598022000-7ff598023000 r--s 00002000 fd:00 47974680                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-options-api_fr.jar
+7ff598023000-7ff598024000 r--s 00000000 fd:00 46663592                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-modules-options-api_ancestris_fr.jar
+7ff598024000-7ff598025000 r--s 00000000 fd:00 46663785                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-modules-options-api_ancestris.jar
+7ff598025000-7ff59802b000 r--s 0007c000 fd:00 47580608                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-options-api.jar
+7ff59802b000-7ff59802c000 r--s 00002000 fd:00 47974284                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-core_fr.jar
+7ff59802c000-7ff59802d000 r--s 00000000 fd:00 46663782                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-core_ancestris.jar
+7ff59802d000-7ff59802e000 r--s 00000000 fd:00 46663552                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-core_ancestris_fr.jar
+7ff59802e000-7ff598031000 ---p 00000000 00:00 0 
+7ff598031000-7ff59812f000 rw-p 00000000 00:00 0                          [stack:7050]
+7ff59812f000-7ff598132000 ---p 00000000 00:00 0 
+7ff598132000-7ff598230000 rw-p 00000000 00:00 0 
+7ff598230000-7ff598233000 ---p 00000000 00:00 0 
+7ff598233000-7ff598331000 rw-p 00000000 00:00 0 
+7ff598331000-7ff598385000 r-xp 00000000 08:03 274207                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libawt_xawt.so
+7ff598385000-7ff598585000 ---p 00054000 08:03 274207                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libawt_xawt.so
+7ff598585000-7ff598589000 rw-p 00054000 08:03 274207                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libawt_xawt.so
+7ff598589000-7ff59858a000 rw-p 00000000 00:00 0 
+7ff59858a000-7ff59862c000 r-xp 00000000 08:03 274205                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libawt.so
+7ff59862c000-7ff59882c000 ---p 000a2000 08:03 274205                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libawt.so
+7ff59882c000-7ff598838000 rw-p 000a2000 08:03 274205                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libawt.so
+7ff598838000-7ff59885c000 rw-p 00000000 00:00 0 
+7ff59885c000-7ff59885f000 ---p 00000000 00:00 0 
+7ff59885f000-7ff59895d000 rw-p 00000000 00:00 0                          [stack:6822]
+7ff59895d000-7ff598960000 ---p 00000000 00:00 0 
+7ff598960000-7ff598a5e000 rw-p 00000000 00:00 0                          [stack:6819]
+7ff598a5e000-7ff598ad7000 r--s 010d1000 08:03 274264                     /usr/java/jdk1.8.0_31/lib/tools.jar
+7ff598ad7000-7ff598aed000 r-xp 00000000 08:03 274243                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libnet.so
+7ff598aed000-7ff598ced000 ---p 00016000 08:03 274243                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libnet.so
+7ff598ced000-7ff598cee000 rw-p 00016000 08:03 274243                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libnet.so
+7ff598cee000-7ff598cff000 r-xp 00000000 08:03 274244                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libnio.so
+7ff598cff000-7ff598efe000 ---p 00011000 08:03 274244                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libnio.so
+7ff598efe000-7ff598eff000 rw-p 00010000 08:03 274244                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libnio.so
+7ff598eff000-7ff598f00000 ---p 00000000 00:00 0 
+7ff598f00000-7ff599000000 rw-p 00000000 00:00 0                          [stack:6818]
+7ff599000000-7ff59a7e0000 rwxp 00000000 00:00 0 
+7ff59a7e0000-7ff5a8000000 ---p 00000000 00:00 0 
+7ff5a8000000-7ff5a88f4000 rw-p 00000000 00:00 0 
+7ff5a88f4000-7ff5ac000000 ---p 00000000 00:00 0 
+7ff5ac000000-7ff5ac007000 r--s 00095000 fd:00 47580586                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-core.jar
+7ff5ac007000-7ff5ac008000 r--s 00000000 fd:00 47974699                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-keyring_fr.jar
+7ff5ac008000-7ff5ac00a000 r--s 00003000 fd:00 47580609                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-keyring.jar
+7ff5ac00a000-7ff5ac00c000 r--s 00001000 fd:00 47974848                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-print_fr.jar
+7ff5ac00c000-7ff5ac010000 r--s 0003e000 fd:00 47580612                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-print.jar
+7ff5ac010000-7ff5ac011000 r--s 00000000 fd:00 47973788                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-progress-ui_fr.jar
+7ff5ac011000-7ff5ac014000 r--s 00023000 fd:00 47580421                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-progress-ui.jar
+7ff5ac014000-7ff5ac015000 r--s 00000000 fd:00 47974252                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-sampler_fr.jar
+7ff5ac015000-7ff5ac017000 r--s 00009000 fd:00 47580583                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-sampler.jar
+7ff5ac017000-7ff5ac019000 r--s 00000000 fd:00 47974480                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-sendopts_fr.jar
+7ff5ac019000-7ff5ac01b000 r--s 00019000 fd:00 47580597                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-sendopts.jar
+7ff5ac01b000-7ff5ac01c000 r--s 00000000 fd:00 47973700                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-settings_fr.jar
+7ff5ac01c000-7ff5ac01f000 r--s 0003f000 fd:00 47580412                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-settings.jar
+7ff5ac01f000-7ff5ac020000 r--s 00002000 fd:00 47973732                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-templates_fr.jar
+7ff5ac020000-7ff5ac022000 r--s 00027000 fd:00 47580414                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-templates.jar
+7ff5ac022000-7ff5ac024000 r--s 00000000 fd:00 47973896                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-spi-quicksearch_fr.jar
+7ff5ac024000-7ff5ac027000 r--s 0002f000 fd:00 47580428                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-spi-quicksearch.jar
+7ff5ac027000-7ff5ac028000 r--s 00000000 fd:00 47974540                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-swing-plaf_fr.jar
+7ff5ac028000-7ff5ac02c000 r--s 0003a000 fd:00 47580601                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-swing-plaf.jar
+7ff5ac02c000-7ff5ac02d000 r--s 00000000 fd:00 47974660                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-io_fr.jar
+7ff5ac02d000-7ff5ac02e000 r--s 0000c000 fd:00 47580607                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-io.jar
+7ff5ac02e000-7ff5ac02f000 r--s 00001000 fd:00 47974152                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-loaders_fr.jar
+7ff5ac02f000-7ff5ac03a000 r--s 00152000 fd:00 47580577                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-loaders.jar
+7ff5ac03a000-7ff5ac03b000 r--s 00000000 fd:00 47973960                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-queries_fr.jar
+7ff5ac03b000-7ff5ac03d000 r--s 0000d000 fd:00 47580432                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-queries.jar
+7ff5ac03d000-7ff5ac03e000 r--s 00000000 fd:00 47974440                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-actions_fr.jar
+7ff5ac03e000-7ff5ac03f000 r--s 00000000 fd:00 46663788                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-openide-actions_ancestris.jar
+7ff5ac03f000-7ff5ac040000 r--s 00000000 fd:00 46663594                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-openide-actions_ancestris_fr.jar
+7ff5ac040000-7ff5ac043000 r--s 00034000 fd:00 47580595                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-actions.jar
+7ff5ac043000-7ff5ac044000 r--s 00002000 fd:00 47973980                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-explorer_fr.jar
+7ff5ac044000-7ff5ac052000 r--s 001b6000 fd:00 47580433                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-explorer.jar
+7ff5ac052000-7ff5ac053000 r--s 00000000 fd:00 47974520                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-swing-outline_fr.jar
+7ff5ac053000-7ff5ac056000 ---p 00000000 00:00 0 
+7ff5ac056000-7ff5ac154000 rw-p 00000000 00:00 0                          [stack:6817]
+7ff5ac154000-7ff5ac157000 ---p 00000000 00:00 0 
+7ff5ac157000-7ff5ac255000 rw-p 00000000 00:00 0                          [stack:6816]
+7ff5ac255000-7ff5ac258000 ---p 00000000 00:00 0 
+7ff5ac258000-7ff5ac356000 rw-p 00000000 00:00 0                          [stack:6815]
+7ff5ac356000-7ff5ac359000 ---p 00000000 00:00 0 
+7ff5ac359000-7ff5ac457000 rw-p 00000000 00:00 0                          [stack:6814]
+7ff5ac457000-7ff5ac45a000 ---p 00000000 00:00 0 
+7ff5ac45a000-7ff5ac558000 rw-p 00000000 00:00 0                          [stack:6813]
+7ff5ac558000-7ff5ac55b000 ---p 00000000 00:00 0 
+7ff5ac55b000-7ff5ac659000 rw-p 00000000 00:00 0                          [stack:6812]
+7ff5ac659000-7ff5ac65c000 ---p 00000000 00:00 0 
+7ff5ac65c000-7ff5ac75a000 rw-p 00000000 00:00 0                          [stack:6811]
+7ff5ac75a000-7ff5ac75b000 ---p 00000000 00:00 0 
+7ff5ac75b000-7ff5ad76a000 rw-p 00000000 00:00 0                          [stack:6810]
+7ff5ad76a000-7ff5ad93f000 r--s 03c68000 08:03 279920                     /usr/java/jdk1.8.0_31/jre/lib/rt.jar
+7ff5ad93f000-7ff5afeff000 rw-p 00000000 00:00 0 
+7ff5afeff000-7ff5aff00000 ---p 00000000 00:00 0 
+7ff5aff00000-7ff5b0000000 rw-p 00000000 00:00 0                          [stack:6809]
+7ff5b0000000-7ff5b1062000 rw-p 00000000 00:00 0 
+7ff5b1062000-7ff5b4000000 ---p 00000000 00:00 0 
+7ff5b4000000-7ff5b4003000 r--s 00043000 fd:00 47580600                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-swing-outline.jar
+7ff5b4003000-7ff5b4004000 r--s 00000000 fd:00 46663733                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-netbeans-swing-tabcontrol_ancestris_fr.jar
+7ff5b4004000-7ff5b4005000 r--s 00000000 fd:00 49286140                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-swing-tabcontrol_fr.jar
+7ff5b4005000-7ff5b4014000 r--s 00115000 fd:00 47580424                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-swing-tabcontrol.jar
+7ff5b4014000-7ff5b4015000 r--s 00000000 fd:00 47973808                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-text_fr.jar
+7ff5b4015000-7ff5b4019000 r--s 00066000 fd:00 47580422                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-text.jar
+7ff5b4019000-7ff5b401a000 r--s 00000000 fd:00 47973828                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-modules-editor-mimelookup_fr.jar
+7ff5b401a000-7ff5b401c000 r--s 0000b000 fd:00 47580423                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-modules-editor-mimelookup.jar
+7ff5b401c000-7ff5b401d000 r--s 00000000 fd:00 47974020                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-windows_fr.jar
+7ff5b401d000-7ff5b4020000 r--s 0002a000 fd:00 47580567                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-windows.jar
+7ff5b4020000-7ff5b4021000 r--s 00000000 fd:00 47973940                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-nodes_fr.jar
+7ff5b4021000-7ff5b4026000 r--s 0008f000 fd:00 47580431                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-nodes.jar
+7ff5b4026000-7ff5b4027000 r--s 00000000 fd:00 46663734                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-openide-dialogs_ancestris_fr.jar
+7ff5b4027000-7ff5b4028000 r--s 00000000 fd:00 46663789                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/modules/locale/org-openide-dialogs_ancestris.jar
+7ff5b4028000-7ff5b4029000 r--s 00000000 fd:00 47974420                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-dialogs_fr.jar
+7ff5b4029000-7ff5b402b000 r--s 00034000 fd:00 47580594                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-dialogs.jar
+7ff5b402b000-7ff5b402c000 r--s 00000000 fd:00 47974384                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-api-progress_fr.jar
+7ff5b402c000-7ff5b402f000 r--s 00014000 fd:00 47580592                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-api-progress.jar
+7ff5b402f000-7ff5b4031000 r--s 00000000 fd:00 47974580                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-openide-awt_fr.jar
+7ff5b4031000-7ff5b4039000 r--s 000a6000 fd:00 47580603                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-openide-awt.jar
+7ff5b4039000-7ff5b403a000 r--s 00000000 fd:00 47974260                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/locale/org-netbeans-api-annotations-common_fr.jar
+7ff5b403a000-7ff5b403f000 r--s 00093000 08:03 274504                     /usr/java/jdk1.8.0_31/jre/lib/jsse.jar
+7ff5b403f000-7ff5b4065000 r--p 00000000 08:03 1045872                    /usr/share/locale/fr/LC_MESSAGES/libc.mo
+7ff5b4065000-7ff5b4066000 ---p 00000000 00:00 0 
+7ff5b4066000-7ff5b4166000 rw-p 00000000 00:00 0                          [stack:6808]
+7ff5b4166000-7ff5b4167000 ---p 00000000 00:00 0 
+7ff5b4167000-7ff5b4267000 rw-p 00000000 00:00 0                          [stack:6807]
+7ff5b4267000-7ff5b4268000 ---p 00000000 00:00 0 
+7ff5b4268000-7ff5b439a000 rw-p 00000000 00:00 0                          [stack:6806]
+7ff5b439a000-7ff5b4493000 ---p 00000000 00:00 0 
+7ff5b4493000-7ff5b44c5000 rw-p 00000000 00:00 0 
+7ff5b44c5000-7ff5b45bd000 ---p 00000000 00:00 0 
+7ff5b45bd000-7ff5b464a000 rw-p 00000000 00:00 0 
+7ff5b464a000-7ff5b4653000 ---p 00000000 00:00 0 
+7ff5b4653000-7ff5b46b4000 rw-p 00000000 00:00 0 
+7ff5b46b4000-7ff5b4a14000 ---p 00000000 00:00 0 
+7ff5b4a14000-7ff5b4a2e000 r-xp 00000000 08:03 274257                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libzip.so
+7ff5b4a2e000-7ff5b4c2e000 ---p 0001a000 08:03 274257                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libzip.so
+7ff5b4c2e000-7ff5b4c2f000 rw-p 0001a000 08:03 274257                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libzip.so
+7ff5b4c2f000-7ff5b4c3b000 r-xp 00000000 08:03 131777                     /usr/lib64/libnss_files-2.20.so
+7ff5b4c3b000-7ff5b4e3a000 ---p 0000c000 08:03 131777                     /usr/lib64/libnss_files-2.20.so
+7ff5b4e3a000-7ff5b4e3b000 r--p 0000b000 08:03 131777                     /usr/lib64/libnss_files-2.20.so
+7ff5b4e3b000-7ff5b4e3c000 rw-p 0000c000 08:03 131777                     /usr/lib64/libnss_files-2.20.so
+7ff5b4e3c000-7ff5b4e66000 r-xp 00000000 08:03 274222                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libjava.so
+7ff5b4e66000-7ff5b5066000 ---p 0002a000 08:03 274222                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libjava.so
+7ff5b5066000-7ff5b5068000 rw-p 0002a000 08:03 274222                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libjava.so
+7ff5b5068000-7ff5b5075000 r-xp 00000000 08:03 274256                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libverify.so
+7ff5b5075000-7ff5b5275000 ---p 0000d000 08:03 274256                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libverify.so
+7ff5b5275000-7ff5b5277000 rw-p 0000d000 08:03 274256                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libverify.so
+7ff5b5277000-7ff5b527a000 ---p 00000000 00:00 0 
+7ff5b527a000-7ff5b5378000 rw-p 00000000 00:00 0                          [stack:6805]
+7ff5b5378000-7ff5bb8eb000 r--p 00000000 08:03 139917                     /usr/lib/locale/locale-archive
+7ff5bb8eb000-7ff5bb8ec000 ---p 00000000 00:00 0 
+7ff5bb8ec000-7ff5bc0ec000 rw-p 00000000 00:00 0 
+7ff5bc0fa000-7ff5bc0fe000 rw-s 00000000 00:04 412352530                  /SYSV00000000 (deleted)
+7ff5bc0fe000-7ff5bc150000 r--p 00000000 08:03 657660                     /usr/share/fonts/dejavu/DejaVuSansMono.ttf
+7ff5bc150000-7ff5bc156000 r--s 0003e000 08:03 274389                     /usr/java/jdk1.8.0_31/jre/lib/ext/sunjce_provider.jar
+7ff5bc157000-7ff5bc159000 rw-p 00000000 00:00 0 
+7ff5bc159000-7ff5bc15a000 r--s 00009000 08:03 274388                     /usr/java/jdk1.8.0_31/jre/lib/ext/sunec.jar
+7ff5bc15a000-7ff5bc15d000 r--s 00019000 08:03 274433                     /usr/java/jdk1.8.0_31/jre/lib/jce.jar
+7ff5bc15d000-7ff5bc1bd000 rw-s 00000000 00:04 398295049                  /SYSV00000000 (deleted)
+7ff5bc1bd000-7ff5bc1be000 r--s 00004000 fd:00 47580584                   /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/modules/org-netbeans-api-annotations-common.jar
+7ff5bc1be000-7ff5bc1e0000 r--s 0038e000 08:03 274382                     /usr/java/jdk1.8.0_31/jre/lib/ext/cldrdata.jar
+7ff5bc1e0000-7ff5bc1ea000 r--s 0021b000 08:03 275116                     /usr/java/jdk1.8.0_31/jre/lib/ext/localedata.jar
+7ff5bc1ea000-7ff5bc1f0000 r--s 0001e000 08:03 274528                     /usr/java/jdk1.8.0_31/lib/dt.jar
+7ff5bc1f0000-7ff5bc1f1000 r--s 00001000 fd:00 5899730                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_zh_TW.jar
+7ff5bc1f1000-7ff5bc1f2000 r--s 00001000 fd:00 5899729                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_tr.jar
+7ff5bc1f2000-7ff5bc1f3000 r--s 00001000 fd:00 5899728                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_sv.jar
+7ff5bc1f3000-7ff5bc1f4000 r--s 00001000 fd:00 5899727                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_sq.jar
+7ff5bc1f4000-7ff5bc1f5000 r--s 00001000 fd:00 5899726                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_si.jar
+7ff5bc1f5000-7ff5bc1f6000 r--s 00001000 fd:00 5899725                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_ro.jar
+7ff5bc1f6000-7ff5bc1f7000 r--s 00001000 fd:00 5899724                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_pt_PT.jar
+7ff5bc1f7000-7ff5bc1f8000 r--s 00001000 fd:00 5899723                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_pl.jar
+7ff5bc1f8000-7ff5bc1f9000 r--s 00001000 fd:00 5899722                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_nl_NL.jar
+7ff5bc1f9000-7ff5bc1fa000 r--s 00000000 fd:00 5899710                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_tr.jar
+7ff5bc1fa000-7ff5bc1fb000 r--s 00000000 fd:00 5899709                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_sv.jar
+7ff5bc1fb000-7ff5bc1fc000 r--s 00000000 fd:00 5899708                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_si.jar
+7ff5bc1fc000-7ff5bc1fd000 r--s 00000000 fd:00 5899707                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_ro.jar
+7ff5bc1fd000-7ff5bc1fe000 r--s 00000000 fd:00 5899706                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_pl.jar
+7ff5bc1fe000-7ff5bc1ff000 r--s 00000000 fd:00 5899705                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_nl_NL.jar
+7ff5bc1ff000-7ff5bc200000 r--s 00000000 fd:00 5899704                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_ko.jar
+7ff5bc200000-7ff5bc201000 r--s 00000000 fd:00 5899703                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_it.jar
+7ff5bc201000-7ff5bc202000 r--s 00000000 fd:00 5899702                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_in_ID.jar
+7ff5bc202000-7ff5bc203000 r--s 00000000 fd:00 5899701                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_gl_ES.jar
+7ff5bc203000-7ff5bc204000 r--s 00000000 fd:00 5899700                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_fr.jar
+7ff5bc204000-7ff5bc205000 r--s 00000000 fd:00 5899699                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_es.jar
+7ff5bc205000-7ff5bc206000 r--s 00000000 fd:00 5899698                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_de.jar
+7ff5bc206000-7ff5bc207000 r--s 00000000 fd:00 5899697                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_cs.jar
+7ff5bc207000-7ff5bc208000 r--s 00000000 fd:00 5899696                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_ca.jar
+7ff5bc208000-7ff5bc209000 r--s 00000000 fd:00 5899695                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util-lookup_bg.jar
+7ff5bc209000-7ff5bc20a000 r--s 00001000 fd:00 5899721                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_ko.jar
+7ff5bc20a000-7ff5bc20c000 r--s 00000000 fd:00 5899720                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_it.jar
+7ff5bc20c000-7ff5bc20d000 r--s 00001000 fd:00 5899719                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_in_ID.jar
+7ff5bc20d000-7ff5bc20e000 r--s 00001000 fd:00 5899718                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_gl_ES.jar
+7ff5bc20e000-7ff5bc210000 r--s 00000000 fd:00 5899717                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_fr.jar
+7ff5bc210000-7ff5bc212000 r--s 00000000 fd:00 5899716                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_es.jar
+7ff5bc212000-7ff5bc214000 r--s 00000000 fd:00 5899715                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_de.jar
+7ff5bc214000-7ff5bc215000 r--s 00001000 fd:00 5899714                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_cs.jar
+7ff5bc215000-7ff5bc216000 r--s 00001000 fd:00 5899713                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_ca.jar
+7ff5bc216000-7ff5bc217000 r--s 00001000 fd:00 5899712                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_bg.jar
+7ff5bc217000-7ff5bc219000 r--s 00000000 fd:00 5899711                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-util_ar_SA.jar
+7ff5bc219000-7ff5bc21a000 r--s 00000000 fd:00 5899674                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_zh_TW.jar
+7ff5bc21a000-7ff5bc21b000 r--s 00000000 fd:00 5899673                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_tr.jar
+7ff5bc21b000-7ff5bc21c000 r--s 00000000 fd:00 5899672                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_sv.jar
+7ff5bc21c000-7ff5bc21d000 r--s 00000000 fd:00 5899671                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_sq.jar
+7ff5bc21d000-7ff5bc21e000 r--s 00000000 fd:00 5899670                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_si.jar
+7ff5bc21e000-7ff5bc21f000 r--s 00000000 fd:00 5899669                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_ro.jar
+7ff5bc21f000-7ff5bc220000 r--s 00000000 fd:00 5899668                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_pt_PT.jar
+7ff5bc220000-7ff5bc221000 r--s 00000000 fd:00 5899667                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_pl.jar
+7ff5bc221000-7ff5bc222000 r--s 00000000 fd:00 5899666                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_nl_NL.jar
+7ff5bc222000-7ff5bc223000 r--s 00000000 fd:00 5899665                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_ko.jar
+7ff5bc223000-7ff5bc224000 r--s 00000000 fd:00 5899664                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_it.jar
+7ff5bc224000-7ff5bc225000 r--s 00000000 fd:00 5899663                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_in_ID.jar
+7ff5bc225000-7ff5bc226000 r--s 00000000 fd:00 5899662                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_gl_ES.jar
+7ff5bc226000-7ff5bc227000 r--s 00000000 fd:00 5899661                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_fr.jar
+7ff5bc227000-7ff5bc228000 r--s 00000000 fd:00 5899660                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_es.jar
+7ff5bc228000-7ff5bc229000 r--s 00000000 fd:00 5899659                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_de.jar
+7ff5bc229000-7ff5bc22a000 r--s 00000000 fd:00 5899658                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_cs.jar
+7ff5bc22a000-7ff5bc22b000 r--s 00000000 fd:00 5899657                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_ca.jar
+7ff5bc22b000-7ff5bc22c000 r--s 00000000 fd:00 5899656                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_bg.jar
+7ff5bc22c000-7ff5bc22d000 r--s 00000000 fd:00 5899655                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/org-openide-modules_ar_SA.jar
+7ff5bc22d000-7ff5bc22e000 r--s 00000000 fd:00 5899694                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_zh_TW.jar
+7ff5bc22e000-7ff5bc22f000 r--s 00000000 fd:00 5899693                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_tr.jar
+7ff5bc22f000-7ff5bc230000 r--s 00000000 fd:00 5899692                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_sv.jar
+7ff5bc230000-7ff5bc231000 r--s 00000000 fd:00 5899691                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_sq.jar
+7ff5bc231000-7ff5bc232000 r--s 00000000 fd:00 5899690                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_si.jar
+7ff5bc232000-7ff5bc233000 r--s 00000000 fd:00 5899689                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ro.jar
+7ff5bc233000-7ff5bc234000 r--s 00000000 fd:00 5899688                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_pt_PT.jar
+7ff5bc234000-7ff5bc235000 r--s 00000000 fd:00 5899687                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_pl.jar
+7ff5bc235000-7ff5bc236000 r--s 00000000 fd:00 5899686                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_nl_NL.jar
+7ff5bc236000-7ff5bc237000 r--s 00000000 fd:00 5899685                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ko.jar
+7ff5bc237000-7ff5bc238000 r--s 00000000 fd:00 5899684                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_it.jar
+7ff5bc238000-7ff5bc239000 r--s 00000000 fd:00 5899683                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_in_ID.jar
+7ff5bc239000-7ff5bc23a000 r--s 00000000 fd:00 5899682                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_gl_ES.jar
+7ff5bc23a000-7ff5bc23b000 r--s 00000000 fd:00 5899681                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_fr.jar
+7ff5bc23b000-7ff5bc23c000 r--s 00000000 fd:00 5899680                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_es.jar
+7ff5bc23c000-7ff5bc23d000 r--s 00000000 fd:00 5899679                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_de.jar
+7ff5bc23d000-7ff5bc23e000 r--s 00000000 fd:00 5899678                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_cs.jar
+7ff5bc23e000-7ff5bc23f000 r--s 00000000 fd:00 5899677                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ca.jar
+7ff5bc23f000-7ff5bc240000 r--s 00000000 fd:00 5899676                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_bg.jar
+7ff5bc240000-7ff5bc241000 r--s 00000000 fd:00 5899675                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ar_SA.jar
+7ff5bc241000-7ff5bc242000 r--s 00000000 fd:00 46663765                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_no.jar
+7ff5bc242000-7ff5bc243000 r--s 00000000 fd:00 46663737                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_cs.jar
+7ff5bc243000-7ff5bc244000 r--s 00000000 fd:00 46663551                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_fr.jar
+7ff5bc244000-7ff5bc245000 r--s 00000000 fd:00 46663743                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_el.jar
+7ff5bc245000-7ff5bc246000 r--s 00000000 fd:00 46663757                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_it.jar
+7ff5bc246000-7ff5bc247000 r--s 00000000 fd:00 46663766                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_pt.jar
+7ff5bc247000-7ff5bc248000 r--s 00000000 fd:00 46663750                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_fi.jar
+7ff5bc248000-7ff5bc249000 r--s 00000000 fd:00 46663526                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_es.jar
+7ff5bc249000-7ff5bc24b000 r--s 0002d000 fd:00 46663780                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris.jar
+7ff5bc24b000-7ff5bc24c000 r--s 00000000 fd:00 46663773                   /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster/core/locale/core_ancestris_sv.jar
+7ff5bc24c000-7ff5bc24d000 r--s 00001000 fd:00 6292907                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_gl_ES.jar
+7ff5bc24d000-7ff5bc24e000 r--s 00001000 fd:00 6292910                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_ko.jar
+7ff5bc24e000-7ff5bc24f000 r--s 00001000 fd:00 6292902                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_ca.jar
+7ff5bc24f000-7ff5bc250000 r--s 00001000 fd:00 6292916                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_sq.jar
+7ff5bc250000-7ff5bc251000 r--s 00001000 fd:00 6292914                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_ro.jar
+7ff5bc251000-7ff5bc252000 r--s 00001000 fd:00 6292893                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_pt_PT.jar
+7ff5bc252000-7ff5bc253000 r--s 00001000 fd:00 6292883                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_cs.jar
+7ff5bc253000-7ff5bc254000 r--s 00001000 fd:00 6292904                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_de.jar
+7ff5bc254000-7ff5bc255000 r--s 00001000 fd:00 6292911                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_nl_NL.jar
+7ff5bc255000-7ff5bc256000 r--s 00001000 fd:00 6292889                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_it.jar
+7ff5bc256000-7ff5bc257000 r--s 00001000 fd:00 6292912                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_pl.jar
+7ff5bc257000-7ff5bc258000 r--s 00001000 fd:00 6292917                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_sv.jar
+7ff5bc258000-7ff5bc259000 r--s 00001000 fd:00 6292909                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_it.jar
+7ff5bc259000-7ff5bc25a000 r--s 00001000 fd:00 6292919                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_zh_TW.jar
+7ff5bc25a000-7ff5bc25b000 r--s 00001000 fd:00 6292915                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_si.jar
+7ff5bc25b000-7ff5bc25c000 r--s 00001000 fd:00 6292903                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_cs.jar
+7ff5bc25c000-7ff5bc25d000 r--s 00001000 fd:00 6292901                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_bg.jar
+7ff5bc25d000-7ff5bc25e000 r--s 00001000 fd:00 6292885                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_es.jar
+7ff5bc25e000-7ff5bc25f000 r--s 00001000 fd:00 6292884                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_de.jar
+7ff5bc25f000-7ff5bc260000 r--s 00001000 fd:00 6292887                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_gl_ES.jar
+7ff5bc260000-7ff5bc261000 r--s 00001000 fd:00 6292900                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_ar_SA.jar
+7ff5bc261000-7ff5bc262000 r--s 00001000 fd:00 6292899                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_zh_TW.jar
+7ff5bc262000-7ff5bc263000 r--s 00001000 fd:00 6292896                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_sq.jar
+7ff5bc263000-7ff5bc264000 r--s 00001000 fd:00 6292894                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_ro.jar
+7ff5bc264000-7ff5bc265000 r--s 00001000 fd:00 6292880                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_ar_SA.jar
+7ff5bc265000-7ff5bc266000 r--s 00001000 fd:00 6292891                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_nl_NL.jar
+7ff5bc266000-7ff5bc267000 r--s 00001000 fd:00 6292906                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_fr.jar
+7ff5bc267000-7ff5bc268000 r--s 00001000 fd:00 6292898                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_tr.jar
+7ff5bc268000-7ff5bc269000 r--s 00001000 fd:00 6292892                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_pl.jar
+7ff5bc269000-7ff5bc26a000 r--s 00001000 fd:00 6292908                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_in_ID.jar
+7ff5bc26a000-7ff5bc26b000 r--s 00001000 fd:00 6292882                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_ca.jar
+7ff5bc26b000-7ff5bc26c000 r--s 00001000 fd:00 6292897                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_sv.jar
+7ff5bc26c000-7ff5bc26d000 r--s 00001000 fd:00 6292881                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_bg.jar
+7ff5bc26d000-7ff5bc26e000 r--s 00001000 fd:00 6292913                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_pt_PT.jar
+7ff5bc26e000-7ff5bc26f000 r--s 00001000 fd:00 6292886                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_fr.jar
+7ff5bc26f000-7ff5bc270000 r--s 00001000 fd:00 6292895                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_si.jar
+7ff5bc270000-7ff5bc271000 r--s 00001000 fd:00 6292890                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_ko.jar
+7ff5bc271000-7ff5bc272000 r--s 00001000 fd:00 6292888                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/org-openide-filesystems_in_ID.jar
+7ff5bc272000-7ff5bc273000 r--s 00001000 fd:00 6292918                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_tr.jar
+7ff5bc273000-7ff5bc279000 r--s 000bc000 fd:00 6161876                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/core.jar
+7ff5bc279000-7ff5bc280000 r--s 000ed000 fd:00 6161875                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/org-openide-filesystems.jar
+7ff5bc280000-7ff5bc284000 r--s 00054000 fd:00 5768610                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/org-openide-util-lookup.jar
+7ff5bc284000-7ff5bc28b000 r--s 000b1000 fd:00 5768611                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/org-openide-util.jar
+7ff5bc28b000-7ff5bc28e000 r--s 00075000 fd:00 5768604                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/boot.jar
+7ff5bc28e000-7ff5bc2e7000 r-xp 00000000 08:03 274252                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libsplashscreen.so
+7ff5bc2e7000-7ff5bc4e7000 ---p 00059000 08:03 274252                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libsplashscreen.so
+7ff5bc4e7000-7ff5bc4e8000 rw-p 00059000 08:03 274252                     /usr/java/jdk1.8.0_31/jre/lib/amd64/libsplashscreen.so
+7ff5bc4e8000-7ff5bc4eb000 rw-p 00000000 00:00 0 
+7ff5bc4eb000-7ff5bd159000 r-xp 00000000 08:03 274261                     /usr/java/jdk1.8.0_31/jre/lib/amd64/server/libjvm.so
+7ff5bd159000-7ff5bd358000 ---p 00c6e000 08:03 274261                     /usr/java/jdk1.8.0_31/jre/lib/amd64/server/libjvm.so
+7ff5bd358000-7ff5bd42e000 rw-p 00c6d000 08:03 274261                     /usr/java/jdk1.8.0_31/jre/lib/amd64/server/libjvm.so
+7ff5bd42e000-7ff5bd474000 rw-p 00000000 00:00 0 
+7ff5bd474000-7ff5bd489000 r-xp 00000000 08:03 274524                     /usr/java/jdk1.8.0_31/lib/amd64/jli/libjli.so
+7ff5bd489000-7ff5bd688000 ---p 00015000 08:03 274524                     /usr/java/jdk1.8.0_31/lib/amd64/jli/libjli.so
+7ff5bd688000-7ff5bd689000 rw-p 00014000 08:03 274524                     /usr/java/jdk1.8.0_31/lib/amd64/jli/libjli.so
+7ff5bd689000-7ff5bd68a000 rw-p 00000000 00:00 0 
+7ff5bd68a000-7ff5bd68c000 r--s 00009000 fd:00 5768603                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/org-openide-modules.jar
+7ff5bd68c000-7ff5bd69e000 rw-p 00000000 00:00 0 
+7ff5bd69e000-7ff5bd6a6000 rw-s 00000000 00:23 7172359                    /tmp/hsperfdata_frederic/6803
+7ff5bd6a6000-7ff5bd6a7000 rw-p 00000000 00:00 0 
+7ff5bd6a7000-7ff5bd6a8000 r--p 00000000 00:00 0 
+7ff5bd6a8000-7ff5bd6a9000 r--s 00001000 fd:00 6292905                    /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/core/locale/core_es.jar
+7ff5bd6a9000-7ff5bd6b0000 r--s 00000000 08:03 271160                     /usr/lib64/gconv/gconv-modules.cache
+7ff5bd6b0000-7ff5bd6b1000 rw-p 00000000 00:00 0 
+7fffa9e24000-7fffa9e47000 rw-p 00000000 00:00 0                          [stack]
+7fffa9f8a000-7fffa9f8c000 r--p 00000000 00:00 0                          [vvar]
+7fffa9f8c000-7fffa9f8e000 r-xp 00000000 00:00 0                          [vdso]
+ffffffffff600000-ffffffffff601000 r-xp 00000000 00:00 0                  [vsyscall]
+
+VM Arguments:
+jvm_args: -Djdk.home=/usr/java/jdk1.8.0_31 -Dnetbeans.running.environment=gnome -Dnetbeans.dirs=/home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/build/cluster:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/harness:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform -Dnetbeans.home=/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform -Dnetbeans.logger.console=true -ea -Xms96m -Xmx896m -XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=/home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/modules.editors.standard/../build/testuserdir/var/log/heapdump.hprof 
+java_command: org.netbeans.Main --cachedir /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/modules.editors.standard/../build/testuserdir/var/cache --userdir /home/frederic/H-Hobby/Development/ancestris/trunk/AncestrisCore/modules.editors.standard/../build/testuserdir --branding ancestris
+java_class_path (initial): /home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/boot.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/org-openide-modules.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/org-openide-util.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/org-openide-util-lookup.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ar_SA.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_bg.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ca.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_cs.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_de.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_es.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_fr.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_gl_ES.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_in_ID.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_it.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ko.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_nl_NL.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_pl.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_pt_PT.jar:/home/frederic/H-Hobby/Development/ancestris/netbeans_platform_8.0.1/platform/lib/locale/boot_ro.jar:/home/frederic/H-Hobby/Developm
+Launcher Type: SUN_STANDARD
+
+Environment Variables:
+PATH=/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/usr/sbin:/bin:/sbin:/home/frederic/.local/bin:/home/frederic/bin
+USERNAME=frederic
+LD_LIBRARY_PATH=/usr/java/jdk1.8.0_31/jre/lib/amd64:/usr/java/jdk1.8.0_31/jre/lib/i386:/usr/java/latest/jre/lib/amd64:/usr/java/latest/jre/lib/i386:
+SHELL=/bin/bash
+DISPLAY=:0
+
+Signal Handlers:
+SIGSEGV: [libjvm.so+0xa7a650], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGBUS: [libjvm.so+0xa7a650], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGFPE: [libjvm.so+0x8e28f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGPIPE: SIG_IGN, sa_mask[0]=00000000000010000000000000000000, sa_flags=SA_RESTART
+SIGXFSZ: [libjvm.so+0x8e28f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGILL: [libjvm.so+0x8e28f0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGUSR1: SIG_DFL, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGUSR2: [libjvm.so+0x8e4120], sa_mask[0]=00100000000000000000000000000000, sa_flags=SA_RESTART|SA_SIGINFO
+SIGHUP: [libjvm.so+0x8e54e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGINT: SIG_IGN, sa_mask[0]=00000000000000000000000000000000, sa_flags=none
+SIGTERM: [libjvm.so+0x8e54e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+SIGQUIT: [libjvm.so+0x8e54e0], sa_mask[0]=11111111011111111101111111111110, sa_flags=SA_RESTART|SA_SIGINFO
+
+
+---------------  S Y S T E M  ---------------
+
+OS:Fedora release 21 (Twenty One)
+
+uname:Linux 3.18.3-201.fc21.x86_64 #1 SMP Mon Jan 19 15:59:31 UTC 2015 x86_64
+libc:glibc 2.20 NPTL 2.20 
+rlimit: STACK 8192k, CORE 0k, NPROC 4096, NOFILE 4096, AS infinity
+load average:0,01 0,18 0,29
+
+/proc/meminfo:
+MemTotal:        8139256 kB
+MemFree:          318180 kB
+MemAvailable:    2497972 kB
+Buffers:          335016 kB
+Cached:          1815348 kB
+SwapCached:            0 kB
+Active:          6168368 kB
+Inactive:        1095068 kB
+Active(anon):    5119400 kB
+Inactive(anon):    46284 kB
+Active(file):    1048968 kB
+Inactive(file):  1048784 kB
+Unevictable:          32 kB
+Mlocked:              32 kB
+SwapTotal:             0 kB
+SwapFree:              0 kB
+Dirty:               884 kB
+Writeback:             0 kB
+AnonPages:       5113188 kB
+Mapped:           224084 kB
+Shmem:             52528 kB
+Slab:             406012 kB
+SReclaimable:     335456 kB
+SUnreclaim:        70556 kB
+KernelStack:        8768 kB
+PageTables:        55440 kB
+NFS_Unstable:          0 kB
+Bounce:                0 kB
+WritebackTmp:          0 kB
+CommitLimit:     4069628 kB
+Committed_AS:    7542096 kB
+VmallocTotal:   34359738367 kB
+VmallocUsed:      106640 kB
+VmallocChunk:   34359619016 kB
+HardwareCorrupted:     0 kB
+AnonHugePages:         0 kB
+HugePages_Total:       0
+HugePages_Free:        0
+HugePages_Rsvd:        0
+HugePages_Surp:        0
+Hugepagesize:       2048 kB
+DirectMap4k:      302768 kB
+DirectMap2M:     8048640 kB
+
+
+CPU:total 4 (2 cores per cpu, 2 threads per core) family 6 model 58 stepping 9, cmov, cx8, fxsr, mmx, sse, sse2, sse3, ssse3, sse4.1, sse4.2, popcnt, avx, aes, clmul, erms, ht, tsc, tscinvbit, tscinv
+
+/proc/cpuinfo:
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz
+stepping	: 9
+microcode	: 0x1b
+cpu MHz		: 1931.671
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 5786.98
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 1
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz
+stepping	: 9
+microcode	: 0x1b
+cpu MHz		: 2009.722
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 2
+initial apicid	: 2
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 5786.98
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 2
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz
+stepping	: 9
+microcode	: 0x1b
+cpu MHz		: 1999.980
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 0
+cpu cores	: 2
+apicid		: 1
+initial apicid	: 1
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 5786.98
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+processor	: 3
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 58
+model name	: Intel(R) Core(TM) i5-3470T CPU @ 2.90GHz
+stepping	: 9
+microcode	: 0x1b
+cpu MHz		: 1809.554
+cache size	: 3072 KB
+physical id	: 0
+siblings	: 4
+core id		: 1
+cpu cores	: 2
+apicid		: 3
+initial apicid	: 3
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 13
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx rdtscp lm constant_tsc arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc aperfmperf eagerfpu pni pclmulqdq dtes64 monitor ds_cpl vmx smx est tm2 ssse3 cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic popcnt tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm ida arat epb pln pts dtherm tpr_shadow vnmi flexpriority ept vpid fsgsbase smep erms xsaveopt
+bugs		:
+bogomips	: 5786.98
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 36 bits physical, 48 bits virtual
+power management:
+
+
+
+Memory: 4k page, physical 8139256k(318180k free), swap 0k(0k free)
+
+vm_info: Java HotSpot(TM) 64-Bit Server VM (25.31-b07) for linux-amd64 JRE (1.8.0_31-b13), built on Dec 17 2014 20:40:15 by "java_re" with gcc 4.3.0 20080428 (Red Hat 4.3.0-8)
+
+time: Sat Jan 23 18:13:44 2016
+elapsed time: 354 seconds (0d 0h 5m 54s)
+
