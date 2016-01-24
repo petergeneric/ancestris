@@ -39,10 +39,12 @@ import org.openide.util.Exceptions;
 public class MacMenu {
     
     public MacMenu() {
+        System.out.println("*** DEBUG *** - Defining MacMenu");
     }
         
     public void setUp() {
         System.out.println("*** DEBUG *** - Setting up Mac Menu");
+        if (true) return;
         
         try {
             Toolkit tk = Toolkit.getToolkit();

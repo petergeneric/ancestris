@@ -91,6 +91,7 @@
                 <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerTopComponent"/>
                 <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+                <attr name="iconBase" stringvalue="ancestris/explorer/explorer.png"/>
             </file>
             <file name="org-netbeans-core-windows-actions-ResetWindowsAction.instance_hidden"/>
         </folder>
@@ -140,7 +141,7 @@
             </file>
             <file name="ancestris-app-ActionClose.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionClose.instance"/>
-                <attr name="position" intvalue="2600"/>
+                <attr name="position" intvalue="2595"/>
             </file>
              <!--<file name="ancestris-app-ActionSave.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSave.instance"/>
@@ -221,7 +222,7 @@
             <file name="org-netbeans-modules-options-OptionsWindowAction.shadow_hidden"/>   <!-- the tag of the options menuitem (FL) -->
             <file name="SeparatorMaxiTools.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                <attr name="position" intvalue="79"/>
+                <attr name="position" intvalue="78"/>
             </file>
             <file name="SeparatorMiniTools.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
@@ -239,6 +240,8 @@
         <file name="Versioning_hidden"/>
         <folder name="View">
             <file name="Separator1.instance_hidden"/>
+            <file name="org-netbeans-core-multiview-EditorsAction.instance_hidden"/>
+            <file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
             <file name="Separator1_1_2.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="-600"/>
@@ -330,6 +333,7 @@
     </folder>
     <folder name="Services">
         <folder name="AutoupdateType">
+            <attr name="position" intvalue="12"/>
             <file name="ancestris_extensions_update_center.instance">
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#Services/AutoupdateType/ancestris_extensions_update_center.instance"/>
                 <attr name="enabled" boolvalue="true"/>
@@ -354,11 +358,13 @@
             </file>
         </folder>
         <folder name="JavaHelp">
+            <attr name="position" intvalue="300"/>
             <file name="app-helpset.xml" url="app-helpset.xml">
                 <attr name="position" intvalue="3000"/>
             </file>
         </folder>
         <folder name="Hidden">
+            <attr name="position" intvalue="200"/>
             <file name="ancestris-app-ActionOpenDefault.instance">
                 <attr name="instanceClass" stringvalue="ancestris.app.ActionOpenDefault"/>
                 <attr name="instanceOf" stringvalue="org.netbeans.api.actions.Openable"/>
@@ -406,6 +412,7 @@
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
         <file name="Standard.xml" url="Standard.xml"/>
         <folder name="Nav">
+            <attr name="position" intvalue="700"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Nav"/>
             <file name="ancestris-app-ActionHistory.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/ancestris-app-ActionHistory.instance"/>
@@ -417,6 +424,7 @@
             </file>
         </folder>
         <folder name="Help">
+            <attr name="position" intvalue="900"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Help"/>
             <file name="MyOptions.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
@@ -436,6 +444,7 @@
             </file>
         </folder>
         <folder name="File">
+            <attr name="position" intvalue="100"/>
             <file name="ancestris-app-ActionNew.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionNew.instance"/>
                 <attr name="position" intvalue="-100"/>
@@ -504,10 +513,9 @@
                 <attr name="displayName" bundlevalue="org.netbeans.core.windows.resources.Bundle#Toolbars.Options.Export.displayName"/>
             </file>
             <file name="General">
-                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/general"/>
                 <attr name="include" stringvalue="config/Preferences/org/.*|config/Preferences/ancestris/.*|etc/.*|config/Services/Browsers/.*"/>
                 <attr name="exclude" stringvalue="ancestris/ancestris.log.*|config/Preferences/ancestris/core/report.*"/>
-                <attr name="displayName" bundlevalue="org.netbeans.core.ui.options.general.Bundle#General.Options.Export.displayName"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsExport/preferences/general"/>
             </file>
         </folder>
         <file name="Keyring_hidden"/>
