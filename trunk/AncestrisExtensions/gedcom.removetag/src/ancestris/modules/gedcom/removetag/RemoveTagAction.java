@@ -11,13 +11,13 @@
  */
 package ancestris.modules.gedcom.removetag;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -25,22 +25,32 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
-@ActionID(id = "ancestris.modules.gedcom.removetag.RemoveTagAction",
-category = "Tools")
-@ActionRegistration(iconBase = "ancestris/modules/gedcom/removetag/RemoveTagIcon.png",
-iconInMenu = true,
-displayName = "#CTL_RemoveTagAction")
-@ActionReference(path = "Menu/Tools/Gedcom")
-public final class RemoveTagAction implements ActionListener {
+@ActionID(id = "ancestris.modules.gedcom.removetag.RemoveTagAction", category = "Tools")
+@ActionRegistration(
+        displayName = "#CTL_RemoveTagAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "RemoveTagAction", position = 500)
+public final class RemoveTagAction extends AbstractAncestrisContextAction {
+
+    public RemoveTagAction() {
+        super();
+        setImage("ancestris/modules/gedcom/removetag/RemoveTagIcon.png");
+        setText(NbBundle.getMessage(RemoveTagAction.class, "CTL_RemoveTagAction"));
+    }
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Context context;
+    protected void actionPerformedImpl(ActionEvent event) {
         RemoveTagPanel removeTagPanel = new RemoveTagPanel();
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-            Gedcom gedcom = context.getGedcom();
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
+            Gedcom gedcom = contextToOpen.getGedcom();
 
             // Create a custom NotifyDescriptor, specify the panel instance as a parameter + other params
             NotifyDescriptor notifyDescriptor = new NotifyDescriptor(
