@@ -17,33 +17,41 @@
  */
 package ancestris.modules.gedcom.history;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Set;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.Utilities;
+import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 
-@ActionID(category = "Tools",
-id = "ancestris.modules.gedcom.history.DisplayHistoryAction")
-@ActionRegistration(iconInMenu = true,
-displayName = "#CTL_DisplayHistoryAction",
-iconBase = "ancestris/modules/gedcom/history/DisplayHistoryIcon.png")
-@ActionReferences({
-    @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3333)
-})
-public final class DisplayHistoryAction implements ActionListener {
+@ActionID(id = "ancestris.modules.gedcom.history.DisplayHistoryAction", category = "Tools")
+@ActionRegistration(
+        displayName = "#CTL_DisplayHistoryAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom/History", name = "DisplayHistoryAction", position = 100)
+public final class DisplayHistoryAction extends AbstractAncestrisContextAction {
+
+    public DisplayHistoryAction() {
+        super();
+        setImage("ancestris/modules/gedcom/history/DisplayHistoryIcon.png");
+        setText(NbBundle.getMessage(DisplayHistoryAction.class, "CTL_DisplayHistoryAction"));
+    }
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
-        if (context != null) {
-            Gedcom gedcom = context.getGedcom();
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
+            Gedcom gedcom = contextToOpen.getGedcom();
             GedcomHistoryTopComponent gedcomHistoryTopComponent = null;
             Set<TopComponent> openedTopComponent = TopComponent.getRegistry().getOpened();
             for (TopComponent topComponent : openedTopComponent) {

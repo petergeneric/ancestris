@@ -44,7 +44,7 @@ import org.openide.windows.TopComponent;
 @TopComponent.Description(preferredID = "GedcomHistoryTopComponent",
 //iconBase="SET/PATH/TO/ICON/HERE", 
 persistenceType = TopComponent.PERSISTENCE_NEVER)
-@TopComponent.Registration(mode = "explorer", openAtStartup = false)
+@TopComponent.Registration(mode = "explorer", openAtStartup = false, position = 101)
 //@TopComponent.OpenActionRegistration(displayName = "#CTL_GedcomHistoryAction", preferredID = "GedcomHistoryTopComponent")
 public final class GedcomHistoryTopComponent extends TopComponent implements ChangeListener {
 

@@ -4,8 +4,10 @@
     <folder name="Menu">
         <folder name="Tools">
             <folder name="Gedcom">
+                <attr name="position" intvalue="80"/>
                 <folder name="History">
                     <attr name="displayName" bundlevalue="ancestris.modules.gedcom.history.Bundle#Menu/Tools/Gedcom/History"/> 
+                    <attr name="position" intvalue="100"/>
                 </folder>
             </folder>
         </folder>
