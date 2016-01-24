@@ -97,8 +97,10 @@
     </folder>
     <folder name="Services">
         <folder name="MIMEResolver">
+            <attr name="position" intvalue="100"/>
             <file name="GedcomResolver.xml" url="GedcomResolver.xml">
                 <attr name="displayName" bundlevalue="ancestris.core.Bundle#Services/MIMEResolver/GedcomResolver.xml"/>
+                <attr name="position" intvalue="100"/>
             </file>
         </folder>
     </folder>
