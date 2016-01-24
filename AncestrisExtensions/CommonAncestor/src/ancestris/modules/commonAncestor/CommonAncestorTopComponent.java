@@ -7,7 +7,6 @@ import genj.gedcom.Gedcom;
 import genj.view.SelectionListener;
 import java.awt.BorderLayout;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
@@ -26,11 +25,11 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
     /**
      * CommonAncestorTopComponent factory
      */
-    public static CommonAncestorTopComponent createInstance() {
+    public static CommonAncestorTopComponent createInstance(Context context) {
         CommonAncestorTopComponent commonAncestorTopComponent = null;
 
         // search existing CommonAncestorTopComponent with the same Gedcom
-        Context currentContext = Utilities.actionsGlobalContext().lookup(Context.class);
+        Context currentContext = context;
         //Context currentContext = GedcomDirectory.getInstance().getLastContext();
         if (currentContext != null) {
             Gedcom currentGedcom = currentContext.getGedcom();
