@@ -7,6 +7,7 @@
                 <attr name="delegate" newvalue="ancestris.modules.imports.wizard.ImportWizardAction"/>
                 <attr name="displayName" bundlevalue="ancestris.modules.imports.wizard.Bundle#CTL_ImportWizardAction"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="iconBase" stringvalue="ancestris/modules/imports/wizard/importGedcom.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
