@@ -1,9 +1,9 @@
 package ancestris.modules.gedcom.mergefile;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import static ancestris.modules.gedcom.mergefile.Bundle.CTL_GedcomMergeAction;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -14,23 +14,34 @@ import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 
-@ActionID(category = "Tools", id = "ancestris.modules.gedcom.merge.GedcomMergeAction")
-@ActionRegistration(iconBase = "ancestris/modules/gedcom/mergefile/MergeFileIcon.png",
-displayName = "#CTL_GedcomMergeAction")
-@ActionReferences({
-    @ActionReference(path = "Menu/Tools/Gedcom", position = 3333)
-})
-@NbBundle.Messages("CTL_GedcomMergeAction=Merge Tool")
-public final class GedcomMergeWizardAction implements ActionListener {
+@ActionID(id = "ancestris.modules.gedcom.merge.GedcomMergeAction", category = "Tools")
+@ActionRegistration(
+        displayName = "#CTL_GedcomMergeAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "GedcomMergeWizardAction", position = 600)
+@NbBundle.Messages("CTL_GedcomMergeAction=Merge genealogies")
+public final class GedcomMergeWizardAction extends AbstractAncestrisContextAction {
+
+    public GedcomMergeWizardAction() {
+        super();
+        setImage("ancestris/modules/gedcom/mergefile/MergeFileIcon.png");
+        setText(NbBundle.getMessage(GedcomMergeWizardAction.class, "CTL_GedcomMergeAction"));
+    }
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
 
     private final static Logger LOG = Logger.getLogger(GedcomMergeWizardAction.class.getName(), null);
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    protected void actionPerformedImpl(ActionEvent event) {
         List<WizardDescriptor.Panel<WizardDescriptor>> panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
         GedcomMergeWizardPanel1 gedcomMergeWizardPanel1 = new GedcomMergeWizardPanel1();
         GedcomMergeWizardPanel2 gedcomMergeWizardPanel2 = new GedcomMergeWizardPanel2();
