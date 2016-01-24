@@ -175,16 +175,7 @@ public final class DatuTopComponent extends TopComponent {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel1 = new javax.swing.JPanel() {
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2d = (Graphics2D) g;
-                Image image = arvernes_logo_small.getImage();
-                int x = (this.getWidth() - image.getWidth(null)) / 2;
-                int y = (this.getHeight() - image.getHeight(null)) / 2;
-                g2d.drawImage(image,x, 40, null);
-                super.paintComponent(g);
-            }
-        };
+        jPanel1 = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
         jComboBox1 = new javax.swing.JComboBox<Calendar>(PointInTime.CALENDARS);
         jLabel3 = new javax.swing.JLabel();
@@ -200,10 +191,6 @@ public final class DatuTopComponent extends TopComponent {
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
         jDisplay1 = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
 
         FormListener formListener = new FormListener();
 
@@ -225,8 +212,7 @@ public final class DatuTopComponent extends TopComponent {
         jComboBox2.addActionListener(formListener);
         jToolBar1.add(jComboBox2);
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel5.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.blue)); // NOI18N
-        jPanel5.setForeground(java.awt.SystemColor.activeCaption);
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel5.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), java.awt.Color.blue)); // NOI18N
         jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
         jPanel5.setOpaque(false);
         jPanel5.setPreferredSize(new java.awt.Dimension(196, 93));
@@ -253,7 +239,7 @@ public final class DatuTopComponent extends TopComponent {
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel3.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.blue)); // NOI18N
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel3.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), java.awt.Color.blue)); // NOI18N
         jPanel3.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel3.toolTipText")); // NOI18N
         jPanel3.setOpaque(false);
         jPanel3.setPreferredSize(new java.awt.Dimension(0, 0));
@@ -271,11 +257,9 @@ public final class DatuTopComponent extends TopComponent {
         jTextFieldGap.setForeground(java.awt.Color.lightGray);
         jTextFieldGap.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldGap.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap.text")); // NOI18N
-        jTextFieldGap.setBorder(null);
-        jTextFieldGap.setOpaque(false);
         jPanel3.add(jTextFieldGap);
 
-        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel7.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.blue)); // NOI18N
+        jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel7.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), java.awt.Color.blue)); // NOI18N
         jPanel7.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel7.toolTipText")); // NOI18N
         jPanel7.setOpaque(false);
         jPanel7.setLayout(new javax.swing.BoxLayout(jPanel7, javax.swing.BoxLayout.LINE_AXIS));
@@ -287,8 +271,6 @@ public final class DatuTopComponent extends TopComponent {
         jTextFieldGap1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jTextFieldGap1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldGap1.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap1.text")); // NOI18N
-        jTextFieldGap1.setBorder(null);
-        jTextFieldGap1.setOpaque(false);
         jTextFieldGap1.addKeyListener(formListener);
         jPanel7.add(jTextFieldGap1);
 
@@ -296,7 +278,7 @@ public final class DatuTopComponent extends TopComponent {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.month")); // NOI18N
         jPanel7.add(jLabel4);
 
-        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel6.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, null, java.awt.Color.blue)); // NOI18N
+        jPanel6.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel6.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), java.awt.Color.blue)); // NOI18N
         jPanel6.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.result.toolTipText")); // NOI18N
         jPanel6.setOpaque(false);
         jPanel6.setPreferredSize(new java.awt.Dimension(196, 93));
@@ -306,61 +288,18 @@ public final class DatuTopComponent extends TopComponent {
         jDisplay1.setForeground(java.awt.Color.red);
         jDisplay1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jDisplay1.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jDisplay1.text")); // NOI18N
-        jDisplay1.setOpaque(false);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jDisplay1, javax.swing.GroupLayout.DEFAULT_SIZE, 262, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jDisplay1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addContainerGap()
                 .addComponent(jDisplay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/datulette/information.png"))); // NOI18N
-        jButton1.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jButton1.toolTipText")); // NOI18N
-        jButton1.setBorder(null);
-        jButton1.addActionListener(formListener);
-
-        jPanel4.setOpaque(false);
-
-        jLabel1.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(51, 51, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jLabel1.text")); // NOI18N
-
-        jLabel2.setFont(new java.awt.Font("Tahoma", 1, 24)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(51, 51, 255));
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jLabel2.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 245, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 244, Short.MAX_VALUE))
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -375,12 +314,8 @@ public final class DatuTopComponent extends TopComponent {
                         .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 189, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGap(12, 12, 12)
-                        .addComponent(jButton1))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE))
+                    .addComponent(jPanel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE)
+                    .addComponent(jPanel5, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 308, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -392,15 +327,10 @@ public final class DatuTopComponent extends TopComponent {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE))
+                    .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addContainerGap())))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel1);
@@ -413,7 +343,7 @@ public final class DatuTopComponent extends TopComponent {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 362, Short.MAX_VALUE)
+            .addComponent(jScrollPane1)
         );
     }
 
@@ -422,14 +352,11 @@ public final class DatuTopComponent extends TopComponent {
     private class FormListener implements java.awt.event.ActionListener, java.awt.event.KeyListener, javax.swing.event.ChangeListener {
         FormListener() {}
         public void actionPerformed(java.awt.event.ActionEvent evt) {
-            if (evt.getSource() == jComboBox1) {
-                DatuTopComponent.this.jComboBox1ActionPerformed(evt);
-            }
-            else if (evt.getSource() == jComboBox2) {
+            if (evt.getSource() == jComboBox2) {
                 DatuTopComponent.this.jComboBox2ActionPerformed(evt);
             }
-            else if (evt.getSource() == jButton1) {
-                DatuTopComponent.this.jButton1ActionPerformed(evt);
+            else if (evt.getSource() == jComboBox1) {
+                DatuTopComponent.this.jComboBox1ActionPerformed(evt);
             }
         }
 
@@ -452,21 +379,6 @@ public final class DatuTopComponent extends TopComponent {
         }
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jSliderGapStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderGapStateChanged
-        if (!jSliderGap.getValueIsAdjusting()) {
-            // Gap  value
-            gap = jSliderGap.getValue();
-            String texte = "";
-            if (gap == 1) {
-                texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.year"), gap);
-            } else if (gap != 0) {
-                texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.years"), gap);
-            }
-            jTextFieldGap.setText(texte);
-            update();
-        }
-    }//GEN-LAST:event_jSliderGapStateChanged
-
     private void jTextFieldGap1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldGap1KeyTyped
         String text = jTextFieldGap1.getText();
         try {
@@ -483,6 +395,26 @@ public final class DatuTopComponent extends TopComponent {
         }
         update();
     }//GEN-LAST:event_jTextFieldGap1KeyTyped
+
+    private void jSliderGapStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderGapStateChanged
+        if (!jSliderGap.getValueIsAdjusting()) {
+            // Gap  value
+            gap = jSliderGap.getValue();
+            String texte = "";
+            if (gap == 1) {
+                texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.year"), gap);
+            } else if (gap != 0) {
+                texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.years"), gap);
+            }
+            jTextFieldGap.setText(texte);
+            update();
+        }
+    }//GEN-LAST:event_jSliderGapStateChanged
+
+    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+        to = (Calendar) jComboBox2.getSelectedItem();
+        update();
+    }//GEN-LAST:event_jComboBox2ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         PointInTime pit = dw1.getValue();
@@ -503,28 +435,16 @@ public final class DatuTopComponent extends TopComponent {
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
-        to = (Calendar) jComboBox2.getSelectedItem();
-        update();
-    }//GEN-LAST:event_jComboBox2ActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JOptionPane.showMessageDialog(this, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.authors.text"));
-    }//GEN-LAST:event_jButton1ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JComboBox<Calendar> jComboBox1;
     private javax.swing.JComboBox<Calendar> jComboBox2;
     private javax.swing.JTextField jDisplay1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanel7;
@@ -534,8 +454,7 @@ public final class DatuTopComponent extends TopComponent {
     private javax.swing.JTextField jTextFieldGap1;
     private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
-    private javax.swing.ImageIcon arvernes_logo_small = new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/datulette/arvernes_logo_small.gif")); // NOI18N
-
+    
     /**
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.

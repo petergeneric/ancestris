@@ -15,7 +15,7 @@
         <folder name="Tools">
             <file name="DatuAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-datulette-DatuAction.instance"/>
-                <attr name="position" intvalue="81"/>
+                <attr name="position" intvalue="20"/>
             </file>
         </folder>
     </folder>
