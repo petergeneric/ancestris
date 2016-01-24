@@ -4,66 +4,86 @@
  */
 package ancestris.modules.webbook;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import ancestris.gedcom.GedcomDirectory;
 import java.awt.Component;
 import java.awt.Dialog;
+import java.awt.event.ActionEvent;
 import java.text.MessageFormat;
-import java.util.Iterator;
 import javax.swing.JComponent;
 import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
-import org.openide.util.actions.CallableSystemAction;
 
-// An example action demonstrating how the wizard could be called from within
-// your code. You can copy-paste the code below wherever you need.
-public final class WebBookWizardAction extends CallableSystemAction {
+@ActionID(id = "ancestris.modules.webbook.WebBookWizardAction", category = "Tools")
+@ActionRegistration(
+        displayName = "#CTL_WebBookAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Multimedia", name = "WebBookWizardAction", position = 100)
+public final class WebBookWizardAction extends AbstractAncestrisContextAction {
 
     private WizardDescriptor.Panel[] panels;
 
-    @SuppressWarnings("unchecked")
-    public void performAction() {
-        Gedcom gedcom = getGedcom();
-        if (gedcom != null) {
-            WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels(gedcom));
-            // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
-            wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
-            wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getName());
-            Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
-            dialog.setVisible(true);
-            dialog.toFront();
-            boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
-            if (!cancelled) {
-                // user pressed ok
-                WebBookStarter wbs = new WebBookStarter(gedcom);
-                wbs.start();
-            } else {
-                // user pressed annuler
+    public WebBookWizardAction() {
+        super();
+        setImage("ancestris/modules/webbook/WebBook.png");
+        setText(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookAction"));
+    }
+
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
+            Gedcom gedcom = contextToOpen.getGedcom();
+            if (gedcom != null) {
+                WizardDescriptor wizardDescriptor = new WizardDescriptor(getPanels(gedcom));
+                // {0} will be replaced by WizardDesriptor.Panel.getComponent().getName()
+                wizardDescriptor.setTitleFormat(new MessageFormat("{0}"));
+                wizardDescriptor.setTitle(NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookTitle") + " - " + gedcom.getName());
+                Dialog dialog = DialogDisplayer.getDefault().createDialog(wizardDescriptor);
+                dialog.setVisible(true);
+                dialog.toFront();
+                boolean cancelled = wizardDescriptor.getValue() != WizardDescriptor.FINISH_OPTION;
+                if (!cancelled) {
+                    // user pressed ok
+                    WebBookStarter wbs = new WebBookStarter(gedcom);
+                    wbs.start();
+                } else {
+                    // user pressed annuler
+                }
+                panels = null;
             }
-            panels = null;
         }
     }
 
     /**
-     * Initialize panels representing individual wizard's steps and sets
-     * various properties for them influencing wizard appearance.
+     * Initialize panels representing individual wizard's steps and sets various
+     * properties for them influencing wizard appearance.
      */
     private WizardDescriptor.Panel[] getPanels(Gedcom gedcom) {
         if (panels == null) {
             panels = new WizardDescriptor.Panel[]{
-                        new WebBookWizardPanel1(gedcom),
-                        new WebBookWizardPanel2(gedcom),
-                        new WebBookWizardPanel3(gedcom),
-                        new WebBookWizardPanel4(gedcom),
-                        new WebBookWizardPanel5(gedcom),
-                        new WebBookWizardPanel6(gedcom),
-                        new WebBookWizardPanel7(gedcom)
-                    };
+                new WebBookWizardPanel1(gedcom),
+                new WebBookWizardPanel2(gedcom),
+                new WebBookWizardPanel3(gedcom),
+                new WebBookWizardPanel4(gedcom),
+                new WebBookWizardPanel5(gedcom),
+                new WebBookWizardPanel6(gedcom),
+                new WebBookWizardPanel7(gedcom)
+            };
             String[] steps = new String[panels.length];
             for (int i = 0; i < panels.length; i++) {
                 Component c = panels[i].getComponent();
@@ -98,33 +118,18 @@ public final class WebBookWizardAction extends CallableSystemAction {
         return NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookAction");
     }
 
-    @Override
-    public String iconResource() {
-        return NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookActionIcon");
-    }
-
     public HelpCtx getHelpCtx() {
         return HelpCtx.DEFAULT_HELP;
     }
 
-    @Override
-    protected boolean asynchronous() {
-        return false;
-    }
+//    @Override
+//    public String iconResource() {
+//        return NbBundle.getMessage(WebBookWizardAction.class, "CTL_WebBookActionIcon");
+//    }
+//
+//    @Override
+//    protected boolean asynchronous() {
+//        return false;
+//    }
 
-    public Gedcom getGedcom() {
-        Context context = Utilities.actionsGlobalContext().lookup(Context.class);
-        Gedcom gedcom = null;
-
-        if (context != null) {
-            gedcom = context.getGedcom(); // get selected gedcom
-            if (gedcom == null) { // if none selected, take first one
-                Iterator<Context> it = GedcomDirectory.getDefault().getContexts().iterator();
-                if (it.hasNext()) { // well, apparently no gedcom exist in the list
-                    gedcom = (it.next()).getGedcom();
-                }
-            }
-        }
-        return gedcom;
-    }
 }
