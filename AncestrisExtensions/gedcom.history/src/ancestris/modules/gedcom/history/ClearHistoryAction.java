@@ -17,34 +17,42 @@
  */
 package ancestris.modules.gedcom.history;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.PluginInterface;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.modules.Places;
 import org.openide.util.Lookup;
-import org.openide.util.Utilities;
+import org.openide.util.NbBundle;
 
-@ActionID(category = "Tools",
-id = "ancestris.modules.gedcom.history.ClearHistoryAction")
-@ActionRegistration(iconInMenu = true,
-displayName = "#CTL_ClearHistoryAction",
-iconBase = "ancestris/modules/gedcom/history/ClearHistoryIcon.png")
-@ActionReferences({
-    @ActionReference(path = "Menu/Tools/Gedcom/History", position = 3334)
-})
-public final class ClearHistoryAction implements ActionListener {
+@ActionID(id = "ancestris.modules.gedcom.history.ClearHistoryAction", category = "Tools")
+@ActionRegistration(
+        displayName = "#CTL_ClearHistoryAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom/History", name = "ClearHistoryAction", position = 200)
+public final class ClearHistoryAction extends AbstractAncestrisContextAction {
+
+    public ClearHistoryAction() {
+        super();
+        setImage("ancestris/modules/gedcom/history/ClearHistoryIcon.png");
+        setText(NbBundle.getMessage(DisplayHistoryAction.class, "CTL_ClearHistoryAction"));
+    }
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
+    protected void actionPerformedImpl(ActionEvent event) {
         for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
             if (pluginInterface instanceof GedcomHistoryPlugin) {
-                Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+                Context context = getContext();
                 if (context != null) {
                     String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
                     File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
