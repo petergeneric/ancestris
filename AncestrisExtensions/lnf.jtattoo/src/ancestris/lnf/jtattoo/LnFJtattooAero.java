@@ -18,7 +18,7 @@ public class LnFJtattooAero extends LookAndFeelProvider {
 
     @Override
     public String getName() {
-        return "com.jtattoo.plaf.acryl.AeroLookAndFeel";
+        return "com.jtattoo.plaf.aero.AeroLookAndFeel";
     }
 
     @Override
