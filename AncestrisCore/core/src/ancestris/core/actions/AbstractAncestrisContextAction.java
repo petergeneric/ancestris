@@ -89,7 +89,7 @@ public abstract class AbstractAncestrisContextAction extends AbstractAncestrisAc
 
     protected Context getDefaultContext() {
         List<Context> gedcontexts = GedcomDirectory.getDefault().getContexts();
-        if (gedcontexts.size() == 1) {
+        if (gedcontexts.size() >= 1) {
             return gedcontexts.get(0);
         }
         return null;
