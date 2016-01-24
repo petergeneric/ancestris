@@ -11,43 +11,49 @@
  */
 package ancestris.modules.exports.website;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
-import genj.gedcom.Property;
 import genj.report.Report;
 import genj.report.ReportPlugin;
 import genj.report.ReportView;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 
-
-@ActionID(category = "Tools",
-id = "ancestris.modules.exports.website.WebSiteAction")
+@ActionID(id = "ancestris.modules.exports.website.WebSiteAction", category = "Tools")
 @ActionRegistration(
-        displayName = "#CTL_WebSiteAction"
-        ,iconBase="ancestris/modules/exports/website/icone_multimedia_16.png"
-        )
-@ActionReferences({
-    @ActionReference(path = "Menu/Tools/Multimedia", position = -90)
-})
+        displayName = "#CTL_WebSiteAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Multimedia", name = "CommonAncestorOpenAction", position = 200)
+public final class WebSiteAction extends AbstractAncestrisContextAction {
 
-public final class WebSiteAction implements ActionListener {
-
-    private final Property context;
-
-    public WebSiteAction(Property context) {
-        this.context = context;
+    public WebSiteAction() {
+        super();
+        setImage("ancestris/modules/exports/website/icone_multimedia_16.png");
+        setText(NbBundle.getMessage(WebSiteAction.class, "CTL_WebSiteAction"));
     }
 
-    public void actionPerformed(ActionEvent ev) {
-        Report report = WebSiteExportPlugin.getReport();
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+
+        Context contextToOpen = getContext();
+
+        if (contextToOpen != null) {
+            Report report = WebSiteExportPlugin.getReport();
 //        ReportView view = AncestrisPlugin.lookup(GenjViewInterface.class).getReportView(context);
-        ReportView view = ReportPlugin.getReportView(new Context(context));
-        if (view != null) {
-            view.startReport(report, context.getGedcom(),context.getGedcom());
+            ReportView view = ReportPlugin.getReportView(new Context(contextToOpen));
+            if (view != null) {
+                view.startReport(report, contextToOpen.getGedcom(), contextToOpen.getGedcom());
+            }
         }
     }
 }
