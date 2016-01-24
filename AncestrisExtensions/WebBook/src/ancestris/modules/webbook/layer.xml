@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+<!--
     <folder name="Actions">
         <folder name="Tools">
             <file name="ancestris-modules-webbook-WebBookWizardAction.instance">
@@ -12,13 +13,17 @@
             </file>
         </folder>
     </folder>
+-->    
     <folder name="Menu">
         <folder name="Tools">
             <folder name="Multimedia">
+                <attr name="position" intvalue="90"/>
+<!--                
                 <file name="WebBookWizardAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/Tools/ancestris-modules-webbook-WebBookWizardAction.instance"/>
-                    <attr name="position" intvalue="10"/>
+                    <attr name="position" intvalue="100"/>
                 </file>
+-->                
             </folder>
         </folder>
     </folder>
