@@ -44,7 +44,6 @@ public class MacMenu {
         
     public void setUp() {
         System.out.println("*** DEBUG *** - Setting up Mac Menu");
-        if (true) return;
         
         try {
             Toolkit tk = Toolkit.getToolkit();
