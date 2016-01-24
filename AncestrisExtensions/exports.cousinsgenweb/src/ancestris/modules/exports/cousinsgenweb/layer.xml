@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
+<!--    
     <folder name="Actions">
         <folder name="File">
             <file name="ancestris-modules-exports-cousinsgenweb-CousinsGenWebAction.instance">
@@ -11,13 +12,18 @@
             </file>
         </folder>
     </folder>
+-->    
     <folder name="Menu">
         <folder name="File">
             <folder name="Export">
+                <attr name="position" intvalue="2410"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.exports.cousinsgenweb.Bundle#Menu/File/Export"/> 
+<!--    
                 <file name="ancestris-modules-exports-cousinsgenweb-CousinsGenWebAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/File/ancestris-modules-exports-cousinsgenweb-CousinsGenWebAction.instance"/>
-                    <attr name="position" intvalue="2455"/>
+                    <attr name="position" intvalue="2000"/>
                 </file>
+-->                
             </folder>
         </folder>
     </folder>
