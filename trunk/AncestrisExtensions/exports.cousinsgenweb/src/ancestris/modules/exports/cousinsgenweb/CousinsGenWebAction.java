@@ -1,5 +1,6 @@
 package ancestris.modules.exports.cousinsgenweb;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -18,12 +19,36 @@ import java.util.Map;
 import java.util.TreeMap;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import org.openide.windows.IOProvider;
 import org.openide.windows.InputOutput;
 
-public final class CousinsGenWebAction implements ActionListener {
+@ActionID(id = "ancestris.modules.exports.cousinsgenweb.CousinsGenWebAction", category = "File")
+@ActionRegistration(
+        displayName = "#CTL_CousinsGenWebAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/File/Export", name = "CousinsGenWebAction", position = 200)
+public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
+
+    public CousinsGenWebAction() {
+        super();
+        setImage("ancestris/modules/exports/cousinsgenweb/cousinsgenweb.png");
+        setText(NbBundle.getMessage(CousinsGenWebAction.class, "CTL_CousinsGenWebAction"));
+    }
+
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+    }
 
     private class CousinGenWebPanelDescriptorActionListener implements ActionListener {
 
@@ -35,6 +60,7 @@ public final class CousinsGenWebAction implements ActionListener {
             file = cousinGenWebPanel.getFile();
         }
     };
+
     CousinsGenWebPanel cousinGenWebPanel = new CousinsGenWebPanel();
     DialogDescriptor cousinGenWebPanelDescriptor = new DialogDescriptor(
             cousinGenWebPanel,
@@ -59,15 +85,15 @@ public final class CousinsGenWebAction implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         // Create the file chooser
-        Context context;
+        Context contextToOpen = getContext();
 
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
+        if (contextToOpen != null) {
             Dialog dialog = DialogDisplayer.getDefault().createDialog(cousinGenWebPanelDescriptor);
             dialog.setVisible(true);
             dialog.toFront();
 
             if (cousinGenWebPanelDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
-                Gedcom myGedcom = context.getGedcom();
+                Gedcom myGedcom = contextToOpen.getGedcom();
                 Collection<Indi> indis = (Collection<Indi>) (myGedcom.getEntities(Gedcom.INDI));
                 io = IOProvider.getDefault().getIO(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.TabTitle") + " " + myGedcom.getName(), true);
                 io.getOut().println(String.format(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.Start"), myGedcom.getName()));
