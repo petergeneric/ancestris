@@ -11,6 +11,7 @@
  */
 package ancestris.modules.gedcom.sosanumbers;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.SelectEntityPanel;
 import genj.gedcom.Context;
@@ -19,33 +20,43 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.util.Registry;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 import static ancestris.modules.gedcom.sosanumbers.Bundle.*;
 
-@ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction",
-        category = "Tools")
-@ActionRegistration(iconBase = "ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png",
+@ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction", category = "Tools")
+@ActionRegistration(
+        displayName = "#CTL_GenerateSosaAction",
         iconInMenu = true,
-        displayName = "#CTL_GenerateSosaAction")
-@ActionReference(path = "Menu/Tools/Gedcom")
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "GenerateSosaAction", position = 300)
 @NbBundle.Messages("ok.label=Generate SOSA Numbering")
-public final class GenerateSosaAction implements ActionListener {
+public final class GenerateSosaAction extends AbstractAncestrisContextAction {
+
+    public GenerateSosaAction() {
+        super();
+        setImage("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png");
+        setText(NbBundle.getMessage(GenerateSosaAction.class, "CTL_GenerateSosaAction"));
+    }
+    
+    @Override
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
     Gedcom myGedcom = null;
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        Context context;
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
 
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-            myGedcom = context.getGedcom();
+        if (contextToOpen != null) {
+            myGedcom = contextToOpen.getGedcom();
             Registry registry = myGedcom.getRegistry();
 
             SelectEntityPanel selectEntityPanel = new SelectEntityPanel(myGedcom, Gedcom.INDI);
