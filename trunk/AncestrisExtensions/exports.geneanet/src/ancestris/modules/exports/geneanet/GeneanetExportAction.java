@@ -23,6 +23,7 @@
  */
 package ancestris.modules.exports.geneanet;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.SaveOptionsWidget;
 import genj.gedcom.Context;
@@ -30,7 +31,6 @@ import genj.gedcom.Gedcom;
 import genj.io.Filter;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
@@ -40,53 +40,43 @@ import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionRegistration;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.Utilities;
 import org.openide.windows.WindowManager;
 
-public final class GeneanetExportAction implements ActionListener {
+@ActionID(id = "ancestris.modules.exports.geneanet.GeneanetExportAction", category = "File")
+@ActionRegistration(
+        displayName = "#CTL_GeneanetExportAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/File/Export", name = "GeneanetExportAction", position = 100)
+public final class GeneanetExportAction extends AbstractAncestrisContextAction {
 
-    JFileChooser fc = new JFileChooser() {
-
-        @Override
-        public void approveSelection() {
-            File f = getSelectedFile();
-            if (f.exists() && getDialogType() == SAVE_DIALOG) {
-                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Overwrite.Text"), NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Overwrite.Title"), JOptionPane.YES_NO_CANCEL_OPTION);
-                switch (result) {
-                    case JOptionPane.YES_OPTION:
-                        super.approveSelection();
-                        return;
-                    case JOptionPane.NO_OPTION:
-                        return;
-                    case JOptionPane.CANCEL_OPTION:
-                        super.cancelSelection();
-                        return;
-                }
-            } else {
-                if (filter.accept(f) == false) {
-                    setSelectedFile(new File(f.getName() + ".gw"));
-                }
-            }
-            super.approveSelection();
-        }
-    };
-    private Gedcom myGedcom = null;
-    final FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.fileType"), "gw");
-    String exportDirName = "";
-    String exportFileName = "";
+    public GeneanetExportAction() {
+        super();
+        setImage("ancestris/modules/exports/geneanet/geneanet.png");
+        setText(NbBundle.getMessage(GeneanetExportAction.class, "CTL_GeneanetExportAction"));
+    }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        // Create the file chooser
-        Context context;
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-            myGedcom = context.getGedcom();
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        // Create the file chooser
+        Context contextToOpen = getContext();
+
+        if (contextToOpen != null) {
+            myGedcom = contextToOpen.getGedcom();
             Preferences modulePreferences = NbPreferences.forModule(GeneanetExport.class);
             String gedcomName = removeExtension(myGedcom.getName());
 
@@ -95,12 +85,12 @@ public final class GeneanetExportAction implements ActionListener {
 
             ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
             for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
-                if (f.canApplyTo(context.getGedcom())) {
+                if (f.canApplyTo(contextToOpen.getGedcom())) {
                     theFilters.add(f);
                 }
             }
             for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
-                if (f.canApplyTo(context.getGedcom())) {
+                if (f.canApplyTo(contextToOpen.getGedcom())) {
                     theFilters.add(f);
                 }
             }
@@ -131,6 +121,35 @@ public final class GeneanetExportAction implements ActionListener {
             }
         }
     }
+
+    JFileChooser fc = new JFileChooser() {
+        @Override
+        public void approveSelection() {
+            File f = getSelectedFile();
+            if (f.exists() && getDialogType() == SAVE_DIALOG) {
+                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Overwrite.Text"), NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.Overwrite.Title"), JOptionPane.YES_NO_CANCEL_OPTION);
+                switch (result) {
+                    case JOptionPane.YES_OPTION:
+                        super.approveSelection();
+                        return;
+                    case JOptionPane.NO_OPTION:
+                        return;
+                    case JOptionPane.CANCEL_OPTION:
+                        super.cancelSelection();
+                        return;
+                }
+            } else {
+                if (filter.accept(f) == false) {
+                    setSelectedFile(new File(f.getName() + ".gw"));
+                }
+            }
+            super.approveSelection();
+        }
+    };
+    private Gedcom myGedcom = null;
+    final FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.fileType"), "gw");
+    String exportDirName = "";
+    String exportFileName = "";
 
     private String removeExtension(String filename) {
 
@@ -176,4 +195,5 @@ public final class GeneanetExportAction implements ActionListener {
             }
         });
     }
+
 }
