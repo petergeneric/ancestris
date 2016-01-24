@@ -25,7 +25,7 @@ import org.openide.awt.ActionRegistration;
         iconBase = "ancestris/modules/treesharing/resources/treesharing.png",
         displayName = "#CTL_TreeSharingAction"
 )
-@ActionReference(path = "Menu/Tools", position = 94) //, separatorBefore = 93, separatorAfter = 95)
+@ActionReference(path = "Menu/Tools", position = 40) //, separatorBefore = 93, separatorAfter = 95)
 public final class TreeSharingAction implements ActionListener {
 
     @Override
