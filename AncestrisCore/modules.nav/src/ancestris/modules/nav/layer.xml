@@ -15,7 +15,7 @@
         <folder name="View">
             <file name="AncestrisNavigatorAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-nav-NavigatorAction.instance"/>
-                <attr name="position" intvalue="-300"/>
+                <attr name="position" intvalue="-290"/>
             </file>
         </folder>
     </folder>
