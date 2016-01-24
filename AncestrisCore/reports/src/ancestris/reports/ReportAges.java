@@ -14,10 +14,12 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
- * GenJ - ReportAges (based on ReportDescendants and ReportGedcomStatistics)
+ * Ancestris - ReportAges (based on ReportDescendants and ReportGedcomStatistics)
  */
+@ServiceProvider(service=Report.class)
 public class ReportAges extends Report {
 
     public boolean reportBaptismAge = true;
