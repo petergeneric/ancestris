@@ -3,10 +3,15 @@ package ancestris.modules.editors.placeeditor.topcomponents;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.modules.editors.placeeditor.panels.PlaceEditorPanel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
+import ancestris.modules.geo.GeoListTopComponent;
+import ancestris.view.AncestrisDockModes;
+import ancestris.view.AncestrisTopComponent;
+import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import java.awt.Dialog;
+import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
@@ -14,32 +19,27 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
-import org.openide.awt.ActionID;
-import org.openide.awt.ActionReference;
+import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.*;
+import org.openide.explorer.ExplorerManager;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.NbBundle.Messages;
-import org.openide.util.lookup.Lookups;
-import org.openide.windows.TopComponent;
+import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
-@TopComponent.Description(preferredID = "PlacesTableTopComponent",
-        iconBase = "ancestris/modules/editors/placeeditor/actions/Place.png",
-        persistenceType = TopComponent.PERSISTENCE_NEVER)
-@TopComponent.Registration(mode = "editor", openAtStartup = false)
-@ActionID(category = "Window", id = "ancestris.modules.editors.placeeditor.topcomponents.PlacesTableTopComponent")
-@ActionReference(path = "Menu/Window" /*
- * , position = 333
- */)
-@Messages({
-    "CTL_PlacesTableAction=PlacesTable",
-    "CTL_PlacesTableTopComponent=PlacesTable Window",
-    "HINT_PlacesTableTopComponent=This is a PlacesTable window"
-})
-public final class PlacesListTopComponent extends TopComponent {
+@ConvertAsProperties(dtd = "-//ancestris.modules.editors.placeeditor.topcomponents//PlaceList//EN",
+autostore = false)
+@ServiceProvider(service = AncestrisViewInterface.class)
+@RetainLocation(AncestrisDockModes.OUTPUT)
+public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider {
+
+    //
+    // Path to the icon used by the component and its open action
+    static final String ICON_PATH = "ancestris/modules/editors/placeeditor/actions/Place.png";
+    private static final String PREFERRED_ID = "PlaceListTopComponent";
 
     private Map<String, Set<PropertyPlace>> placesMap = new HashMap<String, Set<PropertyPlace>>();
     private GedcomPlaceTableModel gedcomPlaceTableModel;
@@ -47,7 +47,27 @@ public final class PlacesListTopComponent extends TopComponent {
     private Gedcom gedcom = null;
     int currentRowIndex = -1;
 
+    public PlacesListTopComponent() {
+        
+    }
+    
+    @Override
+    public Image getImageIcon() {
+        return ImageUtilities.loadImage(ICON_PATH, true);
+    }
+
+    @Override
+    public void setName() {
+        setName(NbBundle.getMessage(getClass(), "CTL_PlacesTableTopComponent"));
+    }
+
+    @Override
+    public void setToolTipText() {
+        setToolTipText(NbBundle.getMessage(getClass(), "HINT_PlacesTableTopComponent"));
+    }
+
     public PlacesListTopComponent(final Gedcom gedcom) {
+        super();
         this.gedcom = gedcom;
 
         gedcomPlaceTableModel = new GedcomPlaceTableModel(PropertyPlace.getFormat(gedcom));
@@ -82,9 +102,6 @@ public final class PlacesListTopComponent extends TopComponent {
         placeTable.setRowSorter(placeTableSorter);
         placeTable.setID(PlacesListTopComponent.class.getName());
 
-        setName(Bundle.CTL_PlacesTableTopComponent());
-        setToolTipText(Bundle.HINT_PlacesTableTopComponent());
-        associateLookup(Lookups.singleton(gedcom));
 
     }
 
@@ -238,14 +255,14 @@ public final class PlacesListTopComponent extends TopComponent {
         // TODO add custom code on component closing
     }
 
-    void writeProperties(java.util.Properties p) {
+    public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         p.setProperty("version", "1.0");
         // TODO store your settings
     }
 
-    void readProperties(java.util.Properties p) {
+    public void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }

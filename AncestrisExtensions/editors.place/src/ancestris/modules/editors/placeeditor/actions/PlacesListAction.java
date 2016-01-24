@@ -1,46 +1,49 @@
 package ancestris.modules.editors.placeeditor.actions;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.editors.placeeditor.topcomponents.PlacesListTopComponent;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Set;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
-import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle.Messages;
-import org.openide.util.Utilities;
+import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
-@ActionID(category = "Tools",
-id = "ancestris.modules.editors.placeeditor.actions.PlaceListAction")
-@ActionRegistration(iconBase = "ancestris/modules/editors/placeeditor/actions/Place.png",
-displayName = "#CTL_PlaceListAction")
-@ActionReferences({
-    @ActionReference(path = "Menu/Tools", position = 1450)
-})
-@Messages("CTL_PlaceListAction=Places list")
-public final class PlacesListAction implements ActionListener {
+@ActionID(id = "ancestris.modules.editors.placeeditor.actions.PlaceListAction", category = "Window")
+@ActionRegistration(
+        displayName = "#CTL_PlaceListAction",
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/View", name = "PlaceListAction", position = -410)
+public final class PlacesListAction extends AbstractAncestrisContextAction {
 
-    Context context;
+    public PlacesListAction() {
+        super();
+        setImage("ancestris/modules/editors/placeeditor/actions/Place.png");
+        setText(NbBundle.getMessage(PlacesListAction.class, "CTL_PlaceListAction"));
+    }
 
     @Override
-    public void actionPerformed(ActionEvent e) {
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-            Gedcom gedcom = context.getGedcom();
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
 
-            TopComponent tc = findTopComponent(gedcom);
-            if (tc == null) {
-                tc = new PlacesListTopComponent(gedcom);
-                tc.open();
-            }
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
+            PlacesListTopComponent tc = new PlacesListTopComponent(contextToOpen.getGedcom());
+            tc.init(contextToOpen);
+            tc.open();
             tc.requestActive();
         }
     }
-
+    
     private TopComponent findTopComponent(Gedcom gedcom) {
         Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
         for (TopComponent tc : openTopComponents) {
