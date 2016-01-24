@@ -67,6 +67,7 @@ public class EnvironmentChecker {
   
   /**
    * Check for Mac
+   * @return 
    */
   public static boolean isMac() {
     //return getProperty("mrj.version", null, "isMac()")!=null;     
@@ -78,7 +79,7 @@ public class EnvironmentChecker {
     // For these reasons, we recommend that you instead use the more standard os.name 
     // and java.runtime.version properties for Macintosh identification in all ongoing 
     // Java development, as outlined in this Technical Note.
-    boolean isMac = getProperty("os.name", "", "isMac()").toLowerCase().indexOf("mac")>-1;
+    boolean isMac = getProperty("os.name", "", "isMac()").toLowerCase().contains("mac");
     System.out.println("*** DEBUG *** - isMac() = " + isMac);
     return isMac;
     //return getProperty("os.name", "", "isMac()").toLowerCase().indexOf("mac")>-1;
@@ -86,9 +87,10 @@ public class EnvironmentChecker {
   
   /**
    * Check for Windows
+   * @return   
    */
   public static boolean isWindows() {
-    return getProperty("os.name", "", "isWindows()").indexOf("Windows")>-1;
+    return getProperty("os.name", "", "isWindows()").contains("Windows");
   }
   
   private static String getDatePattern(int format) {
