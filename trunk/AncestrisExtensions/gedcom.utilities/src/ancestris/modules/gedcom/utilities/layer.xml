@@ -3,8 +3,12 @@
 <filesystem>
     <folder name="Menu">
         <folder name="Tools">
+            <file name="Separator1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="77"/>
+            </file>    
             <folder name="Gedcom">
-                <attr name="position" intvalue="97"/>
+                <attr name="position" intvalue="80"/>
             </folder>
         </folder>
     </folder>
