@@ -18,6 +18,7 @@
             <folder name="Multimedia">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.core.menus.Bundle"/>
                 <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Menu/Tools/Multimedia"/>
+                <attr name="position" intvalue="500"/>
             </folder>
         </folder>
     </folder>
