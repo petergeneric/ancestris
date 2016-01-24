@@ -18,20 +18,20 @@ import org.openide.explorer.view.BeanTreeView;
 //import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.windows.Mode;
-import org.openide.windows.RetainLocation;
 
 /**
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.explorer//GedcomExplorer//EN",
 autostore = false)
-@RetainLocation("ancestris-explorer")
+//@RetainLocation("ancestris-explorer")  - useless if persistence is not NEVER
 public final class GedcomExplorerTopComponent extends TopComponent implements ExplorerManager.Provider/*, ContextProvider*/{
 
     private static GedcomExplorerTopComponent instance;
     /** path to the icon used by the component and its open action */
-//    static final String ICON_PATH = "SET/PATH/TO/ICON/HERE";
+    static final String ICON_PATH = "ancestris/explorer/explorer.png";
     private static final String PREFERRED_ID = "GedcomExplorerTopComponent"; //NOI18N
 
     private transient ExplorerManager explorerManager = new ExplorerManager();
@@ -42,7 +42,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         initComponents();
         setName(NbBundle.getMessage(GedcomExplorerTopComponent.class, "CTL_GedcomExplorerTopComponent"));
         setToolTipText(NbBundle.getMessage(GedcomExplorerTopComponent.class, "HINT_GedcomExplorerTopComponent"));
-//        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
+        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);

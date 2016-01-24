@@ -34,7 +34,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_ActionProperties"
 )
 @ActionReference(path = "Menu/File", position = 2050)
-public final class ActionProperties extends AbstractAncestrisContextAction implements ActionListener {
+public final class ActionProperties extends AbstractAncestrisContextAction {
 
     /** gedcom */
     private Context contextBeingModified = null;
@@ -60,9 +60,9 @@ public final class ActionProperties extends AbstractAncestrisContextAction imple
     }
 
     
-    
+
     @Override
-    public void actionPerformed(ActionEvent e) {
+    protected void actionPerformedImpl(ActionEvent event) {
         Collection list = Lookup.getDefault().lookupAll(ModifyGedcom.class);
         for (Iterator iterator = list.iterator(); iterator.hasNext();) {
             ModifyGedcom wiz = (ModifyGedcom) iterator.next();
@@ -75,9 +75,5 @@ public final class ActionProperties extends AbstractAncestrisContextAction imple
                 return;
             }
         }
-    }
-
-    @Override
-    protected void actionPerformedImpl(ActionEvent event) {
     }
 }
