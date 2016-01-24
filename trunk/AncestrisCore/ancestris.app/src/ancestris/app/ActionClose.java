@@ -10,7 +10,6 @@ import genj.gedcom.Context;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -48,9 +47,10 @@ public class ActionClose extends AbstractAncestrisContextAction {
         if (contextBeingClosed != null) {
             GedcomDirectory.getDefault().closeGedcom(contextBeingClosed);
         } else {
-            Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+            Context context = getContext();
             if (context != null) {
                 GedcomDirectory.getDefault().closeGedcom(context);
+                resultChanged(null);
             }
         }
     }
