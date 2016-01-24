@@ -1,11 +1,11 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
+import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.FopDocumentView;
 import ancestris.util.ProgressListener;
 import genj.gedcom.Context;
 import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -18,33 +18,43 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.util.Utilities;
 import spin.Spin;
 
-@ActionID(id = "ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction",
-        category = "Tools")
-@ActionRegistration(iconInMenu = true,
+@ActionID(id = "ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction", category = "Tools")
+@ActionRegistration(
         displayName = "#CTL_GedcomValidateAction",
-        iconBase = "ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png")
-@ActionReference(path = "Menu/Tools/Gedcom", position = 95)
-public final class GedcomValidateAction implements ActionListener {
+        iconInMenu = true,
+        lazy = false)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "GedcomValidateAction", position = 200)
+public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
-    private Context context;
     private List<ViewContext> result;
 
+    public GedcomValidateAction() {
+        super();
+        setImage("ancestris/modules/gedcom/gedcomvalidate/GedcomValidateIcon.png");
+        setText(NbBundle.getMessage(GedcomValidateAction.class, "CTL_GedcomValidateAction"));
+    }
     @Override
-    public void actionPerformed(ActionEvent e) {
+    protected void contextChanged() {
+        setEnabled(!contextProperties.isEmpty());
+        super.contextChanged();
+    }
+
+
+    @Override
+    protected void actionPerformedImpl(ActionEvent event) {
         Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
 
-        context = Utilities.actionsGlobalContext().lookup(Context.class);
-        if (context != null) {
+        Context contextToOpen = getContext();
+        if (contextToOpen != null) {
             if (modulePreferences.getInt("maxLife", -1) == -1) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GedcomValidate.class, "setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
 
                 OptionsDisplayer.getDefault().open("Extensions/GedcomValidateOptions");
             } else {
-                Validator validator = (Validator) Spin.off(new GedcomValidate(context.getGedcom()));
+                Validator validator = (Validator) Spin.off(new GedcomValidate(contextToOpen.getGedcom()));
 
                 try {
                     ProgressListener.Dispatcher.processStarted(validator);
@@ -80,7 +90,7 @@ public final class GedcomValidateAction implements ActionListener {
                 }
 
                 FopDocumentView window = new FopDocumentView(
-                        context,
+                        contextToOpen,
                         NbBundle.getMessage(GedcomValidate.class, "name.short"),
                         NbBundle.getMessage(GedcomValidate.class, "name"));
 
