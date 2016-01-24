@@ -5,7 +5,7 @@
         <folder name="Tools">
             <file name="Releve-ReleveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-releve-ReleveOpenAction.instance"/>
-                <attr name="position" intvalue="90"/>
+                <attr name="position" intvalue="30"/>
             </file>
         </folder>
     </folder>
