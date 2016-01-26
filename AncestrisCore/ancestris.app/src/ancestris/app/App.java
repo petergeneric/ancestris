@@ -13,7 +13,6 @@ package ancestris.app;
 
 import ancestris.api.core.Version;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.util.MacMenu;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
@@ -170,10 +169,10 @@ public class App {
                 LOG.info("Controlling OS...");
                 if (EnvironmentChecker.isMac()) {
                     LOG.info("Setting up MacOs adjustments");
-//                    System.setProperty("apple.laf.useScreenMenuBar", "true");
-//                    System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");
-                    MacMenu macMenu = new MacMenu();
-                    macMenu.setUp();
+                    System.setProperty("apple.laf.useScreenMenuBar", "true");
+                    System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");
+                    //MacMenu macMenu = new MacMenu();
+                    //macMenu.setUp();
                 }
                 
 
