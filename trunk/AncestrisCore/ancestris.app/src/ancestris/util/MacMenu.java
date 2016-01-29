@@ -22,6 +22,7 @@ import java.lang.invoke.MethodHandle;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Menu;
@@ -32,53 +33,58 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import org.openide.util.Exceptions;
 
+
+
 /**
  *
  * @author frederic
  */
 public class MacMenu {
+
+    private Logger LOG = null;
     
-    public MacMenu() {
-        System.out.println("*** DEBUG *** - Defining MacMenu");
+    public MacMenu(Logger log) {
+        this.LOG = log;
+        LOG.info("*** DEBUG *** - Defining MacMenu");
     }
         
     public void setUp() {
-        System.out.println("*** DEBUG *** - Setting up Mac Menu");
+        LOG.info("*** DEBUG *** - Setting up Mac Menu");
         
         try {
             Toolkit tk = Toolkit.getToolkit();
 
             TKSystemMenu systemMenu = tk.getSystemMenu();
-            System.out.println("*** DEBUG *** - systemMenu = " + systemMenu);
+            LOG.info("*** DEBUG *** - systemMenu = " + systemMenu);
             if (systemMenu == null || !systemMenu.isSupported()) {
                 return;
             }
 
             Field field = systemMenu.getClass().getDeclaredField("glassSystemMenuBar");
-            System.out.println("*** DEBUG *** - field = " + field);
+            LOG.info("*** DEBUG *** - field = " + field);
             field.setAccessible(true);
             
             MethodHandle getSystemMenuBar = MethodHandles.lookup().unreflectGetter(field);
-            System.out.println("*** DEBUG *** - getSystemMenuBar = " + getSystemMenuBar);
+            LOG.info("*** DEBUG *** - getSystemMenuBar = " + getSystemMenuBar);
             
             MethodHandle setSystemMenuBar = MethodHandles.lookup().unreflectSetter(field);
-            System.out.println("*** DEBUG *** - setSystemMenuBar = " + setSystemMenuBar);
+            LOG.info("*** DEBUG *** - setSystemMenuBar = " + setSystemMenuBar);
             
             Method method = systemMenu.getClass().getDeclaredMethod("insertMenu", Menu.class, MenuBase.class, int.class);
-            System.out.println("*** DEBUG *** - method = " + method);
+            LOG.info("*** DEBUG *** - method = " + method);
             method.setAccessible(true);
             
             MethodHandle insertMenu = MethodHandles.lookup().unreflect(method);
-            System.out.println("*** DEBUG *** - insertMenu = " + insertMenu);
+            LOG.info("*** DEBUG *** - insertMenu = " + insertMenu);
 
             final Application applicationAdapter = Application.GetApplication();
-            System.out.println("*** DEBUG *** - applicationAdapter = " + applicationAdapter);
+            LOG.info("*** DEBUG *** - applicationAdapter = " + applicationAdapter);
             if (applicationAdapter == null) {
                 return;
             }
             
             final Method hide = applicationAdapter.getClass().getDeclaredMethod("_hide");
-            System.out.println("*** DEBUG *** - hide = " + hide);
+            LOG.info("*** DEBUG *** - hide = " + hide);
             hide.setAccessible(true);
             MethodHandles.lookup().unreflect(hide);
             
@@ -163,20 +169,20 @@ public class MacMenu {
             defaultApplicationMenu.getItems().add(quitItem);
         
             // Update the existing Application menu
-            System.out.println("*** DEBUG *** - update existing menu");
+            LOG.info("*** DEBUG *** - update existing menu");
             MenuBar glassSystemMenuBar = (MenuBar) getSystemMenuBar.invoke(systemMenu);
-            System.out.println("*** DEBUG *** - glassSystemMenuBar = " + glassSystemMenuBar);
+            LOG.info("*** DEBUG *** - glassSystemMenuBar = " + glassSystemMenuBar);
             if (glassSystemMenuBar == null) {
                 setSystemMenuBar.invoke(new Object[] {systemMenu, Application.GetApplication().createMenuBar()});
             } else {
                 removeMenu(glassSystemMenuBar, 0);
             }
-            System.out.println("*** DEBUG *** - insertMenu menu");
+            LOG.info("*** DEBUG *** - insertMenu menu");
             insertMenu.invoke(new Object[] {systemMenu, null, GlobalMenuAdapter.adapt(defaultApplicationMenu), 0});
 
             // Since we now have a reference to the menu, we can rename items
             defaultApplicationMenu.getItems().get(1).setText("Hide all the others");
-            System.out.println("*** DEBUG *** - END************");
+            LOG.info("*** DEBUG *** - END************");
             
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
