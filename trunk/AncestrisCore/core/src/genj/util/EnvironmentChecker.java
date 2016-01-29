@@ -61,10 +61,18 @@ public class EnvironmentChecker {
    * Check for Java 1.6 and higher
    */
   public static boolean isJava16() {
-    String version = getProperty("java.version", "", "Checking Java VM version");
+    String version = getProperty("java.version", "", "Checking Java VM version 1.6+");
     return version.matches("1\\.[6789].*");
   }
   
+  /**
+   * Check for Java 1.8 and higher
+   */
+  public static boolean isJava18() {
+    String version = getProperty("java.version", "", "Checking Java VM version 1.8+");
+    return version.matches("1\\.[89].*");
+  }
+
   /**
    * Check for Mac
    * @return 
