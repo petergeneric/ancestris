@@ -30,6 +30,7 @@ import genj.io.GedcomReaderContext;
 import genj.io.GedcomReaderFactory;
 import genj.util.Origin;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.List;
@@ -92,6 +93,17 @@ public class GeneanetExport {
         // Save gedcom copy
         if (ok) {
             ok = GedcomMgr.getDefault().saveGedcomImpl(copyGedcom, options.getFilters(), null);
+            // remove backup files is exist
+            final String str = copyGedcom.getName().replace(".ged", "")+"_";
+            File dir = new File(exportFile.getParent());
+            File[] foundFiles = dir.listFiles(new FilenameFilter() {
+                public boolean accept(File dir, String name) {
+                    return name.startsWith(str);
+                }
+            });
+            for (File file : foundFiles) {
+                file.delete();
+            }
         }
 
         // Export terminated
@@ -150,9 +162,9 @@ public class GeneanetExport {
 
             // Delete from first asso entity
             prop.getParent().delProperty(prop);
-            
+
             // Add to second asso entity
-            Property parent = propAsso.addProperty("ASSO", "@"+indiRela.getId()+"@");
+            Property parent = propAsso.addProperty("ASSO", "@" + indiRela.getId() + "@");
             parent.addProperty("TYPE", type);
             parent.addProperty("RELA", rela);
         }
