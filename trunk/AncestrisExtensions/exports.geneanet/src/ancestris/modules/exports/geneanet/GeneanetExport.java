@@ -139,7 +139,6 @@ public class GeneanetExport {
         List<PropertyAssociation> list = (List<PropertyAssociation>) gedcom.getPropertiesByClass(PropertyAssociation.class);
         for (PropertyAssociation prop : list) {
             // Get info
-            //console.println("====================");
             console.println(prop.getDisplayValue());
             indiRela = (Indi) prop.getEntity();
             propAsso = prop.getTarget().getParent();
@@ -148,11 +147,6 @@ public class GeneanetExport {
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
             }
-            //console.println("entAsso = " + propAsso.getEntity().toString());
-            //console.println("propAsso = " + propAsso.toString());
-            //console.println("indiRela = " + indiRela.toString());
-            //console.println("type = " + type);
-            //console.println("rela = " + rela);
 
             // Delete from first asso entity
             prop.getParent().delProperty(prop);
