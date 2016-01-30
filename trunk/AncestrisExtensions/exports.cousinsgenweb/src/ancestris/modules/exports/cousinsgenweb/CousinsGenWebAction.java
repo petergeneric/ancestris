@@ -31,7 +31,7 @@ import org.openide.windows.InputOutput;
         displayName = "#CTL_CousinsGenWebAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/File/Export", name = "CousinsGenWebAction", position = 200)
+@ActionReference(path = "Menu/File/Export", name = "CousinsGenWebAction", position = 300)
 public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
 
     public CousinsGenWebAction() {
