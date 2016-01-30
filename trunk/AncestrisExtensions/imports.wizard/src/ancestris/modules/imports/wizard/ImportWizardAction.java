@@ -2,6 +2,7 @@ package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.awt.Component;
@@ -49,6 +50,7 @@ public final class ImportWizardAction extends CallableSystemAction {
                     Gedcom importedGedcom = context.getGedcom();
                     importedGedcom.setName(inputFile.getName());
                     importMethod.fixGedcom(importedGedcom);
+                    SelectionDispatcher.fireSelection(context);
                 }
                 outFile.delete();
             }
