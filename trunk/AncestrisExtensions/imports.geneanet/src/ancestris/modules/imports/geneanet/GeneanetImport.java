@@ -72,7 +72,7 @@ public class GeneanetImport extends Import {
         }
         for (Property prop : list) {
             // Get info
-            console.println(prop.getDisplayValue());
+            console.println(prop.getEntity().toString());
             id = prop.getValue().replace("@", "");
             indiRela = (Indi) gedcom.getEntity(id);
             if (indiRela == null) {
@@ -99,7 +99,7 @@ public class GeneanetImport extends Import {
             // Delete from first asso entity
             prop.getParent().delProperty(prop);
         }
-
+        
         return true;
     }
 
