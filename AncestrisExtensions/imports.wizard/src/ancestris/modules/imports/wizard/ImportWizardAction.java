@@ -40,7 +40,7 @@ public final class ImportWizardAction extends CallableSystemAction {
         }
         if (!cancelled && importPanel != null && importPanel.getInputFile() != null) {
             importMethod = importPanel.getImportClass();
-            importMethod.setTabName(NAME);
+            importMethod.setTabName(NbBundle.getMessage(ImportWizardAction.class, "OpenIDE-Module-Name") + " - " + importMethod.toString());
             File inputFile = importPanel.getInputFile();
             File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
             if (importMethod.run(inputFile, outFile) == true) {
