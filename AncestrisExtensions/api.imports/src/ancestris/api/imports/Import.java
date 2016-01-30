@@ -62,7 +62,8 @@ public abstract class Import {
             + "CENS|PROB|WILL|" + "GRAD|RETI|";
     protected static final String FAM_TAG_YES = "ANUL|CENS|DIV|DIVF|"
             + "ENGA|MARR|MARB|MARC|" + "MARL|MARS";
-    protected static final String GEDCOM_TAG = "ABBR|ADDR|ADR1|ADR2|ADOP|AFN|AGE|AGNC|ALIA|ANCE|ANCI|ANUL|ASSO|AUTH|"
+    protected static String GEDCOM_VERSION = "";
+    protected static final String GEDCOM55_TAG = "ABBR|ADDR|ADR1|ADR2|ADOP|AFN|AGE|AGNC|ALIA|ANCE|ANCI|ANUL|ASSO|AUTH|"
             + "BAPL|BAPM|BARM|BASM|BIRT|BLES|BLOB|BURI|CALN|CAST|CAUS|CENS|CHAN|CHAR|"
             + "CHIL|CHR|CHRA|CITY|CONC|CONF|CONL|CONT|COPR|CORP|CREM|CTRY|DATA|DATE|"
             + "DEAT|DESC|DESI|DEST|DIV|DIVF|DSCR|EDUC|EMIG|ENDL|ENGA|EVEN|FAM|FAMC|"
@@ -72,9 +73,11 @@ public abstract class Import {
             + "QUAY|REFN|RELA|RELI|REPO|RESI|RESN|RETI|RFN|RIN|ROLE|SEX|SLGC|SLGS|"
             + "SOUR|SPFX|SSN|STAE|STAT|SUBM|SUBN|SURN|TEMP|TEXT|TIME|TITL|TRLR|TYPE|"
             + "VERS|WIFE|WILL";
+    protected static final String GEDCOM551_TAG = "|EMAIL|FAX|FACT|FONE|ROMN|WWW|MAP|LATI|LONG|";
     protected static Pattern tag_y = Pattern.compile("(" + INDI_TAG_YES + FAM_TAG_YES
             + ")");
-    protected static Pattern tag_valid = Pattern.compile("(" + GEDCOM_TAG + ")");
+    protected static Pattern tag55_valid = Pattern.compile("(" + GEDCOM55_TAG + ")");
+    protected static Pattern tag551_valid = Pattern.compile("(" + GEDCOM55_TAG + GEDCOM551_TAG + ")");
     protected static Pattern gedcom_line = Pattern.compile("^(\\d) (_*\\w+)(.*)");
     private static HashMap<String, ImportIndi> hashIndis;
     private static HashMap<String, ImportFam> hashFams;
@@ -149,11 +152,15 @@ public abstract class Import {
             return false;
         }
         try {
+            console.println("Gedcom version = " +  GEDCOM_VERSION);
+            console.println("=============================");
             input = GedcomFileReader.create(fileIn);
             try {
                 while (input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
                         output.writeLine(input);
+                        console.println("Updating Header Note");
+                        console.println("=============================");
                         output.writeLine(1, "NOTE", getImportComment());
                         continue;
                     }
@@ -204,6 +211,9 @@ public abstract class Import {
     }
 
     protected void firstPass() {
+        if ((input.getLevel() == 2) && input.getTag().equals("VERS")) {
+            GEDCOM_VERSION = input.getValue();
+        }
         firstPassMissingEntities();
     }
 
@@ -310,6 +320,7 @@ public abstract class Import {
             return false;
         }
         // le tag n'est pas valide: on le prefixe par _
+        Pattern tag_valid = GEDCOM_VERSION.startsWith("5.5.1") ? tag551_valid : tag55_valid;
         if (!tag_valid.matcher(input.getTag()).matches()) {
             String result = output.writeLine(input.getLevel(), "_" + input.getTag(), input.getValue());
             console.println(input.getLine());
