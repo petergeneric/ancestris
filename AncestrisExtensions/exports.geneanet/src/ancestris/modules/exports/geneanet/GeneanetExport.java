@@ -21,6 +21,7 @@ import ancestris.gedcom.GedcomMgr;
 import ancestris.gedcom.SaveOptionsWidget;
 import ancestris.modules.console.Console;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -168,6 +169,17 @@ public class GeneanetExport {
             parent.addProperty("TYPE", type);
             parent.addProperty("RELA", rela);
         }
+        
+        console.println("====================");
+        Entity entity = gedcom.getFirstEntity("HEAD");
+        Property property = entity.getProperty("NOTE");
+        String note = "";
+        if (property != null) {
+            note = property.getDisplayValue();
+        }
+        note += " - " + NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NoteWarning");
+        property.setValue(note);
+        console.println(note);
 
         return true;
     }
