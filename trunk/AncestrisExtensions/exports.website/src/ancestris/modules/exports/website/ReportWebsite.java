@@ -2,11 +2,9 @@ package ancestris.modules.exports.website;
 
 /**
  * A report for making a website with all information
- * 
- * author   = Erik Melkersson, erik.melkersson@gmail.com
- * version  = 0.2 beta
- * category = Chart
- * name     = Website
+ *
+ * author = Erik Melkersson, erik.melkersson@gmail.com version = 0.2 beta
+ * category = Chart name = Website
  */
 import ancestris.core.TextOptions;
 import ancestris.util.swing.FileChooserBuilder;
@@ -38,9 +36,11 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import genj.option.OptionsWidget;
 import genj.report.Report;
 import genj.util.Resources;
 import java.awt.Color;
+import java.awt.Desktop;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
@@ -54,6 +54,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.URI;
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,8 +74,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-@ServiceProvider(service=Report.class)
-public class ReportWebsite extends Report{
+@ServiceProvider(service = Report.class)
+public class ReportWebsite extends Report {
     //public boolean reportPrivateData = false;
 
     public boolean reportNotesInFullOnEntity = false;
@@ -91,51 +92,74 @@ public class ReportWebsite extends Report{
 //    public String reportWelcomeText = translateGUI("ws.welcome.text");
     public boolean displaySosaStradonitz = false;
 
-
-
     protected HashMap<String, String> sosaStradonitzNumber = null;
     public boolean displayAncestrisFooter = true;
     public String placeDisplayFormat = "all";
     public String secondaryLanguage = "en";
     public boolean removeAllFiles = false;
-    /** Base source file of the css */
+    /**
+     * Base source file of the css
+     */
     protected static final String cssBaseFile = "html/style.css";
-    /** How the tree on each person should look like */
+    /**
+     * How the tree on each person should look like
+     */
     public int treeType = 0;
     public String[] treeTypes = {translateGUI("treeLTR"), translateGUI("treeRTL")}; //, translateGUI("treeTopDown")};
     protected static final String[] cssTreeFile = {"html/treel2r.css", "html/treer2l.css"};
-    /** Colors of the output */
+    /**
+     * Colors of the output
+     */
     public Color cssTextColor = Color.BLACK;
     public Color cssBackgroundColor = Color.WHITE;
     public Color cssLinkColor = new Color(0, 0, 0x99);
     public Color cssVistedLinkColor = new Color(0x66, 0, 0x99);
     public Color cssBorderColor = Color.BLACK;
 
-    /** Select background image in the boxes */
+    /**
+     * Select background image in the boxes
+     */
     public int boxBackground = 0;
     public String[] boxBackgrounds = {translateGUI("green"), translateGUI("blue")};
 
     protected static final String[] boxBackgroundImages = {"html/bkgr_green.png", "html/bkgr_blue.png"};
-    /** Collecting data to the index */
+    /**
+     * Collecting data to the index
+     */
     protected List<Indi> personsWithImage = null;
-    /** Used for handling note and sources on a person/item */
+    /**
+     * Used for handling note and sources on a person/item
+     */
     protected Element sourceDiv = null;
     protected List<Property> addedSourceProperty = null;
     protected int sourceCounter = 0;
     protected Element noteDiv = null;
     protected List<Property> addedNoteProperty = null;
     protected int noteCounter = 0;
-    /** Used for building an individual map */
+    /**
+     * Used for building an individual map
+     */
     protected StringBuffer mapEventLocations = null;
-    /** used for output several languages */
+    /**
+     * used for output several languages
+     */
     protected Locale currentLocale = null;
-    /** Only set when running with the secondary language */
+    /**
+     * Only set when running with the secondary language
+     */
     protected String currentLang = null;
-    /** Always set to what the current lang is */
-    /** Always set to null or the secondary lang. Check this to know if we are having a second lang at all */
+    /**
+     * Always set to what the current lang is
+     */
+    /**
+     * Always set to null or the secondary lang. Check this to know if we are
+     * having a second lang at all
+     */
     protected Locale secondaryLocale = null;
     protected Resources gedcomResources = null;
-    /** The output directory */
+    /**
+     * The output directory
+     */
     protected File destDir = null;
 
     @Override
@@ -144,17 +168,20 @@ public class ReportWebsite extends Report{
     }
 //    Console output;
 
-
     /**
      * Main for argument Gedcom
      */
     public void start(Gedcom gedcom) throws Exception {
-        if (gedcom == null)
+        if (gedcom == null) {
             return;
+        }
+        
+        new OptionsWidget("").setOptions(WebSiteExportPlugin.getReport().getOptions());
+        
 //        output = new Console("website"+gedcom.getName());
 //        currentLocale = Options.getOutputLocale();
         currentLang = TextOptions.getInstance().getOutputLocale().getLanguage();
-        gedcomResources = Resources.get(Gedcom.class,TextOptions.getInstance().getOutputLocale());
+        gedcomResources = Resources.get(Gedcom.class, TextOptions.getInstance().getOutputLocale());
         // Validate some values set in options
         secondaryLocale = null;
         if (secondaryLanguage != null && !secondaryLanguage.equals("")
@@ -176,7 +203,6 @@ public class ReportWebsite extends Report{
         personsWithImage = new ArrayList<Indi>();
 
         // Ask for info
-
         destDir = new FileChooserBuilder(ReportWebsite.class)
                 .setTitle(translateGUI("qOutputDir"))
                 .setApproveText(translateGUI("qOk"))
@@ -222,13 +248,25 @@ public class ReportWebsite extends Report{
             // Run again with a new lang setting
             currentLocale = secondaryLocale;
             currentLang = secondaryLocale.getLanguage();
-            gedcomResources = Resources.get(Gedcom.class,currentLocale);
+            gedcomResources = Resources.get(Gedcom.class, currentLocale);
             translator = makeCssAndJSSettings();
             makeJs(destDir, translator);
             generateFiles(gedcom, rootIndi);
             currentLocale = null;
 
         }
+
+        try {
+            String fileStr = "file://" + destDir.getAbsolutePath() + File.separator + "index.html";
+            URI uri = new URI(fileStr);
+            if (Desktop.isDesktopSupported()) {
+                println("Opening genealogy with browser...("+fileStr+").");
+                Desktop.getDesktop().browse(uri);
+            } else {
+            }
+        } catch (Exception ex) {
+        }
+
     }
 
     /**
@@ -239,21 +277,21 @@ public class ReportWebsite extends Report{
     }
 
     /**
-     * Returns the readable name for the given tag using currentLocale.
-     * Code copied from Gedcom.java class.
+     * Returns the readable name for the given tag using currentLocale. Code
+     * copied from Gedcom.java class.
      */
     public String getPropertyName(String tag, boolean plural) {
 //        if (currentLocale != null) {
-            if (plural) {
-                String name = gedcomResources.getString(tag + ".s.name", false);
-                if (name != null) {
-                    return name;
-                }
-            }
-            String name = gedcomResources.getString(tag + ".name", false);
+        if (plural) {
+            String name = gedcomResources.getString(tag + ".s.name", false);
             if (name != null) {
                 return name;
             }
+        }
+        String name = gedcomResources.getString(tag + ".name", false);
+        if (name != null) {
+            return name;
+        }
 //        }
         return Gedcom.getName(tag, plural);
     }
@@ -607,6 +645,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Make a directory for each object
+     *
      * @param id Id of the object
      * @param dir The user selected output dir
      * @return a File object with the directory
@@ -786,7 +825,7 @@ public class ReportWebsite extends Report{
             handledProperties.add("DEAT");
 
             for (String tag : new String[]{"CAST", "DSCR", "EDUC", "IDNO", "NATI", "NCHI", "NMR", "OCCU", "PROP", "RELI", "RESI", "SSN", "TITL", "FACT",
-                        "ADOP", "CHR", "CREM", "BURI", "BAPM", "BARM", "BASM", "BLES", "CHRA", "CONF", "FCOM", "ORDN", "NATU", "EMIG", "IMMI", "CENS", "PROB", "WILL", "GRAD", "RETI", "EVEN"}) {
+                "ADOP", "CHR", "CREM", "BURI", "BAPM", "BARM", "BASM", "BLES", "CHRA", "CONF", "FCOM", "ORDN", "NATU", "EMIG", "IMMI", "CENS", "PROB", "WILL", "GRAD", "RETI", "EVEN"}) {
                 processOtherEventTag(tag, indi, linkPrefix, indi.getId(), div1, html);
                 handledProperties.add(tag);
             }
@@ -841,12 +880,11 @@ public class ReportWebsite extends Report{
             processSimpleTag(indi, "RESN", div1, html, handledProperties);
 
             /* Ignoring
-            +1 <<LDS_INDIVIDUAL_ORDINANCE>>  {0:M}
+             +1 <<LDS_INDIVIDUAL_ORDINANCE>>  {0:M}
              */
         }
 
         // *** Family div ***
-
         Element div2 = html.div("right");
         bodyNode.appendChild(div2);
 
@@ -882,7 +920,7 @@ public class ReportWebsite extends Report{
 
         if (!isPrivate) {
             /*Element bpMap = getBirthPlaceMap(indi, html);
-            if (bpMap != null) div2.appendChild(bpMap);*/
+             if (bpMap != null) div2.appendChild(bpMap);*/
         }
 
         // Find spouses and children
@@ -952,7 +990,7 @@ public class ReportWebsite extends Report{
                     }
 
                     /* Ignoring
-                    +1 <<LDS_SPOUSE_SEALING>>  {0:M}
+                     +1 <<LDS_SPOUSE_SEALING>>  {0:M}
                      */
                 }
                 Indi[] children = fam.getChildren(true);
@@ -996,8 +1034,7 @@ public class ReportWebsite extends Report{
     }
 
     /**
-     * Construct a name based on PERSONAL_NAME_PIECES
-     * NICK is not inserted here
+     * Construct a name based on PERSONAL_NAME_PIECES NICK is not inserted here
      */
     protected String constructName(Property nameProp) {
         StringBuffer sb = new StringBuffer();
@@ -1166,16 +1203,16 @@ public class ReportWebsite extends Report{
 
         /* TODO BLOBs not handled yet
          * Only in 5.5, not in 5.5.1
-        +1 BLOB        {1:1}
-        +2 CONT <ENCODED_MULTIMEDIA_LINE>  {1:M}
-        +1 OBJE @<XREF:OBJE>@ {0:1}
+         +1 BLOB        {1:1}
+         +2 CONT <ENCODED_MULTIMEDIA_LINE>  {1:M}
+         +1 OBJE @<XREF:OBJE>@ {0:1}
          */
 
         /* Handle FILE, 5.5.1
-        +1 FILE <MULTIMEDIA_FILE_REFN> {1:M} p.54
-        +2 FORM <MULTIMEDIA_FORMAT> {1:1} p.54
-        +3 TYPE <SOURCE_MEDIA_TYPE> {0:1} p.62
-        +2 TITL <DESCRIPTIVE_TITLE> {0:1} p.48
+         +1 FILE <MULTIMEDIA_FILE_REFN> {1:M} p.54
+         +2 FORM <MULTIMEDIA_FORMAT> {1:1} p.54
+         +3 TYPE <SOURCE_MEDIA_TYPE> {0:1} p.62
+         +2 TITL <DESCRIPTIVE_TITLE> {0:1} p.48
          */
         Element p = html.p();
         for (PropertyFile file : object.getProperties(PropertyFile.class)) {
@@ -1393,7 +1430,8 @@ public class ReportWebsite extends Report{
     /**
      *
      * @param indi The person to check
-     * @return true if the person is dead, born before a date or settings allow all to be displayed, false otherwise
+     * @return true if the person is dead, born before a date or settings allow
+     * all to be displayed, false otherwise
      */
     protected boolean isPrivate(Indi indi) {
         if (reportNowLiving) {
@@ -1410,6 +1448,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Helper method to isPrivate
+     *
      * @param indi
      * @return true if person is confirmed to be born before a certain date
      */
@@ -1480,11 +1519,13 @@ public class ReportWebsite extends Report{
 
     /**
      * Handles images in OBJE-properties
+     *
      * @param prop The Property containing the OBJE-properties
      * @param linkPrefix
      * @param dstDir
      * @param html
-     * @param smallThumbs Making the thumbs really small (intended for family images)
+     * @param smallThumbs Making the thumbs really small (intended for family
+     * images)
      * @return paragraph with images, or null
      */
     protected Element processMultimediaLink(Property prop, String linkPrefix, String id,
@@ -1648,15 +1689,11 @@ public class ReportWebsite extends Report{
     }
 
     /**
-     * Handle:
-     *  +1 <<SOURCE_CITATION>>  {0:M}
-     *  +1 <<NOTE_STRUCTURE>>  {0:M}
-     *  +1 RFN <PERMANENT_RECORD_FILE_NUMBER>  {0:1}
-     *  +1 AFN <ANCESTRAL_FILE_NUMBER>  {0:1}
-     *  +1 REFN <USER_REFERENCE_NUMBER>  {0:M}
-     *   +2 TYPE <USER_REFERENCE_TYPE>  {0:1}
-     *  +1 RIN <AUTOMATED_RECORD_ID>  {0:1}
-     *  +1 <<CHANGE_DATE>>  {0:1}
+     * Handle: +1 <<SOURCE_CITATION>> {0:M} +1 <<NOTE_STRUCTURE>> {0:M} +1 RFN
+     * <PERMANENT_RECORD_FILE_NUMBER> {0:1} +1 AFN <ANCESTRAL_FILE_NUMBER> {0:1}
+     * +1 REFN <USER_REFERENCE_NUMBER> {0:M} +2 TYPE <USER_REFERENCE_TYPE> {0:1}
+     * +1 RIN <AUTOMATED_RECORD_ID> {0:1} +1 <<CHANGE_DATE>> {0:1}
+     *
      * @param prop
      * @param linkPrefix
      * @param appendTo
@@ -1741,6 +1778,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Handle simple text tags without any sub tags
+     *
      * @param prop
      * @param tags
      * @param appendTo
@@ -1755,6 +1793,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Handle simple text tags without any sub tags
+     *
      * @param prop
      * @param tag
      * @param appendTo
@@ -1895,6 +1934,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Get a string that may be used when linking to map
+     *
      * @param event
      * @return A sting that may be used in google maps
      */
@@ -1907,9 +1947,9 @@ public class ReportWebsite extends Report{
             return null;
         }
         // Check if there are LATI/LONG and use in first case
-        PropertyLatitude latitude = ((PropertyPlace)place).getLatitude(true);
+        PropertyLatitude latitude = ((PropertyPlace) place).getLatitude(true);
         if (latitude != null) {
-            PropertyLongitude longitude = ((PropertyPlace)place).getLongitude(true);
+            PropertyLongitude longitude = ((PropertyPlace) place).getLongitude(true);
             return latitude.getDoubleValue().toString() + "," + longitude.getDoubleValue().toString();
         }
 
@@ -2073,7 +2113,8 @@ public class ReportWebsite extends Report{
     }
 
     /**
-     * Adds references in the source list and adds a superscript-link on appendTo
+     * Adds references in the source list and adds a superscript-link on
+     * appendTo
      */
     protected void processSourceRefs(Element appendTo, Property prop, String linkPrefix, String id, Html html) {
         Property[] sourceRefs = prop.getProperties("SOUR");
@@ -2096,6 +2137,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Adds the source to the list and return an internal link (#S[n]) to it
+     *
      * @param sourceRef
      * @return
      */
@@ -2215,6 +2257,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Handles a note, adds it to the note-list
+     *
      * @param noteRef
      * @param linkPrefix
      * @param dstDir
@@ -2263,6 +2306,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Checks wether two propery structures equals
+     *
      * @param a
      * @param b
      * @return true if equal, false if not equal or not sure
@@ -2288,6 +2332,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Handle the value of multiline properties
+     *
      * @param appendTo
      * @param prop
      * @param ignoreNewLine
@@ -2325,16 +2370,17 @@ public class ReportWebsite extends Report{
 
     /**
      * Handles a note
+     *
      * @return A <span>-element
      */
     /*	protected Element processNote(Property note, String linkPrefix, Html html) {
-    if (note == null) return null;
-    Element noteEl = html.spanNewlines("note", note.getDisplayValue());
-    Element sourcesEl = processSources(note, linkPrefix, html);
-    if (sourcesEl != null) noteEl.appendChild(sourcesEl);
-    reportUnhandledProperties(note, new String[]{"SOUR"});
-    return noteEl;
-    }*/
+     if (note == null) return null;
+     Element noteEl = html.spanNewlines("note", note.getDisplayValue());
+     Element sourcesEl = processSources(note, linkPrefix, html);
+     if (sourcesEl != null) noteEl.appendChild(sourcesEl);
+     reportUnhandledProperties(note, new String[]{"SOUR"});
+     return noteEl;
+     }*/
     protected void addDecendantTree(Element whereToAdd, Indi indi, String relation, String linkPrefix, Html html) {
         if (indi == null) {
             return;
@@ -2385,7 +2431,9 @@ public class ReportWebsite extends Report{
 
     }
 
-    /** Assumes isPrivate check outside */
+    /**
+     * Assumes isPrivate check outside
+     */
     protected Element getBirthPlaceMap(Indi indi, Html html) {
         String lines = getBirthPlaceMapRec(indi, 0, html);
         if (lines.equals("")) {
@@ -2524,6 +2572,7 @@ public class ReportWebsite extends Report{
 
     /**
      * Make a css, with current settings
+     *
      * @param dir The output directory
      * @throws IOException in case of file error
      */
@@ -2549,17 +2598,20 @@ public class ReportWebsite extends Report{
     }
 
     /**
-     * Calculate the address of an object
-     * Make a directory structure that works for many objecs
-     * @return the address excluding any leading /. For example "indi4/04/12/index.html"
+     * Calculate the address of an object Make a directory structure that works
+     * for many objecs
+     *
+     * @return the address excluding any leading /. For example
+     * "indi4/04/12/index.html"
      */
     protected String addressTo(String id) {
         return addressToDir(id) + getLocalizedFilename(reportIndexFileName, currentLocale);
     }
 
     /**
-     * Calculate the address of an objects directory
-     * Make a directory structure that works for many objecs
+     * Calculate the address of an objects directory Make a directory structure
+     * that works for many objecs
+     *
      * @return the address excluding any leading /. For example "indi4/04/12/"
      */
     //TODO: this is buggy. We must not rely on entity's ID to guess its type. Use TAG Instead
