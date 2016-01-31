@@ -4,7 +4,6 @@
     <folder name="Menu">
         <folder name="File">
             <folder name="Export">
-                <attr name="position" intvalue="2410"/>
                 <attr name="displayName" bundlevalue="ancestris.modules.exports.geneanet.Bundle#Menu/File/Export"/> 
             </folder>
         </folder>
