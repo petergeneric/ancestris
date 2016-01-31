@@ -2,6 +2,7 @@
 <!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <attr name="Menu\File\Import\position" intvalue="1600"/>
+    <attr name="Menu\File\Export\position" intvalue="1650"/>
     <attr name="Menu\File\ImporterSeparator1.instance\position" intvalue="1700"/>
     <attr name="Menu\File\Separator2.instance\position" intvalue="1500"/>
     <attr name="Menu\File\Separator3.instance\position" intvalue="2300"/>
