@@ -34,7 +34,6 @@ import javafx.scene.input.KeyCombination;
 import org.openide.util.Exceptions;
 
 
-
 /**
  *
  * @author frederic
