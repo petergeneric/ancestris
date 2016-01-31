@@ -16,8 +16,13 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.awt.Image;
+import java.io.Reader;
+import java.io.StringReader;
 import java.util.Collection;
 import java.util.Locale;
+import javax.swing.text.Document;
+import javax.swing.text.EditorKit;
+import javax.swing.text.html.HTMLEditorKit;
 import org.openide.util.Lookup;
 
 /**
@@ -131,4 +136,26 @@ public class Utilities {
         }
         return gedcom;
     }
+    
+    /**
+     * (added by FL for blueprint renderers, could be used for other purposes)
+     * Utility method to convert HTML to text.
+     * @param html The string containing HTML.
+     * @return a String containing the derived text .
+     */
+    static public String html2text(String html) {
+        EditorKit kit = new HTMLEditorKit();
+        Document doc = kit.createDefaultDocument();
+        doc.putProperty("IgnoreCharsetDirective", Boolean.TRUE);
+        try {
+            Reader reader = new StringReader(html);
+            kit.read(reader, doc, 0);
+            return doc.getText(0, doc.getLength());
+        } catch (Exception e) {
+            return "";
+        }
+    }
+    
+    
+    
 }

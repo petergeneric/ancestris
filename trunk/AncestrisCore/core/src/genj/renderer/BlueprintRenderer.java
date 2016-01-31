@@ -19,6 +19,7 @@
  */
 package genj.renderer;
 
+import ancestris.util.Utilities;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -27,7 +28,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyBlob;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
@@ -987,7 +987,7 @@ public class BlueprintRenderer {
     }
     
     private String getText(PropertyPlace place) {
-      return place.format(attributes.get("format"));
+      return Utilities.html2text(place.format(attributes.get("format")));
     }
     
     /**
