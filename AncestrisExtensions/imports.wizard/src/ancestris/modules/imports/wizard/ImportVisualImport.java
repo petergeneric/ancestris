@@ -1,6 +1,7 @@
 package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
+import genj.util.Registry;
 import java.io.File;
 import java.util.Collection;
 import java.util.Vector;
@@ -14,6 +15,9 @@ public final class ImportVisualImport extends JPanel {
     Vector<Import> importList = new Vector<Import>();
     private File inputFile = null;
     private Import importClass = null;
+    
+    private Registry registry = null;
+    
 
     /** Creates new form ImportVisualImport */
     public ImportVisualImport() {
@@ -21,8 +25,25 @@ public final class ImportVisualImport extends JPanel {
         for (Import o : c) {
             importList.add(o);
         }
+        registry = Registry.get(getClass());
         initComponents();
-        importClass = (Import)jComboBox1.getSelectedItem();
+        String latestImport = registry.get("latestImport", "");
+        if (!latestImport.isEmpty()) {
+            for (int i = 0; i < jComboBox1.getItemCount(); i++) {
+                Import li = (Import)jComboBox1.getItemAt(i);
+                if (latestImport.equals(li.toString())) {
+                    jComboBox1.setSelectedItem(li);
+                    importClass = li;
+                    break;
+                }
+            }
+        } else {
+            importClass = (Import)jComboBox1.getSelectedItem();
+        }
+        String latestFile = registry.get("latestFile", "");
+        if (!latestFile.isEmpty()) {
+            jTextField1.setText(latestFile);
+        }
 
     }
 
@@ -48,6 +69,11 @@ public final class ImportVisualImport extends JPanel {
         jLabel4 = new javax.swing.JLabel();
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<Import>(importList));
+        jComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBox1ItemStateChanged(evt);
+            }
+        });
         jComboBox1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jComboBox1ActionPerformed(evt);
@@ -88,22 +114,22 @@ public final class ImportVisualImport extends JPanel {
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel3))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel4))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel3)
+                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(45, 45, 45)
-                .addComponent(jLabel4)
+                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -118,13 +144,19 @@ public final class ImportVisualImport extends JPanel {
         fc.setDialogTitle(NbBundle.getMessage(ImportVisualImport.class, "ImportVisualPanel2.fc.title"));
         if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             inputFile = fc.getSelectedFile();
-            jTextField1.setText(getInputFile().getAbsolutePath());
+            String str = getInputFile().getAbsolutePath();
+            jTextField1.setText(str);
+            registry.put("latestFile", str);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
         importClass = (Import)jComboBox1.getSelectedItem();
     }//GEN-LAST:event_jComboBox1ActionPerformed
+
+    private void jComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_jComboBox1ItemStateChanged
+        registry.put("latestImport", ((Import)jComboBox1.getSelectedItem()).toString());
+    }//GEN-LAST:event_jComboBox1ItemStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
