@@ -30,8 +30,10 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.io.Filter;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.prefs.Preferences;
 import javax.swing.JFileChooser;
@@ -156,6 +158,16 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                 hideWaitCursor();
                 NotifyDescriptor nd = new NotifyDescriptor.Message(result, b ? NotifyDescriptor.INFORMATION_MESSAGE : NotifyDescriptor.ERROR_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
+  
+                try {
+                    String fileStr = "http://www.geneanet.org/creer-votre-arbre/gedcom";
+                    URI uri = new URI(fileStr);
+                    if (Desktop.isDesktopSupported()) {
+                        Desktop.getDesktop().browse(uri);
+                    } else {
+                    }
+                } catch (Exception ex) {
+                }
             }
         }
     }
