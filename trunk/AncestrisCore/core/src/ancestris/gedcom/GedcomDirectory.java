@@ -724,10 +724,12 @@ public abstract class GedcomDirectory {
         //FIXME: we could use vetoable setValid(false) to prevent closing dao if used in editor
         protected boolean unregisterGedcomImpl(Context context) {
             GedcomDataObject gdao = gedcomsOpened.get(context.getGedcom());
-            try {
-                gdao.setValid(false);
-            } catch (PropertyVetoException ex) {
-                return false;
+            if (gdao != null) {
+                try {
+                    gdao.setValid(false);
+                } catch (PropertyVetoException ex) {
+                    return false;
+                }
             }
             gedcomsOpened.remove(context.getGedcom());
             return true;
