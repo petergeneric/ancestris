@@ -22,6 +22,8 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyRelationship;
+import genj.gedcom.TagPath;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbBundle;
@@ -63,6 +65,8 @@ public class GeneanetImport extends Import {
         String type = null;
         Property relaProp = null;
         String rela = null;
+        PropertyRelationship pship = null;
+        TagPath tagpath = null;
 
         console.println(NbBundle.getMessage(GeneanetImport.class, "GeneanetImport.ConvertingAssos"));
 
@@ -71,25 +75,35 @@ public class GeneanetImport extends Import {
             getPropertiesRecursively(list, "ASSO", entity);
         }
         for (Property prop : list) {
-            // Get info
             console.println(prop.getEntity().toString());
+            
+            // Get indi
             id = prop.getValue().replace("@", "");
             indiRela = (Indi) gedcom.getEntity(id);
             if (indiRela == null) {
                 console.println(NbBundle.getMessage(GeneanetImport.class, "GeneanetImport.IndiNotFound", id));
                 continue;
             }
+            
+            // Get type, rela and tagpath
             type = prop.getEntity().getTag();
             relaProp = prop.getProperty("RELA");
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
             }
+            tagpath = prop.getParent().getPath(true);
 
-            // Add to second asso entity
+            // Create asso set
             id = prop.getEntity().getId();
             propAsso = (PropertyAssociation) indiRela.addProperty("ASSO", "@" + id + "@");
             propAsso.addProperty("TYPE", type);
-            propAsso.addProperty("RELA", rela);
+            pship = (PropertyRelationship) propAsso.getProperty("RELA", false);
+            rela +=  "@" + tagpath.toString();
+            if (pship == null) {
+                propAsso.addProperty("RELA", rela);
+            } else {
+                pship.setValue(rela);
+            }
             try {
                 propAsso.link();
             } catch (GedcomException ex) {
@@ -99,6 +113,19 @@ public class GeneanetImport extends Import {
             // Delete from first asso entity
             prop.getParent().delProperty(prop);
         }
+        
+        console.println("====================");
+        Entity entity = gedcom.getFirstEntity("HEAD");
+        String note = " - " + NbBundle.getMessage(GeneanetImport.class, "GeneanetImport.NoteWarning");
+        Property[] noteProps = entity.getProperties("NOTE");
+        for (Property noteProp : noteProps) {
+            String str = noteProp.getDisplayValue();
+            if (str.contains(note)) {
+                noteProp.setValue(str.replace(note, ""));
+            }
+        }
+        console.println(note);
+        
         
         return true;
     }
