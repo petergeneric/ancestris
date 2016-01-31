@@ -173,12 +173,13 @@ public class GeneanetExport {
         console.println("====================");
         Entity entity = gedcom.getFirstEntity("HEAD");
         Property property = entity.getProperty("NOTE");
-        String note = "";
+        String note = NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NoteWarning");
         if (property != null) {
-            note = property.getDisplayValue();
+            note = property.getDisplayValue() + " - " + note;
+            property.setValue(note);
+        } else {
+            entity.addProperty("NOTE", note);
         }
-        note += " - " + NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NoteWarning");
-        property.setValue(note);
         console.println(note);
 
         return true;
