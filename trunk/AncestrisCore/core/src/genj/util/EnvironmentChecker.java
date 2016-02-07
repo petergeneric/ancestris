@@ -87,6 +87,7 @@ public class EnvironmentChecker {
     // For these reasons, we recommend that you instead use the more standard os.name 
     // and java.runtime.version properties for Macintosh identification in all ongoing 
     // Java development, as outlined in this Technical Note.
+    // Other possibility is to use : Utilities.isMac()
     return getProperty("os.name", "", "isMac()").toLowerCase().contains("mac");
   }
   

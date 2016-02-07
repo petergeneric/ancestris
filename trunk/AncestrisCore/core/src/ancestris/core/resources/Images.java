@@ -47,6 +47,16 @@ final public class Images {
     public static ImageIcon imgQuestion = new ImageIcon(Images.class,"images/Question");
     public static ImageIcon imgDownload = new ImageIcon(Images.class,"images/Download");
 
+    
+    public static ImageIcon imgGedcom = new ImageIcon(Images.class,"images/Gedcom");
+    public static ImageIcon imgImage = new ImageIcon(Images.class,"images/Image");
+    public static ImageIcon imgSound = new ImageIcon(Images.class,"images/Sound");
+    public static ImageIcon imgVideo = new ImageIcon(Images.class,"images/Video");
+    public static ImageIcon imgPDF = new ImageIcon(Images.class,"images/PDF");
+    public static ImageIcon imgText = new ImageIcon(Images.class,"images/Text");
+    
+    
+    
   /**
    * Static class only
    */
