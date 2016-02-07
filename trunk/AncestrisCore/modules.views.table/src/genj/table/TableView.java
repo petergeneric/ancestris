@@ -500,6 +500,7 @@ public class TableView extends View {
                     .setParent((Component)(event.getSource()))
                     .setFileFilter(new FileNameExtensionFilter(filter_txt_file(),"txt","csv"))
                     .setDefaultExtension("txt")
+                    .setDefaultBadgeProvider()
                     .showSaveDialog(true);
             if (file == null) {
                 return;
