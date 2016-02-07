@@ -1,14 +1,16 @@
 /*
  * Ancestris - http://www.ancestris.org
  * 
- * Copyright 2014 Ancestris
+ * Copyright 2014-2016 Ancestris
  * 
  * Author: Daniel Andre (daniel@ancestris.org).
+ * Author: Frederic Lapeyre (frederic@ancestris.org).
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
+
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
@@ -64,6 +66,27 @@ package ancestris.util.swing;
  * </ul>
  */
 
+/**
+ * Example of use
+ * 
+ * File file  = new FileChooserBuilder(TableView.class)
+                    .setTitle(tableview_export_dialog_title())
+                    .setApproveText(tableview_action_export())
+                    .setApproveTooltipText("Click to select file")
+                    .setFileHiding(true)
+                    .setParent((Component)(event.getSource()))
+                    .setFileFilter(new FileNameExtensionFilter(filter_txt_file(),"txt","csv"))
+                    .setDefaultExtension("txt")
+                    .setDefaultBadgeProvider()
+                    .showSaveDialog(true);
+            if (file == null) {
+                return;
+            }
+ * 
+ * 
+ */
+
+import ancestris.core.resources.Images;
 import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -81,7 +104,16 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import org.openide.util.*;
 import static ancestris.util.swing.Bundle.*;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Arrays;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import org.openide.filesystems.MIMEResolver;
+//import org.netbeans.modules.openide.filesystems.FileFilterSupport;
 
 /**
  * Utility class for working with JFileChoosers.  In particular, remembering
@@ -132,6 +164,7 @@ public class FileChooserBuilder {
     private BadgeProvider badger;
     private String title;
     private String approveText;
+    private String approveTooltipText;
     private final String dirKey;
     private File failoverDir;
     private FileFilter filter;
@@ -139,11 +172,25 @@ public class FileChooserBuilder {
     private boolean controlButtonsShown = true;
     private String aDescription;
     private boolean filesOnly;
-    private static final boolean DONT_STORE_DIRECTORIES = false;
-//            Boolean.getBoolean("forget.recent.dirs");
+    private static final boolean DONT_STORE_DIRECTORIES = false; // Boolean.getBoolean("forget.recent.dirs");
     private SelectionApprover approver;
     private final List<FileFilter> filters = new ArrayList<FileFilter>(3);
     private boolean useAcceptAllFileFilter = true;
+    private boolean imagePreviewer = false;
+    private boolean badgeProvider = false;
+
+    private static String[] gedExtensions = {"ged"};
+    private static String[] imgExtensions = {"jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg"};
+    private static String[] sndExtensions = {"mp3", "wav", "ogg", "flac"};
+    private static String[] vidExtensions = {"mp4", "flv", "ogg", "avi", "mov", "mpeg"};
+    private static String[] pdfExtensions = {"pdf"};
+    private static String[] txtExtensions = {"txt", "doc", "odt", "csv"};
+
+    private static String DIMX = "dimX";
+    private static String DIMY = "dimY";
+    private static String DIMW = "dimW";
+    private static String DIMH = "dimH";
+    
     /**
      * Create a new FileChooserBuilder using the name of the passed class
      * as the metadata for looking up a starting directory from previous
@@ -199,6 +246,27 @@ public class FileChooserBuilder {
     }
 
     /**
+     * Provide a default implementation of badge provider.
+     * @return this
+     */
+    public FileChooserBuilder setDefaultBadgeProvider() {
+        this.badgeProvider = true;
+        return this;
+    }
+
+
+    /**
+     * Provide an implementation of an image previewer which will show the
+     * image of a file when it is selected.
+     * @return this
+     */
+    public FileChooserBuilder setDefaultPreviewer() {
+        this.imagePreviewer = true;
+        return this;
+    }
+
+
+    /**
      * Set the dialog title for any JFileChoosers created by this builder.
      * @param val A localized, human-readable title
      * @return this
@@ -216,6 +284,16 @@ public class FileChooserBuilder {
      */
     public FileChooserBuilder setApproveText(String val) {
         approveText = val;
+        return this;
+    }
+
+    /**
+     * Set the tooltip text on the OK button.
+     * @param val A short, localized, human-readable string
+     * @return this
+     */
+    public FileChooserBuilder setApproveTooltipText(String val) {
+        approveTooltipText = val;
         return this;
     }
 
@@ -289,6 +367,11 @@ public class FileChooserBuilder {
         return this;
     }
 
+    
+    
+    
+    
+    
     /**
      * Create a JFileChooser that conforms to the parameters set in this
      * builder.
@@ -342,6 +425,10 @@ public class FileChooserBuilder {
         return parent;
     }
 
+    
+    
+    
+    
     /**
      * Show an open dialog that allows multiple selection.
      * @return An array of files, or null if the user cancelled the dialog
@@ -351,9 +438,11 @@ public class FileChooserBuilder {
         chooser.setMultiSelectionEnabled(true);
         int result = chooser.showOpenDialog(findDialogParent());
         if (JFileChooser.APPROVE_OPTION == result) {
+            saveDialogSize(chooser);
             File[] files = chooser.getSelectedFiles();
             return files == null ? new File[0] : files;
         } else {
+            saveDialogSize(chooser);
             return null;
         }
     }
@@ -375,12 +464,14 @@ public class FileChooserBuilder {
         chooser.setMultiSelectionEnabled(false);
         int dlgResult = chooser.showOpenDialog(findDialogParent());
         if (JFileChooser.APPROVE_OPTION == dlgResult) {
+            saveDialogSize(chooser);
             File result = chooser.getSelectedFile();
             if (result != null && !result.exists()) {
                 result = null;
             }
             return result;
         } else {
+            saveDialogSize(chooser);
             return null;
         }
 
@@ -415,6 +506,7 @@ public class FileChooserBuilder {
         if (JFileChooser.APPROVE_OPTION == chooser.showSaveDialog(findDialogParent())) {
             file = chooser.getSelectedFile();
         }
+        saveDialogSize(chooser);
         if (file == null){
             return null;
         }
@@ -458,6 +550,7 @@ public class FileChooserBuilder {
     }
     
     private void prepareFileChooser(JFileChooser chooser) {
+        setDialogSize(chooser);
         chooser.setFileSelectionMode(dirsOnly ? JFileChooser.DIRECTORIES_ONLY
                 : filesOnly ? JFileChooser.FILES_ONLY :
                 JFileChooser.FILES_AND_DIRECTORIES);
@@ -469,6 +562,12 @@ public class FileChooserBuilder {
         }
         if (approveText != null) {
             chooser.setApproveButtonText(approveText);
+        }
+        if (approveTooltipText != null) {
+            chooser.setApproveButtonToolTipText(approveTooltipText);
+        }
+        if (badgeProvider) {
+            badger = new DefaultBadgeProvider();
         }
         if (badger != null) {
             chooser.setFileView(new CustomFileView(new BadgeIconProvider(badger),
@@ -484,6 +583,9 @@ public class FileChooserBuilder {
             for (FileFilter f : filters) {
                 chooser.addChoosableFileFilter(f);
             }
+        }
+        if (imagePreviewer) {
+            chooser.setAccessory(new DefaultImagePreviewer(chooser));
         }
     }
 
@@ -550,6 +652,29 @@ public class FileChooserBuilder {
         return this;
     }
 
+    private void setDialogSize(JFileChooser chooser) {
+        int x = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMX, "-1"));
+        int y = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMY, "-1"));
+        int w = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMW, "500"));
+        int h = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMH, "300"));
+        if (x >= 0 && y >= 0) {
+            chooser.setLocation(x, y);
+        }
+        chooser.setPreferredSize(new Dimension(w, h));
+    }
+    
+    private void saveDialogSize(JFileChooser chooser) {
+        int x = chooser.getLocation().x;
+        int y = chooser.getLocation().y;
+        NbPreferences.forModule(FileChooserBuilder.class).put(DIMX, "" + x);
+        NbPreferences.forModule(FileChooserBuilder.class).put(DIMY, "" + y);
+
+        int w = chooser.getSize().width;
+        int h = chooser.getSize().height;
+        NbPreferences.forModule(FileChooserBuilder.class).put(DIMW, "" + w);
+        NbPreferences.forModule(FileChooserBuilder.class).put(DIMH, "" + h);
+    }
+
     /**
      * Object which can approve the selection (enabling the OK button or
      * equivalent) in a JFileChooser.  Equivalent to overriding
@@ -571,9 +696,15 @@ public class FileChooserBuilder {
         public boolean approve (File[] selection);
     }
 
+    
+    
+    
+    
     private static final class SavedDirFileChooser extends JFileChooser {
+        
         private final String dirKey;
         private final SelectionApprover approver;
+        
         SavedDirFileChooser(String dirKey, File failoverDir, boolean force, SelectionApprover approver) {
             this.dirKey = dirKey;
             this.approver = approver;
@@ -643,6 +774,44 @@ public class FileChooserBuilder {
         }
     }
 
+    
+    public static Icon getIconFromFileExtension(File file) {
+        String extension = getExtension(file);
+        Icon icon = null;
+
+        if (Arrays.asList(gedExtensions).contains(extension)) {
+            icon = Images.imgGedcom;
+        } else if (Arrays.asList(imgExtensions).contains(extension)) {
+            icon = Images.imgImage;
+        } else if (Arrays.asList(sndExtensions).contains(extension)) {
+            icon = Images.imgSound;
+        } else if (Arrays.asList(vidExtensions).contains(extension)) {
+            icon = Images.imgVideo;
+        } else if (Arrays.asList(pdfExtensions).contains(extension)) {
+            icon = Images.imgPDF;
+        } else if (Arrays.asList(txtExtensions).contains(extension)) {
+            icon = Images.imgText;
+        }
+
+        return icon;
+        
+    }
+
+    /*
+     * Get the extension of a file.
+     */
+    public static String getExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 && i < s.length() - 1) {
+            ext = s.substring(i + 1).toLowerCase();
+        }
+        return ext;
+    }
+    
+    
     //Can open this API later if there is a use-case
     interface IconProvider {
         public Icon getIcon(File file, Icon orig);
@@ -671,7 +840,7 @@ public class FileChooserBuilder {
          * file.
          * @return  a rightward pixel offset
          */
-        public int getXOffset();
+            public int getXOffset();
 
         /**
          * Get the y offset for badges produced by this provider.  This is
@@ -760,4 +929,61 @@ public class FileChooserBuilder {
             icon2.paintIcon(c, g, x + xMerge, y + yMerge);
         }
     }
+
+    
+    /**
+     * Image previewer as an option
+     */
+    private static final class DefaultImagePreviewer extends JLabel {
+
+        public DefaultImagePreviewer(JFileChooser chooser) {
+            final int size = 120;
+            setText("");
+            setPreferredSize(new Dimension(size, size));
+            setBorder(BorderFactory.createEtchedBorder());
+            setHorizontalAlignment(JLabel.CENTER);
+            setHorizontalTextPosition(JLabel.CENTER);
+            chooser.addPropertyChangeListener(new PropertyChangeListener() {
+                @Override
+                public void propertyChange(PropertyChangeEvent evt) {
+                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+                        File f = (File) evt.getNewValue();
+                        if (f != null) {
+                            ImageIcon icon = new ImageIcon(f.getPath());
+                            if (icon.getIconWidth() > size) {
+                                icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
+                            }
+                            setIcon(icon);
+                        }
+                    }
+                }
+            });
+        }
+    }
+
+    /**
+     * Default badge provider as an option
+     */
+    private static final class DefaultBadgeProvider implements BadgeProvider {
+        
+        public DefaultBadgeProvider() {
+        }
+
+        @Override
+        public Icon getBadge(File file) {
+            return getIconFromFileExtension(file);
+        }
+
+        @Override
+        public int getXOffset() {
+            return 5;
+        }
+
+        @Override
+        public int getYOffset() {
+            return 5;
+        }
+
+    }
+
 }
