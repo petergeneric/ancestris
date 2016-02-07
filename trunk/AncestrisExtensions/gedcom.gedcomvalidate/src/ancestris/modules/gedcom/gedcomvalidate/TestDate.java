@@ -153,6 +153,11 @@ import org.openide.util.NbBundle;
       sign = -1;
     }
 
+    // if one date is incomplete and both have the same year, we assume there is no error
+    if ((!pit1.isComplete() || !pit2.isComplete()) && pit1.getYear() == pit2.getYear()) {
+        return false;
+    }
+    
     // result
     return pit1.compareTo(pit2)*sign>0;
   }
