@@ -2882,7 +2882,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     
     private void selectAssociation() {
-        if (eventSet == null || assoSet == null) {
+        if (eventSet == null || eventSet.isEmpty() || assoSet == null) {
             return;
         }
         EventWrapper event = eventSet.get(eventIndex);
@@ -3055,8 +3055,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            setIcon(((EventLabel)value).getIcon());
-            setText(((EventLabel)value).getShortLabel());
+            if (value != null) {
+                setIcon(((EventLabel) value).getIcon());
+                setText(((EventLabel) value).getShortLabel());
+            }
         return this;
         }
     }
@@ -3067,16 +3069,18 @@ public class IndiPanel extends Editor implements DocumentListener {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            String text = (String) value;
-            try {
-                Double d = new DecimalFormat("#").parse(text).doubleValue();
-                DecimalFormat df = new DecimalFormat("#.#");
-                setText(df.format(d));
-            } catch (ParseException ex) {
-                //Exceptions.printStackTrace(ex);
-                setText(text);
+            if (value != null) {
+                String text = (String) value;
+                try {
+                    Double d = new DecimalFormat("#").parse(text).doubleValue();
+                    DecimalFormat df = new DecimalFormat("#.#");
+                    setText(df.format(d));
+                } catch (ParseException ex) {
+                    //Exceptions.printStackTrace(ex);
+                    setText(text);
+                }
+                setHorizontalAlignment(SwingConstants.CENTER);
             }
-            setHorizontalAlignment(SwingConstants.CENTER);
             return this;
         }
     }
