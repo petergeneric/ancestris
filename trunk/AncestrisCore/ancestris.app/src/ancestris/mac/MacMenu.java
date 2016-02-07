@@ -20,13 +20,32 @@ import org.openide.util.Exceptions;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
+import java.awt.MenuItem;
 import java.awt.PopupMenu;
+import javax.swing.JOptionPane;
 
 /**
- *
+ * By default, menu appears as:
+ * 
+ * -----------------
+ *  ancestris           <== title bar
+ * -----------------
+ *  About ancestris
+ * -----------------
+ *  Preferences
+ * -----------------
+ *  Services
+ * -----------------
+ *  Hide ancestris
+ *  Hide Others
+ *  Show All
+ * -----------------
+ *  Quit ancestris
+ * -----------------
+  * 
  * @author frederic
  */
-public class MacMenu  {
+public class MacMenu {
 
     private Logger LOG;
     
@@ -41,35 +60,49 @@ public class MacMenu  {
             
             // Set some mac-specific properties
             System.setProperty("apple.laf.useScreenMenuBar", "true");
-            System.setProperty("dock:name", "Ancestris");
-            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");
+            System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");   // has no effect
+            System.setProperty("dock:name", "Ancestris");   // has no effect
             
             // Create an instance of the Mac Application class
             Application macApplication = Application.getApplication();
 
             
             // Enable/Disable items
-            macApplication.setEnabledPreferencesMenu(false);
             macApplication.setEnabledAboutMenu(true);
+            macApplication.setEnabledPreferencesMenu(true);
+            macApplication.removeAboutMenuItem();  // test
             
             // Get the menu and translate labels
             PopupMenu menu = macApplication.getDockMenu();
-            LOG.info("*** DEBUG *** - menu.getItemCount()="+menu.getItemCount());
-            for (int i = 0; i < menu.getItemCount(); i++) {
-                LOG.info("*** DEBUG *** - Item("+ i +")=" + menu.getItem(i).getLabel());
+            LOG.info("*** DEBUG *** - menu.getItemCount()="+ (menu == null ? "null" : menu.getItemCount()));
+            if (menu != null) {
+                for (int i = 0; i < menu.getItemCount(); i++) {
+                    LOG.info("*** DEBUG *** - Item(" + i + ")=" + menu.getItem(i).getLabel());
+                }
             }
+            
+            menu = new PopupMenu();
+            menu.add(new MenuItem("Salut A"));
+            menu.add(new MenuItem("Salut B"));
+            menu.add(new MenuItem("Salut C"));
+            macApplication.setDockMenu(menu);
             
             
             // Handles Quit and About
             macApplication.addApplicationListener(new ApplicationAdapter() {
                 @Override
                 public void handleQuit(ApplicationEvent event) {
-                    //doHandleQuit();
+                    JOptionPane.showMessageDialog(null,
+                            "prefs Ancestris 1",
+                            "prefs Ancestris 2",
+                            JOptionPane.INFORMATION_MESSAGE);                
                 }
                 @Override
                 public void handleAbout(ApplicationEvent event) {
-                    //doAbout();
-                }
+                    JOptionPane.showMessageDialog(null,
+                            "about Ancestris 1",
+                            "about Ancestris 2",
+                            JOptionPane.INFORMATION_MESSAGE);                }
             });
                 
             

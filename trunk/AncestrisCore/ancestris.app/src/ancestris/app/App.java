@@ -55,6 +55,8 @@ public class App {
      */
     public static void main(final String[] args) {
 
+        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");  // Usefull for Mac OS X only. Has to be rght after "main".
+        
         // we're ready to be run twice
         synchronized (App.class) {
             if (startup == null) {
