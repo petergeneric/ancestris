@@ -104,6 +104,7 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import org.openide.util.*;
 import static ancestris.util.swing.Bundle.*;
+import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
@@ -111,6 +112,7 @@ import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import org.openide.filesystems.MIMEResolver;
 //import org.netbeans.modules.openide.filesystems.FileFilterSupport;
@@ -551,6 +553,8 @@ public class FileChooserBuilder {
     
     private void prepareFileChooser(JFileChooser chooser) {
         setDialogSize(chooser);
+        removeButtonTooltips(chooser);
+        
         chooser.setFileSelectionMode(dirsOnly ? JFileChooser.DIRECTORIES_ONLY
                 : filesOnly ? JFileChooser.FILES_ONLY :
                 JFileChooser.FILES_AND_DIRECTORIES);
@@ -673,6 +677,23 @@ public class FileChooserBuilder {
         int h = chooser.getSize().height;
         NbPreferences.forModule(FileChooserBuilder.class).put(DIMW, "" + w);
         NbPreferences.forModule(FileChooserBuilder.class).put(DIMH, "" + h);
+    }
+
+    private void removeButtonTooltips(Container container) {
+
+        Component[] jc = container.getComponents();
+        for (int i = 0; i < jc.length; i++) {
+            Component c = jc[i];
+            if (c instanceof JButton) {
+                JButton j = (JButton) c;
+                if (j.getText()!= null && !j.getText().isEmpty()) {
+                    j.setToolTipText(null);
+                }
+            } else if (c instanceof Container) {
+                removeButtonTooltips((Container) c);
+            }
+        }
+
     }
 
     /**
