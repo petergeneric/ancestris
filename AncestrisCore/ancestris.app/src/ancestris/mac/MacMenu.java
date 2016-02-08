@@ -20,8 +20,9 @@ import org.openide.util.Exceptions;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
-import java.awt.MenuItem;
-import java.awt.PopupMenu;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 /**
@@ -68,25 +69,18 @@ public class MacMenu {
 
             
             // Enable/Disable items
-            macApplication.setEnabledAboutMenu(true);
-            macApplication.setEnabledPreferencesMenu(true);
-            macApplication.removeAboutMenuItem();  // test
-            
-            // Get the menu and translate labels
-            PopupMenu menu = macApplication.getDockMenu();
-            LOG.info("*** DEBUG *** - menu.getItemCount()="+ (menu == null ? "null" : menu.getItemCount()));
-            if (menu != null) {
-                for (int i = 0; i < menu.getItemCount(); i++) {
-                    LOG.info("*** DEBUG *** - Item(" + i + ")=" + menu.getItem(i).getLabel());
-                }
-            }
-            
-            menu = new PopupMenu();
-            menu.add(new MenuItem("Salut A"));
-            menu.add(new MenuItem("Salut B"));
-            menu.add(new MenuItem("Salut C"));
-            macApplication.setDockMenu(menu);
-            
+            macApplication.setEnabledAboutMenu(true); // This works
+            macApplication.setEnabledPreferencesMenu(true); // This works
+            macApplication.removeAboutMenuItem();  // This works
+            macApplication.removePreferencesMenuItem(); //test
+
+            // test
+            JMenuBar jmb = new JMenuBar();
+            JMenu fileMenu = new JMenu("Fichier");
+            JMenuItem menuItem = new JMenuItem("Hello world");
+            fileMenu.add(menuItem);
+            jmb.add(fileMenu);
+            macApplication.setDefaultMenuBar(jmb);  
             
             // Handles Quit and About
             macApplication.addApplicationListener(new ApplicationAdapter() {
