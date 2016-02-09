@@ -5,6 +5,7 @@
 package ancestris.app;
 
 import ancestris.util.URLUtil;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.io.File;
@@ -12,35 +13,37 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
-import javax.swing.JFileChooser;
 import javax.swing.SpinnerNumberModel;
 import org.netbeans.api.actions.Openable;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 
 @SuppressWarnings(value={"unchecked", "rawtypes"})
 final class OptionFilesPanel extends javax.swing.JPanel {
 
     private final OptionFilesOptionsPanelController controller;
-    //Create a file chooser
-    private JFileChooser fc = null;
 
     OptionFilesPanel(OptionFilesOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
-        // TODO listen to changes in form fields and call controller.changed()
     }
 
     private void chooseFileDir(javax.swing.JTextField jTF, boolean dirOnly) {
-        String str = jTF.getText();
-        fc = new JFileChooser(str != null ? str : "");
-        if (dirOnly) {
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
-        int returnVal = fc.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTF.setText(fc.getSelectedFile().getAbsolutePath());
-        }
+        File file  = new FileChooserBuilder(OptionFilesPanel.class.getCanonicalName()+dirOnly)
+                    .setDirectoriesOnly(dirOnly)
+                    .setDefaultBadgeProvider()
+                    .setTitle(NbBundle.getMessage(getClass(), dirOnly ? "TITL_GetDefaultDir" : "TITL_GetDefaultGedcom"))
+                    .setApproveText(NbBundle.getMessage(getClass(), "OK_Select"))
+                    .setDefaultExtension("ged")
+                    .setFileFilter(dirOnly ? null : FileChooserBuilder.getGedcomFilter())
+                    .setFileHiding(true)
+                    .setParent(this)
+                    .showOpenDialog();
+            if (file != null) {
+                jTF.setText(file.getAbsolutePath());
+            }
+            
     }
 
     /** This method is called from within the constructor to
@@ -322,14 +325,4 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         logLevel.setSelectedItem(str);
     }
 
-    private Integer getIntFromStr(String str) {
-
-        Integer i = 0;
-        try {
-            i = Integer.valueOf(str);
-        } catch (Exception e) {
-            i = -1;
-        }
-        return i;
-    }
 }
