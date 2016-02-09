@@ -22,7 +22,6 @@ package genj.option;
 import ancestris.util.swing.DialogManager;
 import genj.util.Registry;
 import genj.util.Resources;
-import genj.util.swing.FileChooserWidget;
 import genj.util.swing.FontChooser;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.TextFieldWidget;
@@ -295,39 +294,39 @@ public abstract class PropertyOption extends Option {
 
   } //ColorUI
   
-  /**
-   * A UI for a file
-   */
-  protected static class FileUI implements OptionUI {
-
-    /** file chooser */
-    private FileChooserWidget chooser = new FileChooserWidget();
-
-    /** option */
-    private PropertyOption option;
-
-    /** constructor */
-    public FileUI(PropertyOption option) {
-      this.option = option;
-      chooser.setFile((File)option.getValue());
-    }
-
-    /** text is file name */
-    public String getTextRepresentation() {
-      return chooser.getFile().toString();
-    }
-
-    /** component is the chooser */
-    public JComponent getComponentRepresentation() {
-      return chooser;
-    }
-
-    /** end and commit change */
-    public void endRepresentation() {
-      option.setValue(chooser.getFile());
-    }
-
-  } //FileUI
+//  /**
+//   * A UI for a file
+//   */
+//  protected static class FileUI implements OptionUI {
+//
+//    /** file chooser */
+//    private FileChooserWidget chooser = new FileChooserWidget();
+//
+//    /** option */
+//    private PropertyOption option;
+//
+//    /** constructor */
+//    public FileUI(PropertyOption option) {
+//      this.option = option;
+//      chooser.setFile((File)option.getValue());
+//    }
+//
+//    /** text is file name */
+//    public String getTextRepresentation() {
+//      return chooser.getFile().toString();
+//    }
+//
+//    /** component is the chooser */
+//    public JComponent getComponentRepresentation() {
+//      return chooser;
+//    }
+//
+//    /** end and commit change */
+//    public void endRepresentation() {
+//      option.setValue(chooser.getFile());
+//    }
+//
+//  } //FileUI
 
   /**
    * A UI for a boolean
@@ -573,8 +572,8 @@ public abstract class PropertyOption extends Option {
       if (type==Boolean.TYPE)
         return new BooleanUI(this);
       // a file?
-      if (type==File.class)
-        return new FileUI(this);
+//      if (type==File.class)
+//        return new FileUI(this);
       // multiline?
       if (type==String.class&&multiline)
         return new MultilineUI(this);

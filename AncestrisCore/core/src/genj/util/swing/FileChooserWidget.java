@@ -20,9 +20,9 @@
 package genj.util.swing;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.io.InputSource;
 import genj.util.EnvironmentChecker;
-
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,7 +31,6 @@ import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
@@ -236,34 +235,24 @@ public class FileChooserWidget extends JPanel {
     }
 
     /** choose file */    
+    @Override
     public void actionPerformed(ActionEvent event) {
 
-      // create and show chooser      
-      FileChooser fc = new FileChooser(FileChooserWidget.this, getName(), AbstractAncestrisAction.TXT_OK, extensions, directory);
-      
-      fc.setAccessory(accessory);
-      fc.addPropertyChangeListener(this);
-      
-      File file = getFile();
-      if (file.isFile())
-        fc.setSelectedFile(file);
-      
-      fc.showDialog();
-      
-      // check result
-      file = fc.getSelectedFile();
+        File file  = new FileChooserBuilder(FileChooserWidget.class)
+                    .setDirectoriesOnly(false)
+                    .setDefaultBadgeProvider()
+                    .setAccessory(accessory)
+                    .setDefaultTitle()
+                    .setApproveText(AbstractAncestrisAction.TXT_OK)
+                    .setParent(FileChooserWidget.this)
+                    .setDefaultWorkingDirectory(new File(directory))
+                    .setFileHiding(!ancestris.core.CoreOptions.getInstance().getShowHidden())
+                    .setSelectedFile(getFile())
+                    .showOpenDialog();
+        
       if (file!=null)  {
-        
-        if (extensions!=null && extensions.indexOf(',')<0) {
-          String ext = extensions.trim();
-          if (!file.getName().endsWith("."+ext))
-            file = new File(file.getParentFile(), file.getName()+"."+ext);
-        }
-        
         setFile(file);
         directory = file.getParent();
-        
-        // notify
         fireActionEvent();
       }
       
