@@ -114,6 +114,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.filesystems.MIMEResolver;
 //import org.netbeans.modules.openide.filesystems.FileFilterSupport;
 
@@ -299,6 +300,12 @@ public class FileChooserBuilder {
         return this;
     }
 
+    private String defaultExtension = null;
+    public FileChooserBuilder setDefaultExtension(String extension){
+        defaultExtension = extension;
+        return this;
+    }
+
     /**
      * Set a file filter which filters the list of selectable files.
      * @param filter
@@ -306,6 +313,33 @@ public class FileChooserBuilder {
      */
     public FileChooserBuilder setFileFilter (FileFilter filter) {
         this.filter = filter;
+        return this;
+    }
+
+    /**
+     * Equivalent to calling <code>JFileChooser.addChoosableFileFilter(filter)</code>.
+     * Adds another file filter that can be displayed in the file filters combo
+     * box in the file chooser.
+     *
+     * @param filter The file filter to add
+     * @return this
+     * @since 7.26.0
+     */
+    public FileChooserBuilder addFileFilter (FileFilter filter) {
+        filters.add (filter);
+        return this;
+    }
+
+    /**
+     * Add all default file filters to the file chooser.
+     *
+     * @see MIMEResolver.Registration#showInFileChooser()
+     * @see MIMEResolver.ExtensionRegistration#showInFileChooser()
+     * @return this
+     * @since 8.1
+     */
+    public FileChooserBuilder addDefaultFileFilters() {
+//        filters.addAll(FileFilterSupport.findRegisteredFileFilters());
         return this;
     }
 
@@ -350,7 +384,7 @@ public class FileChooserBuilder {
 
     /**
      * Show/hide control buttons
-     * @param val Whether or not to hide files.  Default is no.
+     * @param val Whether or not to show OK and Cancel buttons on certain UI. Default is true.
      * @return this
      */
     public FileChooserBuilder setControlButtonsAreShown(boolean val) {
@@ -369,6 +403,15 @@ public class FileChooserBuilder {
         return this;
     }
 
+    private Component parent = null;
+    /**
+     * @param parent
+     * @return 
+     */
+    public FileChooserBuilder setParent(Component parent) {
+        this.parent = parent;
+        return this;
+    }
     
     
     
@@ -398,15 +441,6 @@ public class FileChooserBuilder {
         return this;
     }
 
-    private Component parent = null;
-    /**
-     * @param parent
-     * @return 
-     */
-    public FileChooserBuilder setParent(Component parent) {
-        this.parent = parent;
-        return this;
-    }
     /**
      * Tries to find an appropriate component to parent the file chooser to
      * when showing a dialog.
@@ -427,6 +461,22 @@ public class FileChooserBuilder {
         return parent;
     }
 
+    /**
+     * Set a selection approver which can display an &quot;Overwrite file?&quot;
+     * or similar dialog if necessary, when the user presses the accept button
+     * in the file chooser dialog.
+     *
+     * @param approver A SelectionApprover which will determine if the selection
+     * is valid
+     * @return this
+     * @since 7.26.0
+     */
+    public FileChooserBuilder setSelectionApprover (SelectionApprover approver) {
+        this.approver = approver;
+        return this;
+    }
+
+    
     
     
     
@@ -479,11 +529,6 @@ public class FileChooserBuilder {
 
     }
 
-    private String defaultExtension = null;
-    public FileChooserBuilder setDefaultExtension(String extension){
-        defaultExtension = extension;
-        return this;
-    }
     /**
      * Show a save dialog with the file chooser set up according to the
      * parameters of this builder.
@@ -528,6 +573,58 @@ public class FileChooserBuilder {
             }
         return file;
     }
+    
+    /*
+     * Get the extension of a file.
+     */
+    public static String getExtension(File f) {
+        String ext = null;
+        String s = f.getName();
+        int i = s.lastIndexOf('.');
+
+        if (i > 0 && i < s.length() - 1) {
+            ext = s.substring(i + 1).toLowerCase();
+        }
+        return ext;
+    }
+    
+    
+    /*
+     * Get the extension icon of a file.
+     */
+    public static Icon getIconFromFileExtension(File file) {
+        String extension = getExtension(file);
+        Icon icon = null;
+
+        if (Arrays.asList(gedExtensions).contains(extension)) {
+            icon = Images.imgGedcom;
+        } else if (Arrays.asList(imgExtensions).contains(extension)) {
+            icon = Images.imgImage;
+        } else if (Arrays.asList(sndExtensions).contains(extension)) {
+            icon = Images.imgSound;
+        } else if (Arrays.asList(vidExtensions).contains(extension)) {
+            icon = Images.imgVideo;
+        } else if (Arrays.asList(pdfExtensions).contains(extension)) {
+            icon = Images.imgPDF;
+        } else if (Arrays.asList(txtExtensions).contains(extension)) {
+            icon = Images.imgText;
+        }
+
+        return icon;
+    }
+
+    
+    /*
+     * Get the gedcom extension
+     */
+    public static FileNameExtensionFilter getGedcomFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_GEDCOM") ,gedExtensions);
+    }
+
+    
+     
+    
+    // Private methods
         
     private File showFileDialog( FileDialog fileDialog, int mode ) {
         String oldFileDialogProp = System.getProperty("apple.awt.fileDialogForDirectories"); //NOI18N
@@ -614,48 +711,6 @@ public class FileChooserBuilder {
         return fileDialog;
     }
     
-    /**
-     * Equivalent to calling <code>JFileChooser.addChoosableFileFilter(filter)</code>.
-     * Adds another file filter that can be displayed in the file filters combo
-     * box in the file chooser.
-     *
-     * @param filter The file filter to add
-     * @return this
-     * @since 7.26.0
-     */
-    public FileChooserBuilder addFileFilter (FileFilter filter) {
-        filters.add (filter);
-        return this;
-    }
-
-    /**
-     * Add all default file filters to the file chooser.
-     *
-     * @see MIMEResolver.Registration#showInFileChooser()
-     * @see MIMEResolver.ExtensionRegistration#showInFileChooser()
-     * @return this
-     * @since 8.1
-     */
-    public FileChooserBuilder addDefaultFileFilters() {
-//        filters.addAll(FileFilterSupport.findRegisteredFileFilters());
-        return this;
-    }
-
-    /**
-     * Set a selection approver which can display an &quot;Overwrite file?&quot;
-     * or similar dialog if necessary, when the user presses the accept button
-     * in the file chooser dialog.
-     *
-     * @param approver A SelectionApprover which will determine if the selection
-     * is valid
-     * @return this
-     * @since 7.26.0
-     */
-    public FileChooserBuilder setSelectionApprover (SelectionApprover approver) {
-        this.approver = approver;
-        return this;
-    }
-
     private void setDialogSize(JFileChooser chooser) {
         int x = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMX, "-1"));
         int y = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMY, "-1"));
@@ -695,6 +750,10 @@ public class FileChooserBuilder {
         }
 
     }
+    
+    
+    
+    
 
     /**
      * Object which can approve the selection (enabling the OK button or
@@ -796,43 +855,7 @@ public class FileChooserBuilder {
     }
 
     
-    public static Icon getIconFromFileExtension(File file) {
-        String extension = getExtension(file);
-        Icon icon = null;
-
-        if (Arrays.asList(gedExtensions).contains(extension)) {
-            icon = Images.imgGedcom;
-        } else if (Arrays.asList(imgExtensions).contains(extension)) {
-            icon = Images.imgImage;
-        } else if (Arrays.asList(sndExtensions).contains(extension)) {
-            icon = Images.imgSound;
-        } else if (Arrays.asList(vidExtensions).contains(extension)) {
-            icon = Images.imgVideo;
-        } else if (Arrays.asList(pdfExtensions).contains(extension)) {
-            icon = Images.imgPDF;
-        } else if (Arrays.asList(txtExtensions).contains(extension)) {
-            icon = Images.imgText;
-        }
-
-        return icon;
-        
-    }
-
-    /*
-     * Get the extension of a file.
-     */
-    public static String getExtension(File f) {
-        String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 && i < s.length() - 1) {
-            ext = s.substring(i + 1).toLowerCase();
-        }
-        return ext;
-    }
-    
-    
+   
     //Can open this API later if there is a use-case
     interface IconProvider {
         public Icon getIcon(File file, Icon orig);
