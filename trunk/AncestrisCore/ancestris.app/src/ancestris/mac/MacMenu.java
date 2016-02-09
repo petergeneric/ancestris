@@ -20,9 +20,6 @@ import org.openide.util.Exceptions;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 
 /**
@@ -52,13 +49,10 @@ public class MacMenu {
     
     public MacMenu(Logger log) {
         this.LOG = log;
-        LOG.info("*** DEBUG *** - Defining MacMenu");
     }
         
     public void setup() {
         try {
-            LOG.info("*** DEBUG *** - Setting up Mac Menu");
-            
             // Set some mac-specific properties
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");   // has no effect
@@ -74,14 +68,6 @@ public class MacMenu {
             macApplication.removeAboutMenuItem();  // This works
             macApplication.removePreferencesMenuItem(); //test
 
-            // test
-            JMenuBar jmb = new JMenuBar();
-            JMenu fileMenu = new JMenu("Fichier");
-            JMenuItem menuItem = new JMenuItem("Hello world");
-            fileMenu.add(menuItem);
-            jmb.add(fileMenu);
-            macApplication.setDefaultMenuBar(jmb);  
-            
             // Handles Quit and About
             macApplication.addApplicationListener(new ApplicationAdapter() {
                 @Override
@@ -93,10 +79,11 @@ public class MacMenu {
                 }
                 @Override
                 public void handleAbout(ApplicationEvent event) {
-                    JOptionPane.showMessageDialog(null,
-                            "about Ancestris 1",
-                            "about Ancestris 2",
-                            JOptionPane.INFORMATION_MESSAGE);                }
+//                    JOptionPane.showMessageDialog(null,
+//                            "about Ancestris 1",
+//                            "about Ancestris 2",
+//                            JOptionPane.INFORMATION_MESSAGE);
+                }
             });
                 
             
