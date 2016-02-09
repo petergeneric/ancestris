@@ -103,7 +103,6 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import org.openide.util.*;
-import static ancestris.util.swing.Bundle.*;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Image;
@@ -113,6 +112,7 @@ import java.util.Arrays;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.filesystems.MIMEResolver;
@@ -167,7 +167,7 @@ public class FileChooserBuilder {
     private BadgeProvider badger;
     private String title;
     private String approveText;
-    private String approveTooltipText;
+    private String approveTooltipText = null;
     private final String dirKey;
     private File failoverDir;
     private FileFilter filter;
@@ -180,7 +180,9 @@ public class FileChooserBuilder {
     private final List<FileFilter> filters = new ArrayList<FileFilter>(3);
     private boolean useAcceptAllFileFilter = true;
     private boolean imagePreviewer = false;
+    private JComponent accessory;
     private boolean badgeProvider = false;
+    private File selectedFile;
 
     private static String[] gedExtensions = {"ged"};
     private static String[] imgExtensions = {"jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg"};
@@ -270,12 +272,31 @@ public class FileChooserBuilder {
 
 
     /**
+     * Provide an implementation of an accessory.
+     * @return this
+     */
+    public FileChooserBuilder setAccessory(JComponent accessory) {
+        this.accessory = accessory;
+        return this;
+    }
+
+    /**
      * Set the dialog title for any JFileChoosers created by this builder.
      * @param val A localized, human-readable title
      * @return this
      */
     public FileChooserBuilder setTitle(String val) {
         title = val;
+        return this;
+    }
+
+    /**
+     * Set default title
+     * @param val A localized given string
+     * @return this
+     */
+    public FileChooserBuilder setDefaultTitle() {
+        title = NbBundle.getMessage(getClass(), "TITL_ChooseFile");
         return this;
     }
 
@@ -372,6 +393,15 @@ public class FileChooserBuilder {
         return this;
     }
 
+    /**
+     * Set selected file.
+     * @param selectedFile A file to select
+     * @return this
+     */
+    public FileChooserBuilder setSelectedFile (File selectedFile) {
+        this.selectedFile = selectedFile;
+        return this;
+    }
     /**
      * Enable file hiding in any created file choosers
      * @param fileHiding Whether or not to hide files.  Default is no.
@@ -538,9 +568,7 @@ public class FileChooserBuilder {
     public File showSaveDialog() {
         return showSaveDialog(true);
     }
-    @NbBundle.Messages({
-        "chooser.file.overwrite=File exists! Do you want to overwrite it?"
-    })
+
     public File showSaveDialog(boolean askForOverwrite) {
         JFileChooser chooser = createFileChooser();
         if( Boolean.getBoolean("nb.native.filechooser") ) { //NOI18N
@@ -566,7 +594,7 @@ public class FileChooserBuilder {
                 if (DialogManager.YES_OPTION
                         != DialogManager.createYesNo(
                                 chooser.getDialogTitle(),
-                                chooser_file_overwrite()).
+                                NbBundle.getMessage(FileChooserBuilder.class, "MSG_fileOverwrite")).
                                 setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                     file = null;
                 }
@@ -650,7 +678,6 @@ public class FileChooserBuilder {
     
     private void prepareFileChooser(JFileChooser chooser) {
         setDialogSize(chooser);
-        removeButtonTooltips(chooser);
         
         chooser.setFileSelectionMode(dirsOnly ? JFileChooser.DIRECTORIES_ONLY
                 : filesOnly ? JFileChooser.FILES_ONLY :
@@ -664,9 +691,6 @@ public class FileChooserBuilder {
         if (approveText != null) {
             chooser.setApproveButtonText(approveText);
         }
-        if (approveTooltipText != null) {
-            chooser.setApproveButtonToolTipText(approveTooltipText);
-        }
         if (badgeProvider) {
             badger = new DefaultBadgeProvider();
         }
@@ -676,6 +700,9 @@ public class FileChooserBuilder {
         }
         if (filter != null) {
             chooser.setFileFilter(filter);
+        }
+        if (selectedFile != null) {
+            chooser.setSelectedFile(selectedFile);
         }
         if (aDescription != null) {
             chooser.getAccessibleContext().setAccessibleDescription(aDescription);
@@ -687,6 +714,13 @@ public class FileChooserBuilder {
         }
         if (imagePreviewer) {
             chooser.setAccessory(new DefaultImagePreviewer(chooser));
+        } else if (accessory != null) {
+            chooser.setAccessory(accessory);
+        }
+
+        removeButtonTooltips(chooser);
+        if (approveTooltipText != null) {
+            chooser.setApproveButtonToolTipText(approveTooltipText);
         }
     }
 

@@ -25,12 +25,12 @@ import ancestris.core.pluginservice.PluginInterface;
 import static ancestris.gedcom.Bundle.*;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.*;
 import genj.io.*;
 import genj.util.*;
-import genj.util.swing.FileChooser;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -39,7 +39,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -533,39 +532,19 @@ public abstract class GedcomDirectory {
     }
 
     public File chooseFile(String title, String action, JComponent accessory, String defaultFilename) {
-        FileChooser chooser = new FileChooser(
-                null, title, action, "ged",
-                EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file"));
 
-        //FIXME: gedcoms were  opened in same dir as default gedcom
-        // will be changed later
-//        File gedcomDir = ancestris.core.Options.getInstance().getDefaultGedcom();
-//        if (gedcomDir != null) {
-//            gedcomDir = gedcomDir.getParentFile();
-//        }
-//        if (gedcomDir == null || gedcomDir.trim().isEmpty()) {
-//            gedcomDir = "user.home";
-//        }
-//        File directory = REGISTRY.get("last.dir", gedcomDir);
-        File directory = REGISTRY.get("last.dir", new File(""));
-        chooser.setCurrentDirectory(directory);
-        if (defaultFilename != null) {
-            chooser.setSelectedFile(new File(directory, defaultFilename));
-        }
-        if (accessory != null) {
-            chooser.setAccessory(accessory);
-        }
-        chooser.setFileHidingEnabled(!ancestris.core.CoreOptions.getInstance().getShowHidden());
-        if (JFileChooser.APPROVE_OPTION != chooser.showDialog()) {
-            return null;
-        }
-        // check the selection
-        File file = chooser.getSelectedFile();
-        if (file == null) {
-            return null;
-        }
-        // remember last directory
-        REGISTRY.put("last.dir", file.getParentFile().getAbsolutePath());
+        File file  = new FileChooserBuilder(GedcomDirectory.class)
+                    .setDirectoriesOnly(false)
+                    .setDefaultBadgeProvider()
+                    .setAccessory(accessory)
+                    .setTitle(title)
+                    .setApproveText(action)
+                    .setDefaultExtension("ged")
+                    .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                    .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
+                    .setFileHiding(!ancestris.core.CoreOptions.getInstance().getShowHidden())
+                    .showOpenDialog();
+        
         // done
         return file;
     }
