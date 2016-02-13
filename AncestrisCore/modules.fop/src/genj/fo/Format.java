@@ -288,6 +288,18 @@ public abstract class Format {
   }
   
   /**
+   * Return format by extension
+   */
+  public static Format getFormatFromExtension(String extension) {
+    Format[] fs = getFormats();
+    for (int i = 0; i < fs.length; i++) {
+      if (fs[i].getFileExtension().equals(extension))
+        return fs[i];
+    }
+    return DEFAULT;
+  }
+
+  /**
    * Resolve available formats
    */
   public static Format[] getFormats() {
