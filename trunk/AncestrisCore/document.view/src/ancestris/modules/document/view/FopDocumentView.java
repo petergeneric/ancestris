@@ -15,7 +15,7 @@ package ancestris.modules.document.view;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
 import ancestris.view.SelectionDispatcher;
-import static ancestris.modules.document.view.Bundle.*;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.HTMLFormat;
@@ -98,20 +98,49 @@ public class FopDocumentView extends AbstractDocumentView {
     /**
      * Action: SAVE
      */
-    @NbBundle.Messages("savedocument.tip=Save Document")
     private class ActionSave extends AbstractAncestrisAction {
 
         protected ActionSave() {
             setImage(Images.imgSave);
-            setTip(savedocument_tip());
+            setTip(NbBundle.getMessage(getClass(), "TITL_SaveDocument", ""));
         }
 
         @Override
         public void actionPerformed(ActionEvent event) {
-            String fileName = new SaveDocument(document, document.getTitle()).saveFile();
-            if (!fileName.equals("")) {
-                preferences.put("documentFilename", fileName);
+            
+            // Default report folder is in : Registry.get(genj.gedcom.GedcomOptions.class).get("reportDir", System.getProperty("user.home"))
+            File f = new File(document.getTitle());
+            FileChooserBuilder fcb = new FileChooserBuilder(FopDocumentView.class)
+                    .setFilesOnly(true)
+                    .setDefaultBadgeProvider()
+                    .setTitle(NbBundle.getMessage(getClass(), "TITL_SaveDocument", document.getTitle()))
+                    .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
+                    .setDefaultExtension(FileChooserBuilder.getPdfFilter().getExtensions()[0])
+                    .addFileFilter(FileChooserBuilder.getPdfFilter())
+                    .addFileFilter(FileChooserBuilder.getHtmlFilter())
+                    .addFileFilter(FileChooserBuilder.getCSVFilter())
+                    .setAcceptAllFileFilterUsed(false)
+                    .setDefaultDirAsReportDirectory()
+                    .setSelectedFile(f)
+                    .setFileHiding(true);
+
+            File file = fcb.showSaveDialog();
+            if (file == null) {
+                return;
             }
+
+            // format and write
+            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file));
+            try {
+                file.getParentFile().mkdirs();
+                formatter.format(document, file);
+                String fileName = file.getCanonicalPath();
+                if (!fileName.equals("")) {
+                    preferences.put("documentFilename", fileName);
+                }
+            } catch (Throwable t) {
+            }
+            
         }
     } // ActionSave
 
