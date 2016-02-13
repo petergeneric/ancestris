@@ -671,6 +671,10 @@ public class FileChooserBuilder {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_CSV"), csvExtensions);
     }
      
+    public static FileNameExtensionFilter getImageFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Images"), imgExtensions);
+    }
+     
 
     
     
