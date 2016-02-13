@@ -68,12 +68,21 @@ public class FileChooserWidget extends JPanel {
       fireActionEvent();
     }
   };
+
+  /** action mode : open or save */
+  private boolean open;
  
   /** 
    * constructor 
    */
   public FileChooserWidget() {
     this(null);
+    this.open = true;
+  }
+
+  public FileChooserWidget(boolean open) {
+    this(null);
+    this.open = open;
   }
   
   /**
@@ -238,7 +247,8 @@ public class FileChooserWidget extends JPanel {
     @Override
     public void actionPerformed(ActionEvent event) {
 
-        File file  = new FileChooserBuilder(FileChooserWidget.class)
+        File file = null;
+        FileChooserBuilder fcb  = new FileChooserBuilder(FileChooserWidget.class)
                     .setDirectoriesOnly(false)
                     .setDefaultBadgeProvider()
                     .setAccessory(accessory)
@@ -246,10 +256,14 @@ public class FileChooserWidget extends JPanel {
                     .setApproveText(AbstractAncestrisAction.TXT_OK)
                     .setParent(FileChooserWidget.this)
                     .setDefaultWorkingDirectory(new File(directory))
-                    .setFileHiding(!ancestris.core.CoreOptions.getInstance().getShowHidden())
-                    .setSelectedFile(getFile())
-                    .showOpenDialog();
+                    .setSelectedFile(getFile());
         
+        if (open) {
+            file = fcb.showOpenDialog();
+        } else {
+            file = fcb.showSaveDialog();
+        }
+                    
       if (file!=null)  {
         setFile(file);
         directory = file.getParent();

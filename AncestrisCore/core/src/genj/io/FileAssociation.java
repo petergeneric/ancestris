@@ -19,13 +19,10 @@
  */
 package genj.io;
 
-import genj.util.EnvironmentChecker;
-import genj.util.Resources;
 
 import java.awt.Component;
 import java.awt.Desktop;
 import java.io.File;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -42,7 +39,6 @@ import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.swing.JFileChooser;
 
 /**
  * A file association
@@ -422,21 +418,7 @@ public class FileAssociation {
         fa.useDesktop(true);
         return fa;
         // TODO: Il faudra pouvoir mettre un possibilite de mettre une commande pour la modification ou la visualisation
-//     // none found and no platform default figured out either - go ask
-//    JFileChooser chooser = new JFileChooser();
-//    chooser.setDialogTitle(Resources.get(FileAssociation.class).getString("assocation.choose", suffixes));
-//    int rc = chooser.showOpenDialog(owner);
-//    File file = chooser.getSelectedFile();
-//    if (rc!=JFileChooser.APPROVE_OPTION||file==null||!file.exists())
-//      return null;
-//    // find out path
-//    String executable =  file.getAbsolutePath();
-//    if (executable.indexOf(' ')>=0) executable = "\"" +executable + "\"";
-//    // keep it
-//    FileAssociation association = new FileAssociation(suffixes, name, executable);
-//    add(association);
-//    // done
-//    return association;
+
     }
 
     /**
