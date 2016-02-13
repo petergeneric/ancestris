@@ -499,8 +499,9 @@ public class TableView extends View {
                     .setFileHiding(true)
                     .setParent((Component)(event.getSource()))
                     .setFileFilter(new FileNameExtensionFilter(filter_txt_file(),"txt","csv"))
-                    .setDefaultExtension("txt")
+                    .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
                     .setDefaultBadgeProvider()
+                    .setDefaultWorkingDirectory(new File(System.getProperty("user.home")))
                     .showSaveDialog(true);
             if (file == null) {
                 return;
