@@ -9,12 +9,11 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.commonAncestor.quicksearch.module.AbstractQuickSearchComboBar;
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchComboBar;
 import ancestris.modules.commonAncestor.quicksearch.module.QuickSearchPopup;
-import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import genj.util.EnvironmentChecker;
 import genj.util.Registry;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -23,7 +22,6 @@ import java.io.File;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -274,7 +272,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                     + individu2.getFirstName() + " " + individu2.getLastName();
             
             // ask filename
-            File outpuFile = getFileFromUser("titre", AbstractAncestrisAction.TXT_OK, defaultFileName, true, extension);
+            File outpuFile = getFileFromUser(NbBundle.getMessage(getClass(), "TITL_CommonAncestorsResult"), AbstractAncestrisAction.TXT_OK, defaultFileName, true, extension);
             if (outpuFile != null) {
                 // Add appropriate file extension
                 String suffix = "." + extension;
@@ -355,43 +353,26 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      * user choose output file name
      *
      * @param title  file dialog title
-     * @param button  file dialog OK button text
+     * @param buttonLabel
+     * @param defaultFileName
      * @param askForOverwrite  whether to confirm overwriting files
      * @param extension  extension of files to display
+     * @return 
      */
     public File getFileFromUser(String title, String buttonLabel, String defaultFileName, boolean askForOverwrite, String extension) {
 
-        // show filechooser
-        String dir = registry.get("file", EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from"));
-        JFileChooser chooser = new JFileChooser(dir);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setDialogTitle(title);
-        chooser.setSelectedFile(new File(defaultFileName));
-        if (extension != null) {
-            chooser.setFileFilter(new FileExtensionFilter(extension));
-        }
+        File file = new FileChooserBuilder(SamePanel.class.getCanonicalName())
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(title)
+                .setApproveText(buttonLabel)
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .setFileFilter(extension != null ? new FileExtensionFilter(extension) : null)
+                .setSelectedFile(new File(defaultFileName))
+                .setFileHiding(true)
+                .showSaveDialog();
 
-        int rc = chooser.showDialog(this, buttonLabel);
-
-        // check result
-        File result = chooser.getSelectedFile();
-        if (rc != JFileChooser.APPROVE_OPTION || result == null) {
-            return null;
-        }
-
-        // choose an existing file?
-        if (result.exists() && askForOverwrite) {
-            if (DialogManager.YES_OPTION != 
-                    DialogManager.createYesNo(title, NbBundle.getMessage(SamePanel.class, "SamePanel.message.fileExits"))
-                    .setMessageType(DialogManager.WARNING_MESSAGE)
-                    .show()){
-                return null;
-            }
-        }
-
-        // keep it as new default directory
-        registry.put("file", result.getParent().toString());
-        return result;
+        return file;
     }
 
     ///////////////////////////////////////////////////////////////////////////
