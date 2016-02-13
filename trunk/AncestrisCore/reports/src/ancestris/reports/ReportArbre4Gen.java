@@ -9,6 +9,7 @@ package ancestris.reports;
  */
 
 import ancestris.gedcom.privacy.PrivacyPolicy;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
@@ -17,7 +18,6 @@ import genj.report.Report;
 
 
 import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -32,15 +32,12 @@ import java.util.ArrayList;
 import java.util.StringTokenizer;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
  * CHB - GenJ - Graphique Arbre 4 generations (02-2012)
@@ -903,30 +900,19 @@ public class ReportArbre4Gen extends Report
 
 	public File Choix_file(boolean rw)
 	{
-		File directories = null;
-		Component parent = null;
-		int resultat = 0;
-		String ext = "jpg";
-
-		JFileChooser chooser = new JFileChooser();
-		chooser.setCurrentDirectory(directories);
-		FileNameExtensionFilter filter = new FileNameExtensionFilter("Fichiers Image jpg", ext);
-		chooser.setFileFilter(filter);
-		chooser.setMultiSelectionEnabled(false);
-		//----------------- test rw
-		if (rw)  // rw = true  : store
-		{
-			resultat = chooser.showSaveDialog(parent);
-		}
-		else     // rw = false : read
-		{
-			resultat = chooser.showOpenDialog(parent);	
-		}
-		if (resultat == JFileChooser.APPROVE_OPTION)
-		{
-			return chooser.getSelectedFile();
-		}
-		else return null;
+                FileChooserBuilder fcb = new FileChooserBuilder(ReportArbre4Gen.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle("")
+                .setApproveText("")
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getImageFilter())
+                .setAcceptAllFileFilterUsed(true)
+                .setFileHiding(true)
+                .setDefaultDirAsReportDirectory();
+                
+                File file = rw ? fcb.showSaveDialog() : fcb.showOpenDialog();
+                return file;
 	} // end Choix_file
 
 	/** ****************************************************************** */
@@ -935,26 +921,6 @@ public class ReportArbre4Gen extends Report
 	{
 
 		File SelectedFile = Choix_file(true);  // true pour store
-		if (SelectedFile!=null)
-		{
-			if (SelectedFile.exists()) 
-			{
-				int rep = JOptionPane.showConfirmDialog(null, "Voulez-vous continuer ?",
-						"Ce fichier existe déjà !", JOptionPane.WARNING_MESSAGE);
-				if (rep==0)
-				{
-					return SelectedFile; // ré-écriture d'un fichier existant
-				}
-				else
-				{
-					SelectedFile =  gestion_file ();  // on re-demande un nom de fichier
-				}
-			}
-		}
-		else
-		{
-			return null; //réponse de chooser = "annulé"
-		}
 		return SelectedFile;
 
 	} // end gestion_file
