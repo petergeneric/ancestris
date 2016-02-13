@@ -366,7 +366,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 .setDefaultBadgeProvider()
                 .setTitle(title)
                 .setApproveText(buttonLabel)
-                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .setDefaultExtension(extension)
                 .setFileFilter(extension != null ? new FileExtensionFilter(extension) : null)
                 .setSelectedFile(new File(defaultFileName))
                 .setFileHiding(true)
