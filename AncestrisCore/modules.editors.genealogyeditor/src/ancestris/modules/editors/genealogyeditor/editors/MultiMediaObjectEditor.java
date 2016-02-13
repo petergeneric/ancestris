@@ -183,7 +183,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 .setTitle(NbBundle.getMessage(getClass(), "TITL_ChooseImage"))
                 .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
                 .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
-                .setFileFilter(FileChooserBuilder.getTextFilter())
+                .setFileFilter(FileChooserBuilder.getImageFilter())
                 .setAcceptAllFileFilterUsed(true)
                 .setFileHiding(true)
                 .setDefaultWorkingDirectory(new File(Registry.get(MultiMediaObjectEditor.class).get("rootPath", ".")))
