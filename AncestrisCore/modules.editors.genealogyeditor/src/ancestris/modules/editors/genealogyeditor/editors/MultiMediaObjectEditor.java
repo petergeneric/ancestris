@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
-import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.*;
 import genj.util.Registry;
 import genj.view.ViewContext;
@@ -9,8 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.NbBundle;
 
 /**
@@ -178,21 +176,27 @@ public class MultiMediaObjectEditor extends EntityEditor {
     }// </editor-fold>//GEN-END:initComponents
 
     private void imageBeanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageBeanMouseClicked
-        FileNameExtensionFilter imageFileFilter = new FileNameExtensionFilter(NbBundle.getMessage(ImageBean.class, "ImageBean.fileType"), "jpg", "jpeg", "png", "gif");
-        final JFileChooser fileChooser = new JFileChooser();
-        Registry registry = Registry.get(MultiMediaObjectEditor.class);
 
-        System.out.println(registry.get("rootPath", new java.io.File(".")));
-        fileChooser.setFileFilter(imageFileFilter);
-        fileChooser.setAcceptAllFileFilterUsed(true);
-        fileChooser.setSelectedFile(new File(registry.get("rootPath", ".")));
-        if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            registry.put("rootPath", fileChooser.getSelectedFile());
+        File file = new FileChooserBuilder(MultiMediaObjectEditor.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "TITL_ChooseImage"))
+                .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
+                .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getTextFilter())
+                .setAcceptAllFileFilterUsed(true)
+                .setFileHiding(true)
+                .setDefaultWorkingDirectory(new File(Registry.get(MultiMediaObjectEditor.class).get("rootPath", ".")))
+                .showOpenDialog();
 
-            mFile = fileChooser.getSelectedFile();
-            imageBean.setImage(mFile, PropertySex.UNKNOWN);
-            changes.fireChangeEvent();
+        if (file == null) {
+            return;
         }
+
+        mFile = file;
+        imageBean.setImage(mFile, PropertySex.UNKNOWN);
+        changes.fireChangeEvent();
+        
     }//GEN-LAST:event_imageBeanMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
