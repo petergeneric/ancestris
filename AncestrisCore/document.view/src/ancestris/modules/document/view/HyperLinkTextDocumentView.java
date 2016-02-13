@@ -13,8 +13,8 @@ package ancestris.modules.document.view;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
-import static ancestris.modules.document.view.Bundle.*;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
@@ -26,29 +26,30 @@ import java.io.StringReader;
 import java.net.URL;
 import java.nio.charset.Charset;
 import javax.swing.Action;
-import javax.swing.JFileChooser;
-import javax.swing.filechooser.FileFilter;
+import org.openide.util.NbBundle;
 
 /**
- * Class dedicated to display text in {@link DocumentViewTopComponent}.
- * All entities are active hyperlinks. These links fire a selection event.
- * A save action is registered to allow the text content to be saved
+ * Class dedicated to display text in {@link DocumentViewTopComponent}. All
+ * entities are active hyperlinks. These links fire a selection event. A save
+ * action is registered to allow the text content to be saved
  *
  * @author daniel
  */
 public class HyperLinkTextDocumentView extends AbstractDocumentView {
 
     HyperLinkTextPane textOutput;
+    String title;
 
     /**
      * Create and register the AbstractDocumentView
      *
      * @param context Gedcom Context
-     * @param title   Tab title
+     * @param title Tab title
      * @param tooltip tooltip for tab
      */
     public HyperLinkTextDocumentView(Context context, String title, String tooltip) {
         super(context, title, tooltip);
+        this.title = title;
         textOutput = new HyperLinkTextPane();
         textOutput.setGedcom(context.getGedcom());
         setView(textOutput);
@@ -56,8 +57,7 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
     }
 
     /**
-     * Add text to output pane.
-     * Delegate to {@link HyperLinkTextPane}
+     * Add text to output pane. Delegate to {@link HyperLinkTextPane}
      *
      * @param txt
      */
@@ -75,8 +75,8 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
     }
 
     /**
-     * Set pane to text content from a url. May be html encoded.
-     * Delegate to {@link HyperLinkTextPane}
+     * Set pane to text content from a url. May be html encoded. Delegate to
+     * {@link HyperLinkTextPane}
      *
      * @param page text content URL
      *
@@ -100,46 +100,27 @@ public class HyperLinkTextDocumentView extends AbstractDocumentView {
 
         protected ActionSave() {
             setImage(Images.imgSave);
-            setTip(savedocument_tip());
+            setTip(NbBundle.getMessage(getClass(), "TITL_SaveDocument"));
         }
 
         @Override
         public void actionPerformed(ActionEvent event) {
 
-
             // .. choose file
-            JFileChooser chooser = new JFileChooser(".");
-            chooser.setDialogTitle(getTip());
-            chooser.setFileFilter(new FileFilter() {
+            File file = new FileChooserBuilder(HyperLinkTextDocumentView.class)
+                    .setFilesOnly(true)
+                    .setDefaultBadgeProvider()
+                    .setTitle(NbBundle.getMessage(getClass(), "TITL_SaveDocument", title))
+                    .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
+                    .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
+                    .setFileFilter(FileChooserBuilder.getTextFilter())
+                    .setAcceptAllFileFilterUsed(false)
+                    .setFileHiding(true)
+                    .setDefaultDirAsReportDirectory()
+                    .showSaveDialog(true);
 
-                @Override
-                public boolean accept(File f) {
-                    return f.isDirectory() || f.getName().endsWith(".txt");
-                }
-
-                @Override
-                public String getDescription() {
-                    return "*.txt (Text)";
-                }
-            });
-
-            if (JFileChooser.APPROVE_OPTION != chooser.showDialog(HyperLinkTextDocumentView.this, "Save")) {
-                return;
-            }
-            File file = chooser.getSelectedFile();
             if (file == null) {
                 return;
-            }
-            if (!file.getName().endsWith("*.txt")) {
-                file = new File(file.getAbsolutePath() + ".txt");
-            }
-
-            // .. exits ?
-            if (file.exists()) {
-                if (DialogManager.YES_OPTION
-                        != DialogManager.createYesNo(textOutput.getName(), "File exists. Overwrite?").setMessageType(DialogManager.WARNING_MESSAGE).show()) {
-                    return;
-                }
             }
 
             // .. open file
