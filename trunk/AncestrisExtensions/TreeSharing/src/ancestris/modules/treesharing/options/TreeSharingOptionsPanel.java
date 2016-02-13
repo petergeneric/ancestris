@@ -15,8 +15,8 @@ import ancestris.modules.treesharing.communication.MemberProfile;
 import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.TechInfoPanel;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
@@ -26,8 +26,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -37,10 +35,8 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
@@ -60,51 +56,48 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
     private final static int IMG_SMALL_WIDTH = 16;
     private final static int IMG_SMALL_HEIGHT = 19;
-    
+
     private final static int IMG_MEDIUM_WIDTH = 51;
     private final static int IMG_MEDIUM_HEIGHT = 62;
-    
+
     public final static int IMG_LARGE_WIDTH = 155;
     public final static int IMG_LARGE_HEIGHT = 186;
 
-    private final ImageIcon ALLOWED_ICON  = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/allowed.png"));
+    private final ImageIcon ALLOWED_ICON = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/allowed.png"));
     private final ImageIcon MEMBER_ICON = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend16.png"));
-    
 
     private final TreeSharingOptionsPanelController controller;
     private static String photoPath = "";
     private static File dest = null;
     private static BufferedImage targetImage = null;
     private static boolean loading = false;
-    
-    public static final int NO_MATCH = 0; 
-    public static final int EXACT_MATCH = 1; 
-    public static final int FLASH_MATCH = 2; 
-    public static final int LOOSE_MATCH = 3; 
-    public static final int MAX_MATCH = 3; 
 
-    public static final String[] MATCHING_MENU = new String[] { 
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+EXACT_MATCH),
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+FLASH_MATCH),
-        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match"+LOOSE_MATCH) 
+    public static final int NO_MATCH = 0;
+    public static final int EXACT_MATCH = 1;
+    public static final int FLASH_MATCH = 2;
+    public static final int LOOSE_MATCH = 3;
+    public static final int MAX_MATCH = 3;
+
+    public static final String[] MATCHING_MENU = new String[]{
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match" + EXACT_MATCH),
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match" + FLASH_MATCH),
+        NbBundle.getMessage(TreeSharingOptionsPanel.class, "Match" + LOOSE_MATCH)
     };
-    
+
     private TreeSharingOptionsPanel thisPanel = null;
     private Map<String, Boolean> jlist1 = null;
     private Map<String, Boolean> jlist2 = null;
     private MyTableModel model1 = null;
     private MyTableModel model2 = null;
-            
-            
-            
-            
 
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
         this.controller = controller;
         initComponents();
         loading = false;
         this.thisPanel = this;
-    };
+    }
+
+    ;
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -368,8 +361,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             jLabel8.setIcon(null);
         }
         jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
-        jComboBox1.setSelectedIndex(getMatchType()-1);
-        
+        jComboBox1.setSelectedIndex(getMatchType() - 1);
+
         loadMembersLists();
 
     }
@@ -389,8 +382,8 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Photo", photoPath);
         }
         NbPreferences.forModule(TreeSharingOptionsPanel.class).putBoolean("RespectPrivacy", jCheckBox1.isSelected());
-        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", ""+ ((int)(jComboBox1.getSelectedIndex()+1)) );
-        
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("MatchingType", "" + ((int) (jComboBox1.getSelectedIndex() + 1)));
+
         saveMembersLists();
     }
 
@@ -430,15 +423,24 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
     // End of variables declaration//GEN-END:variables
 
     /**
-     * Get file from user and if file is not a picture or if picture cannot be resized, set null icon and display "choose another file" message
+     * Get file from user and if file is not a picture or if picture cannot be
+     * resized, set null icon and display "choose another file" message
      */
     private void chooseAndDisplayImage() {
-        JFileChooser jfc = new JFileChooser();
-        jfc.setDialogTitle(NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"));
-        jfc.setAccessory(new ImagePreviewer(jfc));
-        int ret = jfc.showDialog(jfc, NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserButton"));
-        if (ret == JFileChooser.APPROVE_OPTION) {
-            if (processImage(jfc.getSelectedFile())) {
+
+        File file = new FileChooserBuilder(TreeSharingOptionsPanel.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "FileChooserButton"))
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getImageFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setFileHiding(true)
+                .setDefaultPreviewer()
+                .showOpenDialog();
+        if (file != null) {
+            if (processImage(file)) {
                 jLabel8.setText("");
                 jLabel8.setIcon(new ImageIcon(targetImage));
             } else {
@@ -447,16 +449,15 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             }
         }
     }
-    
-   
+
     private static boolean loadSavePhoto(File f) {
-            if (processImage(f)) {
+        if (processImage(f)) {
             saveImage(f);
             return true;
         }
         return false;
     }
- 
+
     private static boolean processImage(File f) {
         try {
             if (f == null) {
@@ -486,7 +487,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
     }
 
-    
     private static BufferedImage scaleImage(File f, int IMG_LARGE_WIDTH, int IMG_LARGE_HEIGHT) throws Exception {
 
         BufferedImage ret = null;
@@ -494,20 +494,20 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         try {
             image = ImageIO.read(f);
         } catch (Exception ex) {
-            throw new Exception("FileIsNotAnImage"); 
+            throw new Exception("FileIsNotAnImage");
         }
 
         if (image == null) {
-            throw new Exception("FileIsNotAnImage"); 
+            throw new Exception("FileIsNotAnImage");
         }
-        
+
         int imageWidth = image.getWidth(null);
         int imageHeight = image.getHeight(null);
         if ((imageWidth <= 0) || (imageHeight <= 0)) {
             image.flush();
-            throw new Exception("FileIsNotAnImage"); 
+            throw new Exception("FileIsNotAnImage");
         }
-        
+
         double imageRatio = (double) imageWidth / (double) imageHeight;
         int targetWidth = IMG_LARGE_WIDTH;
         int targetHeight = IMG_LARGE_HEIGHT;
@@ -521,13 +521,12 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         try {
             ret = resizeImage(image, targetWidth, targetHeight);
         } catch (Exception e) {
-            throw new Exception("FileCannotBeResized"); 
+            throw new Exception("FileCannotBeResized");
         }
 
         return ret;
     }
 
-    
     private static BufferedImage resizeImage(Image img, int width, int height) {
         BufferedImage dimg = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
         Graphics2D g = dimg.createGraphics();
@@ -537,8 +536,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         return dimg;
     }
 
-    
-    
     public static byte[] getPhotoBytes(File f) {
         try {
             BufferedImage img = ImageIO.read(f);
@@ -551,7 +548,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
         return null;
     }
-    
+
     public static ImageIcon getPhoto(int size, byte[] photoBytes) {
         Image image = null;
         if (photoBytes == null) {
@@ -574,10 +571,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         return new ImageIcon(image);
     }
 
-    
-    
-    
-    
     public static String getPseudo() {
         return NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", "").trim();
     }
@@ -596,7 +589,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         return profile;
     }
 
-
     public static String getProfileError() {
         MemberProfile myProfile = getProfile();
 
@@ -614,7 +606,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
         return "";
     }
-    
+
     public static boolean isValidEmailAddress(String email) {
         String ePattern = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
         java.util.regex.Pattern p = java.util.regex.Pattern.compile(ePattern);
@@ -622,8 +614,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         return m.matches();
     }
 
-
-    
     public static int getMatchType() {
         int ret = LOOSE_MATCH;
         String str = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("MatchingType", "");
@@ -654,12 +644,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
     };
 
-    
     public void loadMembersLists() {
 
         jlist1 = new TreeMap<String, Boolean>(sortmap);
         jlist2 = new TreeMap<String, Boolean>(sortmap);
-        
+
         String[] keys;
         try {
             keys = NbPreferences.forModule(TreeSharingOptionsPanel.class).keys();
@@ -680,7 +669,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
         refreshMembersLists();
     }
-        
+
     public void refreshMembersLists() {
 
         model1 = new MyTableModel(jlist1);
@@ -689,7 +678,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         jTable2.setModel(model2);
         setTable(jTable1);
         setTable(jTable2);
-        
+
     }
 
     private void saveMembersLists() {
@@ -706,31 +695,28 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 NbPreferences.forModule(TreeSharingOptionsPanel.class).remove(key);
             }
         }
-        
+
         // Rebuild list
         for (String item : jlist1.keySet()) {
-            NbPreferences.forModule(TreeSharingOptionsPanel.class).put("memberps-"+item, jlist1.get(item) ? "1" : "0");
+            NbPreferences.forModule(TreeSharingOptionsPanel.class).put("memberps-" + item, jlist1.get(item) ? "1" : "0");
         }
         for (String item : jlist2.keySet()) {
-            NbPreferences.forModule(TreeSharingOptionsPanel.class).put("memberip-"+item, jlist2.get(item) ? "1" : "0");
+            NbPreferences.forModule(TreeSharingOptionsPanel.class).put("memberip-" + item, jlist2.get(item) ? "1" : "0");
         }
     }
-    
-    
-    
 
     // code below is same as in MembersPopup
     private void setTable(JTable table) {
         // Editable Table
         table.getModel().addTableModelListener(this);
-        
+
         // Sortable columns
         table.setAutoCreateRowSorter(true);
         table.getTableHeader().setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_SortHeader"));
-        
+
         // Resize first column
         table.getColumnModel().getColumn(0).setPreferredWidth(20);
-        
+
         // Set tooltip text for name column (if string and does not loose its format)
         DefaultTableCellRenderer rendererCol1 = new DefaultTableCellRenderer();
         rendererCol1.setToolTipText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TIP_DisplayMenu"));
@@ -751,7 +737,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         table.getColumnModel().getColumn(1).setHeaderRenderer(renderer);
         table.getColumnModel().getColumn(0).setHeaderValue(allowedLabel);
         table.getColumnModel().getColumn(1).setHeaderValue(nameLabel);
-        
+
         // Set double click
         table.addMouseListener(new MouseAdapter() {
             @Override
@@ -771,15 +757,15 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                     menu.show(me.getComponent(), me.getX(), me.getY());
                     return;
                 }
-                
+
             }
         });
     }
 
     public void tableChanged(TableModelEvent e) {
-        
+
         MyTableModel model = (MyTableModel) e.getSource();
-        
+
         int row = e.getFirstRow();
         int column = e.getColumn();
         if (row >= 0 && row < model.getRowCount() && column >= 0 && column < model.getColumnCount()) {
@@ -794,33 +780,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
     }
 
-    private static class ImagePreviewer extends JLabel {
-
-        public ImagePreviewer(JFileChooser chooser) {
-            final int size = 120;
-            setPreferredSize(new Dimension(size, size));
-            setBorder(BorderFactory.createEtchedBorder());
-            chooser.addPropertyChangeListener(new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
-                        File f = (File) evt.getNewValue();
-                        if (f != null) {
-                            ImageIcon icon = new ImageIcon(f.getPath());
-                            if (icon.getIconWidth() > size) {
-                                icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
-                            }
-                            setIcon(icon);
-                        }
-                    }
-                }
-            });
-        }
-    }
-
-    
-    
-    
-    
     class JComponentTableCellRenderer implements TableCellRenderer {
 
         @Override
@@ -829,12 +788,12 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             return (JComponent) value;
         }
     }
-    
+
     class MyTableModel extends AbstractTableModel {
 
-        String[] columnNames = { "", "" };
+        String[] columnNames = {"", ""};
         Object[][] data = new Object[0][2];
-        
+
         private MyTableModel(Map<String, Boolean> map) {
             data = new Object[map.size()][2];
             int i = 0;
@@ -886,13 +845,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         }
 
     }
-    
+
     class PopUpMenu extends JPopupMenu {
 
         JMenuItem showItem, eraseItem, eraseAllItems;
 
         public PopUpMenu(TreeSharingOptionsPanel owner, Map<String, Boolean> list, String key) {
-            ActionListener actionListener = new PopupActionListener(owner, list, key);    
+            ActionListener actionListener = new PopupActionListener(owner, list, key);
             //
             if (list != jlist1) {
                 showItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_ShowItem", key));
@@ -911,10 +870,10 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             add(eraseAllItems);
         }
     }
-    
+
     class PopupActionListener implements ActionListener {
 
-        TreeSharingOptionsPanel owner = null; 
+        TreeSharingOptionsPanel owner = null;
         Map<String, Boolean> list = null;
         String key = "";
 
@@ -936,7 +895,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 list.clear();
                 owner.refreshMembersLists();
             }
-            
+
         }
     }
 }
