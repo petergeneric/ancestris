@@ -3,19 +3,18 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.report;
 
@@ -24,8 +23,6 @@ import ancestris.modules.document.view.HyperLinkTextDocumentView;
 import ancestris.modules.document.view.WidgetDocumentView;
 import ancestris.util.swing.DialogManager;
 import genj.common.ContextListWidget;
-import genj.fo.Format;
-import genj.fo.FormatOptionsWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -33,6 +30,8 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import ancestris.swing.ToolBar;
+import ancestris.util.swing.FileChooserBuilder;
+import genj.fo.Format;
 import genj.view.View;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -42,11 +41,13 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
 import javax.swing.JComponent;
+import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import spin.Spin;
 
@@ -58,16 +59,24 @@ public class ReportView extends View {
 
     /* package */
     static final Logger LOG = Logger.getLogger("ancestris.report");
-    /** statics */
+    /**
+     * statics
+     */
     private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
             imgStop = new ImageIcon(ReportView.class, "Stop");
-    /** components to show report info */
+    /**
+     * components to show report info
+     */
     private HyperLinkTextDocumentView output;
     private ActionStart actionStart = new ActionStart();
     private ActionStop actionStop = new ActionStop();
-    /** registry for settings */
+    /**
+     * registry for settings
+     */
     private final static Registry REGISTRY = Registry.get(ReportView.class);
-    /** resources */
+    /**
+     * resources
+     */
     /* package */
     static final Resources RESOURCES = Resources.get(ReportView.class);
     private ReportSelector selector;
@@ -383,26 +392,52 @@ public class ReportView extends View {
             if (object instanceof genj.fo.Document) {
 
                 genj.fo.Document doc = (genj.fo.Document) object;
-                String title = "Document " + doc.getTitle();
 
-                Registry foRegistry = Registry.get(getClass());
+                Format[] formats = Format.getFormats();
+                Map<String, String> fmts = new HashMap<String, String>();   // description, extension
+                for (int i = 0; i < formats.length; i++) {
+                    Format format = formats[i];
+                    fmts.put(format.getFormat(), format.getFileExtension());
+                }
 
-                FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-
-                DialogManager dialog = DialogManager.create(title, options).
-                        setOptionType(DialogManager.OK_CANCEL_OPTION).
-                        setDialogId("report.optionsfromuser");
-                options.connect(dialog);
-                Object rc = dialog.show();
-                Format formatter = options.getFormat();
-                File file = options.getFile();
-                if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
+                FileChooserBuilder fcb = new FileChooserBuilder(genj.fo.Document.class)
+                        .setFilesOnly(true)
+                        .setDefaultBadgeProvider()
+                        .setTitle(NbBundle.getMessage(getClass(), "Fo_Document", doc.getTitle()))
+                        .setApproveText(NbBundle.getMessage(getClass(), "Fo_OK_Select"))
+                        .setDefaultExtension(formats[0].getFileExtension())
+                        .setFileFilters(fmts)
+                        .setAcceptAllFileFilterUsed(false)
+                        .setDefaultDirAsReportDirectory()
+                        .setFileHiding(true);
+                
+                File file = fcb.showSaveDialog();
+                if (file == null) {
                     showResult(null);
                     return;
                 }
-
-                // store options
-                options.remember(foRegistry);
+                
+                Format formatter = Format.getFormatFromExtension(fcb.getExtension(file));
+                
+//                Registry foRegistry = Registry.get(getClass());
+//
+//                FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
+//
+//                DialogManager dialog = DialogManager.create(NbBundle.getMessage(getClass(), "Fo_Document", doc.getTitle()), options).
+//                        setOptionType(DialogManager.OK_CANCEL_OPTION).
+//                        setDialogId("report.optionsfromuser");
+//                options.connect(dialog);
+//                Object rc = dialog.show();
+//
+//                Format formatter = options.getFormat();
+//                File file = options.getFile();
+//                if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
+//                    showResult(null);
+//                    return;
+//                }
+//
+//                // store options
+//                options.remember(foRegistry);
 
                 // format and write
                 try {
@@ -467,7 +502,9 @@ public class ReportView extends View {
     // FIXME: we must enable this action only if there is a valid gedcom selected in lookup
     private class ActionStart extends AbstractAncestrisAction {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         protected ActionStart() {
             // show
             setImage(imgStart);
