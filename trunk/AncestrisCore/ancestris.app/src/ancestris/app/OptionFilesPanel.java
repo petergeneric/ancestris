@@ -35,10 +35,13 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                     .setDefaultBadgeProvider()
                     .setTitle(NbBundle.getMessage(getClass(), dirOnly ? "TITL_GetDefaultDir" : "TITL_GetDefaultGedcom"))
                     .setApproveText(NbBundle.getMessage(getClass(), "OK_Select"))
-                    .setDefaultExtension("ged")
+                    .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
                     .setFileFilter(dirOnly ? null : FileChooserBuilder.getGedcomFilter())
+                    .setAcceptAllFileFilterUsed(dirOnly)
                     .setFileHiding(true)
                     .setParent(this)
+                    .setSelectedFile(new File(jTF.getText()))
+                    .setDefaultWorkingDirectory(new File(System.getProperty("user.home")))
                     .showOpenDialog();
             if (file != null) {
                 jTF.setText(file.getAbsolutePath());
@@ -218,7 +221,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
         setGedcomFile(ancestris.core.CoreOptions.getInstance().getDefaultGedcom());
         jcbAlwaysOpen.setSelected(ancestris.core.CoreOptions.getInstance().getAlwaysOpenDefault());
-        setReportDir(gedcomPrefs.get("reportDir", ""));
+        setReportDir(gedcomPrefs.get("reportDir", System.getProperty("user.home")));
 
 
         jSpinner1.setValue(ancestris.app.AppOptions.getMaxLogSizeKB());
