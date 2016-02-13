@@ -539,10 +539,10 @@ public abstract class GedcomDirectory {
                     .setAccessory(accessory)
                     .setTitle(title)
                     .setApproveText(action)
-                    .setDefaultExtension("ged")
+                    .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
                     .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                    .setAcceptAllFileFilterUsed(false)
                     .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
-                    .setFileHiding(!ancestris.core.CoreOptions.getInstance().getShowHidden())
                     .showOpenDialog();
         
         // done

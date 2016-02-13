@@ -66,27 +66,9 @@ package ancestris.util.swing;
  * </ul>
  */
 
-/**
- * Example of use
- * 
- * File file  = new FileChooserBuilder(TableView.class)
-                    .setTitle(tableview_export_dialog_title())
-                    .setApproveText(tableview_action_export())
-                    .setApproveTooltipText("Click to select file")
-                    .setFileHiding(true)
-                    .setParent((Component)(event.getSource()))
-                    .setFileFilter(new FileNameExtensionFilter(filter_txt_file(),"txt","csv"))
-                    .setDefaultExtension("txt")
-                    .setDefaultBadgeProvider()
-                    .showSaveDialog(true);
-            if (file == null) {
-                return;
-            }
- * 
- * 
- */
 
 import ancestris.core.resources.Images;
+import genj.util.Registry;
 import java.awt.Component;
 import java.awt.FileDialog;
 import java.awt.Frame;
@@ -109,6 +91,8 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -189,7 +173,11 @@ public class FileChooserBuilder {
     private static String[] sndExtensions = {"mp3", "wav", "ogg", "flac"};
     private static String[] vidExtensions = {"mp4", "flv", "ogg", "avi", "mov", "mpeg"};
     private static String[] pdfExtensions = {"pdf"};
-    private static String[] txtExtensions = {"txt", "doc", "odt", "csv"};
+    private static String[] txtExtensions = {"txt"};
+    private static String[] docExtensions = {"txt", "doc", "odt"};
+    private static String[] csvExtensions = {"csv"};
+    private static String[] tblExtensions = {"txt", "csv"};
+    private static String[] htmExtensions = {"html"};
 
     private static String DIMX = "dimX";
     private static String DIMY = "dimY";
@@ -322,6 +310,7 @@ public class FileChooserBuilder {
     }
 
     private String defaultExtension = null;
+    
     public FileChooserBuilder setDefaultExtension(String extension){
         defaultExtension = extension;
         return this;
@@ -334,6 +323,20 @@ public class FileChooserBuilder {
      */
     public FileChooserBuilder setFileFilter (FileFilter filter) {
         this.filter = filter;
+        return this;
+    }
+
+    /**
+     * Set a file filter from array of Formats
+     * @param Format[]
+     * @return this
+     */
+    private Map<String, String> formats = new HashMap<String, String>();   // description, extension
+    public FileChooserBuilder setFileFilters (Map<String, String> formats) {
+        this.formats = formats;
+        for (String key : formats.keySet()) {
+            filters.add(new FileNameExtensionFilter(key, formats.get(key)));
+        }
         return this;
     }
 
@@ -394,6 +397,28 @@ public class FileChooserBuilder {
     }
 
     /**
+     * Set the current directory to the default report directory.
+     * @param dir Default report directory
+     * @return this
+     */
+    public FileChooserBuilder setDefaultDirAsReportDirectory () {
+        failoverDir = new File(Registry.get(genj.gedcom.GedcomOptions.class).get("reportDir", System.getProperty("user.home")));
+        return this;
+    }
+
+    private boolean force = false;
+    /**
+     * Force use of the failover directory - i.e. ignore the directory key
+     * passed in.
+     * @param val
+     * @return this
+     */
+    public FileChooserBuilder forceUseOfDefaultWorkingDirectory(boolean val) {
+        this.force = val;
+        return this;
+    }
+
+    /**
      * Set selected file.
      * @param selectedFile A file to select
      * @return this
@@ -444,9 +469,6 @@ public class FileChooserBuilder {
     }
     
     
-    
-    
-    
     /**
      * Create a JFileChooser that conforms to the parameters set in this
      * builder.
@@ -459,38 +481,10 @@ public class FileChooserBuilder {
         return result;
     }
 
-    private boolean force = false;
-    /**
-     * Force use of the failover directory - i.e. ignore the directory key
-     * passed in.
-     * @param val
-     * @return this
-     */
-    public FileChooserBuilder forceUseOfDefaultWorkingDirectory(boolean val) {
-        this.force = val;
-        return this;
-    }
-
-    /**
-     * Tries to find an appropriate component to parent the file chooser to
-     * when showing a dialog.
-     * @return this
-     */
-    private Component findDialogParent() {
-//        if (this.parent != null){
-//            return this.parent;
-//        }
-        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
-        if (parent == null) {
-            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
-        }
-        if (parent == null) {
-            Frame[] f = Frame.getFrames();
-            parent = f.length == 0 ? null : f[f.length - 1];
-        }
-        return parent;
-    }
-
+    
+    
+    
+    
     /**
      * Set a selection approver which can display an &quot;Overwrite file?&quot;
      * or similar dialog if necessary, when the user presses the accept button
@@ -508,7 +502,7 @@ public class FileChooserBuilder {
 
     
     
-    
+    ////////// SHOW-ERS //////////////////////////////
     
     
     /**
@@ -585,22 +579,30 @@ public class FileChooserBuilder {
         if (file == null){
             return null;
         }
-        if (defaultExtension!=null && !defaultExtension.isEmpty()){
-            if (file.getName().indexOf('.') == -1) {
+        // add filter extension if file has none
+        if (file.getName().indexOf('.') == -1) {
+            String extension = getExtensionFromFilter(chooser.getFileFilter());
+            if (extension != null && !extension.isEmpty()) {
+               defaultExtension = extension;    
+            }
+            if (defaultExtension != null && !defaultExtension.isEmpty()) {
                 file = new File(file.getAbsolutePath() + "."+defaultExtension);
             }
         }
-        if (askForOverwrite &&  file.exists()) {
-                if (DialogManager.YES_OPTION
-                        != DialogManager.createYesNo(
-                                chooser.getDialogTitle(),
-                                NbBundle.getMessage(FileChooserBuilder.class, "MSG_fileOverwrite")).
+        if (askForOverwrite && file.exists()) {
+                if (DialogManager.YES_OPTION != DialogManager.createYesNo(
+                                NbBundle.getMessage(FileChooserBuilder.class, "TITL_fileOverwrite"),
+                                NbBundle.getMessage(FileChooserBuilder.class, "MSG_fileOverwrite", file.getName())).
                                 setMessageType(DialogManager.WARNING_MESSAGE).show()) {
                     file = null;
                 }
             }
         return file;
     }
+    
+    
+    ////////// public tools ////////////////////
+    
     
     /*
      * Get the extension of a file.
@@ -636,24 +638,69 @@ public class FileChooserBuilder {
             icon = Images.imgPDF;
         } else if (Arrays.asList(txtExtensions).contains(extension)) {
             icon = Images.imgText;
-        }
+        } // add more at will !
 
         return icon;
     }
 
     
     /*
-     * Get the gedcom extension
+     * Get the type extensions
      */
     public static FileNameExtensionFilter getGedcomFilter() {
-        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_GEDCOM") ,gedExtensions);
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_GEDCOM"), gedExtensions);
+    }
+
+    public static FileNameExtensionFilter getTextFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_TEXT"), txtExtensions);
+    }
+
+    public static FileNameExtensionFilter getTableFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_TABLE"), tblExtensions);
+    }
+
+    public static FileNameExtensionFilter getPdfFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_PDF"), pdfExtensions);
+    }
+    
+    public static FileNameExtensionFilter getHtmlFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_HTML"), htmExtensions);
+    }
+    
+    public static FileNameExtensionFilter getCSVFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_CSV"), csvExtensions);
+    }
+     
+
+    
+    
+    
+    // Private methods //////////////////////////////////////////////////////////////////////////////////////
+
+    
+    
+    /**
+     * Tries to find an appropriate component to parent the file chooser to
+     * when showing a dialog.
+     * @return this
+     */
+    private Component findDialogParent() {
+//        if (this.parent != null){
+//            return this.parent;
+//        }
+        Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
+        if (parent == null) {
+            parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
+        }
+        if (parent == null) {
+            Frame[] f = Frame.getFrames();
+            parent = f.length == 0 ? null : f[f.length - 1];
+        }
+        return parent;
     }
 
     
-     
     
-    // Private methods
-        
     private File showFileDialog( FileDialog fileDialog, int mode ) {
         String oldFileDialogProp = System.getProperty("apple.awt.fileDialogForDirectories"); //NOI18N
         if( dirsOnly ) {
@@ -682,7 +729,8 @@ public class FileChooserBuilder {
         chooser.setFileSelectionMode(dirsOnly ? JFileChooser.DIRECTORIES_ONLY
                 : filesOnly ? JFileChooser.FILES_ONLY :
                 JFileChooser.FILES_AND_DIRECTORIES);
-        chooser.setFileHidingEnabled(fileHiding);
+        chooser.setFileHidingEnabled(fileHiding);  // default to !ancestris.core.CoreOptions.getInstance().getShowHidden()   ?
+
         chooser.setControlButtonsAreShown(controlButtonsShown);
         chooser.setAcceptAllFileFilterUsed(useAcceptAllFileFilter);
         if (title != null) {
@@ -783,6 +831,10 @@ public class FileChooserBuilder {
             }
         }
 
+    }
+
+    private String getExtensionFromFilter(FileFilter fileFilter) {
+        return formats.get(fileFilter.getDescription());
     }
     
     
