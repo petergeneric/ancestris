@@ -4,14 +4,12 @@
  */
 package ancestris.modules.webbook;
 
-import javax.swing.JFileChooser;
+import ancestris.util.swing.FileChooserBuilder;
+import java.io.File;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class WebBookVisualPanel5 extends JPanel {
-
-    //Create a file chooser
-    private JFileChooser fc = null;
 
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel5() {
@@ -29,13 +27,20 @@ public final class WebBookVisualPanel5 extends JPanel {
 
     private void chooseFileDir(javax.swing.JTextField jTF, boolean dirOnly) {
         String str = jTF.getText();
-        fc = new JFileChooser(str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "");
-        if (dirOnly) {
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
-        int returnVal = fc.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTF.setText(fc.getSelectedFile().getAbsolutePath());
+        String subStr = str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "";
+        
+        FileChooserBuilder fcb = new FileChooserBuilder(WebBookVisualPanel5.class)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), dirOnly ? "TITL_ChooseDir" : "TITL_ChooseLogFile"))
+                .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
+                .setFileHiding(true)
+                .setSelectedFile(new File(subStr))
+                .setParent(this);
+        fcb = dirOnly ? fcb.setDirectoriesOnly(true) : fcb.setFilesOnly(true);
+        File file = dirOnly ? fcb.showOpenDialog() : fcb.showSaveDialog();
+        
+        if (file != null) {
+            jTF.setText(file.getAbsolutePath());
         }
     }
 

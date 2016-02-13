@@ -4,7 +4,8 @@
  */
 package ancestris.modules.webbook;
 
-import javax.swing.JFileChooser;
+import ancestris.util.swing.FileChooserBuilder;
+import java.io.File;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -15,8 +16,6 @@ public final class WebBookVisualPanel6 extends JPanel {
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type2"),
         NbBundle.getMessage(WebBookVisualPanel6.class, "transferType.type3")
     };
-    //Create a file chooser
-    private JFileChooser fc = null;
 
     /** Creates new form WebBookVisualPanel3 */
     public WebBookVisualPanel6() {
@@ -43,15 +42,22 @@ public final class WebBookVisualPanel6 extends JPanel {
         return NbBundle.getMessage(WebBookWizardAction.class, "CTL_Step_6");
     }
 
-    private void chooseFileDir(javax.swing.JTextField jTF, boolean dirOnly) {
+    private void chooseFileDir(javax.swing.JTextField jTF, String title, boolean askOverwrite) {
         String str = jTF.getText();
-        fc = new JFileChooser(str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "");
-        if (dirOnly) {
-            fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        }
-        int returnVal = fc.showOpenDialog(this);
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            jTF.setText(fc.getSelectedFile().getAbsolutePath());
+        String subStr = str != null ? str.substring(0, Math.max(str.indexOf(" "), str.length())) : "";
+        
+        File file = new FileChooserBuilder(WebBookVisualPanel5.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), title))
+                .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
+                .setFileHiding(true)
+                .setSelectedFile(new File(subStr))
+                .setParent(this)
+                .showSaveDialog(askOverwrite);
+        
+        if (file != null) {
+            jTF.setText(file.getAbsolutePath());
         }
     }
 
@@ -261,11 +267,11 @@ public final class WebBookVisualPanel6 extends JPanel {
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        chooseFileDir(jTextField5, false);
+        chooseFileDir(jTextField5, "WebBookVisualPanel6.TITL_PGM", false);
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        chooseFileDir(jTextField6, false);
+        chooseFileDir(jTextField6, "WebBookVisualPanel6.TITL_LOG", true);
     }//GEN-LAST:event_jButton2ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
