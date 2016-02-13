@@ -2,19 +2,17 @@ package ancestris.modules.commonAncestor;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
-import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.fo.Format;
-import genj.fo.FormatOptionsWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.report.ReportView;
-import genj.util.Registry;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
 import ancestris.swing.ToolBar;
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -32,9 +30,10 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Action;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
@@ -53,27 +52,39 @@ import org.openide.util.NbBundle;
 public class PreviewView extends JPanel {
 
     static final Logger LOG = Logger.getLogger("genj.report");
-    /** pages to switch between */
+    /**
+     * pages to switch between
+     */
     private final static String WELCOME = "welcome",
             CONSOLE = "console",
             RESULT = "result";
     private String currentPage = WELCOME;
-    /** components to show report info */
+    /**
+     * components to show report info
+     */
     private Console output;
     private JScrollPane result;
     private ActionShow actionShow = new ActionShow();
-    /** statics */
+    /**
+     * statics
+     */
     // XXX: mus not depends on report module to (only) get those images...
     private final static ImageIcon imgStart = new ImageIcon(ReportView.class, "Start"),
             imgStop = new ImageIcon(ReportView.class, "Stop"),
             imgSave = new ImageIcon(ReportView.class, "Save"),
             imgConsole = new ImageIcon(ReportView.class, "ReportShell"),
             imgGui = new ImageIcon(ReportView.class, "ReportGui");
-    /** gedcom this view is for */
+    /**
+     * gedcom this view is for
+     */
     private Gedcom gedcom;
-    /** our content */
+    /**
+     * our content
+     */
     //private Content content;
-    /** our current zoom */
+    /**
+     * our current zoom
+     */
     private double zoom = 1.0D;
 
     private SliderWidget sliderZoom;
@@ -117,8 +128,8 @@ public class PreviewView extends JPanel {
                 int dX = lastPoint.x - e.getX();
                 int dY = lastPoint.y - e.getY();
 
-                hSb.setValue(hSb.getValue() + (int)(dX*zoom));
-                vSb.setValue(vSb.getValue() + (int)(dY*zoom));
+                hSb.setValue(hSb.getValue() + (int) (dX * zoom));
+                vSb.setValue(vSb.getValue() + (int) (dY * zoom));
                 lastPoint = e.getPoint();
             }
         });
@@ -205,7 +216,6 @@ public class PreviewView extends JPanel {
 //            } catch (Throwable t) {
 //            }
 //        }
-
         // component?
         if (object instanceof JComponent) {
             JComponent c = (JComponent) object;
@@ -222,26 +232,36 @@ public class PreviewView extends JPanel {
         if (object instanceof genj.fo.Document) {
 
             genj.fo.Document doc = (genj.fo.Document) object;
-            String title = "Document " + doc.getTitle();
 
-            Registry foRegistry = Registry.get(getClass());
+            Format[] formats = Format.getFormats();
+            Map<String, String> fmts = new HashMap<String, String>();   // description, extension
+            for (int i = 0; i < formats.length; i++) {
+                Format format = formats[i];
+                fmts.put(format.getFormat(), format.getFileExtension());
+            }
 
-            FormatOptionsWidget options = new FormatOptionsWidget(doc, foRegistry);
-            DialogManager dialog = DialogManager.create(title, options)
-                    .setOptionType(DialogManager.OK_CANCEL_OPTION)
-                    .setDialogId("common.preview");
-            options.connect(dialog);
-            Object rc = dialog.show();
-            Format formatter = options.getFormat();
-            File file = options.getFile();
-            if (rc != DialogManager.OK_OPTION || formatter.getFileExtension() == null || file == null) {
+            FileChooserBuilder fcb = new FileChooserBuilder(genj.fo.Document.class)
+                    .setFilesOnly(true)
+                    .setDefaultBadgeProvider()
+                    .setTitle(NbBundle.getMessage(getClass(), "Fo_Document", doc.getTitle()))
+                    .setApproveText(NbBundle.getMessage(getClass(), "Fo_OK_Select"))
+                    .setDefaultExtension(formats[0].getFileExtension())
+                    .setFileFilters(fmts)
+                    .setAcceptAllFileFilterUsed(false)
+                    .setDefaultDirAsReportDirectory()
+                    .setFileHiding(true);
+
+            File file = fcb.showSaveDialog();
+            if (file == null) {
                 showResult(null);
                 return;
             }
 
-            // store options
-            options.remember(foRegistry);
+            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file));
 
+            
+            
+            
             // format and write
             try {
                 file.getParentFile().mkdirs();
@@ -264,14 +284,15 @@ public class PreviewView extends JPanel {
 
     /**
      * process zoom changes
+     *
      * @param d
      */
     public void setZoom(double d) {
         zoom = Math.max(0.1D, Math.min(1.0, d));
-        if ( renderer != null) {
+        if (renderer != null) {
             renderer.setZoom(zoom);
 
-            if (scrolledComponent!=null) {
+            if (scrolledComponent != null) {
                 // je mets à jour la taille du composant scrollé qui est a l'interieur du JScrollPane
                 // cela refrachit automatiquement la taille des scrollbar du JScrollPane
                 scrolledComponent.setPreferredSize(new Dimension(renderer.getImageWidth(), renderer.getImageHeight()));
@@ -286,9 +307,8 @@ public class PreviewView extends JPanel {
      * retourne le zoom
      */
     public double getZoom() {
-        return  zoom;
+        return zoom;
     }
-
 
     void setRenderer(IGraphicsRenderer renderer) {
         this.renderer = renderer;
@@ -297,6 +317,7 @@ public class PreviewView extends JPanel {
 
     /**
      * create a toolbox with zoom slider
+     *
      * @param toolbar
      */
     public void populate(ToolBar toolbar) {
@@ -309,7 +330,7 @@ public class PreviewView extends JPanel {
         sliderZoom.setFocusable(false);
         toolbar.add(sliderZoom);
         JLabel dummy = new JLabel();
-        dummy.setPreferredSize(new Dimension(20,20));
+        dummy.setPreferredSize(new Dimension(20, 20));
         dummy.setEnabled(false);
         toolbar.add(dummy);
     }
@@ -317,7 +338,6 @@ public class PreviewView extends JPanel {
     //==========================================================================
     // private class SliderListener
     //==========================================================================
-    
     /**
      * listener for slider changes
      */
@@ -335,7 +355,6 @@ public class PreviewView extends JPanel {
     //==========================================================================
     // private class ActionShow
     //==========================================================================
-    
     /**
      * Action: Console
      */
@@ -364,20 +383,22 @@ public class PreviewView extends JPanel {
         }
     }
 
-    
     //==========================================================================
     // private class Console
     //==========================================================================
-    
     /**
      * console output
      */
     private class Console extends JEditorPane implements MouseListener, MouseMotionListener {
 
-        /** the currently found entity id */
+        /**
+         * the currently found entity id
+         */
         private String id = null;
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private Console() {
             setContentType("text/plain");
             setFont(new Font("Monospaced", Font.PLAIN, 12));
@@ -488,7 +509,8 @@ public class PreviewView extends JPanel {
         /**
          * have to implement MouseMotionListener.mouseDragger()
          *
-         * @see java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
+         * @see
+         * java.awt.event.MouseMotionListener#mouseDragged(java.awt.event.MouseEvent)
          */
         @Override
         public void mouseDragged(MouseEvent e) {
