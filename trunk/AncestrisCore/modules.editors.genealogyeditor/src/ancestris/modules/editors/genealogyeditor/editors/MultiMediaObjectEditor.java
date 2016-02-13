@@ -182,7 +182,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 .setDefaultBadgeProvider()
                 .setTitle(NbBundle.getMessage(getClass(), "TITL_ChooseImage"))
                 .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
-                .setDefaultExtension(FileChooserBuilder.getTextFilter().getExtensions()[0])
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
                 .setFileFilter(FileChooserBuilder.getImageFilter())
                 .setAcceptAllFileFilterUsed(true)
                 .setFileHiding(true)
