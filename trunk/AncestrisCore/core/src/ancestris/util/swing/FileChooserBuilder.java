@@ -675,6 +675,14 @@ public class FileChooserBuilder {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Images"), imgExtensions);
     }
      
+    public static FileNameExtensionFilter getSoundFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Sounds"), sndExtensions);
+    }
+     
+    public static FileNameExtensionFilter getVideoFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Videos"), vidExtensions);
+    }
+     
 
     
     
