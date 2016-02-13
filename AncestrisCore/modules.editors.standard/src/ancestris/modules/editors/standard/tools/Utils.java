@@ -25,9 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 
 
@@ -107,18 +105,6 @@ public class Utils {
         }
     
         return image;
-    }
-
-    public static FileNameExtensionFilter getImageFilter() {
-        return new FileNameExtensionFilter(NbBundle.getMessage(Utils.class, "ImageTypes"), imgExtensions);
-    }
-
-    public static FileNameExtensionFilter getVideoFilter() {
-        return new FileNameExtensionFilter(NbBundle.getMessage(Utils.class, "VideoTypes"), videoExtensions);
-    }
-
-    public static FileNameExtensionFilter getSoundFilter() {
-        return new FileNameExtensionFilter(NbBundle.getMessage(Utils.class, "SoundTypes"), soundExtensions);
     }
 
 
