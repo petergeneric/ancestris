@@ -23,6 +23,7 @@ import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -44,12 +45,9 @@ import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.Desktop;
-import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -61,12 +59,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JScrollBar;
@@ -82,7 +78,6 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -2067,34 +2062,29 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean b = false;
         boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
         
-        Registry registry = Registry.get(getClass());
-        JFileChooser jfc = new JFileChooser();
-        jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
-        jfc.setAccessory(new ImagePreviewer(jfc));
-        FileNameExtensionFilter imageFileFilter = Utils.getImageFilter();
-        FileNameExtensionFilter videoFileFilter = Utils.getVideoFilter();
-        FileNameExtensionFilter soundFileFilter = Utils.getSoundFilter();
-        jfc.addChoosableFileFilter(imageFileFilter);
-        jfc.addChoosableFileFilter(videoFileFilter);
-        jfc.addChoosableFileFilter(soundFileFilter);
-        jfc.setAcceptAllFileFilterUsed(true);
-        jfc.setSelectedFile(exists ? mediaSet.get(index).getFile() : new File(registry.get("mediaPath", ".")));
-        int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserOKButton"));
-        if (ret == JFileChooser.APPROVE_OPTION) {
-            File f = jfc.getSelectedFile();
-            registry.put("mediaPath", f);
-            if (f != null) {
-                if (exists) {
-                    mediaSet.get(index).setFile(f);
-                    mediaIndex = index;
-                } else {
-                    MediaWrapper media = new MediaWrapper(f);  
-                    mediaSet.add(media);
-                    mediaIndex = mediaSet.size()-1;
-                }
-                changes.setChanged(true);
-                b = true;
+        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Images")
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .addFileFilter(FileChooserBuilder.getImageFilter())
+                .addFileFilter(FileChooserBuilder.getSoundFilter())
+                .addFileFilter(FileChooserBuilder.getVideoFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setFileHiding(true)
+                .showOpenDialog();
+        if (file != null) {
+            if (exists) {
+                mediaSet.get(index).setFile(file);
+                mediaIndex = index;
+            } else {
+                MediaWrapper media = new MediaWrapper(file);
+                mediaSet.add(media);
+                mediaIndex = mediaSet.size() - 1;
             }
+            changes.setChanged(true);
+            b = true;
         } else {
             textAreaPhotos.requestFocus();
         }
@@ -2737,35 +2727,30 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean chooseSourceFile(int index) {
         boolean b = false;
         boolean exists = (eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (index >= 0) && (index < eventSourceSet.size());
-        
-        Registry registry = Registry.get(getClass());
-        JFileChooser jfc = new JFileChooser();
-        jfc.setDialogTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"));
-        jfc.setAccessory(new ImagePreviewer(jfc));
-        FileNameExtensionFilter imageFileFilter = Utils.getImageFilter();
-        FileNameExtensionFilter videoFileFilter = Utils.getVideoFilter();
-        FileNameExtensionFilter soundFileFilter = Utils.getSoundFilter();
-        jfc.addChoosableFileFilter(imageFileFilter);
-        jfc.addChoosableFileFilter(videoFileFilter);
-        jfc.addChoosableFileFilter(soundFileFilter);
-        jfc.setAcceptAllFileFilterUsed(true);
-        jfc.setSelectedFile(new File(registry.get("sourcePath", ".")));
-        int ret = jfc.showDialog(jfc, NbBundle.getMessage(getClass(), "FileChooserOKButton"));
-        if (ret == JFileChooser.APPROVE_OPTION) {
-            File f = jfc.getSelectedFile();
-            registry.put("sourcePath", f);
-            if (f != null) {
-                if (exists) {
-                    eventSourceSet.get(index).setFile(f);
-                    eventSourceIndex = index;
-                } else {
-                    SourceWrapper source = new SourceWrapper(f);  
-                    eventSourceSet.add(source);
-                    eventSourceIndex = eventSourceSet.size()-1;
-                }
-                changes.setChanged(true);
-                b = true;
+
+        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Sources")
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .addFileFilter(FileChooserBuilder.getImageFilter())
+                .addFileFilter(FileChooserBuilder.getSoundFilter())
+                .addFileFilter(FileChooserBuilder.getVideoFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setFileHiding(true)
+                .showOpenDialog();
+        if (file != null) {
+            if (exists) {
+                eventSourceSet.get(index).setFile(file);
+                eventSourceIndex = index;
+            } else {
+                SourceWrapper source = new SourceWrapper(file);
+                eventSourceSet.add(source);
+                eventSourceIndex = eventSourceSet.size() - 1;
             }
+            changes.setChanged(true);
+            b = true;
         }
         return b;
     }
@@ -3026,28 +3011,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             isCancelled = true;
         }
 
-    }
-
-
-    private static class ImagePreviewer extends JLabel {
-
-        public ImagePreviewer(JFileChooser chooser) {
-            final int size = 120;
-            setPreferredSize(new Dimension(size, size));
-            setBorder(BorderFactory.createEtchedBorder());
-            chooser.addPropertyChangeListener(new PropertyChangeListener() {
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
-                        File f = (File) evt.getNewValue();
-                        ImageIcon icon = new ImageIcon(f.getPath());
-                        if (icon.getIconWidth() > size) {
-                            icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
-                        }
-                        setIcon(icon);
-                    }
-                }
-            });
-        }
     }
 
 
