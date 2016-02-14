@@ -1,5 +1,6 @@
 package ancestris.modules.releve.imageBrowser;
 
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Cursor;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -14,7 +15,6 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
@@ -671,25 +671,27 @@ public class BrowserPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnFolderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFolderActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        if (currentImageDirectory != null) {
-            fc.setCurrentDirectory(currentImageDirectory);
-        }
-        int fcr = fc.showDialog(this, NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.btnFolder.text"));
-        if (fcr != JFileChooser.APPROVE_OPTION) {
-            return;
-        }
 
-        String folderName;
-        try {
-            currentImageDirectory = fc.getSelectedFile();
-            folderName = currentImageDirectory.getCanonicalPath();
-        } catch (IOException ex) {
-            return;
+        File file = new FileChooserBuilder(BrowserPanel.class)
+                .setDirectoriesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "BrowserPanel.btnFolder.text"))
+                .setApproveText(NbBundle.getMessage(getClass(), "BrowserOptionsPanel.dialogTitle.ok"))
+                .setSelectedFile(currentImageDirectory)
+                .setFileHiding(true)
+                .showOpenDialog();
+        
+        if (file != null) {
+            String folderName;
+            try {
+                currentImageDirectory = file;
+                folderName = currentImageDirectory.getCanonicalPath();
+            } catch (IOException ex) {
+                return;
+            }
+            btnFolder.setText(folderName);
+            populateImageList(currentImageDirectory);
         }
-        btnFolder.setText(folderName);
-        populateImageList(currentImageDirectory);
     }//GEN-LAST:event_btnFolderActionPerformed
 
     private void jButtonLeftActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLeftActionPerformed
