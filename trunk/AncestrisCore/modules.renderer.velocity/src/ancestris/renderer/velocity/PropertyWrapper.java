@@ -114,7 +114,13 @@ public class PropertyWrapper extends Object implements Comparable<PropertyWrappe
     }
 
     public String getName() {
-        return format("{$T}");
+        String str = property.getPropertyName();
+        int i = str.indexOf(' ');
+        if (i>0) {
+            return str.substring(0, i);
+        } else {
+            return str;
+        }
     }
 
     public String getPlace() {
