@@ -74,7 +74,7 @@ text-align: left;
 #set($inhumation=$INDI.getProperty("BURI"))
 #set($residence=$INDI.getProperty("RESI"))
 #set($profession=$INDI.getProperty("OCCU"))
-#set ($version="DD_FM_2013/11/03")
+#set($version="DD_FM_FL_2016/02/14")
 
 
 <!----------------------------------- Titre de la page --------------------------->
@@ -94,7 +94,7 @@ text-align: left;
         #set($portrait=$INDI.getProperty("OBJE"))
         #if ($portrait)
          <center>
-         <IMG height="100" width="80" SRC="file:///$!INDI.getProperty("OBJE:FILE").AbsolutePath">
+         <IMG height="100" width="80" SRC="file:///$!INDI.getProperty("OBJE:FILE").getAbsolutePath()">
          </center>
         #end
       </TD>
@@ -123,34 +123,34 @@ text-align: left;
 
 #set($naissance=$INDI.getProperty("BIRT"))
 #if ($naissance) 
-  <br><span class="underline_shadow">NAISSANCE</span> : 
+  <br><span class="underline_shadow">$!INDI.getProperty("BIRT").getName()</span> : 
   <span class="italic">$!INDI.getProperty("BIRT:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("BIRT:PLAC")</span>
 #end 
 
 #set($bapteme=$INDI.getProperty("BAPM"))
 #if ($bapteme)
-  <br><span class="underline_shadow">BAPT&Ecirc;ME</span> : 
+  <br><span class="underline_shadow">$!INDI.getProperty("BAPM").getName()</span> : 
   <span class="italic">$!INDI.getProperty("BAPM:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("BAPM:PLAC")</span>
 #end
 #set($bapt_CHR=$INDI.getProperty("CHR"))
 #if ($bapt_CHR)
-  <br><span class="underline_shadow">BAPT&Ecirc;ME</span> : 
+  <br><span class="underline_shadow">$!INDI.getProperty("CHR").getName()</span> : 
   <span class="italic">$!INDI.getProperty("CHR:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("CHR:PLAC")</span>
 #end
 <br>
 #set($deces=$INDI.getProperty("DEAT"))
 #if ($deces)
-  <br><span class="underline_shadow">D&Eacute;C&Egrave;S</span> : 
+  <br><span class="underline_shadow">$!INDI.getProperty("DEAT").getName()</span> : 
   <span class="italic">$!INDI.getProperty("DEAT:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("DEAT:PLAC")</span> 
 #end
 
 #set($inhumation=$INDI.getProperty("BURI"))
 #if ($inhumation)
-  <br><span class="underline_shadow">INHUMATION</span> : 
+  <br><span class="underline_shadow">$!INDI.getProperty("BURI").getName()</span> : 
   <span class="italic">$!INDI.getProperty("BURI:DATE")</span><br>
   <span class="italic">$!INDI.getProperty("BURI:PLAC")</span>
 #end 
@@ -162,19 +162,19 @@ text-align: left;
 #set($residence=$INDI.getProperty("RESI"))
 #if ($residence)
   #if($INDI.getProperties("RESI").size()>=2)
-    <br><span class="underline_shadow">ADRESSES</span> : 
+    <br><span class="underline_shadow">$!INDI.getProperty("RESI").getName()</span> : 
   #else
-    <br><span class="underline_shadow">ADRESSE</span> : 
+    <br><span class="underline_shadow">$!INDI.getProperty("RESI").getName()</span> : 
   #end
   #set($adresse_code=$!resi.getProperty("ADDR:POST"))
   <ul>
   #foreach($resi in $INDI.getProperties("RESI"))
     #if ($!resi.getProperty("ADDR"))
       <li><span class="italic">$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY"), ($!resi.getProperty("ADDR:POST"))</span><br>
-      p&eacute;riode : <span class="italic">$!resi.Date</span></li>
+      <span class="italic">$!resi.Date</span></li>
     #else
       <li><span class="italic">$!resi.Place</span> <br> 
-      p&eacute;riode : <span class="italic">$!resi.Date</span></li>
+      <span class="italic">$!resi.Date</span></li>
     #end
   #end
   </ul>
@@ -186,14 +186,14 @@ text-align: left;
 #set($profession=$INDI.getProperty("OCCU"))
 #if ($profession)
   #if($INDI.getProperties("OCCU").size()>=2)
-    <br><span class="underline_shadow">PROFESSIONS</span> : 
+    <br><span class="underline_shadow">$!INDI.getProperty("OCCU").getName()</span> : 
   #else
-    <br><span class="underline_shadow">PROFESSION</span> : 
+    <br><span class="underline_shadow">$!INDI.getProperty("OCCU").getName()</span> : 
   #end
   <ul>
   #foreach($occu in $INDI.getProperties("OCCU"))
-    <li><span class="italic">$!occu.Value &agrave; $!occu.Place</span><br>
-    p&eacute;riode : <span class="italic">$!occu.Date</span> ;</li>
+    <li><span class="italic">$!occu.Value - $!occu.Place</span><br>
+    <span class="italic">$!occu.Date</span> ;</li>
   #end
   </ul>
 #end
@@ -202,9 +202,9 @@ text-align: left;
 
 #testaff($fams)#if ($isShown!=0)
   #if($fams.size()>=2)
-    <br><span class="underline_shadow">MARIAGES</span> :
+    <br><span class="underline_shadow">$fams[0].getProperty("MARR").getName()</span> :
   #else
-    <br><span class="underline_shadow">MARIAGE</span> : 
+    <br><span class="underline_shadow">$fams[0].getProperty("MARR").getName()</span> : 
   #end
     <ul>
     #foreach ($fam in $fams)
@@ -218,12 +218,12 @@ text-align: left;
       #if ($mariage)
         $!conjoint.getProperty("NAME") ($conjoint.Id)</span><br>
         <span class="italic">$!mariage.getProperty("DATE")</span> 
-        &agrave; <span class="italic">$!mariage.getProperty("PLAC")</span>
+        - <span class="italic">$!mariage.getProperty("PLAC")</span>
       #end
       #if ($divorce)	
-        <br><span class="underline_shadow">Divorce</span> : 
+        <br><span class="underline_shadow">$!FAM.getProperty("DIV").getName()</span> : 
         <span class="italic">$!divorce.Date</span> 
-        &agrave; <span class="italic">$!divorce.Place</span>
+        - <span class="italic">$!divorce.Place</span>
       #end
       </li>
     #end
