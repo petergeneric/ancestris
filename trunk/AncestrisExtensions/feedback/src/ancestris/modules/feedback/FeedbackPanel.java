@@ -10,6 +10,7 @@
  */
 package ancestris.modules.feedback;
 
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -18,9 +19,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.prefs.Preferences;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -199,46 +197,21 @@ public class FeedbackPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void saveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_saveButtonActionPerformed
-        final FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(FeedBackPlugin.class, "FeedbackPanel.fileType"), "zip");
-        JFileChooser fileChooser = new JFileChooser() {
-
-            @Override
-            public void approveSelection() {
-                File f = getSelectedFile();
-                if (f.exists() && getDialogType() == SAVE_DIALOG) {
-                    int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(FeedBackPlugin.class, "FeedbackPanel.Overwrite.Text"), NbBundle.getMessage(FeedBackPlugin.class, "FeedbackPanel.Overwrite.Title"), JOptionPane.YES_NO_CANCEL_OPTION);
-                    switch (result) {
-                        case JOptionPane.YES_OPTION:
-                            super.approveSelection();
-                            return;
-                        case JOptionPane.NO_OPTION:
-                            return;
-                        case JOptionPane.CANCEL_OPTION:
-                            super.cancelSelection();
-                            return;
-                    }
-                } else {
-                    if (filter.accept(f) == false) {
-                        setSelectedFile(new File(f.getName() + ".gw"));
-                    }
-                }
-                super.approveSelection();
-            }
-        };
-        String dirName = modulePreferences.get("current directory", "");
-
-        if (dirName.length() > 0) {
-            // Set the current directory
-            fileChooser.setCurrentDirectory(new File(dirName));
-        }
-
-        fileChooser.setFileFilter(filter);
-        fileChooser.setAcceptAllFileFilterUsed(false);
-        fileChooser.setSelectedFile(new File(zipFile.getName()));
-
-        if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-            File copyFile = fileChooser.getSelectedFile();
-            modulePreferences.put("current directory", copyFile.getPath());
+        
+        File file = new FileChooserBuilder(FeedbackPanel.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
+                .setDefaultExtension(FileChooserBuilder.getZipFilter().getExtensions()[0])
+                .setFileFilter(FileChooserBuilder.getZipFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setSelectedFile(new File(zipFile.getName()))
+                .setFileHiding(true)
+                .showSaveDialog();
+        
+        if (file != null) {
+            File copyFile = file;
             try {
                 Files.copy(zipFile.toPath(), copyFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException ex) {
