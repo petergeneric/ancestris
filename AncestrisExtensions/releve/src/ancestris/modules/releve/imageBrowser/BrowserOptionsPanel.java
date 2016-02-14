@@ -2,13 +2,13 @@ package ancestris.modules.releve.imageBrowser;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.ReleveTopComponent;
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.DefaultListModel;
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileSystemView;
 import org.netbeans.api.javahelp.Help;
 import org.openide.util.HelpCtx;
@@ -91,7 +91,6 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
         jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png"))); // NOI18N
         jButtonHelp.setBorder(null);
         jButtonHelp.setMargin(null);
-        jButtonHelp.setMinimumSize(new java.awt.Dimension(16, 16));
         jButtonHelp.setPreferredSize(new java.awt.Dimension(20, 20));
         jButtonHelp.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -203,24 +202,27 @@ public class BrowserOptionsPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonAddDirectoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonAddDirectoryActionPerformed
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+
         File defaultDirectory;
         if (jList1.getSelectedValue() != null) {
             defaultDirectory = new File(jList1.getSelectedValue());
         } else {
-            //            String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
-            //            defaultDirectory = new File(defaultDir);
             FileSystemView fsv = FileSystemView.getFileSystemView();
             defaultDirectory = fsv.getDefaultDirectory();
         }
-        if (defaultDirectory != null) {
-            fileChooser.setCurrentDirectory(defaultDirectory);
-        }
-        int fcr = fileChooser.showDialog(this, NbBundle.getMessage(BrowserOptionsPanel.class, "BrowserOptionsPanel.dialogTitle.text"));
-        if (fcr == JFileChooser.APPROVE_OPTION) {
+
+        File file = new FileChooserBuilder(BrowserOptionsPanel.class)
+                .setDirectoriesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "BrowserOptionsPanel.dialogTitle.text"))
+                .setApproveText(NbBundle.getMessage(getClass(), "BrowserOptionsPanel.dialogTitle.ok"))
+                .setSelectedFile(defaultDirectory)
+                .setFileHiding(true)
+                .showOpenDialog();
+        
+        if (file != null) {
             try {
-                String directory = fileChooser.getSelectedFile().getCanonicalPath();
+                String directory = file.getCanonicalPath();
                 int index = ImageDirectoryModel.getModel().indexOf(directory);
                 if ( index == -1 ) {
                     ImageDirectoryModel.getModel().addElement(directory);
