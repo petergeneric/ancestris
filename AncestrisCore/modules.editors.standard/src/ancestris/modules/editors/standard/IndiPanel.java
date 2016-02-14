@@ -2739,6 +2739,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addFileFilter(FileChooserBuilder.getVideoFilter())
                 .setAcceptAllFileFilterUsed(false)
                 .setFileHiding(true)
+                .setDefaultPreviewer()
                 .showOpenDialog();
         if (file != null) {
             if (exists) {
