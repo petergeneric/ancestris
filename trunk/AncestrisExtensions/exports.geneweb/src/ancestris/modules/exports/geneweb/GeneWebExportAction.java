@@ -26,6 +26,7 @@ package ancestris.modules.exports.geneweb;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.SaveOptionsWidget;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.io.Filter;
@@ -33,11 +34,7 @@ import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
@@ -47,7 +44,6 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
 @ActionID(id = "ancestris.modules.exports.geneweb.GeneWebExportAction", category = "File")
@@ -58,6 +54,9 @@ import org.openide.windows.WindowManager;
 @ActionReference(path = "Menu/File/Export", name = "GeneWebExportAction", position = 200)
 public final class GeneWebExportAction extends AbstractAncestrisContextAction {
 
+    private Gedcom myGedcom = null;
+
+    
     public GeneWebExportAction() {
         super();
         setImage("ancestris/modules/exports/geneweb/geneweb.png");
@@ -77,11 +76,7 @@ public final class GeneWebExportAction extends AbstractAncestrisContextAction {
 
         if (contextToOpen != null) {
             myGedcom = contextToOpen.getGedcom();
-            Preferences modulePreferences = NbPreferences.forModule(GeneWebExport.class);
             String gedcomName = removeExtension(myGedcom.getName());
-
-            exportDirName = modulePreferences.get("Dossier-Export-" + gedcomName, "");
-            exportFileName = modulePreferences.get("Fichier-Export-" + gedcomName, gedcomName + ".gw");
 
             ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
             for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
@@ -97,22 +92,19 @@ public final class GeneWebExportAction extends AbstractAncestrisContextAction {
 
             SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
 
-            fc.setAccessory(options);
-            if (exportDirName.length() > 0) {
-                // Set the current directory
-                fc.setCurrentDirectory(new File(exportDirName));
-            }
-
-            fc.setFileFilter(filter);
-            fc.setAcceptAllFileFilterUsed(false);
-            fc.setSelectedFile(new File(exportFileName));
-
-            if (fc.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
-                File exportFile = fc.getSelectedFile();
-                modulePreferences.put("Dossier-Export-" + gedcomName, exportFile.getPath());
-                modulePreferences.put("Fichier-Export-" + gedcomName, exportFile.getName());
-
-                GeneWebExport exportGeneWeb = new GeneWebExport(myGedcom, exportFile, options.getFilters());
+            File file = new FileChooserBuilder(GeneWebExportAction.class)
+                    .setFilesOnly(true)
+                    .setDefaultBadgeProvider()
+                    .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle", myGedcom.getName()))
+                    .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
+                    .setDefaultExtension("gw")
+                    .setAccessory(options)
+                    .setFileHiding(true)
+                    .setSelectedFile(new File(gedcomName + "-geneweb"))
+                    .showSaveDialog();
+            
+            if (file != null) {
+                GeneWebExport exportGeneWeb = new GeneWebExport(myGedcom, file, options.getFilters());
                 showWaitCursor();
                 exportGeneWeb.start();
                 hideWaitCursor();
@@ -121,35 +113,6 @@ public final class GeneWebExportAction extends AbstractAncestrisContextAction {
             }
         }
     }
-
-    JFileChooser fc = new JFileChooser() {
-        @Override
-        public void approveSelection() {
-            File f = getSelectedFile();
-            if (f.exists() && getDialogType() == SAVE_DIALOG) {
-                int result = JOptionPane.showConfirmDialog(this, NbBundle.getMessage(GeneWebExport.class, "GeneWebExportAction.Overwrite.Text"), NbBundle.getMessage(GeneWebExport.class, "GeneWebExportAction.Overwrite.Title"), JOptionPane.YES_NO_CANCEL_OPTION);
-                switch (result) {
-                    case JOptionPane.YES_OPTION:
-                        super.approveSelection();
-                        return;
-                    case JOptionPane.NO_OPTION:
-                        return;
-                    case JOptionPane.CANCEL_OPTION:
-                        super.cancelSelection();
-                        return;
-                }
-            } else {
-                if (filter.accept(f) == false) {
-                    setSelectedFile(new File(f.getName() + ".gw"));
-                }
-            }
-            super.approveSelection();
-        }
-    };
-    private Gedcom myGedcom = null;
-    final FileNameExtensionFilter filter = new FileNameExtensionFilter(NbBundle.getMessage(GeneWebExport.class, "GeneWebExportAction.fileType"), "gw");
-    String exportDirName = "";
-    String exportFileName = "";
 
     private String removeExtension(String filename) {
 
