@@ -36,7 +36,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.prefs.Preferences;
 import javax.swing.JFrame;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -47,7 +46,6 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.Lookup;
 import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
 
 @ActionID(id = "ancestris.modules.exports.geneanet.GeneanetExportAction", category = "File")
@@ -79,9 +77,7 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
 
         if (contextToOpen != null) {
             myGedcom = contextToOpen.getGedcom();
-
-            Preferences modulePreferences = NbPreferences.forModule(GeneanetExport.class);
-            String gedcomName = removeExtension(myGedcom.getName()) + "-geneanet";
+            String gedcomName = removeExtension(myGedcom.getName());
 
             ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
             for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
@@ -107,7 +103,7 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                     .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
                     .setAccessory(options)
                     .setFileHiding(true)
-                    .setSelectedFile(new File(myGedcom.getName().replace(".ged", "") + "-geneanet"))
+                    .setSelectedFile(new File(gedcomName + "-geneanet"))
                     .showSaveDialog();
             
             if (file != null) {
