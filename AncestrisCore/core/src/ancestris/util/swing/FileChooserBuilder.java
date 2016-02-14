@@ -184,6 +184,8 @@ public class FileChooserBuilder {
     private static String DIMY = "dimY";
     private static String DIMW = "dimW";
     private static String DIMH = "dimH";
+
+    private JFileChooser activeChooser = null;
     
     /**
      * Create a new FileChooserBuilder using the name of the passed class
@@ -342,6 +344,20 @@ public class FileChooserBuilder {
     }
 
     /**
+     * Force filter to be only the file filter provided while file chooser is already open.
+     * @param FileFilter A file filter 
+     * @return this
+     */
+    public FileChooserBuilder forceFileFilter (FileFilter filter) {
+        if (activeChooser != null) {
+            activeChooser.resetChoosableFileFilters();
+            activeChooser.setFileFilter(filter);
+            activeChooser.setAcceptAllFileFilterUsed(false);
+        }
+        return this;
+    }
+
+    /**
      * Equivalent to calling <code>JFileChooser.addChoosableFileFilter(filter)</code>.
      * Adds another file filter that can be displayed in the file filters combo
      * box in the file chooser.
@@ -428,6 +444,19 @@ public class FileChooserBuilder {
         this.selectedFile = selectedFile;
         return this;
     }
+
+    /**
+     * Force selected file while file chooser is already open.
+     * @param selectedFile A file to display in the file box 
+     * @return this
+     */
+    public FileChooserBuilder forceSelectedFile (File selectedFile) {
+        if (activeChooser != null) {
+            activeChooser.setSelectedFile(selectedFile);
+        }
+        return this;
+    }
+    
     /**
      * Enable file hiding in any created file choosers
      * @param fileHiding Whether or not to hide files.  Default is no.
@@ -788,6 +817,8 @@ public class FileChooserBuilder {
         if (approveTooltipText != null) {
             chooser.setApproveButtonToolTipText(approveTooltipText);
         }
+        
+        activeChooser = chooser;
     }
 
     private FileDialog createFileDialog( File currentDirectory ) {
