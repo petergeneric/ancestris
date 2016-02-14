@@ -178,6 +178,7 @@ public class FileChooserBuilder {
     private static String[] csvExtensions = {"csv"};
     private static String[] tblExtensions = {"txt", "csv"};
     private static String[] htmExtensions = {"html"};
+    private static String[] zipExtensions = {"zip"};
 
     private static String DIMX = "dimX";
     private static String DIMY = "dimY";
@@ -638,6 +639,8 @@ public class FileChooserBuilder {
             icon = Images.imgPDF;
         } else if (Arrays.asList(txtExtensions).contains(extension)) {
             icon = Images.imgText;
+        } else if (Arrays.asList(zipExtensions).contains(extension)) {
+            icon = Images.imgZip;
         } // add more at will !
 
         return icon;
@@ -683,6 +686,9 @@ public class FileChooserBuilder {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Videos"), vidExtensions);
     }
      
+    public static FileNameExtensionFilter getZipFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Zip"), zipExtensions);
+    }
 
     
     
