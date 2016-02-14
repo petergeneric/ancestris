@@ -25,9 +25,8 @@ import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.releve.dnd.ViewWrapperManager;
-import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Component;
-import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -36,8 +35,6 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -47,14 +44,11 @@ import javax.swing.filechooser.FileFilter;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JComponent;
-import javax.swing.JFileChooser;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.KeyStroke;
-import javax.swing.SwingUtilities;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.*;
@@ -86,8 +80,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     private final JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));    
     private final JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
     private final JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
-    
-    
     
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
@@ -817,39 +809,26 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     private static File getFileFromUserForOpen(Component component, String title, String buttonLabel, String defaultFileName, boolean askForOverwrite, String extension) {
 
-        // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
-        JFileChooser chooser = new JFileChooser(dir);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setDialogTitle(title);
-        chooser.setSelectedFile(new File(defaultFileName));
-        chooser.setDialogType(JFileChooser.OPEN_DIALOG);
-        if (extension != null) {
-            chooser.setFileFilter(new FileExtensionFilter(extension));
-        }
-
-        int rc = chooser.showDialog(component, buttonLabel);
-
-        // check resultFile
-        File resultFile = chooser.getSelectedFile();
-        if (rc != JFileChooser.APPROVE_OPTION || resultFile == null) {
+        File file = new FileChooserBuilder(ReleveTopComponent.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(title)
+                .setApproveText(buttonLabel)
+                .setDefaultExtension(extension)
+                .setSelectedFile(new File(defaultFileName))
+                .setDefaultWorkingDirectory(new File(dir))
+                .setFileHiding(true)
+                .showOpenDialog();
+        
+        if (file == null) {
             return null;
         }
 
-        // choose an existing file?
-        if (resultFile.exists() && askForOverwrite) {
-            //rc = DialogHelper.openDialog(title, DialogHelper.WARNING_MESSAGE, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"), Action2.yesNo(), this);
-            if (rc != 0) {
-                return null;
-            }
-        }
-
         // keep it as new default directory
-        if (resultFile != null) {
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
-        }
-        return resultFile;
+        NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent().toString());
+        return file;
     }
 
 
@@ -898,51 +877,31 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
-        JFileChooser chooser = new JFileChooser(dir);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setDialogTitle(title);
-        chooser.setSelectedFile(new File(fileName));
-        if (extension != null) {
-            chooser.setFileFilter(new FileExtensionFilter(extension));
-        }
-
-        int rc = chooser.showDialog(component, buttonLabel);
-
-
-        // check resultFile
-        File resultFile = chooser.getSelectedFile();
-        if (rc != JFileChooser.APPROVE_OPTION || resultFile == null) {
-            return ;
-        }
-
-         // j'ajoute l'extension par defaut si l'utilisateur n'a pas mis d'extension
-        if (!resultFile.getName().contains(".")) {
-            resultFile = new File(resultFile.getAbsolutePath() + "." + extension);
-        }
-
-        // choose an existing file?
-        if (resultFile.exists() && askForOverwrite) {
-            Toolkit.getDefaultToolkit().beep();
-            if (DialogManager.YES_OPTION !=
-                    DialogManager.createYesNo(title, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"))
-                    .setMessageType(DialogManager.WARNING_MESSAGE).show()){
-                return;
-            }
-        }
-
-        if (resultFile != null) {
+        
+        File file = new FileChooserBuilder(ReleveTopComponent.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(title)
+                .setApproveText(buttonLabel)
+                .setDefaultExtension(extension)
+                .setSelectedFile(new File(fileName))
+                .setDefaultWorkingDirectory(new File(dir))
+                .setFileHiding(true)
+                .showSaveDialog();
+        
+        if (file != null) {
             // je memorise  le répertoire du fichier
             // remarque : je memorise le répertoire du fichier avant d'enregistrer le fichier
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, resultFile.getParent().toString());
+            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent().toString());
             // j'enregistre les données dans le fichier
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, resultFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, file, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
 
              if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
                 // je memorise le nom du fichier
-                setCurrentFile(resultFile);
+                setCurrentFile(file);
             } else {
                 // j'affiche les erreurs rencontrées
                 String message = saveResult.toString();
@@ -1053,18 +1012,17 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      *
      */
     protected void exportFile() {
-        String buttonLabel = "Enregistrer";
-        boolean askForOverwrite = true;
-        Component component = this;
-        String title  = "Enregistrer";       
-
-        // show filechooser
         String defaultDir = EnvironmentChecker.getProperty("user.home", ".", "looking for report dir to let the user choose from");
         String dir = NbPreferences.forModule(ReleveTopComponent.class).get(FILE_DIRECTORY, defaultDir);
-        final JFileChooser chooser = new JFileChooser(dir);
-        chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        chooser.setDialogTitle(title);        
-
+        final FileChooserBuilder fcb = new FileChooserBuilder(ReleveTopComponent.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
+                .setDefaultWorkingDirectory(new File(dir))
+                .setFileHiding(true)
+                .setAcceptAllFileFilterUsed(false);
+        
         GridBagConstraints gridBagConstraints;
         javax.swing.JPanel panelExport;
         javax.swing.JPanel jPanelFormat;
@@ -1138,6 +1096,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         ActionListener rbActionListener = new java.awt.event.ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
+                String defaultFileName;
                 String extension = "txt";
                 String cityName = dataManager.getCityName();
                 if ( cityName.isEmpty()) {
@@ -1168,13 +1127,18 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                     format = "";
                     extension = "pdf";
                 }
+                
                 // je cree le nom de fichier par defaut
-                chooser.setSelectedFile(new File(cityName+recordType+format+"."+extension));
+                defaultFileName = cityName+recordType+format+"."+extension;
+                fcb.setDefaultExtension(extension);
+                fcb.forceSelectedFile(new File(defaultFileName));
+                fcb.forceFileFilter(new FileExtensionFilter(extension));
             }
         };
 
         jRadioButtonEgmt.addActionListener(rbActionListener);
         jRadioButtonNimegue.addActionListener(rbActionListener);
+        jRadioButtonPdf.addActionListener(rbActionListener);
         jRadioButtonAll.addActionListener(rbActionListener);
         jRadioButtonBirth.addActionListener(rbActionListener);
         jRadioButtonMarriage.addActionListener(rbActionListener);
@@ -1196,34 +1160,18 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // je met a jour le nom du fichier par defaut en fonction du format 
         rbActionListener.actionPerformed(null);
 
-        // j'ajoute le panneau dans la boite de dialogue
-        chooser.setAccessory(panelExport);
-
-        String extension = chooser.getDescription(chooser.getSelectedFile());
-        chooser.setFileFilter(new FileExtensionFilter(extension));
-
-        // j'affiche la boit de dialog
-        int rc = chooser.showDialog(component, buttonLabel);
-
-        // check resultFile
-        File outputFile = chooser.getSelectedFile();
-        if (rc != JFileChooser.APPROVE_OPTION || outputFile == null) {
-            return ;
-        }
-
-        // choose an existing file?
-        if (outputFile.exists() && askForOverwrite) {
-            Toolkit.getDefaultToolkit().beep();
-             if (DialogManager.YES_OPTION !=
-                    DialogManager.createYesNo(title, NbBundle.getMessage(ReleveTopComponent.class, "message.fileExits"))
-                    .setMessageType(DialogManager.WARNING_MESSAGE).show()){
-                return;
-            }
-        }
-
-        if (outputFile != null) {
+        
+        // show filechooser
+        fcb.setDefaultExtension("csv")
+           .setSelectedFile(new File(dataManager.getCityName()+"_B_EGMT.csv"))  //default
+           .setFileFilter(new FileExtensionFilter("csv"))
+           .setAccessory(panelExport);
+        
+        File file = fcb.showSaveDialog();
+        
+        if (file != null) {
             // j'enregistre le répertoire du fichier
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, outputFile.getParent().toString());
+            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent().toString());
 
             // je recupere le type de fichier choisi
             FileManager.FileFormat fileFormat = FileManager.FileFormat.FILE_TYPE_UNKNOW;
@@ -1235,28 +1183,23 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 fileFormat = FileManager.FileFormat.FILE_TYPE_PDF;
             }
 
-            // j'ajoute l'extension par defaut si l'utilisateur n'a pas mis d'extension
-            if ( ! outputFile.getName().contains(".") ) {
-                outputFile = new File (outputFile.getAbsolutePath()+"."+extension);
-            }
-
             // j'enregistre les modeles choisis la liste des modeles à enregistrer
             StringBuilder saveResult = new StringBuilder();
             if (jRadioButtonAll.isSelected()) {
-                FileManager.saveFile(dataManager, dataManager, outputFile, fileFormat);
+                FileManager.saveFile(dataManager, dataManager, file, fileFormat);
             } else if (jRadioButtonBirth.isSelected()) {
-                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.birth);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.birth);
             } else if (jRadioButtonMarriage.isSelected()) {
-                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.marriage);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.marriage);
             } else if (jRadioButtonDeath.isSelected()) {
-                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.death);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.death);
             } else if (jRadioButtonMisc.isSelected()) {
-                FileManager.saveFile(dataManager, outputFile, fileFormat, dataManager.getDataModel(), DataManager.RecordType.misc);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.misc);
             }
             if (! saveResult.toString().isEmpty()) {
                 // j'affiche les erreurs rencontrées
                 String message = saveResult.toString();
-                JOptionPane.showMessageDialog(this, message, title, JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, message, NbBundle.getMessage(getClass(), "FileChooserTitle"), JOptionPane.ERROR_MESSAGE);
             }
         }
     }
