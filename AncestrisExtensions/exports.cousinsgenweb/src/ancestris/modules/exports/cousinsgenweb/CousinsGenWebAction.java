@@ -5,6 +5,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
+import java.awt.Cursor;
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,14 +18,17 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.swing.JFrame;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
+import org.openide.awt.StatusDisplayer;
+import org.openide.util.Mutex;
 import org.openide.util.NbBundle;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
+import org.openide.windows.*;
 
 @ActionID(id = "ancestris.modules.exports.cousinsgenweb.CousinsGenWebAction", category = "File")
 @ActionRegistration(
@@ -33,6 +37,9 @@ import org.openide.windows.InputOutput;
         lazy = false)
 @ActionReference(path = "Menu/File/Export", name = "CousinsGenWebAction", position = 300)
 public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
+
+    CousinsGenWebPanel cousinGenWebPanel;
+    DialogDescriptor cousinGenWebPanelDescriptor;
 
     public CousinsGenWebAction() {
         super();
@@ -57,16 +64,10 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
             depPos = cousinGenWebPanel.getDepPos();
             cityPos = cousinGenWebPanel.getCityPos();
             depLen = cousinGenWebPanel.getDepLength();
-            file = cousinGenWebPanel.getFile();
+            dir = cousinGenWebPanel.getFile();
         }
     };
 
-    CousinsGenWebPanel cousinGenWebPanel = new CousinsGenWebPanel();
-    DialogDescriptor cousinGenWebPanelDescriptor = new DialogDescriptor(
-            cousinGenWebPanel,
-            NbBundle.getMessage(CousinsGenWebPanel.class, "CTL_CousinsGenWebAction"),
-            true,
-            new CousinGenWebPanelDescriptorActionListener());
     /**
      * option - Index jurisdiction for analysis in PLAC tags
      */
@@ -79,20 +80,38 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
      * option - Meaningfull length for the Department Juridiction field to keep
      */
     public int depLen = 0;
-    File file = null;
-    InputOutput io = null;
 
+    // Export directory
+    File dir = null;
+
+    InputOutput io = null;
+    
+    
     @Override
     public void actionPerformed(ActionEvent e) {
         // Create the file chooser
         Context contextToOpen = getContext();
 
         if (contextToOpen != null) {
+
+            cousinGenWebPanel = new CousinsGenWebPanel(contextToOpen);
+            cousinGenWebPanelDescriptor = new DialogDescriptor(
+                    cousinGenWebPanel,
+                    NbBundle.getMessage(CousinsGenWebPanel.class, "CTL_CousinsGenWebAction"),
+                    true,
+                    new CousinGenWebPanelDescriptorActionListener());
+
             Dialog dialog = DialogDisplayer.getDefault().createDialog(cousinGenWebPanelDescriptor);
             dialog.setVisible(true);
             dialog.toFront();
 
             if (cousinGenWebPanelDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
+                if (dir == null) {
+                    NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(CousinsGenWebAction.class, "ERR_EmptyDirectory"), NotifyDescriptor.INFORMATION_MESSAGE);
+                    DialogDisplayer.getDefault().notify(nd);
+                    return;
+                }
+                showWaitCursor();
                 Gedcom myGedcom = contextToOpen.getGedcom();
                 Collection<Indi> indis = (Collection<Indi>) (myGedcom.getEntities(Gedcom.INDI));
                 io = IOProvider.getDefault().getIO(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.TabTitle") + " " + myGedcom.getName(), true);
@@ -109,7 +128,7 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
                     String p = ps.next();
 
                     try {
-                        export(p, primary, file);
+                        export(p, primary, dir);
                     } catch (IOException ioe) {
                         System.err.println("IO Exception!");
                         ioe.printStackTrace();
@@ -118,11 +137,40 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
                 io.getOut().println(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.End"));
                 io.getOut().close();
                 io.getErr().close();
+                hideWaitCursor();
+                NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.End"), NotifyDescriptor.INFORMATION_MESSAGE);
+                DialogDisplayer.getDefault().notify(nd);
 
             }
         }
     }
 
+    private static void showWaitCursor() {
+        Mutex.EVENT.readAccess(new Runnable() {
+
+            @Override
+            public void run() {
+                JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
+                mainWindow.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+                mainWindow.getGlassPane().setVisible(true);
+                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(CousinsGenWebAction.class, "CousinsGenWebAction.Start"));
+            }
+        });
+    }
+
+    private static void hideWaitCursor() {
+        Mutex.EVENT.readAccess(new Runnable() {
+
+            @Override
+            public void run() {
+                StatusDisplayer.getDefault().setStatusText("");  //NOI18N
+                JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
+                mainWindow.getGlassPane().setVisible(false);
+                mainWindow.getGlassPane().setCursor(null);
+            }
+        });
+    }
+    
     /**
      * Analyze an individual
      */
@@ -134,11 +182,8 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
             return;
         }
 
-        // loop over all dates in indi
-        for (Iterator<PropertyPlace> places = indi.getProperties(PropertyPlace.class).iterator(); places.hasNext();) {
-
-            PropertyPlace place = places.next();
-
+        // loop over all places in indi
+        for (PropertyPlace place : indi.getProperties(PropertyPlace.class)) {
             String dept = place.getJurisdiction(depPos);
             if (dept == null) {
                 continue;
@@ -156,7 +201,6 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
             }
             // keep it
             keep(name, jurisdiction, dept, primary);
-
         }
     }
 
@@ -189,8 +233,8 @@ public final class CousinsGenWebAction extends AbstractAncestrisContextAction {
         return result;
     }
 
-    private void export(String dept, Map<String, Object> primary, File dir) throws IOException {
-        File file = new File(dir, dept + ".csv");
+    private void export(String dept, Map<String, Object> primary, File directory) throws IOException {
+        File file = new File(directory, dept + ".csv");
         BufferedWriter out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
 
         io.getOut().println(("DepartmentJur") + " : " + dept);

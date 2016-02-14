@@ -6,6 +6,8 @@
 package ancestris.modules.exports.cousinsgenweb;
 
 import ancestris.util.swing.FileChooserBuilder;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import java.io.File;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -18,6 +20,8 @@ import org.openide.util.NbPreferences;
  */
 public class CousinsGenWebPanel extends javax.swing.JPanel {
 
+    private Context context;
+
     private File file = null;
     private int cityPos = 0;
     private int depLength = 0;
@@ -26,7 +30,8 @@ public class CousinsGenWebPanel extends javax.swing.JPanel {
     /**
      * Creates new form CousinsGenWebPanel
      */
-    public CousinsGenWebPanel() {
+    public CousinsGenWebPanel(Context context) {
+        this.context = context;
         initComponents();
         cityPos = Integer.parseInt(textFieldCityPos.getText());
         depLength = Integer.parseInt(textFieldDepLength.getText());
@@ -245,10 +250,13 @@ public class CousinsGenWebPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        File file = new FileChooserBuilder(CousinsGenWebPanel.class)
+        Gedcom myGedcom = context.getGedcom();
+        String gedcomName = removeExtension(myGedcom.getName());
+
+        file = new FileChooserBuilder(CousinsGenWebPanel.class)
                 .setDirectoriesOnly(true)
                 .setDefaultBadgeProvider()
-                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle", context.getGedcom().getName()))
                 .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
                 .setFileHiding(true)
                 .showOpenDialog();
@@ -268,4 +276,24 @@ public class CousinsGenWebPanel extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldDepPos;
     private javax.swing.JTextField textFieldFileName;
     // End of variables declaration//GEN-END:variables
+
+    private String removeExtension(String filename) {
+
+        String separator = System.getProperty("file.separator");
+
+        // Remove the path upto the filename.
+        int lastSeparatorIndex = filename.lastIndexOf(separator);
+        if (lastSeparatorIndex != -1) {
+            filename = filename.substring(lastSeparatorIndex + 1);
+        }
+
+        // Remove the extension.
+        int extensionIndex = filename.lastIndexOf(".");
+        if (extensionIndex == -1) {
+            return filename;
+        }
+
+        return filename.substring(0, extensionIndex);
+    }
+
 }
