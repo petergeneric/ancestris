@@ -1,11 +1,11 @@
 package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.util.Registry;
 import java.io.File;
 import java.util.Collection;
 import java.util.Vector;
-import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -103,20 +103,20 @@ public final class ImportVisualImport extends JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(6, 6, 6)
-                                .addComponent(jButton1))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel3))
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel4))
+                    .addComponent(jLabel4)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jTextField1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -140,10 +140,18 @@ public final class ImportVisualImport extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        JFileChooser fc = new JFileChooser();
-        fc.setDialogTitle(NbBundle.getMessage(ImportVisualImport.class, "ImportVisualPanel2.fc.title"));
-        if (fc.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-            inputFile = fc.getSelectedFile();
+
+        File file = new FileChooserBuilder(ImportVisualImport.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "ImportVisualPanel2.fc.title"))
+                .setApproveText(NbBundle.getMessage(getClass(), "ImportVisualPanel2.fc.OK"))
+                .setSelectedFile(inputFile)
+                .setFileHiding(true)
+                .showOpenDialog();
+        
+        if (file != null) {
+            inputFile = file;
             String str = getInputFile().getAbsolutePath();
             jTextField1.setText(str);
             registry.put("latestFile", str);
