@@ -54,6 +54,7 @@ public final class ImportVisualImport extends JPanel {
         String latestFile = registry.get("latestFile", "");
         if (!latestFile.isEmpty()) {
             jTextField1.setText(latestFile);
+            inputFile = new File(latestFile);
         }
 
     }
