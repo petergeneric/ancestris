@@ -116,7 +116,7 @@ public abstract class Import {
     public boolean run(File fileIn, File fileOut) {
         hashIndis = new HashMap<String, ImportIndi>();
         hashFams = new HashMap<String, ImportFam>();
-        // on fait une premiere passe sur le fichier pour creer les repos
+        // Read pass. No writing is made
         try {
             EOL = getEOL(fileIn);
             input = GedcomFileReader.create(fileIn);
