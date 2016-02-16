@@ -5,6 +5,8 @@
 package ancestris.explorer;
 
 import genj.view.ViewContext;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import org.openide.util.NbBundle;
@@ -36,6 +38,9 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
 
     private transient ExplorerManager explorerManager = new ExplorerManager();
     private boolean forceClose=false;
+    
+    private Set<EntityNode> nodesList = null;   // Used to improve performance when refreshing nodes via gedcomListener (refreshes once at UIReady)
+    private boolean charging = false;
 
     public GedcomExplorerTopComponent() {
         forceClose=false;
@@ -85,6 +90,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
+     * @return 
      */
     public static synchronized GedcomExplorerTopComponent getDefault() {
         if (instance == null) {
@@ -95,6 +101,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
 
     /**
      * Obtain the GedcomExplorerTopComponent instance. Never call {@link #getDefault} directly!
+     * @return 
      */
     public static synchronized GedcomExplorerTopComponent findInstance() {
         TopComponent win = WindowManager.getDefault().findTopComponent(PREFERRED_ID);
@@ -160,7 +167,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     }
 
     private void readPropertiesImpl(java.util.Properties p) {
-//        String version = p.getProperty("version");
+        // String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
 
@@ -182,6 +189,41 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
             return new ViewContext(((ExplorerNode)contextnode).getContext());
         return null;
     }
+    
+    
+    
+    public void addToList(EntityNode en) {
+        if (nodesList == null) {
+            nodesList = new HashSet<EntityNode>();
+        }
+        nodesList.add(en);
+        if (!charging) {
+            updateList();
+        }
+    }
+    
+    public void resetList() {
+        if (nodesList != null) {
+            nodesList.clear();
+        }
+        charging = false;
+    }
+    
+    public void updateList() {
+        charging = true;
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+
+            @Override
+            public void run() {
+                for (EntityNode en : nodesList) {
+                    en.fireChanges();
+                }
+                resetList();
+            }
+        });
+        
+    }
+    
 //    ExplorerHelper explorerHelper;
 //
 //    protected void setExplorerHelper(ExplorerHelper explorerHelper) {

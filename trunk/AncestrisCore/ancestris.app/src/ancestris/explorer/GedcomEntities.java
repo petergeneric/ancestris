@@ -48,4 +48,8 @@ class GedcomEntities {
         return tag;
     }
 
+    public Gedcom getGedcom(){
+        return gedcom;
+    }
+
 }

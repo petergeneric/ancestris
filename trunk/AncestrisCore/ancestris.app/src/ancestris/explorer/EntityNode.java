@@ -35,7 +35,6 @@ class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<En
 
     public EntityNode(Entity e) {
         super(new Context(e));
-//        super(Children.LEAF, Lookups.fixed(new Object[]{e}));
         entity = e;
     }
 
@@ -56,7 +55,7 @@ class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<En
     }
 
     void fireChanges() {
-        fireDisplayNameChange(null, null);
+        fireDisplayNameChange(null, getDisplayName());
         fireIconChange();
     }
 
