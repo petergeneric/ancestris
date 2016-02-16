@@ -26,6 +26,7 @@ import org.openide.nodes.Node;
  */
 class GedcomFileChildren extends Children.Keys<Gedcom> implements GedcomRegistryListener {
 
+    @Override
     protected Node[] createNodes(Gedcom key) {
         return new Node[]{new GedcomFileNode(key)};
     }
@@ -52,10 +53,12 @@ class GedcomFileChildren extends Children.Keys<Gedcom> implements GedcomRegistry
         setKeys(gedcoms);
     }
 
+    @Override
     public void gedcomRegistered(Context context) {
         updateGedcoms();
     }
 
+    @Override
     public void gedcomUnregistered(Context context) {
         updateGedcoms();
     }

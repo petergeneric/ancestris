@@ -2,7 +2,6 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ancestris.explorer;
 
 import genj.gedcom.Entity;
@@ -22,20 +21,22 @@ import org.openide.nodes.Node;
  *
  * @author daniel
  */
-class EntityChildren extends Children.SortedArray implements GedcomListener{
+class EntityChildren extends Children.SortedArray implements GedcomListener {
 
     private final GedcomEntities entities;
 
     public EntityChildren(GedcomEntities entities) {
         super();
         this.entities = entities;
+        entities.getGedcom().addGedcomListener(this);
     }
 
     @Override
-    public Collection<Node> initCollection(){
+    public Collection<Node> initCollection() {
         ArrayList<Node> result = new ArrayList<Node>();
-        for (Entity e:entities.getEntities())
+        for (Entity e : entities.getEntities()) {
             result.add(new EntityNode(e));
+        }
         return result;
     }
 
@@ -51,81 +52,103 @@ class EntityChildren extends Children.SortedArray implements GedcomListener{
         AncestrisPlugin.unregister(this);
     }
 
-
-
-    /** gedcom callback */
+    /**
+     * gedcom callback
+     */
+    @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-      // an entity we're not looking at?
-      if (!entities.getTag().equals(entity.getTag()))
-        return;
-      add(new EntityNode[]{new EntityNode(entity)});
-
-      refresh();
-    }
-
-    /** gedcom callback */
-    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-      // an entity we're not looking at?
-      if (!entities.getTag().equals(entity.getTag()))
-        return;
-      for (Node n:getNodes()){
-          EntityNode en = (EntityNode)n;
-          if (en.getEntity().equals(entity)){
-            remove(new EntityNode[]{en});
-          }
-      }
-
-      refresh();
-    }
-
-    /** gedcom callback */
-    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-      invalidate(gedcom, property.getEntity(), added.getPath());
-    }
-
-    /** gedcom callback */
-    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-      invalidate(gedcom, property.getEntity(), property.getPath());
-    }
-
-    /** gedcom callback */
-    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-      invalidate(gedcom, property.getEntity(), new TagPath(property.getPath(), deleted.getTag()));
-    }
-
-    private void invalidate(Gedcom gedcom, Entity entity, TagPath path) {
-      if (entities.getTag().equals(Gedcom.FAM) && entity instanceof Indi) {
-          for (Node n:getNodes()){
-              EntityNode en = (EntityNode)n;
-              Indi i = (Indi)entity;
-              Fam f = (Fam)en.getEntity();
-              if (f.getSpouses().contains(i))
-                en.fireChanges();
-
-          }
-      }
-      if (!entities.getTag().equals(entity.getTag()))
+        // an entity we're not looking at?
+        if (!entities.getTag().equals(entity.getTag())) {
             return;
-      for (Node n:getNodes()){
-          EntityNode en = (EntityNode)n;
-          if (en.getEntity().equals(entity)){
-              en.fireChanges();
-          }
-      }
-      refresh();
-//      // a path we're interested in?
-//      TagPath[] paths = mode.getPaths();
-//      for (int i=0;i<paths.length;i++) {
-//        if (paths[i].equals(path)) {
-//          for (int j=0;j<rows.size();j++) {
-//            if (rows.get(j)==entity) {
-//                fireRowsChanged(j,j,i);
-//                return;
-//            }
-//          }
-//        }
-//      }
-      // done
+        }
+        add(new EntityNode[]{new EntityNode(entity)});
+
+        Node node = this.getNode();
+        if (node instanceof EntitiesNode) {
+            EntitiesNode esn = (EntitiesNode) node;
+            esn.updateDisplay();
+        }
+
+        refresh();
+    }
+
+    /**
+     * gedcom callback
+     */
+    @Override
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        // an entity we're not looking at?
+        if (!entities.getTag().equals(entity.getTag())) {
+            return;
+        }
+        for (Node n : getNodes()) {
+            EntityNode en = (EntityNode) n;
+            if (en.getEntity().equals(entity)) {
+                remove(new EntityNode[]{en});
+            }
+        }
+
+        Node node = this.getNode();
+        if (node instanceof EntitiesNode) {
+            EntitiesNode esn = (EntitiesNode) node;
+            esn.updateDisplay();
+        }
+
+        refresh();
+    }
+
+    /**
+     * gedcom callback
+     */
+    @Override
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        invalidate(gedcom, property.getEntity(), added.getPath());
+        
+    }
+
+    /**
+     * gedcom callback
+     */
+    @Override
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        invalidate(gedcom, property.getEntity(), property.getPath());
+    }
+
+    /**
+     * gedcom callback
+     */
+    @Override
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        invalidate(gedcom, property.getEntity(), new TagPath(property.getPath(), deleted.getTag()));
+    }
+
+    
+    
+    
+    private void invalidate(Gedcom gedcom, Entity entity, TagPath path) {
+        if (entities.getTag().equals(Gedcom.FAM) && entity instanceof Indi) {
+            for (Node n : getNodes()) {
+                EntityNode en = (EntityNode) n;
+                Indi i = (Indi) entity;
+                Fam f = (Fam) en.getEntity();
+                if (f.getSpouses().contains(i)) {
+                    GedcomExplorerTopComponent.getDefault().addToList(en);
+                    //en.fireChanges();
+                }
+
+            }
+        }
+        if (!entities.getTag().equals(entity.getTag())) {
+            return;
+        }
+        for (Node n : getNodes()) {
+            EntityNode en = (EntityNode) n;
+            if (en.getEntity().equals(entity)) {
+                GedcomExplorerTopComponent.getDefault().addToList(en);
+                //en.fireChanges();
+            }
+        }
+        //refresh();
     }
 
 }
