@@ -135,12 +135,15 @@ public abstract class Import {
             }
         } catch (FileNotFoundException e1) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
+            //Exceptions.printStackTrace(e1);
             return false;
         } catch (IOException ex) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
+            //Exceptions.printStackTrace(ex);
             return false;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
+            //Exceptions.printStackTrace(e);
             return false;
         }
 
@@ -191,6 +194,7 @@ public abstract class Import {
             return false;
         }
 
+        console.println("=========== Completed =============");
         return true;
     }
 
@@ -402,7 +406,7 @@ public abstract class Import {
         }
 
         public String getNextLine(boolean consume) throws IOException {
-            readLine(false);
+            readLine(false, false);
             theLine = line;
             if (level <= 0) {
                 path = new TagPath(tag);
