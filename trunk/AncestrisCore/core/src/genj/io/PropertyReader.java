@@ -120,7 +120,7 @@ public class PropertyReader {
       MultiLineProperty.Collector collector = ((MultiLineProperty)prop).getLineCollector();
       while (true) {
         // check next line
-        if (!readLine(false))
+        if (!readLine(false, true))
           break;
         // collect as far as we can
         if (level<currentLevel+1 || !collector.append(level-currentLevel, tag, value))
@@ -137,7 +137,7 @@ public class PropertyReader {
     while (true) {
       
       // read next &parse
-      if (!readLine(false))
+      if (!readLine(false, true))
         return;
       
       // wrong level now?
@@ -210,7 +210,7 @@ public class PropertyReader {
   /**
    * read a line
    */
-  protected boolean readLine(boolean consume) throws IOException {
+  protected boolean readLine(boolean consume, boolean stopIfException) throws IOException {
     
     // need a line?
     if (line==null) {
@@ -221,6 +221,9 @@ public class PropertyReader {
       // grab it ignoring empty lines
       while (line==null) {
         line = in.readLine();
+//        if (stopIfException) {
+//            System.out.println("DEBUG reading - line = " + line);
+//        }
         if (line==null) 
           return false;
         lines ++;
@@ -245,9 +248,17 @@ public class PropertyReader {
             level = Integer.parseInt(tokens.nextToken(),10);
           }
         } catch (StringIndexOutOfBoundsException sioobe) {
-          throw new GedcomFormatException(RESOURCES.getString("read.error.emptyline"), lines);
+            if (stopIfException) {
+                throw new GedcomFormatException(RESOURCES.getString("read.error.emptyline"), lines);
+            } else {
+                return false;
+            }
         } catch (NumberFormatException nfe) {
-          throw new GedcomFormatException(RESOURCES.getString("read.error.nonumber"), lines);
+            if (stopIfException) {
+                throw new GedcomFormatException(RESOURCES.getString("read.error.nonumber"), lines);
+            } else {
+                return false;
+            }
         }
   
         // .. tag (?)

@@ -41,8 +41,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -457,7 +455,7 @@ public class GedcomReaderFactory {
             /** read one entity */
             Entity readEntity() throws IOException {
 
-                if (!readLine(true)) {
+                if (!readLine(true, true)) {
                     throw new GedcomFormatException(RESOURCES.getString("read.error.norecord"), lines);
                 }
 
@@ -468,7 +466,7 @@ public class GedcomReaderFactory {
                 // Trailer? we're done
                 if (tag.equals("TRLR")) {
                     // consume any trailing blanks
-                    if (readLine(true)) {
+                    if (readLine(true, true)) {
                         throw new GedcomFormatException(RESOURCES.getString("read.error.aftertrlr"), lines);
                     }
                     return null;
