@@ -202,8 +202,7 @@ text-align: left;
 
 #testaff($fams)
 #if ($isShown!=0)
-  #set($mariageexists=$fams[0].getProperty("MARR"))
-  #if(($fams.size()>=1) && ($mariageexists))
+  #if(($fams.size()>=1) && ($fams[0].getProperty("MARR")))
     <br><span class="underline_shadow">$fams[0].getProperty("MARR").getName()</span> :
   #else
     <br> 
@@ -217,7 +216,7 @@ text-align: left;
       #set($naiss_conjoint=$conjoint.getProperty("BIRT"))
       #set($dec_conjoint=$conjoint.getProperty("DEAT"))
       <li>
-      #if ($mariage)
+      #if (($mariage) && ($conjoint.Id))
         $!conjoint.getProperty("NAME") ($conjoint.Id)</span><br>
         <span class="italic">$!mariage.getProperty("DATE")</span> 
         - <span class="italic">$!mariage.getProperty("PLAC")</span>
