@@ -40,7 +40,7 @@ public class PropertySimpleValue extends Property {
      */
     public PropertySimpleValue(String tag, String value) {
         super(tag);
-        this.value = value;
+        this.value = trim(value);
     }
 
     /**
@@ -65,6 +65,6 @@ public class PropertySimpleValue extends Property {
     }
 
     protected String trim(String value) {
-        return value;
+        return value.replaceAll("\\r\\n|\\r|\\n", " ");
     }
 } //PropertySimpleValue
