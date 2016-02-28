@@ -42,10 +42,16 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         Object[] toArray = gedcomPlacesMap.keySet().toArray();
         String key = (String) toArray[row];
         if (key.split(PropertyPlace.JURISDICTION_SEPARATOR).length > column) {
-            return key.split(PropertyPlace.JURISDICTION_SEPARATOR)[column];
+            String str = key.split(PropertyPlace.JURISDICTION_SEPARATOR)[column];
+            return str.trim();
         } else {
             return "";
         }
+    }
+
+    @Override
+    public Class getColumnClass(int column) {
+        return String.class;
     }
 
     @Override

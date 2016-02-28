@@ -66,7 +66,7 @@ public class EditorTable extends JTable {
                 for (RowSorter.SortKey key : sortKeys) {
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortIndex", index++);
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortOrder", key.getSortOrder().toString());
-                    logger.log(Level.INFO, "sorterChanged SORTED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
+                    logger.log(Level.FINE, "sorterChanged SORTED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
                 }
             } else if (type.equals(RowSorterEvent.Type.SORT_ORDER_CHANGED)) {
                 List<RowSorter.SortKey> sortKeys = rse.getSource().getSortKeys();
@@ -74,7 +74,7 @@ public class EditorTable extends JTable {
                 for (RowSorter.SortKey key : sortKeys) {
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortIndex", index++);
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortOrder", key.getSortOrder().toString());
-                    logger.log(Level.INFO, "sorterChanged SORT_ORDER_CHANGED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
+                    logger.log(Level.FINE, "sorterChanged SORT_ORDER_CHANGED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
                 }
             }
         }
@@ -115,7 +115,7 @@ public class EditorTable extends JTable {
         for (int index = 0; index < getColumnModel().getColumnCount(); index++) {
             if (sortIndexs[index] > -1) {
                 sortKeys.add(new RowSorter.SortKey(sortIndexs[index], sortOrders[index]));
-                logger.log(Level.INFO, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, sortIndexs[index], sortOrders[index]});
+                logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, sortIndexs[index], sortOrders[index]});
             }
         }
 
