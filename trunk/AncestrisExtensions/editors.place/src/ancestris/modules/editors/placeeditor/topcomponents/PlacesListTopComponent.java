@@ -3,7 +3,6 @@ package ancestris.modules.editors.placeeditor.topcomponents;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.modules.editors.placeeditor.panels.PlaceEditorPanel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
-import ancestris.modules.geo.GeoListTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -31,7 +30,7 @@ import org.openide.windows.RetainLocation;
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.modules.editors.placeeditor.topcomponents//PlaceList//EN",
-autostore = false)
+        autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider {
@@ -48,9 +47,9 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     int currentRowIndex = -1;
 
     public PlacesListTopComponent() {
-        
+
     }
-    
+
     @Override
     public Image getImageIcon() {
         return ImageUtilities.loadImage(ICON_PATH, true);
@@ -98,10 +97,22 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
 
+        // Set sorter 
+        // FL: 2016-02-28 : for some unknown reason, default row sorter sorts strings excluding spaces... Using string sorter below solves the issue.
+        // Returning getColumnClass as String does not solve the issue (!?!?)
         placeTableSorter = new TableRowSorter<TableModel>(placeTable.getModel());
+        Comparator strComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
+            }
+        };
+        for (int c = 0; c < placeTable.getModel().getColumnCount(); c++) {
+            placeTableSorter.setComparator(c, strComparator);
+        }
         placeTable.setRowSorter(placeTableSorter);
+        
         placeTable.setID(PlacesListTopComponent.class.getName());
-
 
     }
 
