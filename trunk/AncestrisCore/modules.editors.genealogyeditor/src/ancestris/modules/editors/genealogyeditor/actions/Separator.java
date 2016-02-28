@@ -3,7 +3,6 @@ package ancestris.modules.editors.genealogyeditor.actions;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import javax.swing.AbstractAction;
 import javax.swing.JSeparator;
 import org.openide.awt.ActionID;
@@ -22,7 +21,7 @@ import org.openide.util.actions.Presenter;
         displayName = ""
 )
 @ActionReferences({
-    @ActionReference(path = "Menu/File", position = 3333),
+    //@ActionReference(path = "Menu/File", position = 3333),
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 150)
 })
 @Messages("CTL_Separator=Separator")
