@@ -1,4 +1,5 @@
 Manifest-Version: 1
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.commonAncestor
 OpenIDE-Module-Layer: ancestris/modules/commonAncestor/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/commonAncestor/Bundle.properties
