@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.gedcom.searchduplicates
 OpenIDE-Module-Layer: ancestris/modules/gedcom/searchduplicates/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/gedcom/searchduplicates/Bundle.properties
