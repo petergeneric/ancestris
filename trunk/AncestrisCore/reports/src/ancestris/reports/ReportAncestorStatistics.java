@@ -32,11 +32,13 @@ import java.util.List;
 import java.util.Stack;
 import java.util.TreeMap;
 import java.util.Vector;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * This report prints the number of ancestors found, coverage factor,
  * implex factor and coefficient of consanguinity.
  */
+@ServiceProvider(service=Report.class)
 public class ReportAncestorStatistics extends Report {
     private static final boolean DEBUG = false;
     private static final String STACK_SEPARATOR = "\n";
