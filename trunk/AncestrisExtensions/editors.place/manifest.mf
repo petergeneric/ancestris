@@ -5,5 +5,5 @@ OpenIDE-Module-Localizing-Bundle: ancestris/modules/editors/placeeditor/Bundle.p
 OpenIDE-Module-Requires: 
   ancestris.api.place,
   org.openide.windows.WindowManager
-OpenIDE-Module-Specification-Version: 0.1
+OpenIDE-Module-Specification-Version: 0.9.0
 
