@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
+AutoUpdate-Show-In-Client: true
 OpenIDE-Module: ancestris.modules.flashlist
 OpenIDE-Module-Layer: ancestris/modules/flashlist/layer.xml
 OpenIDE-Module-Localizing-Bundle: ancestris/modules/flashlist/Bundle.properties
