@@ -165,7 +165,9 @@ public class App {
 
                 
                 //UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
+                
                 //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                
                 //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
                 
                 // Patch up Ancestris menu for Mac if applicable
