@@ -1,5 +1,6 @@
 package ancestris.modules.editors.placeeditor.topcomponents;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.modules.editors.placeeditor.panels.PlaceEditorPanel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
@@ -264,7 +265,8 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
     @Override
     public void componentClosed() {
-        // TODO add custom code on component closing
+        AncestrisPlugin.unregister(this);
+
     }
 
     public void writeProperties(java.util.Properties p) {
