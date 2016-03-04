@@ -1,6 +1,5 @@
 package ancestris.modules.editors.placeeditor.topcomponents;
 
-import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
 import ancestris.modules.editors.placeeditor.panels.PlaceEditorPanel;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
@@ -65,6 +64,11 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     @Override
     public void setToolTipText() {
         setToolTipText(NbBundle.getMessage(getClass(), "HINT_PlacesTableTopComponent"));
+    }
+
+    @Override
+    public boolean createPanel() {
+        return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
     }
 
     public PlacesListTopComponent(final Gedcom gedcom) {
@@ -264,11 +268,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     }
 
     @Override
-    public void componentClosed() {
-        AncestrisPlugin.unregister(this);
-
-    }
-
     public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
@@ -276,6 +275,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         // TODO store your settings
     }
 
+    @Override
     public void readProperties(java.util.Properties p) {
         String version = p.getProperty("version");
         // TODO read your settings according to their version
