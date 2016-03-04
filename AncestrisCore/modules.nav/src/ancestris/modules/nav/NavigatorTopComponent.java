@@ -58,7 +58,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
 
     @Override
     public Image getImageIcon() {
-        return ImageUtilities.loadImage("ancestris/modules/nav/NavIcon.png", true);
+        return ImageUtilities.loadImage("ancestris/modules/nav/NaviconPlus.png", true);
     }
 
     @Override
