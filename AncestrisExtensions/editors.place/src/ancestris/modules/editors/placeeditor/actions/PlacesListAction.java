@@ -3,15 +3,11 @@ package ancestris.modules.editors.placeeditor.actions;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.editors.placeeditor.topcomponents.PlacesListTopComponent;
 import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
 import java.awt.event.ActionEvent;
-import java.util.Set;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
-import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 @ActionID(id = "ancestris.modules.editors.placeeditor.actions.PlaceListAction", category = "Window")
 @ActionRegistration(
@@ -44,14 +40,4 @@ public final class PlacesListAction extends AbstractAncestrisContextAction {
         }
     }
     
-    private TopComponent findTopComponent(Gedcom gedcom) {
-        Set<TopComponent> openTopComponents = WindowManager.getDefault().getRegistry().getOpened();
-        for (TopComponent tc : openTopComponents) {
-            if (tc.getLookup().lookup(Gedcom.class) == gedcom) {
-                return tc;
-            }
-        }
-
-        return null;
-    }
 }
