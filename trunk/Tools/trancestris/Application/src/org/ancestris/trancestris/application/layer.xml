@@ -148,5 +148,16 @@
             </file>
         </folder>
     </folder>
+    <folder name="Shortcuts">
+        <!-- set up a shortcut key for executing an Action:
+          Ctrl + Shift + Equals on Linux and MS Windows, but Command + Shift + Equals on a Mac
+        -->
+        <file name="D-Z.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-UndoAction.instance"/>
+        </file>
+        <file name="D-Y.shadow">
+            <attr name="originalFile" stringvalue="Actions/Edit/org-openide-actions-RedoAction.instance"/>
+        </file>
+  </folder>    
 
 </filesystem>
