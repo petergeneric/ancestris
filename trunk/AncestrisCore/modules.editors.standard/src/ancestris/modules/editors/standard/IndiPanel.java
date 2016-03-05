@@ -1743,7 +1743,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean privateTagFound = false;
         
         // Title
-        title.setText(indi.getFirstName() + " " + indi.getLastName());
+        title.setText("<html> <font color=\"red\"><b>/!\\ TRAVAUX EN COURS /!\\</b></font> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
