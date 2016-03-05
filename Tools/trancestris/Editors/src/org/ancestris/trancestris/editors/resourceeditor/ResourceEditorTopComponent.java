@@ -17,10 +17,9 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.ListModel;
 import javax.swing.ToolTipManager;
-import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataListener;
+import javax.swing.event.UndoableEditEvent;
 import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import org.ancestris.trancestris.resources.ResourceFile;
 import org.ancestris.trancestris.resources.ZipDirectory;
@@ -143,49 +142,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         }
     }
 
-    class MyUndoRedo implements UndoRedo {
-
-        @Override
-        public boolean canUndo() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public boolean canRedo() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void undo() throws CannotUndoException {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void redo() throws CannotRedoException {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void addChangeListener(ChangeListener cl) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void removeChangeListener(ChangeListener cl) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public String getUndoPresentationName() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public String getRedoPresentationName() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-    }
-
     class MyAbstractUndoableEdit extends AbstractUndoableEdit {
 
         private final int index;
@@ -214,6 +170,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             getResourceFile().setLineTranslation(index, oldValue);
             getResourceFileView().setSelectedIndex(index);
             getResourceFileView().ensureIndexIsVisible(index);
+            textAreaTranslation.setText(oldValue);
             undoRedoEvent = false;
         }
 
@@ -223,6 +180,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             getResourceFile().setLineTranslation(index, newValue);
             getResourceFileView().setSelectedIndex(index);
             getResourceFileView().ensureIndexIsVisible(index);
+            textAreaTranslation.setText(newValue);
             undoRedoEvent = false;
         }
     }
@@ -406,7 +364,10 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             String newValue = textAreaTranslation.getText();
             logger.log(Level.INFO, "Save translation for index {0}", i);
             getResourceFile().setLineTranslation(i, newValue);
-            manager.addEdit(new MyAbstractUndoableEdit(i, oldValue, newValue));
+            MyAbstractUndoableEdit ue = new MyAbstractUndoableEdit(i, oldValue, newValue);
+            if (!undoRedoEvent) {
+                manager.undoableEditHappened(new UndoableEditEvent(this, ue));
+            }
         }
 
         // Search for the first next non translated line
@@ -643,4 +604,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
     public UndoRedo getUndoRedo() {
         return manager;
     }
+
+
 }
