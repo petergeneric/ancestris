@@ -49,7 +49,7 @@
             </file>
         </folder-->
 
-        <file name="UndoRedo_hidden"/>
+        <!-- <file name="UndoRedo_hidden"/> -->
     </folder>
     <folder name="Windows2">
         <folder name="Components">
