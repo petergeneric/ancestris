@@ -126,11 +126,15 @@ public class DateBean extends PropertyBean {
 
     PropertyDate p = (PropertyDate)property;
     
-    p.setValue(format, date1.getValue(), date2.getValue(), phrase.getText());
+    setValueToProperty(p);
 
     // Done
   }
 
+  public void setValueToProperty(PropertyDate pDate) {
+      pDate.setValue(format, date1.getValue(), date2.getValue(), phrase.getText());
+  }
+  
   /**
    * Setup format
    */
