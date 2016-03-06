@@ -72,6 +72,7 @@ public class SourceChooser extends javax.swing.JPanel {
     private Gedcom gedcom = null;
     private File mainFile = null;
     private Image mainImage = null;
+    private SourceWrapper mainSource = null;
     private String mainTitle = null;
     private String mainText = null;
     private JButton okButton = null;
@@ -82,10 +83,11 @@ public class SourceChooser extends javax.swing.JPanel {
     /**
      * Creates new form SourceChooser
      */
-    public SourceChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton, JButton cancelButton) {
+    public SourceChooser(Gedcom gedcom, File file, Image image, String title, SourceWrapper source, JButton okButton, JButton cancelButton) {
         this.gedcom = gedcom;
         mainFile = file;
         mainImage = image;
+        mainSource = source;
         mainTitle = title;
         mainText = "";
         this.okButton = okButton;
@@ -97,6 +99,7 @@ public class SourceChooser extends javax.swing.JPanel {
             @Override
             public void run() {
                 displaySourceThumbs();
+                selectSource(mainSource);
             }
         };
         sourceThread.setName("Source reading thread");
@@ -120,6 +123,29 @@ public class SourceChooser extends javax.swing.JPanel {
         
     }
 
+    private void selectSource(SourceWrapper source) {
+        SourceThumb selectedSource = null;
+        for (SourceThumb sourcei : allSource) {
+            if (sourcei.entity == null && source == null) {
+                selectedSource = sourcei;
+                break;
+            }
+            if (sourcei.entity != null && source != null && sourcei.entity.equals(source.getTargetSource())) {
+                selectedSource = sourcei;
+                break;
+            }
+        }
+        if (selectedSource != null) {
+            final SourceThumb sourcei = selectedSource;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    sourceList.setSelectedValue(sourcei, true);
+                }
+            });
+        }
+    }
+    
 
     private void displayIconAndTitle() {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
@@ -565,9 +591,11 @@ public class SourceChooser extends javax.swing.JPanel {
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
+                setBorder(BorderFactory.createRaisedBevelBorder());
             } else {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
+                setBorder(BorderFactory.createEmptyBorder());
             }
 
             setEnabled(list.isEnabled());

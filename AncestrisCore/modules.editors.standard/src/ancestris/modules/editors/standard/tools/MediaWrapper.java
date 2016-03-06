@@ -295,5 +295,9 @@ public class MediaWrapper {
         this.title = str;
     }
 
+    public Entity getTargetMedia() {
+        return targetMedia;
+    }
+
 
 }

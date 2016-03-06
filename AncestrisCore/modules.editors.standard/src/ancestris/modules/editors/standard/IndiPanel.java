@@ -38,7 +38,6 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
-import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.util.Registry;
@@ -72,6 +71,8 @@ import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
 import javax.swing.SwingConstants;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
@@ -124,40 +125,31 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private static Map<String, EventUsage> eventUsages = null;
 
+    private ImagePanel imagePanel = null;
     
     // Media
     private List<MediaWrapper> mediaSet = null;
     private int mediaIndex = 0;
-    private boolean isBusyMedia = false;
     private List<MediaWrapper> mediaRemovedSet = null;
+    private boolean isBusyMedia = false;
     
     // Notes
     private List<NoteWrapper> noteSet = null;
     private int noteIndex = 0;
-    private boolean isBusyNote = false;
     private List<NoteWrapper> noteRemovedSet = null;
+    private boolean isBusyNote = false;
     
     // Events
     private List<EventWrapper> eventSet = null;
     private int eventIndex = 0;
-    private boolean isBusyEvent = false;
     private List<EventWrapper> eventRemovedSet = null;
-    
-    // Event Notes
-    private List<NoteWrapper> eventNoteSet = null;
-    private int eventNoteIndex = 0;
+    private boolean isBusyEvent = false;
     private boolean isBusyEventNote = false;
-    private List<NoteWrapper> eventNoteRemovedSet = null;
-    
-    // Event Sources with Media and Text and Repo
-    private List<SourceWrapper> eventSourceSet = null;
-    private int eventSourceIndex = 0;
     private boolean isBusyEventSource = false;
-    private List<SourceWrapper> eventSourceRemovedSet = null;
-    private ImagePanel imagePanel = null;
     
     // Associations
     private List<AssoWrapper> assoSet = null;
+    private List<AssoWrapper> assoRemovedSet = null;
 
     
     /**
@@ -1353,10 +1345,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (isBusyEventNote) {
             return;
         }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
         int i = scrollNotesEvent.getValue();
-        if (eventNoteSet != null && !eventNoteSet.isEmpty() && i >= 0 && i < eventNoteSet.size() && i != eventNoteIndex) {
-            eventNoteIndex = scrollNotesEvent.getValue();
-            displayEventNote();
+        if (event.eventNoteSet != null && !event.eventNoteSet.isEmpty() && i >= 0 && i < event.eventNoteSet.size() && i != event.eventNoteIndex) {
+            event.eventNoteIndex = scrollNotesEvent.getValue();
+            displayEventNote(event);
         }
     }//GEN-LAST:event_scrollNotesEventAdjustmentValueChanged
 
@@ -1413,24 +1409,32 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_eventNoteMouseWheelMoved
 
     private void addNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addNoteEventButtonActionPerformed
-        if (chooseEventNote(eventNoteSet.size())) {
-            displayEventNote();
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseEventNote(event, event.eventNoteSet.size())) {
+            displayEventNote(event);
             eventNote.requestFocus();
         }
     }//GEN-LAST:event_addNoteEventButtonActionPerformed
 
     private void delNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delNoteEventButtonActionPerformed
-        if (eventNoteSet != null && !eventNoteSet.isEmpty() && (eventNoteIndex >= 0) && (eventNoteIndex < eventNoteSet.size())) {
-            NoteWrapper note = eventNoteSet.get(eventNoteIndex);
-            eventNoteRemovedSet.add(note);
-            eventNoteSet.remove(eventNoteIndex);
-            eventNoteIndex--;
-            if (eventNoteIndex < 0) {
-                eventNoteIndex = 0;
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventNoteSet != null && !event.eventNoteSet.isEmpty() && (event.eventNoteIndex >= 0) && (event.eventNoteIndex < event.eventNoteSet.size())) {
+            NoteWrapper note = event.eventNoteSet.get(event.eventNoteIndex);
+            event.eventNoteRemovedSet.add(note);
+            event.eventNoteSet.remove(event.eventNoteIndex);
+            event.eventNoteIndex--;
+            if (event.eventNoteIndex < 0) {
+                event.eventNoteIndex = 0;
             }
             changes.setChanged(true);
         }
-        displayEventNote();
+        displayEventNote(event);
     }//GEN-LAST:event_delNoteEventButtonActionPerformed
 
     private void eventSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_eventSplitPanePropertyChange
@@ -1439,8 +1443,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_eventSplitPanePropertyChange
 
     private void addSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addSourceEventButtonActionPerformed
-        if (chooseSource(eventSourceSet.size())) {
-            displayEventSource();
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseSource(event, event.eventSourceSet.size())) {
+            displayEventSource(event);
             eventSourceTitle.requestFocus();
         }
     }//GEN-LAST:event_addSourceEventButtonActionPerformed
@@ -1449,10 +1457,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (isBusyEventSource) {
             return;
         }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
         int i = scrollSourcesEvent.getValue();
-        if (eventSourceSet != null && !eventSourceSet.isEmpty() && i >= 0 && i < eventSourceSet.size() && i != eventSourceIndex) {
-            eventSourceIndex = scrollSourcesEvent.getValue();
-            displayEventSource();
+        if (event.eventSourceSet != null && !event.eventSourceSet.isEmpty() && i >= 0 && i < event.eventSourceSet.size() && i != event.eventSourceIndex) {
+            event.eventSourceIndex = scrollSourcesEvent.getValue();
+            displayEventSource(event);
         }
     }//GEN-LAST:event_scrollSourcesEventAdjustmentValueChanged
 
@@ -1462,22 +1474,30 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_scrollSourcesEventMouseWheelMoved
 
     private void delSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delSourceEventButtonActionPerformed
-        if (eventSourceSet != null && !eventSourceSet.isEmpty() && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size())) {
-            SourceWrapper source = eventSourceSet.get(eventSourceIndex);
-            eventSourceRemovedSet.add(source);
-            eventSourceSet.remove(eventSourceIndex);
-            eventSourceIndex--;
-            if (eventSourceIndex < 0) {
-                eventSourceIndex = 0;
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventSourceSet != null && !event.eventSourceSet.isEmpty() && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size())) {
+            SourceWrapper source = event.eventSourceSet.get(event.eventSourceIndex);
+            event.eventSourceRemovedSet.add(source);
+            event.eventSourceSet.remove(event.eventSourceIndex);
+            event.eventSourceIndex--;
+            if (event.eventSourceIndex < 0) {
+                event.eventSourceIndex = 0;
             }
             changes.setChanged(true);
         }
-        displayEventSource();
+        displayEventSource(event);
     }//GEN-LAST:event_delSourceEventButtonActionPerformed
 
     private void repoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repoEditButtonActionPerformed
-        if (chooseRepository()) {
-            displayEventSource();
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseRepository(event)) {
+            displayEventSource(event);
         }
         eventSourceTitle.requestFocus();
 
@@ -1525,16 +1545,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (isBusyEventNote) {
             return;
         }
-        if (eventNoteSet != null && !eventNoteSet.isEmpty()) {
-            int i = eventNoteIndex + notches;
-            if (i >= eventNoteSet.size()) {
-                i = eventNoteSet.size() - 1;
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventNoteSet != null && !event.eventNoteSet.isEmpty()) {
+            int i = event.eventNoteIndex + notches;
+            if (i >= event.eventNoteSet.size()) {
+                i = event.eventNoteSet.size() - 1;
             }
             if (i < 0) {
                 i = 0;
             }
-            eventNoteIndex = i;
-            displayEventNote();
+            event.eventNoteIndex = i;
+            displayEventNote(event);
         }
     }
 
@@ -1542,16 +1566,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (isBusyEventSource) {
             return;
         }
-        if (eventSourceSet != null && !eventSourceSet.isEmpty()) {
-            int i = eventSourceIndex + notches;
-            if (i >= eventSourceSet.size()) {
-                i = eventSourceSet.size() - 1;
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventSourceSet != null && !event.eventSourceSet.isEmpty()) {
+            int i = event.eventSourceIndex + notches;
+            if (i >= event.eventSourceSet.size()) {
+                i = event.eventSourceSet.size() - 1;
             }
             if (i < 0) {
                 i = 0;
             }
-            eventSourceIndex = i;
-            displayEventSource();
+            event.eventSourceIndex = i;
+            displayEventSource(event);
         }
     }
     
@@ -1702,27 +1730,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
-    /**
-     * Document listener methods
-     */
-    public void insertUpdate(DocumentEvent e) {
-        if (!isBusyEvent) {
-            changes.setChanged(true);
-        }
-    }
-
-    public void removeUpdate(DocumentEvent e) {
-        if (!isBusyEvent) {
-            changes.setChanged(true);
-        }
-    }
-
-    public void changedUpdate(DocumentEvent e) {
-        if (!isBusyEvent) {
-            changes.setChanged(true);
-        }
-    }
-
     
     
 
@@ -1831,6 +1838,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             assoSet = null;
         }
         assoSet = getAssociations(indi);
+        assoRemovedSet = new ArrayList<AssoWrapper>();
         displayAssociationsComboBox();
         selectAssociation();
         
@@ -1844,17 +1852,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void addListeners() {
         firstnamesText.getDocument().addDocumentListener(this);
         lastnameText.getDocument().addDocumentListener(this);
-        
         textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
-        
         textAreaNotes.getDocument().addDocumentListener(new NoteTextListener());
         
-        eventDescription.getDocument().addDocumentListener(this);
-        // eventDate.addChangeListener(changes); // this statement is taken care of in "displayEvent"
-        eventPlace.getDocument().addDocumentListener(this);
+        eventDescription.getDocument().addDocumentListener(new EventDescriptionListener());
+        eventDate.addChangeListener(new EventDateListener());
+        eventPlace.getDocument().addDocumentListener(new EventDescriptionListener());
         
         eventNote.getDocument().addDocumentListener(new EventNoteTextListener());
-        
         EventSourceTextListener estl = new EventSourceTextListener();
         eventSourceTitle.getDocument().addDocumentListener(estl);
         eventSourceText.getDocument().addDocumentListener(estl);
@@ -1864,10 +1869,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     private void saveData() {
+        
+        // Save Indi and Sex
         indi.setName(firstnamesText.getText(), lastnameText.getText());
         //
         indi.setSex(getSex());
         //
+        
+        // Save privay
         boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         if (privateCheckBox.isSelected()) {
             if (!privateTagFound) {
@@ -1878,10 +1887,16 @@ public class IndiPanel extends Editor implements DocumentListener {
                 indi.delProperty(indi.getProperty(Options.getInstance().getPrivateTag()));
             }
         }
+        
+        // Save the rest
         //
-        putMedia();
+        saveMedia();
         //
-        putNotes();
+        saveNotes();
+        //
+        saveEvents();
+        //
+        saveAssociations();
         //.......................................
     }
 
@@ -1919,7 +1934,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    private void putMedia() {
+    private void saveMedia() {
         //mediaSet
         for (MediaWrapper media : mediaSet) {
             media.update(indi);
@@ -2015,6 +2030,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? mediaSet.get(index).getFile() : null,
                 exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
                 exists ? mediaSet.get(index).getTitle() : "",
+                exists ? mediaSet.get(index) : null, 
                 mediaButton, cancelButton
         );
         int size = mediaChooser.getNbMedia();
@@ -2091,22 +2107,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
-    private void updatePhotoTitle(int index) {
-        if (isBusyMedia) {
-            return;
-        }
-        String photoTitle = textAreaPhotos.getText();
-        if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
-            mediaSet.get(index).setTitle(photoTitle);
-            mediaIndex = index;
-        } else {
-            MediaWrapper media = new MediaWrapper(photoTitle);
-            mediaSet.add(media);
-            mediaIndex = mediaSet.size()-1;
-        }
-        changes.setChanged(true);
-    }
-
     private void createFamilyNodes(Indi indi) {
         familyTop.removeAllChildren();
         familyTop.setUserObject(new NodeWrapper(NodeWrapper.PARENTS, indi.getFamilyWhereBiologicalChild()));
@@ -2169,7 +2169,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    private void putNotes() {
+    private void saveNotes() {
         //noteSet
         for (NoteWrapper note : noteSet) {
             note.update(indi);
@@ -2213,22 +2213,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    private void updateNoteText(int index) {
-        if (isBusyNote) {
-            return;
-        }
-        String noteText = textAreaNotes.getText();
-        if ((noteSet != null) && (!noteSet.isEmpty()) && (index >= 0) && (index < noteSet.size())) {
-            noteSet.get(index).setText(noteText);
-            noteIndex = index;
-        } else {
-            NoteWrapper note = new NoteWrapper(noteText);
-            noteSet.add(note);
-            noteIndex = noteSet.size()-1;
-        }
-        changes.setChanged(true);
-    }
-
     
     private boolean chooseNote(int index) {
         boolean b = false;
@@ -2327,7 +2311,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    private void putEvents() {
+    private void saveEvents() {
         //eventSet
         for (EventWrapper event : eventSet) {
             event.update(indi);
@@ -2417,12 +2401,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
+    private EventWrapper getCurrentEvent() {
+        EventWrapper event = null;
+        if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {
+            event = eventSet.get(eventIndex);
+        }
+        return event;
+    }
     
     private void displayEvent() {
         isBusyEvent = true;
         eventDate.removeChangeListener(changes);
-        if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {        
-            EventWrapper event = eventSet.get(eventIndex);
+
+        EventWrapper event = getCurrentEvent();
+        if (event != null) {        
             
             // Title
             eventTitle.setText(event.title);
@@ -2447,39 +2439,17 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventPlace.setCaretPosition(0);
 
             // Notes
-            if (eventNoteSet != null) {
-                eventNoteSet.clear();
-                eventNoteSet = null;
-            }
-            if (eventNoteRemovedSet != null) {
-                eventNoteRemovedSet.clear();
-                eventNoteRemovedSet = null;
-            }
-            eventNoteSet = getEventNotes(event.eventProperty);
-            eventNoteRemovedSet = new ArrayList<NoteWrapper>();
             scrollNotesEvent.setMinimum(0);
             scrollNotesEvent.setBlockIncrement(1);
             scrollNotesEvent.setUnitIncrement(1);
-            eventNoteIndex = 0;
-            displayEventNote();
+            displayEventNote(event);
         
             
             // Sources - Media & Text & Repo
-            if (eventSourceSet != null) {
-                eventSourceSet.clear();
-                eventSourceSet = null;
-            }
-            if (eventSourceRemovedSet != null) {
-                eventSourceRemovedSet.clear();
-                eventSourceRemovedSet = null;
-            }
-            eventSourceSet = getEventSource(event.eventProperty);
-            eventSourceRemovedSet = new ArrayList<SourceWrapper>();
             scrollSourcesEvent.setMinimum(0);
             scrollSourcesEvent.setBlockIncrement(1);
             scrollSourcesEvent.setUnitIncrement(1);
-            eventSourceIndex = 0;
-            displayEventSource();
+            displayEventSource(event);
             
         }
         isBusyEvent = false;
@@ -2487,43 +2457,20 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-
-    private List<NoteWrapper> getEventNotes(Property event) {
-        List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
-                
-        // Look for notes attached to event
-        Property[] noteProps = event.getProperties("NOTE");
-        for (Property prop : noteProps) {
-            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
-                ret.add(new NoteWrapper(prop));
-            }
-        }
-        return ret;
-    }
+    
 
     
-    private void putEventNotes() {
-//        //noteSet
-//        for (NoteWrapper note : eventNoteSet) {
-//            note.update(indi);
-//        }
-//        for (NoteWrapper note : noteRemovedSet) {
-//            note.remove(indi);
-//        }
-    }
-
-    
-    private void displayEventNote() {
+    private void displayEventNote(EventWrapper event) {
         isBusyEventNote = true;
-        if (eventNoteSet != null && !eventNoteSet.isEmpty() && (eventNoteIndex >= 0) && (eventNoteIndex < eventNoteSet.size())) {        
-            setEventNote(eventNoteSet.get(eventNoteIndex));
+        if (event.eventNoteSet != null && !event.eventNoteSet.isEmpty() && (event.eventNoteIndex >= 0) && (event.eventNoteIndex < event.eventNoteSet.size())) {        
+            setEventNote(event, event.eventNoteSet.get(event.eventNoteIndex));
         } else {
-            setEventNote(null);
+            setEventNote(event, null);
         }
         isBusyEventNote = false;
     }
     
-    private void setEventNote(NoteWrapper note) {
+    private void setEventNote(EventWrapper event, NoteWrapper note) {
         
         String localText = "";
         
@@ -2536,41 +2483,25 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventNote.setCaretPosition(0);
         
         // Update scroll
-        scrollNotesEvent.setValues(eventNoteIndex, 1, 0, eventNoteSet.size());
-        scrollNotesEvent.setToolTipText(getScrollEventNotesLabel());
+        scrollNotesEvent.setValues(event.eventNoteIndex, 1, 0, event.eventNoteSet.size());
+        scrollNotesEvent.setToolTipText(getScrollEventNotesLabel(event));
     }
 
 
-    private String getScrollEventNotesLabel() {
-        return String.valueOf(eventNoteSet.size() > 0 ? eventNoteIndex + 1 : eventNoteIndex) + "/" + String.valueOf(eventNoteSet.size());
-    }
-
-    
-    private void updateEventNoteText(int index) {
-        if (isBusyEvent || isBusyEventNote) {
-            return;
-        }
-        String noteText = eventNote.getText();
-        if ((eventNoteSet != null) && (!eventNoteSet.isEmpty()) && (index >= 0) && (index < eventNoteSet.size())) {
-            eventNoteSet.get(index).setText(noteText);
-            eventNoteIndex = index;
-        } else {
-            NoteWrapper note = new NoteWrapper(noteText);
-            eventNoteSet.add(note);
-            eventNoteIndex = eventNoteSet.size()-1;
-        }
-        changes.setChanged(true);
+    private String getScrollEventNotesLabel(EventWrapper event) {
+        return String.valueOf(event.eventNoteSet.size() > 0 ? event.eventNoteIndex + 1 : event.eventNoteIndex) + "/" + String.valueOf(event.eventNoteSet.size());
     }
 
     
-    private boolean chooseEventNote(int index) {
+    
+    private boolean chooseEventNote(EventWrapper event, int index) {
         boolean b = false;
-        boolean exists = (eventNoteSet != null) && (!eventNoteSet.isEmpty()) && (index >= 0) && (index < eventNoteSet.size());
+        boolean exists = (event.eventNoteSet != null) && (!event.eventNoteSet.isEmpty()) && (index >= 0) && (index < event.eventNoteSet.size());
         
         JButton noteButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseNote"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { noteButton, cancelButton };
-        NoteChooser noteChooser = new NoteChooser(gedcom, exists ? eventNoteSet.get(index) : null, noteButton, cancelButton);
+        NoteChooser noteChooser = new NoteChooser(gedcom, exists ? event.eventNoteSet.get(index) : null, noteButton, cancelButton);
         int size = noteChooser.getNbNotes();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseNoteTitle", size), noteChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == noteButton) {
@@ -2578,25 +2509,25 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (noteChooser.isSelectedEntityNote()) {
                 Note entity = (Note) noteChooser.getSelectedEntity();
                 if (exists) {
-                    eventNoteSet.get(index).setTargetEntity(entity);
-                    eventNoteSet.get(index).setText(noteText);
-                    eventNoteIndex = index;
+                    event.eventNoteSet.get(index).setTargetEntity(entity);
+                    event.eventNoteSet.get(index).setText(noteText);
+                    event.eventNoteIndex = index;
                 } else {
                     NoteWrapper note = new NoteWrapper(entity);
                     note.setText(noteText);
-                    eventNoteSet.add(note);
-                    eventNoteIndex = eventNoteSet.size() - 1;
+                    event.eventNoteSet.add(note);
+                    event.eventNoteIndex = event.eventNoteSet.size() - 1;
                 }
                 changes.setChanged(true);
                 b = true;
             } else {
                 if (exists) {
-                    eventNoteSet.get(index).setText(noteText);
-                    eventNoteIndex = index;
+                    event.eventNoteSet.get(index).setText(noteText);
+                    event.eventNoteIndex = index;
                 } else {
                     NoteWrapper note = new NoteWrapper(noteText);
-                    eventNoteSet.add(note);
-                    eventNoteIndex = eventNoteSet.size() - 1;
+                    event.eventNoteSet.add(note);
+                    event.eventNoteIndex = event.eventNoteSet.size() - 1;
                 }
                 changes.setChanged(true);
                 b = true;
@@ -2611,53 +2542,18 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
-    private List<SourceWrapper> getEventSource(Property event) {
-        List<SourceWrapper> ret = new ArrayList<SourceWrapper>();
-                
-        // Look for sources attached to event (source_citation as links to a source entity)
-        for (PropertySource propSource : event.getProperties(PropertySource.class)) {
-            ret.add(new SourceWrapper(propSource));
-        }
-        // Look for sources attached to event (source_citation included underneath SOUR tag)
-        Property[] sourceProps = event.getProperties("SOUR");
-        for (Property prop : sourceProps) {
-            if (prop != null && !(prop instanceof PropertySource)) {
-                ret.add(new SourceWrapper(prop));
-            }
-        }
-        
-        // Read only ! : Look for general sources directly attached to indi
-        // Look for sources attached to indi as links to source entities
-        for (PropertySource propSource : indi.getProperties(PropertySource.class)) {
-            if (propSource != null && propSource.getParent() == ((Property) indi)) {
-                ret.add(new SourceWrapper(propSource));
-            }
-        }
-        // Look for sources attached to indi (source_citation included underneath SOUR tag)
-        sourceProps = indi.getProperties("SOUR");
-        for (Property prop : sourceProps) {
-            if (prop != null && !(prop instanceof PropertySource)) {
-                ret.add(new SourceWrapper(prop));
-            }
-        }
-        
-        return ret;
-    }
-
     
-    
-    
-    private void displayEventSource() {
+    private void displayEventSource(EventWrapper event) {
         isBusyEventSource = true;
-        if (eventSourceSet != null && !eventSourceSet.isEmpty() && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size())) {        
-            setEventSource(eventSourceSet.get(eventSourceIndex));
+        if (event.eventSourceSet != null && !event.eventSourceSet.isEmpty() && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size())) {        
+            setEventSource(event, event.eventSourceSet.get(event.eventSourceIndex));
         } else {
-            setEventSource(null);
+            setEventSource(event, null);
         }
         isBusyEventSource = false;
     }
 
-    private void setEventSource(SourceWrapper source) {
+    private void setEventSource(EventWrapper event, SourceWrapper source) {
         
         // Title
         eventSourceTitle.setText(source == null ? "" : source.getTitle());
@@ -2675,48 +2571,52 @@ public class IndiPanel extends Editor implements DocumentListener {
         repoText.setCaretPosition(0);
         
         // Update scroll
-        scrollSourcesEvent.setValues(eventSourceIndex, 1, 0, eventSourceSet.size());
-        scrollSourcesEvent.setToolTipText(getScrollEventSourcesLabel());
+        scrollSourcesEvent.setValues(event.eventSourceIndex, 1, 0, event.eventSourceSet.size());
+        scrollSourcesEvent.setToolTipText(getScrollEventSourcesLabel(event));
     }
 
-    private String getScrollEventSourcesLabel() {
-        return String.valueOf(eventSourceSet.size() > 0 ? eventSourceIndex + 1 : eventSourceIndex) + "/" + String.valueOf(eventSourceSet.size());
+    private String getScrollEventSourcesLabel(EventWrapper event) {
+        return String.valueOf(event.eventSourceSet.size() > 0 ? event.eventSourceIndex + 1 : event.eventSourceIndex) + "/" + String.valueOf(event.eventSourceSet.size());
     }
 
     public void chooseSource() {
-        if (chooseSource(eventSourceIndex)) {
-            displayEventSource();
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseSource(event, event.eventSourceIndex)) {
+            displayEventSource(event);
             eventSourceTitle.requestFocus();
         }
     }
     
-    public boolean chooseSource(int index) {
+    public boolean chooseSource(EventWrapper event, int index) {
         boolean b = false;
-        boolean exists = (eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (index >= 0) && (index < eventSourceSet.size());
+        boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
         
         JButton sourceButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseSource"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { sourceButton, fileButton, cancelButton };
-        SourceChooser sourceChooser = new SourceChooser(gedcom, imagePanel.getFile(), imagePanel.getImage(), eventSourceTitle.getText(), sourceButton, cancelButton);
+        SourceChooser sourceChooser = new SourceChooser(gedcom, imagePanel.getFile(), imagePanel.getImage(), eventSourceTitle.getText(), event.getEventSource(),sourceButton, cancelButton);
         int size = sourceChooser.getNbSource();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseSourceTitle", size), sourceChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == sourceButton) {
             if (sourceChooser.isSelectedEntitySource()) {
                 Source entity = (Source) sourceChooser.getSelectedEntity();
                 if (exists) {
-                    eventSourceSet.get(index).setTargetEntity(entity);
-                    eventSourceIndex = index;
+                    event.eventSourceSet.get(index).setTargetEntity(entity);
+                    event.eventSourceIndex = index;
                 } else {
                     SourceWrapper source = new SourceWrapper(entity);
-                    eventSourceSet.add(source);
-                    eventSourceIndex = eventSourceSet.size() - 1;
+                    event.eventSourceSet.add(source);
+                    event.eventSourceIndex = event.eventSourceSet.size() - 1;
                 }   
                 changes.setChanged(true);
                 b = true;
             }
         } else if (o == fileButton) {
-            return chooseSourceFile(index);
+            return chooseSourceFile(event, index);
         }
         
         return b;
@@ -2724,9 +2624,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     
 
     
-    private boolean chooseSourceFile(int index) {
+    private boolean chooseSourceFile(EventWrapper event, int index) {
         boolean b = false;
-        boolean exists = (eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (index >= 0) && (index < eventSourceSet.size());
+        boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
 
         File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Sources")
                 .setFilesOnly(true)
@@ -2743,12 +2643,12 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .showOpenDialog();
         if (file != null) {
             if (exists) {
-                eventSourceSet.get(index).setFile(file);
-                eventSourceIndex = index;
+                event.eventSourceSet.get(index).setFile(file);
+                event.eventSourceIndex = index;
             } else {
                 SourceWrapper source = new SourceWrapper(file);
-                eventSourceSet.add(source);
-                eventSourceIndex = eventSourceSet.size() - 1;
+                event.eventSourceSet.add(source);
+                event.eventSourceIndex = event.eventSourceSet.size() - 1;
             }
             changes.setChanged(true);
             b = true;
@@ -2757,47 +2657,26 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-
-    
-    private void updateEventSourceText(int index) {
-        if (isBusyEvent || isBusyEventSource) {
-            return;
-        }
-        String sourceText = eventSourceText.getText();
-        if ((eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (index >= 0) && (index < eventSourceSet.size())) {
-            eventSourceSet.get(index).setText(sourceText);
-            eventSourceIndex = index;
-        } else {
-            SourceWrapper source = new SourceWrapper(sourceText);
-            eventSourceSet.add(source);
-            eventSourceIndex = eventSourceSet.size()-1;
-        }
-        changes.setChanged(true);
-    }
-
-    
-    
-    
-    public boolean chooseRepository() {
+    public boolean chooseRepository(EventWrapper event) {
         boolean b = false;
         JButton repoButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseRepo"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { repoButton, cancelButton };
-        SourceWrapper source = eventSourceSet.isEmpty() ?  null : eventSourceSet.get(eventSourceIndex);
+        SourceWrapper source = event.eventSourceSet.isEmpty() ?  null : event.eventSourceSet.get(event.eventSourceIndex);
         RepoChooser repoChooser = new RepoChooser(gedcom, source, repoButton, cancelButton);
         int size = repoChooser.getNbRepos();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseRepoTitle", size), repoChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == repoButton) {
             if (repoChooser.isSelectedEntityRepo()) {
-                boolean exists = (eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size());
+                boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size());
                 if (exists) {
                     Repository entity = (Repository) repoChooser.getSelectedEntity();
-                    eventSourceSet.get(eventSourceIndex).setRepo(entity);
+                    event.eventSourceSet.get(event.eventSourceIndex).setRepo(entity);
                 } else {
                     Repository entity = (Repository) repoChooser.getSelectedEntity();
                     source = new SourceWrapper(entity);  
-                    eventSourceSet.add(source);
-                    eventSourceIndex = eventSourceSet.size()-1;
+                    event.eventSourceSet.add(source);
+                    event.eventSourceIndex = event.eventSourceSet.size()-1;
                 }
                 changes.setChanged(true);
                 b = true;
@@ -2899,16 +2778,156 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
 
+    private void saveAssociations() {
+        //assoSet
+        for (AssoWrapper asso : assoSet) {
+            asso.update(indi);
+        }
+        for (AssoWrapper asso : assoRemovedSet) {
+            asso.remove(indi);
+        }
+    }
+
+
+    
+    
+    
+
+    /**
+     * Updaters (user has made a change to in a field or control, data is stored in data structure)
+     */
+    private void updatePhotoTitle(int index) {
+        if (isBusyMedia) {
+            return;
+        }
+        String photoTitle = textAreaPhotos.getText();
+        if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
+            mediaSet.get(index).setTitle(photoTitle);
+            mediaIndex = index;
+        } else {
+            MediaWrapper media = new MediaWrapper(photoTitle);
+            mediaSet.add(media);
+            mediaIndex = mediaSet.size()-1;
+        }
+        changes.setChanged(true);
+    }
+
+    private void updateNoteText(int index) {
+        if (isBusyNote) {
+            return;
+        }
+        String noteText = textAreaNotes.getText();
+        if ((noteSet != null) && (!noteSet.isEmpty()) && (index >= 0) && (index < noteSet.size())) {
+            noteSet.get(index).setText(noteText);
+            noteIndex = index;
+        } else {
+            NoteWrapper note = new NoteWrapper(noteText);
+            noteSet.add(note);
+            noteIndex = noteSet.size()-1;
+        }
+        changes.setChanged(true);
+    }
+
+    private void updateEventDescription(DocumentEvent e) {
+        if (isBusyEvent) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event != null) {
+            event.setDescription(eventDescription.getText());
+            event.setPlace(eventPlace.getText());
+            changes.setChanged(true);
+        }
+    }
+
+    private void updateEventDate(ChangeEvent e) {
+        if (isBusyEvent) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event != null) {
+            event.setDate(eventDate);
+            //changes.setChanged(true); // already done in the bean
+        }
+    }
+
+    private void updateEventNoteText() {
+        if (isBusyEvent || isBusyEventNote) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        String noteText = eventNote.getText();
+        if ((event.eventNoteSet != null) && (!event.eventNoteSet.isEmpty()) && (event.eventNoteIndex >= 0) && (event.eventNoteIndex < event.eventNoteSet.size())) {
+            event.eventNoteSet.get(event.eventNoteIndex).setText(noteText);
+        } else {
+            NoteWrapper note = new NoteWrapper(noteText);
+            event.eventNoteSet.add(note);
+            event.eventNoteIndex = event.eventNoteSet.size()-1;
+        }
+        changes.setChanged(true);
+    }
+
+    private void updateEventSourceText() {
+        if (isBusyEvent || isBusyEventSource) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        String sourceTitle = eventSourceTitle.getText();
+        String sourceText = eventSourceText.getText();
+        if ((event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size())) {
+            event.eventSourceSet.get(event.eventSourceIndex).setTitle(sourceTitle);
+            event.eventSourceSet.get(event.eventSourceIndex).setText(sourceText);
+        } else {
+            SourceWrapper source = new SourceWrapper(sourceTitle);
+            source.setText(sourceText);
+            event.eventSourceSet.add(source);
+            event.eventSourceIndex = event.eventSourceSet.size()-1;
+        }
+        changes.setChanged(true);
+    }
 
     
     
     
     
-    //
-    //
-    //
     
     
+    
+    
+    
+    
+    /**
+     * Document listener methods for name, etc information
+     */
+    public void insertUpdate(DocumentEvent e) {
+        if (!isBusyEvent) {
+            changes.setChanged(true);
+        }
+    }
+
+    public void removeUpdate(DocumentEvent e) {
+        if (!isBusyEvent) {
+            changes.setChanged(true);
+        }
+    }
+
+    public void changedUpdate(DocumentEvent e) {
+        if (!isBusyEvent) {
+            changes.setChanged(true);
+        }
+    }
+
+    
+    
+    /**
+     * Document listener methods for Main pictures
+     */
     private class PhotoTitleListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
@@ -2925,6 +2944,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
+    /**
+     * Document listener methods for Main notes
+     */
     private class NoteTextListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
@@ -2940,36 +2962,80 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
+    /**
+     * Document listener methods for Event description, place
+     */
+    private class EventDescriptionListener implements DocumentListener {
+
+        public void insertUpdate(DocumentEvent e) {
+            updateEventDescription(e);
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updateEventDescription(e);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            updateEventDescription(e);
+        }
+    }
+
+    /**
+     * Document listener methods for Event date
+     */
+    private class EventDateListener implements ChangeListener {
+
+        public void stateChanged(ChangeEvent e) {
+            updateEventDate(e);
+        }
+
+    }
+
+    /**
+     * Document listener methods for Event notes
+     */
     private class EventNoteTextListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
-            updateEventNoteText(eventNoteIndex);
+            updateEventNoteText();
         }
 
         public void removeUpdate(DocumentEvent e) {
-            updateEventNoteText(eventNoteIndex);
+            updateEventNoteText();
         }
 
         public void changedUpdate(DocumentEvent e) {
-            updateEventNoteText(eventNoteIndex);
+            updateEventNoteText();
         }
     }
 
+    /**
+     * Document listener methods for Event source
+     */
     private class EventSourceTextListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
-            updateEventSourceText(eventSourceIndex);
+            updateEventSourceText();
         }
 
         public void removeUpdate(DocumentEvent e) {
-            updateEventSourceText(eventSourceIndex);
+            updateEventSourceText();
         }
 
         public void changedUpdate(DocumentEvent e) {
-            updateEventSourceText(eventSourceIndex);
+            updateEventSourceText();
         }
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     
     private class FamilyTreeMouseListener implements MouseListener {

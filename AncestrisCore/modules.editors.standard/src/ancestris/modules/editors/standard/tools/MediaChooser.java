@@ -52,6 +52,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -71,6 +72,7 @@ public class MediaChooser extends javax.swing.JPanel {
     
     private Gedcom gedcom = null;
     private File mainFile = null;
+    private MediaWrapper mainMedia = null;
     private Image mainImage = null;
     private Image scaledImage = null;
     private String mainTitle = null;
@@ -80,9 +82,10 @@ public class MediaChooser extends javax.swing.JPanel {
     /**
      * Creates new form MediaChooser
      */
-    public MediaChooser(Gedcom gedcom, File file, Image image, String title, JButton okButton, JButton cancelButton) {
+    public MediaChooser(Gedcom gedcom, File file, Image image, String title, MediaWrapper media, JButton okButton, JButton cancelButton) {
         this.gedcom = gedcom;
         mainFile = file;
+        mainMedia = media;
         mainImage = image;
         mainTitle = title;
         this.okButton = okButton;
@@ -94,6 +97,7 @@ public class MediaChooser extends javax.swing.JPanel {
             @Override
             public void run() {
                 displayMediaThumbs();
+                selectMedia(mainMedia);
             }
         };
         mediaThread.setName("Media reading thread");
@@ -117,6 +121,30 @@ public class MediaChooser extends javax.swing.JPanel {
         });
         
     }
+
+    private void selectMedia(MediaWrapper media) {
+        MediaThumb selectedMedia = null;
+        for (MediaThumb mediai : allMedia) {
+            if (mediai.entity == null && media == null) {
+                selectedMedia = mediai;
+                break;
+            }
+            if (mediai.entity != null && media != null && mediai.entity.equals(media.getTargetMedia())) {
+                selectedMedia = mediai;
+                break;
+            }
+        }
+        if (selectedMedia != null) {
+            final MediaThumb mediai = selectedMedia;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    mediaList.setSelectedValue(mediai, true);
+                }
+            });
+        }
+    }
+    
 
 
     private void displayIconAndTitle() {
@@ -555,9 +583,11 @@ public class MediaChooser extends javax.swing.JPanel {
             if (isSelected) {
                 setBackground(list.getSelectionBackground());
                 setForeground(list.getSelectionForeground());
+                setBorder(BorderFactory.createRaisedBevelBorder());
             } else {
                 setBackground(list.getBackground());
                 setForeground(list.getForeground());
+                setBorder(BorderFactory.createEmptyBorder());
             }
 
             setEnabled(list.isEnabled());
