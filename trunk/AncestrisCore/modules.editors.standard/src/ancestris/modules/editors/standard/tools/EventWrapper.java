@@ -12,6 +12,7 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import genj.edit.beans.DateBean;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
@@ -19,6 +20,9 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertySource;
+import java.util.ArrayList;
+import java.util.List;
 import org.openide.util.NbBundle;
 
 
@@ -44,6 +48,16 @@ public class EventWrapper {
     public String age = "";
     public PropertyPlace place = null;
     
+    // Event Notes
+    public List<NoteWrapper> eventNoteSet = null;
+    public int eventNoteIndex = 0;
+    public List<NoteWrapper> eventNoteRemovedSet = null;
+    
+    // Event Sources with Media and Text and Repo
+    public List<SourceWrapper> eventSourceSet = null;
+    public int eventSourceIndex = 0;
+    public List<SourceWrapper> eventSourceRemovedSet = null;
+    
     
     public EventWrapper(Property property, Indi indi) {
         if (property == null) {
@@ -59,11 +73,13 @@ public class EventWrapper {
         // Title and description
         this.title = this.eventLabel.getShortLabel();
         String desc = property.getDisplayValue();
-        Property type = property.getProperty("TYPE");
-        this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");
+        Property type = property.getProperty("TYPE"); 
+        this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");   // we cannot have both desc and type filled in at the same time
 
         // Event date
-        this.date = (PropertyDate) property.getProperty("DATE");
+        this.date = new PropertyDate();
+        PropertyDate tmpDate = (PropertyDate) property.getProperty("DATE");
+        this.date.setValue(tmpDate.getValue());
         try {
             if (date != null && date.getStart() != null) {
                 this.dayOfWeek = date.getStart().getDayOfWeek(true);
@@ -110,6 +126,32 @@ public class EventWrapper {
         
         // Place of event
         this.place = (PropertyPlace) property.getProperty("PLAC");
+        
+        // Notes
+            if (eventNoteSet != null) {
+            eventNoteSet.clear();
+            eventNoteSet = null;
+        }
+        if (eventNoteRemovedSet != null) {
+            eventNoteRemovedSet.clear();
+            eventNoteRemovedSet = null;
+        }
+        eventNoteSet = getEventNotes(eventProperty);
+        eventNoteRemovedSet = new ArrayList<NoteWrapper>();
+        eventNoteIndex = 0;
+        
+        // Sources - Media & Text & Repo
+        if (eventSourceSet != null) {
+            eventSourceSet.clear();
+            eventSourceSet = null;
+        }
+        if (eventSourceRemovedSet != null) {
+            eventSourceRemovedSet.clear();
+            eventSourceRemovedSet = null;
+        }
+        eventSourceSet = getEventSources(eventProperty);
+        eventSourceRemovedSet = new ArrayList<SourceWrapper>();
+        eventSourceIndex = 0;
     }
 
     public EventWrapper(Entity entity) {
@@ -120,6 +162,30 @@ public class EventWrapper {
         this.title = this.eventLabel.getShortLabel();
     }
 
+
+    public void setDescription(String text) {
+        description = text;
+    }
+
+    public void setPlace(String text) {
+        place.setValue(text);
+    }
+
+    public void setDate(DateBean dateBean) {
+        dateBean.setValueToProperty(date);
+    }
+
+    
+    public SourceWrapper getEventSource() {
+        if ((eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size())) {
+            return eventSourceSet.get(eventSourceIndex);
+        }
+        return null;
+    }
+
+    
+    
+    
     
     private boolean isValidBirthDate(Indi indi) {
         PropertyDate birthDate = indi.getBirthDate();
@@ -127,8 +193,62 @@ public class EventWrapper {
     }
 
     
+    private List<NoteWrapper> getEventNotes(Property event) {
+        List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
+                
+        // Look for notes attached to event
+        Property[] noteProps = event.getProperties("NOTE");
+        for (Property prop : noteProps) {
+            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+                ret.add(new NoteWrapper(prop));
+            }
+        }
+        return ret;
+    }
+
+    
+    private List<SourceWrapper> getEventSources(Property event) {
+        List<SourceWrapper> ret = new ArrayList<SourceWrapper>();
+                
+        // Look for sources attached to event (source_citation as links to a source entity)
+        for (PropertySource propSource : event.getProperties(PropertySource.class)) {
+            ret.add(new SourceWrapper(propSource));
+        }
+        // Look for sources attached to event (source_citation included underneath SOUR tag)
+        Property[] sourceProps = event.getProperties("SOUR");
+        for (Property prop : sourceProps) {
+            if (prop != null && !(prop instanceof PropertySource)) {
+                ret.add(new SourceWrapper(prop));
+            }
+        }
+        
+        // Read only ! : Look for general sources directly attached to indi
+        // Look for sources attached to indi as links to source entities
+        for (PropertySource propSource : hostingEntity.getProperties(PropertySource.class)) {
+            if (propSource != null && propSource.getParent() == ((Property) hostingEntity)) {
+                ret.add(new SourceWrapper(propSource));
+            }
+        }
+        // Look for sources attached to indi (source_citation included underneath SOUR tag)
+        sourceProps = hostingEntity.getProperties("SOUR");
+        for (Property prop : sourceProps) {
+            if (prop != null && !(prop instanceof PropertySource)) {
+                ret.add(new SourceWrapper(prop));
+            }
+        }
+        
+        return ret;
+    }
+
     
     
+    
+    /**
+     * Creates or Updates the events property
+     *    - Creation : separate event entity
+     *    - Update : where it is
+     * @param indi 
+     */
     public void update(Indi indi) {
         
     }

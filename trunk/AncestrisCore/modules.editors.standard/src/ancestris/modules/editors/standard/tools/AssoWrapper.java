@@ -13,7 +13,6 @@
 package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
@@ -139,5 +138,16 @@ public class AssoWrapper {
     public static AssoWrapper clone(AssoWrapper asso) {
         return new AssoWrapper(asso);
     }
+
+    public void update(Indi indi) {
+        
+    }
+
+
+
+    public void remove(Indi indi) {
+
+    }
+
     
 }
