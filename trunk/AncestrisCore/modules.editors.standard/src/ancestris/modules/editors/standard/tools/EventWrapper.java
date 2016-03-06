@@ -129,7 +129,7 @@ public class EventWrapper {
         // Place of event
         this.place = new PropertyPlace("PLAC");
         PropertyPlace tmpPlace = (PropertyPlace) property.getProperty("PLAC");
-        if (tmpDate != null) {
+        if (tmpPlace != null) {
             this.place.setValue(tmpPlace.getValue());
 
         }
