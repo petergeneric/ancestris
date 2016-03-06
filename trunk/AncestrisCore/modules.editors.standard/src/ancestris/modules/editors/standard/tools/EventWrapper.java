@@ -79,7 +79,9 @@ public class EventWrapper {
         // Event date
         this.date = new PropertyDate();
         PropertyDate tmpDate = (PropertyDate) property.getProperty("DATE");
-        this.date.setValue(tmpDate.getValue());
+        if (tmpDate != null) {
+            this.date.setValue(tmpDate.getValue());
+        }
         try {
             if (date != null && date.getStart() != null) {
                 this.dayOfWeek = date.getStart().getDayOfWeek(true);
@@ -125,7 +127,12 @@ public class EventWrapper {
         }
         
         // Place of event
-        this.place = (PropertyPlace) property.getProperty("PLAC");
+        this.place = new PropertyPlace("PLAC");
+        PropertyPlace tmpPlace = (PropertyPlace) property.getProperty("PLAC");
+        if (tmpDate != null) {
+            this.place.setValue(tmpPlace.getValue());
+
+        }
         
         // Notes
             if (eventNoteSet != null) {
