@@ -83,8 +83,8 @@ public class EventWrapper {
             this.date.setValue(tmpDate.getValue());
         }
         try {
-            if (date != null && date.getStart() != null) {
-                this.dayOfWeek = date.getStart().getDayOfWeek(true);
+            if (tmpDate != null && tmpDate.getStart() != null) {
+                this.dayOfWeek = tmpDate.getStart().getDayOfWeek(true);
             } else {
                 this.dayOfWeek = "";
             }
@@ -94,8 +94,8 @@ public class EventWrapper {
         }
 
         // Event year
-        if (this.date != null) {
-            this.eventYear = date.getStart() == null ? 0 : date.getStart().getYear();
+        if (tmpDate != null) {
+            this.eventYear = tmpDate.getStart() == null ? 0 : tmpDate.getStart().getYear();
         }
         
         //
