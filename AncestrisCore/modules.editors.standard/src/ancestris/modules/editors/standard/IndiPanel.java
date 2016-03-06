@@ -2567,7 +2567,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         imagePanel.setMedia(source != null ? source.getFile() : null);
         
         // Repositoryname
-        repoText.setText(source == null ? "" : source.getRepoName());
+        repoText.setText(source != null ? source.getRepoName() : "");
         repoText.setCaretPosition(0);
         
         // Update scroll
