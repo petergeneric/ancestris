@@ -168,17 +168,17 @@ public class FileChooserBuilder {
     private boolean badgeProvider = false;
     private File selectedFile;
 
-    private static String[] gedExtensions = {"ged"};
-    private static String[] imgExtensions = {"jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg"};
-    private static String[] sndExtensions = {"mp3", "wav", "ogg", "flac"};
-    private static String[] vidExtensions = {"mp4", "flv", "ogg", "avi", "mov", "mpeg"};
-    private static String[] pdfExtensions = {"pdf"};
-    private static String[] txtExtensions = {"txt"};
-    private static String[] docExtensions = {"txt", "doc", "odt"};
-    private static String[] csvExtensions = {"csv"};
-    private static String[] tblExtensions = {"txt", "csv"};
-    private static String[] htmExtensions = {"html"};
-    private static String[] zipExtensions = {"zip"};
+    public static String[] gedExtensions = {"ged"};
+    public static String[] imgExtensions = {"jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg"};
+    public static String[] sndExtensions = {"mp3", "wav", "ogg", "flac"};
+    public static String[] vidExtensions = {"mp4", "flv", "ogg", "avi", "mov", "mpeg"};
+    public static String[] pdfExtensions = {"pdf"};
+    public static String[] txtExtensions = {"txt"};
+    public static String[] docExtensions = {"txt", "doc", "odt"};
+    public static String[] csvExtensions = {"csv"};
+    public static String[] tblExtensions = {"txt", "csv"};
+    public static String[] htmExtensions = {"html"};
+    public static String[] zipExtensions = {"zip"};
 
     private static String DIMX = "dimX";
     private static String DIMY = "dimY";
@@ -632,7 +632,6 @@ public class FileChooserBuilder {
     
     
     ////////// public tools ////////////////////
-    
     
     /*
      * Get the extension of a file.
