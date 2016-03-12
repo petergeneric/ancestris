@@ -105,8 +105,7 @@ import org.openide.util.NbBundle;
 public class IndiPanel extends Editor implements DocumentListener {
 
     private static final Logger LOG = Logger.getLogger("ancestris.editor.indi");
-    private boolean listernersOn = false;
-    
+
     private int PHOTO_WIDTH = 160;
     private int PHOTO_HEIGHT = 186;
     private Image PHOTO_MALE = null;
@@ -116,6 +115,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     private Context context;
     private Gedcom gedcom;
     private Indi indi;
+    private boolean gedcomHasChanged = true;
+    private boolean listernersOn = false;
     
     private DefaultMutableTreeNode familyTop = null;
     private Registry registry = null;
@@ -156,6 +157,7 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Creates new form IndiPanel
      */
     public IndiPanel() {
+
         try {
             this.PHOTO_MALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_male.png"));
             this.PHOTO_FEMALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_female.png"));
@@ -179,6 +181,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         assoComboBox.addPopupMenuListener(new AssociationPopupListener());
 
+        gedcomHasChanged = true; // force data load at initialisation
     }
     
     /**
@@ -1680,6 +1683,11 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     @Override
+    public void setGedcomHasChanged(boolean flag) {
+        gedcomHasChanged = flag;
+    }
+    
+    @Override
     protected void setContextImpl(Context context) {
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
         
@@ -1689,7 +1697,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             this.indi = (Indi) entity;
             this.gedcom = indi.getGedcom();
 
-            loadData();
+            if (gedcomHasChanged) {  // do not reload data when not necessary, for performance rasons when selecting properties in Gedcom editor for instance
+                loadData();
+                gedcomHasChanged = false;
+            }
 
             if (!listernersOn) {
                 addListeners();
@@ -1706,14 +1717,19 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void selectPropertyContext(Context context) {
         if (eventSet != null) {
             Property propertyToDisplay = context.getProperty();
-            for (EventWrapper event : eventSet) {
-                if (event.eventProperty.equals(propertyToDisplay)) {
-                    int index = eventSet.indexOf(event);
-                    if (index != -1) {
-                        int row = eventTable.convertRowIndexToView(index);
-                        eventTable.setRowSelectionInterval(row, row);
+            Property ent = propertyToDisplay.getEntity();
+            while (propertyToDisplay != ent) {
+                for (EventWrapper event : eventSet) {
+                    if (event.eventProperty.equals(propertyToDisplay)) {
+                        int index = eventSet.indexOf(event);
+                        if (index != -1) {
+                            int row = eventTable.convertRowIndexToView(index);
+                            eventTable.setRowSelectionInterval(row, row);
+                            break;
+                        }
                     }
-                }
+                } // end for
+                propertyToDisplay = propertyToDisplay.getParent();
             }
         }
     }
@@ -2923,6 +2939,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
+
+
+    
+    
+    
+    
+    
+    /**
+     * ******************  CLASSES  *********************
+     */
+    
     
     
     /**
