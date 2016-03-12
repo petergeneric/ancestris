@@ -16,6 +16,7 @@ import genj.edit.beans.DateBean;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.PropertyDate;
@@ -33,30 +34,30 @@ import org.openide.util.NbBundle;
  */
 public class EventWrapper {
 
-    private Entity hostingEntity = null;     // INDI or FAM the event belongs to
-    public Property eventProperty = null;    // the event
+    private Entity hostingEntity = null;    // INDI or FAM the event belongs to
+    public Property eventProperty = null;   // the event
     
-    public EventLabel eventLabel = null;     // for table
-    public int eventYear = 0;                // for table
-    public String eventAge = "";             // for table and label
+    public EventLabel eventLabel = null;    // for table
+    public int eventYear = 0;               // for table
+    public String eventAge = "";            // for table and label
     
     public String title = "";  
-    public String description = "";
     public boolean showDesc = false;
-    public PropertyDate date = null;
+    public String description = "";         // Description (to be saved in gedcom)
+    public PropertyDate date = null;        // Date temp property (to be saved in gedcom)
+    public PropertyPlace place = null;      // Place temp property (to be saved in gedcom)
     public String dayOfWeek = null;
     public String age = "";
-    public PropertyPlace place = null;
     
     // Event Notes
-    public List<NoteWrapper> eventNoteSet = null;
+    public List<NoteWrapper> eventNoteSet = null;               // Notes to add/update (to be saved in gedcom)
+    public List<NoteWrapper> eventNoteRemovedSet = null;        // Notes to remove (to be saved in gedcom)
     public int eventNoteIndex = 0;
-    public List<NoteWrapper> eventNoteRemovedSet = null;
     
     // Event Sources with Media and Text and Repo
-    public List<SourceWrapper> eventSourceSet = null;
+    public List<SourceWrapper> eventSourceSet = null;           // Sources to add/update (to be saved in gedcom)
+    public List<SourceWrapper> eventSourceRemovedSet = null;    // Sources to remove (to be saved in gedcom)
     public int eventSourceIndex = 0;
-    public List<SourceWrapper> eventSourceRemovedSet = null;
     
     
     public EventWrapper(Property property, Indi indi) {
@@ -74,7 +75,7 @@ public class EventWrapper {
         this.title = this.eventLabel.getShortLabel();
         String desc = property.getDisplayValue();
         Property type = property.getProperty("TYPE"); 
-        this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");   // we cannot have both desc and type filled in at the same time
+        this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");   
 
         // Event date
         this.date = new PropertyDate();
@@ -255,8 +256,20 @@ public class EventWrapper {
      *    - Creation : separate event entity
      *    - Update : where it is
      * @param indi 
-     */
+     * String description = "";                             // Description (to be saved in gedcom)
+     * PropertyDate date = null;                            // Date temp property (to be saved in gedcom)
+     * PropertyPlace place = null;                          // Place temp property (to be saved in gedcom)
+     * List<NoteWrapper> eventNoteSet = null;               // Notes to add/update (to be saved in gedcom)
+     * List<NoteWrapper> eventNoteRemovedSet = null;        // Notes to remove (to be saved in gedcom)
+     * List<SourceWrapper> eventSourceSet = null;           // Sources to add/update (to be saved in gedcom)
+     * List<SourceWrapper> eventSourceRemovedSet = null;    // Sources to remove (to be saved in gedcom)
+    */ 
     public void update(Indi indi) {
+        // description : depends on property.metaProperty
+        // = property.getDisplayValue();                            // case of attributes
+        // = property.getProperty("TYPE").getDisplayValue();        // case of events
+        MetaProperty meta = this.eventProperty.getMetaProperty();
+        String str = "";
         
     }
 

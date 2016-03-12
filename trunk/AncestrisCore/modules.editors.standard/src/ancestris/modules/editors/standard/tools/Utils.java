@@ -12,6 +12,10 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import static ancestris.util.swing.FileChooserBuilder.getExtension;
+import static ancestris.util.swing.FileChooserBuilder.imgExtensions;
+import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
+import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import java.awt.Graphics2D;
@@ -40,10 +44,6 @@ public class Utils {
     private static Image IMG_VIDEO = null;
     private static Image IMG_SOUND = null;
     private static Image IMG_NO_SOURCE_MEDIA = null;
-    
-    private static String[] imgExtensions =   { "jpg", "jpeg", "png", "gif", "tiff", "bmp", "svg" };
-    private static String[] videoExtensions = { "mp4", "flv", "ogg", "avi", "mov", "mpeg" };
-    private static String[] soundExtensions = { "mp3", "wav", "ogg", "flac" };
     
     public static boolean parentTagsContains(Property prop, String tag) {
         if (prop == null) {
@@ -93,9 +93,9 @@ public class Utils {
                 //Exceptions.printStackTrace(ex);
                 image = IMG_INVALID_PHOTO;
             }
-        } else if (Arrays.asList(videoExtensions).contains(getExtension(file))) {
+        } else if (Arrays.asList(vidExtensions).contains(getExtension(file))) {
             image = IMG_VIDEO;
-        } else if (Arrays.asList(soundExtensions).contains(getExtension(file))) {
+        } else if (Arrays.asList(sndExtensions).contains(getExtension(file))) {
             image = IMG_SOUND;
         } else {
             image = IMG_INVALID_PHOTO;
@@ -108,23 +108,6 @@ public class Utils {
     }
 
 
-    /*
-     * Get the extension of a file.
-     */
-    private static String getExtension(File f) {
-        if (f == null) {
-            return "";
-        }
-        String ext = null;
-        String s = f.getName();
-        int i = s.lastIndexOf('.');
-
-        if (i > 0 && i < s.length() - 1) {
-            ext = s.substring(i + 1).toLowerCase();
-        }
-        return ext;
-    }
-    
 
     
     public static void getPropertiesRecursively(Property parent, String tag, List props) {
@@ -182,14 +165,5 @@ public class Utils {
     }
 
     
-    private static String removeExtension(String name) {
-        String ret = name;
-        int dotIndex = name.lastIndexOf('.');
-        if (dotIndex >= 0) { // to prevent exception if there is no dot
-            ret = name.substring(0, dotIndex);
-        }
-        return ret;
-    }
-
     
 }

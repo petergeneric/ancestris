@@ -108,15 +108,19 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
      */
     @Override
     public void setContextImpl(Context context) {
-        // Quit if context is null or the same 
+        // Quit if context is null  
         if (context == null || context.getEntity() == null) {
             return;
         }
-        if (this.context == context && editor != null) {
-            editor.setContext(context);
+        // Quit if context is the same  
+        if (this.context == context) {
             return;
         }
-        LOG.finer("setContextImpl context = " + context.toString());
+        // Redisplay and Quit if context is different and editor already exists
+        if (this.context != context && editor != null) {
+            editor.setContext(context);  
+            return;
+        }
         this.context = context;
         
         // Reconnect to gedcom if different
@@ -374,7 +378,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             if (!isChangeSource) {
                 commit(false);
             }
-
+            if (editor != null) {
+                editor.setGedcomHasChanged(true);   // gedcom has not yet changed but it will and this flag has to occur before WriteLockReleasedd
+            }
         }
     }
 
