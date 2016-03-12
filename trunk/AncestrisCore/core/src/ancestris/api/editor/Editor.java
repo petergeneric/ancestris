@@ -69,6 +69,10 @@ public abstract class Editor extends JPanel {
 
     protected abstract void setContextImpl(Context context);
 
+    public void setGedcomHasChanged(boolean flag) {
+    }
+    
+    
     /**
      * commit changes
      */
