@@ -115,7 +115,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private Context context;
     private Gedcom gedcom;
     private Indi indi;
-    private boolean gedcomHasChanged = true;
+    private boolean reloadData = true;
     private boolean listernersOn = false;
     
     private DefaultMutableTreeNode familyTop = null;
@@ -181,7 +181,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         assoComboBox.addPopupMenuListener(new AssociationPopupListener());
 
-        gedcomHasChanged = true; // force data load at initialisation
+        reloadData = true; // force data load at initialisation
     }
     
     /**
@@ -1684,12 +1684,17 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     @Override
     public void setGedcomHasChanged(boolean flag) {
-        gedcomHasChanged = flag;
+        reloadData = flag;
     }
     
     @Override
     protected void setContextImpl(Context context) {
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
+
+        // force data reload if entity selected is different
+        if (this.context != null && context != null && this.context != context && this.context.getEntity() != context.getEntity()) {
+            reloadData = true;
+        }
         
         this.context = context;
         Entity entity = context.getEntity();
@@ -1697,9 +1702,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             this.indi = (Indi) entity;
             this.gedcom = indi.getGedcom();
 
-            if (gedcomHasChanged) {  // do not reload data when not necessary, for performance rasons when selecting properties in Gedcom editor for instance
+            if (reloadData) {  // do not reload data when not necessary, for performance reasons when selecting properties in Gedcom editor for instance
                 loadData();
-                gedcomHasChanged = false;
+                reloadData = false;
             }
 
             if (!listernersOn) {
@@ -1713,10 +1718,21 @@ public class IndiPanel extends Editor implements DocumentListener {
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
     }
 
-    
+    /**
+     * Select event corresponding to property
+     * - if context is of different entity
+     * - if context is an event, select if
+     * TODO:
+     * - if context if a wedding type event, select it
+     * - if context is an Asso type data, select it ?
+     * - is context is a note, select it
+     * - if context is a source, select it
+     * 
+     * @param context 
+     */
     private void selectPropertyContext(Context context) {
-        if (eventSet != null) {
-            Property propertyToDisplay = context.getProperty();
+        Property propertyToDisplay = context.getProperty();
+        if (propertyToDisplay != null && eventSet != null) {
             Property ent = propertyToDisplay.getEntity();
             while (propertyToDisplay != ent) {
                 for (EventWrapper event : eventSet) {
@@ -2757,7 +2773,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         assoComboBox.setModel(cbModel);
         ComboBoxAssosRenderer renderer = new ComboBoxAssosRenderer();
         assoComboBox.setRenderer(renderer);
-        assoComboBox.setMaximumRowCount(10);
+        assoComboBox.setMaximumRowCount(20);
         assoEditButton.setEnabled(!(eventSet.isEmpty() && assoSet.isEmpty()));
     }
 
