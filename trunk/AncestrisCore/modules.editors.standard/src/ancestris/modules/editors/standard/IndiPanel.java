@@ -62,11 +62,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
-import javax.swing.ListCellRenderer;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
@@ -77,8 +74,6 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.event.PopupMenuEvent;
-import javax.swing.event.PopupMenuListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -149,6 +144,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEventSource = false;
     
     // Associations
+    private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
     private List<AssoWrapper> assoSet = null;
     private List<AssoWrapper> assoRemovedSet = null;
 
@@ -179,8 +175,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         registry = Registry.get(getClass());
         eventSplitPane.setDividerLocation(registry.get("eventSplitDividerLocation", eventSplitPane.getDividerLocation()));
         
-        assoComboBox.addPopupMenuListener(new AssociationPopupListener());
-
         reloadData = true; // force data load at initialisation
     }
     
@@ -275,8 +269,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollSourcesEvent = new javax.swing.JScrollBar();
         addSourceEventButton = new javax.swing.JButton();
         delSourceEventButton = new javax.swing.JButton();
+        assoPanel = new javax.swing.JPanel();
         assoComboBox = new javax.swing.JComboBox();
         assoEditButton = new javax.swing.JButton();
+        assoEditIndi = new javax.swing.JButton();
 
         setMaximumSize(new java.awt.Dimension(32767, 500));
         setPreferredSize(new java.awt.Dimension(557, 800));
@@ -817,7 +813,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 24, Short.MAX_VALUE))
+                .addGap(0, 26, Short.MAX_VALUE))
             .addGroup(eventLeftLayout.createSequentialGroup()
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(eventLeftLayout.createSequentialGroup()
@@ -1056,7 +1052,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourcePanelLayout.setVerticalGroup(
             eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventSourcePanelLayout.createSequentialGroup()
-                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 169, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(addSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1064,12 +1060,13 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGroup(eventSourcePanelLayout.createSequentialGroup()
                 .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 141, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        assoComboBox.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "asso 1", "asso 2", "asso 3", "asso 4" }));
+        assoComboBox.setMaximumRowCount(20);
+        assoComboBox.setModel(cbModel);
         assoComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoComboBox.toolTipText")); // NOI18N
 
         assoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/association.png"))); // NOI18N
@@ -1083,6 +1080,37 @@ public class IndiPanel extends Editor implements DocumentListener {
                 assoEditButtonActionPerformed(evt);
             }
         });
+
+        assoEditIndi.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/editindi.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(assoEditIndi, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditIndi.text")); // NOI18N
+        assoEditIndi.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.assoEditIndi.toolTipText")); // NOI18N
+        assoEditIndi.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        assoEditIndi.setIconTextGap(0);
+        assoEditIndi.setPreferredSize(new java.awt.Dimension(16, 16));
+        assoEditIndi.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                assoEditIndiActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout assoPanelLayout = new javax.swing.GroupLayout(assoPanel);
+        assoPanel.setLayout(assoPanelLayout);
+        assoPanelLayout.setHorizontalGroup(
+            assoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(assoPanelLayout.createSequentialGroup()
+                .addComponent(assoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
+                .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(assoEditIndi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+        assoPanelLayout.setVerticalGroup(
+            assoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+            .addGroup(assoPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                .addComponent(assoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(assoEditIndi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
 
         javax.swing.GroupLayout eventRightLayout = new javax.swing.GroupLayout(eventRight);
         eventRight.setLayout(eventRightLayout);
@@ -1101,27 +1129,21 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(ageAtEvent)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, 297, Short.MAX_VALUE)
                                 .addGap(2, 2, 2))))
                     .addGroup(eventRightLayout.createSequentialGroup()
-                        .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(eventTitle)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(eventDescription))
-                            .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(placeLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(eventPlace)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(assoComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGap(2, 2, 2)
-                                .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
-                            .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(2, 2, 2))))
+                        .addComponent(eventTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eventDescription))
+                    .addGroup(eventRightLayout.createSequentialGroup()
+                        .addComponent(placeLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eventPlace)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 335, Short.MAX_VALUE)
+                    .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+            .addComponent(assoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         eventRightLayout.setVerticalGroup(
             eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1146,10 +1168,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(assoComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap())
+                .addComponent(assoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         eventSplitPane.setRightComponent(eventRight);
@@ -1526,6 +1545,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_eventSourceTextMouseWheelMoved
 
+    private void assoEditIndiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assoEditIndiActionPerformed
+        AssoWrapper asso = (AssoWrapper) assoComboBox.getSelectedItem();
+        if (asso.assoIndi != null) {
+            SelectionDispatcher.fireSelection(new Context(asso.assoIndi));
+        }
+    }//GEN-LAST:event_assoEditIndiActionPerformed
+
     
     private void scrollNotes(int notches) {
         if (isBusyNote) {
@@ -1597,6 +1623,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JLabel ageAtEvent;
     private javax.swing.JComboBox assoComboBox;
     private javax.swing.JButton assoEditButton;
+    private javax.swing.JButton assoEditIndi;
+    private javax.swing.JPanel assoPanel;
     private javax.swing.JButton brothersButton;
     private javax.swing.ButtonGroup buttonGender;
     private javax.swing.JButton childrenButton;
@@ -2763,7 +2791,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     private void displayAssociationsComboBox() {
-        DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
+        cbModel.removeAllElements();
         for (AssoWrapper asso : assoSet) {
             cbModel.addElement(asso);
         }
@@ -2771,9 +2799,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             cbModel.addElement(new AssoWrapper(NbBundle.getMessage(getClass(), "No_Association_Text")));
         }
         assoComboBox.setModel(cbModel);
-        ComboBoxAssosRenderer renderer = new ComboBoxAssosRenderer();
-        assoComboBox.setRenderer(renderer);
-        assoComboBox.setMaximumRowCount(20);
         assoEditButton.setEnabled(!(eventSet.isEmpty() && assoSet.isEmpty()));
     }
 
@@ -3099,31 +3124,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         
     }
 
-    private class AssociationPopupListener implements PopupMenuListener {
-        
-        private boolean isCancelled = false;
-
-        public void popupMenuWillBecomeVisible(PopupMenuEvent e) {
-            isCancelled = false;
-        }
-
-        public void popupMenuWillBecomeInvisible(PopupMenuEvent e) {
-            if (!isCancelled) {
-                AssoWrapper asso = (AssoWrapper) assoComboBox.getSelectedItem();
-                if (asso.assoIndi != null) {
-                    // TODO : save changes before going to another indi
-                    SelectionDispatcher.fireSelection(new Context(asso.assoIndi));
-                }
-            }
-        }
-
-        public void popupMenuCanceled(PopupMenuEvent e) {
-            isCancelled = true;
-        }
-
-    }
-
-
     private class IconTextCellRenderer extends DefaultTableCellRenderer {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -3158,31 +3158,5 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
     
-    private class ComboBoxAssosRenderer extends JLabel implements ListCellRenderer {
-
-        public ComboBoxAssosRenderer() {
-            setOpaque(true);
-            setHorizontalAlignment(LEFT);
-            setVerticalAlignment(CENTER);
-        }
-
-        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-            if (value != null) {
-                AssoWrapper asso = (AssoWrapper) value;
-                if (isSelected) {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
-                } else {
-                    setBackground(list.getBackground());
-                    setForeground(list.getForeground());
-                }
-                setIcon(null);
-                String name = (asso.assoLastname + " " + asso.assoFirstname).trim();
-                setText((!name.isEmpty() ? name + " | " : "") + asso.assoTxt);
-            }
-            return this;
-        }
-    }
-
     
 }

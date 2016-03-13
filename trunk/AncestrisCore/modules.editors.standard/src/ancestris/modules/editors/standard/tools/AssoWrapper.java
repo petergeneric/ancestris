@@ -139,6 +139,12 @@ public class AssoWrapper {
         return new AssoWrapper(asso);
     }
 
+    @Override
+    public String toString() {
+        String name = (assoLastname + " " + assoFirstname).trim();
+        return assoTxt + (!name.isEmpty() ? " | " + name : "");
+    }
+    
     public void update(Indi indi) {
         
     }
