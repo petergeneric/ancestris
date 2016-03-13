@@ -73,14 +73,14 @@ public class NoteWrapper {
      *    - Update : where it is
      * @param indi 
      */
-    public void update(Indi indi) {
+    public void update(Property mainProp) {
         // If it is a creation...
         if (hostingProperty == null) {
             try {
                 if (this.targetNote == null) {
-                    this.targetNote = indi.getGedcom().createEntity(Gedcom.NOTE);
+                    this.targetNote = mainProp.getGedcom().createEntity(Gedcom.NOTE);
                 }
-                indi.addNote((Note) targetNote);
+                mainProp.addNote((Note) targetNote);
                 putNoteLinked((Note) targetNote);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
@@ -108,7 +108,7 @@ public class NoteWrapper {
             
         // Case of property as Note entity (added chosen from NoteChooser)
         if (entity instanceof Note) {
-            indi.addNote((Note) targetNote);
+            mainProp.addNote((Note) targetNote);
             putNoteLinked(targetNote);
         }
     }
@@ -138,7 +138,7 @@ public class NoteWrapper {
 
     
     
-    public void remove(Indi indi) {
+    public void remove() {
         if (hostingProperty == null) {
             return;
         }
