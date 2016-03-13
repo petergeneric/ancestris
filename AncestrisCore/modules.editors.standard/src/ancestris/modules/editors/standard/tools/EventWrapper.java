@@ -16,9 +16,9 @@ import genj.edit.beans.DateBean;
 import genj.gedcom.Entity;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
-import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
+import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySource;
@@ -44,6 +44,7 @@ public class EventWrapper {
     public String title = "";  
     public boolean showDesc = false;
     public String description = "";         // Description (to be saved in gedcom)
+    private boolean hasAttribute = false;   // attribute of event if of type PropertyChoiceValue
     public PropertyDate date = null;        // Date temp property (to be saved in gedcom)
     public PropertyPlace place = null;      // Place temp property (to be saved in gedcom)
     public String dayOfWeek = null;
@@ -64,8 +65,9 @@ public class EventWrapper {
         if (property == null) {
             return;
         }
-        this.hostingEntity = property.getEntity();
         this.eventProperty = property;
+        this.hasAttribute =  this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
+        this.hostingEntity = property.getEntity();
 
         // Event description & icon
         this.eventLabel = new EventLabel(property);
@@ -73,9 +75,8 @@ public class EventWrapper {
         
         // Title and description
         this.title = this.eventLabel.getShortLabel();
-        String desc = property.getDisplayValue();
         Property type = property.getProperty("TYPE"); 
-        this.description = (desc != null && !desc.isEmpty() ? desc : "") + (type != null ? type.getDisplayValue() : "");   
+        this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
 
         // Event date
         this.date = new PropertyDate();
@@ -193,8 +194,6 @@ public class EventWrapper {
 
     
     
-    
-    
     private boolean isValidBirthDate(Indi indi) {
         PropertyDate birthDate = indi.getBirthDate();
         return birthDate != null && birthDate.isValid();
@@ -265,11 +264,53 @@ public class EventWrapper {
      * List<SourceWrapper> eventSourceRemovedSet = null;    // Sources to remove (to be saved in gedcom)
     */ 
     public void update(Indi indi) {
-        // description : depends on property.metaProperty
-        // = property.getDisplayValue();                            // case of attributes
-        // = property.getProperty("TYPE").getDisplayValue();        // case of events
-        MetaProperty meta = this.eventProperty.getMetaProperty();
-        String str = "";
+        // Description : depends on property.metaProperty
+        // = property.getDisplayValue();                            // case of attributes: description is the value of the event
+        // = property.getProperty("TYPE").getDisplayValue();        // case of events and RESI: description is the value of the TYPE
+        description = description.trim();
+        if (hasAttribute) {
+            eventProperty.setValue(description);
+        } else { 
+            Property type = eventProperty.getProperty("TYPE");
+            if (type == null) {
+                eventProperty.addProperty("TYPE", description);
+            } else {
+                type.setValue(description);
+            }
+        }
+
+        // Date
+        PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
+        if (tmpDate == null) {
+            eventProperty.addProperty("DATE", date.getValue());
+        } else {
+            tmpDate.setValue(date.getValue());
+        }
+        
+        // Place
+        PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
+        if (tmpPlace == null) {
+            eventProperty.addProperty("PLAC", place.getValue());
+        } else {
+            tmpPlace.setValue(place.getValue());
+        }
+        
+        // Notes
+        for (NoteWrapper note : eventNoteSet) {
+            note.update(eventProperty);
+        }
+        for (NoteWrapper note : eventNoteRemovedSet) {
+            note.remove();
+        }
+        
+        // Sources
+        for (SourceWrapper source : eventSourceSet) {
+            source.update(eventProperty);
+        }
+        for (SourceWrapper source : eventSourceRemovedSet) {
+            source.remove();
+        }
+        
         
     }
 

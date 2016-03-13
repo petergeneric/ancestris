@@ -2235,7 +2235,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             note.update(indi);
         }
         for (NoteWrapper note : noteRemovedSet) {
-            note.remove(indi);
+            note.remove();
         }
     }
 

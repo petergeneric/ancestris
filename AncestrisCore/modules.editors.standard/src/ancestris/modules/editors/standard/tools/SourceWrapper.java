@@ -299,12 +299,12 @@ public class SourceWrapper {
      *    - Update : where it is
      * @param indi 
      */
-    public void update(Indi indi) {
+    public void update(Property mainProp) {
         // If it is a creation...
         if (hostingProperty == null) {
-            Gedcom gedcom = indi.getGedcom();
+            Gedcom gedcom = mainProp.getGedcom();
             if (gedcom.getGrammar().equals(Grammar.V55)) {
-                putMediaIntegrated(indi.addProperty("OBJE", ""));
+                putMediaIntegrated(mainProp.addProperty("OBJE", ""));
             } else {
 //                try {
 //                    if (this.targetMedia == null) {
@@ -339,7 +339,7 @@ public class SourceWrapper {
             
         // Case of property as Media entity (added chosen from MediaChooseer)
         if (entity instanceof Media) {
-            indi.addMedia((Media) targetMedia);
+            mainProp.addMedia((Media) targetMedia);
             putMediaLinked(targetMedia);
         }
     }
@@ -397,13 +397,18 @@ public class SourceWrapper {
         }
     }
 
-    public void remove(Indi indi) {
+    public void remove() {
         if (hostingProperty == null) {
             return;
         }
         hostingProperty.getParent().delProperty(hostingProperty);
     }
 
+
+    
+    
+    
+    
     
     public Entity getTargetSource() {
         return targetSource;
