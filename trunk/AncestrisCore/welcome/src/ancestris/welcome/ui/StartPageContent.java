@@ -44,7 +44,6 @@
 
 package ancestris.welcome.ui;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -56,7 +55,6 @@ import javax.swing.JComponent;
 import javax.swing.JPanel;
 import ancestris.welcome.content.Constants;
 import java.util.Random;
-import javax.swing.BoxLayout;
 import org.openide.util.ImageUtilities;
 
 /**
@@ -74,7 +72,7 @@ public class StartPageContent extends JPanel implements Constants {
     public StartPageContent() {
         super( new GridBagLayout() );
 
-        int nn = new Random().nextInt(11) + 1;                   // random.nextInt(max - min + 1) + min
+        int nn = new Random().nextInt(24) + 1;                   // random.nextInt(max - min + 1) + min
         imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
         
         JComponent tabs = new TabbedPane( new LearnAndDiscoverTab(), new MyAncestrisTab(), new WhatsNewTab());
