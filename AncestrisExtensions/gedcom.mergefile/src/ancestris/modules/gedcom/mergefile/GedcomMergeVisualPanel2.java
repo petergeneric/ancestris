@@ -2,7 +2,6 @@ package ancestris.modules.gedcom.mergefile;
 
 import ancestris.gedcom.GedcomDirectory;
 import static ancestris.modules.gedcom.mergefile.Bundle.*;
-import genj.gedcom.Context;
 import java.io.File;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
@@ -90,7 +89,7 @@ public final class GedcomMergeVisualPanel2 extends JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         // Choose Gedcom File
-        if ((gedcomFile = GedcomDirectory.getDefault().chooseFile(stepIndex2_open_title(), stepIndex2_open_action(), null)) != null) {
+        if ((gedcomFile = GedcomDirectory.getDefault().chooseFile(stepIndex2_open_title(), stepIndex2_open_action(), null, false)) != null) {
             jTextField1.setText(gedcomFile.toString());
             firePropertyChange(PROP_FIRST_GEDCOM, 0, 1);
         } else {

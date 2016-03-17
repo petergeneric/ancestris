@@ -92,7 +92,7 @@ public final class GedcomMergeVisualPanel4 extends JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // let user choose a file
-        gedcomMergeFile = GedcomDirectory.getDefault().chooseFile(create_title(), create_action(), null);
+        gedcomMergeFile = GedcomDirectory.getDefault().chooseFile(create_title(), create_action(), null, false);
         if (gedcomMergeFile != null) {
             if (!gedcomMergeFile.getName().endsWith(".ged")) {
                 gedcomMergeFile = new File(gedcomMergeFile.getAbsolutePath() + ".ged");
