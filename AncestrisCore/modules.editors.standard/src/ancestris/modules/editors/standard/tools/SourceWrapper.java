@@ -14,8 +14,7 @@ package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Grammar;
-import genj.gedcom.Indi;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
@@ -25,6 +24,7 @@ import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import java.io.File;
+import org.openide.util.Exceptions;
 
 
 
@@ -57,6 +57,11 @@ import java.io.File;
  * 
  * FL : Sources used fields will be TITL, TEXT, MEDIA and REPO, Rest will be facultative or used in gedcom editor
  *      In Source chooser we will have TITL and MEDIA
+ * 
+ * FL : When souce records are used, grammar does not matter for title, text, repo and media
+ *      When source citations are used, information can be updated but :
+ *          - no REPO can be used => warn user
+ *          - and in 5.5, no media can be used => warn user
  * 
  * 
  * 
@@ -102,15 +107,15 @@ import java.io.File;
  *     +2 <<NOTE_STRUCTURE>> {0:M}
  *   +1 AUTH <SOURCE_ORIGINATOR> {0:1}
  *     +2 [CONC|CONT] <SOURCE_ORIGINATOR> {0:M}
- *   +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}
+ *   +1 TITL <SOURCE_DESCRIPTIVE_TITLE> {0:1}                  ==> 1 Title
  *     +2 [CONC|CONT] <SOURCE_DESCRIPTIVE_TITLE> {0:M}
  *   +1 ABBR <SOURCE_FILED_BY_ENTRY> {0:1}
  *   +1 PUBL <SOURCE_PUBLICATION_FACTS> {0:1}
  *     +2 [CONC|CONT] <SOURCE_PUBLICATION_FACTS> {0:M}
- *   +1 TEXT <TEXT_FROM_SOURCE> {0:1}
+ *   +1 TEXT <TEXT_FROM_SOURCE> {0:1}                          ==> 1 Text
  *     +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
- *   +1 <<SOURCE_REPOSITORY_CITATION>> {0:M}
- *   +1 <<MULTIMEDIA_LINK>> {0:M}
+ *   +1 <<SOURCE_REPOSITORY_CITATION>> {0:M}                   ==> 1 Repo
+ *   +1 <<MULTIMEDIA_LINK>> {0:M}                              ==> 1 Media (use first media only)
  *   +1 <<NOTE_STRUCTURE>> {0:M}
  *   +1 REFN <USER_REFERENCE_NUMBER> {0:M}
  *     +2 TYPE <USER_REFERENCE_TYPE> {0:1}
@@ -125,7 +130,7 @@ import java.io.File;
  * 
  * SOURCE_CITATION: = (5.5)
  *   [  
- *   n SOUR @<XREF:SOUR>@    pointer to source record   {1:1}       ==> only use pointer to source record
+ *   n SOUR @<XREF:SOUR>@  {1:1}    pointer to source record        ==> only use pointer to source record
  *     +1 PAGE <WHERE_WITHIN_SOURCE>  {0:1}
  *     +1 EVEN <EVENT_TYPE_CITED_FROM>  {0:1}
  *       +2 ROLE <ROLE_IN_EVENT>  {0:1}
@@ -136,17 +141,18 @@ import java.io.File;
  *     +1 QUAY <CERTAINTY_ASSESSMENT>  {0:1}
  *     +1 <<MULTIMEDIA_LINK>>  {0:M}
  *     +1 <<NOTE_STRUCTURE>>  {0:M}
- *   |              Systems not using source records 
- *   n SOUR <SOURCE_DESCRIPTION>  {1:1}                             ==> Title (read mode only)
+ * 
+ *   |              Systems not using source records                ==> Media (none)
+ *   n SOUR <SOURCE_DESCRIPTION>  {1:1}                             ==> Title (update mode only)
  *     +1 [ CONC | CONT ] <SOURCE_DESCRIPTION>  {0:M}
- *     +1 TEXT <TEXT_FROM_SOURCE>  {0:M}                            ==> Text (read mode only)
+ *     +1 TEXT <TEXT_FROM_SOURCE>  {0:M}                            ==> Text (update mode only)
  *        +2 [CONC | CONT ] <TEXT_FROM_SOURCE>  {0:M}
  *     +1 <<NOTE_STRUCTURE>>  {0:M}
  *   ]
  * 
  * SOURCE_CITATION: =  (5.5.1) (almost the same as 5.5 if I do not use QUAY, media and note links)
  *   [
- *     n SOUR @<XREF:SOUR>@ {1:1} pointer to source record (preferred)
+ *     n SOUR @<XREF:SOUR>@ {1:1}    pointer to source record       ==> only use pointer to source record
  *     +1 PAGE <WHERE_WITHIN_SOURCE> {0:1}
  *     +1 EVEN <EVENT_TYPE_CITED_FROM> {0:1}
  *        +2 ROLE <ROLE_IN_EVENT> {0:1}
@@ -157,13 +163,14 @@ import java.io.File;
  *     +1 QUAY <CERTAINTY_ASSESSMENT> {0:1}
  *     +1 <<MULTIMEDIA_LINK>> {0:M}
  *     +1 <<NOTE_STRUCTURE>> {0:M}
- *  |
- *  n SOUR <SOURCE_DESCRIPTION> {1:1} Systems not using source records 
+ * 
+ *  |              Systems not using source records 
+ *  n SOUR <SOURCE_DESCRIPTION> {1:1}                               ==> Title (update mode only)
  *     +1 [CONC|CONT] <SOURCE_DESCRIPTION> {0:M}
- *     +1 TEXT <TEXT_FROM_SOURCE> {0:M}
+ *     +1 TEXT <TEXT_FROM_SOURCE> {0:M}                             ==> Text (update mode only)
  *        +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
  *     +1 QUAY <CERTAINTY_ASSESSMENT> {0:1}
- *     +1 <<MULTIMEDIA_LINK>> {0:M}                                 ==> Media  (read mode only)
+ *     +1 <<MULTIMEDIA_LINK>> {0:M}                                 ==> Media (update mode only)
  *     +1 <<NOTE_STRUCTURE>> {0:M}
  *  ]
  * 
@@ -181,6 +188,7 @@ import java.io.File;
  */
 public class SourceWrapper {
 
+    private boolean recordType = true;          // true if record type, false if citation type
     private Property hostingProperty = null;    // the property the source property belongs to
     private Entity targetSource = null;         // the source entity
     private String title = "";                  // the source title
@@ -190,7 +198,7 @@ public class SourceWrapper {
     private Repository targetRepo = null;       // the repository entity
     private String repoName = "";               // the name of the repository entity
     
-    // Constructor for source linked from host property (source_citation as links to a source entity)
+    // Constructor for source linked from host property (source_record as links to a source entity)
     public SourceWrapper(PropertySource propertySource) {
         if (propertySource == null) {
             return;
@@ -199,23 +207,15 @@ public class SourceWrapper {
         setTargetEntity((Source) propertySource.getTargetEntity());
     }
 
+    public void setTargetEntity(Source entity) {
+        this.targetSource = entity;
+        setInfoFromRecord(entity);
+    }
+
     // Constructor for source directly within host property (source_citation included underneath SOUR tag)
     public SourceWrapper(Property propertySour) {
-        if (propertySour == null) {
-            return;
-        }
         this.hostingProperty = propertySour;
-        this.title = propertySour.getDisplayValue();
-        Property propText = propertySour.getProperty("TEXT");
-        if (propText != null) {
-            this.title = propText.getDisplayValue();
-        }
-        Property propMedia = propertySour.getProperty("OBJE", true);
-        if (propMedia != null && propMedia instanceof PropertyMedia) {
-            PropertyMedia pm = (PropertyMedia) propMedia;
-            this.targetMedia = (Media) pm.getTargetEntity();
-            this.file = targetMedia.getFile();
-        }
+        setInfoFromCitation(propertySour);
     }
 
     // Constructor for source added from source chooser
@@ -226,6 +226,13 @@ public class SourceWrapper {
         setTargetEntity(entity);
     }
     
+    public void setHostingProperty(Property property) {
+        this.hostingProperty = property;
+    }
+
+    
+   
+    // Constructor from repo chooser
     public SourceWrapper(Repository repo) {
         setRepo(repo);
     }
@@ -250,29 +257,30 @@ public class SourceWrapper {
     
     
     
-    public void setTargetEntity(Source entity) {
-        this.targetSource = entity;
-        setInfo(entity);
-    }
-
     
-    public void setInfo(Property property) {
+    /**
+     * Read source record (5.5 or 5.5.1)
+     * (reading is the same regardless of the grammar)
+     */
+    private void setInfoFromRecord(Property property) {
+        recordType = true;
+
         if (property == null) {
             return;
         }
-        Property propTitle = property.getProperty("TITL", true);
+        Property propTitle = property.getProperty("TITL", true);                /* title */
         if (propTitle != null) {
             this.title = propTitle.getDisplayValue();
         } else {
             this.title = "";
         }
-        Property propText = property.getProperty("TEXT", true);
+        Property propText = property.getProperty("TEXT", true);                 /* text */
         if (propText != null) {
             this.text = propText.getDisplayValue();
         } else {
             this.text = "";
         }
-        Property propMedia = property.getProperty("OBJE", true);
+        Property propMedia = property.getProperty("OBJE", true);                /* media */
         if (propMedia != null && propMedia instanceof PropertyMedia) {
             PropertyMedia pm = (PropertyMedia) propMedia;
             this.targetMedia = (Media) pm.getTargetEntity();
@@ -281,7 +289,7 @@ public class SourceWrapper {
             this.targetMedia = null;
             this.file = null;
         }
-        Property propRepository = property.getProperty("REPO", true);
+        Property propRepository = property.getProperty("REPO", true);           /* repo */
         if (propRepository != null && propRepository instanceof PropertyRepository) {
             PropertyRepository pr = (PropertyRepository) propRepository;
             this.targetRepo = (Repository) pr.getTargetEntity();
@@ -292,110 +300,152 @@ public class SourceWrapper {
         }
     }
 
+    
     /**
-     * Creates or Updates the OBJE media property
-     *    - Creation in 55  : integrated property (BLOB not supported)
-     *    - Creation in 551 : separate media entity
+     * Read source citation (5.5 or 5.5.1)
+     * (no repository in this case)
+     */
+    private void setInfoFromCitation(Property property) {
+        recordType = false;
+
+        if (property == null) {
+            return;
+        }
+        this.title = property.getDisplayValue().trim();                         /* title */
+        Property propText = property.getProperty("TEXT");                       /* text */
+        if (propText != null) {
+            this.text = propText.getDisplayValue();
+        }
+        Property propMedia = property.getProperty("OBJE", true);                /* media (5.5.1 only) */
+        if (propMedia != null && propMedia instanceof PropertyMedia) {
+            PropertyMedia pm = (PropertyMedia) propMedia;
+            this.targetMedia = (Media) pm.getTargetEntity();
+            this.file = targetMedia.getFile();
+        }
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Creates or Updates the SOUR property
+     *    - Creation : separate SOUR entity
      *    - Update : where it is
-     * @param indi 
+     * @param mainProp (indi or event basically) 
      */
     public void update(Property mainProp) {
+
         // If it is a creation...
         if (hostingProperty == null) {
-            Gedcom gedcom = mainProp.getGedcom();
-            if (gedcom.getGrammar().equals(Grammar.V55)) {
-                putMediaIntegrated(mainProp.addProperty("OBJE", ""));
-            } else {
-//                try {
-//                    if (this.targetMedia == null) {
-//                        this.targetMedia = indi.getGedcom().createEntity(Gedcom.OBJE);
-//                    }
-//                    indi.addMedia((Media) targetMedia);
-//                    putMediaLinked((Media) targetMedia);
-//                } catch (GedcomException ex) {
-//                    Exceptions.printStackTrace(ex);
-//                }
+            try {
+                if (this.targetSource == null) {
+                    this.targetSource = mainProp.getGedcom().createEntity(Gedcom.SOUR);
+                }
+                mainProp.addSource((Source) targetSource);
+                putSourceRecord((Source) targetSource);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
             }
             return;
         }
         
         // ... or else a modification
-        Entity entity = hostingProperty.getEntity();
-        // Case of property directly written within INDI
-        if ((entity instanceof Indi) && !(hostingProperty instanceof PropertyMedia)) {
-            putMediaIntegrated(hostingProperty);
+        // Case of property source as Citation
+        if (!recordType) {
+            putSourceCitation(hostingProperty);
         } else 
             
-        // Case of propertyMedia written within INDI
-        if ((entity instanceof Indi) && (hostingProperty instanceof PropertyMedia)) {
-            PropertyMedia pm = (PropertyMedia) hostingProperty;
-            Property parent = pm.getParent();
-            // add new link from parent
-            parent.addMedia((Media) targetMedia);
-            putMediaLinked(targetMedia);
-            // remove old link
-            parent.delProperty(hostingProperty);
+        // Case of property source as linked record already existing
+        if (recordType && (hostingProperty instanceof PropertySource)) {
+            PropertySource ps = (PropertySource) hostingProperty;
+            Property parent = ps.getParent();
+            if (parent != null) {
+                // add new link from parent
+                parent.addSource((Source) targetSource);
+                putSourceRecord(targetSource);
+                // remove old link
+                parent.delProperty(hostingProperty);
+            }
         } else
             
-        // Case of property as Media entity (added chosen from MediaChooseer)
-        if (entity instanceof Media) {
-            mainProp.addMedia((Media) targetMedia);
-            putMediaLinked(targetMedia);
+        // Case of property as source record not already linked (added and chosen from SourceChooser)
+        if (recordType && !(hostingProperty instanceof PropertySource)) {
+            mainProp.addSource((Source) targetSource);
+            putSourceRecord(targetSource);
         }
+        
     }
 
+    
+    
+    
+    
+    
+    
     /**
-     * Writes the media tags of a Media Entity
-     * 
-     * 5.5:
-     *   Not supported
-     * 
-     * 5.5.1:
-     * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
-     *      +2 TITL <DESCRIPTIVE_TITLE> {0:1}
-     * 
+     * Writes the source as a link to a Source Entity
      * @param property 
      */
-    private void putMediaLinked(Property property) {
-        Property mediaFile = property.getProperty("FILE", true);
-        if (mediaFile == null) {
-            mediaFile = property.addProperty("FILE", "");
+    private void putSourceRecord(Property property) {
+        if (property == null) {
+            return;
         }
-        ((PropertyFile) mediaFile).addFile(this.file);
-        Property mediaTitle = mediaFile.getProperty("TITL");
-        if (mediaTitle == null) {
-            mediaTitle = mediaFile.addProperty("TITL", "");
+        putProperty(property, "TITL", title);
+        putProperty(property, "TEXT", text);
+        
+        // Put media, and create it if it does not exists 
+        putMedia(property, file);
+        
+        // Put repo, and create it if it does not exists
+        if (targetRepo == null) {
+            try {
+                targetRepo = (Repository) property.getGedcom().createEntity(Gedcom.REPO);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
         }
-        if (mediaTitle != null) {
-            mediaTitle.setValue(this.title);
+        targetRepo.setRepositoryName(repoName);
+        
+        Property propRepository = property.getProperty("REPO", true);
+        if (propRepository != null && propRepository instanceof PropertyRepository) {
+            PropertyRepository pr = (PropertyRepository) propRepository;
+            Repository tmpRepo = (Repository) pr.getTargetEntity();
+            if (tmpRepo != targetRepo) { // it points to another media entity, replace media.
+                property.delProperty(propRepository);
+                property.addRepository(targetRepo);
+            } 
+        } else {
+          property.addRepository(targetRepo);
         }
+        
     }
 
+    
+    
+    
+    
     /**
-     * Writes the media tags of an integrated media property
-     * 
-     * 5.5 and 5.5.1:
-     *  +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
-     *  +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
-     * 
+     * Writes the source as a link to a Source Entity
      * @param property 
      */
-    private void putMediaIntegrated(Property property) {
-        Property mediaFile = property.getProperty("FILE", true);
-        if (mediaFile == null) {
-            mediaFile = property.addProperty("FILE", "");
+    private void putSourceCitation(Property property) {
+        property.setValue(title);
+        putProperty(property, "TEXT", text);
+        if (property.getMetaProperty().allows("OBJE")) {
+            putMedia(property, file);
         }
-        if (this.file != null) {
-            ((PropertyFile) mediaFile).addFile(this.file);
-        }
-        Property mediaTitle = property.getProperty("TITL");
-        if (mediaTitle == null) {
-            mediaTitle = property.addProperty("TITL", "");
-        }
-        if (mediaTitle != null) {
-            mediaTitle.setValue(this.title != null ? this.title : "");
-        }
+
     }
+
+    
+    
+    
+    
+    
 
     public void remove() {
         if (hostingProperty == null) {
@@ -459,5 +509,68 @@ public class SourceWrapper {
         return targetRepo;
     }
 
+    
+    
+    
+    
+    /**
+     * Update or Create tag property with value to provided property
+     * @param property : host property
+     * @param tag : property tag
+     * @param value : property value
+     */
+    private void putProperty(Property property, String tag, String value) {
+        Property prop = property.getProperty(tag, true);
+        if (prop != null) {
+            prop.setValue(value);
+        } else {
+            property.addProperty(tag, value);
+        }
+    }
+
+    /**
+     * Update or create media to a property
+     * @param property
+     * @param f 
+     */
+    private void putMedia(Property property, File f) {
+        if (targetMedia == null) {
+            try {
+                targetMedia = (Media) property.getGedcom().createEntity(Gedcom.OBJE);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        putFile(targetMedia, f);
+        
+        Property propMedia = property.getProperty("OBJE", true);
+        if (propMedia != null && propMedia instanceof PropertyMedia) {
+            PropertyMedia pm = (PropertyMedia) propMedia;
+            Media tmpMedia = (Media) pm.getTargetEntity();
+            if (tmpMedia != targetMedia) { // it points to another media entity, replace media.
+                property.delProperty(propMedia);
+                property.addMedia(targetMedia);
+            } 
+        } else {
+          property.addMedia(targetMedia);  
+        }
+    }
+
+    /**
+     * Update or create file value to a property
+     * @param property
+     * @param f 
+     */
+    private void putFile(Property property, File f) {
+        Property mediaFile = property.getProperty("FILE", true);
+        if (mediaFile == null) {
+            mediaFile = property.addProperty("FILE", "");
+        }
+        if (this.file != null) {
+            ((PropertyFile) mediaFile).addFile(f);
+        }
+    }
+
+    
 
 }

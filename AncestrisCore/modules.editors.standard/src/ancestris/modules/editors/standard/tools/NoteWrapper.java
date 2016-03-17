@@ -44,7 +44,7 @@ public class NoteWrapper {
             this.targetNote = (Note) pnote.getTargetEntity();
             setText(this.targetNote.getValue().trim());
         } else {
-            this.hostingProperty = property.getParent();
+            this.hostingProperty = property;
             this.targetNote = this.hostingProperty.getEntity();
             setText(property.getValue().trim());
         }
@@ -71,7 +71,7 @@ public class NoteWrapper {
      * Creates or Updates the NOTE property
      *    - Creation : separate NOTE entity
      *    - Update : where it is
-     * @param indi 
+     * @param mainProp (indi or event basically) 
      */
     public void update(Property mainProp) {
         // If it is a creation...
@@ -81,7 +81,7 @@ public class NoteWrapper {
                     this.targetNote = mainProp.getGedcom().createEntity(Gedcom.NOTE);
                 }
                 mainProp.addNote((Note) targetNote);
-                putNoteLinked((Note) targetNote);
+                targetNote.setValue(text);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -90,18 +90,18 @@ public class NoteWrapper {
         
         // ... or else a modification
         Entity entity = hostingProperty.getEntity();
-        // Case of property directly written within INDI
+        // Case of property directly written within mainProp
         if ((entity instanceof Indi) && !(hostingProperty instanceof PropertyNote)) {
-            putNoteIntegrated(hostingProperty);
+            hostingProperty.setValue(text);
         } else 
             
-        // Case of propertyNote written within INDI
+        // Case of propertyNote written within mainProp
         if ((entity instanceof Indi) && (hostingProperty instanceof PropertyNote)) {
             PropertyNote pn = (PropertyNote) hostingProperty;
             Property parent = pn.getParent();
             // add new link from parent
             parent.addNote((Note) targetNote);
-            putNoteLinked(targetNote);
+            targetNote.setValue(text);
             // remove old link
             parent.delProperty(hostingProperty);
         } else
@@ -109,32 +109,10 @@ public class NoteWrapper {
         // Case of property as Note entity (added chosen from NoteChooser)
         if (entity instanceof Note) {
             mainProp.addNote((Note) targetNote);
-            putNoteLinked(targetNote);
+            targetNote.setValue(text);
         }
     }
 
-    /**
-     * Writes the note as a link to a Note Entity
-     * 
-     * n NOTE @<XREF:NOTE>@ {1:1}
-     * 
-     * @param property 
-     */
-    private void putNoteLinked(Property property) {
-        property.setValue(this.text);
-    }
-
-    /**
-     * Writes the note as an integrated note property
-     * 
-     * n NOTE [<SUBMITTER_TEXT> | <NULL>] {1:1}
-     *   +1 [CONC|CONT] <SUBMITTER_TEXT> {0:M}
-     * 
-     * @param property 
-     */
-    private void putNoteIntegrated(Property property) {
-        property.setValue(this.text);
-    }
 
     
     

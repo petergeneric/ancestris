@@ -45,6 +45,7 @@ import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -125,23 +126,26 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     // Media
     private List<MediaWrapper> mediaSet = null;
-    private int mediaIndex = 0;
+    private int mediaIndex = 0, savedMediaIndex = -1;
     private List<MediaWrapper> mediaRemovedSet = null;
     private boolean isBusyMedia = false;
     
     // Notes
     private List<NoteWrapper> noteSet = null;
-    private int noteIndex = 0;
+    private int noteIndex = 0, savedNoteIndex = -1;
     private List<NoteWrapper> noteRemovedSet = null;
     private boolean isBusyNote = false;
     
     // Events
     private List<EventWrapper> eventSet = null;
-    private int eventIndex = 0;
     private List<EventWrapper> eventRemovedSet = null;
     private boolean isBusyEvent = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
+    private int eventIndex = 0, savedEventIndex = -1, savedEventNoteIndex = -1, savedEventSourceIndex = -1;
+    public Map<String, NoteWrapper> refNotes = null;       // Reference to all note entities used by id, to avoid duplicates
+    public Map<String, SourceWrapper> refSources = null;   // Reference to all sources used by id, to avoid duplicates
+    
     
     // Associations
     private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
@@ -154,6 +158,7 @@ public class IndiPanel extends Editor implements DocumentListener {
      */
     public IndiPanel() {
 
+        // Fixed variables
         try {
             this.PHOTO_MALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_male.png"));
             this.PHOTO_FEMALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_female.png"));
@@ -162,11 +167,18 @@ public class IndiPanel extends Editor implements DocumentListener {
             Exceptions.printStackTrace(ex);
         }
         
+        // Data
         eventUsages = new HashMap<String, EventUsage>();
         EventUsage.init(eventUsages);
         
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
         
+        refNotes = new HashMap<String, NoteWrapper>();
+        refSources = new HashMap<String, SourceWrapper>();
+
+        reloadData = true; // force data load at initialisation
+        
+        // Components
         initComponents();
         
         familyTree.setCellRenderer(new FamilyTreeRenderer());
@@ -175,7 +187,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         registry = Registry.get(getClass());
         eventSplitPane.setDividerLocation(registry.get("eventSplitDividerLocation", eventSplitPane.getDividerLocation()));
         
-        reloadData = true; // force data load at initialisation
     }
     
     /**
@@ -967,6 +978,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         repoText.setEditable(false);
         repoText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoText.text")); // NOI18N
+        repoText.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoText.toolTipText")); // NOI18N
 
         repoEditButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/repository.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(repoEditButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.repoEditButton.text")); // NOI18N
@@ -1720,7 +1732,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
 
         // force data reload if entity selected is different
-        if (this.context != null && context != null && this.context != context && this.context.getEntity() != context.getEntity()) {
+        if (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity()) {
             reloadData = true;
         }
         
@@ -1753,12 +1765,23 @@ public class IndiPanel extends Editor implements DocumentListener {
      * TODO:
      * - if context if a wedding type event, select it
      * - if context is an Asso type data, select it ?
-     * - is context is a note, select it
+     * - if context is a note, select it
      * - if context is a source, select it
      * 
      * @param context 
      */
     private void selectPropertyContext(Context context) {
+        // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
+        if (savedEventIndex != -1 && eventSet != null) {
+            scrollPhotos.setValue(savedMediaIndex);             savedMediaIndex = -1;
+            scrollNotes.setValue(savedNoteIndex);               savedNoteIndex = -1;
+            selectEvent(savedEventIndex);                       savedEventIndex = -1;
+            scrollNotesEvent.setValue(savedEventNoteIndex);     savedEventNoteIndex = -1;
+            scrollSourcesEvent.setValue(savedEventSourceIndex); savedEventSourceIndex = -1;
+            return;
+        } 
+        
+        // Else select property if any (coming from fireSelection)
         Property propertyToDisplay = context.getProperty();
         if (propertyToDisplay != null && eventSet != null) {
             Property ent = propertyToDisplay.getEntity();
@@ -1767,16 +1790,30 @@ public class IndiPanel extends Editor implements DocumentListener {
                     if (event.eventProperty.equals(propertyToDisplay)) {
                         int index = eventSet.indexOf(event);
                         if (index != -1) {
-                            int row = eventTable.convertRowIndexToView(index);
-                            eventTable.setRowSelectionInterval(row, row);
-                            break;
+                            selectEvent(index);
+                            return;
                         }
                     }
                 } // end for
                 propertyToDisplay = propertyToDisplay.getParent();
             }
         }
+
+        // Else select first row if eventSet not empty
+        if (eventSet != null) {
+            selectEvent(-1);
+        }
+        
     }
+    
+    private void selectEvent(int index) {
+        int row = index != -1 ? eventTable.convertRowIndexToView(index) : 0;
+        eventTable.setRowSelectionInterval(row, row);
+        eventTable.scrollRectToVisible(new Rectangle(eventTable.getCellRect(row, 0, true)));
+        eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
+    }
+
+    
     
     
     @Override
@@ -1808,9 +1845,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         String str = "";
         int i = 0;
         boolean privateTagFound = false;
+        refNotes.clear();
+        refSources.clear();
         
         // Title
-        title.setText("<html> <font color=\"red\"><b>/!\\ TRAVAUX EN COURS /!\\</b></font> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
+        title.setText("<html> <font color=\"red\"><b>/!\\ UNDER CONSTRUCTION /!\\</b></font> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
@@ -1888,9 +1927,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         eventSet = getEvents(indi);
         eventRemovedSet = new ArrayList<EventWrapper>();
-        eventIndex = 0;
         displayEventTable();
-        displayEvent();
+        eventIndex = 0;
         
         // Associations
         if (assoSet != null) {
@@ -1900,7 +1938,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         assoSet = getAssociations(indi);
         assoRemovedSet = new ArrayList<AssoWrapper>();
         displayAssociationsComboBox();
-        selectAssociation();
         
         // Modification timestamp
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
@@ -1936,7 +1973,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         indi.setSex(getSex());
         //
         
-        // Save privay
+        // Save privacy
         boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         if (privateCheckBox.isSelected()) {
             if (!privateTagFound) {
@@ -1951,10 +1988,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Save the rest
         //
         saveMedia();
+        savedMediaIndex = mediaIndex;
+
         //
         saveNotes();
+        savedNoteIndex = noteIndex;
+
         //
         saveEvents();
+        savedEventIndex = eventIndex;
+        EventWrapper ew = getCurrentEvent();
+        savedEventNoteIndex = ew.eventNoteIndex;
+        savedEventSourceIndex = ew.eventSourceIndex;
+
         //
         saveAssociations();
         //.......................................
@@ -2346,7 +2392,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             Property[] eventProps = indi.getProperties(tag);
             for (Property prop : eventProps) {
                 if (prop != null) {
-                    ret.add(new EventWrapper(prop, indi));
+                    ret.add(new EventWrapper(prop, indi, refNotes, refSources));
                 }
             }
         }
@@ -2361,7 +2407,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 Property[] eventProps = fam.getProperties(tag);
                 for (Property prop : eventProps) {
                     if (prop != null) {
-                        ret.add(new EventWrapper(prop, indi));
+                        ret.add(new EventWrapper(prop, indi, refNotes, refSources));
                     }
                 }
             }
@@ -2456,9 +2502,6 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
         });
-        if (eventTable.getRowCount() > 0) {
-            eventTable.setRowSelectionInterval(0, 0);
-        }
     }
 
     private EventWrapper getCurrentEvent() {
@@ -2502,6 +2545,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             scrollNotesEvent.setMinimum(0);
             scrollNotesEvent.setBlockIncrement(1);
             scrollNotesEvent.setUnitIncrement(1);
+            event.eventNoteIndex = 0;
             displayEventNote(event);
         
             
@@ -2509,6 +2553,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             scrollSourcesEvent.setMinimum(0);
             scrollSourcesEvent.setBlockIncrement(1);
             scrollSourcesEvent.setUnitIncrement(1);
+            event.eventSourceIndex = 0;
             displayEventSource(event);
             
         }
@@ -2569,25 +2614,17 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (noteChooser.isSelectedEntityNote()) {
                 Note entity = (Note) noteChooser.getSelectedEntity();
                 if (exists) {
-                    event.eventNoteSet.get(index).setTargetEntity(entity);
-                    event.eventNoteSet.get(index).setText(noteText);
-                    event.eventNoteIndex = index;
+                    event.setNote(entity, noteText, index);
                 } else {
-                    NoteWrapper note = new NoteWrapper(entity);
-                    note.setText(noteText);
-                    event.eventNoteSet.add(note);
-                    event.eventNoteIndex = event.eventNoteSet.size() - 1;
+                    event.addNote(entity, noteText);
                 }
                 changes.setChanged(true);
                 b = true;
             } else {
                 if (exists) {
-                    event.eventNoteSet.get(index).setText(noteText);
-                    event.eventNoteIndex = index;
+                    event.setNote(noteText, index);
                 } else {
-                    NoteWrapper note = new NoteWrapper(noteText);
-                    event.eventNoteSet.add(note);
-                    event.eventNoteIndex = event.eventNoteSet.size() - 1;
+                    event.addNote(noteText);
                 }
                 changes.setChanged(true);
                 b = true;
@@ -2665,12 +2702,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (sourceChooser.isSelectedEntitySource()) {
                 Source entity = (Source) sourceChooser.getSelectedEntity();
                 if (exists) {
-                    event.eventSourceSet.get(index).setTargetEntity(entity);
-                    event.eventSourceIndex = index;
+                    event.setSource(entity, index);
                 } else {
-                    SourceWrapper source = new SourceWrapper(entity);
-                    event.eventSourceSet.add(source);
-                    event.eventSourceIndex = event.eventSourceSet.size() - 1;
+                    event.addSource(entity);
                 }   
                 changes.setChanged(true);
                 b = true;
@@ -2703,12 +2737,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .showOpenDialog();
         if (file != null) {
             if (exists) {
-                event.eventSourceSet.get(index).setFile(file);
-                event.eventSourceIndex = index;
+                event.setSource(file, index);
             } else {
-                SourceWrapper source = new SourceWrapper(file);
-                event.eventSourceSet.add(source);
-                event.eventSourceIndex = event.eventSourceSet.size() - 1;
+                event.addSource(file);
             }
             changes.setChanged(true);
             b = true;
@@ -2729,14 +2760,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (o == repoButton) {
             if (repoChooser.isSelectedEntityRepo()) {
                 boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size());
+                Repository repo = (Repository) repoChooser.getSelectedEntity();
                 if (exists) {
-                    Repository entity = (Repository) repoChooser.getSelectedEntity();
-                    event.eventSourceSet.get(event.eventSourceIndex).setRepo(entity);
+                    event.setSourceRepository(repo);
                 } else {
-                    Repository entity = (Repository) repoChooser.getSelectedEntity();
-                    source = new SourceWrapper(entity);  
-                    event.eventSourceSet.add(source);
-                    event.eventSourceIndex = event.eventSourceSet.size()-1;
+                    event.addSourceRepository(repo);
                 }
                 changes.setChanged(true);
                 b = true;
@@ -2784,7 +2812,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
         if (eventProp instanceof Entity) {
-            return new EventWrapper((Entity) eventProp);
+            return new EventWrapper((Entity) eventProp, refNotes, refSources);
         }
         return null;
     }
@@ -2918,11 +2946,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         String noteText = eventNote.getText();
         if ((event.eventNoteSet != null) && (!event.eventNoteSet.isEmpty()) && (event.eventNoteIndex >= 0) && (event.eventNoteIndex < event.eventNoteSet.size())) {
-            event.eventNoteSet.get(event.eventNoteIndex).setText(noteText);
+            event.setNote(noteText);
         } else {
-            NoteWrapper note = new NoteWrapper(noteText);
-            event.eventNoteSet.add(note);
-            event.eventNoteIndex = event.eventNoteSet.size()-1;
+            event.addNote(noteText);
         }
         changes.setChanged(true);
     }
@@ -2938,13 +2964,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         String sourceTitle = eventSourceTitle.getText();
         String sourceText = eventSourceText.getText();
         if ((event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (event.eventSourceIndex >= 0) && (event.eventSourceIndex < event.eventSourceSet.size())) {
-            event.eventSourceSet.get(event.eventSourceIndex).setTitle(sourceTitle);
-            event.eventSourceSet.get(event.eventSourceIndex).setText(sourceText);
+            event.setSource(sourceTitle, sourceText);
         } else {
-            SourceWrapper source = new SourceWrapper(sourceTitle);
-            source.setText(sourceText);
-            event.eventSourceSet.add(source);
-            event.eventSourceIndex = event.eventSourceSet.size()-1;
+            event.addSource(sourceTitle, sourceText);
         }
         changes.setChanged(true);
     }
