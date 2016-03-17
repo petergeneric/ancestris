@@ -90,7 +90,7 @@ public final class GedcomMergeVisualPanel3 extends JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
         // Choose Gedcom File
-        if ((gedcomFile = GedcomDirectory.getDefault().chooseFile(stepIndex3_open_title(), stepIndex3_open_action(), null)) != null) {
+        if ((gedcomFile = GedcomDirectory.getDefault().chooseFile(stepIndex3_open_title(), stepIndex3_open_action(), null, false)) != null) {
             jTextField1.setText(gedcomFile.toString());
             firePropertyChange(PROP_SECOND_GEDCOM, 0, 1);
         } else {
