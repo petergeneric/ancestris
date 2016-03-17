@@ -134,7 +134,7 @@ public abstract class GedcomDirectory {
         File file = null;
         boolean fileOK = false;
         while (!fileOK) {            
-            file = chooseFile(title == null ? create_title() : title, create_action(), null, defaultFilename);
+            file = chooseFile(title == null ? create_title() : title, create_action(), null, defaultFilename, true);
             if (file == null) {
                 return null;
             }
@@ -221,7 +221,7 @@ public abstract class GedcomDirectory {
     public Context openGedcom() {
 
         // ask user
-        File file = chooseFile(RES.getString("cc.open.title"), RES.getString("cc.open.action"), null);
+        File file = chooseFile(RES.getString("cc.open.title"), RES.getString("cc.open.action"), null, false);
         if (file == null) {
             return null;
         }
@@ -346,7 +346,7 @@ public abstract class GedcomDirectory {
         }
 
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString());
+        File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString(), true);
         if (file == null) {
             return false;
         }
@@ -525,15 +525,20 @@ public abstract class GedcomDirectory {
      * Utilities methods
      */
     /**
-     * Let the user choose a file
+     * Let the user choose a file (false) or create one (true)
+     * @param title
+     * @param action
+     * @param accessory
+     * @param create
+     * @return 
      */
-    public File chooseFile(String title, String action, JComponent accessory) {
-        return chooseFile(title, action, accessory, null);
+    public File chooseFile(String title, String action, JComponent accessory, boolean create) {
+        return chooseFile(title, action, accessory, null, create);
     }
 
-    public File chooseFile(String title, String action, JComponent accessory, String defaultFilename) {
+    public File chooseFile(String title, String action, JComponent accessory, String defaultFilename, boolean create) {
 
-        File file  = new FileChooserBuilder(GedcomDirectory.class)
+        FileChooserBuilder fbc  = new FileChooserBuilder(GedcomDirectory.class)
                     .setDirectoriesOnly(false)
                     .setDefaultBadgeProvider()
                     .setAccessory(accessory)
@@ -542,8 +547,13 @@ public abstract class GedcomDirectory {
                     .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
                     .setFileFilter(FileChooserBuilder.getGedcomFilter())
                     .setAcceptAllFileFilterUsed(false)
-                    .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
-                    .showOpenDialog();
+                    .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")));
+
+        if (defaultFilename != null) {
+            fbc = fbc.setSelectedFile(new File(defaultFilename));
+        }
+        
+        File file = create ? fbc.showSaveDialog(false) : fbc.showOpenDialog();
         
         // done
         return file;

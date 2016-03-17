@@ -36,6 +36,10 @@ public class PropertyRepository extends PropertyXRef {
     assertTag("REPO");
   }
 
+  /*package*/ PropertyRepository() {
+    super("REPO");
+  }
+
   /**
    * Links reference to entity (if not already done)
    * @exception GedcomException when processing link would result in inconsistent state

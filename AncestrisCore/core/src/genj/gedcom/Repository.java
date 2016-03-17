@@ -48,4 +48,16 @@ public class Repository extends Entity {
     return name!=null ? name.getValue() : ""; 
   }
   
+  /**
+   * Sets the name of this repository
+   */
+  public void setRepositoryName(String name) {
+    Property property = getProperty("NAME");
+    if (property == null) {
+        property = addProperty("NAME", name);
+    } else {
+        property.setValue(name);
+    }
+  }
+  
 } //Repository
