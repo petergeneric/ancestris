@@ -35,6 +35,10 @@ public class PropertySource extends PropertyXRef {
     assertTag("SOUR");
   }
   
+  /*package*/ PropertySource() {
+    super("SOUR");
+  }
+
   /**
    * Links reference to entity (if not already done)
    * @exception GedcomException when processing link would result in inconsistent state

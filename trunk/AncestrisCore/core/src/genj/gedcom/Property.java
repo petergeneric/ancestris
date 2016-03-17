@@ -218,6 +218,50 @@ public abstract class Property implements Comparable<Property> {
     }
 
     /**
+     * Associates a source object with this property
+     */
+    public boolean addSource(Source source) {
+        // SOUR?
+        if (!getMetaProperty().allows("SOUR")) {
+            return false;
+        }
+        // add reference
+        PropertySource xref = new PropertySource();
+        addProperty(xref);
+        xref.setValue(source.getId());
+        try {
+            xref.link();
+        } catch (GedcomException e) {
+            Gedcom.LOG.log(Level.FINE, "unexpected", e);
+            delProperty(xref);
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * Associates a repository object with this property
+     */
+    public boolean addRepository(Repository repository) {
+        // REPO?
+        if (!getMetaProperty().allows("REPO")) {
+            return false;
+        }
+        // add reference
+        PropertyRepository xref = new PropertyRepository();
+        addProperty(xref);
+        xref.setValue(repository.getId());
+        try {
+            xref.link();
+        } catch (GedcomException e) {
+            Gedcom.LOG.log(Level.FINE, "unexpected", e);
+            delProperty(xref);
+            return false;
+        }
+        return true;
+    }
+
+    /**
      * Adds a sub-property to this property
      */
     public Property addProperty(String tag, String value) {
