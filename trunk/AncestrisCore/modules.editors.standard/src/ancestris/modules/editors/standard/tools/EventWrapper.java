@@ -237,6 +237,7 @@ public class EventWrapper {
                 NoteWrapper note = null;
                 if (prop instanceof PropertyNote) {
                     note = createUniqueNote((Note) ((PropertyNote) prop).getTargetEntity());
+                    note.setHostingProperty(prop);
                 } else {
                     note = new NoteWrapper(prop);
                 }
@@ -435,7 +436,10 @@ public class EventWrapper {
             // Date
             PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
             if (tmpDate == null) {
-                eventProperty.addProperty("DATE", date.getValue());
+                String val = date.getValue().trim();
+                if (!val.isEmpty()) {
+                    eventProperty.addProperty("DATE", date.getValue());
+                }
             } else {
                 tmpDate.setValue(date.getValue());
             }
@@ -443,7 +447,10 @@ public class EventWrapper {
             // Place
             PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
             if (tmpPlace == null) {
-                eventProperty.addProperty("PLAC", place.getValue());
+                String val = place.getValue().trim();
+                if (!val.isEmpty()) {
+                    eventProperty.addProperty("PLAC", place.getValue());
+                }
             } else {
                 tmpPlace.setValue(place.getValue());
             }
