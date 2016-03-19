@@ -221,11 +221,13 @@ public class MediaWrapper {
         if (recordType && (hostingProperty instanceof PropertyMedia)) {
             PropertyMedia pm = (PropertyMedia) hostingProperty;
             Property parent = pm.getParent();
-            // add new link from parent
-            parent.addMedia((Media) targetMedia);
-            putMediaRecord(targetMedia);
-            // remove old link
-            parent.delProperty(hostingProperty);
+            if (parent != null) {
+                // add new link from parent
+                parent.addMedia((Media) targetMedia);
+                putMediaRecord(targetMedia);
+                // remove old link
+                parent.delProperty(hostingProperty);
+            }
         } else
             
         // Case of Media record and link not yet created (added and chosen from MediaChooser)

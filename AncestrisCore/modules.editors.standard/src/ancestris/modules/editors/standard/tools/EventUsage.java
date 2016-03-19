@@ -25,6 +25,8 @@ import java.util.Set;
 public class EventUsage {
     
     public static void init(Map<String, EventUsage> eventUsages) {
+        eventUsages.put("INDI", new EventUsage( 0, "INDI"));    // The general event for an individual (/!\ this is not a gedcom event)
+
         eventUsages.put("BIRT", new EventUsage( 1, "INDI"));    // The event of entering into life.
 
         eventUsages.put("CHR",  new EventUsage( 2, "INDI"));    // The religious event (not LDS) of baptizing and/or naming a child.

@@ -12,11 +12,13 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.util.WordBuffer;
 import javax.swing.JLabel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -31,31 +33,37 @@ public class EventLabel extends JLabel {
     public EventLabel(Property property) {
         this.tag = property.getTag();
         
-        String str = property.getPropertyName();
-        if (str.contains(" ")) {
-            this.shortLabel = str.substring(0, str.indexOf(" ")); // only take first word
+        if (property instanceof Indi) {
+            this.shortLabel = NbBundle.getMessage(getClass(), "IndiEventNameShort");
+            this.longLabel = NbBundle.getMessage(getClass(), "IndiEventNameLong");
         } else {
-            this.shortLabel = str;
+            String str = property.getPropertyName();
+            if (str.contains(" ")) {
+                this.shortLabel = str.substring(0, str.indexOf(" ")); // only take first word
+            } else {
+                this.shortLabel = str;
+            }
+
+            WordBuffer buffer = new WordBuffer(" - ");
+
+            buffer.append(shortLabel);
+
+            Property date = property.getProperty("DATE");
+            if (date != null) {
+                PropertyDate pDate = (PropertyDate) date;
+                buffer.append(pDate.getStart().getValue());
+            }
+
+            Property place = property.getProperty("PLAC");
+            if (place != null) {
+                PropertyPlace pPlace = (PropertyPlace) place;
+                buffer.append(pPlace.getCity());
+            }
+
+            this.longLabel = buffer.toString();
         }
+        
         setText(shortLabel);
-        
-        WordBuffer buffer = new WordBuffer(" - ");
-
-        buffer.append(shortLabel);
-
-        Property date = property.getProperty("DATE");
-        if (date != null) {
-            PropertyDate pDate = (PropertyDate) date;
-            buffer.append(pDate.getStart().getValue());
-        }
-
-        Property place = property.getProperty("PLAC");
-        if (place != null) {
-            PropertyPlace pPlace = (PropertyPlace) place;
-            buffer.append(pPlace.getCity());
-        }
-        
-        longLabel = buffer.toString();
     }
 
     public String getTag() {
