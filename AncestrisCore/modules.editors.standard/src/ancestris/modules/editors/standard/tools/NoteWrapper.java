@@ -65,6 +65,10 @@ public class NoteWrapper {
     }
 
     
+    public void setHostingProperty(Property property) {
+        this.hostingProperty = property;
+    }
+
 
 
     /**
@@ -106,9 +110,9 @@ public class NoteWrapper {
             parent.delProperty(hostingProperty);
         } else
             
-        // Case of property as Note entity (added chosen from NoteChooser)
+        // Case of property as Note entity
         if (entity instanceof Note) {
-            mainProp.addNote((Note) targetNote);
+            //mainProp.addNote((Note) targetNote);
             targetNote.setValue(text);
         }
     }

@@ -444,8 +444,8 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        SelectionDispatcher.fireSelection(new Context(ent));
                         cancelButton.doClick();
+                        SelectionDispatcher.fireSelection(new Context(ent));
                     }
                 });
                 menu.show(assoWithTable, evt.getX(), evt.getY());
@@ -467,8 +467,8 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
-                        SelectionDispatcher.fireSelection(new Context(targetProperty));
                         cancelButton.doClick();
+                        SelectionDispatcher.fireSelection(new Context(targetProperty));
                     }
                 });
                 menu.show(assoOfList, evt.getX(), evt.getY());
