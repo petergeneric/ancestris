@@ -1935,6 +1935,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             assoSet.clear();
             assoSet = null;
         }
+        if (assoRemovedSet != null) {
+            assoRemovedSet.clear();
+            assoRemovedSet = null;
+        }
         assoSet = getAssociations(indi);
         assoRemovedSet = new ArrayList<AssoWrapper>();
         displayAssociationsComboBox();
@@ -2852,9 +2856,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { okButton, cancelButton };
         AssoManager assoManager = new AssoManager(indi, eventSet, assoSet, (AssoWrapper) assoComboBox.getSelectedItem(), okButton, cancelButton);
-        String indiStr = assoManager.getIndi();
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle", indiStr), assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        String title = NbBundle.getMessage(getClass(), "TITL_AssoManagerTitle", assoManager.getIndi());
+        Object o = DialogManager.create(title, assoManager).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == okButton && assoManager.hasChanged()) {
+            for (AssoWrapper asso : assoSet) {
+                if (!assoManager.contains(asso)) {
+                    assoRemovedSet.add(asso);
+                }
+            }
             assoSet = assoManager.clone(assoManager.getSet());
             changes.setChanged(true);
             b = true;
@@ -2866,10 +2875,10 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void saveAssociations() {
         //assoSet
         for (AssoWrapper asso : assoSet) {
-            asso.update(indi);
+            asso.update();
         }
         for (AssoWrapper asso : assoRemovedSet) {
-            asso.remove(indi);
+            asso.remove();
         }
     }
 

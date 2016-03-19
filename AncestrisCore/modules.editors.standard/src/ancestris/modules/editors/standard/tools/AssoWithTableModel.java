@@ -128,7 +128,7 @@ class AssoWithTableModel extends AbstractTableModel {
             if (o != null) {
                 switch (column) {
                     case 0:
-                        str = ((EventWrapper) o).eventLabel.getLongLabel() + "MM";  // add size of an icon
+                        str = ((EventWrapper) o).eventLabel.getLongLabel() + "MMMMMM";  // add size of an icon plus the drop-down button
                         break;
                     case 1:
                         str = ((String) o);
@@ -143,7 +143,7 @@ class AssoWithTableModel extends AbstractTableModel {
                         str = ((String) o);
                         break;
                     case 5:
-                        str = PropertySex.TXT_UNKNOWN + "MM"; // size of sex icon and label
+                        str = PropertySex.TXT_UNKNOWN + "MMMMMM"; // size of sex icon and label plus the drop-down button
                         break;
                     case 6:
                         str = ((String) o);
@@ -161,7 +161,36 @@ class AssoWithTableModel extends AbstractTableModel {
         return ret;
     }
 
-    void updateList(Object data, int row, int column) {
+    public boolean isChanged(Object data, int row, int column) {
+        boolean ret = false;
+        AssoWrapper asso = assoModelSet.get(row);
+        switch (column) {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                ret = !asso.assoLastname.equals((String) data);
+                break;
+            case 4:
+                ret = !asso.assoFirstname.equals((String) data);
+                break;
+            case 5:
+                ImageIcon icon = (ImageIcon) data;
+                int newSex = (icon == PropertySex.getImage(PropertySex.MALE) ? PropertySex.MALE : icon == PropertySex.getImage(PropertySex.FEMALE) ? PropertySex.FEMALE : PropertySex.UNKNOWN);
+                ret = asso.assoSex != newSex;
+                break;
+            case 6:
+                ret = !asso.assoOccupation.equals((String) data);
+                break;
+        }
+        return ret;
+    }
+
+    
+    public void updateList(Object data, int row, int column) {
         AssoWrapper asso = assoModelSet.get(row);
         switch (column) {
             case 0:
@@ -189,11 +218,11 @@ class AssoWithTableModel extends AbstractTableModel {
         }
     }
 
-    List<AssoWrapper> getSet() {
+    public List<AssoWrapper> getSet() {
         return assoModelSet;
     }
 
-    void setIndiValues(Indi indi, int row) {
+    public void setIndiValues(Indi indi, int row) {
         setValueAt(indi.getLastName(), row, 3);
         setValueAt(indi.getFirstName(), row, 4);
         setValueAt(PropertySex.getImage(indi.getSex()), row, 5);
