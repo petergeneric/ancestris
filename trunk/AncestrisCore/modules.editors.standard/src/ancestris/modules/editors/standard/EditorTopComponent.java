@@ -349,6 +349,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         cancel();
 
         // Re-set for cancel
+        editor.setGedcomHasChanged(true);
         Context ctx = editor.getContext();
         editor.setContext(ctx);
     }

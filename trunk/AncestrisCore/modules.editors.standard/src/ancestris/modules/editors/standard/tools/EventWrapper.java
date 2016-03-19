@@ -40,12 +40,13 @@ import org.openide.util.NbBundle;
  */
 public class EventWrapper {
 
+    public boolean isGeneral = true;       // true for the general event
     private Entity hostingEntity = null;    // INDI or FAM the event belongs to
     public Property eventProperty = null;   // the event
     
     public EventLabel eventLabel = null;    // for table
     public int eventYear = 0;               // for table
-    public String eventAge = "";            // for table and label
+    public String eventAge = "-";            // for table and label
     
     public String title = "";  
     public boolean showDesc = false;
@@ -53,7 +54,7 @@ public class EventWrapper {
     private boolean hasAttribute = false;   // attribute of event if of type PropertyChoiceValue
     public PropertyDate date = null;        // Date temp property (to be saved in gedcom)
     public PropertyPlace place = null;      // Place temp property (to be saved in gedcom)
-    public String dayOfWeek = null;
+    public String dayOfWeek = "";
     public String age = "";
     
 
@@ -77,80 +78,89 @@ public class EventWrapper {
         
         this.refNotes = refNotes;
         this.refSources = refSources;
-        
         this.eventProperty = property;
-        this.hasAttribute =  this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
         this.hostingEntity = property.getEntity();
 
         // Event description & icon
         this.eventLabel = new EventLabel(property);
         this.eventLabel.setIcon(property.getImage());
-        
-        // Title and description
-        this.title = this.eventLabel.getShortLabel();
-        Property type = property.getProperty("TYPE"); 
-        this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
 
-        // Event date
-        this.date = new PropertyDate();
-        PropertyDate tmpDate = (PropertyDate) property.getProperty("DATE");
-        if (tmpDate != null) {
-            this.date.setValue(tmpDate.getValue());
-        }
-        try {
-            if (tmpDate != null && tmpDate.getStart() != null) {
-                this.dayOfWeek = tmpDate.getStart().getDayOfWeek(true);
-            } else {
+        // No attributes appart from notes and sources for the general event
+        if (!property.equals(indi)) {
+
+            isGeneral = false;
+            
+            // Description
+            this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
+            Property type = property.getProperty("TYPE");
+            this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+
+            // Event date
+            this.date = new PropertyDate();
+            PropertyDate tmpDate = (PropertyDate) property.getProperty("DATE");
+            if (tmpDate != null) {
+                this.date.setValue(tmpDate.getValue());
+            }
+            try {
+                if (tmpDate != null && tmpDate.getStart() != null) {
+                    this.dayOfWeek = tmpDate.getStart().getDayOfWeek(true);
+                } else {
+                    this.dayOfWeek = "";
+                }
+            } catch (GedcomException ex) {
+                //Exceptions.printStackTrace(ex);
                 this.dayOfWeek = "";
             }
-        } catch (GedcomException ex) {
-            //Exceptions.printStackTrace(ex);
-            this.dayOfWeek = "";
-        }
 
-        // Event year
-        if (tmpDate != null) {
-            this.eventYear = tmpDate.getStart() == null ? 0 : tmpDate.getStart().getYear();
-        }
-        
-        //
-        if (indi == null) {
-            return;
-        }
-        
-        // Age of related indi at time of event
-        Property prop = property.getProperty("AGE");
-        if (prop != null && prop instanceof PropertyAge) {
-            PropertyAge propAge = (PropertyAge) prop;
-            propAge.updateAge();
-            this.eventAge = propAge.getDecimalValue("#.###");
-            if (eventAge.equals("0")) {
-                eventAge = "-";
+            // Event year
+            if (tmpDate != null) {
+                this.eventYear = tmpDate.getStart() == null ? 0 : tmpDate.getStart().getYear();
             }
-            this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
-        } else {
-            PropertyAge propAge = new PropertyAge("AGE");
-            propAge.getAge(indi, eventProperty);
-            this.eventAge = propAge.getDecimalValue("#.###");
-            if (eventAge.equals("0")) {
-                eventAge = "-";
+
+            //
+            if (indi == null) {
+                return;
             }
-            this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
-        }
-        if (this.date == null || property.getTag().equals("BIRT")) {
-            this.age = "";
-        }
-        
-        // Place of event
-        this.place = new PropertyPlace("PLAC");
-        PropertyPlace tmpPlace = (PropertyPlace) property.getProperty("PLAC");
-        if (tmpPlace != null) {
-            this.place.setValue(tmpPlace.getValue());
+
+            // Age of related indi at time of event
+            Property prop = property.getProperty("AGE");
+            if (prop != null && prop instanceof PropertyAge) {
+                PropertyAge propAge = (PropertyAge) prop;
+                propAge.updateAge();
+                this.eventAge = propAge.getDecimalValue("#.###");
+                if (eventAge.equals("0")) {
+                    eventAge = "-";
+                }
+                this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
+            } else {
+                PropertyAge propAge = new PropertyAge("AGE");
+                propAge.getAge(indi, eventProperty);
+                this.eventAge = propAge.getDecimalValue("#.###");
+                if (eventAge.equals("0")) {
+                    eventAge = "-";
+                }
+                this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
+            }
+            if (this.date == null || property.getTag().equals("BIRT")) {
+                this.age = "";
+            }
+
+            // Place of event
+            this.place = new PropertyPlace("PLAC");
+            PropertyPlace tmpPlace = (PropertyPlace) property.getProperty("PLAC");
+            if (tmpPlace != null) {
+                this.place.setValue(tmpPlace.getValue());
+
+            }
 
         }
+        
+        // Title
+        this.title = isGeneral ? this.eventLabel.getLongLabel() : this.eventLabel.getShortLabel();
+        
         
         // Notes
-            if (eventNoteSet != null) {
+        if (eventNoteSet != null) {
             eventNoteSet.clear();
             eventNoteSet = null;
         }
@@ -293,10 +303,15 @@ public class EventWrapper {
                 
         // Look for sources attached to event (source_record as links to a source entity)
         for (PropertySource propSource : event.getProperties(PropertySource.class)) {
+            // skip it for general sources more than 2 levels below indi
+            if (event instanceof Indi && !propSource.getParent().equals(event)) {
+                continue;
+            }
             SourceWrapper source = createUniqueSource((Source) propSource.getTargetEntity());
             source.setHostingProperty(propSource);
             ret.add(source);
         }
+        
         // Look for sources attached to event (source_citation included underneath SOUR tag)
         Property[] sourceProps = event.getProperties("SOUR");
         for (Property prop : sourceProps) {
@@ -304,22 +319,6 @@ public class EventWrapper {
                 ret.add(new SourceWrapper(prop));
             }
         }
-        
-//        // Read only ! : Look for general sources directly attached to indi
-//        // Look for sources attached to indi as links to source entities
-//        for (PropertySource propSource : hostingEntity.getProperties(PropertySource.class)) {
-//            if (propSource != null && propSource.getParent() == ((Property) hostingEntity)) {
-//                SourceWrapper source = createUniqueSource((Source) propSource.getTargetEntity());
-//                ret.add(source);
-//            }
-//        }
-//        // Look for sources attached to indi (source_citation included underneath SOUR tag)
-//        sourceProps = hostingEntity.getProperties("SOUR");
-//        for (Property prop : sourceProps) {
-//            if (prop != null && !(prop instanceof PropertySource)) {
-//                ret.add(new SourceWrapper(prop));
-//            }
-//        }
         
         return ret;
     }
@@ -416,35 +415,38 @@ public class EventWrapper {
      * List<SourceWrapper> eventSourceRemovedSet = null;    // Sources to remove (to be saved in gedcom)
     */ 
     public void update(Indi indi) {
-        // Description : depends on property.metaProperty
-        // = property.getDisplayValue();                            // case of attributes: description is the value of the event
-        // = property.getProperty("TYPE").getDisplayValue();        // case of events and RESI: description is the value of the TYPE
-        description = description.trim();
-        if (hasAttribute) {
-            eventProperty.setValue(description);
-        } else { 
-            Property type = eventProperty.getProperty("TYPE");
-            if (type == null) {
-                eventProperty.addProperty("TYPE", description);
-            } else {
-                type.setValue(description);
-            }
-        }
-
-        // Date
-        PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
-        if (tmpDate == null) {
-            eventProperty.addProperty("DATE", date.getValue());
-        } else {
-            tmpDate.setValue(date.getValue());
-        }
         
-        // Place
-        PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
-        if (tmpPlace == null) {
-            eventProperty.addProperty("PLAC", place.getValue());
-        } else {
-            tmpPlace.setValue(place.getValue());
+        if (!isGeneral) {
+            // Description : depends on property.metaProperty
+            // = property.getDisplayValue();                            // case of attributes: description is the value of the event
+            // = property.getProperty("TYPE").getDisplayValue();        // case of events and RESI: description is the value of the TYPE
+            description = description.trim();
+            if (hasAttribute) {
+                eventProperty.setValue(description);
+            } else {
+                Property type = eventProperty.getProperty("TYPE");
+                if (type == null) {
+                    eventProperty.addProperty("TYPE", description);
+                } else {
+                    type.setValue(description);
+                }
+            }
+
+            // Date
+            PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
+            if (tmpDate == null) {
+                eventProperty.addProperty("DATE", date.getValue());
+            } else {
+                tmpDate.setValue(date.getValue());
+            }
+
+            // Place
+            PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
+            if (tmpPlace == null) {
+                eventProperty.addProperty("PLAC", place.getValue());
+            } else {
+                tmpPlace.setValue(place.getValue());
+            }
         }
         
         // Notes

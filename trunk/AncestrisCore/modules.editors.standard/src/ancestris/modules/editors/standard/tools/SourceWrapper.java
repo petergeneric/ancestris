@@ -15,6 +15,7 @@ package ancestris.modules.editors.standard.tools;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Grammar;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
@@ -285,9 +286,11 @@ public class SourceWrapper {
             PropertyMedia pm = (PropertyMedia) propMedia;
             this.targetMedia = (Media) pm.getTargetEntity();
             this.file = targetMedia.getFile();
-        } else {
+        } else if (propMedia != null) {
             this.targetMedia = null;
-            this.file = null;
+            Property prop = propMedia.getProperty("FILE");
+            PropertyFile pFile = prop != null ? (PropertyFile) prop : null;
+            this.file = pFile != null ? pFile.getFile() : null;
         }
         Property propRepository = property.getProperty("REPO", true);           /* repo */
         if (propRepository != null && propRepository instanceof PropertyRepository) {
@@ -534,25 +537,35 @@ public class SourceWrapper {
      * @param f 
      */
     private void putMedia(Property property, File f) {
-        if (targetMedia == null) {
-            try {
-                targetMedia = (Media) property.getGedcom().createEntity(Gedcom.OBJE);
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
+
+        Gedcom gedcom = property.getGedcom();
+        if (gedcom.getGrammar().equals(Grammar.V55)) {  // v5.5
+            Property propMedia = property.getProperty("OBJE", true);
+            if (propMedia == null) {
+                propMedia = property.addProperty("OBJE", "");
             }
-        }
-        putFile(targetMedia, f);
-        
-        Property propMedia = property.getProperty("OBJE", true);
-        if (propMedia != null && propMedia instanceof PropertyMedia) {
-            PropertyMedia pm = (PropertyMedia) propMedia;
-            Media tmpMedia = (Media) pm.getTargetEntity();
-            if (tmpMedia != targetMedia) { // it points to another media entity, replace media.
-                property.delProperty(propMedia);
+            putFile(propMedia, f);
+        } else {  // v5.5.1
+            if (targetMedia == null) {
+                try {
+                    targetMedia = (Media) property.getGedcom().createEntity(Gedcom.OBJE);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            putFile(targetMedia, f);
+
+            Property propMedia = property.getProperty("OBJE", true);
+            if (propMedia != null && propMedia instanceof PropertyMedia) {
+                PropertyMedia pm = (PropertyMedia) propMedia;
+                Media tmpMedia = (Media) pm.getTargetEntity();
+                if (tmpMedia != targetMedia) { // it points to another media entity, replace media.
+                    property.delProperty(propMedia);
+                    property.addMedia(targetMedia);
+                }
+            } else {
                 property.addMedia(targetMedia);
-            } 
-        } else {
-          property.addMedia(targetMedia);  
+            }
         }
     }
 
@@ -566,7 +579,7 @@ public class SourceWrapper {
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
-        if (this.file != null) {
+        if (this.file != null && mediaFile instanceof PropertyFile) {
             ((PropertyFile) mediaFile).addFile(f);
         }
     }
