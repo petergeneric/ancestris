@@ -13,6 +13,8 @@
 package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
@@ -20,7 +22,10 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyRelationship;
 import genj.gedcom.PropertySex;
+import genj.gedcom.PropertyXRef;
+import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -85,6 +90,10 @@ public class AssoWrapper {
         targetEventTag = asso.targetEventTag;
         targetEventDesc = asso.targetEventDesc;
     }
+    
+    public boolean equals(AssoWrapper object) {
+        return (assoIndi.equals(object.assoIndi)) && targetEvent.equals(object.targetEvent) && targetEventDesc.equals(object.targetEventDesc);
+    }
 
     /**
      * Set values based on ASSO tag and reference
@@ -145,15 +154,149 @@ public class AssoWrapper {
         return assoTxt + (!name.isEmpty() ? " | " + name : "");
     }
     
-    public void update(Indi indi) {
+    /**
+     * Modify or create an association
+     * 
+     * @param indi 
+     */
+    public void update() {
+
+        if (!isToBeUpdated()) {   // do no update if not necessary (otherwise it would change the modification timestamp)
+            return;
+        }
+        
+        // If target entity is null, create it
+        if (targetEntity == null) {
+            targetEntity = targetEvent.eventProperty.getEntity();
+        }
+        
+        // If individual is to be created, create it
+        if (assoIndi == null || assoIndi.getGedcom() == null) {
+            try {
+                assoIndi = (Indi) targetEntity.getGedcom().createEntity(Gedcom.INDI);
+                assoProp = null;
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+        
+        // Update individual
+        assoIndi.setName(assoFirstname, assoLastname);
+        assoIndi.setSex(assoSex);
+        putProperty(assoIndi, "OCCU", assoOccupation);
+
+        // If association is null, create it
+        if (assoProp == null) {
+            PropertyXRef assoXref = (PropertyXRef) assoIndi.addProperty("ASSO", "@@");
+            assoProp = (PropertyAssociation) assoXref;
+        } else {
+            removeLink(assoProp);
+        }
+        
+        // Record values
+        assoProp.setValue('@' + targetEntity.getId() + '@');
+
+        TagPath anchor = targetEvent.eventProperty.getPath();
+        putProperty(assoProp, "RELA", assoTxt + (anchor == null ? "" : '@' + anchor.toString()));
+        
+        // link it (adds the TYPE tag at the same time)
+        try {
+            assoProp.link();
+        } catch (Exception ex) {
+            removeAsso(assoIndi, assoProp);
+            Exceptions.printStackTrace(ex);
+        }
         
     }
 
 
+    
+    private boolean isToBeUpdated() {
+        if (!assoIndi.getFirstName().equals(assoFirstname)) {
+            return true;
+        }
+        if (!assoIndi.getLastName().equals(assoLastname)) {
+            return true;
+        }
+        if (assoIndi.getSex() != assoSex) {
+            return true;
+        }
+        Property occuProps[] = assoIndi.getProperties("OCCU");
+        boolean found = false;
+        for (Property p : occuProps) {
+            String occuStr = "";
+            if (p != null) {
+                occuStr = p.getDisplayValue().trim();
+            }
+            if (occuStr.equals(assoOccupation.trim())) {
+                found = true;
+            }
+        }
+        if (!found) {
+            return true;
+        }
+        
+        if (targetEntity == null || assoIndi == null || assoIndi.getGedcom() == null || assoProp == null) {
+            return true;
+        }
+        
+        String val = assoProp.getValue();
+        if (!val.equals('@' + targetEntity.getId() + '@')) {
+            return true;
+        }
+        
+        TagPath anchor = targetEvent.eventProperty.getPath();
+        String newRela = assoTxt + (anchor == null ? "" : '@' + anchor.toString());
+        PropertyRelationship p = (PropertyRelationship) assoProp.getProperty("RELA");
+        String oldRela = p != null ? p.getValue() : "";
+        if (!oldRela.equals(newRela)) {
+            return true;
+        }
 
-    public void remove(Indi indi) {
-
+        return false;
     }
 
+    
+    
+
+    /**
+     * 
+     * @param indi 
+     */
+    public void remove() {
+        if (assoIndi != null && assoProp != null) {
+            removeLink(assoProp);
+            removeAsso(assoIndi, assoProp);
+        }
+    }
+
+
+    /**
+     * Update or Create tag property with value to provided property
+     * @param property : host property
+     * @param tag : property tag
+     * @param value : property value
+     */
+    private void putProperty(Property property, String tag, String value) {
+        Property prop = property.getProperty(tag, true);
+        if (prop != null) {
+            prop.setValue(value);
+        } else {
+            property.addProperty(tag, value);
+        }
+    }
+
+    private void removeLink(PropertyAssociation pa) {
+        Property target = pa.getTarget();
+        Property targetParent = target.getParent();
+        pa.unlink();
+        targetParent.delProperty(target);
+    }
+
+    private void removeAsso(Indi indi, PropertyAssociation pa) {
+        indi.delProperty(pa);
+    }
+
+    
     
 }

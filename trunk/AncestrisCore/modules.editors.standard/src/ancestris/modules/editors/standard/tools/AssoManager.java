@@ -11,6 +11,7 @@
  */
 package ancestris.modules.editors.standard.tools;
 
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -60,6 +61,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private Registry registry = null;
     private boolean hasChanged = false;
     private JButton okButton = null;
+    private JButton cancelButton = null;
     private boolean isValid = true;
     private boolean isBusy = false;
     
@@ -75,6 +77,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private JComboBox comboBoxRelas = null;
     private String[] arrayOccus = null;
     private JComboBox comboBoxOccus = null;
+    private Indi inditobecreated = null;
             
     // Associations Of indi
     private DefaultListModel assoOfSet = null;
@@ -88,9 +91,13 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         this.indi = indi;
         this.gedcom = indi.getGedcom();
         this.okButton = okButton;
+        this.cancelButton = cancelButton;
 
         registry = Registry.get(getClass());
 
+        // Pre-create an indi for display in table
+        inditobecreated = new Indi("INDI", NbBundle.getMessage(getClass(), "AssoManager.inditobecreated"));
+        
         // Get associations of both types
         assoWithSet = clone(assoSet);
         assoOfSet = getAssociationOf(indi);
@@ -438,6 +445,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         SelectionDispatcher.fireSelection(new Context(ent));
+                        cancelButton.doClick();
                     }
                 });
                 menu.show(assoWithTable, evt.getX(), evt.getY());
@@ -451,12 +459,16 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
             AssoWrapper asso = (AssoWrapper) assoOfList.getModel().getElementAt(index);
             if (asso != null) {
                 final Property targetProperty = asso.targetEvent != null ? asso.targetEvent.eventProperty : null;
+                if (targetProperty == null) {
+                    return;
+                }
                 JPopupMenu menu = new JPopupMenu();
-                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "AssoManager.ShowEntity", asso.targetEvent.eventLabel.getLongLabel()));
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "AssoManager.ShowEntity", targetProperty.getEntity().toString(true)));
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         SelectionDispatcher.fireSelection(new Context(targetProperty));
+                        cancelButton.doClick();
                     }
                 });
                 menu.show(assoOfList, evt.getX(), evt.getY());
@@ -510,8 +522,16 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 }
                 if (column >=3 && column <= 6) {
                     isBusy = true;
-                    Indi indiCreated = new Indi("INDI", NbBundle.getMessage(getClass(), "AssoManager.inditobecreated"));
-                    awtm.setValueAt(indiCreated, row, 2);
+                    if (awtm.isChanged(data, row, column)) {
+                        Indi changedIndi = (Indi) awtm.getValueAt(row, 2);
+                        if ((changedIndi != null) && (changedIndi != inditobecreated) && (DialogManager.YES_OPTION == DialogManager.createYesNo(
+                                NbBundle.getMessage(getClass(), "TITL_AssoChangeIndi"),
+                                NbBundle.getMessage(getClass(), "MSG_AssoChangedIndi", awtm.getColumnName(column), changedIndi)).
+                                setMessageType(DialogManager.QUESTION_MESSAGE).show())) {
+                            awtm.setValueAt(inditobecreated, row, 2);
+                        }
+                    }
+                    
                     isBusy = false;
                 }
                 if (column == 1) { // add rela value to combobox if different
@@ -565,6 +585,15 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
             ret.add(AssoWrapper.clone(asso));
         }
         return ret;
+    }
+
+    public boolean contains(AssoWrapper element) {
+        for (AssoWrapper asso : assoWithSet) {
+            if (asso.equals(element)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 
@@ -643,18 +672,28 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     
     private class ComboBoxEventsRenderer extends JLabel implements ListCellRenderer {
 
+        private Color backSelectedColor = null;
+        private Color foreSelectedColor = null;
+        
         public ComboBoxEventsRenderer() {
             setOpaque(true);
             setHorizontalAlignment(LEFT);
             setVerticalAlignment(CENTER);
+            setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            
+            // For some reason, selected colors have to be instantiated in order to work when item is selected.
+            Color c = new JList().getSelectionBackground();
+            backSelectedColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
+            c = new JList().getSelectionForeground();
+            foreSelectedColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
         }
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value != null) {
                 EventWrapper event = (EventWrapper) value;
                 if (isSelected) {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
+                    setBackground(backSelectedColor);
+                    setForeground(foreSelectedColor);
                 } else {
                     setBackground(list.getBackground());
                     setForeground(list.getForeground());
@@ -669,23 +708,33 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
 
     private class ComboBoxSexsRenderer extends JLabel implements ListCellRenderer {
 
+        private Color backSelectedColor = null;
+        private Color foreSelectedColor = null;
+        
         public ComboBoxSexsRenderer() {
             setOpaque(true);
             setHorizontalAlignment(LEFT);
             setVerticalAlignment(CENTER);
+            setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            
+            // For some reason, selected colors have to be instantiated in order to work when item is selected.
+            Color c = new JList().getSelectionBackground();
+            backSelectedColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
+            c = new JList().getSelectionForeground();
+            foreSelectedColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
         }
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value != null) {
                 ImageIcon icon = (ImageIcon) value;
                 if (isSelected) {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
+                    setBackground(backSelectedColor);
+                    setForeground(foreSelectedColor);
                 } else {
                     setBackground(list.getBackground());
                     setForeground(list.getForeground());
                 }
-                setHorizontalAlignment(JLabel.CENTER);
+                setHorizontalAlignment(JLabel.LEFT);
                 setIcon(icon);
                 setText(icon == PropertySex.getImage(PropertySex.MALE) ? PropertySex.TXT_MALE : icon == PropertySex.getImage(PropertySex.FEMALE) ? PropertySex.TXT_FEMALE : PropertySex.TXT_UNKNOWN);
             }
@@ -696,6 +745,19 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     
     
     private class ListRenderer extends JLabel implements ListCellRenderer {
+
+        private Color backSelectedColor = null;
+        private Color foreSelectedColor = null;
+        
+        public ListRenderer() {
+            setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            
+            // For some reason, selected colors have to be instantiated in order to work when item is selected.
+            Color c = new JList().getSelectionBackground();
+            backSelectedColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
+            c = new JList().getSelectionForeground();
+            foreSelectedColor = new Color(c.getRed(), c.getGreen(), c.getBlue());
+        }
 
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value != null) {
@@ -713,8 +775,8 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                 setText(sb.toString());
 
                 if (isSelected) {
-                    setBackground(list.getSelectionBackground());
-                    setForeground(list.getSelectionForeground());
+                    setBackground(backSelectedColor);
+                    setForeground(foreSelectedColor);
                 } else {
                     setBackground(list.getBackground());
                     setForeground(list.getForeground());
