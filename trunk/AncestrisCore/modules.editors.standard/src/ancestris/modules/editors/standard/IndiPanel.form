@@ -814,6 +814,9 @@
                   <Dimension value="[30, 26]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eventBirtButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="eventBaptButton">
               <Properties>
@@ -830,6 +833,9 @@
                   <Dimension value="[30, 26]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eventBaptButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="eventOccuButton">
               <Properties>
@@ -846,6 +852,9 @@
                   <Dimension value="[30, 26]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eventOccuButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="eventDeatButton">
               <Properties>
@@ -862,6 +871,9 @@
                   <Dimension value="[30, 26]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eventDeatButtonActionPerformed"/>
+              </Events>
             </Component>
             <Component class="javax.swing.JButton" name="eventBuriButton">
               <Properties>

@@ -72,14 +72,11 @@ public class EventWrapper {
     
     
     public EventWrapper(Property property, Indi indi, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
-        if (property == null) {
-            return;
-        }
         
         this.refNotes = refNotes;
         this.refSources = refSources;
         this.eventProperty = property;
-        this.hostingEntity = property.getEntity();
+        this.hostingEntity = property != null ? property.getEntity() : null;
 
         // Event description & icon
         this.eventLabel = new EventLabel(property);
@@ -91,9 +88,11 @@ public class EventWrapper {
             isGeneral = false;
             
             // Description
-            this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
-            Property type = property.getProperty("TYPE");
-            this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+            if (property.getGedcom() != null) {  // for new properties, there is no  and therefore no metaproperty
+                this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
+                Property type = property.getProperty("TYPE");
+                this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+            }
 
             // Event date
             this.date = new PropertyDate();
@@ -229,6 +228,9 @@ public class EventWrapper {
     
     private List<NoteWrapper> getEventNotes(Property event) {
         List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
+        if (event == null) {
+            return ret;
+        }
                 
         // Look for notes attached to event
         Property[] noteProps = event.getProperties("NOTE");
@@ -301,6 +303,9 @@ public class EventWrapper {
     
     private List<SourceWrapper> getEventSources(Property event) {
         List<SourceWrapper> ret = new ArrayList<SourceWrapper>();
+        if (event == null) {
+            return ret;
+        }
                 
         // Look for sources attached to event (source_record as links to a source entity)
         for (PropertySource propSource : event.getProperties(PropertySource.class)) {
@@ -417,6 +422,12 @@ public class EventWrapper {
     */ 
     public void update(Indi indi) {
         
+        // if new property (to be created), do it first
+        if (eventProperty.getGedcom() == null) {
+            eventProperty = indi.addProperty(eventProperty.getTag(), "");
+        }
+        
+        // Updatee event property
         if (!isGeneral) {
             // Description : depends on property.metaProperty
             // = property.getDisplayValue();                            // case of attributes: description is the value of the event
