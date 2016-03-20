@@ -634,21 +634,41 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(eventBirtButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBirtButton.text")); // NOI18N
         eventBirtButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBirtButton.toolTipText")); // NOI18N
         eventBirtButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventBirtButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventBirtButtonActionPerformed(evt);
+            }
+        });
 
         eventBaptButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/baptism.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventBaptButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBaptButton.text")); // NOI18N
         eventBaptButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBaptButton.toolTipText")); // NOI18N
         eventBaptButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventBaptButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventBaptButtonActionPerformed(evt);
+            }
+        });
 
         eventOccuButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/marr.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventOccuButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.text")); // NOI18N
         eventOccuButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.toolTipText")); // NOI18N
         eventOccuButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventOccuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventOccuButtonActionPerformed(evt);
+            }
+        });
 
         eventDeatButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/death.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventDeatButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDeatButton.text")); // NOI18N
         eventDeatButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDeatButton.toolTipText")); // NOI18N
         eventDeatButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventDeatButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventDeatButtonActionPerformed(evt);
+            }
+        });
 
         eventBuriButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/burial.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventBuriButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventBuriButton.text")); // NOI18N
@@ -1296,7 +1316,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_firstnamesTextActionPerformed
 
     private void eventBuriButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBuriButtonActionPerformed
-        // TODO add your handling code here:
+        createOrPreSelectEvent("BURI");
+        selectEvent(eventIndex);
+        eventDescription.requestFocus();
     }//GEN-LAST:event_eventBuriButtonActionPerformed
 
     private void scrollNotesEventAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollNotesEventAdjustmentValueChanged
@@ -1471,6 +1493,28 @@ public class IndiPanel extends Editor implements DocumentListener {
             SelectionDispatcher.fireSelection(new Context(asso.assoIndi));
         }
     }//GEN-LAST:event_assoEditIndiActionPerformed
+
+    private void eventBirtButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBirtButtonActionPerformed
+        createOrPreSelectEvent("BIRT");
+        selectEvent(eventIndex);
+        eventDescription.requestFocus();
+    }//GEN-LAST:event_eventBirtButtonActionPerformed
+
+    private void eventBaptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBaptButtonActionPerformed
+        createOrPreSelectEvent("CHR");
+        selectEvent(eventIndex);
+        eventDescription.requestFocus();
+    }//GEN-LAST:event_eventBaptButtonActionPerformed
+
+    private void eventOccuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventOccuButtonActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_eventOccuButtonActionPerformed
+
+    private void eventDeatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDeatButtonActionPerformed
+        createOrPreSelectEvent("DEAT");
+        selectEvent(eventIndex);
+        eventDescription.requestFocus();
+    }//GEN-LAST:event_eventDeatButtonActionPerformed
 
     
     private void scrollEventNotes(int notches) {
@@ -2768,10 +2812,73 @@ public class IndiPanel extends Editor implements DocumentListener {
         changes.setChanged(true);
     }
 
+
+    private void createOrPreSelectEvent(final String tag) {
+
+        int index = getEvent(tag);
+        
+        // Create event if it does not exists
+        if (index == -1) {
+            Property prop = new Property(tag) {
+
+                @Override
+                public genj.util.swing.ImageIcon getImage() {
+                    return new genj.util.swing.ImageIcon(getClass(), getImageResource(tag));
+                }
+
+                @Override
+                public String getValue() {
+                    return "";
+                }
+
+                @Override
+                public void setValue(String value) {
+                }
+            };
+
+            eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
+            displayEventTable();
+            eventIndex = eventSet.size()-1;
+            changes.setChanged(true);
+            
+        } else {
+            eventIndex = index;
+        }
+    }
+    
+    private int getEvent(String tag) {
+        for (EventWrapper event : eventSet) {
+            if (event.eventProperty.getTag().equals(tag)) {
+                return eventSet.indexOf(event);
+            }
+        }
+        return -1;
+    }
+
     
     
-    
-    
+    private String getImageResource(String tag) {
+        String str = "";
+        if (tag.equals("BIRT")) {
+            str = "birth";
+        } else if (tag.equals("CHR")) {
+            str = "baptism";
+        } else if (tag.equals("BURI")) {
+            str = "burial";
+        } else if (tag.equals("DEAT")) {
+            str = "death";
+        } else if (tag.equals("MARR")) {
+            str = "marr";
+        } else if (tag.equals("OCCU")) {
+            str = "occu";
+        } else if (tag.equals("RETI")) {
+            str = "retirement";
+        } else if (tag.equals("RESI")) {
+            str = "residency";
+        }
+        
+        return "/ancestris/modules/editors/standard/images/" + str + ".png";
+    }
     
     
     
@@ -2798,6 +2905,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             changes.setChanged(true);
         }
     }
+
 
 
 
