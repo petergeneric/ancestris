@@ -92,7 +92,7 @@ public class AssoWrapper {
     }
     
     public boolean equals(AssoWrapper object) {
-        return (assoIndi.equals(object.assoIndi)) && targetEvent.equals(object.targetEvent) && targetEventDesc.equals(object.targetEventDesc);
+        return (assoProp.equals(object.assoProp));
     }
 
     /**
@@ -196,7 +196,7 @@ public class AssoWrapper {
         // Record values
         assoProp.setValue('@' + targetEntity.getId() + '@');
 
-        TagPath anchor = targetEvent.eventProperty.getPath();
+        TagPath anchor = getAnchor(targetEvent.eventProperty);
         putProperty(assoProp, "RELA", assoTxt + (anchor == null ? "" : '@' + anchor.toString()));
         
         // link it (adds the TYPE tag at the same time)
@@ -245,11 +245,10 @@ public class AssoWrapper {
             return true;
         }
         
-        TagPath anchor = targetEvent.eventProperty.getPath();
-        String newRela = assoTxt + (anchor == null ? "" : '@' + anchor.toString());
+        TagPath newAnchor = getAnchor(targetEvent.eventProperty);
         PropertyRelationship p = (PropertyRelationship) assoProp.getProperty("RELA");
-        String oldRela = p != null ? p.getValue() : "";
-        if (!oldRela.equals(newRela)) {
+        TagPath oldAnchor = p != null ? p.getAnchor() : null;
+        if (oldAnchor == null || !oldAnchor.equals(newAnchor)) {
             return true;
         }
 
@@ -288,6 +287,9 @@ public class AssoWrapper {
 
     private void removeLink(PropertyAssociation pa) {
         Property target = pa.getTarget();
+        if (target == null) {
+            return;
+        }
         Property targetParent = target.getParent();
         pa.unlink();
         targetParent.delProperty(target);
@@ -295,6 +297,14 @@ public class AssoWrapper {
 
     private void removeAsso(Indi indi, PropertyAssociation pa) {
         indi.delProperty(pa);
+    }
+
+    private TagPath getAnchor(Property property) {
+        if (property == null) {
+            return null;
+        }
+        TagPath result = property.getPath(false);
+        return property.getEntity().getProperty(result) == property ? result : property.getPath(true); 
     }
 
     
