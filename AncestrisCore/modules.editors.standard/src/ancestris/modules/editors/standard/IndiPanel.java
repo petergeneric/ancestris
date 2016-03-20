@@ -12,6 +12,7 @@ import ancestris.modules.editors.standard.tools.EventWrapper;
 import ancestris.modules.editors.standard.tools.ImagePanel;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
+import ancestris.modules.editors.standard.tools.NameDetailsPanel;
 import ancestris.modules.editors.standard.tools.NodeWrapper;
 import ancestris.modules.editors.standard.tools.NoteChooser;
 import ancestris.modules.editors.standard.tools.NoteWrapper;
@@ -23,6 +24,7 @@ import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import static ancestris.modules.editors.standard.tools.Utils.getResizedIcon;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
+import static ancestris.util.swing.DialogManager.OK_ONLY_OPTION;
 import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -123,6 +125,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private static Map<String, EventUsage> eventUsages = null;
 
     private ImagePanel imagePanel = null;
+    private NameDetailsPanel nameDetails = null;
     
     // Media
     private List<MediaWrapper> mediaSet = null;
@@ -173,6 +176,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Components
         initComponents();
+        nameDetails = new NameDetailsPanel();
         
         familyTree.setCellRenderer(new FamilyTreeRenderer());
         familyTree.addMouseListener(new FamilyTreeMouseListener());
@@ -1276,7 +1280,15 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_motherButtonActionPerformed
 
     private void moreNamesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moreNamesButtonActionPerformed
-        // TODO add your handling code here:
+        DialogManager.create(NbBundle.getMessage(getClass(), "IndiPanel.moreNamesButton.toolTipText"), nameDetails).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(OK_ONLY_OPTION).show();
+        String f = nameDetails.getFirstName();
+        String l = nameDetails.getLastName();
+        if (!firstnamesText.getText().equals(f)) {
+            firstnamesText.setText(f);
+        }
+        if (!lastnameText.getText().equals(l)) {
+            lastnameText.setText(l);
+        }
     }//GEN-LAST:event_moreNamesButtonActionPerformed
 
     private void firstnamesTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstnamesTextActionPerformed
@@ -1738,7 +1750,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Names
         firstnamesText.setText(indi.getFirstName());
         lastnameText.setText(indi.getLastName());
-        // TODO: other names in popup to be done later
+        nameDetails.setDetails(indi);
 
         // Sex
         i = indi.getSex();
@@ -1812,6 +1824,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void addListeners() {
         firstnamesText.getDocument().addDocumentListener(this);
         lastnameText.getDocument().addDocumentListener(this);
+        nameDetails.addListeners(this);
         textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
 
         eventDescription.getDocument().addDocumentListener(new EventDescriptionListener());
@@ -1831,6 +1844,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Save Indi and Sex
         indi.setName(firstnamesText.getText(), lastnameText.getText());
+        nameDetails.saveDetails(indi);
+        
         //
         indi.setSex(getSex());
         //
