@@ -1657,7 +1657,15 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     @Override
     public void setGedcomHasChanged(boolean flag) {
+        // Force Reload
         reloadData = flag;
+        
+        // Remember selections
+        savedMediaIndex = mediaIndex;
+        savedEventIndex = eventIndex;
+        EventWrapper ew = getCurrentEvent();
+        savedEventNoteIndex = ew.eventNoteIndex;
+        savedEventSourceIndex = ew.eventSourceIndex;
     }
     
     @Override
@@ -1739,6 +1747,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
     
     private void selectEvent(int index) {
+        if (index >= eventTable.getRowCount()) {
+            index = -1;
+        }
         int row = index != -1 ? eventTable.convertRowIndexToView(index) : 0;
         eventTable.setRowSelectionInterval(row, row);
         eventTable.scrollRectToVisible(new Rectangle(eventTable.getCellRect(row, 0, true)));
@@ -1909,14 +1920,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Save the rest
         //
         saveMedia();
-        savedMediaIndex = mediaIndex;
 
         //
         saveEvents();
-        savedEventIndex = eventIndex;
-        EventWrapper ew = getCurrentEvent();
-        savedEventNoteIndex = ew.eventNoteIndex;
-        savedEventSourceIndex = ew.eventSourceIndex;
 
         //
         saveAssociations();
