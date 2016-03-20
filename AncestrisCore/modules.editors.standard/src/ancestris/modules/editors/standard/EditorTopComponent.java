@@ -342,14 +342,16 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     }
 
     public void okCallBack(ActionEvent event) {
+        // Remember intra-entity selections
+        editor.setGedcomHasChanged(true);
+        // Make changes
         commit(false);
     }
 
     public void cancelCallBack(ActionEvent event) {
-        cancel();
-
-        // Re-set for cancel
+        // Force reload and remember intra-entity selections
         editor.setGedcomHasChanged(true);
+        // Redisplay context from scratch)
         Context ctx = editor.getContext();
         editor.setContext(ctx);
     }
