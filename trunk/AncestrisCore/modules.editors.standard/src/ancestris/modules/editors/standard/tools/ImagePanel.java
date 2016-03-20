@@ -60,7 +60,7 @@ public class ImagePanel extends javax.swing.JPanel {
         this.startY = 0;
         this.ready = false;
         try {
-            IMG_NO_SOURCE_MEDIA = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/source_unknown.png"));
+            IMG_NO_SOURCE_MEDIA = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy.png"));
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }

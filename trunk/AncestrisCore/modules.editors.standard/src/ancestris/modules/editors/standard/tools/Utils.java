@@ -44,6 +44,7 @@ public class Utils {
     private static Image IMG_VIDEO = null;
     private static Image IMG_SOUND = null;
     private static Image IMG_NO_SOURCE_MEDIA = null;
+    private static Image IMG_JUST_TEXT_MEDIA = null;
     
     public static boolean parentTagsContains(Property prop, String tag) {
         if (prop == null) {
@@ -75,7 +76,8 @@ public class Utils {
                 IMG_INVALID_PHOTO = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/invalid_photo.png"));
                 IMG_VIDEO = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/video.png"));
                 IMG_SOUND = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/sound.png"));
-                IMG_NO_SOURCE_MEDIA = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/source_unknown.png"));
+                IMG_NO_SOURCE_MEDIA = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy_small.png"));
+                IMG_JUST_TEXT_MEDIA = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/source_text_only_small.png"));
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -84,7 +86,7 @@ public class Utils {
         Image image = null;
 
         if (file == null) {
-            return clazz == SourceChooser.SourceThumb.class && !noText ? IMG_NO_SOURCE_MEDIA : IMG_INVALID_PHOTO;
+            return clazz == SourceChooser.SourceThumb.class && !noText ? IMG_JUST_TEXT_MEDIA : IMG_NO_SOURCE_MEDIA;
         }
         if (Arrays.asList(imgExtensions).contains(getExtension(file))) {
             try {

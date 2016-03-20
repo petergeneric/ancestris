@@ -291,6 +291,9 @@ public class SourceWrapper {
             Property prop = propMedia.getProperty("FILE");
             PropertyFile pFile = prop != null ? (PropertyFile) prop : null;
             this.file = pFile != null ? pFile.getFile() : null;
+        } else {
+            this.targetMedia = null;
+            this.file = null;
         }
         Property propRepository = property.getProperty("REPO", true);           /* repo */
         if (propRepository != null && propRepository instanceof PropertyRepository) {
