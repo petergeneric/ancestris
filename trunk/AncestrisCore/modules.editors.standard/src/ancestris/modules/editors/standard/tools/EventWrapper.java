@@ -88,11 +88,14 @@ public class EventWrapper {
             isGeneral = false;
             
             // Description
-            if (property.getGedcom() != null) {  // for new properties, there is no  and therefore no metaproperty
+            if (property.getGedcom() != null) {  // for new properties, there is no gedcom and therefore no metaproperty
                 this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
-                Property type = property.getProperty("TYPE");
-                this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+            } else {
+                String tag = this.eventProperty.getTag();
+                this.hasAttribute = "OCCU".equals(tag);
             }
+            Property type = property.getProperty("TYPE");
+            this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
 
             // Event date
             this.date = new PropertyDate();
