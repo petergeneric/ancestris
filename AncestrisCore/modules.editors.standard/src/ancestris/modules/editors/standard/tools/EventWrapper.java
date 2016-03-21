@@ -445,7 +445,7 @@ public class EventWrapper {
             }
 
             // Date
-            PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
+            PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE", false);
             if (tmpDate == null) {
                 String val = date.getValue().trim();
                 if (!val.isEmpty()) {
