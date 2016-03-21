@@ -48,6 +48,8 @@ import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Image;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.File;
@@ -65,6 +67,8 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
@@ -233,10 +237,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventLeft = new javax.swing.JPanel();
         eventBirtButton = new javax.swing.JButton();
         eventBaptButton = new javax.swing.JButton();
-        eventOccuButton = new javax.swing.JButton();
+        eventMarrButton = new javax.swing.JButton();
         eventDeatButton = new javax.swing.JButton();
         eventBuriButton = new javax.swing.JButton();
-        eventMarrButton = new javax.swing.JButton();
+        eventOccuButton = new javax.swing.JButton();
         eventRetiButton = new javax.swing.JButton();
         eventResiButton = new javax.swing.JButton();
         eventOthersButton = new javax.swing.JButton();
@@ -650,13 +654,13 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
-        eventOccuButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/marr.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(eventOccuButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.text")); // NOI18N
-        eventOccuButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.toolTipText")); // NOI18N
-        eventOccuButton.setPreferredSize(new java.awt.Dimension(30, 26));
-        eventOccuButton.addActionListener(new java.awt.event.ActionListener() {
+        eventMarrButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/marr.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(eventMarrButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventMarrButton.text")); // NOI18N
+        eventMarrButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventMarrButton.toolTipText")); // NOI18N
+        eventMarrButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventMarrButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                eventOccuButtonActionPerformed(evt);
+                eventMarrButtonActionPerformed(evt);
             }
         });
 
@@ -680,23 +684,38 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
-        eventMarrButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/occu.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(eventMarrButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventMarrButton.text")); // NOI18N
-        eventMarrButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventMarrButton.toolTipText")); // NOI18N
-        eventMarrButton.setActionCommand(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventMarrButton.actionCommand")); // NOI18N
-        eventMarrButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventOccuButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/occu.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(eventOccuButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.text")); // NOI18N
+        eventOccuButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.toolTipText")); // NOI18N
+        eventOccuButton.setActionCommand(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOccuButton.actionCommand")); // NOI18N
+        eventOccuButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventOccuButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventOccuButtonActionPerformed(evt);
+            }
+        });
 
         eventRetiButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/retirement.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventRetiButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventRetiButton.text")); // NOI18N
         eventRetiButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventRetiButton.toolTipText")); // NOI18N
         eventRetiButton.setActionCommand(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventRetiButton.actionCommand")); // NOI18N
         eventRetiButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventRetiButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventRetiButtonActionPerformed(evt);
+            }
+        });
 
         eventResiButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/residency.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventResiButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventResiButton.text")); // NOI18N
         eventResiButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventResiButton.toolTipText")); // NOI18N
         eventResiButton.setActionCommand(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventResiButton.actionCommand")); // NOI18N
         eventResiButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventResiButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventResiButtonActionPerformed(evt);
+            }
+        });
 
         eventOthersButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/event.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventOthersButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOthersButton.text")); // NOI18N
@@ -760,29 +779,29 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventBaptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventOccuButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eventMarrButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventDeatButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventBuriButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(eventLeftLayout.createSequentialGroup()
-                        .addComponent(eventMarrButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventRetiButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eventOccuButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventResiButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(eventRetiButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 26, Short.MAX_VALUE))
+                .addGap(0, 36, Short.MAX_VALUE))
             .addGroup(eventLeftLayout.createSequentialGroup()
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(eventLeftLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 208, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -791,12 +810,12 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eventBirtButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventBaptButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eventOccuButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventMarrButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventDeatButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventBuriButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventLeftLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventMarrButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eventOccuButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventRetiButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventResiButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1105,7 +1124,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(ageAtEvent)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(eventRightLayout.createSequentialGroup()
-                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE)
+                                .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGap(2, 2, 2))))
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(eventTitle)
@@ -1117,7 +1136,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlace)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1156,7 +1175,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(eventSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 549, Short.MAX_VALUE)
+                        .addComponent(eventSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
                         .addGap(2, 2, 2))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(mediaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1506,15 +1525,27 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDescription.requestFocus();
     }//GEN-LAST:event_eventBaptButtonActionPerformed
 
-    private void eventOccuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventOccuButtonActionPerformed
+    private void eventMarrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventMarrButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_eventOccuButtonActionPerformed
+    }//GEN-LAST:event_eventMarrButtonActionPerformed
 
     private void eventDeatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDeatButtonActionPerformed
         createOrPreSelectEvent("DEAT");
         selectEvent(getRowFromIndex(eventIndex));
         eventDescription.requestFocus();
     }//GEN-LAST:event_eventDeatButtonActionPerformed
+
+    private void eventOccuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventOccuButtonActionPerformed
+        showPopupEventMenu(eventOccuButton, "OCCU", "EventMenu_AddOccu", "EventMenu_DisplayNextOccu");
+    }//GEN-LAST:event_eventOccuButtonActionPerformed
+
+    private void eventRetiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventRetiButtonActionPerformed
+        showPopupEventMenu(eventRetiButton, "RETI", "EventMenu_AddReti", "EventMenu_DisplayNextReti");
+    }//GEN-LAST:event_eventRetiButtonActionPerformed
+
+    private void eventResiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventResiButtonActionPerformed
+        showPopupEventMenu(eventResiButton, "RESI", "EventMenu_AddResi", "EventMenu_DisplayNextResi");
+    }//GEN-LAST:event_eventResiButtonActionPerformed
 
     
     private void scrollEventNotes(int notches) {
@@ -2833,37 +2864,44 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
 
-    private void createOrPreSelectEvent(final String tag) {
-
+    
+    
+    /**
+     * Event navigation
+     */
+    
+    private void createOrPreSelectEvent(String tag) {
         int index = getEvent(tag);
-        
-        // Create event if it does not exists
-        if (index == -1) {
-            Property prop = new Property(tag) {
 
-                @Override
-                public genj.util.swing.ImageIcon getImage() {
-                    return new genj.util.swing.ImageIcon(getClass(), getImageResource(tag));
-                }
-
-                @Override
-                public String getValue() {
-                    return "";
-                }
-
-                @Override
-                public void setValue(String value) {
-                }
-            };
-
-            eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
-            displayEventTable();
-            eventIndex = eventSet.size()-1;
-            changes.setChanged(true);
-            
-        } else {
+        if (index == -1) { // Create event if it does not exists
+            createEvent(tag);
+        } else { // else select it
             eventIndex = index;
         }
+    }
+    
+    private void createEvent(final String tag) {
+        Property prop = new Property(tag) {
+
+            @Override
+            public genj.util.swing.ImageIcon getImage() {
+                return new genj.util.swing.ImageIcon(getClass(), getImageResource(tag));
+            }
+
+            @Override
+            public String getValue() {
+                return "";
+            }
+
+            @Override
+            public void setValue(String value) {
+            }
+        };
+
+        eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
+        displayEventTable();
+        eventIndex = eventSet.size() - 1;
+        changes.setChanged(true);
     }
     
     private int getEvent(String tag) {
@@ -2875,8 +2913,24 @@ public class IndiPanel extends Editor implements DocumentListener {
         return -1;
     }
 
-    
-    
+    private int getNextEvent(String tag) {
+        int index = eventIndex + 1;
+        if (index == eventSet.size()) {
+            index = 0;
+        }
+        for (int i = index; i < eventSet.size(); i++) {
+            if (eventSet.get(i).eventProperty.getTag().equals(tag)) {
+                return i;
+            }
+        }
+        for (int i = 0; i < index; i++) {
+            if (eventSet.get(i).eventProperty.getTag().equals(tag)) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     private String getImageResource(String tag) {
         String str = "";
         if (tag.equals("BIRT")) {
@@ -2900,6 +2954,33 @@ public class IndiPanel extends Editor implements DocumentListener {
         return "/ancestris/modules/editors/standard/images/" + str + ".png";
     }
     
+    private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
+
+        JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
+        JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), createLabel));
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                createEvent(tag);
+                selectEvent(getRowFromIndex(eventIndex));
+                eventDescription.requestFocus();
+            }
+        });
+        menuItem = new JMenuItem(NbBundle.getMessage(getClass(), displayNextLabel));
+        menu.add(menuItem);
+        menuItem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent ae) {
+                int index = getNextEvent(tag);
+                if (index != -1) {
+                    selectEvent(getRowFromIndex(index));
+                    eventDescription.requestFocus();
+                }
+            }
+        });
+        menu.show(button, 3, button.getHeight()-5);
+    }
+
+
     
     
     
@@ -2925,7 +3006,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             changes.setChanged(true);
         }
     }
-
 
 
 
