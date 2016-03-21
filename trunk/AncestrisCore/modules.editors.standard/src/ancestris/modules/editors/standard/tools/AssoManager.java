@@ -654,6 +654,9 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
 
         private void updateEmptyBorder(Object value) {
             String str = (String) value;
+            if (str == null) {
+                str = "";
+            }
             if (str.trim().isEmpty()) {
                 setBorder(BorderFactory.createLineBorder(Color.red));
             }

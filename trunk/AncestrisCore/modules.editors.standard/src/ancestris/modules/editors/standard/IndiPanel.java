@@ -139,7 +139,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEvent = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
-    private int eventIndex = 0, savedEventIndex = -1, savedEventNoteIndex = -1, savedEventSourceIndex = -1;
+    private int eventIndex = 0, savedEventRow = -1, savedEventNoteIndex = -1, savedEventSourceIndex = -1;
     public Map<String, NoteWrapper> refNotes = null;       // Reference to all note entities used by id, to avoid duplicates
     public Map<String, SourceWrapper> refSources = null;   // Reference to all sources used by id, to avoid duplicates
     
@@ -1317,7 +1317,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void eventBuriButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBuriButtonActionPerformed
         createOrPreSelectEvent("BURI");
-        selectEvent(eventIndex);
+        selectEvent(getRowFromIndex(eventIndex));
         eventDescription.requestFocus();
     }//GEN-LAST:event_eventBuriButtonActionPerformed
 
@@ -1496,13 +1496,13 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void eventBirtButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBirtButtonActionPerformed
         createOrPreSelectEvent("BIRT");
-        selectEvent(eventIndex);
+        selectEvent(getRowFromIndex(eventIndex));
         eventDescription.requestFocus();
     }//GEN-LAST:event_eventBirtButtonActionPerformed
 
     private void eventBaptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBaptButtonActionPerformed
         createOrPreSelectEvent("CHR");
-        selectEvent(eventIndex);
+        selectEvent(getRowFromIndex(eventIndex));
         eventDescription.requestFocus();
     }//GEN-LAST:event_eventBaptButtonActionPerformed
 
@@ -1512,7 +1512,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void eventDeatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDeatButtonActionPerformed
         createOrPreSelectEvent("DEAT");
-        selectEvent(eventIndex);
+        selectEvent(getRowFromIndex(eventIndex));
         eventDescription.requestFocus();
     }//GEN-LAST:event_eventDeatButtonActionPerformed
 
@@ -1662,8 +1662,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Remember selections
         savedMediaIndex = mediaIndex;
-        savedEventIndex = eventIndex;
-        EventWrapper ew = getCurrentEvent();
+        EventWrapper ew = getCurrentEvent();       
+        sortEventTable();                               // Remember row after sorting in case rows are unsorted.
+        selectEvent(getRowFromIndex(eventIndex));       // Sorting unselects row so select again the index
+        savedEventRow = eventTable.getSelectedRow();    // Remember row (if we remember index, it might be a different one after saving because events are rebuilt differently if some were created)
         savedEventNoteIndex = ew.eventNoteIndex;
         savedEventSourceIndex = ew.eventSourceIndex;
     }
@@ -1713,9 +1715,9 @@ public class IndiPanel extends Editor implements DocumentListener {
      */
     private void selectPropertyContext(Context context) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
-        if (savedEventIndex != -1 && eventSet != null) {
+        if (savedEventRow != -1 && eventSet != null) {
             scrollPhotos.setValue(savedMediaIndex);             savedMediaIndex = -1;
-            selectEvent(savedEventIndex);                       savedEventIndex = -1;
+            selectEvent(savedEventRow);                         savedEventRow = -1;
             scrollNotesEvent.setValue(savedEventNoteIndex);     savedEventNoteIndex = -1;
             scrollSourcesEvent.setValue(savedEventSourceIndex); savedEventSourceIndex = -1;
             return;
@@ -1730,7 +1732,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     if (event.eventProperty.equals(propertyToDisplay)) {
                         int index = eventSet.indexOf(event);
                         if (index != -1) {
-                            selectEvent(index);
+                            selectEvent(getRowFromIndex(index));
                             return;
                         }
                     }
@@ -1741,22 +1743,29 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         // Else select first row if eventSet not empty
         if (eventSet != null) {
-            selectEvent(-1);
+            selectEvent(0);
         }
         
     }
     
-    private void selectEvent(int index) {
-        if (index >= eventTable.getRowCount()) {
-            index = -1;
+    private void selectEvent(int row) {
+        if (eventTable.getRowCount() == 0) {
+            return;
         }
-        int row = index != -1 ? eventTable.convertRowIndexToView(index) : 0;
+        if (row < 0 || row >= eventTable.getRowCount()) {
+            row = 0;
+        }
         eventTable.setRowSelectionInterval(row, row);
         eventTable.scrollRectToVisible(new Rectangle(eventTable.getCellRect(row, 0, true)));
         eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
     }
 
-    
+    private int getRowFromIndex(int index) {
+        if (eventTable != null && eventTable.getRowCount() > 0) {
+            return eventTable.convertRowIndexToView(index);
+        }
+        return -1;
+    }
     
     
     @Override
@@ -2274,39 +2283,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventTableModel etm = new EventTableModel(eventSet);
         eventTable.setModel(etm);    
         eventTable.setAutoCreateRowSorter(true);
-        TableRowSorter sorter = new TableRowSorter<EventTableModel>(etm);
-        sorter.setComparator(0, new Comparator<EventLabel>() {
-            public int compare(EventLabel l1, EventLabel l2) {
-                Integer i1 = eventUsages.get(l1.getTag()).getOrder();
-                Integer i2 = eventUsages.get(l2.getTag()).getOrder();
-                return i1.compareTo(i2);
-            }
-        });
-        sorter.setComparator(2, new Comparator<String>() {
-            public int compare(String s1, String s2) {
-                try {
-                    if (s1.equals("-")) {
-                        s1 = "0";
-                    }
-                    if (s2.equals("-")) {
-                        s2 = "0";
-                    }
-                    Double d1 = new DecimalFormat("#.###").parse(s1).doubleValue();
-                    Double d2 = new DecimalFormat("#.###").parse(s2).doubleValue();
-                    return d1.compareTo(d2);
-                } catch (ParseException ex) {
-                    Exceptions.printStackTrace(ex);
-                    return 0;
-                }
-            }
-        });
-        eventTable.setRowSorter(sorter);
-        List<SortKey> sortKeys = new ArrayList<SortKey>();
-        sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
-        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
-        sorter.sort();
         
         int maxWidth = 0;
         for (EventWrapper event : eventSet) {
@@ -2344,8 +2320,46 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
         });
+        sortEventTable();
+        
     }
 
+    private void sortEventTable() {
+        TableRowSorter sorter = new TableRowSorter<EventTableModel>((EventTableModel) eventTable.getModel());
+        sorter.setComparator(0, new Comparator<EventLabel>() {
+            public int compare(EventLabel l1, EventLabel l2) {
+                Integer i1 = eventUsages.get(l1.getTag()).getOrder();
+                Integer i2 = eventUsages.get(l2.getTag()).getOrder();
+                return i1.compareTo(i2);
+            }
+        });
+        sorter.setComparator(2, new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                try {
+                    if (s1.equals("-")) {
+                        s1 = "0";
+                    }
+                    if (s2.equals("-")) {
+                        s2 = "0";
+                    }
+                    Double d1 = new DecimalFormat("#.###").parse(s1).doubleValue();
+                    Double d2 = new DecimalFormat("#.###").parse(s2).doubleValue();
+                    return d1.compareTo(d2);
+                } catch (ParseException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return 0;
+                }
+            }
+        });
+        eventTable.setRowSorter(sorter);
+        List<SortKey> sortKeys = new ArrayList<SortKey>();
+        sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+    }
+    
     private EventWrapper getCurrentEvent() {
         EventWrapper event = null;
         if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {
