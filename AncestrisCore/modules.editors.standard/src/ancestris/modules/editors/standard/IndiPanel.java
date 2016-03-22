@@ -1556,14 +1556,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventWrapper event = getCurrentEvent();
         eventRemovedSet.add(event);
         eventSet.remove(eventIndex);
-        if (eventIndex == eventSet.size()) {
-            eventIndex--;
+        int row = getRowFromIndex(eventIndex);
+        if (row == eventSet.size()) {
+            row--;
         }
-        if (eventIndex < 0) {
-            eventIndex = 0;
+        if (row < 0) {
+            row = 0;
         }
         displayEventTable();
-        selectEvent(getRowFromIndex(eventIndex));
+        selectEvent(row);
         changes.setChanged(true);
     }//GEN-LAST:event_eventRemoveButtonActionPerformed
 
