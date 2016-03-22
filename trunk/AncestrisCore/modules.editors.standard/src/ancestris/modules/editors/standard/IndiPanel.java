@@ -2956,6 +2956,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
+        // if tag does not exist, create it and return
+        if (getNextEvent(tag) == -1) {
+            createEvent(tag);
+            selectEvent(getRowFromIndex(eventIndex));
+            eventDescription.requestFocus();
+            return;
+        }
+        
         JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
         JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), createLabel));
         menu.add(menuItem);
@@ -2968,7 +2976,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         });
         menuItem = new JMenuItem(NbBundle.getMessage(getClass(), displayNextLabel));
         menu.add(menuItem);
-        menuItem.setEnabled(getNextEvent(tag) != -1);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int index = getNextEvent(tag);
