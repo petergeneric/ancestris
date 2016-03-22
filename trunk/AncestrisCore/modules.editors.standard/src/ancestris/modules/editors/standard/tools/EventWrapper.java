@@ -492,10 +492,13 @@ public class EventWrapper {
 
 
     public void remove(Indi indi) {
+        
         if (hostingEntity == null) {
             return;
         }
         hostingEntity.delProperty(eventProperty);
+        
+        
     }
 
 

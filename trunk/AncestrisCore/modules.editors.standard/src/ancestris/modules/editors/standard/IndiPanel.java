@@ -59,8 +59,10 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -2325,8 +2327,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         for (EventWrapper event : eventSet) {
             event.update(indi);
         }
+        
+        // Remove events updating associations at the same time
+        Set<AssoWrapper> tmpList = new HashSet<AssoWrapper>();
         for (EventWrapper event : eventRemovedSet) {
+            for (AssoWrapper asso : assoSet) {
+                if (asso.assoProp.getTargetParent() == event.eventProperty) {
+                    tmpList.add(asso);
+                }
+            }
             event.remove(indi);
+        }
+        for (AssoWrapper asso : tmpList) {
+            assoSet.remove(asso);
         }
     }
 
