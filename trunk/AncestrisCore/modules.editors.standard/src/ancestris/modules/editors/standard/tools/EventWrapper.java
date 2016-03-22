@@ -495,7 +495,7 @@ public class EventWrapper {
         if (hostingEntity == null) {
             return;
         }
-        hostingEntity.delProperty(eventProperty);  // FIXME : recursively
+        hostingEntity.delProperty(eventProperty);
     }
 
 

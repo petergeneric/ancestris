@@ -728,6 +728,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventRemoveButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventRemoveButton.toolTipText")); // NOI18N
         eventRemoveButton.setActionCommand(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventRemoveButton.actionCommand")); // NOI18N
         eventRemoveButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventRemoveButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventRemoveButtonActionPerformed(evt);
+            }
+        });
 
         eventTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -1546,6 +1551,21 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void eventResiButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventResiButtonActionPerformed
         showPopupEventMenu(eventResiButton, "RESI", "EventMenu_AddResi", "EventMenu_DisplayNextResi");
     }//GEN-LAST:event_eventResiButtonActionPerformed
+
+    private void eventRemoveButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventRemoveButtonActionPerformed
+        EventWrapper event = getCurrentEvent();
+        eventRemovedSet.add(event);
+        eventSet.remove(eventIndex);
+        if (eventIndex == eventSet.size()) {
+            eventIndex--;
+        }
+        if (eventIndex < 0) {
+            eventIndex = 0;
+        }
+        displayEventTable();
+        selectEvent(getRowFromIndex(eventIndex));
+        changes.setChanged(true);
+    }//GEN-LAST:event_eventRemoveButtonActionPerformed
 
     
     private void scrollEventNotes(int notches) {
@@ -2407,6 +2427,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (event != null) {        
             
             showGeneralInformation(!event.isGeneral);
+            eventRemoveButton.setEnabled(eventIndex != 0);
 
             eventTitle.setText(event.title);
             
