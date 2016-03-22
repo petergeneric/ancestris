@@ -2968,6 +2968,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         });
         menuItem = new JMenuItem(NbBundle.getMessage(getClass(), displayNextLabel));
         menu.add(menuItem);
+        menuItem.setEnabled(getNextEvent(tag) != -1);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
                 int index = getNextEvent(tag);
