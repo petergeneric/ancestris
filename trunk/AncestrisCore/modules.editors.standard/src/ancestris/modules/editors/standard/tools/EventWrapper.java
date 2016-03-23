@@ -426,7 +426,7 @@ public class EventWrapper {
     public void update(Indi indi) {
         
         // if new property (to be created), do it first
-        if (eventProperty.getGedcom() == null) {
+        if (eventProperty.getGedcom() == null || eventProperty.getGedcom().getOrigin() == null) {
             eventProperty = indi.addProperty(eventProperty.getTag(), "");
         }
         

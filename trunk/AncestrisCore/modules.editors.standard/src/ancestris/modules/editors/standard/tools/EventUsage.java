@@ -18,11 +18,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+
 /**
  *
  * @author frederic
  */
 public class EventUsage {
+    
+    static public String[] otherEventsList = new String[] {
+        "BAPM", "BLES", "ADOP", "FCOM", "BARM", "BASM", "CONF", "NATI", "RELI", 
+        "CAST", "CHRA", "GRAD", "ORDN", "ENGA", "MARB", "MARL", "MARS", "MARC", 
+        "DIVF", "DIV", "ANUL", "EMIG", "IMMI", "NATU", "TITL", "SSN", "IDNO", 
+        "DSCR", "EDUC", "CENS", "PROP", "EVEN", "FACT", "PROB", "WILL", "CREM"
+    };
     
     public static void init(Map<String, EventUsage> eventUsages) {
         eventUsages.put("INDI", new EventUsage( 0, "INDI"));    // The general event for an individual (/!\ this is not a gedcom event)

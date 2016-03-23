@@ -724,6 +724,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventOthersButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOthersButton.toolTipText")); // NOI18N
         eventOthersButton.setActionCommand(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventOthersButton.actionCommand")); // NOI18N
         eventOthersButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventOthersButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventOthersButtonActionPerformed(evt);
+            }
+        });
 
         eventRemoveButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventRemoveButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventRemoveButton.text")); // NOI18N
@@ -1569,6 +1574,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         selectEvent(row);
         changes.setChanged(true);
     }//GEN-LAST:event_eventRemoveButtonActionPerformed
+
+    private void eventOthersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventOthersButtonActionPerformed
+        showPopupEventMenu(eventOthersButton);
+    }//GEN-LAST:event_eventOthersButtonActionPerformed
 
     
     private void scrollEventNotes(int notches) {
@@ -2939,6 +2948,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         changes.setChanged(true);
     }
     
+    private void createEvent(Property prop) {
+        eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
+        displayEventTable();
+        eventIndex = eventSet.size() - 1;
+        changes.setChanged(true);
+    }
+    
     private int getEvent(String tag) {
         for (EventWrapper event : eventSet) {
             if (event.eventProperty.getTag().equals(tag)) {
@@ -2989,6 +3005,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         return "/ancestris/modules/editors/standard/images/" + str + ".png";
     }
     
+    
+    
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
         // if tag does not exist, create it and return
@@ -3023,6 +3041,45 @@ public class IndiPanel extends Editor implements DocumentListener {
         menu.show(button, 3, button.getHeight()-5);
     }
 
+
+    private void showPopupEventMenu(JButton button) {
+        JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
+        JMenuItem menuItem = null;
+        
+        // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+        Gedcom tmpGedcom = new Gedcom();
+        tmpGedcom.setGrammar(gedcom.getGrammar());
+        Entity tmpIndi = null, tmpFam = null;
+        Property prop = null;
+        try {
+            tmpIndi = tmpGedcom.createEntity(Gedcom.INDI);
+            tmpFam = tmpGedcom.createEntity(Gedcom.FAM);
+        } catch (GedcomException ex) {
+            return;
+        }
+
+        // Loop on all other events
+        for (final String tag : EventUsage.otherEventsList) {
+            prop = tmpIndi.addProperty(tag, "");
+            if (!tmpIndi.getMetaProperty().allows(tag)) {
+                prop = tmpFam.addProperty(tag, "");
+            }
+            menuItem = new JMenuItem(prop.getPropertyName(), prop.getImage());
+            final Property fProp = prop;
+            menu.add(menuItem);
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    createEvent(fProp);
+                    selectEvent(getRowFromIndex(eventIndex));
+                    eventDescription.requestFocus();
+                }
+            });
+        }
+        // End loop
+
+        // Show menu
+        menu.show(button, 3, button.getHeight()-5);
+    }
 
     
     
