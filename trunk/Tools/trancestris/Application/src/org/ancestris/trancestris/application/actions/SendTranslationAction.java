@@ -49,48 +49,56 @@ public final class SendTranslationAction implements ActionListener {
             ZipArchive zipArchive = ((ZipExplorerTopComponent) tc).getBundles();
             if (zipArchive != null) {
                 zipArchive.write();
-                if (zipArchive.hasTranslation() == true) {
-                    archiveName = zipArchive.getName();
-                    filePath = zipArchive.getZipFile().getParent();
-                    prefix = archiveName.substring(0, archiveName.indexOf('.'));
-                    suffix = archiveName.substring(archiveName.indexOf('.') + 1);
-                    toLocale = zipArchive.getToLocale().getLanguage();
-                    fromLocale = zipArchive.getFromLocale().getLanguage();
+                boolean confirmed = false, done = false;
+                while (!done) {
+                    if (zipArchive.hasTranslation() == true || confirmed) {
+                        archiveName = zipArchive.getName();
+                        filePath = zipArchive.getZipFile().getParent();
+                        prefix = archiveName.substring(0, archiveName.indexOf('.'));
+                        suffix = archiveName.substring(archiveName.indexOf('.') + 1);
+                        toLocale = zipArchive.getToLocale().getLanguage();
+                        fromLocale = zipArchive.getFromLocale().getLanguage();
 
-                    setDefaultValues(sendTranslationPanel);
-                    DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
-                    dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
-                    DialogDisplayer.getDefault().createDialog(dd);
-                    DialogDisplayer.getDefault().notify(dd);
-                    if (dd.getValue().equals(SEND)) {
-                        zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
-                        if (!zipOutputFile.exists()) {
-                            try {
-                                zipOutputFile.createNewFile();
-                            } catch (IOException ex) {
-                                Exceptions.printStackTrace(ex);
+                        setDefaultValues(sendTranslationPanel);
+                        DialogDescriptor dd = new DialogDescriptor(sendTranslationPanel, NbBundle.getMessage(this.getClass(), "SendTranslationPanel.title"));
+                        dd.setOptions(new Object[]{SEND, DialogDescriptor.CANCEL_OPTION});
+                        DialogDisplayer.getDefault().createDialog(dd);
+                        DialogDisplayer.getDefault().notify(dd);
+                        if (dd.getValue().equals(SEND)) {
+                            zipOutputFile = new File(filePath + File.separator + prefix + "_" + toLocale + "." + suffix);
+                            if (!zipOutputFile.exists()) {
+                                try {
+                                    zipOutputFile.createNewFile();
+                                } catch (IOException ex) {
+                                    Exceptions.printStackTrace(ex);
+                                }
                             }
+
+                            int nbTranslatedFiles = zipArchive.saveTranslation(zipOutputFile);
+
+                            saveValues(sendTranslationPanel);
+                            String subject = sendTranslationPanel.getSubjectFormattedTextField();
+                            String name = sendTranslationPanel.getNameFormattedTextField();
+                            String from = sendTranslationPanel.getEmailFormattedTextField();
+                            String message = sendTranslationPanel.getMessageTextArea();
+                            String to = sendTranslationPanel.getMailToFormattedTextField();
+                            if (nbTranslatedFiles > 1) {
+                                message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There are " + nbTranslatedFiles + " files in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
+                            } else {
+                                message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There is one file in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
+                            }
+                            Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
+                            t.start();
                         }
-
-                        int nbTranslatedFiles = zipArchive.saveTranslation(zipOutputFile);
-
-                        saveValues(sendTranslationPanel);
-                        String subject = sendTranslationPanel.getSubjectFormattedTextField();
-                        String name = sendTranslationPanel.getNameFormattedTextField();
-                        String from = sendTranslationPanel.getEmailFormattedTextField();
-                        String message = sendTranslationPanel.getMessageTextArea();
-                        String to = sendTranslationPanel.getMailToFormattedTextField();
-                        if (nbTranslatedFiles > 1) {
-                            message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There are " + nbTranslatedFiles + " files in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
+                        done = true;
+                    } else {
+                        NotifyDescriptor nd = new NotifyDescriptor.Confirmation(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.nothingToSend"), NotifyDescriptor.QUESTION_MESSAGE, NotifyDescriptor.YES_NO_OPTION);
+                        if (DialogDisplayer.getDefault().notify(nd) == NotifyDescriptor.OK_OPTION) {
+                            confirmed = true;
                         } else {
-                            message += "\n \n ----- Do not delete the following sentence ----- \n       (.) There is one file in the bundle \n ------------==:==:==:==:==:==:==:==------------ \n ";
+                            done = true;
                         }
-                        Thread t = new Thread(new SendMessageWorker(name, from, to, subject, message, zipOutputFile));
-                        t.start();
                     }
-                } else {
-                    NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.nothingToSend"), NotifyDescriptor.INFORMATION_MESSAGE);
-                    DialogDisplayer.getDefault().notify(nd);
                 }
             }
         }
