@@ -14,6 +14,8 @@ package ancestris.modules.editors.standard.tools;
 
 import genj.edit.beans.DateBean;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Note;
@@ -23,6 +25,7 @@ import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
@@ -30,6 +33,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 
@@ -427,10 +431,18 @@ public class EventWrapper {
         
         // if new property (to be created), do it first
         if (eventProperty.getGedcom() == null || eventProperty.getGedcom().getOrigin() == null) {
-            eventProperty = indi.addProperty(eventProperty.getTag(), "");
+            if (hostingEntity instanceof Indi) {
+                eventProperty = indi.addProperty(eventProperty.getTag(), "");
+            } else if (hostingEntity instanceof Fam) {
+                Fam fam = createFamForIndi(indi);
+                if (fam == null) {
+                    return;
+                }
+                eventProperty = fam.addProperty(eventProperty.getTag(), "");
+            }
         }
         
-        // Updatee event property
+        // Update event property
         if (!isGeneral) {
             // Description : depends on property.metaProperty
             // = property.getDisplayValue();                            // case of attributes: description is the value of the event
@@ -499,6 +511,28 @@ public class EventWrapper {
         hostingEntity.delProperty(eventProperty);
         
         
+    }
+
+    private Fam createFamForIndi(Indi indi) {
+        Fam fam = null;
+        Gedcom gedcom = indi.getGedcom();
+        try {
+            fam = (Fam) gedcom.createEntity(Gedcom.FAM);
+
+            int sex = indi.getSex();
+            if (sex == PropertySex.UNKNOWN) {
+                sex = PropertySex.MALE;
+            }
+            if (sex == PropertySex.MALE) {
+                fam.setHusband(indi);
+            } else {
+                fam.setWife(indi);
+            }
+
+        } catch (GedcomException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        return fam;
     }
 
 
