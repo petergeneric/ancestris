@@ -764,7 +764,7 @@
                               <Component id="modificationLabel" max="32767" attributes="0"/>
                           </Group>
                           <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="sourcePanel" alignment="0" pref="208" max="32767" attributes="0"/>
+                          <Component id="sourcePanel" alignment="0" pref="198" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
                   </Group>
@@ -1132,7 +1132,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="eventNotePanel" pref="325" max="32767" attributes="0"/>
+                          <Component id="eventNotePanel" pref="333" max="32767" attributes="0"/>
                           <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>

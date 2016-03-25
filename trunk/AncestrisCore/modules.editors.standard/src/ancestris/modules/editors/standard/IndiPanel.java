@@ -63,6 +63,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -1538,7 +1540,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_eventBaptButtonActionPerformed
 
     private void eventMarrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventMarrButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupEventMenu(eventMarrButton, "MARR", "EventMenu_AddMarr", "EventMenu_DisplayNextMarr");
     }//GEN-LAST:event_eventMarrButtonActionPerformed
 
     private void eventDeatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDeatButtonActionPerformed
@@ -2918,34 +2920,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         int index = getEvent(tag);
 
         if (index == -1) { // Create event if it does not exists
-            createEvent(tag);
+            // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+            Gedcom tmpGedcom = new Gedcom();
+            tmpGedcom.setGrammar(gedcom.getGrammar());
+            Entity tmpIndi = null;
+            try {
+                tmpIndi = tmpGedcom.createEntity(Gedcom.INDI);
+            } catch (GedcomException ex) {
+                return;
+            }
+            Property prop = tmpIndi.addProperty(tag, "");
+            createEvent(prop);
         } else { // else select it
             eventIndex = index;
         }
-    }
-    
-    private void createEvent(final String tag) {
-        Property prop = new Property(tag) {
-
-            @Override
-            public genj.util.swing.ImageIcon getImage() {
-                return new genj.util.swing.ImageIcon(getClass(), getImageResource(tag));
-            }
-
-            @Override
-            public String getValue() {
-                return "";
-            }
-
-            @Override
-            public void setValue(String value) {
-            }
-        };
-
-        eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
-        displayEventTable();
-        eventIndex = eventSet.size() - 1;
-        changes.setChanged(true);
     }
     
     private void createEvent(Property prop) {
@@ -2982,36 +2970,29 @@ public class IndiPanel extends Editor implements DocumentListener {
         return -1;
     }
 
-    private String getImageResource(String tag) {
-        String str = "";
-        if (tag.equals("BIRT")) {
-            str = "birth";
-        } else if (tag.equals("CHR")) {
-            str = "baptism";
-        } else if (tag.equals("BURI")) {
-            str = "burial";
-        } else if (tag.equals("DEAT")) {
-            str = "death";
-        } else if (tag.equals("MARR")) {
-            str = "marr";
-        } else if (tag.equals("OCCU")) {
-            str = "occu";
-        } else if (tag.equals("RETI")) {
-            str = "retirement";
-        } else if (tag.equals("RESI")) {
-            str = "residency";
-        }
-        
-        return "/ancestris/modules/editors/standard/images/" + str + ".png";
-    }
-    
-    
     
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
+        // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+        Gedcom tmpGedcom = new Gedcom();
+        tmpGedcom.setGrammar(gedcom.getGrammar());
+        Entity tmpIndi = null, tmpFam = null;
+        Property prop = null;
+        try {
+            tmpIndi = tmpGedcom.createEntity(Gedcom.INDI);
+            tmpFam = tmpGedcom.createEntity(Gedcom.FAM);
+        } catch (GedcomException ex) {
+            return;
+        }
+        prop = tmpIndi.addProperty(tag, "");
+        if (!tmpIndi.getMetaProperty().allows(tag)) {
+            prop = tmpFam.addProperty(tag, "");
+        }
+        final Property fProp = prop;
+
         // if tag does not exist, create it and return
         if (getNextEvent(tag) == -1) {
-            createEvent(tag);
+            createEvent(fProp);
             selectEvent(getRowFromIndex(eventIndex));
             eventDescription.requestFocus();
             return;
@@ -3022,7 +3003,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                createEvent(tag);
+                createEvent(fProp);
                 selectEvent(getRowFromIndex(eventIndex));
                 eventDescription.requestFocus();
             }
@@ -3058,14 +3039,20 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         }
 
-        // Loop on all other events
+        // Loop on all other events to build list of sorted items
+        SortedMap<String, Property> names = new TreeMap<String, Property>();
         for (final String tag : EventUsage.otherEventsList) {
             prop = tmpIndi.addProperty(tag, "");
             if (!tmpIndi.getMetaProperty().allows(tag)) {
                 prop = tmpFam.addProperty(tag, "");
             }
-            menuItem = new JMenuItem(prop.getPropertyName(), prop.getImage());
-            final Property fProp = prop;
+            names.put(prop.getPropertyName(), prop);
+        }
+        
+        // Retrieve list in sorted order and build menu items
+        for (String name : names.keySet())     {
+            final Property fProp = names.get(name);
+            menuItem = new JMenuItem(fProp.getPropertyName(), fProp.getImage());
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
@@ -3106,6 +3093,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             changes.setChanged(true);
         }
     }
+
 
 
 
