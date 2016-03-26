@@ -147,9 +147,10 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEvent = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
-    private int eventIndex = 0, savedEventRow = -1, savedEventNoteIndex = -1, savedEventSourceIndex = -1;
     public Map<String, NoteWrapper> refNotes = null;       // Reference to all note entities used by id, to avoid duplicates
     public Map<String, SourceWrapper> refSources = null;   // Reference to all sources used by id, to avoid duplicates
+    private int eventIndex = 0, savedEventNoteIndex = -1, savedEventSourceIndex = -1;       // memory
+    private String savedEventTagDateDesc = "-1";                                              // memory
     
     // Associations
     private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
@@ -1727,11 +1728,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         reloadData = flag;
         
         // Remember selections
+        EventWrapper ew = getCurrentEvent();            
         savedMediaIndex = mediaIndex;
-        EventWrapper ew = getCurrentEvent();       
-        sortEventTable();                               // Remember row after sorting in case rows are unsorted.
-        selectEvent(getRowFromIndex(eventIndex));       // Sorting unselects row so select again the index
-        savedEventRow = eventTable.getSelectedRow();    // Remember row (if we remember index, it might be a different one after saving because events are rebuilt differently if some were created)
+        savedEventTagDateDesc = ew.getEventKey();
         savedEventNoteIndex = ew.eventNoteIndex;
         savedEventSourceIndex = ew.eventSourceIndex;
     }
@@ -1781,9 +1780,9 @@ public class IndiPanel extends Editor implements DocumentListener {
      */
     private void selectPropertyContext(Context context) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
-        if (savedEventRow != -1 && eventSet != null) {
+        if (!savedEventTagDateDesc.equals("-1") && eventSet != null) {
             scrollPhotos.setValue(savedMediaIndex);             savedMediaIndex = -1;
-            selectEvent(savedEventRow);                         savedEventRow = -1;
+            selectEvent(savedEventTagDateDesc);                 savedEventTagDateDesc = "-1";
             scrollNotesEvent.setValue(savedEventNoteIndex);     savedEventNoteIndex = -1;
             scrollSourcesEvent.setValue(savedEventSourceIndex); savedEventSourceIndex = -1;
             return;
@@ -1814,6 +1813,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         
     }
     
+    private void selectEvent(String key) {
+        if (eventTable.getRowCount() == 0) {
+            return;
+        }
+        for (EventWrapper event : eventSet) {
+            if (key.equals(event.getEventKey())) {
+                selectEvent(getRowFromIndex(eventSet.indexOf(event)));
+                return;
+            }
+        }
+        selectEvent(0);
+    }
+
     private void selectEvent(int row) {
         if (eventTable.getRowCount() == 0) {
             return;
