@@ -536,7 +536,19 @@ public class EventWrapper {
     }
 
 
+    public String getEventKey() {
+        String ret = "";
 
+        if (eventProperty == null) {
+            return "-1";
+        } else {
+            ret += eventProperty.getTag() + "|";
+        }
+
+        ret += (date == null) ? "" : date.getDisplayValue();
+        ret += description;
+        return ret;
+    }
 
 
 }
