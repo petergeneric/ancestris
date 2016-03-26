@@ -2970,6 +2970,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         return -1;
     }
 
+    private int getEventNb(String tag) {
+        int nb = 0;
+        for (EventWrapper event : eventSet) {
+            if (event.eventProperty.getTag().equals(tag)) {
+                nb++;
+            }
+        }
+        return nb;
+    }
+
     
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
@@ -2991,12 +3001,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         final Property fProp = prop;
 
         // if tag does not exist, create it and return
-        if (getNextEvent(tag) == -1) {
+        int nbEvent = getEventNb(tag);
+        if (nbEvent == 0) {
             createEvent(fProp);
             selectEvent(getRowFromIndex(eventIndex));
             eventDescription.requestFocus();
             return;
         }
+        String nextLabel = nbEvent == 1 ? displayNextLabel : displayNextLabel+"_many";
         
         JPopupMenu menu = new JPopupMenu("");   // title in popup would be nice but L&F does not display it
         JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), createLabel));
@@ -3008,7 +3020,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 eventDescription.requestFocus();
             }
         });
-        menuItem = new JMenuItem(NbBundle.getMessage(getClass(), displayNextLabel));
+        menuItem = new JMenuItem(NbBundle.getMessage(getClass(), nextLabel));
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
