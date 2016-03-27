@@ -9,9 +9,10 @@ import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 
 /**
-
-
-*/
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ */
 public class ReportContemporaries extends Report {
 	 
 	// check all relevant tags by default	

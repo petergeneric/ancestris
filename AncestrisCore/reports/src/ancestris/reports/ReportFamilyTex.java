@@ -19,6 +19,9 @@ import genj.report.Report;
 // import tree.ReportGraphicalTree;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * @author Ekran, based on work of Carsten Muessig <carsten.muessig@gmx.net>
  * @version $Revision: 1.8 $
  * @modified by $Author: lukas0815 $, Ekran

@@ -31,6 +31,9 @@ import javax.swing.JTabbedPane;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * A report that shows pie charts with events by months
  */
 @ServiceProvider(service=Report.class)

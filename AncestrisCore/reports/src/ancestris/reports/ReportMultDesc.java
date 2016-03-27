@@ -21,8 +21,11 @@ import java.util.HashMap;
 import org.openide.util.lookup.ServiceProvider;
 
 
-/*
- * GenJ - ReportMultDesc
+/**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * ReportMultDesc
  * TODO Daniel titles statistics (nb pers distinctes, nbpers vivantes, nb fam, ...)
  * TODO Daniel: Remove bullet with possibly replacement with d'abboville number
  * TODO Daniel: Add table output (for csv)

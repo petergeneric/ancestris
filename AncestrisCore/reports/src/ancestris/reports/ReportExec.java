@@ -16,7 +16,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 /**
- * GenJ - Report to run an external program
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * Report to run an external program
  * @author Nils Meier nils@meiers.net
  * @version 0.1
  */

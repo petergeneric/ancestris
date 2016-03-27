@@ -7,7 +7,10 @@ package ancestris.reports;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-/*
+/**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * @progname       ps-circle.ll
  * @version        2.6.2 of 2003-12-10
  * @author         Jim Eggert (eggertj@ll.mit.edu), Henry Sikkema (hasikkema@yahoo.ca)

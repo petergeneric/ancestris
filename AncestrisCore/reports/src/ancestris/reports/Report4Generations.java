@@ -35,7 +35,10 @@ import genj.gedcom.TagPath;
 import genj.report.Report;
 
 /**
- * GenJ -  ReportAncestors
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * ReportAncestors
  * @version 0.1
  */
 public class Report4Generations extends Report {

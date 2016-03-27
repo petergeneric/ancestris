@@ -27,8 +27,9 @@ import java.util.Comparator;
 import java.util.Iterator;
 
 /**
- * Ancestris - Report
- * Note: this report requires Java2
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * $Header: /cygdrive/c/temp/cvs/genj/genj/src/report/ReportGedcomStatistics.java,v 1.73 2010-01-24 16:08:39 nmeier Exp $
  * @author Francois Massonneau <francois@ancestris.org>
  * @author Carsten Muessig <carsten.muessig@gmx.net>

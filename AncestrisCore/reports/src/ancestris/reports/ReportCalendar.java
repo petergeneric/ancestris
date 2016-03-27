@@ -22,6 +22,9 @@ import java.util.Date;
 
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * Produces a calendar in iCalendar format.
  *
  * @author Przemek Wiech <pwiech@losthive.org>

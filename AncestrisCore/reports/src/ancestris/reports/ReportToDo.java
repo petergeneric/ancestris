@@ -35,7 +35,8 @@ import javax.swing.ImageIcon;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * GenJ - Report
+ *
+ * Ancestris - http://www.ancestris.org
  *
  * @author Daniel ANDRE <daniel.andre@free.fr>
  * @version 1.0

@@ -28,6 +28,9 @@ import java.util.Map;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * Show a chart of places over time
  */
 @SuppressWarnings("unchecked")

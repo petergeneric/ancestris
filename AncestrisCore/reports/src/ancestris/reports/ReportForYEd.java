@@ -8,6 +8,12 @@ package ancestris.reports;
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
 
+/**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ */
+
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;

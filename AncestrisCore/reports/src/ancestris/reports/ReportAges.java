@@ -17,7 +17,10 @@ import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * Ancestris - ReportAges (based on ReportDescendants and ReportGedcomStatistics)
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * ReportAges (based on ReportDescendants and ReportGedcomStatistics)
  */
 @ServiceProvider(service=Report.class)
 public class ReportAges extends Report {

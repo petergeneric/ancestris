@@ -99,7 +99,9 @@ import org.openide.util.lookup.ServiceProvider;
     //
 
 /**
- * GenJ - Report
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * @author Nils Meier <nils@meiers.net>
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 2.2

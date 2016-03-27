@@ -9,6 +9,9 @@ import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * Report displays status of information found vs information to be searched for
  * each person in the tree.
  *

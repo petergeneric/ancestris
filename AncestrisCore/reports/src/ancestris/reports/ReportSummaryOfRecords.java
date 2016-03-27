@@ -29,7 +29,10 @@ import genj.report.Report;
 import javax.swing.ImageIcon;
 
 /**
- * GenJ - Report
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * Report
  * @author Nils Meier <nils@meiers.net>
  * @version 1.0
  */

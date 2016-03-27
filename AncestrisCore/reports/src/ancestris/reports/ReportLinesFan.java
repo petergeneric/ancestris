@@ -25,7 +25,10 @@ import java.nio.charset.Charset;
 import java.util.LinkedList;
 
 /**
- * Ancestris - ReportPSCirc
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * ReportPSCirc
  * adapted from LifeLines ps-fan report
  *
  * TODO Daniel
