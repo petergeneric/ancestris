@@ -29,7 +29,10 @@ import java.util.TreeSet;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * GenJ - ReportSosa
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * ReportSosa
  */
 @SuppressWarnings("unchecked")
 @ServiceProvider(service=Report.class)

@@ -40,6 +40,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * CHB - GenJ - Graphique Arbre 4 generations (02-2012)
  */
 public class ReportArbre4Gen extends Report

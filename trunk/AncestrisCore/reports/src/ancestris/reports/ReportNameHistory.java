@@ -25,6 +25,9 @@ import java.util.TreeMap;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * Chart names and their usage in a gedcom file
  */
 @SuppressWarnings("unchecked")

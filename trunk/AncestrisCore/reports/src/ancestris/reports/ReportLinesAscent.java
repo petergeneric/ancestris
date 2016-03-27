@@ -2,6 +2,11 @@ package ancestris.reports;
 import genj.gedcom.Indi;
 import genj.report.Report;
 
+/**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ */ 
 
 public class ReportLinesAscent extends Report {
 		 

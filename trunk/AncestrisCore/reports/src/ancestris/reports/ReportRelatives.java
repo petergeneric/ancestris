@@ -21,6 +21,9 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * A report for displaying relatives of a person
  */
 public class ReportRelatives extends Report {

@@ -1,9 +1,6 @@
 package ancestris.reports;
 
 /**
- * GenJ - GenealogyJ
- *
- * Copyright (C) 1997 - 2003
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -35,6 +32,9 @@ import java.util.Vector;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * This report prints the number of ancestors found, coverage factor,
  * implex factor and coefficient of consanguinity.
  */

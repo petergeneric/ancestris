@@ -8,9 +8,10 @@ import genj.gedcom.PropertyDate;
 import genj.report.Report;
 
 /**
-
-
-*/
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ */
 public class ReportDirectoryTool extends Report {
 	 
 	// check all relevant tags by default	

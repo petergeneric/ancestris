@@ -8,10 +8,10 @@ import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
-
- 
-
-*/
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ */
 @ServiceProvider(service=Report.class)
 public class ReportTopNames extends Report {
 	 

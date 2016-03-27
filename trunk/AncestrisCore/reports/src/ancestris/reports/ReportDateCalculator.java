@@ -16,7 +16,10 @@ import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 
 import javax.swing.JLabel;
-/*
+/**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * todo:
  * - convertir en gregorien avant
  * - traiter l'evt BAPT comme BIRT

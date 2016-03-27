@@ -16,6 +16,9 @@ import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * @author   = Ekran, based on work of Carsten Muessig <carsten.muessig@gmx.net>
  * @version $Revision: 1.5 $
  * @modified by $Author: paul59 $, Ekran

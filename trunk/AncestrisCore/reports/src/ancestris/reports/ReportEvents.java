@@ -35,7 +35,9 @@ import java.util.TimeZone;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * GenJ - Report
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * @author Nils Meier nils@meiers.net
  * @author Carsten Muessig carsten.muessig@gmx.net
  */

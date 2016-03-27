@@ -8,12 +8,12 @@ import genj.report.Report;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
-
-author    = Paul Robinson
-version   = 1.0 - 23 Jan 2010
-
-
-*/
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * author    = Paul Robinson
+ * version   = 1.0 - 23 Jan 2010
+ */
 @ServiceProvider(service=Report.class)
 public class ReportPedigree extends Report {
 	 

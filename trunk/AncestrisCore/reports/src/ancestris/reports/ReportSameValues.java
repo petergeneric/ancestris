@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
+ *
+ * Ancestris - http://www.ancestris.org
+ *
  * A report that uses PropertyChoiceValue's referencing ability. For
  * a given PropertyChoiceValue's value it shows those properties
  * with the same value (e.g. everyone living in Rendsburg)

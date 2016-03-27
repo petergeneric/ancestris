@@ -26,7 +26,12 @@ import java.util.Iterator;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
-/** A report showing age distribution for males/females. */
+/** 
+ *
+ * Ancestris - http://www.ancestris.org
+ *
+ * A report showing age distribution for males/females. 
+ */
 public class ReportDemography extends Report {
 
   /** The maximum age stored in the series. */
