@@ -108,6 +108,15 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
      */
     @Override
     public void stateChanged(ChangeEvent e) {
+        if (callback != null && e.getSource() instanceof Boolean) {
+            Boolean b = (Boolean) e.getSource();
+            if (b) {
+                callback.okCallBack(null);
+            } else {
+                callback.cancelCallBack(null);
+            }
+            return;
+        }
         setChanged(true);
         revalidate();
     }

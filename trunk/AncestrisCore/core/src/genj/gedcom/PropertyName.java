@@ -19,7 +19,6 @@
  */
 package genj.gedcom;
 
-import ancestris.util.TimingUtility;
 import genj.crypto.Enigma;
 import genj.util.ReferenceSet;
 import genj.util.WordBuffer;
@@ -53,7 +52,6 @@ public class PropertyName extends Property {
     private String nameTagValue;
     /** the name if unparsable */
     private String nameAsString;
-    private boolean mutePC = false;
     
     // use busy flag to avoid loopings
     private boolean isBusy = false;
@@ -449,7 +447,6 @@ public class PropertyName extends Property {
         }
 
         // Done
-        mutePC = false;
         isBusy = false;
         return this;
     }
@@ -611,28 +608,26 @@ public class PropertyName extends Property {
      * refresh name structure from name value and all subtags
      */
     private void refresh() {
-        setName(getPropertyValue("NPFX"),
-                getPropertyValue("GIVN"),
-                getPropertyValue("SPFX"),
-                getPropertyValue("SURN"),
-                getPropertyValue("NSFX"),
-                false);
+        if (!isBusy) {
+            setName(getPropertyValue("NPFX"), getPropertyValue("GIVN"), getPropertyValue("SPFX"), getPropertyValue("SURN"), getPropertyValue("NSFX"), false);
+        }
+    }
+
+    @Override
+    void propagatePropertyAdded(Property container, int pos, Property added) {
+        refresh();
+        super.propagatePropertyAdded(container, pos, added);
     }
 
     @Override
     void propagatePropertyDeleted(Property container, int pos, Property deleted) {
-//XXX:        setValue(getValue());
         refresh();
         super.propagatePropertyDeleted(container, pos, deleted);
     }
 
     @Override
     void propagatePropertyChanged(Property property, String oldValue) {
-        if (!mutePC) {
-            mutePC = true;
-//XXX:            setValue(getValue());
-            refresh();
-        }
+        refresh();
         super.propagatePropertyChanged(property, oldValue);
     }
 

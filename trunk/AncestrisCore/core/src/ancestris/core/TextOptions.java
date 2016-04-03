@@ -1,24 +1,15 @@
-/**
- * GenJ - GenealogyJ
- *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
- *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
- *
- * $Revision: 1.18 $ $Author: nmeier $ $Date: 2010-01-27 14:11:45 $
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2011-16 Ancestris
+ * 
+ * Author: Frédéric Lapeyre (frederic@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
+
 package ancestris.core;
 
 import ancestris.util.Utilities;
@@ -82,11 +73,11 @@ public class TextOptions {
     }
 
     public String getBirthSymbol() {
-        return textOptions.get("birthSymbol","*");
+        return textOptions.get("birthSymbol","°");
     }
 
     public void setBirthSymbol(String set) {
-        textOptions.put("birthSymbol", trim(set, "*"));
+        textOptions.put("birthSymbol", trim(set, "°"));
     }
 
     public String getBaptismSymbol() {
@@ -106,11 +97,11 @@ public class TextOptions {
     }
 
     public String getMarriageSymbol() {
-        return textOptions.get("marriageSymbol","oo");
+        return textOptions.get("marriageSymbol","x");
     }
 
     public void setMarriageSymbol(String set) {
-        textOptions.put("marriageSymbol", trim(set, "oo"));
+        textOptions.put("marriageSymbol", trim(set, "x"));
     }
 
     public String getDivorceSymbol() {

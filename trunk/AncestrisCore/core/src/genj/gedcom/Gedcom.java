@@ -507,7 +507,7 @@ public class Gedcom implements Comparable {
     /**
      * Final destination for a change propagation
      */
-    protected void propagatePropertyAdded(Entity entity, final Property container, final int pos, Property added) {
+    protected void propagatePropertyAdded(Entity entity, final Property container, final int pos, final Property added) {
 
         if (LOG.isLoggable(Level.FINER)) {
             LOG.finer("Property " + added.getTag() + " added to " + container.getTag() + " at position " + pos + " (entity " + entity.getId() + ")");
