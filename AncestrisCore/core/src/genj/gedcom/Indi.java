@@ -40,6 +40,8 @@ public class Indi extends Entity {
             PATH_INDIFAMC = new TagPath("INDI:FAMC"),
             PATH_INDIBIRTDATE = new TagPath("INDI:BIRT:DATE"),
             PATH_INDIDEATDATE = new TagPath("INDI:DEAT:DATE"),
+            PATH_INDIBIRTPLACE = new TagPath("INDI:BIRT:PLAC"),
+            PATH_INDIDEATPLACE = new TagPath("INDI:DEAT:PLAC"),
             PATH_INDIDEAT = new TagPath("INDI:DEAT");
 
     public final static ImageIcon IMG_MALE = Grammar.V55.getMeta(PATH_INDI).getImage("male"),
@@ -84,6 +86,15 @@ public class Indi extends Entity {
     }
 
     /**
+     * Calculate the INDI's Birthplace
+     *
+     * @return date or null
+     */
+    public PropertyPlace getBirthPlace() {
+        return (PropertyPlace) getProperty(PATH_INDIBIRTPLACE);
+    }
+
+    /**
      * Calculate the death date of the Indi.
      *
      * @return a PropertyDate corresponding to the INDI:DEAT:DATE property.
@@ -107,6 +118,49 @@ public class Indi extends Entity {
         return (PropertyDate) setValue(PATH_INDIDEATDATE, "");
     }
 
+    /**
+     * Calculate the INDI's Deathplace
+     *
+     * @return date or null
+     */
+    public PropertyPlace getDeathPlace() {
+        return (PropertyPlace) getProperty(PATH_INDIDEATPLACE);
+    }
+
+    /**
+     * Get brothers including unknown or not
+     * @param includeUnknown
+     * @return 
+     */
+    public Indi[] getBrothers(boolean includeUnknown) {
+        return getSiblings(PropertySex.MALE, includeUnknown);
+    }
+    
+    /**
+     * Get sisters including unknown or not
+     * @param includeUnknown
+     * @return 
+     */
+    public Indi[] getSisters(boolean includeUnknown) {
+        return getSiblings(PropertySex.FEMALE, includeUnknown);
+    }
+    
+    private Indi[] getSiblings(int sex, boolean includeUnknown) {
+        List<Indi> l = new ArrayList<Indi>();
+        for (Indi i : getSiblings(false)) {
+            int s = i.getSex();
+            if (s == sex || (includeUnknown && s == PropertySex.UNKNOWN)) {
+                l.add(i);
+            }
+        }
+        Indi[] result = new Indi[l.size()];
+        l.toArray(result);
+        return result;
+    }
+    
+    
+    
+    
     /**
      * Calculate all siblings (biological)
      */
