@@ -27,7 +27,7 @@
                   <Component id="isOrderDiscretionaryCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="isExtramaritalValidCheckBox" min="-2" max="-2" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="maxLifeFormattedTextField" min="-2" max="-2" attributes="0"/>
+                      <Component id="maxLifeFormattedTextField" min="-2" pref="56" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="maxLifeLabel" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -66,11 +66,11 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="yearRangeLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="minYear" min="-2" max="-2" attributes="0"/>
+                      <Component id="minYear" min="-2" pref="62" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="maxYear" min="-2" max="-2" attributes="0"/>
+                      <Component id="maxYear" min="-2" pref="70" max="-2" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
