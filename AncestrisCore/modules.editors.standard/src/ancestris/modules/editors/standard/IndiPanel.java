@@ -61,6 +61,7 @@ import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.Desktop;
 import java.awt.Image;
+import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -89,6 +90,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
@@ -165,7 +167,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     public Map<String, NoteWrapper> refNotes = null;       // Reference to all note entities used by id, to avoid duplicates
     public Map<String, SourceWrapper> refSources = null;   // Reference to all sources used by id, to avoid duplicates
     private int eventIndex = 0, savedEventNoteIndex = -1, savedEventSourceIndex = -1;       // memory
-    private String savedEventTagDateDesc = "-1";                                              // memory
+    private String savedEventTagDateDesc = "-1";                                            // memory
+    private Component savedFocusedControl = null;                                           // memory
     
     // Associations
     private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
@@ -315,11 +318,21 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(indiAddButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiAddButton.text")); // NOI18N
         indiAddButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiAddButton.toolTipText")); // NOI18N
         indiAddButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        indiAddButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indiAddButtonActionPerformed(evt);
+            }
+        });
 
         indiDelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/indi-delete.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(indiDelButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiDelButton.text")); // NOI18N
         indiDelButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiDelButton.toolTipText")); // NOI18N
         indiDelButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        indiDelButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indiDelButtonActionPerformed(evt);
+            }
+        });
 
         photos.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(photos, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.photos.text")); // NOI18N
@@ -1589,6 +1602,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         showPopupEventMenu(eventOthersButton);
     }//GEN-LAST:event_eventOthersButtonActionPerformed
 
+    private void indiAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiAddButtonActionPerformed
+        if (changes.hasChanged()) {
+            changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
+        }
+        IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, IndiCreator.REL_NONE, null, null);
+        SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+
+    }//GEN-LAST:event_indiAddButtonActionPerformed
+
+    private void indiDelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiDelButtonActionPerformed
+        if (changes.hasChanged()) {
+            changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
+        }
+        new IndiCreator(IndiCreator.DESTROY, indi, IndiCreator.REL_NONE, null, null);
+    }//GEN-LAST:event_indiDelButtonActionPerformed
+
     
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
@@ -1720,6 +1749,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     @Override
     public ViewContext getContext() {
+        context = new Context(getCurrentEvent().eventProperty);
         return new ViewContext(context);
     }
 
@@ -1731,14 +1761,15 @@ public class IndiPanel extends Editor implements DocumentListener {
     @Override
     public void setGedcomHasChanged(boolean flag) {
         // Force Reload
-        reloadData = flag;
+        reloadData = true;
         
         // Remember selections
         EventWrapper ew = getCurrentEvent();            
         savedMediaIndex = mediaIndex;
-        savedEventTagDateDesc = ew.getEventKey();
+        savedEventTagDateDesc = ew.getEventKey(flag);
         savedEventNoteIndex = ew.eventNoteIndex;
         savedEventSourceIndex = ew.eventSourceIndex;
+        savedFocusedControl = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
     
     @Override
@@ -1770,8 +1801,17 @@ public class IndiPanel extends Editor implements DocumentListener {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 @Override
                 public void run() {
-                    firstnamesText.setCaretPosition(firstnamesText.getText().length());
-                    firstnamesText.requestFocus();
+                    if (savedFocusedControl == null || !savedFocusedControl.isFocusable()) {
+                        firstnamesText.setCaretPosition(firstnamesText.getText().length());
+                        firstnamesText.requestFocus();
+                    } else {
+                        if (savedFocusedControl instanceof JTextField) {
+                            JTextField jtf = (JTextField) savedFocusedControl;
+                            jtf.setCaretPosition(jtf.getText().length());
+                        }
+                        savedFocusedControl.requestFocus();
+                        savedFocusedControl = null;
+                    }
                 }
             });
             

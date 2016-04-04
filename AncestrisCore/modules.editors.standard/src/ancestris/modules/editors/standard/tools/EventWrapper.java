@@ -92,24 +92,19 @@ public class EventWrapper {
             isGeneral = false;
             
             // Description
-            if (property.getGedcom() != null) {  // for new properties, there is no gedcom and therefore no metaproperty
-                this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
-            } else {
-                String tag = this.eventProperty.getTag();
-                this.hasAttribute = "OCCU".equals(tag);
-            }
-            Property type = property.getProperty("TYPE");
-            this.description = hasAttribute ? property.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+            this.description = getDescription();
 
             // Event date
             this.date = new PropertyDate();
-            PropertyDate tmpDate = (PropertyDate) property.getProperty("DATE");
+            PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
             if (tmpDate != null) {
                 this.date.setValue(tmpDate.getValue());
             }
+            
+            // Day of week
             try {
-                if (tmpDate != null && tmpDate.getStart() != null) {
-                    this.dayOfWeek = tmpDate.getStart().getDayOfWeek(true);
+                if (date != null && date.getStart() != null) {
+                    this.dayOfWeek = date.getStart().getDayOfWeek(true);
                 } else {
                     this.dayOfWeek = "";
                 }
@@ -539,6 +534,15 @@ public class EventWrapper {
 
 
     public String getEventKey() {
+        return getEventKey(false);
+    }
+    
+    /**
+     * Get key of event
+     * @param force : if true, reload key from gedcom for date and description
+     * @return 
+     */
+    public String getEventKey(boolean force) {
         String ret = "";
 
         if (eventProperty == null) {
@@ -547,9 +551,31 @@ public class EventWrapper {
             ret += eventProperty.getTag() + "|";
         }
 
-        ret += (date == null) ? "" : date.getDisplayValue();
-        ret += description;
+        if (force) {
+            PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
+            ret += (tmpDate == null) ? "" : tmpDate.getDisplayValue();
+            ret += getDescription();
+        } else {
+            ret += (date == null) ? "" : date.getDisplayValue();
+            ret += description;
+        }
         return ret;
+    }
+
+    
+    
+    
+    private String getDescription() {
+        
+        if (eventProperty.getGedcom() != null) {  // for new properties, there is no gedcom and therefore no metaproperty
+            this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
+        } else {
+            String tag = this.eventProperty.getTag();
+            this.hasAttribute = "OCCU".equals(tag);
+        }
+        Property type = eventProperty.getProperty("TYPE");
+        
+        return hasAttribute ? eventProperty.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
     }
 
 
