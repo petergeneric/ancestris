@@ -86,9 +86,10 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         auto.setFocusable(false);
 
         if (DialogManager.create(
-                BUNDLE.getString("confirm.keep.changes"),
+                BUNDLE.getString("confirm.keep.title"),
                 new JComponent[]{
                     new JLabel(BUNDLE.getString("confirm.keep.changes")),
+                    new JLabel(" "),
                     auto
                 })
                 .setMessageType(DialogManager.QUESTION_MESSAGE)
