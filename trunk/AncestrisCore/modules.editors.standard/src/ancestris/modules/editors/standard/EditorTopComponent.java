@@ -134,8 +134,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             gedcom.addGedcomListener(callback);
         }
 
-        // Commit if necessary without asking for confirmation (in case context changes, we do not want to loose the changes made)
-        commit(false);
+        // Commit asking for confirmation (in case context changes, user will be asked to confirm)
+        commit(true);
 
         // Prepare confirm panel
         if (confirmPanel == null) {
@@ -176,7 +176,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             } else {
                 editor = new BlankPanel();
             }
-            editor.addChangeListener(confirmPanel);
+            if (editor != null) {
+                editor.addChangeListener(confirmPanel);
+            }
         }
         
         // Fill in editor with new context
@@ -395,6 +397,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         @Override
         public void stateChanged(ChangeEvent e) {
             if (editor != null) {
+                // Force reload
+                editor.setGedcomHasChanged(true);
+                // Reset context
                 Context ctx = editor.getContext();
                 editor.setContext(ctx);
             }

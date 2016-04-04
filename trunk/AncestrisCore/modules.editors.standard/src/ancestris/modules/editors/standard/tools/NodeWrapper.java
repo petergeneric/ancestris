@@ -13,7 +13,6 @@
 package ancestris.modules.editors.standard.tools;
 
 import ancestris.core.TextOptions;
-import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
@@ -25,6 +24,9 @@ import genj.gedcom.PropertySex;
  */
 public class NodeWrapper {
     
+    private static String NO_NAME = "?";
+    private static String NO_DATE = "-";
+
     public static int PARENTS = 0;
     public static int SIBLING = 1;
     public static int BROTHER = 2;
@@ -37,9 +39,9 @@ public class NodeWrapper {
     public static int BOY = 9;
     public static int GIRL = 10;
 
-    private static String b = TextOptions.getInstance().getBirthSymbol();
-    private static String m = TextOptions.getInstance().getMarriageSymbol();
-    private static String d = TextOptions.getInstance().getDeathSymbol();
+    private static String b = "";
+    private static String m = "";
+    private static String d = "";
     
     private Entity entity = null;
     private int type = 0;
@@ -47,11 +49,14 @@ public class NodeWrapper {
     private Indi myIndi = null;
     
     
-    
     public NodeWrapper(int type, Object o) {
         this.type = type;
         this.object = o;
         
+        b = TextOptions.getInstance().getBirthSymbol();
+        m = TextOptions.getInstance().getMarriageSymbol();
+        d = TextOptions.getInstance().getDeathSymbol();
+
         if (type == MEUNKNOWN) {
             Indi indi = (Indi)o;
             this.entity = indi;
@@ -139,7 +144,11 @@ public class NodeWrapper {
                 ret.append("");
                 this.entity = fam; 
             }
-            ret.append(m).append(fam.getMarriageDate() != null ? fam.getMarriageDate().getDisplayValue() : "").append(" ");
+            String dateStr = fam.getMarriageDate() != null ? fam.getMarriageDate().getDisplayValue() : NO_DATE;
+            if (dateStr.trim().isEmpty()) {
+                dateStr = NO_DATE;
+            }
+            ret.append(m).append(dateStr).append(" ");
             
         } else if (type == CHILD || type == BOY || type == GIRL) {
             Indi indi = (Indi) object;
@@ -157,10 +166,22 @@ public class NodeWrapper {
         if (indi == null) {
             return "";
         }
-        String ln = (indi.getLastName() != null) ? indi.getLastName() : "";
-        String fn = (indi.getFirstName() != null) ? indi.getFirstName() : "";
-        String bd = (indi.getBirthAsString() != null) ? indi.getBirthAsString() : "";
-        String dd = (indi.getDeathAsString() != null) ? indi.getDeathAsString() : "";
+        String ln = (indi.getLastName() != null) ? indi.getLastName() : NO_NAME;
+        if (ln.trim().isEmpty()) {
+            ln = NO_NAME;
+        }
+        String fn = (indi.getFirstName() != null) ? indi.getFirstName() : NO_NAME;
+        if (fn.trim().isEmpty()) {
+            fn = NO_NAME;
+        }
+        String bd = (indi.getBirthAsString() != null) ? indi.getBirthAsString() : NO_NAME;
+        if (bd.trim().isEmpty()) {
+            bd = NO_DATE;
+        }
+        String dd = (indi.getDeathAsString() != null) ? indi.getDeathAsString() : NO_NAME;
+        if (dd.trim().isEmpty()) {
+            dd = NO_DATE;
+        }
         
         StringBuilder ret = new StringBuilder("");
         ret.append(ln).append(", ").append(fn);
@@ -169,8 +190,26 @@ public class NodeWrapper {
         return ret.toString();
     }
 
-    boolean isMe() {
+    public boolean isMe() {
         return (type == MEUNKNOWN || type == MEMALE || type == MEFEMALE);
+    }
+
+    public Indi getCurrentSpouse(Indi indi) {
+        if (type < SPOUSE) {
+            return null;
+        }
+        if (type == SPOUSE) {
+            return (Indi) entity;
+        }
+        if (type > SPOUSE) {
+            Indi child = (Indi) object;
+            Fam fam = child.getFamilyWhereBiologicalChild();
+            if (fam == null) {
+                return null;
+            }
+            return (Indi) fam.getOtherSpouse(indi);
+        }
+        return null;
     }
 
     

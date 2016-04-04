@@ -446,14 +446,16 @@ public class EventWrapper {
         if (!isGeneral) {
             // Description : depends on property.metaProperty
             // = property.getDisplayValue();                            // case of attributes: description is the value of the event
-            // = property.getProperty("TYPE").getDisplayValue();        // case of events and RESI: description is the value of the TYPE
+            // = property.getProperty("TYPE").getDisplayV   alue();        // case of events and RESI: description is the value of the TYPE
             description = description.trim();
             if (hasAttribute) {
                 eventProperty.setValue(description);
             } else {
                 Property type = eventProperty.getProperty("TYPE");
                 if (type == null) {
-                    eventProperty.addProperty("TYPE", description);
+                    if (!description.isEmpty()) {
+                        eventProperty.addProperty("TYPE", description);
+                    }
                 } else {
                     type.setValue(description);
                 }

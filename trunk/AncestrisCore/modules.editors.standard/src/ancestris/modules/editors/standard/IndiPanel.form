@@ -473,9 +473,6 @@
               <Dimension value="[120, 27]"/>
             </Property>
           </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="firstnamesTextActionPerformed"/>
-          </Events>
         </Component>
         <Component class="javax.swing.JTextField" name="lastnameText">
           <Properties>
