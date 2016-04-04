@@ -1,3 +1,15 @@
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2016 Ancestris
+ * 
+ * Author: Frédéric Lapeyre (frederic@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ */
+
 package ancestris.modules.editors.standard;
 
 import ancestris.modules.editors.standard.tools.EventUsage;
@@ -10,6 +22,8 @@ import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
 import ancestris.modules.editors.standard.tools.ImagePanel;
+import ancestris.modules.editors.standard.tools.IndiChooser;
+import ancestris.modules.editors.standard.tools.IndiCreator;
 import ancestris.modules.editors.standard.tools.MediaChooser;
 import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.modules.editors.standard.tools.NameDetailsPanel;
@@ -91,6 +105,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 /*
  * Ancestris - http://www.ancestris.org
@@ -454,11 +469,6 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         firstnamesText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.firstnamesText.text")); // NOI18N
         firstnamesText.setPreferredSize(new java.awt.Dimension(120, 27));
-        firstnamesText.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                firstnamesTextActionPerformed(evt);
-            }
-        });
 
         lastnameText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.lastnameText.text")); // NOI18N
         lastnameText.setPreferredSize(new java.awt.Dimension(120, 27));
@@ -1311,27 +1321,27 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_delMediaButtonActionPerformed
 
     private void brothersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brothersButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupFamilyMenu(brothersButton, IndiCreator.REL_BROTHER, null, indi.getBrothers(true));
     }//GEN-LAST:event_brothersButtonActionPerformed
 
     private void sistersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sistersButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupFamilyMenu(sistersButton, IndiCreator.REL_SISTER, null, indi.getSisters(true));
     }//GEN-LAST:event_sistersButtonActionPerformed
 
     private void spousesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spousesButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupFamilyMenu(spousesButton, IndiCreator.REL_PARTNER, null, indi.getPartners());
     }//GEN-LAST:event_spousesButtonActionPerformed
 
     private void childrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_childrenButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupFamilyMenu(childrenButton, IndiCreator.REL_CHILD, null, indi.getChildren());
     }//GEN-LAST:event_childrenButtonActionPerformed
 
     private void fatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fatherButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupFamilyMenu(fatherButton, IndiCreator.REL_FATHER, indi.getBiologicalFather(), null);
     }//GEN-LAST:event_fatherButtonActionPerformed
 
     private void motherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motherButtonActionPerformed
-        // TODO add your handling code here:
+        showPopupFamilyMenu(motherButton, IndiCreator.REL_MOTHER, indi.getBiologicalMother(), null);
     }//GEN-LAST:event_motherButtonActionPerformed
 
     private void moreNamesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moreNamesButtonActionPerformed
@@ -1345,10 +1355,6 @@ public class IndiPanel extends Editor implements DocumentListener {
             lastnameText.setText(l);
         }
     }//GEN-LAST:event_moreNamesButtonActionPerformed
-
-    private void firstnamesTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstnamesTextActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_firstnamesTextActionPerformed
 
     private void eventBuriButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBuriButtonActionPerformed
         createOrPreSelectEvent("BURI");
@@ -1760,7 +1766,20 @@ public class IndiPanel extends Editor implements DocumentListener {
                 listernersOn = true;
             }
             
+            // Focus on firstnames
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    firstnamesText.setCaretPosition(firstnamesText.getText().length());
+                    firstnamesText.requestFocus();
+                }
+            });
+            
+            // Overwrite and select default context property if any
             selectPropertyContext(context);
+            
+            // Reset change flag
+            changes.setChanged(false);
         }
 
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
@@ -2257,32 +2276,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
 
-    //
-    //
-    //
-
-    
-    /**
-     * Notes
-     * 
-     * We get notes *only as linked entities* to individuals
-     * 
-     * @param indi
-     * @return 
-     */
-    
-    private List<NoteWrapper> getNotes(Indi indi) {
-        List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
-                
-        // Look for only general notes directly attached to indi
-        Property[] noteProps = indi.getProperties("NOTE");
-        for (Property prop : noteProps) {
-            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
-                ret.add(new NoteWrapper(prop));
-            }
-        }
-        return ret;
-    }
 
     
 
@@ -2884,6 +2877,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (event != null) {
             event.setDate(eventDate);
             //changes.setChanged(true); // already done in the bean
+            // TODO : control date consistency XXXXXXXXXXXXXXX
         }
     }
 
@@ -2924,9 +2918,240 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
     
+    /**
+     * Family buttons navigation
+     */
+    
+    private void showPopupFamilyMenu(JButton button, final int relation, Indi familyMember, Indi[] familyMembers) {
+        
+        ImageIcon createIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_create.png"));
+        ImageIcon attachIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_attach.png"));
+        ImageIcon detachIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_detach.png"));
+        
+        // If modifications not saved, add "save and " in front of each label
+        String prefixLabel = changes.hasChanged() ? NbBundle.getMessage(getClass(), "SaveAnd")+" " : "";
+
+        // Initiate menu
+        JPopupMenu menu = new JPopupMenu("");   
+        JMenuItem menuItem = null;
+        boolean putSeparator = false;
+        
+        // Build popup menu with items
+        // - (save and ) create <family member> : only if <family member> does not exist or more than one can be created
+        // - (save and ) attach <family member> : only if <family member> does not exist or more than one can be created
+        // - (save and ) detach <family member> : only if <family member> exists, with sub-menu if several exist
+        
+        // create father or mother 
+        if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember == null) {
+            String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
+            menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
+            menu.add(menuItem);
+            putSeparator = true;
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (changes.hasChanged()) {
+                        changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
+                    }
+                    IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, relation, null, null);
+                    SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+                }
+            });
+        }
+        // attach father or mother 
+        if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember == null) {
+            if (putSeparator) {
+                menu.addSeparator();
+            }
+            Indi[] potentialFamilyMembers = Utils.getPotentialFamilyMembers(indi, relation);
+            for (Indi potMember : potentialFamilyMembers) {
+                String label = "";
+                if (potMember != null) { 
+                    label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation], Utils.getDetails(potMember));
+                } else {
+                    if (potentialFamilyMembers.length >= 2) {
+                        label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation] + "_others");
+                    } else {
+                        label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation] + "_other");
+                    }
+                }
+                menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), attachIcon);
+                menu.add(menuItem);
+                putSeparator = true;
+                final Indi fIndi = potMember;
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        Indi indiToAttach = fIndi;
+                        if (indiToAttach == null) {
+                            indiToAttach = getIndiFromUser(indi, relation == IndiCreator.REL_FATHER ? indi.getLastName() : "", relation);
+                        }
+                        if (indiToAttach != null) {
+                            if (changes.hasChanged()) {
+                                changes.fireChangeEvent(new Boolean(true));
+                            }
+                            IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
+                            SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+                        }
+                    }
+
+                });
+            }
+        }
+        // detach father or mother 
+        if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember != null) {
+            if (putSeparator) {
+                menu.addSeparator();
+            }
+            String label = NbBundle.getMessage(getClass(), "DetachIndi_" + IndiCreator.RELATIONS[relation], familyMember.getName());
+            menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), detachIcon);
+            menu.add(menuItem);
+            final Indi fIndi = familyMember;
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (changes.hasChanged()) {
+                        changes.fireChangeEvent(new Boolean(true));
+                    }
+                    new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
+                    SelectionDispatcher.fireSelection(new Context(indi));
+                }
+            });
+        }
+
+        putSeparator = false;
+        
+        
+        // create family members
+        if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
+            String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
+            final Indi currentSpouse;
+            if (relation == IndiCreator.REL_CHILD) {
+                currentSpouse = Utils.getCurrentSpouse(indi, familyTree);
+                label += currentSpouse != null ? " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_spouse", currentSpouse) : "";
+            } else {
+                currentSpouse = null;
+            }
+            menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
+            menu.add(menuItem);
+            putSeparator = true;
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (changes.hasChanged()) {
+                        changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
+                    }
+                    IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, relation, currentSpouse, null);
+                    SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+                }
+            });
+        }
+        // attach family members
+        if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
+            if (putSeparator) {
+                menu.addSeparator();
+            }
+            Indi[] potentialFamilyMembers = Utils.getPotentialFamilyMembers(indi, relation);
+            for (Indi potMember : potentialFamilyMembers) {
+                String label = "";
+                if (potMember != null) { 
+                    label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation], Utils.getDetails(potMember));
+                } else {
+                    if (potentialFamilyMembers.length >= 2) {
+                        label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation] + "_others");
+                    } else {
+                        label = NbBundle.getMessage(getClass(), "AttachIndi_" + IndiCreator.RELATIONS[relation] + "_other");
+                    }
+                }
+                menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), attachIcon);
+                menu.add(menuItem);
+                putSeparator = true;
+                final Indi fIndi = potMember;
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        Indi indiToAttach = fIndi;
+                        if (indiToAttach == null) {
+                            String filter = "";
+                            if (relation == IndiCreator.REL_BROTHER || relation == IndiCreator.REL_SISTER || (relation == IndiCreator.REL_CHILD && indi.getSex() == PropertySex.MALE)) {
+                                filter = indi.getLastName();
+                            }
+                            indiToAttach = getIndiFromUser(indi, filter, relation);
+                        }
+                        if (indiToAttach != null) {
+                            if (changes.hasChanged()) {
+                                changes.fireChangeEvent(new Boolean(true));
+                            }
+                            IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
+                            SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+                        }
+                    }
+
+                });
+            }
+        }
+        // detach family members
+        if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER && familyMembers != null && familyMembers.length != 0) {
+            if (putSeparator) {
+                menu.addSeparator();
+            }
+            for (Indi i : familyMembers) {
+                String label = NbBundle.getMessage(getClass(), "DetachIndi_" + IndiCreator.RELATIONS[relation], i.getName());
+                menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), detachIcon);
+                menu.add(menuItem);
+                final Indi fIndi = i;
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        if (changes.hasChanged()) {
+                            changes.fireChangeEvent(new Boolean(true));
+                        }
+                        new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
+                        SelectionDispatcher.fireSelection(new Context(indi));
+                    }
+                });
+            }
+        }
+
+        
+        
+        
+        // Show menu
+        menu.show(button, 3, button.getHeight()-5);
+
+        
+    }
+    
+    private Indi getIndiFromUser(Indi tmpIndi, String filter, int relation) {
+        // Init variables
+        JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { okButton, cancelButton };
+        String str = NbBundle.getMessage(getClass(), "TITL_" + IndiCreator.RELATIONS[relation]);
+
+        // Create chooser
+        IndiChooser indiChooser = new IndiChooser(tmpIndi, filter, relation, okButton);
+        
+        // Open dialog
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseIndiTitle", str, tmpIndi.toString(true)), indiChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == okButton) {
+            return indiChooser.getIndi();
+        } else {
+            return null;
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     
     /**
-     * Event navigation
+     * Event buttons navigation
      */
     
     private void createOrPreSelectEvent(String tag) {
@@ -3122,6 +3347,8 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
 
+
+
     
     
     
@@ -3235,7 +3462,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (selRow != -1 && e.getClickCount() == 2) {
                 DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) familyTree.getLastSelectedPathComponent();
                 NodeWrapper node = (NodeWrapper) treeNode.getUserObject();
-                SelectionDispatcher.fireSelection(new Context(node.getEntity()));
+                if (node.getEntity() != null) {
+                    SelectionDispatcher.fireSelection(new Context(node.getEntity()));
+                }
             }
         }
 
