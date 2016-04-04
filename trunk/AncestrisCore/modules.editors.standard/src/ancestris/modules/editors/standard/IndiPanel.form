@@ -114,6 +114,9 @@
           <Dimension value="[30, 26]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indiAddButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="indiDelButton">
       <Properties>
@@ -130,6 +133,9 @@
           <Dimension value="[30, 26]"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indiDelButtonActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JPanel" name="mediaPanel">
 

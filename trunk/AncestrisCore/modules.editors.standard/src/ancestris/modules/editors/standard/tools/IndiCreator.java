@@ -32,7 +32,9 @@ public class IndiCreator {
     public static int CREATION = 0;
     public static int ATTACH = 1;
     public static int DETACH = 2;
+    public static int DESTROY = 9;
     
+    public static int REL_NONE = 0;
     public static int REL_FATHER = 1;
     public static int REL_MOTHER = 2;
     public static int REL_BROTHER = 3;
@@ -112,6 +114,11 @@ public class IndiCreator {
                                 unlinkChildFromTarget(sourceIndi, target, currentSpouse);
                             }
                             return;
+                        }
+                        
+                        // Case of destruction
+                        if (mode == DESTROY) {
+                            gedcom.deleteEntity(sourceIndi);
                         }
                         
                     }

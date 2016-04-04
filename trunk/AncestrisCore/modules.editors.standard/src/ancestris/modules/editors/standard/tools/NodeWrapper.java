@@ -134,10 +134,10 @@ public class NodeWrapper {
             Fam fam = (Fam) object;
             Indi husband = fam.getHusband();
             Indi wife = fam.getWife();
-            if (husband == null || husband.equals(myIndi)) {
+            if (husband != null && husband.equals(myIndi)) {
                 ret.append(wife != null ? getName(wife) : "");
                 this.entity = wife; 
-            } else if (wife == null || wife.equals(myIndi)) {
+            } else if (wife != null && wife.equals(myIndi)) {
                 ret.append(husband != null ? getName(husband) : "");
                 this.entity = husband; 
             } else {
