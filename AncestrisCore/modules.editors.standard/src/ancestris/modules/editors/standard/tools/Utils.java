@@ -544,7 +544,7 @@ public class Utils {
         
         // Return is no spouse or only one
         Fam[] fams = indi.getFamiliesWhereSpouse();
-        if (fams == null || fams.length == 1) {
+        if (fams == null || fams.length <= 1) {
             return null;
         }
         
