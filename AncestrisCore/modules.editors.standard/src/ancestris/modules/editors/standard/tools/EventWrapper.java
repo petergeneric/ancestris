@@ -44,6 +44,8 @@ import org.openide.util.NbBundle;
  */
 public class EventWrapper {
 
+    public static String AGE_FORMAT = "#.###";   // Format of age displayed 
+    
     public boolean isGeneral = true;        // true for the general event
     private Entity hostingEntity = null;    // INDI or FAM the event belongs to
     public Property eventProperty = null;   // the event
@@ -128,7 +130,7 @@ public class EventWrapper {
             if (prop != null && prop instanceof PropertyAge) {
                 PropertyAge propAge = (PropertyAge) prop;
                 propAge.updateAge();
-                this.eventAge = propAge.getDecimalValue("#.###");
+                this.eventAge = propAge.getDecimalValue(AGE_FORMAT);
                 if (eventAge.equals("0")) {
                     eventAge = "-";
                 }
@@ -136,7 +138,7 @@ public class EventWrapper {
             } else {
                 PropertyAge propAge = new PropertyAge("AGE");
                 propAge.getAge(indi, eventProperty);
-                this.eventAge = propAge.getDecimalValue("#.###");
+                this.eventAge = propAge.getDecimalValue(AGE_FORMAT);
                 if (eventAge.equals("0")) {
                     eventAge = "-";
                 }

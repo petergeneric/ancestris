@@ -2464,8 +2464,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                     if (s2.equals("-")) {
                         s2 = "0";
                     }
-                    Double d1 = new DecimalFormat("#.###").parse(s1).doubleValue();
-                    Double d2 = new DecimalFormat("#.###").parse(s2).doubleValue();
+                    Double d1 = new DecimalFormat(EventWrapper.AGE_FORMAT).parse(s1).doubleValue();
+                    Double d2 = new DecimalFormat(EventWrapper.AGE_FORMAT).parse(s2).doubleValue();
                     return d1.compareTo(d2);
                 } catch (ParseException ex) {
                     Exceptions.printStackTrace(ex);
