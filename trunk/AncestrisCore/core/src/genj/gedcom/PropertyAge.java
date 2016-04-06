@@ -101,7 +101,7 @@ public class PropertyAge extends Property {
       return ">"+age.getValue();
     if (younger_exactly_older<0)
       return "<"+age.getValue();
-    return age.getValue();
+    return (isNegative() ? "-" : "") + age.getValue();
   }
 
     @Override
@@ -122,7 +122,7 @@ public class PropertyAge extends Property {
       return ">"+age.toString();
     if (younger_exactly_older<0)
       return "<"+age.toString();
-    return age.toString();
+    return (isNegative() ? "-" : "") + age.toString();
     }
 
     public String getDecimalValue(String format) {
@@ -132,7 +132,7 @@ public class PropertyAge extends Property {
 
         DecimalFormat df = new DecimalFormat(format);
         df.setRoundingMode(RoundingMode.FLOOR);
-        return df.format(d);
+        return (isNegative() ? "-" : "") + df.format(d);
     }
 
   public void getAge(Entity e, Property propEvent) {
@@ -275,4 +275,12 @@ public class PropertyAge extends Property {
     return date != null ? date.getStart() : null;
   }
 
+  
+  public boolean isNegative() {
+    if (getParent() == null || getEarlier() == null || getLater() == null) {
+        return false;
+    }
+    return (getEarlier().compareTo(getLater())>0);
+
+  }
 } //PropertyAge
