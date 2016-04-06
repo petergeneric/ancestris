@@ -1615,7 +1615,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (changes.hasChanged()) {
             changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
         }
-        new IndiCreator(IndiCreator.DESTROY, indi, IndiCreator.REL_NONE, null, null);
+        if (DialogManager.YES_OPTION == DialogManager.create(NbBundle.getMessage(getClass(), "TITL_WARNING_Delete_Indi"), NbBundle.getMessage(getClass(), "MSG_WARNING_Delete_Indi", indi.toString())).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show()) {
+            new IndiCreator(IndiCreator.DESTROY, indi, IndiCreator.REL_NONE, null, null);
+        }
+
     }//GEN-LAST:event_indiDelButtonActionPerformed
 
     
