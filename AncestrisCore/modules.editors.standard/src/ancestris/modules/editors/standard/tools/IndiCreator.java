@@ -46,10 +46,11 @@ public class IndiCreator {
     
     private Indi indiCreated;
 
+    private boolean success;
     
     public IndiCreator(final int mode, final Indi sourceIndi, final int relation, final Indi currentSpouse, final Indi target) {
         Gedcom gedcom = sourceIndi.getGedcom();
-        
+        success = false;
         
         try {
             if (!gedcom.isWriteLocked()) {
@@ -75,6 +76,7 @@ public class IndiCreator {
                             } else if (relation == REL_CHILD) {
                                 linkChild(sourceIndi, indiCreated, currentSpouse);
                             }
+                            success = true;
                             return;
                         }
                         
@@ -94,6 +96,7 @@ public class IndiCreator {
                             } else if (relation == REL_CHILD) {
                                 linkChildToTarget(sourceIndi, target, currentSpouse);
                             }
+                            success = true;
                             return;
                         }
                         
@@ -113,12 +116,14 @@ public class IndiCreator {
                             } else if (relation == REL_CHILD) {
                                 unlinkChildFromTarget(sourceIndi, target, currentSpouse);
                             }
+                            success = true;
                             return;
                         }
                         
                         // Case of destruction
                         if (mode == DESTROY) {
                             gedcom.deleteEntity(sourceIndi);
+                            success = true;
                         }
                         
                     }
@@ -127,12 +132,17 @@ public class IndiCreator {
                 });
             }
         } catch (GedcomException ex) {
+            success = false;
             Exceptions.printStackTrace(ex);
         }
     }
 
     public Indi getIndi() {
         return indiCreated;
+    }
+    
+    public boolean isSuccessful() {
+        return success;
     }
     
     
