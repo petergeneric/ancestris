@@ -30,6 +30,8 @@ import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -46,7 +48,9 @@ import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JTable;
+import javax.swing.JTextField;
 import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -56,7 +60,7 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class AssoManager extends javax.swing.JPanel implements TableModelListener{
+public class AssoManager extends javax.swing.JPanel implements TableModelListener  {
 
     private Registry registry = null;
     private boolean hasChanged = false;
@@ -72,6 +76,13 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     // Associations With indi
     private List<AssoWrapper> assoWithSet = null;
     private AssoWithTableModel awtm = null;
+
+    // ComboBox
+    private Entity[] arrayIndis = null;
+    private JComboBox comboBoxIndis = null;
+    private JTextField comboFilter = null;
+    private String oldEnteredText = "";
+
     private int rowHeight = 18;
     private String[] arrayRelas = null;
     private JComboBox comboBoxRelas = null;
@@ -144,11 +155,26 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         assoWithTable.getColumnModel().getColumn(1).setCellRenderer(new OtherCellRenderer());
         
         // Set indi column as combobox
-        Entity[] arrayIndis = gedcom.getEntities("INDI", "INDI:NAME");
-        JComboBox comboBoxIndis = new JComboBox(arrayIndis);
+        arrayIndis = gedcom.getEntities("INDI", "INDI:NAME");
+        comboBoxIndis = new JComboBox(arrayIndis);
         comboBoxRelas.setMaximumRowCount(20);
         assoWithTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBoxIndis));
         assoWithTable.getColumnModel().getColumn(2).setCellRenderer(new OtherCellRenderer());
+        comboBoxIndis.setEditable(true);
+        comboFilter = (JTextField) comboBoxIndis.getEditor().getEditorComponent();
+        comboFilter.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent ke) {
+                SwingUtilities.invokeLater(new Runnable() {
+                    public void run() {
+                        if (comboFilter.getSelectedText() == null && !oldEnteredText.equals(comboFilter.getText())) {
+                            oldEnteredText = comboFilter.getText();
+                            filterCombo(oldEnteredText);
+                        }
+                    }
+                });
+            }
+        });
 
         // Last name and FirstName
         assoWithTable.getColumnModel().getColumn(3).setCellRenderer(new OtherCellRenderer());
@@ -596,7 +622,26 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         return false;
     }
 
+    public void filterCombo(String enteredText) {
 
+        List<Entity> filterArray= new ArrayList<Entity>();
+        for (int i = 0; i < arrayIndis.length; i++) {
+            if (arrayIndis[i].toString().toLowerCase().contains(enteredText.toLowerCase())) {
+                filterArray.add(arrayIndis[i]);
+            }
+        }
+
+        if (filterArray.size() > 0) {
+            comboBoxIndis.setModel(new DefaultComboBoxModel(filterArray.toArray()));
+            comboFilter.setText(enteredText);
+            comboFilter.setCaretPosition(enteredText.length());
+        }
+
+        if (!comboBoxIndis.isPopupVisible()) {
+            comboBoxIndis.showPopup();
+        }
+        
+    }
     
     
     
