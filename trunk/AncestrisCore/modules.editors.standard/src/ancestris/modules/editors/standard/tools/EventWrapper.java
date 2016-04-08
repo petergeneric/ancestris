@@ -29,7 +29,11 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
+import genj.gedcom.time.Delta;
+import genj.gedcom.time.PointInTime;
 import java.io.File;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -50,18 +54,21 @@ public class EventWrapper {
     private Entity hostingEntity = null;    // INDI or FAM the event belongs to
     public Property eventProperty = null;   // the event
     
+    private PropertyDate birthDate;         // birth date if any
+    private double ageAsDouble;             // calculated age
+    
     public EventLabel eventLabel = null;    // for table
     public String eventYear = "-";          // for table
-    public String eventAge = "-";           // for table and label
-    
-    public String title = "";  
+    public String eventAge = "-";           // for table (calculated)
+
     public boolean showDesc = false;
-    public String description = "";         // Description (to be saved in gedcom)
+    public String title = "";               // Description (to be saved in gedcom) for certain events
+    public String description = "";         // Description (to be saved in gedcom) 
     private boolean hasAttribute = false;   // attribute of event if of type PropertyChoiceValue
     public PropertyDate date = null;        // Date temp property (to be saved in gedcom)
     public PropertyPlace place = null;      // Place temp property (to be saved in gedcom)
-    public String dayOfWeek = "";
-    public String age = "";
+    public String dayOfWeek = "";           // Displayed day of week (calculated)
+    public String age = "";                 // Displayed age as a string in full (calculated)
     
 
     // Event Notes
@@ -125,28 +132,9 @@ public class EventWrapper {
                 return;
             }
 
-            // Age of related indi at time of event
-            Property prop = property.getProperty("AGE");
-            if (prop != null && prop instanceof PropertyAge) {
-                PropertyAge propAge = (PropertyAge) prop;
-                propAge.updateAge();
-                this.eventAge = propAge.getDecimalValue(AGE_FORMAT);
-                if (eventAge.equals("0")) {
-                    eventAge = "-";
-                }
-                this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
-            } else {
-                PropertyAge propAge = new PropertyAge("AGE");
-                propAge.getAge(indi, eventProperty);
-                this.eventAge = propAge.getDecimalValue(AGE_FORMAT);
-                if (eventAge.equals("0")) {
-                    eventAge = "-";
-                }
-                this.age = "(" + propAge.getPropertyName() + ": " + (isValidBirthDate(indi) || !eventAge.equals("-") ? propAge.getDisplayValue() : NbBundle.getMessage(getClass(), "Undetermined_Age")) + ")";
-            }
-            if (this.date == null || property.getTag().equals("BIRT")) {
-                this.age = "";
-            }
+            // Age (for table (eventAge) and description (age) and value (ageAsDouble)
+            calcAge(indi, property);
+            
 
             // Place of event
             this.place = new PropertyPlace("PLAC");
@@ -217,14 +205,68 @@ public class EventWrapper {
     }
 
     
+
+    /**
+     * Calculate age from birth date and date of event, and produce value, age in table and age description
+     * - birthDate :    PropertyDate
+     * - ageAsDouble :  double
+     * - eventAge :     signed numerical string
+     * - age :          litteral string
+     * 
+     * @param indi
+     * @param property 
+     */
+    public void calcAge(Indi indi, Property property) {
+        
+        // Get birth date
+        birthDate = indi.getBirthDate();
+        
+        if (!isValidBirthDate()) {
+            ageAsDouble = 0;
+            eventAge = "-";
+            age = NbBundle.getMessage(getClass(), "Undetermined_Age");
+            return;
+        }
+
+        if (date == null || !date.isValid() || property.getTag().equals("BIRT")) {
+            ageAsDouble = 0;
+            eventAge = "-";
+            age = "";
+            return;
+        } 
+
+        // Calculate elements
+        PointInTime start = birthDate.getStart();
+        PointInTime end = date.getStart();
+        Delta delta = Delta.get(start, end);
+        
+        // Double
+        double d = delta.getYears();
+        d += ((double) delta.getMonths()) / 12;
+        d += ((double) delta.getDays()) / 365;
+        if (start.compareTo(end) > 0) {
+            d *= -1;
+        }
+        ageAsDouble = d;
+        
+        // eventAge
+        DecimalFormat df = new DecimalFormat(AGE_FORMAT);
+        df.setRoundingMode(RoundingMode.FLOOR);
+        eventAge = df.format(d);
+        
+        // age
+        age = "(" + PropertyAge.getLabelForAge() + ": " + (d<0 ? "-" : "") + delta.toString() + ")";
+    }
     
     
-    private boolean isValidBirthDate(Indi indi) {
-        PropertyDate birthDate = indi.getBirthDate();
+    
+    private boolean isValidBirthDate() {
         return birthDate != null && birthDate.isValid();
     }
 
-    
+    public boolean isAgeNegative() {
+        return ageAsDouble < 0;
+    }
 
     //
     // NOTES
@@ -579,6 +621,8 @@ public class EventWrapper {
         
         return hasAttribute ? eventProperty.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
     }
+
+
 
 
 }
