@@ -18,6 +18,7 @@ import ancestris.api.editor.Editor;
 import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.AssoManager;
 import ancestris.modules.editors.standard.tools.AssoWrapper;
+import ancestris.modules.editors.standard.tools.ErrorWrapper;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
@@ -175,6 +176,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<AssoWrapper> assoSet = null;
     private List<AssoWrapper> assoRemovedSet = null;
 
+    // Warnings
+    private List<ErrorWrapper> errorSet = null;
+
     
     /**
      * Creates new form IndiPanel
@@ -200,6 +204,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         refSources = new HashMap<String, SourceWrapper>();
 
         reloadData = true; // force data load at initialisation
+        errorSet = new ArrayList<ErrorWrapper>();
         
         // Components
         initComponents();
@@ -223,8 +228,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void initComponents() {
 
         buttonGender = new javax.swing.ButtonGroup();
-        title = new javax.swing.JLabel();
         indiAddButton = new javax.swing.JButton();
+        warningButton = new javax.swing.JButton();
+        title = new javax.swing.JLabel();
         indiDelButton = new javax.swing.JButton();
         mediaPanel = new javax.swing.JPanel();
         photos = new javax.swing.JLabel();
@@ -310,10 +316,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         setMaximumSize(new java.awt.Dimension(32767, 500));
         setPreferredSize(new java.awt.Dimension(557, 800));
 
-        title.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(title, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.title.text")); // NOI18N
-
         indiAddButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/indi-add.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(indiAddButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiAddButton.text")); // NOI18N
         indiAddButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiAddButton.toolTipText")); // NOI18N
@@ -323,6 +325,20 @@ public class IndiPanel extends Editor implements DocumentListener {
                 indiAddButtonActionPerformed(evt);
             }
         });
+
+        warningButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/warning.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(warningButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.warningButton.text")); // NOI18N
+        warningButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.warningButton.toolTipText")); // NOI18N
+        warningButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        warningButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                warningButtonActionPerformed(evt);
+            }
+        });
+
+        title.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        title.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(title, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.title.text")); // NOI18N
 
         indiDelButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/indi-delete.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(indiDelButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.indiDelButton.text")); // NOI18N
@@ -1228,7 +1244,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(indiAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(0, 0, 0)
+                        .addComponent(warningButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
                         .addComponent(title, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(indiDelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1241,7 +1259,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(title)
                     .addComponent(indiAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(indiDelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(indiDelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(warningButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -1602,23 +1621,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         showPopupEventMenu(eventOthersButton);
     }//GEN-LAST:event_eventOthersButtonActionPerformed
 
+    private void warningButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_warningButtonActionPerformed
+        showWarningsAndErrors();
+    }//GEN-LAST:event_warningButtonActionPerformed
+
     private void indiAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiAddButtonActionPerformed
-        if (changes.hasChanged()) {
-            changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
-        }
         IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, IndiCreator.REL_NONE, null, null);
         SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
-
     }//GEN-LAST:event_indiAddButtonActionPerformed
 
     private void indiDelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiDelButtonActionPerformed
-        if (changes.hasChanged()) {
-            changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
-        }
         if (DialogManager.YES_OPTION == DialogManager.create(NbBundle.getMessage(getClass(), "TITL_WARNING_Delete_Indi"), NbBundle.getMessage(getClass(), "MSG_WARNING_Delete_Indi", indi.toString())).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show()) {
             new IndiCreator(IndiCreator.DESTROY, indi, IndiCreator.REL_NONE, null, null);
         }
-
     }//GEN-LAST:event_indiDelButtonActionPerformed
 
     
@@ -1748,6 +1763,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JTextArea textAreaPhotos;
     private javax.swing.JLabel title;
     private javax.swing.JRadioButton unknownRadioButton;
+    private javax.swing.JButton warningButton;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -1792,6 +1808,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
             if (reloadData) {  // do not reload data when not necessary, for performance reasons when selecting properties in Gedcom editor for instance
                 loadData();
+                warningButton.setVisible(passControls());
                 reloadData = false;
             }
 
@@ -1823,6 +1840,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             
             // Reset change flag
             changes.setChanged(false);
+            
         }
 
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
@@ -2076,6 +2094,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         //
         saveAssociations();
         //.......................................
+        
+        
     }
 
     
@@ -2919,8 +2939,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventWrapper event = getCurrentEvent();
         if (event != null) {
             event.setDate(eventDate);
-            //changes.setChanged(true); // already done in the bean
-            // TODO : control date consistency XXXXXXXXXXXXXXX
         }
     }
 
@@ -3362,6 +3380,49 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
+    private boolean passControls() {
+        
+        errorSet.clear();
+        boolean existErrors = false;
+        for (EventWrapper event : eventSet) {
+            
+            // negative age
+            if (event.isAgeNegative()) {
+                String str = event.eventProperty.getPropertyName();
+                if (str.contains(" ")) {
+                    str = str.substring(0, str.indexOf(" ")); // only take first word
+                }
+                String msg = NbBundle.getMessage(getClass(), "MSG_WARNING_Control_01", event.date.getDisplayValue(), str);
+                errorSet.add(new ErrorWrapper(event.eventProperty, msg));
+                existErrors = true;
+            }
+            
+            // Others to be done
+            
+        }
+        return existErrors;
+    }
+    
+    
+    private void showWarningsAndErrors() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("<html>");
+        for (ErrorWrapper error : errorSet) {
+            sb.append("\u26AB&nbsp;");
+            sb.append(error.getMessage());
+            sb.append("<br><br>");
+        }
+        sb.append("</html>");
+        DialogManager.create(
+                NbBundle.getMessage(getClass(), "TITL_WARNING_Control"), sb.toString())
+                .setMessageType(DialogManager.WARNING_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .show();
+    }
+
+    
+    
+    
     
     
     
@@ -3387,6 +3448,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }
 
+
+    
 
 
 
