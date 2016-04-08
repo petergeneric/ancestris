@@ -21,10 +21,8 @@ package genj.gedcom;
 
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
-import java.math.RoundingMode;
 
 import java.text.Collator;
-import java.text.DecimalFormat;
 
 import javax.swing.ImageIcon;
 
@@ -101,7 +99,7 @@ public class PropertyAge extends Property {
       return ">"+age.getValue();
     if (younger_exactly_older<0)
       return "<"+age.getValue();
-    return (isNegative() ? "-" : "") + age.getValue();
+    return age.getValue();
   }
 
     @Override
@@ -122,24 +120,9 @@ public class PropertyAge extends Property {
       return ">"+age.toString();
     if (younger_exactly_older<0)
       return "<"+age.toString();
-    return (isNegative() ? "-" : "") + age.toString();
+    return age.toString();
     }
 
-    public String getDecimalValue(String format) {
-        double d = age.getYears();
-        d += ((double) age.getMonths()) / 12;
-        d += ((double) age.getDays()) / 365;
-
-        DecimalFormat df = new DecimalFormat(format);
-        df.setRoundingMode(RoundingMode.FLOOR);
-        return (isNegative() ? "-" : "") + df.format(d);
-    }
-
-  public void getAge(Entity e, Property propEvent) {
-      updateAge(Delta.get(getEarlier(e, propEvent), getLater(propEvent)));
-  }
-    
-    
     /**
    * Accessor Value
    */
@@ -276,11 +259,4 @@ public class PropertyAge extends Property {
   }
 
   
-  public boolean isNegative() {
-    if (getParent() == null || getEarlier() == null || getLater() == null) {
-        return false;
-    }
-    return (getEarlier().compareTo(getLater())>0);
-
-  }
 } //PropertyAge
