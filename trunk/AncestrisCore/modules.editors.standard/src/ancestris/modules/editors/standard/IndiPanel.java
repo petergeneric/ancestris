@@ -15,10 +15,10 @@ package ancestris.modules.editors.standard;
 import ancestris.modules.editors.standard.tools.EventUsage;
 import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.AssoManager;
 import ancestris.modules.editors.standard.tools.AssoWrapper;
-import ancestris.modules.editors.standard.tools.ErrorWrapper;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
@@ -58,6 +58,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.util.Registry;
+import genj.util.Validator;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -73,6 +74,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -87,6 +89,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
@@ -106,7 +109,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.Exceptions;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
@@ -177,7 +182,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<AssoWrapper> assoRemovedSet = null;
 
     // Warnings
-    private List<ErrorWrapper> errorSet = null;
+    private List<ViewContext> errorSet = null;
 
     
     /**
@@ -204,7 +209,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         refSources = new HashMap<String, SourceWrapper>();
 
         reloadData = true; // force data load at initialisation
-        errorSet = new ArrayList<ErrorWrapper>();
         
         // Components
         initComponents();
@@ -3380,10 +3384,45 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Management of errors
+     */
+    
+    private Validator getValidator() {
+        Validator validator = null;
+        Collection<? extends AncestrisPlugin> plugins = Lookup.getDefault().lookupAll(AncestrisPlugin.class);
+        for (AncestrisPlugin plugin : plugins) {
+            if (plugin.getPluginName().equals("ancestris.modules.gedcom.gedcomvalidate")) {
+                validator = (Validator) plugin;
+                break;
+            }
+        }
+        return validator;
+    }
+    
     private boolean passControls() {
+
+        // If validator loaded, use it
+        Validator validator = getValidator();
         
+        if (validator != null) {
+            errorSet = validator.start(indi);
+            return errorSet != null;
+        }
+        
+        // No validator found, used basic default one detecting only negative ages
+        if (errorSet == null) {
+            errorSet = new ArrayList<ViewContext>();
+        }
         errorSet.clear();
-        boolean existErrors = false;
         for (EventWrapper event : eventSet) {
             
             // negative age
@@ -3393,31 +3432,44 @@ public class IndiPanel extends Editor implements DocumentListener {
                     str = str.substring(0, str.indexOf(" ")); // only take first word
                 }
                 String msg = NbBundle.getMessage(getClass(), "MSG_WARNING_Control_01", event.date.getDisplayValue(), str);
-                errorSet.add(new ErrorWrapper(event.eventProperty, msg));
-                existErrors = true;
+                errorSet.add(new ViewContext(event.eventProperty).setText(msg));
             }
-            
-            // Others to be done
-            
         }
-        return existErrors;
+        return !errorSet.isEmpty();
     }
     
     
     private void showWarningsAndErrors() {
-        StringBuilder sb = new StringBuilder();
-        sb.append("<html>");
-        for (ErrorWrapper error : errorSet) {
-            sb.append("\u26AB&nbsp;");
-            sb.append(error.getMessage());
-            sb.append("<br><br>");
+        if (errorSet == null || errorSet.isEmpty()) {
+            return;
         }
-        sb.append("</html>");
-        DialogManager.create(
-                NbBundle.getMessage(getClass(), "TITL_WARNING_Control"), sb.toString())
+        
+        // List
+        String[] array = new String[errorSet.size()];
+        int i = 0;
+        for (ViewContext error : errorSet) {
+            array[i++] = error.getText();
+        }
+        JList list = new JList(array);
+        
+        // Dialog box
+        Validator validator = getValidator();
+        JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton optionsButton = new JButton(NbBundle.getMessage(getClass(), "Button_ValidateOptions"));
+        Object[] options = null;
+        if (validator != null) {
+            options = new Object[] { okButton, optionsButton };
+        } else {
+            options = new Object[] { okButton };
+        }
+        Object o = DialogManager.create(
+                NbBundle.getMessage(getClass(), "TITL_WARNING_Control"), list)
                 .setMessageType(DialogManager.WARNING_MESSAGE)
-                .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .setOptions(options)
                 .show();
+        if (validator != null && o == optionsButton) {
+            OptionsDisplayer.getDefault().open("Extensions/GedcomValidateOptions");
+        }
     }
 
     

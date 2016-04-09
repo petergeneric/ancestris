@@ -18,6 +18,7 @@ import static ancestris.util.swing.FileChooserBuilder.imgExtensions;
 import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
 import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
 import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -34,11 +35,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.prefs.Preferences;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 
 
 
@@ -275,6 +278,16 @@ public class Utils {
             return 98;
         }
         
+        // Get options if any
+        Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
+        int maxAgeFather = modulePreferences.getInt("maxAgeFather", 64);
+        int minAgeFather = modulePreferences.getInt("minAgeFather", 14);
+        int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
+        int minAgeMother = modulePreferences.getInt("minAgeMother", 10);
+        int maxDiffAgeSibling = modulePreferences.getInt("maxDiffAgeSibling", 21);
+        int maxDiffAgeSpouses = modulePreferences.getInt("maxDiffAgeSpouses", 20);
+        
+        
         PropertyDate bd = null, ibd = null, dd = null, idd = null;
         long t = 0, it = 0, diffb = 0, diffbd = 0, diffdb = 0;
         
@@ -327,11 +340,11 @@ public class Utils {
             if (!indi.getLastName().equals(i.getLastName())) {
                 return 2;
             }
-            boolean oldEnough = diffb < -15;
+            boolean oldEnough = diffb < -minAgeFather;
             if (!oldEnough) {
                 return 3;
             }
-            boolean youngEnough = diffb > -64;
+            boolean youngEnough = diffb > -maxAgeFather;
             if (!youngEnough) {
                 return 4;
             }
@@ -345,11 +358,11 @@ public class Utils {
             if (i.getSex() != PropertySex.FEMALE) {
                 return 6;
             }
-            boolean oldEnough = diffb < -17;
+            boolean oldEnough = diffb < -minAgeMother;
             if (!oldEnough) {
                 return 8;
             }
-            boolean youngEnough = diffb > -47;
+            boolean youngEnough = diffb > -maxAgeMother;
             if (!youngEnough) {
                 return 9;
             }
@@ -384,11 +397,11 @@ public class Utils {
             if (!indi.getLastName().equals(i.getLastName())) {
                 return 12;
             }
-            boolean oldEnough = diffb < 21;
+            boolean oldEnough = diffb < maxDiffAgeSibling;
             if (!oldEnough) {
                 return 13;
             }
-            boolean youngEnough = diffb > -21;
+            boolean youngEnough = diffb > -maxDiffAgeSibling;
             if (!youngEnough) {
                 return 14;
             }
@@ -409,11 +422,11 @@ public class Utils {
             if (!indi.getLastName().equals(i.getLastName())) {
                 return 22;
             }
-            boolean oldEnough = diffb < 21;
+            boolean oldEnough = diffb < maxDiffAgeSibling;
             if (!oldEnough) {
                 return 23;
             }
-            boolean youngEnough = diffb > -21;
+            boolean youngEnough = diffb > -maxDiffAgeSibling;
             if (!youngEnough) {
                 return 24;
             }
@@ -435,11 +448,11 @@ public class Utils {
             if (indi.getLastName().equals(i.getLastName())) {
                 return 32;
             }
-            boolean oldEnough = diffb < 20;
+            boolean oldEnough = diffb < maxDiffAgeSpouses;
             if (!oldEnough) {
                 return 33;
             }
-            boolean youngEnough = diffb > -20;
+            boolean youngEnough = diffb > -maxDiffAgeSpouses;
             if (!youngEnough) {
                 return 34;
             }
@@ -486,11 +499,11 @@ public class Utils {
                     return 43;
                 }
             }
-            boolean oldEnough = diffb > 14;
+            boolean oldEnough = diffb > minAgeMother;
             if (!oldEnough) {
                 return 44;
             }
-            boolean youngEnough = diffb < 50;
+            boolean youngEnough = diffb < maxAgeMother;
             if (!youngEnough) {
                 return 45;
             }
@@ -522,13 +535,15 @@ public class Utils {
         }
         ret += indi.toString(true);
         
+        Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
+        int maxYear = modulePreferences.getInt("maxYear", 3000);
         PropertyDate birth = indi.getBirthDate();
-        if (birth != null && birth.getStart() != null && birth.getStart().getYear() < 3000) {
+        if (birth != null && birth.getStart() != null && birth.getStart().getYear() < maxYear) {
             ret += " " + TextOptions.getInstance().getBirthSymbol() + birth.getStart().getYear();
         }
         
         PropertyDate death = indi.getDeathDate();
-        if (death != null && death.getStart() != null && death.getStart().getYear() < 3000) {
+        if (death != null && death.getStart() != null && death.getStart().getYear() < maxYear) {
             ret += " " + TextOptions.getInstance().getDeathSymbol() + death.getStart().getYear();
         }
 
