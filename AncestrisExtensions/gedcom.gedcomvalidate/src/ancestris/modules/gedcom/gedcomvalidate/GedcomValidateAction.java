@@ -1,9 +1,11 @@
 package ancestris.modules.gedcom.gedcomvalidate;
 
+import genj.util.Validator;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.FopDocumentView;
 import ancestris.util.ProgressListener;
 import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import genj.view.ViewContext;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
@@ -44,21 +46,20 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
-        Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
+        Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
 
         Context contextToOpen = getContext();
         if (contextToOpen != null) {
             if (modulePreferences.getInt("maxLife", -1) == -1) {
                 NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(GedcomValidate.class, "setParameters"), NotifyDescriptor.INFORMATION_MESSAGE);
                 DialogDisplayer.getDefault().notify(nd);
-
                 OptionsDisplayer.getDefault().open("Extensions/GedcomValidateOptions");
             } else {
-                Validator validator = (Validator) Spin.off(new GedcomValidate(contextToOpen.getGedcom()));
+                Validator validator = (Validator) Spin.off(new GedcomValidate());
 
                 try {
                     ProgressListener.Dispatcher.processStarted(validator);
-                    result = validator.start();
+                    result = validator.start(contextToOpen.getGedcom());
                 } finally {
                     ProgressListener.Dispatcher.processStopped(validator);
                 }

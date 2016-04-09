@@ -88,7 +88,7 @@ import org.openide.util.NbBundle;
    */
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
-    Entity entity = prop.getEntity();
+      Entity entity = prop.getEntity();
     PropertyDate date1;
 
     // did we get a path1 or assuming prop instanceof date?

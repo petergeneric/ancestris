@@ -7,6 +7,7 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
+import genj.util.Validator;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.MetaProperty;
@@ -28,7 +29,7 @@ import static ancestris.modules.gedcom.gedcomvalidate.Bundle.*;
  */
 public class GedcomValidate implements Validator {
 
-    Preferences modulePreferences = NbPreferences.forModule(GedcomValidate.class);
+    Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
 
     /**
      * whether order of properties counts or not
@@ -73,71 +74,54 @@ public class GedcomValidate implements Validator {
     public int minAgeFather = modulePreferences.getInt("minAgeFather", 14);
     public int minAgeMother = modulePreferences.getInt("minAgeMother", 10);
     public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
-    public PointInTime minYear = new PointInTime(0, 0, GedcomValidateOptions.getInstance().getMinYear());
-    public PointInTime maxYear = new PointInTime(0, 0, GedcomValidateOptions.getInstance().getMaxYear());
-    /* Jerome's checks that haven't made it yet
+    public PointInTime minYear = new PointInTime(0, 0, modulePreferences.getInt("minYear", 1));
+    public PointInTime maxYear = new PointInTime(0, 0, modulePreferences.getInt("maxYear", 3000));
+    /* TODO
      *
-     * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
-     * [ ] families containing a man who has fathered a child (more than 9 months) after they have died
      * [ ] age difference between husband and wife is not greater than SOME_VALUE.
+     * [ ] age difference between siblings is not greater than SOME_VALUE.
+    
+     * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
+    
+     * [ ] families containing a man who has fathered a child (more than 9 months) after they have died
      * [ ] women who have given birth more than once within 9 months (discounting twins)
      *
      */
-    private final static String[] LIFETIME_DATES = {
-        "INDI:ADOP:DATE",
-        "INDI:ADOP:DATE",
-        "INDI:BAPM:DATE",
-        "INDI:BAPL:DATE",
-        "INDI:BARM:DATE",
-        "INDI:BASM:DATE",
-        "INDI:BLES:DATE",
-        "INDI:CHRA:DATE",
-        "INDI:CONF:DATE",
-        "INDI:ORDN:DATE",
-        "INDI:NATU:DATE",
-        "INDI:EMIG:DATE",
-        "INDI:IMMI:DATE",
-        "INDI:CENS:DATE",
-        "INDI:RETI:DATE"
+    static public String[] ALL_EVENTS = new String[] {
+        "INDI:BIRT", "INDI:CHR",  "FAM:MARR",  "INDI:OCCU", "INDI:RESI", "FAM:RESI",  "INDI:RETI", "INDI:DEAT", "INDI:BURI",
+        "INDI:BAPM", "INDI:BLES", "INDI:ADOP", "INDI:FCOM", "INDI:BARM", "INDI:BASM", "INDI:CONF", "INDI:NATI", "INDI:RELI", 
+        "INDI:CAST", "INDI:CHRA", "INDI:GRAD", "INDI:ORDN", "FAM:ENGA",  "FAM:MARB",  "FAM:MARL",  "FAM:MARS",  "FAM:MARC", 
+        "FAM:DIVF",  "FAM:DIV",   "FAM:ANUL",  "INDI:EMIG", "INDI:IMMI", "INDI:NATU", "INDI:TITL", "INDI:SSN",  "INDI:IDNO", 
+        "INDI:DSCR", "INDI:EDUC", "INDI:CENS", "FAM:CENS",  "INDI:PROP", "FAM:EVEN",  "INDI:EVEN", "INDI:FACT", "INDI:PROB", "INDI:WILL", "INDI:CREM"
     };
+    
+    private final static String[] LIFETIME_DATES = new String[ALL_EVENTS.length];
     private boolean cancel;
     private int entitiesNumber;
     private int entitiesCounter;
     private String entityType;
     private Gedcom gedcom;
 
-    public GedcomValidate(Gedcom gedcom) {
-        this.gedcom = gedcom;
+    public GedcomValidate() {
+        // prepare lifetime tags
+        for (int i = 0 ; i< ALL_EVENTS.length ; i++) {
+            LIFETIME_DATES[i] = ALL_EVENTS[i] + ":DATE";
+        }
+        
     }
 
     /**
      * Start for argument gedcom
      */
-    public List<ViewContext> start() {
+    @Override
+    public List<ViewContext> start(Gedcom gedcom) {
+
+        this.gedcom = gedcom;
+        
         // prepare tests
         final List<Test> tests = createTests(gedcom);
         final List<ViewContext> issues = new ArrayList<ViewContext>();
 
-        // test if there's a submitter
-        // XXX: removed as addActions is obsoleted
-//        if (gedcom.getSubmitter() == null) {
-//            final ViewContext ctx = new ViewContext(gedcom);
-//            ctx.setText(NbBundle.getMessage(this.getClass(), "err.nosubmitter", gedcom.getName())).setImage(Gedcom.getImage());
-//            ctx.addAction(new AbstractAncestrisAction(NbBundle.getMessage(this.getClass(), "fix")) {
-//
-//                public void actionPerformed(ActionEvent event) {
-//                    setEnabled(false);
-//                    gedcom.doMuteUnitOfWork(new UnitOfWork() {
-//
-//                        public void perform(Gedcom gedcom) throws GedcomException {
-//                            Submitter sub = (Submitter) gedcom.createEntity(Gedcom.SUBM);
-//                            sub.setName(EnvironmentChecker.getProperty("user.name", "?", "using user.name for fixing missing submitter"));
-//                        }
-//                    });
-//                }
-//            });
-//            issues.add(ctx);
-//        }
         // Loop through entities and test 'em
         entitiesNumber = gedcom.getEntities().size();
         entitiesCounter = 0;
@@ -156,25 +140,29 @@ public class GedcomValidate implements Validator {
             }
         }
 
-        // show results
-        return results(gedcom, issues);
+        return issues.isEmpty() ? null : issues;
     }
 
     /**
-     * show validation results
+     * Start for argument entity
      */
-    private List<ViewContext> results(Gedcom gedcom, List<ViewContext> issues) {
-
-        // any fixes proposed at all?
-        if (issues.isEmpty()) {
-//            getOptionFromUser(translate("noissues"), Report.OPTION_OK);
+    @Override
+    public List<ViewContext> start(Entity e) {
+        if (e == null ) {
             return null;
         }
-
-        // wrap
-        return issues;
+        
+        final List<Test> tests = createTests(e.getGedcom());
+        final List<ViewContext> issues = new ArrayList<ViewContext>();
+        
+        TagPath path = new TagPath(e.getTag());
+        test(e, path, e.getGedcom().getGrammar().getMeta(path), tests, issues);
+        
+        return issues.isEmpty() ? null : issues;
     }
-
+    
+    
+    
     /**
      * Test a property (recursively)
      */
@@ -312,9 +300,9 @@ public class GedcomValidate implements Validator {
             result.add(new TestAge("INDI:BAPM:DATE", "..:..", TestAge.OVER, maxAgeBAPM, "maxAgeBAPM"));
         }
 
-        // max CHRI age
+        // max CHR age
         if (maxAgeBAPM > 0) {
-            result.add(new TestAge("INDI:CHRI:DATE", "..:..", TestAge.OVER, maxAgeBAPM, "maxAgeBAPM"));
+            result.add(new TestAge("INDI:CHR:DATE", "..:..", TestAge.OVER, maxAgeBAPM, "maxAgeBAPM"));
         }
 
         // min RETI age
