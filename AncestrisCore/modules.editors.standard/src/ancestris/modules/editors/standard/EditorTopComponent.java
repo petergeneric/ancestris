@@ -108,14 +108,17 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
      */
     @Override
     public void setContextImpl(Context context) {
+        
         // Quit if context is null  
         if (context == null || context.getEntity() == null) {
             return;
         }
+
         // Quit if context is the same  
         if (context != null && context.equals(this.context)) {
             return;
         }
+
         // Redisplay and Quit if same entity, different context, and if editor already exists
         if (context != null && this.context != null && !context.equals(this.context) &&  context.getEntity().equals(this.context.getEntity()) && editor != null) {
             this.context = context;
@@ -144,26 +147,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         }
         
         // Adjust context if not an indi
-        String type = context.getEntity().getTag();
-        if (type.equals(Gedcom.FAM)) {
-            Fam fam = (Fam) context.getEntity();
-            Indi indi = fam.getHusband();
-            if (indi == null) {
-                indi = fam.getWife();
-            }
-            if (indi != null) {
-                List<Entity> entities = new ArrayList<Entity>();
-                entities.add(indi);
-                List<Property> properties = (List<Property>) context.getProperties();
-                Property union = fam.getProperty("MARR");
-                if ((properties == null || properties.isEmpty()) && (union != null)) {
-                    properties = new ArrayList<Property>();
-                    properties.add(union);
-                }
-                Context newContext = new Context(context.getGedcom(), entities, properties);
-                context = newContext;
-            }
-        }
+        context = adjustContext(context);
         
         // Reset editor if not suitable for new context
         if (editor != null && (!editor.getContext().getEntity().getTag().equals(context.getEntity().getTag()))) {
@@ -173,8 +157,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         
         // Set the right editor panel to display depending on newt context
         if (editor == null) {
-            type = context.getEntity().getTag();
-            if (type.equals(Gedcom.INDI)) {
+            if (context.getEntity().getTag().equals(Gedcom.INDI)) {
                 editor = new IndiPanel();
             } else {
                 editor = new BlankPanel();
@@ -347,10 +330,10 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     }
 
     public void okCallBack(ActionEvent event) {
-        // Remember intra-entity selections
-        editor.setGedcomHasChanged(false);
-        // Make changes
+        Context ctx = editor.getContext();
         commit(event == null);
+        // Force reload here (in case of FAM selected, need to alter real context from setContextImpl here) without re-committing
+        editor.setContext(adjustContext(ctx));
     }
 
     public void cancelCallBack(ActionEvent event) {
@@ -370,6 +353,31 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         AncestrisTopComponent topComponent = new EditorTopComponent();
         topComponent.init(getContext());
         return topComponent;
+    }
+
+    private Context adjustContext(Context ctx) {
+        Context newContext = ctx;
+        
+        String type = ctx.getEntity().getTag();
+        if (type.equals(Gedcom.FAM)) {
+            Fam fam = (Fam) ctx.getEntity();
+            Indi indi = fam.getHusband();
+            if (indi == null) {
+                indi = fam.getWife();
+            }
+            if (indi != null) {
+                List<Entity> entities = new ArrayList<Entity>();
+                entities.add(indi);
+                List<Property> properties = (List<Property>) ctx.getProperties();
+                Property union = fam.getProperty("MARR");
+                if ((properties == null || properties.isEmpty()) && (union != null)) {
+                    properties = new ArrayList<Property>();
+                    properties.add(union);
+                }
+                newContext = new Context(ctx.getGedcom(), entities, properties);
+            }
+        }
+        return newContext;
     }
 
     
@@ -404,7 +412,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
                 editor.setGedcomHasChanged(true);
                 // Reset context
                 Context ctx = editor.getContext();
-                editor.setContext(ctx);
+                editor.setContext(adjustContext(ctx));
             }
         }
     }
