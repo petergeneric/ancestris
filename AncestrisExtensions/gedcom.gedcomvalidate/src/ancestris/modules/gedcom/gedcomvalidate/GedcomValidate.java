@@ -95,7 +95,8 @@ public class GedcomValidate implements Validator {
         "INDI:DSCR", "INDI:EDUC", "INDI:CENS", "FAM:CENS",  "INDI:PROP", "FAM:EVEN",  "INDI:EVEN", "INDI:FACT", "INDI:PROB", "INDI:WILL", "INDI:CREM"
     };
     
-    private final static String[] LIFETIME_DATES = new String[ALL_EVENTS.length];
+    private static String[] AFTER_BIRTH_EVENTS = null;
+    private static String[] BEFORE_DEATH_EVENTS = null;
     private boolean cancel;
     private int entitiesNumber;
     private int entitiesCounter;
@@ -103,10 +104,18 @@ public class GedcomValidate implements Validator {
     private Gedcom gedcom;
 
     public GedcomValidate() {
+        
         // prepare lifetime tags
+        List<String> list1 = new ArrayList<String>();
+        List<String> list2 = new ArrayList<String>();
         for (int i = 0 ; i< ALL_EVENTS.length ; i++) {
-            LIFETIME_DATES[i] = ALL_EVENTS[i] + ":DATE";
+            list1.add(ALL_EVENTS[i] + ":DATE");
+            if (!ALL_EVENTS[i].contains("BURI") && !ALL_EVENTS[i].contains("CREM")) {
+                list2.add(ALL_EVENTS[i] + ":DATE");
+            }
         }
+        AFTER_BIRTH_EVENTS  = list1.toArray(new String[list1.size()]);
+        BEFORE_DEATH_EVENTS = list2.toArray(new String[list2.size()]);
         
     }
 
@@ -265,10 +274,10 @@ public class GedcomValidate implements Validator {
         result.add(new TestDate("INDI:BURI:DATE", TestDate.BEFORE, "INDI:DEAT:DATE"));
 
         // events before birth
-        result.add(new TestDate(LIFETIME_DATES, TestDate.BEFORE, "INDI:BIRT:DATE"));
+        result.add(new TestDate(AFTER_BIRTH_EVENTS, TestDate.BEFORE, "INDI:BIRT:DATE"));
 
         // events after death
-        result.add(new TestDate(LIFETIME_DATES, TestDate.AFTER, "INDI:DEAT:DATE"));
+        result.add(new TestDate(BEFORE_DEATH_EVENTS, TestDate.AFTER, "INDI:DEAT:DATE"));
 
         // divorce before marriage
         result.add(new TestDate("FAM:DIV:DATE", TestDate.BEFORE, "FAM:MARR:DATE"));

@@ -124,8 +124,8 @@ public class TestAge extends Test {
       } else {
         words.append(NbBundle.getMessage(this.getClass(),"err.age.over", indi.toString(), String.valueOf(years)));
       }
-      words.append("-");
-      words.append(NbBundle.getMessage(this.getClass(), explanation));
+      words.append(", ");
+      words.append(NbBundle.getMessage(this.getClass(), explanation).toLowerCase());
 
       issues.add(new ViewContext(prop).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
     }
