@@ -88,7 +88,7 @@ import org.openide.util.NbBundle;
    */
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
 
-      Entity entity = prop.getEntity();
+    Entity entity = prop.getEntity();
     PropertyDate date1;
 
     // did we get a path1 or assuming prop instanceof date?
@@ -115,9 +115,9 @@ import org.openide.util.NbBundle;
       String event2 = Gedcom.getName(path2.get(path2.length()-2));
       
       if (comparison==BEFORE)
-        buf.append(NbBundle.getMessage(this.getClass(),"err.date.before", event1, event2));
+        buf.append(NbBundle.getMessage(this.getClass(),"err.date.before", event1, date1.getDisplayValue(), event2, date2.getDisplayValue()));
       else
-        buf.append(NbBundle.getMessage(this.getClass(),"err.date.after", event1, event2));
+        buf.append(NbBundle.getMessage(this.getClass(),"err.date.after", event1, date1.getDisplayValue(), event2, date2.getDisplayValue()));
       
       entity = date2.getEntity();
       if (entity instanceof Indi)
