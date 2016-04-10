@@ -56,7 +56,7 @@ import org.openide.util.Parameters;
         }
         // got an issue with that
         issues.add(new ViewContext(prop).setText(
-                NbBundle.getMessage(this.getClass(), "warn.year.range", path.toString())));
+                NbBundle.getMessage(this.getClass(), "warn.year.range", propDate.getDisplayValue(), report.minYear.getYear(), report.maxYear.getYear())));
         // done
     }
 
