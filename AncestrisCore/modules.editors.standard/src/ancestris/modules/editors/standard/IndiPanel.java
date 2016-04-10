@@ -3409,19 +3409,42 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private boolean passControls() {
 
-        // If validator loaded, use it
-        Validator validator = getValidator();
-        
-        if (validator != null) {
-            errorSet = validator.start(indi);
-            return errorSet != null;
-        }
-        
-        // No validator found, used basic default one detecting only negative ages
+        // Refresh errorSet
         if (errorSet == null) {
             errorSet = new ArrayList<ViewContext>();
         }
         errorSet.clear();
+        
+        
+        // If validator loaded, use it
+        Validator validator = getValidator();
+        if (validator != null) {
+            List<ViewContext> errors = new ArrayList<ViewContext>();
+            
+            // Control INDI
+            errors = validator.start(indi);
+            if (errors != null) {
+                errorSet.addAll(errors);
+            }
+            
+            // Control parents of INDI
+            errors = validator.start(indi.getFamilyWhereBiologicalChild());
+            if (errors != null) {
+                errorSet.addAll(errors);
+            }
+            
+            // Control spouse of INDI
+            for (Fam fam : indi.getFamiliesWhereSpouse()) {
+                errors = validator.start(fam);
+                if (errors != null) {
+                    errorSet.addAll(errors);
+                }
+            }
+            
+            return errorSet != null && !errorSet.isEmpty();
+        }
+        
+        // No validator found, used basic default one detecting only negative ages
         for (EventWrapper event : eventSet) {
             
             // negative age

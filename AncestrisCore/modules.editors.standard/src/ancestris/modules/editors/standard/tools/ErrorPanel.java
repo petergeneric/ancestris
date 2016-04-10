@@ -11,9 +11,12 @@
  */
 package ancestris.modules.editors.standard.tools;
 
+import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FontMetrics;
 import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -26,17 +29,28 @@ import org.netbeans.api.options.OptionsDisplayer;
  */
 public class ErrorPanel extends javax.swing.JPanel {
 
+    private Registry registry = null;
+    
     List<ViewContext> errors = null;
     
     /**
      * Creates new form ErrorPanel
      */
     public ErrorPanel(List<ViewContext> errors, boolean showParameters) {
+        registry = Registry.get(getClass());
         this.errors = errors;
         initComponents();
         errorsList.setCellRenderer(new ListRenderer());
         paramLabel.setVisible(showParameters);
         paramButton.setVisible(showParameters);
+
+        // set window width to max of preferred size and longuest string
+        int maxWidth = registry.get("errorWindowWidth", this.getPreferredSize().width);
+        FontMetrics fm = getFontMetrics(getFont());
+        for (ViewContext error : errors) {
+            maxWidth = Math.max(maxWidth, fm.stringWidth(error.getText()) + 70);
+        }
+        this.setPreferredSize(new Dimension(maxWidth, registry.get("errorWindowHeight", this.getPreferredSize().height)));
     }
 
     /**
@@ -53,6 +67,13 @@ public class ErrorPanel extends javax.swing.JPanel {
         paramLabel = new javax.swing.JLabel();
         paramButton = new javax.swing.JButton();
 
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
+
+        errorsList.setBorder(javax.swing.BorderFactory.createCompoundBorder(javax.swing.BorderFactory.createEtchedBorder(), javax.swing.BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         errorsList.setModel(new javax.swing.AbstractListModel() {
             ViewContext[] lines = errors.toArray(new ViewContext[errors.size()]);
 
@@ -65,6 +86,7 @@ public class ErrorPanel extends javax.swing.JPanel {
             }
         });
         errorsList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        errorsList.setFixedCellHeight(20);
         errorsList.setVisibleRowCount(12);
         jScrollPane.setViewportView(errorsList);
 
@@ -86,7 +108,7 @@ public class ErrorPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 644, Short.MAX_VALUE)
+                    .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(paramButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -98,7 +120,7 @@ public class ErrorPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE)
+                .addComponent(jScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(paramLabel)
@@ -110,6 +132,11 @@ public class ErrorPanel extends javax.swing.JPanel {
     private void paramButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_paramButtonActionPerformed
         OptionsDisplayer.getDefault().open("Extensions/GedcomValidateOptions");
     }//GEN-LAST:event_paramButtonActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put("errorWindowWidth", evt.getComponent().getWidth());
+        registry.put("errorWindowHeight", evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -137,6 +164,7 @@ public class ErrorPanel extends javax.swing.JPanel {
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value != null) {
                 ViewContext vc = (ViewContext) value;
+                setIconTextGap(8);
                 setIcon(vc.getImage());
                 setText(vc.getText());
                 if (isSelected) {
