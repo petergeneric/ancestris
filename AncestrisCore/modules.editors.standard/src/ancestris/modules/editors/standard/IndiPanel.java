@@ -3445,7 +3445,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         ErrorPanel ep = new ErrorPanel(errorSet, getValidator() != null);
         DialogManager.create(
-                NbBundle.getMessage(getClass(), "TITL_WARNING_Control"), ep)
+                NbBundle.getMessage(getClass(), "TITL_WARNING_Control", indi.toString()), ep)
                 .setMessageType(DialogManager.WARNING_MESSAGE)
                 .setOptionType(DialogManager.OK_ONLY_OPTION)
                 .show();

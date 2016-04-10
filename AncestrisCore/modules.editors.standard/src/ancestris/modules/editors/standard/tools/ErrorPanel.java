@@ -137,6 +137,7 @@ public class ErrorPanel extends javax.swing.JPanel {
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             if (value != null) {
                 ViewContext vc = (ViewContext) value;
+                setIcon(vc.getImage());
                 setText(vc.getText());
                 if (isSelected) {
                     setBackground(backSelectedColor);
