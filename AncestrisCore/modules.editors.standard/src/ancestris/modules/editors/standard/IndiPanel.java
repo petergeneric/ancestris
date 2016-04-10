@@ -19,6 +19,7 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.standard.tools.AssoManager;
 import ancestris.modules.editors.standard.tools.AssoWrapper;
+import ancestris.modules.editors.standard.tools.ErrorPanel;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
@@ -89,7 +90,6 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListSelectionModel;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JList;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
@@ -109,7 +109,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -3444,32 +3443,13 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         }
         
-        // List
-        String[] array = new String[errorSet.size()];
-        int i = 0;
-        for (ViewContext error : errorSet) {
-            array[i++] = error.getText();
-        }
-        JList list = new JList(array);
-        
-        // Dialog box
-        Validator validator = getValidator();
-        JButton okButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
-        JButton optionsButton = new JButton(NbBundle.getMessage(getClass(), "Button_ValidateOptions"));
-        Object[] options = null;
-        if (validator != null) {
-            options = new Object[] { okButton, optionsButton };
-        } else {
-            options = new Object[] { okButton };
-        }
-        Object o = DialogManager.create(
-                NbBundle.getMessage(getClass(), "TITL_WARNING_Control"), list)
+        ErrorPanel ep = new ErrorPanel(errorSet, getValidator() != null);
+        DialogManager.create(
+                NbBundle.getMessage(getClass(), "TITL_WARNING_Control"), ep)
                 .setMessageType(DialogManager.WARNING_MESSAGE)
-                .setOptions(options)
+                .setOptionType(DialogManager.OK_ONLY_OPTION)
                 .show();
-        if (validator != null && o == optionsButton) {
-            OptionsDisplayer.getDefault().open("Extensions/GedcomValidateOptions");
-        }
+        warningButton.setVisible(passControls());
     }
 
     
