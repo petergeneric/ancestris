@@ -7,6 +7,7 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
+import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
@@ -120,9 +121,9 @@ public class TestAge extends Test {
       
       WordBuffer words = new WordBuffer();
       if (comparison==UNDER) {
-        words.append(NbBundle.getMessage(this.getClass(),"err.age.under", indi.toString(), String.valueOf(years)));
+        words.append(NbBundle.getMessage(this.getClass(),"err.age.under", indi.toString(), Gedcom.getName(prop.getParent().getTag()), String.valueOf(years)));
       } else {
-        words.append(NbBundle.getMessage(this.getClass(),"err.age.over", indi.toString(), String.valueOf(years)));
+        words.append(NbBundle.getMessage(this.getClass(),"err.age.over", indi.toString(), Gedcom.getName(prop.getParent().getTag()), String.valueOf(years)));
       }
       words.append(", ");
       words.append(NbBundle.getMessage(this.getClass(), explanation).toLowerCase());
