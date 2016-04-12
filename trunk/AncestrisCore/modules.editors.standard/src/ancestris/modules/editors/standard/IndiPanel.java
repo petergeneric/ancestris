@@ -58,6 +58,7 @@ import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
+import genj.util.ReferenceSet;
 import genj.util.Registry;
 import genj.util.Validator;
 import genj.view.ViewContext;
@@ -206,7 +207,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         refNotes = new HashMap<String, NoteWrapper>();
         refSources = new HashMap<String, SourceWrapper>();
-
+        
         reloadData = true; // force data load at initialisation
         
         // Components
@@ -1770,14 +1771,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public ViewContext getContext() {
-        context = new Context(getCurrentEvent().eventProperty);
-        return new ViewContext(context);
+    public Component getEditorComponent() {
+        return this;
     }
 
     @Override
-    public Component getEditorComponent() {
-        return this;
+    public ViewContext getContext() {
+        context = new Context(getCurrentEvent().eventProperty);
+        return new ViewContext(context);
     }
 
     @Override
@@ -1820,7 +1821,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 listernersOn = true;
             }
             
-            // Focus on firstnames
+            // Focus saved focused field, or else on firstnames
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 @Override
                 public void run() {
@@ -1976,6 +1977,22 @@ public class IndiPanel extends Editor implements DocumentListener {
         firstnamesText.setText(indi.getFirstName());
         lastnameText.setText(indi.getLastName());
         nameDetails.setDetails(indi);
+// In propertyName, to add functionality of assisted name/firstname input:
+//    /**
+//     * Return all last names
+//     */
+//    public static List<String> getLastNames(Gedcom gedcom, boolean sortByName) {
+//        return gedcom.getReferenceSet(KEY_LASTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
+//    }
+//
+//    /**
+//     * Return all first names
+//     */
+//    public static List<String> getFirstNames(Gedcom gedcom, boolean sortByName) {
+//        return gedcom.getReferenceSet(KEY_FIRSTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
+//    }
+//
+        
 
         // Sex
         i = indi.getSex();
@@ -2011,6 +2028,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Family tree (parents, siblings, mariages and corresponding childrens)
         createFamilyNodes(indi);
         familyTree.repaint();
+        
+        // Places
+        ReferenceSet<String, Property> placesProperties = gedcom.getReferenceSet("PLAC");
+// In propertyName, to add functionality of assisted place input:
+//        return gedcom.getReferenceSet(KEY_LASTNAME).getKeys(sortByName ? gedcom.getCollator() : null);
+// Do not use combobox because of documentlistener which might alter inputs, rather use keystroke instead like AssoManager but with a separate popuplist
         
         // Events
         if (eventSet != null) {

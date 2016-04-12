@@ -295,7 +295,7 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         if (p == null) {
             return;
         }
-        p.setName(prefixText.getText(), indi.getFirstName(), surnamePrefixText.getText(), indi.getLastName(), surnamePrefixText.getText(), false);
+        p.setName(prefixText.getText(), indi.getFirstName(), surnamePrefixText.getText(), indi.getLastName(), suffixText.getText(), false);
         p.setNick(nickText.getText());
     }
 
