@@ -209,7 +209,7 @@ public class PropertyName extends Property {
      * the suffix
      */
     public String getSuffix() {
-        return suffix;
+        return getPropertyValue("NSFX");
     }
 
     /**
@@ -426,11 +426,11 @@ public class PropertyName extends Property {
         if (hasParent && !isBusy) {
             isBusy = true;
             boolean add = GedcomOptions.getInstance().getAddNameSubtags();
-            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);
-            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);
-            addNameSubProperty(add, "NSFX", suff);
+            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);    
+            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);  
             addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);
             addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);
+            addNameSubProperty(add, "NSFX", suff);
         }
 
         // Make sure no Information is kept in base class
@@ -461,9 +461,10 @@ public class PropertyName extends Property {
      */
     private void addNameSubProperty(boolean force, String tag, String value) {
         Property sub = getProperty(tag);
+        String oldValue = (sub != null) ? sub.getValue() : "";
 
         if (value.isEmpty()) {
-            if (sub != null) {
+            if (sub != null && !oldValue.isEmpty()) {
                 delProperty(sub);
             }
             return;
@@ -471,7 +472,6 @@ public class PropertyName extends Property {
         if (sub == null) {
             sub = addProperty(tag, value);
         } else {
-            String oldValue = sub.getValue();
             if (!value.equals(oldValue)) {
                 sub.setValue(value);
             }
@@ -607,27 +607,33 @@ public class PropertyName extends Property {
     /**
      * refresh name structure from name value and all subtags
      */
-    private void refresh() {
+    private void refresh(Property property) {
+        String tag = property.getTag();
+System.out.println("DEBUG ***** refresh tag = "+tag);
         if (!isBusy) {
+System.out.println("DEBUG ***** refresh setting name components");
             setName(getPropertyValue("NPFX"), getPropertyValue("GIVN"), getPropertyValue("SPFX"), getPropertyValue("SURN"), getPropertyValue("NSFX"), false);
         }
     }
 
     @Override
-    void propagatePropertyAdded(Property container, int pos, Property added) {
-        refresh();
-        super.propagatePropertyAdded(container, pos, added);
+    void propagatePropertyAdded(Property property, int pos, Property added) {
+System.out.println("DEBUG ***** ADDED property added="+added);
+        refresh(added);
+        super.propagatePropertyAdded(property, pos, added);
     }
 
     @Override
-    void propagatePropertyDeleted(Property container, int pos, Property deleted) {
-        refresh();
-        super.propagatePropertyDeleted(container, pos, deleted);
+    void propagatePropertyDeleted(Property property, int pos, Property deleted) {
+System.out.println("DEBUG ***** DELETED property deleted="+deleted);
+        refresh(deleted);
+        super.propagatePropertyDeleted(property, pos, deleted);
     }
 
     @Override
     void propagatePropertyChanged(Property property, String oldValue) {
-        refresh();
+System.out.println("DEBUG ***** CHANGED property oldValue="+oldValue+"+NewValue="+property.getDisplayValue());
+        refresh(property);
         super.propagatePropertyChanged(property, oldValue);
     }
 
