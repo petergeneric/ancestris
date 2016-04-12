@@ -609,30 +609,25 @@ public class PropertyName extends Property {
      */
     private void refresh(Property property) {
         String tag = property.getTag();
-System.out.println("DEBUG ***** refresh tag = "+tag);
         if (!isBusy) {
-System.out.println("DEBUG ***** refresh setting name components");
             setName(getPropertyValue("NPFX"), getPropertyValue("GIVN"), getPropertyValue("SPFX"), getPropertyValue("SURN"), getPropertyValue("NSFX"), false);
         }
     }
 
     @Override
     void propagatePropertyAdded(Property property, int pos, Property added) {
-System.out.println("DEBUG ***** ADDED property added="+added);
         refresh(added);
         super.propagatePropertyAdded(property, pos, added);
     }
 
     @Override
     void propagatePropertyDeleted(Property property, int pos, Property deleted) {
-System.out.println("DEBUG ***** DELETED property deleted="+deleted);
         refresh(deleted);
         super.propagatePropertyDeleted(property, pos, deleted);
     }
 
     @Override
     void propagatePropertyChanged(Property property, String oldValue) {
-System.out.println("DEBUG ***** CHANGED property oldValue="+oldValue+"+NewValue="+property.getDisplayValue());
         refresh(property);
         super.propagatePropertyChanged(property, oldValue);
     }
