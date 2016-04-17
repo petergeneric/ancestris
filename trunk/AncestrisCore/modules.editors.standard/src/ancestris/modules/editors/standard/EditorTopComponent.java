@@ -330,10 +330,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     }
 
     public void okCallBack(ActionEvent event) {
-        Context ctx = editor.getContext();
         commit(event == null);
-        // Force reload here (in case of FAM selected, need to alter real context from setContextImpl here) without re-committing
-        editor.setContext(adjustContext(ctx));
     }
 
     public void cancelCallBack(ActionEvent event) {
@@ -394,9 +391,6 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             // Changes we have to commit?
             if (!isChangeSource) {
                 commit(false);
-            }
-            if (editor != null) {
-                editor.setGedcomHasChanged(true);   // gedcom has not yet changed but it will and this flag has to occur before WriteLockReleasedd
             }
         }
     }

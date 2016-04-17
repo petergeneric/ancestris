@@ -179,7 +179,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         // Set indi column as combobox
         arrayIndis = gedcom.getEntities("INDI", "INDI:NAME");
         comboBoxIndis = new JComboBox(arrayIndis);
-        comboBoxRelas.setMaximumRowCount(20);
+        comboBoxIndis.setMaximumRowCount(20);
         assoWithTable.getColumnModel().getColumn(2).setCellEditor(new DefaultCellEditor(comboBoxIndis));
         assoWithTable.getColumnModel().getColumn(2).setCellRenderer(new OtherCellRenderer());
         comboBoxIndis.setEditable(true);
@@ -577,15 +577,16 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         if (row >= 0 && row < awtm.getRowCount() && column >= 0 && column < awtm.getColumnCount()) {
             Object data = awtm.getValueAt(row, column);
             if (data != null && !isBusy) {
-                if (column == 2) {
+                if (column == 2 && data instanceof Indi) {
                     isBusy = true;
                     awtm.setIndiValues((Indi) data, row);
                     isBusy = false;
                 }
                 if (column >=3 && column <= 6) {
                     isBusy = true;
-                    if (awtm.isChanged(data, row, column)) {
-                        Indi changedIndi = (Indi) awtm.getValueAt(row, 2);
+                    Object data2 = awtm.getValueAt(row, 2);
+                    if (awtm.isChanged(data, row, column) && data2 instanceof Indi) {
+                        Indi changedIndi = (Indi) data2;
                         if ((changedIndi != null) && (changedIndi != inditobecreated) && (DialogManager.YES_OPTION == DialogManager.createYesNo(
                                 NbBundle.getMessage(getClass(), "TITL_AssoChangeIndi"),
                                 NbBundle.getMessage(getClass(), "MSG_AssoChangedIndi", awtm.getColumnName(column), changedIndi)).

@@ -583,7 +583,7 @@ public class EventWrapper {
     
     /**
      * Get key of event
-     * @param force : if true, reload key from gedcom for date and description
+     * @param force : if true, reload key from gedcom file for date and description
      * @return 
      */
     public String getEventKey(boolean force) {
@@ -597,10 +597,10 @@ public class EventWrapper {
 
         if (force) {
             PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
-            ret += (tmpDate == null) ? "" : tmpDate.getDisplayValue();
+            ret += (tmpDate == null || tmpDate.getValue().isEmpty()) ? "" : tmpDate.getValue();
             ret += getDescription();
         } else {
-            ret += (date == null) ? "" : date.getDisplayValue();
+            ret += (date == null || date.getValue().isEmpty()) ? "" : date.getValue();
             ret += description;
         }
         return ret;
