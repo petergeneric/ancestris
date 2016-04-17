@@ -186,9 +186,12 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<ViewContext> errorSet = null;
     
     // Filters
+    List<String> allFirstNames = null;
+    JTextField firstnamesText = null;
+    List<String> allLastNames = null;
+    JTextField lastnameText = null;
     List<String> allPlaces = null;
     JTextField eventPlaceText = null;
-    String oldEnteredPlaceText = "";
 
     
     /**
@@ -223,6 +226,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         familyTree.setCellRenderer(new FamilyTreeRenderer());
         familyTree.addMouseListener(new FamilyTreeMouseListener());
 
+        firstnamesText = (JTextField) firstnamesCombo.getEditor().getEditorComponent();
+        lastnameText = (JTextField) lastnameCombo.getEditor().getEditorComponent();
         eventPlaceText = (JTextField) eventPlaceCombo.getEditor().getEditorComponent();
         
         registry = Registry.get(getClass());
@@ -260,8 +265,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         moreNamesButton = new javax.swing.JButton();
         firstnamesLabel = new javax.swing.JLabel();
         lastnameLabel = new javax.swing.JLabel();
-        firstnamesText = new javax.swing.JTextField();
-        lastnameText = new javax.swing.JTextField();
+        firstnamesCombo = new javax.swing.JComboBox();
+        lastnameCombo = new javax.swing.JComboBox();
         maleRadioButton = new javax.swing.JRadioButton();
         femaleRadioButton = new javax.swing.JRadioButton();
         unknownRadioButton = new javax.swing.JRadioButton();
@@ -300,6 +305,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         dayOfWeek = new javax.swing.JLabel();
         ageAtEvent = new javax.swing.JLabel();
         placeLabel = new javax.swing.JLabel();
+        eventPlaceCombo = new javax.swing.JComboBox();
         eventPlaceButton = new javax.swing.JButton();
         eventNotePanel = new javax.swing.JPanel();
         eventNoteScrollPane = new javax.swing.JScrollPane();
@@ -323,7 +329,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         assoComboBox = new javax.swing.JComboBox();
         assoEditButton = new javax.swing.JButton();
         assoEditIndi = new javax.swing.JButton();
-        eventPlaceCombo = new javax.swing.JComboBox();
 
         setMaximumSize(new java.awt.Dimension(32767, 500));
         setPreferredSize(new java.awt.Dimension(557, 800));
@@ -508,11 +513,11 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         org.openide.awt.Mnemonics.setLocalizedText(lastnameLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.lastnameLabel.text")); // NOI18N
 
-        firstnamesText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.firstnamesText.text")); // NOI18N
-        firstnamesText.setPreferredSize(new java.awt.Dimension(120, 27));
+        firstnamesCombo.setEditable(true);
+        firstnamesCombo.setMaximumRowCount(19);
 
-        lastnameText.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.lastnameText.text")); // NOI18N
-        lastnameText.setPreferredSize(new java.awt.Dimension(120, 27));
+        lastnameCombo.setEditable(true);
+        lastnameCombo.setMaximumRowCount(19);
 
         buttonGender.add(maleRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(maleRadioButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maleRadioButton.text")); // NOI18N
@@ -636,20 +641,20 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(femaleRadioButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(unknownRadioButton)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 61, Short.MAX_VALUE)
                         .addComponent(privateCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(namePanelLayout.createSequentialGroup()
-                        .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(firstnamesText, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 167, Short.MAX_VALUE)
-                            .addComponent(firstnamesLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(firstnamesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(firstnamesCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(namePanelLayout.createSequentialGroup()
                                 .addComponent(lastnameLabel)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(namePanelLayout.createSequentialGroup()
-                                .addComponent(lastnameText, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                                .addGap(2, 2, 2)
+                                .addComponent(lastnameCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(moreNamesButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(2, 2, 2))))))
         );
@@ -663,10 +668,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(lastnameLabel))
                 .addGap(1, 1, 1)
                 .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(firstnamesText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lastnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(moreNamesButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(3, 3, 3)
+                    .addComponent(moreNamesButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(firstnamesCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lastnameCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4)
                 .addGroup(namePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(privateCheckBox)
                     .addComponent(maleRadioButton)
@@ -914,6 +919,9 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.placeLabel.text")); // NOI18N
 
+        eventPlaceCombo.setEditable(true);
+        eventPlaceCombo.setMaximumRowCount(19);
+
         eventPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/place.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventPlaceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlaceButton.text")); // NOI18N
         eventPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlaceButton.toolTipText")); // NOI18N
@@ -1111,7 +1119,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourcePanelLayout.setVerticalGroup(
             eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventSourcePanelLayout.createSequentialGroup()
-                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(addSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1121,7 +1129,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1170,9 +1178,6 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addComponent(assoEditButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addComponent(assoEditIndi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
-
-        eventPlaceCombo.setEditable(true);
-        eventPlaceCombo.setMaximumRowCount(19);
 
         javax.swing.GroupLayout eventRightLayout = new javax.swing.GroupLayout(eventRight);
         eventRight.setLayout(eventRightLayout);
@@ -1742,15 +1747,15 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JTree familyTree;
     private javax.swing.JButton fatherButton;
     private javax.swing.JRadioButton femaleRadioButton;
+    private javax.swing.JComboBox firstnamesCombo;
     private javax.swing.JLabel firstnamesLabel;
-    private javax.swing.JTextField firstnamesText;
     private javax.swing.JLabel idLabel;
     private javax.swing.JButton indiAddButton;
     private javax.swing.JButton indiDelButton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JComboBox lastnameCombo;
     private javax.swing.JLabel lastnameLabel;
-    private javax.swing.JTextField lastnameText;
     private javax.swing.JRadioButton maleRadioButton;
     private javax.swing.JPanel mediaPanel;
     private javax.swing.JLabel modificationLabel;
@@ -1989,13 +1994,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         sosaLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaLabel.text") + " " + str);
 
         // Names
+        allFirstNames = PropertyName.getFirstNames(gedcom, true);
+        AutoCompletion.reset(firstnamesCombo, allFirstNames);
+        allLastNames = PropertyName.getLastNames(gedcom, true);
+        AutoCompletion.reset(lastnameCombo, allLastNames);
         firstnamesText.setText(indi.getFirstName());
         lastnameText.setText(indi.getLastName());
         nameDetails.setDetails(indi);
-        List<String> allLastNames = PropertyName.getLastNames(gedcom, true);
-        List<String> allFirstNames = PropertyName.getFirstNames(gedcom, true);
-        // TODO : USE IT FOR DROPLISTS
-        
 
         // Sex
         i = indi.getSex();
