@@ -27,6 +27,7 @@ import org.openide.util.Exceptions;
 public class AutoCompletion extends PlainDocument {
 
     static Map<JComboBox, AutoCompletion> instances = null;
+    
     final JComboBox comboBox;
     JTextComponent textEditor;
     List<String> comboList;
@@ -40,6 +41,9 @@ public class AutoCompletion extends PlainDocument {
         this.comboList = list;
         
         this.comboBox.setEditable(true);
+        
+        setScrollBars();
+        
         textEditor = (JTextComponent) comboBox.getEditor().getEditorComponent();
         textEditor.setDocument(this);
         
@@ -168,6 +172,17 @@ public class AutoCompletion extends PlainDocument {
             instance.resetList();
         }
         
+    }
+
+    private void setScrollBars() {
+        Object comp = comboBox.getUI().getAccessibleChild(comboBox, 0);
+        if (!(comp instanceof JPopupMenu)) {
+            return;
+        }
+        JPopupMenu popup = (JPopupMenu) comp;
+        JScrollPane scrollPane = (JScrollPane) popup.getComponent(0);
+        scrollPane.setHorizontalScrollBar(new JScrollBar(JScrollBar.HORIZONTAL));
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
     }
     
 }
