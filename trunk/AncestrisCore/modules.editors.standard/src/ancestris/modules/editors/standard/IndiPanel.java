@@ -226,6 +226,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         familyTree.setCellRenderer(new FamilyTreeRenderer());
         familyTree.addMouseListener(new FamilyTreeMouseListener());
 
+        firstnamesCombo.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMMMMMMMMMM");
+        lastnameCombo.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMMMMM");
+
         firstnamesText = (JTextField) firstnamesCombo.getEditor().getEditorComponent();
         lastnameText = (JTextField) lastnameCombo.getEditor().getEditorComponent();
         eventPlaceText = (JTextField) eventPlaceCombo.getEditor().getEditorComponent();
