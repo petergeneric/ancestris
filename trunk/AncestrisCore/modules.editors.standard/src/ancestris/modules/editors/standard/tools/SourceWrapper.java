@@ -344,7 +344,6 @@ public class SourceWrapper {
      * @param mainProp (indi or event basically) 
      */
     public void update(Property mainProp) {
-
         // If it is a creation...
         if (hostingProperty == null) {
             try {
@@ -367,14 +366,13 @@ public class SourceWrapper {
             
         // Case of property source as linked record already existing
         if (recordType && (hostingProperty instanceof PropertySource)) {
+            putSourceRecord(targetSource);
+            // 2 situations : remplacement of the text of the same source or replacement of the source by another one
             PropertySource ps = (PropertySource) hostingProperty;
-            Property parent = ps.getParent();
-            if (parent != null) {
-                // add new link from parent
-                parent.addSource((Source) targetSource);
-                putSourceRecord(targetSource);
-                // remove old link
-                parent.delProperty(hostingProperty);
+            Source tse = (Source) ps.getTargetEntity();
+            if (targetMedia.equals(tse)) { // it was just an update of the same media, quit
+            } else { 
+                Utils.replaceRef(ps, tse, targetSource);
             }
         } else
             
@@ -441,7 +439,7 @@ public class SourceWrapper {
     private void putSourceCitation(Property property) {
         property.setValue(title);
         putProperty(property, "TEXT", text);
-        if (property.getMetaProperty().allows("OBJE")) {
+        if (property.getMetaProperty().allows("OBJE") && (file != null)) {
             putMedia(property, file);
         }
 

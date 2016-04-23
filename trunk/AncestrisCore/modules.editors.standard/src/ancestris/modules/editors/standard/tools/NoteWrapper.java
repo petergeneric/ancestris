@@ -13,6 +13,7 @@
 package ancestris.modules.editors.standard.tools;
 
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
@@ -29,6 +30,7 @@ import org.openide.util.Exceptions;
  */
 public class NoteWrapper {
 
+    private boolean recordType = true;          // true if type of note is record, false if citation
     private Property hostingProperty = null;
     private Entity targetNote = null;
     private String text = "";
@@ -38,14 +40,15 @@ public class NoteWrapper {
         if (property == null) {
             return;
         }
-        if (property instanceof PropertyNote) {
-            this.hostingProperty = property;
+        this.hostingProperty = property;
+        if (hostingProperty instanceof PropertyNote) {
             PropertyNote pnote = (PropertyNote) property;
+            this.recordType = true;
             this.targetNote = (Note) pnote.getTargetEntity();
             setText(this.targetNote.getValue().trim());
         } else {
-            this.hostingProperty = property;
-            this.targetNote = this.hostingProperty.getEntity();
+            this.recordType = false;
+            this.targetNote = hostingProperty.getEntity();
             setText(property.getValue().trim());
         }
     }
@@ -55,6 +58,7 @@ public class NoteWrapper {
         if (entity == null) {
             return;
         }
+        this.recordType = true;
         this.targetNote = entity;
         setText(this.targetNote.getValue().trim());
     }
@@ -95,24 +99,24 @@ public class NoteWrapper {
         // ... or else a modification
         Entity entity = hostingProperty.getEntity();
         // Case of property directly written within mainProp
-        if ((entity instanceof Indi) && !(hostingProperty instanceof PropertyNote)) {
+        if ((entity instanceof Indi || entity instanceof Fam) && !(hostingProperty instanceof PropertyNote)) {
             hostingProperty.setValue(text);
         } else 
             
         // Case of propertyNote written within mainProp
-        if ((entity instanceof Indi) && (hostingProperty instanceof PropertyNote)) {
-            PropertyNote pn = (PropertyNote) hostingProperty;
-            Property parent = pn.getParent();
-            // add new link from parent
-            parent.addNote((Note) targetNote);
+        if ((entity instanceof Indi || entity instanceof Fam) && (hostingProperty instanceof PropertyNote)) {
             targetNote.setValue(text);
-            // remove old link
-            parent.delProperty(hostingProperty);
+            // 2 situations : remplacement of the text of the same note or replacement of the note by another one
+            PropertyNote pnote = (PropertyNote) hostingProperty;
+            Note tne = (Note) pnote.getTargetEntity();
+            if (targetNote.equals(tne)) { // it was just an update of the same note, quit
+            } else { 
+                Utils.replaceRef(pnote, tne, targetNote);
+            }
         } else
             
         // Case of property as Note entity
         if (entity instanceof Note) {
-            //mainProp.addNote((Note) targetNote);
             targetNote.setValue(text);
         }
     }
@@ -128,6 +132,10 @@ public class NoteWrapper {
     }
 
     
+    public boolean isRecord() {
+        return recordType;
+    }
+
     public String getText() {
         return text;
     }
@@ -138,6 +146,10 @@ public class NoteWrapper {
 
     public void setTargetEntity(Note entity) {
         this.targetNote = entity;
+    }
+
+    public Entity getTargetNote() {
+        return targetNote;
     }
 
 

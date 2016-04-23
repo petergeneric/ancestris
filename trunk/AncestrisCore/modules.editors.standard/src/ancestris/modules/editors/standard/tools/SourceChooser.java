@@ -555,7 +555,7 @@ public class SourceChooser extends javax.swing.JPanel {
         sourceList.setModel(new DefaultListModel());
         filteredModel.clear();
         for (SourceThumb item : allSource) {
-            if (item.title.contains(filter)) {
+            if (item.title.toLowerCase().contains(filter.toLowerCase())) {
                 filteredModel.addElement(item);
             }
         }

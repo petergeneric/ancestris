@@ -40,6 +40,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -56,6 +57,7 @@ public class NoteChooser extends javax.swing.JPanel {
     private DefaultListModel filteredModel = new DefaultListModel();
     
     private Gedcom gedcom = null;
+    private NoteWrapper mainNote = null;
     private String mainText = null;
     private String mainTitle = null;
     private JButton okButton = null;
@@ -64,8 +66,9 @@ public class NoteChooser extends javax.swing.JPanel {
     /**
      * Creates new form NoteChooser
      */
-    public NoteChooser(Gedcom gedcom, NoteWrapper noteWrapper, JButton okButton, JButton cancelButton) {
+    public NoteChooser(Gedcom gedcom, NoteWrapper note, JButton okButton, JButton cancelButton) {
         this.gedcom = gedcom;
+        this.mainNote = note;
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
@@ -75,6 +78,7 @@ public class NoteChooser extends javax.swing.JPanel {
             @Override
             public void run() {
                 displayNoteThumbs();
+                selectNote(mainNote);
             }
         };
         noteThread.setName("Note reading thread");
@@ -95,11 +99,33 @@ public class NoteChooser extends javax.swing.JPanel {
                 filterModel(textFilter.getText());
             }
         });
-        noteList.setSelectedIndex(0);
         
     }
 
 
+    private void selectNote(NoteWrapper note) {
+        NoteThumb selectedNote = null;
+        for (NoteThumb notei : allNote) {
+            if (notei.entity == null && note == null) {
+                selectedNote = notei;
+                break;
+            }
+            if (notei.entity != null && note != null && notei.entity.equals(note.getTargetNote())) {
+                selectedNote = notei;
+                break;
+            }
+        }
+        if (selectedNote != null) {
+            final NoteThumb notei = selectedNote;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    noteList.setSelectedValue(notei, true);
+                }
+            });
+        }
+    }
+    
 
     private void displayIconAndTitle() {
         displayIconAndTitle(noteText.getPreferredSize().width, noteText.getPreferredSize().height);
@@ -421,7 +447,7 @@ public class NoteChooser extends javax.swing.JPanel {
         noteList.setModel(new DefaultListModel());
         filteredModel.clear();
         for (NoteThumb item : allNote) {
-            if (item.text.contains(filter)) {
+            if (item.text.toLowerCase().contains(filter.toLowerCase())) {
                 filteredModel.addElement(item);
             }
         }
