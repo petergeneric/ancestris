@@ -530,7 +530,7 @@ public class MediaChooser extends javax.swing.JPanel {
         mediaList.setModel(new DefaultListModel());
         filteredModel.clear();
         for (MediaThumb item : allMedia) {
-            if (item.title.contains(filter)) {
+            if (item.title.toLowerCase().contains(filter.toLowerCase())) {
                 filteredModel.addElement(item);
             }
         }

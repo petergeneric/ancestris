@@ -219,21 +219,20 @@ public class MediaWrapper {
             
         // Case of Media record and propertyMedia already linked
         if (recordType && (hostingProperty instanceof PropertyMedia)) {
+            putMediaRecord(targetMedia);
+            // 2 situations : remplacement of the text of the same media or replacement of the media by another one
             PropertyMedia pm = (PropertyMedia) hostingProperty;
-            Property parent = pm.getParent();
-            if (parent != null) {
-                // add new link from parent
-                parent.addMedia((Media) targetMedia);
-                putMediaRecord(targetMedia);
-                // remove old link
-                parent.delProperty(hostingProperty);
+            Media tme = (Media) pm.getTargetEntity();
+            if (targetMedia.equals(tme)) { // it was just an update of the same media, quit
+            } else { 
+                Utils.replaceRef(pm, tme, targetMedia);
             }
         } else
             
         // Case of Media record and link not yet created (added and chosen from MediaChooser)
         if (recordType &&  !(hostingProperty instanceof PropertyMedia)) {
-            indi.addMedia((Media) targetMedia);
             putMediaRecord(targetMedia);
+            indi.addMedia((Media) targetMedia);
         }
     }
 

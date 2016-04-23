@@ -17,6 +17,7 @@ import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import static ancestris.util.swing.FileChooserBuilder.imgExtensions;
 import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
 import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
+import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -178,8 +179,33 @@ public class Utils {
         return dimg;
     }
 
-    
-    
+
+    /**
+     * Replacement of the pointer to another entity (tme = old pointer, targetMedia = new pointer)
+     * (a bit cumbersome but better replace than delete/add in case other properties are children of the existing PropertyMedia).
+     * @param pm
+     * @param tme
+     * @param targetMedia 
+     */
+
+    public static void replaceRef(PropertyXRef pe, Entity oldEntity, Entity newEntity) {
+
+        // Remember former link
+        PropertyXRef xref = pe.getTarget();
+        pe.unlink();
+
+        // Relink to new entity
+        pe.setValue(newEntity.getId());
+        try {
+            pe.link();
+        } catch (GedcomException e) {
+            return;
+        }
+
+        // Remove former link definitely (after previous call "link", and not before, otherwise it fails with npe)
+        oldEntity.delProperty(xref);
+        
+    }
     
     
 
@@ -579,6 +605,7 @@ public class Utils {
         // Else return detected spouse
         return spouse;
     }
+
     
     
 }

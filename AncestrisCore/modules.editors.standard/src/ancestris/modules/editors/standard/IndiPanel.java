@@ -311,12 +311,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventPlaceCombo = new javax.swing.JComboBox();
         eventPlaceButton = new javax.swing.JButton();
         eventNotePanel = new javax.swing.JPanel();
+        noteLabel = new javax.swing.JLabel();
+        changeNoteImg = new javax.swing.JLabel();
         eventNoteScrollPane = new javax.swing.JScrollPane();
         eventNote = new javax.swing.JTextArea();
-        delNoteEventButton = new javax.swing.JButton();
-        addNoteEventButton = new javax.swing.JButton();
         scrollNotesEvent = new javax.swing.JScrollBar();
-        jLabel2 = new javax.swing.JLabel();
+        addNoteEventButton = new javax.swing.JButton();
+        delNoteEventButton = new javax.swing.JButton();
         eventSourcePanel = new javax.swing.JPanel();
         eventSourceTitle = new javax.swing.JTextField();
         eventSourceScrollPane = new javax.swing.JScrollPane();
@@ -932,6 +933,18 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         eventNotePanel.setPreferredSize(new java.awt.Dimension(256, 60));
 
+        org.openide.awt.Mnemonics.setLocalizedText(noteLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.noteLabel.text")); // NOI18N
+
+        changeNoteImg.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        changeNoteImg.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/note.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(changeNoteImg, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.changeNoteImg.text")); // NOI18N
+        changeNoteImg.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.changeNoteImg.toolTipText")); // NOI18N
+        changeNoteImg.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                changeNoteImgMouseClicked(evt);
+            }
+        });
+
         eventNote.setColumns(20);
         eventNote.setLineWrap(true);
         eventNote.setRows(3);
@@ -945,15 +958,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         });
         eventNoteScrollPane.setViewportView(eventNote);
 
-        delNoteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(delNoteEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.text")); // NOI18N
-        delNoteEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.toolTipText")); // NOI18N
-        delNoteEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        delNoteEventButton.setIconTextGap(0);
-        delNoteEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
-        delNoteEventButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delNoteEventButtonActionPerformed(evt);
+        scrollNotesEvent.setBlockIncrement(1);
+        scrollNotesEvent.setVisibleAmount(5);
+        scrollNotesEvent.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                scrollNotesEventMouseWheelMoved(evt);
+            }
+        });
+        scrollNotesEvent.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
+                scrollNotesEventAdjustmentValueChanged(evt);
             }
         });
 
@@ -969,29 +983,30 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
-        scrollNotesEvent.setBlockIncrement(1);
-        scrollNotesEvent.setVisibleAmount(5);
-        scrollNotesEvent.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
-            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                scrollNotesEventMouseWheelMoved(evt);
+        delNoteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(delNoteEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.text")); // NOI18N
+        delNoteEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delNoteEventButton.toolTipText")); // NOI18N
+        delNoteEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        delNoteEventButton.setIconTextGap(0);
+        delNoteEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        delNoteEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delNoteEventButtonActionPerformed(evt);
             }
         });
-        scrollNotesEvent.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
-            public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                scrollNotesEventAdjustmentValueChanged(evt);
-            }
-        });
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.jLabel2.text")); // NOI18N
 
         javax.swing.GroupLayout eventNotePanelLayout = new javax.swing.GroupLayout(eventNotePanel);
         eventNotePanel.setLayout(eventNotePanelLayout);
         eventNotePanelLayout.setHorizontalGroup(
             eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventNotePanelLayout.createSequentialGroup()
-                .addComponent(jLabel2)
+                .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(noteLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(eventNotePanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(changeNoteImg, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(eventNoteScrollPane)
+                .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 272, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(scrollNotesEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1001,7 +1016,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventNotePanelLayout.setVerticalGroup(
             eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventNotePanelLayout.createSequentialGroup()
-                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
+                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1009,7 +1024,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addComponent(eventNoteScrollPane)
             .addGroup(eventNotePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel2)
+                .addComponent(noteLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(changeNoteImg, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1658,6 +1675,20 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_indiDelButtonActionPerformed
 
+    private void changeNoteImgMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_changeNoteImgMouseClicked
+        if (!changeNoteImg.isEnabled()) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseEventNote(event, event.eventNoteIndex)) {
+            displayEventNote(event);
+            eventNote.requestFocus();
+        }
+    }//GEN-LAST:event_changeNoteImgMouseClicked
+
     
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
@@ -1714,6 +1745,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JPanel assoPanel;
     private javax.swing.JButton brothersButton;
     private javax.swing.ButtonGroup buttonGender;
+    private javax.swing.JLabel changeNoteImg;
     private javax.swing.JButton childrenButton;
     private javax.swing.JLabel datelabel;
     private javax.swing.JLabel dayOfWeek;
@@ -1756,7 +1788,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton indiAddButton;
     private javax.swing.JButton indiDelButton;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JComboBox lastnameCombo;
     private javax.swing.JLabel lastnameLabel;
     private javax.swing.JRadioButton maleRadioButton;
@@ -1765,6 +1796,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton moreNamesButton;
     private javax.swing.JButton motherButton;
     private javax.swing.JPanel namePanel;
+    private javax.swing.JLabel noteLabel;
     private javax.swing.JLabel photos;
     private javax.swing.JLabel placeLabel;
     private javax.swing.JCheckBox privateCheckBox;
@@ -2635,6 +2667,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (note != null) {
             localText = note.getText();
         }
+        
+        // Icon button
+        boolean enabled = (event != null) && (event.eventNoteSet.size() > 0) && (event.eventNoteIndex < event.eventNoteSet.size()) && ((event.eventNoteSet.get(event.eventNoteIndex)).isRecord());
+        changeNoteImg.setEnabled(enabled);
+        changeNoteImg.setToolTipText(NbBundle.getMessage(IndiPanel.class, enabled ? "IndiPanel.changeNoteImg.toolTipText" : "IndiPanel.changeNoteImg.toolTipTextOff"));
+        eventNote.setCaretPosition(0);
         
         // Text
         eventNote.setText(localText);

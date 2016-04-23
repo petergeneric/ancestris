@@ -784,7 +784,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         repoList.setModel(new DefaultListModel());
         filteredModel.clear();
         for (RepoThumb item : allRepo) {
-            if (item.text.contains(filter)) {
+            if (item.text.toLowerCase().contains(filter.toLowerCase())) {
                 filteredModel.addElement(item);
             }
         }
