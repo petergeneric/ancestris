@@ -30,11 +30,29 @@ import org.openide.util.Exceptions;
 
 
 /**
- * Sources are behind 
- *  - INDI record : used *
- *  - Event Detail : used *
- *  - FAM record : used *
+ * FL Principles for the simple editor for SOURCES. 
  * 
+ * -1- Simple editor should make the grammar (5.5 or 5.5.1) transparent to the user.
+ * 
+ * -2- Simple editor should make the gedcom structure (link, sub-tags, citations) transparent to the user.
+ *      As a consequence, the editor should be able to read a given information regardless of how it is attached in the gedcom structure
+ *      An another consequence, it will write the information in only one way (which I choose to be in a record if there is more than one possibility) 
+ * 
+ * -3- Simple editor cannot manage all of the gedcom possibilities for sources. Sources use a lot of fields. There are too many combinations. 
+ *      Fields not managed within the source editor will be managed by the gedcom editor
+ * 
+ * -4- From all these principles, simple editor will define a unique and generic backbone of information that is easy to manipulate for the user:
+ *      - Basic and most commonly used information from the editor main window
+ *      - Possibility to choose a source for an event in one click
+ *      - Less frequently used information from another simple window or in the gedcom editor
+ * 
+ * 
+ * Sources can be attached to a number of element but the simple editor will not use all of them :
+ *  - INDI record : used *
+ *  - INDI event detail : used *
+ *  - FAM event detail : used *
+ * 
+ *  - FAM record : not used *
  *  - OBJE record : not used *
  *  - NOTE record : not used *
  *  - ASSO structure : not used *
@@ -43,7 +61,96 @@ import org.openide.util.Exceptions;
  *  - Personal Name Pieces : not used (5.5.1 only)
  *  - Place structure : not used (5.5 only)
  * 
- * Systems that describe sources using the AUTHor, TITLe, PUBLication, and REPOsitory fields can
+ * 
+ */
+
+
+/*
+
+BACKBONE : GENERIC AND BASIC INFORMATION EDITOR WILL MANAGE AND WHERE IT WILL PUT IT BY DEFAULT IF CREATED
+
+    - 1 TITL                            => read from record or from tag (cannot be both), created to source record
+    Content of the source:
+    - 1 TEXT                            => read from record only (RECORD if both), created to source record
+    - n OBJE                            => read from record *and* from tag, created to most commonly used OBJE in gedcom file (dynamic detection), updated where they are
+    Location to access the source:
+    - 1 REPO                            => read from record, no choice
+
+    Rest of SOUR sub-tags and SOUR record will be added/updated using Gedcom editor because more related to the source than to the individual.
+
+
+
+
+SOUR tag
+
+    - 1 TITL : description of source (in direct tag or in SOUR entity)
+
+    SUB-TAGS
+	Content of the source:
+	- n TEXT : actual text of the source
+	- n OBJE : media
+
+	Location in the source
+	- 1 PAGE : where within source (label: value [, label: value]
+
+	Structured information codifying the content of the source
+	- 1 EVEN : Type of event of the source document
+		[ ADOP | BIRT | BAPM | BARM | BASM | BLES | BURI | CENS | CHR | CHRA | CONF | CREM | DEAT | EMIG | FCOM | GRAD | IMMI | NATU | ORDN | RETI | PROB | WILL | EVEN ]
+		[ ANUL | CENS | DIV | DIVF | ENGA | MARR | MARB | MARC | MARL | MARS | EVEN ]
+		[ CAST | EDUC | NATI | OCCU | PROP | RELI | RESI | TITL | FACT ]
+	- 1 ROLE in the EVEN : INDI's relation compared to the main person of the source
+		[ CHIL | HUSB | WIFE | MOTH | FATH | SPOU | ( <ROLE_DESCRIPTOR> ) ]
+	- 1 QUAY
+		[ 0 (unreliable) | 1 (questionable) | 2 (official source with questionable proof) | 3 (proof) ]
+
+	Creation of the source:
+	- 1 DATE of TEXT written
+
+	User notes about the source	
+	- n NOTE : user notes
+
+SOUR entity
+	- 1 TITL : title describing the source
+
+	Content of the source:
+	- 1 TEXT : actual text from the source
+	- n OBJE : media
+
+	Structured information codifying the content of the source
+	- 1 DATA : structured description of data contained in the source
+		- n EVEN : list of events the source document talks about
+			- DATE
+			- PLAC
+		- n NOTE related to the events
+		- 1 official agent for the source
+
+	Location to access the source:
+	- 1 ABBR : abreviation title
+	- n REPO : location and contact to access the source. Several repo if source can be found in several places.
+
+	Creation of the source:
+	- 1 AUTH : text describing who the creator of the record was
+	- 1 PUBL : publication place and date or creation of the source
+
+	User notes about the source	
+	- n NOTE : user notes
+
+	User reference number
+	- 1 REFN and TYPE
+
+	Automatic unique identification nb of source record in the submitter system
+	- 1 RIN
+
+
+*/
+
+
+
+
+ /**
+ * GEDCOM GRAMMAR. : 
+ * 
+ * From the gedcom norm : systems that describe sources using the AUTHor, TITLe, PUBLication, and REPOsitory fields can
  * and should always pass this information in GEDCOM using a SOURce record pointed to by the <<SOURCE_CITATION>>
  * Systems that only allow free form source notes should encourage forming the source information so that it include text about these categories:
  * ! TITL: A descriptive title of the source
@@ -53,19 +160,7 @@ import org.openide.util.Exceptions;
  * When possible provide the tag for these categories within the text so that a receiving system could
  * parse them to fit the recommended source/citation structure
  * 
- * 
- * FL : Notes and media that usually come at same level of sources are not used, Those used will be within sources
- * 
- * FL : Sources used fields will be TITL, TEXT, MEDIA and REPO, Rest will be facultative or used in gedcom editor
- *      In Source chooser we will have TITL and MEDIA
- * 
- * FL : When souce records are used, grammar does not matter for title, text, repo and media
- *      When source citations are used, information can be updated but :
- *          - no REPO can be used => warn user
- *          - and in 5.5, no media can be used => warn user
- * 
- * 
- * 
+
  * 
  * Source records are : 
  * 
@@ -88,7 +183,7 @@ import org.openide.util.Exceptions;
  *       +1 TEXT <TEXT_FROM_SOURCE>  {0:1}                          ==> 1 Text
  *         +2 [CONT|CONC] <TEXT_FROM_SOURCE>  {0:M}
  *       +1 <<SOURCE_REPOSITORY_CITATION>>  {0:1}                   ==> 1 Repo
- *       +1 <<MULTIMEDIA_LINK>>  {0:M}                              ==> 1 Media (use first media only)
+ *       +1 <<MULTIMEDIA_LINK>>  {0:M}                              ==> 1 Media (use first media only) // TODO : MAKE IT MULTIPLE **************
  *       +1 <<NOTE_STRUCTURE>>  {0:M}
  *       +1 REFN <USER_REFERENCE_NUMBER>  {0:M}
  *         +2 TYPE <USER_REFERENCE_TYPE>  {0:1}
@@ -116,7 +211,7 @@ import org.openide.util.Exceptions;
  *   +1 TEXT <TEXT_FROM_SOURCE> {0:1}                          ==> 1 Text
  *     +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
  *   +1 <<SOURCE_REPOSITORY_CITATION>> {0:M}                   ==> 1 Repo
- *   +1 <<MULTIMEDIA_LINK>> {0:M}                              ==> 1 Media (use first media only)
+ *   +1 <<MULTIMEDIA_LINK>> {0:M}                              ==> 1 Media (use first media only) // TODO : MAKE IT MULTIPLE **************
  *   +1 <<NOTE_STRUCTURE>> {0:M}
  *   +1 REFN <USER_REFERENCE_NUMBER> {0:M}
  *     +2 TYPE <USER_REFERENCE_TYPE> {0:1}
@@ -140,7 +235,7 @@ import org.openide.util.Exceptions;
  *       +2 TEXT <TEXT_FROM_SOURCE>  {0:M}
  *         +3 [ CONC | CONT ] <TEXT_FROM_SOURCE>  {0:M}
  *     +1 QUAY <CERTAINTY_ASSESSMENT>  {0:1}
- *     +1 <<MULTIMEDIA_LINK>>  {0:M}
+ *     +1 <<MULTIMEDIA_LINK>>  {0:M}                                ==> Media not used // TODO : USE MEDIA AND MAKE IT MULTIPLE **************
  *     +1 <<NOTE_STRUCTURE>>  {0:M}
  * 
  *   |              Systems not using source records                ==> Media (none)
@@ -151,7 +246,7 @@ import org.openide.util.Exceptions;
  *     +1 <<NOTE_STRUCTURE>>  {0:M}
  *   ]
  * 
- * SOURCE_CITATION: =  (5.5.1) (almost the same as 5.5 if I do not use QUAY, media and note links)
+ * SOURCE_CITATION: =  (5.5.1) (same as 5.5)
  *   [
  *     n SOUR @<XREF:SOUR>@ {1:1}    pointer to source record       ==> only use pointer to source record
  *     +1 PAGE <WHERE_WITHIN_SOURCE> {0:1}
@@ -171,12 +266,9 @@ import org.openide.util.Exceptions;
  *     +1 TEXT <TEXT_FROM_SOURCE> {0:M}                             ==> Text (update mode only)
  *        +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
  *     +1 QUAY <CERTAINTY_ASSESSMENT> {0:1}
- *     +1 <<MULTIMEDIA_LINK>> {0:M}                                 ==> Media (update mode only)
+ *     +1 <<MULTIMEDIA_LINK>> {0:M}                                 ==> Media (update mode only)   // TODO : MAKE IT MULTIPLE **************
  *     +1 <<NOTE_STRUCTURE>> {0:M}
  *  ]
- * 
- * 
- * 
  * 
  * 
  */
@@ -206,6 +298,7 @@ public class SourceWrapper {
         }
         this.hostingProperty = propertySource;
         setTargetEntity((Source) propertySource.getTargetEntity());
+        // TODO : ALSO GET MEDIA ATTACHED TO PROPERTY **************
     }
 
     public void setTargetEntity(Source entity) {
@@ -281,7 +374,7 @@ public class SourceWrapper {
         } else {
             this.text = "";
         }
-        Property propMedia = property.getProperty("OBJE", true);                /* media */
+        Property propMedia = property.getProperty("OBJE", true);                /* media */  // TODO : MAKE IT MULTIPLE **************
         if (propMedia != null && propMedia instanceof PropertyMedia) {
             PropertyMedia pm = (PropertyMedia) propMedia;
             this.targetMedia = (Media) pm.getTargetEntity();
@@ -322,7 +415,7 @@ public class SourceWrapper {
         if (propText != null) {
             this.text = propText.getDisplayValue();
         }
-        Property propMedia = property.getProperty("OBJE", true);                /* media (5.5.1 only) */
+        Property propMedia = property.getProperty("OBJE", true);                /* media (5.5.1 only) */   // TODO : MAKE IT MULTIPLE **************
         if (propMedia != null && propMedia instanceof PropertyMedia) {
             PropertyMedia pm = (PropertyMedia) propMedia;
             this.targetMedia = (Media) pm.getTargetEntity();

@@ -930,6 +930,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(eventPlaceButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlaceButton.text")); // NOI18N
         eventPlaceButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventPlaceButton.toolTipText")); // NOI18N
         eventPlaceButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        eventPlaceButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                eventPlaceButtonActionPerformed(evt);
+            }
+        });
 
         eventNotePanel.setPreferredSize(new java.awt.Dimension(256, 60));
 
@@ -1016,7 +1021,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventNotePanelLayout.setVerticalGroup(
             eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventNotePanelLayout.createSequentialGroup()
-                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE)
+                .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 51, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1139,7 +1144,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourcePanelLayout.setVerticalGroup(
             eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventSourcePanelLayout.createSequentialGroup()
-                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(addSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1149,7 +1154,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 157, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1227,9 +1232,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(placeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
+                        .addGap(0, 0, 0))
                     .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -1689,6 +1694,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_changeNoteImgMouseClicked
 
+    private void eventPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventPlaceButtonActionPerformed
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseEventPlace(event)) {
+            eventPlaceText.setText(event.place.getDisplayValue());
+            eventPlaceText.requestFocus();
+        }
+    }//GEN-LAST:event_eventPlaceButtonActionPerformed
+
     
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
@@ -2076,7 +2092,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         allPlaces = gedcom.getReferenceSet("PLAC").getKeys(gedcom.getCollator());
         AutoCompletion.reset(eventPlaceCombo, allPlaces);
         
-        // Events
+        // Events (with description, date, place, note, source)
         if (eventSet != null) {
             eventSet.clear();
             eventSet = null;
@@ -2106,7 +2122,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Modification timestamp
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
         //
-        //.......................................
 
     }
 
@@ -2166,33 +2181,29 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    
-    
-    //
-    //
-    //
 
     
-    /**
+    
+    /***************************************************************************
      * Media
-     * @param indi
-     * @return 
      */
     
     private List<MediaWrapper> getMedia(Indi indi) {
         List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
         
         // Look for media directly attached to indi (media always have a file, so look for all files underneath OBJE but not underneath SOUR)
-        for (PropertyFile prop : indi.getProperties(PropertyFile.class)) {
-            if (!Utils.parentTagsContains(prop, "SOUR")) {
-                Property propObje = getParentTag(prop, "OBJE");
+        for (PropertyFile propFile : indi.getProperties(PropertyFile.class)) {
+            if (!Utils.parentTagsContains(propFile, "SOUR")) {
+                Property propObje = getParentTag(propFile, "OBJE");
                 ret.add(new MediaWrapper(propObje));
             }
         }
         
         // Look for media as links to entities
         for (PropertyMedia propMedia : indi.getProperties(PropertyMedia.class)) {
-            ret.add(new MediaWrapper(propMedia));
+            if (!Utils.parentTagsContains(propMedia.getParent(), "SOUR")) {
+                ret.add(new MediaWrapper(propMedia));
+            }
         }
         
         return ret;
@@ -2372,6 +2383,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
 
+    
+    
+    
+    
+    
+    /***************************************************************************
+     * Family tree
+     */
+    
     private void createFamilyNodes(Indi indi) {
         familyTop.removeAllChildren();
         familyTop.setUserObject(new NodeWrapper(NodeWrapper.PARENTS, indi.getFamilyWhereBiologicalChild()));
@@ -2414,19 +2434,14 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
     
-    //
-    //
-    //
 
     
     
-    /**
+    
+    
+    
+    /***************************************************************************
      * Events
-     * 
-     * We get events of Indi and related Fams
-     * 
-     * @param indi
-     * @return 
      */
     
     private List<EventWrapper> getEvents(Indi indi) {
@@ -2572,12 +2587,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         sorter.sort();
     }
     
-    private EventWrapper getCurrentEvent() {
-        EventWrapper event = null;
-        if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {
-            event = eventSet.get(eventIndex);
-        }
-        return event;
+    private void showGeneralInformation(boolean show) {
+        //eventTitle.setVisible(show);
+        eventDescription.setVisible(show);
+        datelabel.setVisible(show);
+        eventDate.setVisible(show);
+        dayOfWeek.setVisible(show);
+        ageAtEvent.setVisible(show);
+        placeLabel.setVisible(show);
+        eventPlaceCombo.setVisible(show);
+        eventPlaceButton.setVisible(show);
     }
     
     private void displayEvent() {
@@ -2636,18 +2655,29 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     
-    private void showGeneralInformation(boolean show) {
-        //eventTitle.setVisible(show);
-        eventDescription.setVisible(show);
-        datelabel.setVisible(show);
-        eventDate.setVisible(show);
-        dayOfWeek.setVisible(show);
-        ageAtEvent.setVisible(show);
-        placeLabel.setVisible(show);
-        eventPlaceCombo.setVisible(show);
-        eventPlaceButton.setVisible(show);
+    
+    
+    
+    
+    /***************************************************************************
+     * Place
+     */
+
+    private boolean chooseEventPlace(EventWrapper event) {
+        
+        
+        
+        return true;
     }
     
+    
+    
+    
+    
+    
+    /***************************************************************************
+     * Notes
+     */
 
     
     private void displayEventNote(EventWrapper event) {
@@ -2729,6 +2759,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
+    /***************************************************************************
+     * Sources
+     */
     
     
     private void displayEventSource(EventWrapper event) {
@@ -2863,8 +2896,12 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return b;
     }
-
     
+    
+    
+    /***************************************************************************
+     * Associations
+     */
     
     private List<AssoWrapper> getAssociations(Indi indi) {
         List<AssoWrapper> ret = new ArrayList<AssoWrapper>();
@@ -2895,19 +2932,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         return ret;
     }
-    
-    private EventWrapper getEventWherePropIs(Property eventProp) {
-        for (EventWrapper event : eventSet) {
-            if (event.eventProperty == eventProp) {
-                return event;
-            }
-        }
-        if (eventProp instanceof Entity) {
-            return new EventWrapper((Entity) eventProp, refNotes, refSources);
-        }
-        return null;
-    }
-    
     
     private void displayAssociationsComboBox() {
         cbModel.removeAllElements();
@@ -2974,7 +2998,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
 
-    /**
+    /***************************************************************************
      * Updaters (user has made a change to in a field or control, data is stored in data structure)
      */
     private void updatePhotoTitle(int index) {
@@ -3062,7 +3086,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
     
-    /**
+    /***************************************************************************
      * Family buttons navigation
      */
     
@@ -3294,9 +3318,30 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
-    /**
-     * Event buttons navigation
+    /***************************************************************************
+     * Event buttons manipulation and navigation
      */
+    
+    private EventWrapper getCurrentEvent() {
+        EventWrapper event = null;
+        if (eventSet != null && !eventSet.isEmpty() && (eventIndex >= 0) && (eventIndex < eventSet.size())) {
+            event = eventSet.get(eventIndex);
+        }
+        return event;
+    }
+    
+    private EventWrapper getEventWherePropIs(Property eventProp) {
+        for (EventWrapper event : eventSet) {
+            if (event.eventProperty == eventProp) {
+                return event;
+            }
+        }
+        if (eventProp instanceof Entity) {
+            return new EventWrapper((Entity) eventProp, refNotes, refSources);
+        }
+        return null;
+    }
+    
     
     private void createOrPreSelectEvent(String tag) {
         int index = getEvent(tag);
@@ -3471,7 +3516,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
-    /**
+    /***************************************************************************
      * Management of errors
      */
     
@@ -3592,6 +3637,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
 
+
     
 
 
@@ -3604,7 +3650,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     /**
-     * ******************  CLASSES  *********************
+     * ******************  CLASSES  ********************************************
      */
     
     

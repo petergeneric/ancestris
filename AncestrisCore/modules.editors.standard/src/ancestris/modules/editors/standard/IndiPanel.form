@@ -1153,9 +1153,9 @@
                               <Component id="placeLabel" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="eventPlaceCombo" max="32767" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           </Group>
                           <Component id="eventNotePanel" pref="333" max="32767" attributes="0"/>
                           <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
@@ -1179,7 +1179,7 @@
                           <Component id="dayOfWeek" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="ageAtEvent" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
                           <Component id="placeLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Component id="eventPlaceButton" alignment="2" min="-2" max="-2" attributes="0"/>
@@ -1271,6 +1271,9 @@
                   <Dimension value="[30, 26]"/>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="eventPlaceButtonActionPerformed"/>
+              </Events>
             </Component>
             <Container class="javax.swing.JPanel" name="eventNotePanel">
               <Properties>
@@ -1304,7 +1307,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="scrollNotesEvent" pref="97" max="32767" attributes="0"/>
+                          <Component id="scrollNotesEvent" pref="51" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="addNoteEventButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -1461,7 +1464,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="scrollSourcesEvent" pref="179" max="32767" attributes="0"/>
+                          <Component id="scrollSourcesEvent" pref="184" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="addSourceEventButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -1473,7 +1476,7 @@
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventSourceScrollPane" pref="157" max="32767" attributes="0"/>
+                          <Component id="eventSourceScrollPane" pref="162" max="32767" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="repoPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
