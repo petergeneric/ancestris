@@ -25,6 +25,19 @@ import java.io.File;
 import org.openide.util.Exceptions;
 
 
+/**
+ * Media can be attached to a number of element but the simple editor will not use all of them :
+ *  - INDI record : used *
+ *  - INDI event detail : used *
+ *  - FAM event detail : used *
+ *  - SOUR record : used *
+ * 
+ *  - FAM record : not used *
+ *  - SUBM record : not used *
+ * 
+ */
+
+
 //    
 //  MULTIMEDIA_LINK: 5.5
 //
