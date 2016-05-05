@@ -75,7 +75,7 @@ public class MapPlaceEditor extends AncestrisEditor{
             gedcom = place.getGedcom();
         }
         if (gedcom != null && (place instanceof PropertyPlace || place == null)){
-            editorPanel.set(parent, (PropertyPlace)place);
+            editorPanel.set(gedcom, (PropertyPlace)place);
             ADialog dialog = new ADialog(NbBundle.getMessage(MapPlaceEditor.class, "PlaceEditorPanel.edit.title"), editorPanel);
             if (dialog.show() == ADialog.OK_OPTION) {
                 // Add dow:
@@ -114,12 +114,12 @@ public class MapPlaceEditor extends AncestrisEditor{
         
         boolean ret = false;
 
-        PlaceFormatEditorOptionsPanel pfeop = new PlaceFormatEditorOptionsPanel(gedcom);
+        OLDPlaceFormatEditorOptionsPanel pfeop = new OLDPlaceFormatEditorOptionsPanel(gedcom);
         if (!pfeop.isRegisteredPlaceSortOrder() || forceEdit) {
             DialogManager.ADialog gedcomPlaceFormatEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(PlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
+                    NbBundle.getMessage(OLDPlaceFormatEditorOptionsPanel.class, "PlaceFormatEditorOptionsPanel.title"),
                     pfeop);
-            gedcomPlaceFormatEditorDialog.setDialogId(PlaceFormatEditorOptionsPanel.class.getName());
+            gedcomPlaceFormatEditorDialog.setDialogId(OLDPlaceFormatEditorOptionsPanel.class.getName());
             if (gedcomPlaceFormatEditorDialog.show() == ADialog.OK_OPTION) {
                 pfeop.commit();
                 ret = true;
