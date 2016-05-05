@@ -3,9 +3,12 @@ package ancestris.modules.place.geonames;
 import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.api.place.Place;
 import ancestris.api.place.SearchPlace;
+import ancestris.util.TimingUtility;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.geonames.*;
@@ -15,13 +18,13 @@ import org.openide.util.TaskListener;
 
 /**
  *
- * @author dominique
+ * @author frederic & dominique
  */
 public class GeonamesPlacesList implements SearchPlace {
 
     private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
     private List<Place> mPlacesList = new ArrayList<Place>();
-    RequestProcessor.Task theTask;
+    private RequestProcessor.Task theTask;
 
     public RequestProcessor.Task getTask() {
         return theTask;
@@ -29,55 +32,73 @@ public class GeonamesPlacesList implements SearchPlace {
 
     @Override
     public void searchPlace(final String searchedPlace, final List<Place> placesList) {
+        mPlacesList.clear();
         RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
         Runnable runnable = new Runnable() {
 
             @Override
             public synchronized void run() {
                 if (searchedPlace.isEmpty() == false) {
+
                     ToponymSearchResult toponymSearchResult;
+                    Set<String> tmpListDedup = new HashSet<String>();
+                    Place place = null;
+
 
                     try {
-                        logger.log(Level.INFO, "Start searching {0} ...", searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
-                        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
+                        logger.log(Level.FINE, "   ");
+                        logger.log(Level.FINE, "Start searching {0} ...", searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
 
+                        WebService.setUserName(GeonamesOptions.getInstance().getUserName());
                         ToponymSearchCriteria toponymSearchCriteria = new ToponymSearchCriteria();
                         toponymSearchCriteria.setStyle(Style.FULL);
                         toponymSearchCriteria.setLanguage(Locale.getDefault().toString());
                         toponymSearchCriteria.setQ(searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
+                        logger.log(Level.FINE, "Call to WebService.search for toponym - "+ TimingUtility.geInstance().getTime());
                         toponymSearchResult = WebService.search(toponymSearchCriteria);
+                        logger.log(Level.FINE, "Answer from WebService.search for toponym- "+ TimingUtility.geInstance().getTime());
 
                         for (Toponym toponym : toponymSearchResult.getToponyms()) {
-                            PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
-                            postalCodeSearchCriteria.setStyle(Style.FULL);
-
-                            logger.log(Level.INFO, "toponym: Place Name {0} AdminName1 {1} AdminName2 {2} AdminName3 {3} AdminName4 {4} AdminName5 {5}", new Object[]{toponym.getName(), toponym.getAdminName1(), toponym.getAdminName2(), toponym.getAdminName3(), toponym.getAdminName4(), toponym.getAdminName5()});
-                            logger.log(Level.INFO, "toponym: Place Name {0} AdminCode1 {1} AdminCode2 {2} AdminCode3 {3} AdminCode4 {4} AdminCode5 {5}", new Object[]{toponym.getName(), toponym.getAdminCode1(), toponym.getAdminCode2(), toponym.getAdminCode3(), toponym.getAdminCode4(), toponym.getAdminCode5()});
-
-                            postalCodeSearchCriteria.setPlaceName(toponym.getName());
-                            postalCodeSearchCriteria.setCountryCode(toponym.getCountryCode());
+                            
+                            logger.log(Level.FINE, "toponym: Place Name {0} AdminName1 {1} AdminName2 {2} AdminName3 {3} AdminName4 {4} AdminName5 {5}", new Object[]{toponym.getName(), toponym.getAdminName1(), toponym.getAdminName2(), toponym.getAdminName3(), toponym.getAdminName4(), toponym.getAdminName5()});
 
                             List<PostalCode> postalCodeSearchResult;
+                            PostalCodeSearchCriteria postalCodeSearchCriteria = new PostalCodeSearchCriteria();
+                            postalCodeSearchCriteria.setStyle(Style.FULL);
+                            postalCodeSearchCriteria.setPlaceName(toponym.getName());
+                            String cc = toponym.getCountryCode();
+                            if (cc == null || cc.isEmpty()) {
+                                continue;
+                            }
+                            postalCodeSearchCriteria.setCountryCode(cc);
+                            logger.log(Level.FINE, "Call to WebService.search for postal code - "+ TimingUtility.geInstance().getTime());
                             postalCodeSearchResult = WebService.postalCodeSearch(postalCodeSearchCriteria);
+                            logger.log(Level.FINE, "Answer from WebService.search for postal code- "+ TimingUtility.geInstance().getTime());
 
                             if (!postalCodeSearchResult.isEmpty()) {
                                 for (PostalCode postalCode : postalCodeSearchResult) {
-                                    logger.log(Level.INFO, "postalCode AdminName1 {0} AdminName2 {1} AdminName3 {2}", new Object[]{postalCode.getAdminName1(), postalCode.getAdminName2(), postalCode.getAdminName3()});
-                                    logger.log(Level.INFO, "postalCode AdminCode1 {0} AdminCode2 {1} AdminCode3 {2}", new Object[]{postalCode.getAdminCode1(), postalCode.getAdminCode2(), postalCode.getAdminCode3()});
-
-                                    mPlacesList.add(new GeonamesPlace(toponym, postalCode));
+                                    logger.log(Level.FINE, "postalCode AdminName1 {0} AdminName2 {1} AdminName3 {2}", new Object[]{postalCode.getAdminName1(), postalCode.getAdminName2(), postalCode.getAdminName3()});
+                                    place = new GeonamesPlace(toponym, postalCode);
                                 }
                             } else {
-                                mPlacesList.add(new GeonamesPlace(toponym, null));
+                                place = new GeonamesPlace(toponym, null);
                             }
-                            logger.log(Level.INFO, "... search finished");
+                            String str = place.toString();
+                            if (!tmpListDedup.contains(str)) {
+                                mPlacesList.add(place);
+                                tmpListDedup.add(str);
+                            }
                         }
+                        logger.log(Level.FINE, "... search completed.");
+                        logger.log(Level.FINE, "   ");
                         if (Thread.currentThread().isInterrupted()) {
                             throw new InterruptedException("");
                         }
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
                     }
+
+                    placesList.addAll(mPlacesList);
                 }
             }
         };
@@ -88,10 +109,28 @@ public class GeonamesPlacesList implements SearchPlace {
 
             @Override
             public void taskFinished(Task task) {
-                placesList.addAll(mPlacesList);
             }
         });
 
         theTask.schedule(0); //start the task
     }
-}
+    
+    
+    
+    public Place searchNearestPlace(double latitude, double longitude) {
+        WebService.setUserName(GeonamesOptions.getInstance().getUserName());        
+        try {
+            List<Toponym> results = WebService.findNearbyPlaceName(latitude, longitude);
+            if (!results.isEmpty()) {
+                int geonameId = results.get(0).getGeoNameId();
+                Toponym toponym = WebService.get(geonameId, null, null);
+                return new GeonamesPlace(toponym, null);
+            }
+        } catch (Exception ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+        return null;
+    }
+    
+    
+ }
