@@ -22,24 +22,31 @@ import javax.swing.JTextField;
 import javax.swing.TransferHandler;
 
 /**
- *
  * @author frederic
  */
 public class PlaceFormatConverterPanel extends javax.swing.JPanel {
 
-    private final String[] fromFormat;
-    private final JTextField[] fromFields;
-    private final StringTransferHandler sth;
+    // From format
+    private String[] fromFormat = null;
+    private JTextField[] fromFields = null;
 
+    // To format
     private String toPlaceFormat = null;
     private String[] toFormat = null;
     private JTextField[] toFields = null;
+
+    // Other variables
     private boolean isValidated = false;
+    private final StringTransferHandler sth;
+    
     
     /**
      * Creates new form PlaceFormatConverter
+     * @param fromPlaceFormat
+     * @param toPlaceFormat
+     * @param initMap
      */
-    public PlaceFormatConverterPanel(String fromPlaceFormat, String toPlaceFormat) {
+    public PlaceFormatConverterPanel(String fromPlaceFormat, String toPlaceFormat, String initMap) {
         this.sth = new StringTransferHandler(this);
         initComponents();
 
@@ -51,6 +58,7 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         fromFields = new JTextField[fromFormat.length];
         jPanel1.setLayout(new GridLayout(0,1));
         for (int i = 0; i < fromFormat.length; i++) {
+            fromFormat[i] = fromFormat[i].trim();
             fromFields[i] = new JTextField(fromFormat[i]);
             jPanel1.add(fromFields[i]);
             fromFields[i].setTransferHandler(sth);
@@ -62,6 +70,9 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
 
         // Init to-fields
         initToFields(toPlaceFormat);
+        
+        // Set initial map if any
+        setConversionMapFromString(initMap);
     }
 
     public final void initToFields(String toPlaceFormat) {
@@ -86,6 +97,7 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         toFields = new JTextField[toFormat.length];
         jPanel2.setLayout(new GridLayout(0,2));
         for (int i = 0; i < toFormat.length; i++) {
+            toFormat[i] = toFormat[i].trim();
             jPanel2.add(new JLabel(toFormat[i]));
             toFields[i] = new JTextField("");
             jPanel2.add(toFields[i]);
@@ -186,13 +198,13 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 217, Short.MAX_VALUE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
                         .addGap(36, 36, 36)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -203,7 +215,7 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(20, 20, 20))
-                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 558, Short.MAX_VALUE))
+                    .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel3Layout.setVerticalGroup(
@@ -263,7 +275,7 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane3;
     // End of variables declaration//GEN-END:variables
 
-    // Make sure that is none of toFields include a fromField, that fromField should be enabled
+    // Make sure that if none of toFields include a fromField, that fromField should be enabled
     void updateDisplay() {
         boolean found = false;
         for (int i = 0; i < fromFields.length; i++) {
@@ -340,7 +352,7 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         String sep = PropertyPlace.JURISDICTION_SEPARATOR; // keep this as we use the PropertyPlace info to reverse read.
         int index = -1;
         
-        for (int i = 0; i < toFormat.length; i++) {
+        for (int i = 0; i < toFormat.length; i++) { 
             if (i == toFormat.length-1) {
                 sep = "";
             }
@@ -359,6 +371,26 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         return ret;
     }
     
+    public void setConversionMapFromString(String mapStr) {
+        if (mapStr == null || mapStr.trim().isEmpty()) {
+            return;
+        }
+        
+        String[] map = PropertyPlace.getFormat(mapStr);
+        for (int i = 0; i < toFormat.length; i++) { 
+            if (i >= map.length) {
+                break;
+            }
+            if (map[i].trim().isEmpty()) {
+                continue;
+            }
+            int j = Integer.valueOf(map[i]);
+            toFields[i].setText(fromFields[j].getText());
+            fromFields[j].setEnabled(false);
+        }
+    }
+    
+    
     public class DragMouseAdapter extends MouseAdapter {
 
         @Override
@@ -368,6 +400,4 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
             handler.exportAsDrag(c, e, TransferHandler.COPY);
         }
     }
-
-    
 }
