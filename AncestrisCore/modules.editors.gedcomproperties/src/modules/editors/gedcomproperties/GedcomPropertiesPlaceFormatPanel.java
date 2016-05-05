@@ -335,7 +335,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         jButton5.setEnabled(jCheckBox1.isSelected());
         if (jCheckBox1.isSelected() && parent.getPlaceFormatConverter() == null) {
-            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(parent.getOriginalPlaceFormat(), getPLAC()));
+            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(parent.getOriginalPlaceFormat(), getPLAC(), null));
             DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
@@ -473,7 +473,6 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         jScrollPane4.setVisible(canBeConverted);
         parent.warnVersionChange(canBeConverted);
         if (canBeConverted && parent.getPlaceFormatConverter() != null) {
-            String str = getPLAC();
             parent.getPlaceFormatConverter().setValidatedMap(false, getPLAC());
         }
     }
