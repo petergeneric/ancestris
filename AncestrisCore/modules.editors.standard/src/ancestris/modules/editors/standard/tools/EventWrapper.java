@@ -23,6 +23,8 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
 import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
@@ -65,6 +67,7 @@ public class EventWrapper {
     public String title = "";               // Description (to be saved in gedcom) for certain events
     public String description = "";         // Description (to be saved in gedcom) 
     private boolean hasAttribute = false;   // attribute of event if of type PropertyChoiceValue
+    private Property dummyProperty = null;  // Temporary gedcom to attach date and place property
     public PropertyDate date = null;        // Date temp property (to be saved in gedcom)
     public PropertyPlace place = null;      // Place temp property (to be saved in gedcom)
     public String dayOfWeek = "";           // Displayed day of week (calculated)
@@ -91,6 +94,9 @@ public class EventWrapper {
         this.eventProperty = property;
         this.hostingEntity = property != null ? property.getEntity() : null;
 
+        // Create dummy indi (will be used for tmpDate et tmpPlace)
+        createDummyProperty(indi.getGedcom());
+        
         // Event description & icon
         this.eventLabel = new EventLabel(property);
         this.eventLabel.setIcon(property.getImage());
@@ -104,7 +110,7 @@ public class EventWrapper {
             this.description = getDescription();
 
             // Event date
-            this.date = new PropertyDate();
+            this.date = (PropertyDate) dummyProperty.addProperty("DATE", "");
             PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE");
             if (tmpDate != null) {
                 this.date.setValue(tmpDate.getValue());
@@ -137,13 +143,12 @@ public class EventWrapper {
             
 
             // Place of event
-            this.place = new PropertyPlace("PLAC");
+            this.place = (PropertyPlace) dummyProperty.addProperty("PLAC", "");
             PropertyPlace tmpPlace = (PropertyPlace) property.getProperty("PLAC");
             if (tmpPlace != null) {
                 this.place.setValue(tmpPlace.getValue());
-
+                setCoordinates(tmpPlace, this.place);
             }
-
         }
         
         // Title
@@ -516,11 +521,12 @@ public class EventWrapper {
             if (tmpPlace == null) {
                 String val = place.getValue().trim();
                 if (!val.isEmpty()) {
-                    eventProperty.addProperty("PLAC", place.getValue());
+                    tmpPlace = (PropertyPlace) eventProperty.addProperty("PLAC", place.getValue());
                 }
             } else {
                 tmpPlace.setValue(place.getValue());
             }
+            setCoordinates(place, tmpPlace);
         }
         
         // Notes
@@ -620,6 +626,28 @@ public class EventWrapper {
         Property type = eventProperty.getProperty("TYPE");
         
         return hasAttribute ? eventProperty.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+    }
+
+    private void createDummyProperty(Gedcom gedcom) {
+        Gedcom tmpGedcom = new Gedcom();
+        tmpGedcom.setGrammar(gedcom.getGrammar());
+        try {
+            Indi indi = (Indi) tmpGedcom.createEntity(Gedcom.INDI);
+            dummyProperty = indi.addProperty("BIRT", "");
+        } catch (GedcomException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+
+    }
+
+    private void setCoordinates(PropertyPlace fromPlace, PropertyPlace toPlace) {
+        PropertyLatitude pLatitude = fromPlace.getLatitude(true);
+        PropertyLongitude pLongitude = fromPlace.getLongitude(true);
+        if (pLatitude != null && pLongitude != null) {
+            String strLat = pLatitude.getValue();
+            String strLong = pLongitude.getValue();
+            toPlace.setCoordinates(strLat, strLong);
+        }
     }
 
 

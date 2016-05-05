@@ -17,6 +17,7 @@ import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.privacy.standard.Options;
+import ancestris.modules.editors.geoplace.PlaceEditorPanel;
 import ancestris.modules.editors.standard.tools.AssoManager;
 import ancestris.modules.editors.standard.tools.AssoWrapper;
 import ancestris.modules.editors.standard.tools.AutoCompletion;
@@ -169,6 +170,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<EventWrapper> eventSet = null;
     private List<EventWrapper> eventRemovedSet = null;
     private boolean isBusyEvent = false;
+    private PlaceEditorPanel placeEditor = null;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
     public Map<String, NoteWrapper> refNotes = null;       // Reference to all note entities used by id, to avoid duplicates
@@ -213,7 +215,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventUsage.init(eventUsages);
         
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
-        
+        placeEditor = new PlaceEditorPanel();
         refNotes = new HashMap<String, NoteWrapper>();
         refSources = new HashMap<String, SourceWrapper>();
         
@@ -2665,9 +2667,25 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private boolean chooseEventPlace(EventWrapper event) {
         
+        boolean b = false;
         
+        JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { OKButton, cancelButton };
         
-        return true;
+        placeEditor.set(gedcom, event.place);
+        placeEditor.setOKButton(OKButton);
+        
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChoosePlaceTitle"), placeEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        placeEditor.saveSize();
+        if (o == OKButton) {
+            placeEditor.copyValue(event.place);
+            eventPlaceText.setText(event.place.getDisplayValue());
+            eventPlaceText.setCaretPosition(0);
+            b = true;
+        }
+        
+        return b;
     }
     
     
