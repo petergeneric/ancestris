@@ -7,7 +7,6 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import java.awt.Dialog;
 import java.awt.Image;
@@ -123,28 +122,8 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     }
 
     private void updateGedcomPlaceTable() {
-        List<PropertyPlace> gedcomPlacesList = GedcomUtilities.searchProperties(gedcom, PropertyPlace.class, GedcomUtilities.ENT_ALL);
-
         placesMap.clear();
-
-        for (PropertyPlace propertyPlace : gedcomPlacesList) {
-            Property latitude = propertyPlace.getLatitude(false);
-            Property longitude = propertyPlace.getLongitude(false);
-
-            String gedcomPlace = propertyPlace.getDisplayValue()
-                    + PropertyPlace.JURISDICTION_SEPARATOR
-                    + (latitude != null ? latitude.getValue() : "")
-                    + PropertyPlace.JURISDICTION_SEPARATOR
-                    + (longitude != null ? longitude.getValue() : "");
-
-            Set<PropertyPlace> propertySet = placesMap.get(gedcomPlace);
-            if (propertySet == null) {
-                propertySet = new HashSet<PropertyPlace>();
-                placesMap.put(gedcomPlace, propertySet);
-            }
-            propertySet.add((PropertyPlace) propertyPlace);
-        }
-
+        placesMap = GedcomUtilities.getPropertyPlaceMap(gedcom);
         gedcomPlaceTableModel.update(placesMap);
     }
 
