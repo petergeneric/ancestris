@@ -6,10 +6,11 @@ import org.geonames.InsufficientStyleException;
 import org.geonames.PostalCode;
 import org.geonames.Toponym;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
- * @author dominique
+ * @author Frederic
  */
 public class GeonamesPlace implements Place {
 
@@ -29,12 +30,12 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getCity() {
-        return postalCode.getPlaceName();
+        return postalCode == null ? toponym.getName() : postalCode.getPlaceName();
     }
 
     @Override
     public String getFirstAvailableJurisdiction() {
-        return postalCode.getAdminCode1();
+        return postalCode == null ? toponym.getName() : postalCode.getAdminCode1();
     }
 
     @Override
@@ -49,7 +50,7 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getJurisdiction(int hierarchyLevel) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return getJurisdictions()[hierarchyLevel];
     }
 
     @Override
@@ -74,7 +75,7 @@ public class GeonamesPlace implements Place {
 
     @Override
     public String getValueStartingWithCity() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return toString();
     }
 
     @Override
@@ -92,16 +93,68 @@ public class GeonamesPlace implements Place {
         return toponym.getLatitude();
     }
 
+    /**
+     * Format is defined as : "City, PostalCode, GeoCode, County, State, Country"
+     * 
+     * <toponymName>Meudon</toponymName>
+     * <alternateName isPreferredName="true" lang="post">92190</alternateName>
+     * <adminCode4>92048</adminCode4>
+     * <adminName2>Hauts-de-Seine</adminName2>
+     * <adminName1>Île-de-France</adminName1>
+     * <countryName>France</countryName>
+     * 
+     * <lat>48.81381</lat>
+     * <lng>2.235</lng>
+     * <geonameId>2994144</geonameId>
+     * <name>Meudon</name>
+     * <countryCode>FR</countryCode>
+     * <fcl>P</fcl>
+     * <fcode>PPL</fcode>
+     * <fclName>city, village,...</fclName>
+     * <fcodeName>populated place</fcodeName>
+     * <population>44652</population>
+     * <asciiName>Meudon</asciiName>
+     * <alternateNames>Medon,Meudon,Mjodon,Moldonium,Rabelais,mo dong,moedong,mudon,mwdwn,mydwn,Медон,Мёдон,مودون,ميدون,ムードン,默东,뫼동</alternateNames>
+     * <elevation/>
+     * <srtm3>111</srtm3>
+     * <continentCode>EU</continentCode>
+     * <adminCode1 ISO3166-2="11">11</adminCode1>
+     * <adminCode2>92</adminCode2>
+     * <adminCode3>923</adminCode3>
+     * <adminName3>Arrondissement de Boulogne-Billancourt</adminName3>
+     * <adminName4>Meudon</adminName4>
+     * <alternateName lang="ko">뫼동</alternateName
+     * ><alternateName lang="ja">ムードン</alternateName>
+     * <alternateName lang="post">92196 CEDEX</alternateName>
+     * <alternateName lang="link">http://en.wikipedia.org/wiki/Meudon</alternateName>
+     * <alternateName lang="fr">Meudon</alternateName>
+     * 
+     * 
+     * 
+     * @return 
+     */
     @Override
     public String toString() {
         try {
             return toponym.getName()
-                    + postalCode != null ? postalCode.getPostalCode() : ""
-                    + toponym.getAdminCode4() + toponym.getAdminName2()
+                    + (postalCode != null ? postalCode.getPostalCode() : "")
+                    + toponym.getAdminCode4() 
+                    + toponym.getAdminName2()
                     + toponym.getAdminName1()
-                    + toponym.getCountryName();// Country 
+                    + toponym.getCountryName(); // Country 
         } catch (InsufficientStyleException ex) {
             return "";
         }
     }
+    
+    /**
+     * Defines geonames placeformat
+     * 
+     * @return 
+     */
+    public static String getPlaceFormat() {
+        return NbBundle.getMessage(GeonamesPlace.class, "GeoNamesPlaceFormat"); // Example : "City, PostalCode, GeoCode, County, State, Country";
+    }
+
+
 }
