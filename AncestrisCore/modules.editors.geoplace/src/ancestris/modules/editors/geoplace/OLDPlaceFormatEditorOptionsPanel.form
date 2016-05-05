@@ -41,7 +41,7 @@
           </Properties>
           <AccessibilityProperties>
             <Property name="AccessibleContext.accessibleName" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jPanel1.AccessibleContext.accessibleName_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jPanel1.AccessibleContext.accessibleName" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </AccessibilityProperties>
 
@@ -69,7 +69,7 @@
                               </Group>
                               <EmptySpace max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="hamletComboBox" alignment="0" pref="373" max="32767" attributes="0"/>
+                                  <Component id="hamletComboBox" alignment="0" pref="665" max="32767" attributes="0"/>
                                   <Component id="parishComboBox" alignment="0" max="32767" attributes="0"/>
                                   <Component id="cityComboBox" alignment="0" max="32767" attributes="0"/>
                                   <Component id="zipCodeComboBox" alignment="0" max="32767" attributes="0"/>
@@ -168,7 +168,7 @@
             <Component class="javax.swing.JLabel" name="jLabel10">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel10.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel10.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -178,7 +178,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.hamletLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.hamletLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -186,7 +186,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.parishLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.parishLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -194,7 +194,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.cityLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.cityLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -202,7 +202,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.zipCodeLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.ZipCodeLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -210,7 +210,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.geoIDLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.GeoIdLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -218,7 +218,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.countyLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.CountyLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -226,7 +226,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.stateLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.StateLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -234,7 +234,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.countryLabel.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.CountryLabel" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -349,17 +349,17 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="11"/>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel1.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JTextField" name="jTextField1">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jTextField1.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jTextField1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jTextField1.toolTipText_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jTextField1.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
               <Events>
@@ -369,56 +369,56 @@
             <Component class="javax.swing.JLabel" name="jLabel2">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel2.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel3">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel3.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel3.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel4">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel4.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel4.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel5">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel5.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel5.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel6">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel6.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel7">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel7.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel7.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel8">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel8.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel8.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel9">
               <Properties>
                 <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="PlaceFormatEditorOptionsPanel.jLabel9.text_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="OLDPlaceFormatEditorOptionsPanel.jLabel9.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
