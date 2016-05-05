@@ -341,6 +341,22 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
+     * Accessor - display value with geo coordinates
+     */
+    public String getGeoValue() {
+        Property latitude = getLatitude(false);
+        Property longitude = getLongitude(false);
+
+        String gedcomPlace = getDisplayValue()
+                + PropertyPlace.JURISDICTION_SEPARATOR
+                + (latitude != null ? latitude.getValue() : "")
+                + PropertyPlace.JURISDICTION_SEPARATOR
+                + (longitude != null ? longitude.getValue() : "");
+        
+        return gedcomPlace;
+    }
+
+    /**
      * Accessor - all jurisdictions starting with city
      */
     public String getNumericalJurisdictions() {
@@ -360,7 +376,7 @@ public class PropertyPlace extends PropertyChoiceValue {
      *
      * @return zero based index or -1 if not determined
      */
-    private int getCityIndex() {
+    public int getCityIndex() {
 
         // try to get a place format
         if (getFormatAsString().length() == 0) {
