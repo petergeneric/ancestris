@@ -239,7 +239,7 @@ public class GedcomUtilities {
             propertySet.add((PropertyPlace) propertyPlace);
         }
 
-        return placesMap;
+        return placesMap; 
     }
     
 }
