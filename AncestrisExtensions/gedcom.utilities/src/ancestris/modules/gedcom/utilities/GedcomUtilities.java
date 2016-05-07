@@ -225,7 +225,7 @@ public class GedcomUtilities {
     
     
     public static Map<String, Set<PropertyPlace>> getPropertyPlaceMap(Gedcom gedcom) {
-
+    
         SortedMap<String, Set<PropertyPlace>> placesMap = new TreeMap<String, Set<PropertyPlace>>(gedcom.getCollator());
         List<PropertyPlace> gedcomPlacesList = searchProperties(gedcom, PropertyPlace.class, GedcomUtilities.ENT_ALL);
 
@@ -235,7 +235,7 @@ public class GedcomUtilities {
             if (propertySet == null) {
                 propertySet = new HashSet<PropertyPlace>();
                 placesMap.put(gedcomPlace, propertySet);
-            }
+}
             propertySet.add((PropertyPlace) propertyPlace);
         }
 
