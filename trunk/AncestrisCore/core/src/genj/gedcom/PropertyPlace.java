@@ -244,7 +244,7 @@ public class PropertyPlace extends PropertyChoiceValue {
         Collection<Property> places = getGedcom().getReferenceSet(TAG + "." + hierarchyLevel).getReferences(jurisdiction);
         return places.toArray(new PropertyPlace[places.size()]);
     }
-
+   
     /**
      * Accessor - all places with the same jurisdiction for given hierarchy
      * level
