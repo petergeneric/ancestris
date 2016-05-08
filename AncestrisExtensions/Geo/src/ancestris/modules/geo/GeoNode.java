@@ -10,6 +10,7 @@ import ancestris.core.pluginservice.PluginInterface;
 import ancestris.modules.editors.gedcom.EditTopComponent;
 import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
 import ancestris.modules.editors.geoplace.PlaceEditor;
+import ancestris.modules.editors.standard.EditorPlugin;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -47,7 +48,7 @@ import org.openide.util.ImageUtilities;
 class GeoNode extends AbstractNode implements PropertyChangeListener {
 
     private final static String GEDCOM_EDITOR = NbBundle.getMessage(GedcomEditorPlugin.class, "OpenIDE-Module-Name");
-    private final static String ANCESTRIS_EDITOR = "Editor";   // FIXME
+    private final static String ANCESTRIS_EDITOR = NbBundle.getMessage(EditorPlugin.class, "OpenIDE-Module-Name");
     
     public GeoNode(GeoPlacesList gpl) {
         super(new GeoChildrenNodes(gpl));
@@ -245,22 +246,18 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     }
                 TopComponent tc = null;
                 for (Class clazz : openedViews) {
-                    if (!clazz.getCanonicalName().contains("EditorTopComponent")) {
+                    if (!clazz.getCanonicalName().contains("editors.standard.EditorTopComponent")) {
                         continue;
                     }
                     try {
                         tc = (TopComponent) clazz.newInstance();
-
                         if (tc instanceof AncestrisViewInterface) {
                             tc = ((AncestrisViewInterface) tc).create(new Context(obj.getProperty()));
                         }
                         tc.open();
+                        tc.requestActive();
                     } catch (Exception ex) {
                         Exceptions.printStackTrace(ex);
-                    }
-                    if (tc != null) {
-                        tc.requestActive();
-                        break;
                     }
                 }
             } else if (actionName.equals("ACTION_SelectEvent")) {
