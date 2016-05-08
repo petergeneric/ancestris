@@ -126,7 +126,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         listPanel = new javax.swing.JPanel();
         placeEditorTabbedPane = new javax.swing.JTabbedPane();
         gedcomListPanel = new javax.swing.JPanel();
-        geonamesScrollPane1 = new javax.swing.JScrollPane();
+        gedcomListScrollPane = new javax.swing.JScrollPane();
         gedcomPlacesListResult = new javax.swing.JList<String>();
         eventsLabel = new javax.swing.JLabel();
         placeReferenceScrollPane = new javax.swing.JScrollPane();
@@ -184,7 +184,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 gedcomPlacesListResultValueChanged(evt);
             }
         });
-        geonamesScrollPane1.setViewportView(gedcomPlacesListResult);
+        gedcomListScrollPane.setViewportView(gedcomPlacesListResult);
 
         eventsLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/geoplace/resources/association.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(eventsLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.eventsLabel.text")); // NOI18N
@@ -210,7 +210,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         gedcomListPanel.setLayout(gedcomListPanelLayout);
         gedcomListPanelLayout.setHorizontalGroup(
             gedcomListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(geonamesScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+            .addComponent(gedcomListScrollPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
             .addGroup(gedcomListPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(gedcomListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -224,7 +224,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             gedcomListPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(gedcomListPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(geonamesScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                .addComponent(gedcomListScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(eventsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -484,11 +484,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JButton completePlaceButton;
     private javax.swing.JLabel eventsLabel;
     private javax.swing.JPanel gedcomListPanel;
+    private javax.swing.JScrollPane gedcomListScrollPane;
     private ancestris.modules.editors.geoplace.GedcomPlaceEditorPanel gedcomPlaceEditorPanel;
     private javax.swing.JList<String> gedcomPlacesListResult;
     private javax.swing.JList<String> geonamesPlacesListResult;
     private javax.swing.JScrollPane geonamesScrollPane;
-    private javax.swing.JScrollPane geonamesScrollPane1;
     private javax.swing.JPanel internetListPanel;
     private org.jdesktop.swingx.JXMapKit jXMapKit1;
     private javax.swing.JPanel listPanel;
@@ -570,6 +570,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
         if (!gedcomPlacesListModel.isEmpty()) {
             placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
+            selectPlace(mPlace);
         } else {
             placeEditorTabbedPane.setSelectedComponent(internetListPanel);
         }
@@ -594,6 +595,23 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
         });
         
+    }
+    
+    /**
+     * Select place and make visible at the top of the list
+     * @param place 
+     */
+    public void selectPlace(PropertyPlace place) {
+        int index = gedcomPlacesListModel.indexOf(place.getGeoValue());
+        
+        gedcomPlacesListResult.setSelectedIndex(index);
+        int firstIndex = gedcomPlacesListResult.getFirstVisibleIndex();
+        int lastIndex = gedcomPlacesListResult.getLastVisibleIndex();
+        int visibleIndex = index + (lastIndex - firstIndex)/2;
+        if (visibleIndex > gedcomPlacesListModel.getSize()) {
+            visibleIndex = gedcomPlacesListModel.getSize()-1;
+        }
+        gedcomPlacesListResult.ensureIndexIsVisible(visibleIndex);
     }
     
     private void searchPlace() {
