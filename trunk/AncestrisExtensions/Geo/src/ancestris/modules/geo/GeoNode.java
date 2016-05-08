@@ -195,13 +195,11 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             } else if (actionName.equals("ACTION_EditPlace")) {
                 // Popup editor
                 Gedcom gedcom = obj.getGedcom();
-                int undoNb = gedcom.getUndoNb();
-                // XXX: use lookup
-                final AncestrisEditor editor = new PlaceEditor();
                 GeoPlacesList.getInstance(gedcom).stopListening();
                 genj.gedcom.Property p = obj.getPlace();
+                AncestrisEditor editor = new PlaceEditor();
                 if (p == null){
-                    p = editor.add(obj.getProperty());
+                    p = editor.add(obj.getProperty());  // should never happen, should it ?
                 } else {
                     p = editor.edit(p);
                 }
