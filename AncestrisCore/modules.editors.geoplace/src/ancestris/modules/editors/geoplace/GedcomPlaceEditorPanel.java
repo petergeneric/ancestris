@@ -46,8 +46,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     private String[] gedcomPlaceFormat;
     private JComponent[][] gedcomFields;
 
-    private String[] geonamesMap;
-    
     private PropertyPlace mPlace;
     
     boolean placeModified = false;
@@ -170,13 +168,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         this.gedcom = gedcom;
         this.mPlace = place;
         
-        String map = registry.get(gedcom.getName()+".geonamesPlaceConversionMap", "");
-        if (map.isEmpty()) {
-            geonamesMap = getGeonamesMap(false);
-        } else {
-            geonamesMap = PropertyPlace.getFormat(map);
-        }
-        
         // Design panel based on read gedcom fields and its corresponding mapping
         if (gedcomFields == null) {
             setGedcomPanel();
@@ -205,7 +196,16 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     map[i] = ""+i;
                 } 
             } else {
-                map = geonamesMap;
+                String mapStr = registry.get(gedcom.getName() + ".geonamesPlaceConversionMap", "");
+                if (mapStr.isEmpty()) {
+                    map = getGeonamesMap();
+                } else {
+                    map = PropertyPlace.getFormat(mapStr);
+                }
+                if (map == null) {
+                    updateOnGoing = false;
+                    return;
+                }
             }
             for (int i = startIndex; i < gedcomPlaceFormat.length; i++) {
                 JTextField jtf = ((javax.swing.JTextField) (gedcomFields[1][i]));
@@ -398,7 +398,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void parametersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_parametersButtonActionPerformed
-        geonamesMap = getGeonamesMap(true);
+        getGeonamesMap();
     }//GEN-LAST:event_parametersButtonActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField gedcomLatitudeTextField;
@@ -412,29 +412,33 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
     
     
-    private String[] getGeonamesMap(boolean initValidity) {
+    private String[] getGeonamesMap() {
         
-        boolean valid = initValidity;
         String map = "";
         String[] format = null;
-        PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(GeonamesPlace.getPlaceFormat(), gedcom.getPlaceFormat(), registry.get(gedcom.getName()+".geonamesPlaceConversionMap", ""));
-        do {
-            // Display parameter panel asking user to map geonames fields to his/her gedcom fields
-            Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), pfc).setMessageType(DialogManager.PLAIN_MESSAGE).show();
-            if (o == DialogManager.OK_OPTION) {
-                map = pfc.getConversionMapAsString();
-                if (!map.replace(PropertyPlace.JURISDICTION_SEPARATOR, "").trim().isEmpty()) {
-                    registry.put(gedcom.getName()+".geonamesPlaceConversionMap", map);
-                    format = PropertyPlace.getFormat(map);
-                    valid = true;
-                } else {
+        String placeMap = registry.get(gedcom.getName()+".geonamesPlaceConversionMap", "");
+        PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(GeonamesPlace.getPlaceFormat(), gedcom.getPlaceFormat(), placeMap);
+        pfc.setTextTitle(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversionTitle"));
+        pfc.setLeftTitle(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversionLeftTitle"));
+        pfc.setRightTitle(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversionRightTitle"));
+        // Display parameter panel asking user to map geonames fields to his/her gedcom fields
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), pfc).setMessageType(DialogManager.PLAIN_MESSAGE).show();
+        if (o == DialogManager.OK_OPTION) {
+            map = pfc.getConversionMapAsString();
+            if (!map.replace(PropertyPlace.JURISDICTION_SEPARATOR, "").trim().isEmpty()) {
+                registry.put(gedcom.getName() + ".geonamesPlaceConversionMap", map);
+                format = PropertyPlace.getFormat(map);
+            } else {
+                if (placeMap.isEmpty()) {
                     DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), NbBundle.getMessage(getClass(), "ERR_EmptyConversion"))
+                            .setMessageType(DialogManager.ERROR_MESSAGE).show();
+                } else {
+                    DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), NbBundle.getMessage(getClass(), "ERR_NothingSaved"))
                             .setMessageType(DialogManager.ERROR_MESSAGE).show();
                 }
             }
-        } while (!valid);
-        
-        return format == null ? geonamesMap : format;
+        }
+        return format;
     }
     
     

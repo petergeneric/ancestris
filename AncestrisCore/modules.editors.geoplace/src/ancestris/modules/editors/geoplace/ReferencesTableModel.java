@@ -1,7 +1,6 @@
 package ancestris.modules.editors.geoplace;
 
 import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
@@ -39,8 +38,7 @@ public class ReferencesTableModel extends AbstractTableModel {
             Property parent = place.getParent();
             if (entity != null && parent != null) {
                 if (column == 0) {
-//                    String str = PropertyTag2Name.getTagName(parent.getTag());
-                    String str = Gedcom.getName(parent.getTag());
+                    String str = parent.getPropertyName(); 
                     if (str.contains(" ")) {
                         return str.substring(0, str.indexOf(" ")); // only take first word
                     } else {

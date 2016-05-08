@@ -19,11 +19,11 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
@@ -65,8 +65,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     // Register to save window position
     private Registry registry = null;
 
+    // Map of geo coordinate places with their corresponding properties
+    Map<String, Set<PropertyPlace>> placesMap = null;
+    
     // List of places found in the gedcom file and model in the list window
-    private Map<String, Set<PropertyPlace>> placesMap = new HashMap<String, Set<PropertyPlace>>();
     private final DefaultListModel<String> gedcomPlacesListModel = new DefaultListModel<String>();
     private boolean listIsBusy = false;
     
@@ -559,8 +561,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         // Fill in gedcom places with all places in gedcom
         gedcomPlacesListModel.clear();
-        placesMap = Utilities.getPropertyPlaceMap(gedcom);
-        for (String place : placesMap.keySet()) {
+        placesMap = getGeoPlaces();
+        Set<String> places = placesMap.keySet();  
+        for (String place : places) {
             gedcomPlacesListModel.addElement(place);
         }
 
@@ -732,6 +735,30 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
     }
 
+    
+
+    /**
+     * Get map of geo places with set of properties corresponding to them
+     * @return 
+     */
+    private Map<String, Set<PropertyPlace>> getGeoPlaces() {
+        Map<String, Set<PropertyPlace>> ret = new TreeMap<String, Set<PropertyPlace>>();
+        
+        for (String placeStr : mGedcom.getReferenceSet("PLAC").getKeys(mGedcom.getCollator())) {
+            Set<Property> props = mGedcom.getReferenceSet("PLAC").getReferences(placeStr);
+            for (Property prop : props) {
+                String geoPlace = ((PropertyPlace) prop).getGeoValue();
+                Set<PropertyPlace> set = ret.get(geoPlace);
+                if (set == null) {
+                    set = new HashSet<PropertyPlace>();
+                    ret.put(geoPlace, set);
+                }
+                set.add((PropertyPlace) prop);
+            }
+        }
+        return ret;
+    }
+
 
 
     
@@ -740,7 +767,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     
     
     /**
-     * Document listener methods for Event description
+     * Document listener methods for diplaying places corresponding to filter
      */
     private class FilterListener implements DocumentListener {
 
