@@ -9,7 +9,7 @@ import ancestris.core.pluginservice.PluginInterface;
 //XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.gedcom.EditTopComponent;
 import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
-import ancestris.modules.editors.geoplace.MapPlaceEditor;
+import ancestris.modules.editors.geoplace.PlaceEditor;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -197,7 +197,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 Gedcom gedcom = obj.getGedcom();
                 int undoNb = gedcom.getUndoNb();
                 // XXX: use lookup
-                final AncestrisEditor editor = new MapPlaceEditor();
+                final AncestrisEditor editor = new PlaceEditor();
                 GeoPlacesList.getInstance(gedcom).stopListening();
                 genj.gedcom.Property p = obj.getPlace();
                 if (p == null){
@@ -206,33 +206,10 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     p = editor.edit(p);
                 }
                 try {
-//                (PropertyPlace)editor.edit(obj.getPlace(),obj.getProperty());
                     obj.updateAllEventsPlaces((PropertyPlace)p); // need to update everytime (even if p == null) as listener has been stopped
                 } catch (ClassCastException ex){}
-//                
-//                if (editor.edit(obj.getPlace(),obj.getProperty()) != null){
-//                    try {
-//                        gedcom.doUnitOfWork(new UnitOfWork() {
-//
-//                            @Override
-//                            public void perform(Gedcom gedcom) throws GedcomException {
-//                                PropertyPlace p = editor.commit();  // writes place edited and also writes geocoordinates into gedcom file
-//                                if (p != null){
-//                                    // update all other places in gedcom and refresh list
-//                                    obj.updateAllEventsPlaces(p);
-//                                }
-//                            }
-//                        });
                 GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                 GeoPlacesList.getInstance(gedcom).startListening();    
-//                    } catch (GedcomException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                } else {
-//                    while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-//                        gedcom.undoUnitOfWork(false);
-//                    }
-//                }
             } else if (actionName.equals("ACTION_CopyPlace")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace());
             } else if (actionName.equals("ACTION_PastePlace")) {
