@@ -616,22 +616,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
     }
 
+    /**
+     * Used for saving coordinates into gedcom directly, for one single place or all places in set
+     */
     public void commit() {
         try {
             final String placeString = gedcomPlaceEditorPanel.getPlaceString(0);
-            final String mapTAG;
-            final String latitudeTAG;
-            final String longitudeTAG;
 
-            if (mGedcom.getGrammar().getVersion().equals("5.5.1")) {
-                mapTAG = "MAP";
-                latitudeTAG = "LATI";
-                longitudeTAG = "LONG";
-            } else {
-                mapTAG = "_MAP";
-                latitudeTAG = "_LATI";
-                longitudeTAG = "_LONG";
-            }
             if (gedcomPlaceEditorPanel.isModified()) {
                 mGedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -639,26 +630,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                     public void perform(Gedcom gedcom) throws GedcomException {
                         for (PropertyPlace propertyPlace : mPropertyPlaces) {
                             propertyPlace.setValue(placeString);
-                            Property map = propertyPlace.getProperty(mapTAG);
-                            if (!gedcomPlaceEditorPanel.getLatitude().isEmpty() && !gedcomPlaceEditorPanel.getLongitude().isEmpty()) {
-                                if (map == null) {
-                                    map = propertyPlace.addProperty(mapTAG, "");
-                                    map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
-                                    map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
-                                } else {
-                                    Property latitude = map.getProperty(latitudeTAG);
-                                    if (latitude == null) {
-                                        map.addProperty(latitudeTAG, gedcomPlaceEditorPanel.getLatitude());
-                                    } else {
-                                        latitude.setValue(gedcomPlaceEditorPanel.getLatitude());
-                                    }
-                                    Property longitude = map.getProperty(longitudeTAG);
-                                    if (longitude == null) {
-                                        map.addProperty(longitudeTAG, gedcomPlaceEditorPanel.getLongitude());
-                                    } else {
-                                        longitude.setValue(gedcomPlaceEditorPanel.getLongitude());
-                                    }
-                                }
+                            String lat = gedcomPlaceEditorPanel.getLatitude();
+                            String lon = gedcomPlaceEditorPanel.getLongitude();
+                            if (!lat.isEmpty() && !lon.isEmpty()) {
+                                propertyPlace.setCoordinates(lat, lon);
                             }
                         }
                     }
