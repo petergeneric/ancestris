@@ -2673,7 +2673,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { OKButton, cancelButton };
         
-        placeEditor.set(gedcom, event.place);
+        placeEditor.set(gedcom, event.place, false);
         placeEditor.setOKButton(OKButton);
         
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChoosePlaceTitle"), placeEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
