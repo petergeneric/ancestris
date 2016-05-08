@@ -39,7 +39,7 @@ public class PlaceFactory implements Place {
     @Override
     public Double getLongitude() {
         if (propertyPlace == null) {
-            return 0d;
+            return null;
         }
         PropertyLongitude longitude = propertyPlace.getLongitude(true); 
         return longitude == null ? null : longitude.getDoubleValue();
@@ -48,7 +48,7 @@ public class PlaceFactory implements Place {
     @Override
     public Double getLatitude() {
         if (propertyPlace == null) {
-            return 0d;
+            return null;
         }
         PropertyLatitude latitude = propertyPlace.getLatitude(true);
         return latitude == null ? null : latitude.getDoubleValue();
