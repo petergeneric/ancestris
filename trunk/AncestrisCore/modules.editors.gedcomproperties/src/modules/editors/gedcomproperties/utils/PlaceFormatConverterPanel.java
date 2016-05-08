@@ -106,7 +106,19 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
             toFields[i].setDragEnabled(false);
         }
     }
+    
+    public void setTextTitle(String text) {
+        textTitle.setText(text);
+    }
 
+    public void setLeftTitle(String text) {
+        leftTitle.setText(text);
+    }
+
+    public void setRightTitle(String text) {
+        rightTitle.setText(text);
+    }
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -118,9 +130,9 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
 
         jScrollPane3 = new javax.swing.JScrollPane();
         jPanel3 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        textTitle = new javax.swing.JLabel();
+        leftTitle = new javax.swing.JLabel();
+        rightTitle = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -137,14 +149,14 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
         jPanel3.setBorder(null);
         jPanel3.setPreferredSize(new java.awt.Dimension(560, 460));
 
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(PlaceFormatConverterPanel.class, "PlaceFormatConverterPanel.jLabel1.text")); // NOI18N
+        textTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(textTitle, org.openide.util.NbBundle.getMessage(PlaceFormatConverterPanel.class, "PlaceFormatConverterPanel.textTitle.text")); // NOI18N
 
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(PlaceFormatConverterPanel.class, "PlaceFormatConverterPanel.jLabel2.text")); // NOI18N
+        leftTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(leftTitle, org.openide.util.NbBundle.getMessage(PlaceFormatConverterPanel.class, "PlaceFormatConverterPanel.leftTitle.text")); // NOI18N
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(PlaceFormatConverterPanel.class, "PlaceFormatConverterPanel.jLabel3.text")); // NOI18N
+        rightTitle.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(rightTitle, org.openide.util.NbBundle.getMessage(PlaceFormatConverterPanel.class, "PlaceFormatConverterPanel.rightTitle.text")); // NOI18N
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
@@ -200,15 +212,15 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(12, 12, 12)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(textTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel2)
+                            .addComponent(leftTitle)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 211, Short.MAX_VALUE))
                         .addGap(36, 36, 36)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addComponent(jLabel3)
+                                .addComponent(rightTitle)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jButton1))
                             .addGroup(jPanel3Layout.createSequentialGroup()
@@ -222,14 +234,14 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(textTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(rightTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(leftTitle, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1)
@@ -263,9 +275,6 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -273,6 +282,9 @@ public class PlaceFormatConverterPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel leftTitle;
+    private javax.swing.JLabel rightTitle;
+    private javax.swing.JLabel textTitle;
     // End of variables declaration//GEN-END:variables
 
     // Make sure that if none of toFields include a fromField, that fromField should be enabled
