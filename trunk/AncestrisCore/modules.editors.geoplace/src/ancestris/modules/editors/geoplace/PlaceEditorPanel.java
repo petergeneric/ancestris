@@ -2,7 +2,6 @@ package ancestris.modules.editors.geoplace;
 
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -560,7 +559,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         // Fill in gedcom places with all places in gedcom
         gedcomPlacesListModel.clear();
-        placesMap = GedcomUtilities.getPropertyPlaceMap(gedcom);
+        placesMap = Utilities.getPropertyPlaceMap(gedcom);
         for (String place : placesMap.keySet()) {
             gedcomPlacesListModel.addElement(place);
         }
