@@ -52,7 +52,7 @@ public class PlaceEditor extends AncestrisEditor {
 
     @Override
     public Property add(Property parent) {
-        return edit(null,parent);
+        return edit(null, parent);
     }
 
     private Property edit(Property place, Property parent) {
@@ -63,9 +63,13 @@ public class PlaceEditor extends AncestrisEditor {
         if (place != null){
             gedcom = place.getGedcom();
         }
-        if (gedcom != null && (place instanceof PropertyPlace || place == null)){
-            editorPanel.set(gedcom, (PropertyPlace)place);
-            ADialog dialog = new ADialog(NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"), editorPanel);
+        if (gedcom != null && (place instanceof PropertyPlace || place == null)) {
+            editorPanel.set(gedcom, (PropertyPlace) place, true);
+            String title = NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.all", place.getDisplayValue());
+            if (place == null) {
+                title = NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.new");
+            }
+            ADialog dialog = new ADialog(title, editorPanel);
             if (dialog.show() == ADialog.OK_OPTION) {
                 // Add dow:
                     try {

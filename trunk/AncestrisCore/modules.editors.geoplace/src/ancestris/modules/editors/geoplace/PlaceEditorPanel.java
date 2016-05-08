@@ -7,10 +7,8 @@ import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -39,7 +37,6 @@ import javax.swing.table.TableRowSorter;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -519,7 +516,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      */
     public void copyValue(PropertyPlace place) {
         place.setValue(gedcomPlaceEditorPanel.getPlaceString(0));
-        place.setCoordinates(gedcomPlaceEditorPanel.getLatitude(), gedcomPlaceEditorPanel.getLongitude());
+        String lat = gedcomPlaceEditorPanel.getLatitude();
+        String lon = gedcomPlaceEditorPanel.getLongitude();
+        if (!lat.isEmpty() && !lon.isEmpty()) {
+            place.setCoordinates(lat, lon);
+        }
     }
 
     /**
@@ -534,10 +535,18 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param gedcom
      * @param place 
      */
-    public void set(Gedcom gedcom, PropertyPlace place) {
+    public void set(Gedcom gedcom, PropertyPlace place, boolean allPlaces) {
         
+        this.mGedcom = gedcom;
+        this.mPlace = place;
+        
+        placesMap = getGeoPlaces();
         mPropertyPlaces = new HashSet<PropertyPlace>() {};
-        mPropertyPlaces.add(place);
+        if (allPlaces) {
+            mPropertyPlaces.addAll(placesMap.get(place.getGeoValue()));
+        } else {
+            mPropertyPlaces.add(place);
+        }
         set(gedcom, mPropertyPlaces);
 
     }
@@ -561,7 +570,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         // Fill in gedcom places with all places in gedcom
         gedcomPlacesListModel.clear();
-        placesMap = getGeoPlaces();
+        if (placesMap == null) {
+            placesMap = getGeoPlaces();
+        }
         Set<String> places = placesMap.keySet();  
         for (String place : places) {
             gedcomPlacesListModel.addElement(place);
@@ -570,7 +581,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
         if (!gedcomPlacesListModel.isEmpty()) {
             placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
-            selectPlace(mPlace);
         } else {
             placeEditorTabbedPane.setSelectedComponent(internetListPanel);
         }
@@ -589,6 +599,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
+                selectPlace(mPlace);
                 searchPlaceTextField.setSelectionStart(0);
                 searchPlaceTextField.setSelectionEnd(searchPlaceTextField.getText().length());
                 searchPlaceTextField.requestFocus();
@@ -602,7 +613,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param place 
      */
     public void selectPlace(PropertyPlace place) {
+        String str = place.getGeoValue();
         int index = gedcomPlacesListModel.indexOf(place.getGeoValue());
+        gedcomPlacesListResult.ensureIndexIsVisible(0);  // to start scroll from beginning of list;
         
         gedcomPlacesListResult.setSelectedIndex(index);
         int firstIndex = gedcomPlacesListResult.getFirstVisibleIndex();
@@ -638,27 +651,16 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * Used for saving coordinates into gedcom directly, for one single place or all places in set
      */
     public void commit() {
-        try {
-            final String placeString = gedcomPlaceEditorPanel.getPlaceString(0);
-
-            if (gedcomPlaceEditorPanel.isModified()) {
-                mGedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        for (PropertyPlace propertyPlace : mPropertyPlaces) {
-                            propertyPlace.setValue(placeString);
-                            String lat = gedcomPlaceEditorPanel.getLatitude();
-                            String lon = gedcomPlaceEditorPanel.getLongitude();
-                            if (!lat.isEmpty() && !lon.isEmpty()) {
-                                propertyPlace.setCoordinates(lat, lon);
-                            }
-                        }
-                    }
-                }); // end of doUnitOfWork
+        String placeString = gedcomPlaceEditorPanel.getPlaceString(0);
+        if (gedcomPlaceEditorPanel.isModified()) {
+            for (PropertyPlace propertyPlace : mPropertyPlaces) {
+                propertyPlace.setValue(placeString);
+                String lat = gedcomPlaceEditorPanel.getLatitude();
+                String lon = gedcomPlaceEditorPanel.getLongitude();
+                if (!lat.isEmpty() && !lon.isEmpty()) {
+                    propertyPlace.setCoordinates(lat, lon);
+                }
             }
-        } catch (GedcomException ex) {
-            Exceptions.printStackTrace(ex);
         }
     }
 
