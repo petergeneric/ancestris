@@ -4,6 +4,10 @@ import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.api.place.Place;
 import ancestris.api.place.SearchPlace;
 import ancestris.util.TimingUtility;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Gedcom;
+import genj.gedcom.PropertyPlace;
+import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +15,9 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import org.geonames.*;
+import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -131,6 +137,42 @@ public class GeonamesPlacesList implements SearchPlace {
         }
         return null;
     }
+    
+    
+    public static boolean isGeonamesMapDefined(Class clazz, Gedcom gedcom) {
+        String placeMap = Registry.get(clazz).get(gedcom.getName()+".geonamesPlaceConversionMap", "");
+        return !placeMap.isEmpty();
+    }
+        
+    public static String[] getGeonamesMap(Class clazz, Gedcom gedcom) {
+        
+        String map = "";
+        String[] format = null;
+        String placeMap = Registry.get(clazz).get(gedcom.getName()+".geonamesPlaceConversionMap", "");
+        PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(GeonamesPlace.getPlaceFormat(), gedcom.getPlaceFormat(), placeMap);
+        pfc.setTextTitle(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversionTitle"));
+        pfc.setLeftTitle(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversionLeftTitle"));
+        pfc.setRightTitle(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversionRightTitle"));
+        // Display parameter panel asking user to map geonames fields to his/her gedcom fields
+        Object o = DialogManager.create(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversion"), pfc).setMessageType(DialogManager.PLAIN_MESSAGE).show();
+        if (o == DialogManager.OK_OPTION) {
+            map = pfc.getConversionMapAsString();
+            if (!map.replace(PropertyPlace.JURISDICTION_SEPARATOR, "").trim().isEmpty()) {
+                Registry.get(clazz).put(gedcom.getName() + ".geonamesPlaceConversionMap", map);
+                format = PropertyPlace.getFormat(map);
+            } else {
+                if (placeMap.isEmpty()) {
+                    DialogManager.create(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversion"), NbBundle.getMessage(GeonamesPlacesList.class, "ERR_EmptyConversion"))
+                            .setMessageType(DialogManager.ERROR_MESSAGE).show();
+                } else {
+                    DialogManager.create(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversion"), NbBundle.getMessage(GeonamesPlacesList.class, "ERR_NothingSaved"))
+                            .setMessageType(DialogManager.ERROR_MESSAGE).show();
+                }
+            }
+        }
+        return format;
+    }
+    
     
     
  }
