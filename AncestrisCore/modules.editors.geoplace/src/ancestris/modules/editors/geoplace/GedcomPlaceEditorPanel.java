@@ -216,7 +216,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             // Fill in geocoordinates
             Double latitude = place.getLatitude();
             if (forceReplace || gedcomLatitudeTextField.getText().isEmpty()) {
-                if (latitude != null) {
+                if (latitude != null && !latitude.isNaN()) {
                     gedcomLatitudeTextField.setText(String.valueOf(latitude));
                 } else {
                     gedcomLatitudeTextField.setText("");
@@ -224,7 +224,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             }
             Double longitude = place.getLongitude();
             if (forceReplace || gedcomLongitudeTextField.getText().isEmpty()) {
-                if (longitude != null) {
+                if (longitude != null && !longitude.isNaN()) {
                     gedcomLongitudeTextField.setText(String.valueOf(longitude));
                 } else {
                     gedcomLongitudeTextField.setText("");
