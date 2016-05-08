@@ -80,7 +80,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     @Override
     public void setName() {
         if (editor != null && editor.getName() != null) {
-            setName(editor.getName());
+            setName(editor.getName());  // "CTL_" + preferredID()
         } else {
             super.setName();
         }
