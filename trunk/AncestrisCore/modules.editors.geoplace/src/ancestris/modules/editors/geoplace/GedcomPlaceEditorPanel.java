@@ -2,8 +2,7 @@ package ancestris.modules.editors.geoplace;
 
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
-import ancestris.modules.place.geonames.GeonamesPlace;
-import ancestris.util.swing.DialogManager;
+import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.*;
 import genj.util.Registry;
 import java.util.ArrayList;
@@ -20,9 +19,7 @@ import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
-import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
-import org.openide.util.NbBundle;
 
 /**
  * This class is the base element of the Place Format editor for any gedcom.
@@ -413,32 +410,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     
     
     private String[] getGeonamesMap() {
-        
-        String map = "";
-        String[] format = null;
-        String placeMap = registry.get(gedcom.getName()+".geonamesPlaceConversionMap", "");
-        PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(GeonamesPlace.getPlaceFormat(), gedcom.getPlaceFormat(), placeMap);
-        pfc.setTextTitle(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversionTitle"));
-        pfc.setLeftTitle(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversionLeftTitle"));
-        pfc.setRightTitle(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversionRightTitle"));
-        // Display parameter panel asking user to map geonames fields to his/her gedcom fields
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), pfc).setMessageType(DialogManager.PLAIN_MESSAGE).show();
-        if (o == DialogManager.OK_OPTION) {
-            map = pfc.getConversionMapAsString();
-            if (!map.replace(PropertyPlace.JURISDICTION_SEPARATOR, "").trim().isEmpty()) {
-                registry.put(gedcom.getName() + ".geonamesPlaceConversionMap", map);
-                format = PropertyPlace.getFormat(map);
-            } else {
-                if (placeMap.isEmpty()) {
-                    DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), NbBundle.getMessage(getClass(), "ERR_EmptyConversion"))
-                            .setMessageType(DialogManager.ERROR_MESSAGE).show();
-                } else {
-                    DialogManager.create(NbBundle.getMessage(getClass(), "TITL_PlaceFormatConversion"), NbBundle.getMessage(getClass(), "ERR_NothingSaved"))
-                            .setMessageType(DialogManager.ERROR_MESSAGE).show();
-                }
-            }
-        }
-        return format;
+        return GeonamesPlacesList.getGeonamesMap(getClass(), gedcom);
     }
     
     
