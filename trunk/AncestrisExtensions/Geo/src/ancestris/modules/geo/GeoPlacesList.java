@@ -4,12 +4,11 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.modules.editors.geoplace.MapPlaceEditor;
+import ancestris.modules.editors.geoplace.PlaceEditor;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyName;
@@ -211,8 +210,7 @@ class GeoPlacesList implements GedcomListener {
      * 
      */
     public boolean initPlaceDisplayFormat(boolean forceEdit) {
-        // TODO: use Lookup to find place editor
-        return MapPlaceEditor.updatePlaceFormat(gedcom,forceEdit);
+        return PlaceEditor.updatePlaceFormat(gedcom,forceEdit);
     }
 
     // TODO: add a setting for Geo module to modify place format
