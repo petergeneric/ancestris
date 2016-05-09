@@ -4,7 +4,7 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.modules.editors.geoplace.PlaceEditor;
+import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
@@ -180,7 +180,7 @@ class GeoPlacesList implements GedcomListener {
     }
 
     private void reloadPlaces(Property property) {
-        List<PropertyPlace> list = (List<PropertyPlace>) property.getEntity().getProperties(PropertyPlace.class);
+        List<PropertyPlace> list = property.getEntity().getProperties(PropertyPlace.class);
         if ((property instanceof PropertyName && !list.isEmpty()) || property instanceof PropertyPlace) {
             reloadPlaces();
         }
@@ -210,7 +210,10 @@ class GeoPlacesList implements GedcomListener {
      * 
      */
     public boolean initPlaceDisplayFormat(boolean forceEdit) {
-        return PlaceEditor.updatePlaceFormat(gedcom,forceEdit);
+        if (!GeonamesPlacesList.isGeonamesMapDefined(getClass(), gedcom) || forceEdit) {
+            GeonamesPlacesList.getGeonamesMap(getClass(), gedcom);
+        }
+        return GeonamesPlacesList.isGeonamesMapDefined(getClass(), gedcom);
     }
 
     // TODO: add a setting for Geo module to modify place format

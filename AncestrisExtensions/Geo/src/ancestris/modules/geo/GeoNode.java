@@ -4,7 +4,6 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.api.editor.AncestrisEditor;
 import ancestris.core.pluginservice.PluginInterface;
 //XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.gedcom.EditTopComponent;
@@ -197,15 +196,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 // Popup editor
                 Gedcom gedcom = obj.getGedcom();
                 GeoPlacesList.getInstance(gedcom).stopListening();
-                genj.gedcom.Property p = obj.getPlace();
-                AncestrisEditor editor = new PlaceEditor();
-                if (p == null){
-                    p = editor.add(obj.getProperty());  // should never happen, should it ?
-                } else {
-                    p = editor.edit(p);
-                }
+                PropertyPlace p = (PropertyPlace) new PlaceEditor().edit(obj.getPlace(), obj.getGeoPosition());
                 try {
-                    obj.updateAllEventsPlaces((PropertyPlace)p); // need to update everytime (even if p == null) as listener has been stopped
+                    obj.updateAllEventsPlaces(p); // need to update everytime (even if p == null) as listener has been stopped
                 } catch (ClassCastException ex){}
                 GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                 GeoPlacesList.getInstance(gedcom).startListening();    
