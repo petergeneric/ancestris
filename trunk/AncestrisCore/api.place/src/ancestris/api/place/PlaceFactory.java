@@ -15,6 +15,7 @@ package ancestris.api.place;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 /**
  *
@@ -23,9 +24,22 @@ import genj.gedcom.PropertyPlace;
 public class PlaceFactory implements Place {
 
     private PropertyPlace propertyPlace = null;
+    private Double latitude, longitude = 0d;
 
     public PlaceFactory(PropertyPlace place) {
         this.propertyPlace = place;
+        if (propertyPlace != null) {
+            PropertyLongitude pLon = propertyPlace.getLongitude(true);
+            this.longitude = pLon != null ? pLon.getDoubleValue() : null;
+            PropertyLatitude pLat = propertyPlace.getLatitude(true);
+            this.latitude = pLat != null ? pLat.getDoubleValue() : null;
+        }
+    }
+
+    public PlaceFactory(PropertyPlace place, GeoPosition geoPoint) {
+        this.propertyPlace = place;
+        this.latitude = geoPoint.getLatitude();
+        this.longitude = geoPoint.getLongitude();
     }
 
     @Override
@@ -38,20 +52,12 @@ public class PlaceFactory implements Place {
 
     @Override
     public Double getLongitude() {
-        if (propertyPlace == null) {
-            return null;
-        }
-        PropertyLongitude longitude = propertyPlace.getLongitude(true); 
-        return longitude == null ? null : longitude.getDoubleValue();
+        return longitude;
     }
 
     @Override
     public Double getLatitude() {
-        if (propertyPlace == null) {
-            return null;
-        }
-        PropertyLatitude latitude = propertyPlace.getLatitude(true);
-        return latitude == null ? null : latitude.getDoubleValue();
+        return latitude;
     }
 
     @Override
