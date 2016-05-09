@@ -10,8 +10,7 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.api.editor.AncestrisEditor;
-import genj.gedcom.PropertyPlace;
+import ancestris.modules.editors.geoplace.PlaceEditor;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Polygon;
@@ -307,9 +306,7 @@ public class HoverPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jScrollBar1AdjustmentValueChanged
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        PropertyPlace p = currentGno.getPlace();
-        if (p != null)
-            AncestrisEditor.findEditor(p).edit(p);
+        new PlaceEditor().edit(currentGno.getPlace(), currentGno.getGeoPosition());
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
