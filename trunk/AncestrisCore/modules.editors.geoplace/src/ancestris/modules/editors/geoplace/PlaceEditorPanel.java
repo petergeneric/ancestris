@@ -578,13 +578,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             gedcomPlacesListModel.addElement(place);
         }
 
-        // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
-        if (!gedcomPlacesListModel.isEmpty()) {
-            placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
-        } else {
-            placeEditorTabbedPane.setSelectedComponent(internetListPanel);
-        }
-        
         // Set text in search field
         listIsBusy = true;
         searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
@@ -599,7 +592,16 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
-                selectPlace(mPlace);
+                // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
+                if (!gedcomPlacesListModel.isEmpty()) {
+                    placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
+                    selectPlace(mPlace);
+                }
+                if (!geonamePlacesListModel.isEmpty()) {
+                    placeEditorTabbedPane.setSelectedComponent(internetListPanel);
+                    geonamesPlacesListResult.setSelectedIndex(0);
+                }
+
                 searchPlaceTextField.setSelectionStart(0);
                 searchPlaceTextField.setSelectionEnd(searchPlaceTextField.getText().length());
                 searchPlaceTextField.requestFocus();
@@ -613,7 +615,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param place 
      */
     public void selectPlace(PropertyPlace place) {
-        String str = place.getGeoValue();
         int index = gedcomPlacesListModel.indexOf(place.getGeoValue());
         gedcomPlacesListResult.ensureIndexIsVisible(0);  // to start scroll from beginning of list;
         
@@ -626,6 +627,19 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
         gedcomPlacesListResult.ensureIndexIsVisible(visibleIndex);
     }
+
+    
+    /**
+     * Set this point to the geoname tab and slects it so it displays the map with the corresponding location
+     * @param geoPoint 
+     */
+    public void setGeoPoint(GeoPosition geoPoint) {
+        geonamePlacesListModel.clear();
+        Place place = new PlaceFactory(mPlace, geoPoint);
+        geonamePlacesListModel.add(place);
+    }
+
+
     
     private void searchPlace() {
         searchPlaceButton.setEnabled(false);
@@ -753,6 +767,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
         return ret;
     }
+
 
 
 
