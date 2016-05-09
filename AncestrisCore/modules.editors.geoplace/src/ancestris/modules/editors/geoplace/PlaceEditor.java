@@ -12,13 +12,13 @@
 package ancestris.modules.editors.geoplace;
 
 import ancestris.api.editor.AncestrisEditor;
-import ancestris.modules.place.geonames.GeonamesPlacesList;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -45,9 +45,12 @@ public class PlaceEditor extends AncestrisEditor {
         return false;
     }
 
+    
+    
+    
     @Override
     public Property edit(Property property, boolean isNew) {
-        return edit(property,null);
+        return edit(property, null);
     }
 
     @Override
@@ -55,20 +58,25 @@ public class PlaceEditor extends AncestrisEditor {
         return edit(null, parent);
     }
 
-    private Property edit(Property place, Property parent) {
-        Gedcom gedcom=null;
-        if (parent != null){
-            gedcom = parent.getGedcom();
+    
+    
+    
+    
+    public Property edit(Property place, Object arg) {
+        if (place == null) {
+            return null;
         }
-        if (place != null){
-            gedcom = place.getGedcom();
-        }
-        if (gedcom != null && (place instanceof PropertyPlace || place == null)) {
-            editorPanel.set(gedcom, (PropertyPlace) place, true);
-            String title = NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.all", place.getDisplayValue());
-            if (place == null) {
-                title = NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.new");
+        Gedcom gedcom = place.getGedcom();
+        GeoPosition geoPoint = null;
+        if (arg != null) {
+            if (arg instanceof GeoPosition) {
+                geoPoint = (GeoPosition) arg;
             }
+        }
+        if (gedcom != null && place instanceof PropertyPlace) {
+            editorPanel.set(gedcom, (PropertyPlace) place, true);
+            editorPanel.setGeoPoint(geoPoint);
+            String title = NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.all", place.getDisplayValue());
             ADialog dialog = new ADialog(title, editorPanel);
             if (dialog.show() == ADialog.OK_OPTION) {
                 // Add dow:
@@ -90,16 +98,4 @@ public class PlaceEditor extends AncestrisEditor {
     }
 
     
-    /**
-     * Open Place Format option dialog.
-     * @param gedcom
-     * @param forceEdit
-     * @return true if place format has been edited
-     */
-    public static boolean updatePlaceFormat(Gedcom gedcom,boolean forceEdit){
-        if (!GeonamesPlacesList.isGeonamesMapDefined(PlaceEditor.class, gedcom) || forceEdit) {
-            GeonamesPlacesList.getGeonamesMap(PlaceEditor.class, gedcom);
-        }
-        return GeonamesPlacesList.isGeonamesMapDefined(PlaceEditor.class, gedcom);
-    }
 }
