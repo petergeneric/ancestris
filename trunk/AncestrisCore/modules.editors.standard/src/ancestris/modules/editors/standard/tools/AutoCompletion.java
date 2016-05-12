@@ -180,9 +180,11 @@ public class AutoCompletion extends PlainDocument {
             return;
         }
         JPopupMenu popup = (JPopupMenu) comp;
-        JScrollPane scrollPane = (JScrollPane) popup.getComponent(0);
-        scrollPane.setHorizontalScrollBar(new JScrollBar(JScrollBar.HORIZONTAL));
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        if (popup.getComponent(0) instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) popup.getComponent(0);
+            scrollPane.setHorizontalScrollBar(new JScrollBar(JScrollBar.HORIZONTAL));
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        }
     }
     
 }
