@@ -17,7 +17,6 @@ import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
 import java.awt.Image;
-import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -92,7 +91,6 @@ public class GeoNodeObject {
     public GeoNodeObject(GeoPlacesList gplOwner, PropertyPlace place, boolean avoidInternetSearch) {
         this.gplOwner = gplOwner;
         this.place = place;
-        //FIXME: replace with place.format(null);
         this.placeDisplayFormat = gplOwner.getPlaceDisplayFormat(place);
         this.placeKey = gplOwner.getPlaceKey(place);
         this.property = place.getParent();
@@ -116,14 +114,6 @@ public class GeoNodeObject {
 
     public void removePropertyChangeListener(PropertyChangeListener pcl) {
         listeners.remove(pcl);
-    }
-
-    private void fire(String propertyName, Object old, Object nue) {
-        //Passing 0 below on purpose, so you only synchronize for one atomic call:
-        PropertyChangeListener[] pcls = listeners.toArray(new PropertyChangeListener[0]);
-        for (int i = 0; i < pcls.length; i++) {
-            pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
-        }
     }
 
     /**

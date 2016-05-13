@@ -224,7 +224,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
             } else if (actionName.equals("ACTION_UpdateList")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
             } else if (actionName.equals("ACTION_UpdatePlaceOptions")) {
-                if (GeoPlacesList.getInstance(obj.getGedcom()).initPlaceDisplayFormat(true)) {
+                if (GeoPlacesList.getInstance(obj.getGedcom()).setPlaceDisplayFormat(obj.getPlace())) {
                     GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
                 }
             } else if (actionName.equals("ACTION_EditEvent"+GEDCOM_EDITOR)) {
