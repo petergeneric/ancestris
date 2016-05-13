@@ -557,6 +557,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param propertyPlaces 
      */
     public void set(Gedcom gedcom, Set<PropertyPlace> propertyPlaces) {
+        
+        if (mPropertyPlaces == null) {
+            mPropertyPlaces = propertyPlaces;
+        }
+        
         Object[] propertyPlaceArray = propertyPlaces.toArray();
 
         this.mGedcom = gedcom;
@@ -580,7 +585,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         // Set text in search field
         listIsBusy = true;
-        searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " "));
+        searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " ").trim());
         listIsBusy = false;
          
         // Set window size
@@ -666,8 +671,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      */
     public void commit() {
         String placeString = gedcomPlaceEditorPanel.getPlaceString(0);
+        Set<PropertyPlace> tmpList = new HashSet<PropertyPlace>();
+        tmpList.addAll(mPropertyPlaces);
         if (gedcomPlaceEditorPanel.isModified()) {
-            for (PropertyPlace propertyPlace : mPropertyPlaces) {
+            for (PropertyPlace propertyPlace : tmpList) {
                 propertyPlace.setValue(placeString);
                 String lat = gedcomPlaceEditorPanel.getLatitude();
                 String lon = gedcomPlaceEditorPanel.getLongitude();

@@ -54,7 +54,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
      * Creates form GedcomPlaceEditorPanel
      */
     public GedcomPlaceEditorPanel() {
-        registry = Registry.get(getClass());
         initComponents();
     }
 
@@ -165,6 +164,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         this.gedcom = gedcom;
         this.mPlace = place;
         
+        registry = gedcom.getRegistry();
+        
         // Design panel based on read gedcom fields and its corresponding mapping
         if (gedcomFields == null) {
             setGedcomPanel();
@@ -193,7 +194,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     map[i] = ""+i;
                 } 
             } else {
-                String mapStr = registry.get(gedcom.getName() + ".geonamesPlaceConversionMap", "");
+                String mapStr = GeonamesPlacesList.getGeonamesMapString(gedcom);
                 if (mapStr.isEmpty()) {
                     map = getGeonamesMap();
                 } else {
@@ -410,7 +411,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     
     
     private String[] getGeonamesMap() {
-        return GeonamesPlacesList.getGeonamesMap(getClass(), gedcom);
+        return GeonamesPlacesList.getGeonamesMap(gedcom);
     }
     
     
@@ -426,11 +427,16 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
     public String getPlaceString(int startingFrom) {
 
+        boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
         String placeString = "";
 
         for (int i = 0; i < gedcomPlaceFormat.length; i++) {
             if (i > 0) {
                 placeString += PropertyPlace.JURISDICTION_SEPARATOR;
+                if (USE_SPACES) {
+                    placeString += " ";
+                }
+
             }
             placeString += ((JTextField) (gedcomFields[1][i])).getText();
         }
