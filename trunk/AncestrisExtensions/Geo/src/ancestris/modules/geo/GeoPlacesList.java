@@ -4,7 +4,7 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.modules.place.geonames.GeonamesPlacesList;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
@@ -83,9 +83,6 @@ class GeoPlacesList implements GedcomListener {
     public synchronized void launchPlacesSearch() {
         List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
 
-        // Check that display format of places is set
-        initPlaceDisplayFormat(false);
-        
         // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
         DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); 
         Date versionDate;
@@ -201,37 +198,39 @@ class GeoPlacesList implements GedcomListener {
         stopListening = false;
     }
     
-    /**
-     * Initiate place display format.
-     * 
-     * 1/ Use User preferences first for this gedcom (TODO)
-     * 2/ Default to "city,hamlet,geo_code,county/dept,state/region,country" otherwise
-     *    For that, I need PlaceFormatEditorOptionsPanel to collect placesortorder preferences for this gedcom
-     * 
-     */
-    public boolean initPlaceDisplayFormat(boolean forceEdit) {
-        if (!GeonamesPlacesList.isGeonamesMapDefined(getClass(), gedcom) || forceEdit) {
-            GeonamesPlacesList.getGeonamesMap(getClass(), gedcom);
-        }
-        return GeonamesPlacesList.isGeonamesMapDefined(getClass(), gedcom);
-    }
+    public boolean setPlaceDisplayFormat(PropertyPlace place) {
+        boolean changed = false;
 
-    // TODO: add a setting for Geo module to modify place format
+        String displayFormat = getGedcom().getPlaceDisplayFormat();
+        PlaceDisplayFormatPanel fdfPanel = new PlaceDisplayFormatPanel(place);
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_SetPlaceDisplayFormat"), fdfPanel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
+        if (o == DialogManager.OK_OPTION) {
+            String newPlaceDisplayFormat = fdfPanel.getDisplayFormat();
+            if (!newPlaceDisplayFormat.equals(displayFormat)) {
+                gedcom.setPlaceDisplayFormat(newPlaceDisplayFormat);
+                changed = true;
+            }
+        }
+        
+        return changed;
+    }
+    
+    public String getPlaceKey(PropertyPlace place) {
+        return getPlaceDisplayFormat(place) + "[" + getMapString(place);
+    }
+    
     public String getPlaceDisplayFormat(PropertyPlace place) {
         String str = "";
         if (place == null || (str = place.format(null)).isEmpty()) {
             return NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
         }
-        
         //TODO: Should we  move this code to PropertyPlace.format?
         str = str.replaceAll("\\(\\)", ""); // aestethic cleanning of empty jurisdictions in case they are between ()
         str = str.replaceAll("\\[\\]", ""); // aestethic cleanning of empty jurisdictions in case they are between []
         str = str.replaceAll("\\{\\}", ""); // aestethic cleanning of empty jurisdictions in case they are between {}
+        str = str.replaceAll("<html>", ""); // remove start and end tags
+        str = str.replaceAll("</html>", ""); // remove start and end tags
         return str;
-    }
-    
-    public String getPlaceKey(PropertyPlace place) {
-        return getPlaceDisplayFormat(place) + "[" + getMapString(place);
     }
     
     // Need to distinguish locations where geocoordinates are in gedcom from those where they are not
