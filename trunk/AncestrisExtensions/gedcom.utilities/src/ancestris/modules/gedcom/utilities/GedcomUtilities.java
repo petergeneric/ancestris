@@ -22,17 +22,11 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyXRef;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
@@ -224,22 +218,5 @@ public class GedcomUtilities {
     
     
     
-    public static Map<String, Set<PropertyPlace>> getPropertyPlaceMap(Gedcom gedcom) {
-    
-        SortedMap<String, Set<PropertyPlace>> placesMap = new TreeMap<String, Set<PropertyPlace>>(gedcom.getCollator());
-        List<PropertyPlace> gedcomPlacesList = searchProperties(gedcom, PropertyPlace.class, GedcomUtilities.ENT_ALL);
-
-        for (PropertyPlace propertyPlace : gedcomPlacesList) {
-            String gedcomPlace = propertyPlace.getGeoValue();
-            Set<PropertyPlace> propertySet = placesMap.get(gedcomPlace);
-            if (propertySet == null) {
-                propertySet = new HashSet<PropertyPlace>();
-                placesMap.put(gedcomPlace, propertySet);
-}
-            propertySet.add((PropertyPlace) propertyPlace);
-        }
-
-        return placesMap; 
-    }
     
 }
