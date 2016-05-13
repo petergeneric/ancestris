@@ -2,6 +2,7 @@ package ancestris.modules.editors.placeeditor.topcomponents;
 
 import genj.util.Registry;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,26 +28,26 @@ public class EditorTable extends JTable {
 
         @Override
         public void columnAdded(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
+            //logger.log(Level.FINE, "columnAdded: {0}", tcme.getFromIndex());
         }
 
         @Override
         public void columnRemoved(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
+            //logger.log(Level.FINE, "columnRemoved: {0}", tcme.getFromIndex());
         }
 
         @Override
         public void columnMoved(TableColumnModelEvent tcme) {
-            logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
+            //logger.log(Level.FINE, "columnMoved: {0}", tcme.getFromIndex());
         }
 
         @Override
         public void columnMarginChanged(ChangeEvent ce) {
-            logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
+            //logger.log(Level.FINE, "columnMarginChanged: {0}", ce.toString());
             for (int index = 0; index < columnModel.getColumnCount(); index++) {
-                int preferredWidth = columnModel.getColumn(index).getPreferredWidth();
-                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
-                mRegistry.put(mTableId + ".column" + index + ".size", preferredWidth);
+//                int preferredWidth = columnModel.getColumn(index).getPreferredWidth();
+//                logger.log(Level.FINE, "columnMarginChanged: table id {0} column index {1} size {2}", new Object[]{mTableId, index, preferredWidth});
+                mRegistry.put(mTableId + ".column" + index + ".size", columnModel.getColumn(index).getPreferredWidth());
             }
         }
 
@@ -66,7 +67,7 @@ public class EditorTable extends JTable {
                 for (RowSorter.SortKey key : sortKeys) {
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortIndex", index++);
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortOrder", key.getSortOrder().toString());
-                    logger.log(Level.FINE, "sorterChanged SORTED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
+                    //logger.log(Level.FINE, "sorterChanged SORTED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
                 }
             } else if (type.equals(RowSorterEvent.Type.SORT_ORDER_CHANGED)) {
                 List<RowSorter.SortKey> sortKeys = rse.getSource().getSortKeys();
@@ -74,7 +75,7 @@ public class EditorTable extends JTable {
                 for (RowSorter.SortKey key : sortKeys) {
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortIndex", index++);
                     mRegistry.put(mTableId + ".column" + key.getColumn() + ".sortOrder", key.getSortOrder().toString());
-                    logger.log(Level.FINE, "sorterChanged SORT_ORDER_CHANGED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
+                    //logger.log(Level.FINE, "sorterChanged SORT_ORDER_CHANGED: index {0} order {1}", new Object[]{key.getColumn(), key.getSortOrder().toString()});
                 }
             }
         }
@@ -98,7 +99,7 @@ public class EditorTable extends JTable {
         for (int index = 0; index < columnModel.getColumnCount(); index++) {
             int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
             columnModel.getColumn(index).setPreferredWidth(columnSize);
-            logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, index, columnSize});
+            //logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, index, columnSize});
         }
 
         SortOrder[] sortOrders = new SortOrder[getColumnModel().getColumnCount()];
@@ -115,7 +116,7 @@ public class EditorTable extends JTable {
         for (int index = 0; index < getColumnModel().getColumnCount(); index++) {
             if (sortIndexs[index] > -1) {
                 sortKeys.add(new RowSorter.SortKey(sortIndexs[index], sortOrders[index]));
-                logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, sortIndexs[index], sortOrders[index]});
+                //logger.log(Level.FINE, "setID: table id {0} column index {1} size {2}", new Object[]{tableId, sortIndexs[index], sortOrders[index]});
             }
         }
 
@@ -124,7 +125,22 @@ public class EditorTable extends JTable {
             setRowSorter(new TableRowSorter<TableModel>(getModel()));
             rowSorter = getRowSorter();
         }
+        
+        // Set sorter 
+        // FL: 2016-02-28 : for some unknown reason, default row sorter sorts strings excluding spaces... Using string sorter below solves the issue.
+        // Returning getColumnClass as String does not solve the issue (!?!?)
+        Comparator strComparator = new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                return o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
+            }
+        };
+        for (int c = 0; c < getColumnModel().getColumnCount(); c++) {
+            ((TableRowSorter) rowSorter).setComparator(c, strComparator);
+        }
         rowSorter.setSortKeys(sortKeys);
+        
+        
         rowSorter.addRowSorterListener(new EditorTableRowSorterListener());
         getColumnModel().addColumnModelListener(new EditorTableTableColumnModelListener());
     }

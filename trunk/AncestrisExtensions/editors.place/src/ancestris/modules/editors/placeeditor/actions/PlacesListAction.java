@@ -33,7 +33,7 @@ public final class PlacesListAction extends AbstractAncestrisContextAction {
     protected void actionPerformedImpl(ActionEvent event) {
         Context contextToOpen = getContext();
         if (contextToOpen != null) {
-            PlacesListTopComponent tc = new PlacesListTopComponent(contextToOpen.getGedcom());
+            PlacesListTopComponent tc = new PlacesListTopComponent();
             tc.init(contextToOpen);
             tc.open();
             tc.requestActive();

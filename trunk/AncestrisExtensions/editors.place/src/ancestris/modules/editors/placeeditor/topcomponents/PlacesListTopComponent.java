@@ -1,25 +1,35 @@
 package ancestris.modules.editors.placeeditor.topcomponents;
 
+import ancestris.modules.editors.geoplace.PlaceEditorPanel;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
-import ancestris.modules.editors.placeeditor.panels.PlaceEditorPanel;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomListener;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.UnitOfWork;
+import genj.util.ReferenceSet;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
+import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
@@ -33,21 +43,25 @@ import org.openide.windows.RetainLocation;
         autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
-public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider {
+public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomListener {
 
-    //
-    // Path to the icon used by the component and its open action
+    final static Logger LOG = Logger.getLogger("ancestris.editor");
+
     static final String ICON_PATH = "ancestris/modules/editors/placeeditor/actions/Place.png";
     private static final String PREFERRED_ID = "PlaceListTopComponent";
 
-    private Map<String, Set<PropertyPlace>> placesMap = new HashMap<String, Set<PropertyPlace>>();
+    private Gedcom gedcom = null;
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
-    private Gedcom gedcom = null;
-    int currentRowIndex = -1;
+    private PlaceEditorPanel placesEditorPanel = null;
+    private ReferenceSet placesMap = null;
+    
+    private boolean isBusyCommitting = false;
+    private UndoRedoListener undoRedoListener;
+    
 
     public PlacesListTopComponent() {
-
+        super();
     }
 
     @Override
@@ -67,27 +81,22 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
     @Override
     public boolean createPanel() {
-        return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
-    }
 
-    public PlacesListTopComponent(final Gedcom gedcom) {
-        super();
-        this.gedcom = gedcom;
-
+        this.gedcom = getGedcom();
         gedcomPlaceTableModel = new GedcomPlaceTableModel(PropertyPlace.getFormat(gedcom));
 
         initComponents();
+        
         placeTable.addMouseListener(new MouseAdapter() {
-
             @Override
             public void mouseClicked(MouseEvent e) {
                 if (e.getClickCount() == 2) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
-                    PlaceEditorPanel placesEditorPanel = new PlaceEditorPanel();
+                    placesEditorPanel = new PlaceEditorPanel();
                     DialogDescriptor placesEditorPanelDescriptor = new DialogDescriptor(
                             placesEditorPanel,
-                            NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                            NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.all", propertyPlaces.iterator().next().getGeoValue()),
                             true,
                             null);
                     placesEditorPanel.set(gedcom, propertyPlaces);
@@ -95,36 +104,24 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                     dialog.setVisible(true);
                     dialog.toFront();
                     if (placesEditorPanelDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
-                        placesEditorPanel.commit();
+                        commit(); 
                         updateGedcomPlaceTable();
                     }
                 }
             }
         });
 
-        // Set sorter 
-        // FL: 2016-02-28 : for some unknown reason, default row sorter sorts strings excluding spaces... Using string sorter below solves the issue.
-        // Returning getColumnClass as String does not solve the issue (!?!?)
-        placeTableSorter = new TableRowSorter<TableModel>(placeTable.getModel());
-        Comparator strComparator = new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                return o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
-            }
-        };
-        for (int c = 0; c < placeTable.getModel().getColumnCount(); c++) {
-            placeTableSorter.setComparator(c, strComparator);
-        }
-        placeTable.setRowSorter(placeTableSorter);
-        
         placeTable.setID(PlacesListTopComponent.class.getName());
-
+        updateGedcomPlaceTable();
+        
+        return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
     }
 
+
     private void updateGedcomPlaceTable() {
-        placesMap.clear();
-        placesMap = GedcomUtilities.getPropertyPlaceMap(gedcom);
+        placesMap = gedcom.getReferenceSet("PLAC");
         gedcomPlaceTableModel.update(placesMap);
+        ((TableRowSorter) placeTable.getRowSorter()).sort();
     }
 
     private void newFilter(String filter) {
@@ -241,10 +238,12 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
 
     @Override
     public void componentOpened() {
-        if (gedcom != null) {
-            updateGedcomPlaceTable();
-        }
+        // Set undo/redo
+        undoRedoListener = new UndoRedoListener();
+        UndoRedo undoRedo = getUndoRedo();
+        undoRedo.addChangeListener(undoRedoListener);
     }
+    
 
     @Override
     public void writeProperties(java.util.Properties p) {
@@ -259,4 +258,77 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         String version = p.getProperty("version");
         // TODO read your settings according to their version
     }
+
+    @Override
+    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+        if (!entity.getProperties(PropertyPlace.class).isEmpty()) {
+            updateGedcomPlaceTable();
+        }
+    }
+
+    @Override
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        if (!entity.getProperties(PropertyPlace.class).isEmpty()) {
+            updateGedcomPlaceTable();
+        }
+    }
+
+    @Override
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        if (property.getTag().equals("PLAC")) {
+            updateGedcomPlaceTable();
+        }
+    }
+
+    @Override
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        if (property.getTag().equals("PLAC")) {
+            updateGedcomPlaceTable();
+        }
+    }
+
+    @Override
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        if (property.getTag().equals("PLAC")) {
+            updateGedcomPlaceTable();
+        }
+    }
+
+
+    private void commit() {
+        // Is busy committing ?
+        if (isBusyCommitting) {
+            return;
+        }
+        isBusyCommitting = true;
+        try {
+            if (gedcom.isWriteLocked()) {
+                placesEditorPanel.commit();
+            } else {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placesEditorPanel.commit();
+                    }
+                });
+            }
+
+        } catch (Throwable t) {
+            LOG.log(Level.WARNING, "Error committing editor", t);
+        } finally {
+            isBusyCommitting = false;
+        }
+    }
+
+    
+    private class UndoRedoListener implements ChangeListener {
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            updateGedcomPlaceTable();
+        }
+    }
+
+    
 }
