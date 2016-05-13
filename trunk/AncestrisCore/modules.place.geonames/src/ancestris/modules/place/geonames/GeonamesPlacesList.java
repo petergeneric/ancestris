@@ -7,7 +7,6 @@ import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
-import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +30,8 @@ public class GeonamesPlacesList implements SearchPlace {
     private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
     private List<Place> mPlacesList = new ArrayList<Place>();
     private RequestProcessor.Task theTask;
+    
+    private static String KEYMAP = "geonamesPlaceConversionMap";
 
     public RequestProcessor.Task getTask() {
         return theTask;
@@ -139,16 +140,15 @@ public class GeonamesPlacesList implements SearchPlace {
     }
     
     
-    public static boolean isGeonamesMapDefined(Class clazz, Gedcom gedcom) {
-        String placeMap = Registry.get(clazz).get(gedcom.getName()+".geonamesPlaceConversionMap", "");
-        return !placeMap.isEmpty();
+    public static String getGeonamesMapString(Gedcom gedcom) {
+        return gedcom.getRegistry().get(KEYMAP, "");
     }
         
-    public static String[] getGeonamesMap(Class clazz, Gedcom gedcom) {
+    public static String[] getGeonamesMap(Gedcom gedcom) {
         
         String map = "";
         String[] format = null;
-        String placeMap = Registry.get(clazz).get(gedcom.getName()+".geonamesPlaceConversionMap", "");
+        String placeMap = getGeonamesMapString(gedcom);
         PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(GeonamesPlace.getPlaceFormat(), gedcom.getPlaceFormat(), placeMap);
         pfc.setTextTitle(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversionTitle"));
         pfc.setLeftTitle(NbBundle.getMessage(GeonamesPlacesList.class, "TITL_PlaceFormatConversionLeftTitle"));
@@ -158,7 +158,7 @@ public class GeonamesPlacesList implements SearchPlace {
         if (o == DialogManager.OK_OPTION) {
             map = pfc.getConversionMapAsString();
             if (!map.replace(PropertyPlace.JURISDICTION_SEPARATOR, "").trim().isEmpty()) {
-                Registry.get(clazz).put(gedcom.getName() + ".geonamesPlaceConversionMap", map);
+                gedcom.getRegistry().put(KEYMAP, map);
                 format = PropertyPlace.getFormat(map);
             } else {
                 if (placeMap.isEmpty()) {
