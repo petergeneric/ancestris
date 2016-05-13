@@ -1,8 +1,7 @@
 package ancestris.modules.editors.placeeditor.models;
 
 import genj.gedcom.PropertyPlace;
-import java.util.HashMap;
-import java.util.Map;
+import genj.util.ReferenceSet;
 import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 
@@ -12,7 +11,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class GedcomPlaceTableModel extends AbstractTableModel {
 
-    Map<String, Set<PropertyPlace>> gedcomPlacesMap = new HashMap<String, Set<PropertyPlace>>();
+    ReferenceSet gedcomPlacesMap = null;
     String[] columsTitle;
 
     public GedcomPlaceTableModel(String[] placeFormat) {
@@ -27,9 +26,17 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         columsTitle[index + 1] = "Longitude";
     }
 
+    public void update(ReferenceSet gedcomPlacesMap) {
+        this.gedcomPlacesMap = gedcomPlacesMap;
+        fireTableDataChanged();
+    }
+
     @Override
     public int getRowCount() {
-        return gedcomPlacesMap.size();
+        if (gedcomPlacesMap == null) {
+            return 0;
+        }
+        return gedcomPlacesMap.getKeys().size();
     }
 
     @Override
@@ -39,7 +46,10 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     @Override
     public Object getValueAt(int row, int column) {
-        Object[] toArray = gedcomPlacesMap.keySet().toArray();
+        if (gedcomPlacesMap == null) {
+            return "";
+        }
+        Object[] toArray = gedcomPlacesMap.getKeys().toArray();
         String key = (String) toArray[row];
         if (key.split(PropertyPlace.JURISDICTION_SEPARATOR).length > column) {
             String str = key.split(PropertyPlace.JURISDICTION_SEPARATOR)[column];
@@ -59,15 +69,14 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
         return columsTitle[col];
     }
 
-    public void update(Map<String, Set<PropertyPlace>> gedcomPlacesMap) {
-        this.gedcomPlacesMap = gedcomPlacesMap;
-
-        fireTableDataChanged();
-    }
-
     public Set<PropertyPlace> getValueAt(int row) {
-        Object[] toArray = gedcomPlacesMap.keySet().toArray();
+        if (gedcomPlacesMap == null) {
+            return null;
+        }
+
+        Object[] toArray = gedcomPlacesMap.getKeys().toArray();
         String key = (String) toArray[row];
-        return gedcomPlacesMap.get(key);
+        return gedcomPlacesMap.getReferences(key);
     }
+    
 }
