@@ -7,10 +7,11 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import genj.gedcom.Gedcom;
+import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
@@ -80,7 +81,7 @@ public class TestAge extends Test {
    * Test individual(s)'s age at given date property 
    */
   /*package*/ void test(Property prop, TagPath trigger, List<ViewContext> issues, GedcomValidate report) {
-    
+
     // get to the date
     PropertyDate date ;
     if (path2date!=null) {
@@ -92,43 +93,78 @@ public class TestAge extends Test {
     if (date==null||!date.isValid())
       return;
 
-    // find indi we compute age for 
-    Property pindi = prop.getProperty(path2indi);
-    if (!(pindi instanceof Indi))
-      return;
-    Indi indi = (Indi)pindi;      
-
-    // calc pit of date
-    PointInTime pit2 = date.getStart();
-
-    // get birth
-    PropertyDate birt = indi.getBirthDate();
-    if (birt==null||!birt.isValid())
-      return;
-    PointInTime pit1 = birt.getStart();
+    // Check date against those of indis and we will compute age for each
+    Property[] props = prop.getProperties(path2indi);
+    if (props == null) {
+        return;
+    }
+    Entity mainEntity = null;
+    if (prop instanceof PropertyXRef) {
+        PropertyXRef pxref = (PropertyXRef) prop;
+        mainEntity = pxref.getTargetEntity();
+    } else {
+        mainEntity = prop.getEntity();
+    }
     
-    // don't test if birth<date?
-    if (pit1.compareTo(pit2)>0)
-      return;
-    
-    // calculate delta
-    Delta delta = Delta.get(pit1, pit2);
-    if (delta==null)
-      return;
-      
-    // test it 
-    if (isError(delta.getYears()))  {
-      
-      WordBuffer words = new WordBuffer();
-      if (comparison==UNDER) {
-        words.append(NbBundle.getMessage(this.getClass(),"err.age.under", indi.toString(), Gedcom.getName(prop.getParent().getTag()), String.valueOf(years)));
-      } else {
-        words.append(NbBundle.getMessage(this.getClass(),"err.age.over", indi.toString(), Gedcom.getName(prop.getParent().getTag()), String.valueOf(years)));
-      }
-      words.append(", ");
-      words.append(NbBundle.getMessage(this.getClass(), explanation).toLowerCase());
+    for (Property pindi : props) {
+        if (!(pindi instanceof Indi)) {
+            continue;
+        }
+        Indi indi = (Indi) pindi;
+        if (indi == mainEntity) {
+            continue;
+        }
 
-      issues.add(new ViewContext(prop).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
+        // calc pit of date
+        PointInTime pit2 = date.getStart();
+
+        // get birth
+        PropertyDate birt = indi.getBirthDate();
+        if (birt == null || !birt.isValid()) {
+            return;
+        }
+        PointInTime pit1 = birt.getStart();
+
+        // calculate delta
+        Delta delta = Delta.get(pit1, pit2);
+        if (delta == null) {
+            return;
+        }
+
+        // test it 
+        boolean error = isError(delta.getYears());
+        if (explanation.equals("minDiffAgeSibling")) {
+            int m = delta.getMonths() + (12 * delta.getYears());
+            if (m == 0) {
+                int j = delta.getDays();
+                if (j < 2) {
+                    return;
+                }
+            }
+            error = isError(m);
+        }
+        if (error) {
+            // Builds the error context
+            // Prop : property being tested (indi or fam) - make sure context is the person involed rather than the "fam" event, so use mainEntity
+            // Indi : person involed
+            WordBuffer words = new WordBuffer();
+            if (explanation.equals("minAgeMARR")) {
+                words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), delta.getYears(), String.valueOf(years)));
+            }
+            if (explanation.equals("minAgeMother") || explanation.equals("maxAgeMother") || explanation.equals("minAgeFather")) {
+                words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, indi.toString(), delta.getYears(), mainEntity.toString(), String.valueOf(years)));
+            }
+            if (explanation.equals("maxDiffAgeSibling") || explanation.equals("maxDiffAgeSpouses")) {
+                words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), indi.toString(), delta.getYears(), String.valueOf(years)));
+            }
+            if (explanation.equals("minDiffAgeSibling")) {
+                words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), indi.toString(), 12*delta.getYears()+delta.getMonths(), String.valueOf(years)));
+            }
+            words.append(", ");
+            words.append(NbBundle.getMessage(this.getClass(), explanation).toLowerCase());
+
+            issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
+        }
     }
     
     // done
