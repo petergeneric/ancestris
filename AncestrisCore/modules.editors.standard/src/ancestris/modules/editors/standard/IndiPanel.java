@@ -3567,20 +3567,20 @@ public class IndiPanel extends Editor implements DocumentListener {
             // Control INDI
             errors = validator.start(indi);
             if (errors != null) {
-                errorSet.addAll(errors);
+                addErrors(errors);
             }
             
             // Control parents of INDI
             errors = validator.start(indi.getFamilyWhereBiologicalChild());
             if (errors != null) {
-                errorSet.addAll(errors);
+                addErrors(errors);
             }
-            
+
             // Control spouse of INDI
             for (Fam fam : indi.getFamiliesWhereSpouse()) {
                 errors = validator.start(fam);
                 if (errors != null) {
-                    errorSet.addAll(errors);
+                    addErrors(errors);
                 }
             }
             
@@ -3604,6 +3604,14 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
     
     
+    private void addErrors(List<ViewContext> errors) {
+        for (ViewContext error : errors) {
+            if (error.getEntity().equals(indi)) {
+                errorSet.add(error);
+            }
+        }
+    }
+
     private void showWarningsAndErrors() {
         if (errorSet == null || errorSet.isEmpty()) {
             return;
