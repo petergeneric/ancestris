@@ -74,15 +74,14 @@ public class GedcomValidate implements Validator {
     public int minAgeFather = modulePreferences.getInt("minAgeFather", 14);
     public int minAgeMother = modulePreferences.getInt("minAgeMother", 10);
     public int maxAgeMother = modulePreferences.getInt("maxAgeMother", 48);
+    public int maxDiffAgeSibling = modulePreferences.getInt("maxDiffAgeSibling", 21);
+    public int minDiffAgeSibling = modulePreferences.getInt("minDiffAgeSibling", 10);
+    public int maxDiffAgeSpouses = modulePreferences.getInt("maxDiffAgeSpouses", 20);
     public PointInTime minYear = new PointInTime(0, 0, modulePreferences.getInt("minYear", 1));
     public PointInTime maxYear = new PointInTime(0, 0, modulePreferences.getInt("maxYear", 3000));
     /* TODO
      *
-     * [ ] age difference between husband and wife is not greater than SOME_VALUE.
-     * [ ] age difference between siblings is not greater than SOME_VALUE.
-    
      * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die
-    
      * [ ] families containing a man who has fathered a child (more than 9 months) after they have died
      * [ ] women who have given birth more than once within 9 months (discounting twins)
      *
@@ -336,6 +335,20 @@ public class GedcomValidate implements Validator {
         }
         if (minAgeFather > 0) {
             result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.UNDER, minAgeFather, "minAgeFather"));
+        }
+
+        // min/max age difference between sibling, spouses
+        if (maxDiffAgeSibling > 0) {
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.OVER, maxDiffAgeSibling, "maxDiffAgeSibling"));
+        }
+        if (minDiffAgeSibling > 0) {
+            result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minDiffAgeSibling, "minDiffAgeSibling"));
+        }
+        if (maxDiffAgeSpouses > 0) {
+            result.add(new TestAge("FAM:HUSB", "*:..:BIRT:DATE", "..:WIFE:*:..", TestAge.OVER, maxDiffAgeSpouses, "maxDiffAgeSpouses"));
+        }
+        if (maxDiffAgeSpouses > 0) {
+            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.OVER, maxDiffAgeSpouses, "maxDiffAgeSpouses"));
         }
 
         // **********************************************************************
