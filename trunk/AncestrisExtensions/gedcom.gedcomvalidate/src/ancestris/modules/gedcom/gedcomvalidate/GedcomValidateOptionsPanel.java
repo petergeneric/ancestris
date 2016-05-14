@@ -444,19 +444,19 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         modulePreferences.putBoolean("isRelaxedPlaceFormat", isRelaxedPlaceFormatCheckBox.isSelected());
         modulePreferences.putBoolean("isUnderscoreValid", isUnderscoreValidCheckBox.isSelected());
         modulePreferences.putBoolean("isSameSexFamValid", isSameSexFamValid.isSelected());
-        modulePreferences.putInt("maxAgeBAPM", (Integer) maxAgeBAPMFormattedTextField.getValue());
-        modulePreferences.putInt("maxLife", (Integer) maxLifeFormattedTextField.getValue());
-        modulePreferences.putInt("minAgeRETI", (Integer) minAgeRETIFormattedTextField.getValue());
-        modulePreferences.putInt("minYear", (Integer) minYear.getValue());
-        modulePreferences.putInt("maxYear", (Integer) maxYear.getValue());
-        modulePreferences.putInt("maxAgeFather", (Integer) maxAgeFatherFormattedTextField.getValue());
-        modulePreferences.putInt("minAgeFather", (Integer) minAgeFatherFormattedTextField.getValue());
-        modulePreferences.putInt("minAgeMARR", (Integer) minAgeMARRFormattedTextField.getValue());
-        modulePreferences.putInt("maxAgeMother", (Integer) maxAgeMotherFormattedTextField.getValue());
-        modulePreferences.putInt("minAgeMother", (Integer) minAgeMotherFormattedTextField.getValue());
-        modulePreferences.putInt("maxDiffAgeSibling", (Integer) maxDiffAgeSiblingFormattedTextField.getValue());
-        modulePreferences.putInt("minDiffAgeSibling", (Integer) minDiffAgeSiblingFormattedTextField.getValue());
-        modulePreferences.putInt("maxDiffAgeSpouses", (Integer) maxDiffAgeSpousesFormattedTextField.getValue());
+        modulePreferences.putInt("maxAgeBAPM", Integer.valueOf(maxAgeBAPMFormattedTextField.getText()));
+        modulePreferences.putInt("maxLife", Integer.valueOf(maxLifeFormattedTextField.getText()));
+        modulePreferences.putInt("minAgeRETI", Integer.valueOf(minAgeRETIFormattedTextField.getText()));
+        modulePreferences.putInt("minYear", Integer.valueOf(minYear.getText()));
+        modulePreferences.putInt("maxYear", Integer.valueOf(maxYear.getText()));
+        modulePreferences.putInt("maxAgeFather", Integer.valueOf(maxAgeFatherFormattedTextField.getText()));
+        modulePreferences.putInt("minAgeFather", Integer.valueOf(minAgeFatherFormattedTextField.getText()));
+        modulePreferences.putInt("minAgeMARR", Integer.valueOf(minAgeMARRFormattedTextField.getText()));
+        modulePreferences.putInt("maxAgeMother", Integer.valueOf(maxAgeMotherFormattedTextField.getText()));
+        modulePreferences.putInt("minAgeMother", Integer.valueOf(minAgeMotherFormattedTextField.getText()));
+        modulePreferences.putInt("maxDiffAgeSibling", Integer.valueOf(maxDiffAgeSiblingFormattedTextField.getText()));
+        modulePreferences.putInt("minDiffAgeSibling", Integer.valueOf(minDiffAgeSiblingFormattedTextField.getText()));
+        modulePreferences.putInt("maxDiffAgeSpouses", Integer.valueOf(maxDiffAgeSpousesFormattedTextField.getText()));
     }
 
     boolean valid() {

@@ -138,6 +138,9 @@ public class TestAge extends Test {
             if (m == 0) {
                 int j = delta.getDays();
                 if (j < 2) {
+                    WordBuffer words = new WordBuffer();
+                    words.append(NbBundle.getMessage(this.getClass(), "err.twins", mainEntity.toString(), indi.toString(), String.valueOf(years)));
+                    issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
                     return;
                 }
             }
