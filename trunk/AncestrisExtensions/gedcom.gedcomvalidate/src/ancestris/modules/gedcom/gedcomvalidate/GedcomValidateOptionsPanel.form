@@ -123,8 +123,10 @@
         <Component class="javax.swing.JFormattedTextField" name="maxLifeFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="###0" subtype="-1" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="maxLifeLabel">
@@ -303,10 +305,10 @@
         <Component class="javax.swing.JFormattedTextField" name="maxAgeFatherFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/gedcom/gedcomvalidate/Bundle.properties" key="GedcomValidateOptionsPanel.maxAgeFatherFormattedTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="###0" subtype="-1" type="0"/>
             </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="maxAgeFatherLabel">
@@ -319,15 +321,19 @@
         <Component class="javax.swing.JFormattedTextField" name="minAgeFatherFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="###0" subtype="-1" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="maxAgeMotherFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format format="###0" subtype="-1" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="maxAgeMotherLabel">
@@ -340,8 +346,10 @@
         <Component class="javax.swing.JFormattedTextField" name="minAgeMotherFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="minAgeMotherLabel">
@@ -354,19 +362,19 @@
         <Component class="javax.swing.JFormattedTextField" name="maxDiffAgeSiblingFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/gedcom/gedcomvalidate/Bundle.properties" key="GedcomValidateOptionsPanel.maxDiffAgeSiblingFormattedTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
             </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="maxDiffAgeSpousesFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
-            <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/gedcom/gedcomvalidate/Bundle.properties" key="GedcomValidateOptionsPanel.maxDiffAgeSpousesFormattedTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
             </Property>
+            <Property name="horizontalAlignment" type="int" value="0"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="maxDiffAgeSpousesLabel">
@@ -407,21 +415,27 @@
         <Component class="javax.swing.JFormattedTextField" name="maxAgeBAPMFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="minAgeMARRFormattedTextField">
           <Properties>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JFormattedTextField" name="minAgeRETIFormattedTextField">
           <Properties>
             <Property name="columns" type="int" value="3"/>
+            <Property name="formatterFactory" type="javax.swing.JFormattedTextField$AbstractFormatterFactory" editor="org.netbeans.modules.form.editors.AbstractFormatterFactoryEditor">
+              <Format subtype="0" type="0"/>
+            </Property>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="text" type="java.lang.String" value="000"/>
           </Properties>
         </Component>
       </SubComponents>
