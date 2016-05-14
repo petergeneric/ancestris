@@ -72,12 +72,12 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(yearRangeLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.yearRangeLabel.text")); // NOI18N
 
         minYear.setColumns(3);
+        minYear.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         minYear.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minYear.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.minYear.text")); // NOI18N
 
         maxYear.setColumns(3);
+        maxYear.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         maxYear.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxYear.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.maxYear.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.jLabel2.text")); // NOI18N
 
