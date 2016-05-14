@@ -449,6 +449,7 @@ public class WebSection {
      */
     public void createPopupEmail(File file) {
         PrintWriter out = wh.getWriter(file, UTF8);
+        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
         out.println("<html><head><title>" + trs("TXT_popupemail_title") + "</title>");
         out.println("<link rel=\"StyleSheet\" href=\"../" + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
         out.println("<script language='javascript'>");
@@ -461,7 +462,6 @@ public class WebSection {
         out.println("<div class=\"contreport\">");
         out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_description")) + "</span></p>");
         out.println("<p class=\"description\">" + htmlText(trs("TXT_emailform_info")) + "</p>");
-        out.println("<div class=\"spacer\">" + SPACE + "</div>");
         out.println("</div>");
 
         out.println("<div class=\"contreport\">");
@@ -470,10 +470,10 @@ public class WebSection {
         out.println("  <script language='javascript'>");
         out.println("  document.write( \"<form class='description' action='mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "\" + person + \"' method='post' enctype='text/plain' >\" );");
         out.println("  </script>");
-        out.println("  " + htmlText(trs("TXT_emailform_name")) + ":&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
-        out.println("  " + htmlText(trs("TXT_emailform_reason")) + ":&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_reason")) + "\"><br /><br />");
-        out.println("  " + htmlText(trs("TXT_emailform_message")) + ":&nbsp;");
-        out.println("  <textarea name=\"" + htmlText(trs("TXT_emailform_message")) + "\" cols=60 rows=14 wrap=virtual></textarea><br /><br />");
+        out.println("  " + htmlText(trs("TXT_emailform_name")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
+        out.println("  " + htmlText(trs("TXT_emailform_reason")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_reason")) + "\"><br /><br />");
+        out.println("  " + htmlText(trs("TXT_emailform_message")) + "&nbsp;<br />");
+        out.println("  <textarea name=\"" + htmlText(trs("TXT_emailform_message")) + "\" cols=77 rows=8 wrap=virtual></textarea><br /><br />");
         out.println("  <center><input onclick='self.close();' type=\"submit\" value=\"" + htmlText(trs("TXT_emailform_send")) + "\">&nbsp;&nbsp;&nbsp;<input onclick='self.close();' type=\"reset\" value=\"" + htmlText(trs("TXT_emailform_cancel")) + "\"></center>");
         out.println("  </form>");
         out.println("</p>");
