@@ -77,17 +77,6 @@
         </DimensionLayout>
       </Layout>
     </Container>
-    <Component class="javax.swing.JTextField" name="gedcomLongitudeTextField">
-      <Properties>
-        <Property name="columns" type="int" value="16"/>
-        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="RightClicOnMap" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-        </Property>
-      </Properties>
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    placeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                placeModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    placeModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
-      </AuxValues>
-    </Component>
     <Component class="javax.swing.JTextField" name="gedcomLatitudeTextField">
       <Properties>
         <Property name="columns" type="int" value="16"/>
@@ -97,6 +86,17 @@
       </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLatitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    placeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                placeModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    placeModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JTextField" name="gedcomLongitudeTextField">
+      <Properties>
+        <Property name="columns" type="int" value="16"/>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/editors/geoplace/Bundle.properties" key="RightClicOnMap" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {&#xa;&#xa;            @Override&#xa;            public void changedUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    placeModified = true;&#xa;                }&#xa;            }&#xa;&#xa;            @Override&#xa;            public void removeUpdate(DocumentEvent e) {&#xa;                placeModified = true;&#xa;            }&#xa;&#xa;            @Override&#xa;            public void insertUpdate(DocumentEvent e) {&#xa;                if (!updateOnGoing) {&#xa;                    placeModified = true;&#xa;                }&#xa;            }&#xa;        });"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="latitudeLabel">

@@ -4,7 +4,6 @@ import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
 import ancestris.modules.place.geonames.GeonamesPlacesList;
 import genj.gedcom.*;
-import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -20,6 +19,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 /**
  * This class is the base element of the Place Format editor for any gedcom.
@@ -37,8 +37,6 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
     private final static Logger logger = Logger.getLogger(GedcomPlaceEditorPanel.class.getName(), null);
     
-    private Registry registry = null;
-    
     private Gedcom gedcom;
     private String[] gedcomPlaceFormat;
     private JComponent[][] gedcomFields;
@@ -47,6 +45,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     
     boolean placeModified = false;
     boolean updateOnGoing = false;
+    
+    private PlaceEditorPanel parentPanel = null;
 
     
     
@@ -150,7 +150,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             });
         }
         
-        
+        // Define document listener for geo coordinates to display location on map if coordinates are changed
+        gedcomLatitudeTextField.getDocument().addDocumentListener(new CoordinatesListener());
         
     }
     
@@ -158,13 +159,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     
     
     /**
+     * @param gedcom
      * @param place the place to set
      */
     public void set(Gedcom gedcom, PropertyPlace place) {
         this.gedcom = gedcom;
         this.mPlace = place;
-        
-        registry = gedcom.getRegistry();
         
         // Design panel based on read gedcom fields and its corresponding mapping
         if (gedcomFields == null) {
@@ -269,8 +269,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         placeFieldsPanel = new javax.swing.JPanel();
-        gedcomLongitudeTextField = new javax.swing.JTextField();
         gedcomLatitudeTextField = new javax.swing.JTextField();
+        gedcomLongitudeTextField = new javax.swing.JTextField();
         latitudeLabel = new javax.swing.JLabel();
         longitudeLabel = new javax.swing.JLabel();
         parametersLabel = new javax.swing.JLabel();
@@ -287,9 +287,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             .addGap(0, 66, Short.MAX_VALUE)
         );
 
-        gedcomLongitudeTextField.setColumns(16);
-        gedcomLongitudeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
-        gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {
+        gedcomLatitudeTextField.setColumns(16);
+        gedcomLatitudeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
+        gedcomLatitudeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -311,9 +311,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        gedcomLatitudeTextField.setColumns(16);
-        gedcomLatitudeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
-        gedcomLatitudeTextField.getDocument().addDocumentListener(new DocumentListener() {
+        gedcomLongitudeTextField.setColumns(16);
+        gedcomLongitudeTextField.setToolTipText(org.openide.util.NbBundle.getMessage(GedcomPlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
+        gedcomLongitudeTextField.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -460,6 +460,45 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
 
     public String getLongitude() {
         return gedcomLongitudeTextField.getText();
+    }
+
+    void setMapHandle(PlaceEditorPanel panel) {
+        this.parentPanel = panel;
+    }
+
+    
+    
+    
+    
+    private class CoordinatesListener implements DocumentListener {
+
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            showLocation();
+        }
+
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            showLocation();
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            showLocation();
+        }
+
+        private void showLocation() {
+            try {
+                if (parentPanel != null) {
+                    Double latitude = Double.parseDouble(gedcomLatitudeTextField.getText());
+                    Double longitude = Double.parseDouble(gedcomLongitudeTextField.getText());
+                    if (!latitude.isNaN() && !longitude.isNaN()) {
+                        parentPanel.showLocation(new GeoPosition(latitude, longitude));
+                    }
+                }
+            } catch (Exception e) {
+            }
+        }
     }
 
 }
