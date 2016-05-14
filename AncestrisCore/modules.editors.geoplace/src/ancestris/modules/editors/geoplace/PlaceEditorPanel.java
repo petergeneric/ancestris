@@ -592,6 +592,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         this.setPreferredSize(new Dimension(registry.get("placeWindowWidth", this.getPreferredSize().width), registry.get("placeWindowHeight", this.getPreferredSize().height)));
         splitPane.setDividerLocation(registry.get("placeSplitDividerLocation", splitPane.getDividerLocation()));
 
+        // Give handle on this panel
+        gedcomPlaceEditorPanel.setMapHandle(this);
         
         // Set cursor on search field
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
@@ -704,6 +706,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }
 
     
+    public void showLocation(GeoPosition geoPoint) {
+        jXMapKit1.setAddressLocation(geoPoint);
+    }
     
     private Place getSelectedPlace() {
         int index = gedcomPlacesListResult.getSelectedIndex();
@@ -727,12 +732,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
             if (longitude != null && latitude != null) {
                 // Center map on existing geo coordinates
-                jXMapKit1.setAddressLocation(new GeoPosition(latitude, longitude));
+                showLocation(new GeoPosition(latitude, longitude));
                 return;
             }
         }
         // Center map on a clearly non found place
-        jXMapKit1.setAddressLocation(new GeoPosition(DEFAULT_LAT, DEFAULT_LON)); 
+        showLocation(new GeoPosition(DEFAULT_LAT, DEFAULT_LON)); 
     }
 
     private void setRefTableColumnWidths() {
@@ -864,11 +869,11 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 Double dLat = (double) Math.round(mpm.getGeoPoint().getLatitude() * 100000) / 100000;
                 Double dLon = (double) Math.round(mpm.getGeoPoint().getLongitude() * 100000) / 100000;
                 gedcomPlaceEditorPanel.modifyCoordinates(String.valueOf(dLat), String.valueOf(dLon), true);
-                jXMapKit1.setAddressLocation(mpm.getGeoPoint());
+                showLocation(mpm.getGeoPoint());
             }
             if (actionName.equals("ACTION_MapNearestPoint")) {
                 gedcomPlaceEditorPanel.updatePlace(geonamesPlacesList.searchNearestPlace(mpm.getGeoPoint().getLatitude(), mpm.getGeoPoint().getLongitude()), 0, true);
-                jXMapKit1.setAddressLocation(mpm.getGeoPoint());
+                showLocation(mpm.getGeoPoint());
             }
         }
     }
