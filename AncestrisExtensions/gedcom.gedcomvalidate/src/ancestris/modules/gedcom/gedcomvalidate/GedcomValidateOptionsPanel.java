@@ -64,8 +64,8 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.jPanel1.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP)); // NOI18N
 
         maxLifeFormattedTextField.setColumns(3);
+        maxLifeFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         maxLifeFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxLifeFormattedTextField.setText("000");
 
         org.openide.awt.Mnemonics.setLocalizedText(maxLifeLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "maxLife")); // NOI18N
 
@@ -122,34 +122,34 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(minAgeFatherLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "minAgeFather")); // NOI18N
 
         maxAgeFatherFormattedTextField.setColumns(3);
+        maxAgeFatherFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         maxAgeFatherFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxAgeFatherFormattedTextField.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.maxAgeFatherFormattedTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(maxAgeFatherLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "maxAgeFather")); // NOI18N
 
         minAgeFatherFormattedTextField.setColumns(3);
+        minAgeFatherFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         minAgeFatherFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minAgeFatherFormattedTextField.setText("000");
 
         maxAgeMotherFormattedTextField.setColumns(3);
+        maxAgeMotherFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter(new java.text.DecimalFormat("###0"))));
         maxAgeMotherFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxAgeMotherFormattedTextField.setText("000");
 
         org.openide.awt.Mnemonics.setLocalizedText(maxAgeMotherLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "maxAgeMother")); // NOI18N
 
         minAgeMotherFormattedTextField.setColumns(3);
+        minAgeMotherFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         minAgeMotherFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minAgeMotherFormattedTextField.setText("000");
 
         org.openide.awt.Mnemonics.setLocalizedText(minAgeMotherLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "minAgeMother")); // NOI18N
 
         maxDiffAgeSiblingFormattedTextField.setColumns(3);
+        maxDiffAgeSiblingFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         maxDiffAgeSiblingFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxDiffAgeSiblingFormattedTextField.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.maxDiffAgeSiblingFormattedTextField.text")); // NOI18N
 
         maxDiffAgeSpousesFormattedTextField.setColumns(3);
+        maxDiffAgeSpousesFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         maxDiffAgeSpousesFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxDiffAgeSpousesFormattedTextField.setText(org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.maxDiffAgeSpousesFormattedTextField.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(maxDiffAgeSpousesLabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "maxDiffAgeSpouses")); // NOI18N
 
@@ -162,15 +162,15 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(minAgeRETILabel, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "minAgeRETI")); // NOI18N
 
         maxAgeBAPMFormattedTextField.setColumns(3);
+        maxAgeBAPMFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         maxAgeBAPMFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        maxAgeBAPMFormattedTextField.setText("000");
 
+        minAgeMARRFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         minAgeMARRFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minAgeMARRFormattedTextField.setText("000");
 
         minAgeRETIFormattedTextField.setColumns(3);
+        minAgeRETIFormattedTextField.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.NumberFormatter()));
         minAgeRETIFormattedTextField.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        minAgeRETIFormattedTextField.setText("000");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);

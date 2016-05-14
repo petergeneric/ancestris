@@ -110,7 +110,7 @@ public class GedcomValidate implements Validator {
         List<String> list2 = new ArrayList<String>();
         for (int i = 0 ; i< ALL_EVENTS.length ; i++) {
             list1.add(ALL_EVENTS[i] + ":DATE");
-            if (!ALL_EVENTS[i].contains("BURI") && !ALL_EVENTS[i].contains("CREM")) {
+            if (!ALL_EVENTS[i].contains("BURI") && !ALL_EVENTS[i].contains("CREM") && !ALL_EVENTS[i].contains("PROP")) {
                 list2.add(ALL_EVENTS[i] + ":DATE");
             }
         }
