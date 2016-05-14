@@ -19,6 +19,7 @@ import genj.gedcom.GedcomException;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
+import ancestris.modules.webbook.WebBookWizardAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +35,7 @@ import java.util.Iterator;
 import java.text.DecimalFormat;
 import java.util.StringTokenizer;
 import org.openide.util.Lookup;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
@@ -111,9 +113,11 @@ public class WebMap extends WebSection {
         printOpenHTMLHead(out, "TXT_Map", this);
 
         // include style element to ensure vertical sizing of maps in conjunction with body height
-        String mapKey = wp.param_media_GoogleKey.isEmpty() ? "abcdefg" : wp.param_media_GoogleKey;
-        if (mapKey == null) {
-            mapKey = "not_found";
+        // Example of key : "ABQIAAAAflGR5fqP8WaEJouBa4XUoBQgBZxvXovzViDdLVeChhhy44iFxBQxMqr4ELXy1eFn1ZT_X5RiFrBIHA"
+        String DEFAULT_KEY = "ABQIAAAAflGR5fqP8WaEJouBa4XUoBQgBZxvXovzViDdLVeChhhy44iFxBQxMqr4ELXy1eFn1ZT_X5RiFrBIHA";
+        String mapKey = wp.param_media_GoogleKey.isEmpty() ? DEFAULT_KEY : wp.param_media_GoogleKey;
+        if (mapKey == null || mapKey.equals("#") || mapKey.equals(NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGoogleKey"))) {
+            mapKey = DEFAULT_KEY;
         }
         out.println("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
 
