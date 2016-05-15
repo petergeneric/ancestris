@@ -45,7 +45,6 @@ public final class OpenAction extends AbstractAncestrisContextAction {
         Context contextToOpen = getContext();
         if (contextToOpen != null) {
             AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
-//            win.init(contextToOpen);
             win.open();
             win.requestActive();
         }
