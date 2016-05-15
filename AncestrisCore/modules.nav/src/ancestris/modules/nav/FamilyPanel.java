@@ -15,7 +15,7 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
-import ancestris.modules.editors.standard.EditorActions;
+import ancestris.modules.editors.standard.actions.EditorActions;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
