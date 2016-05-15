@@ -12,7 +12,6 @@ import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
-import genj.util.ReferenceSet;
 import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
@@ -54,7 +53,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
     private PlaceEditorPanel placesEditorPanel = null;
-    private ReferenceSet placesMap = null;
     
     private boolean isBusyCommitting = false;
     private UndoRedoListener undoRedoListener;
@@ -83,7 +81,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     public boolean createPanel() {
 
         this.gedcom = getGedcom();
-        gedcomPlaceTableModel = new GedcomPlaceTableModel(PropertyPlace.getFormat(gedcom));
+        gedcomPlaceTableModel = new GedcomPlaceTableModel(gedcom);
 
         initComponents();
         
@@ -111,16 +109,17 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
 
-        placeTable.setID(PlacesListTopComponent.class.getName());
         updateGedcomPlaceTable();
+        placeTable.setID(gedcom, PlacesListTopComponent.class.getName());
+        placeTableSorter = (TableRowSorter) placeTable.getRowSorter();
         
         return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
     }
 
 
     private void updateGedcomPlaceTable() {
-        placesMap = gedcom.getReferenceSet("PLAC");
-        gedcomPlaceTableModel.update(placesMap);
+        gedcomPlaceTableModel.update();
+        nbPlaces.setText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.nbPlaces.text", gedcomPlaceTableModel.getRowCount()));
         ((TableRowSorter) placeTable.getRowSorter()).sort();
     }
 
@@ -151,6 +150,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         searchPlaceComboBox = new javax.swing.JComboBox();
         jScrollPane1 = new javax.swing.JScrollPane();
         placeTable = new ancestris.modules.editors.placeeditor.topcomponents.EditorTable();
+        nbPlaces = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(searchPlaceLabel, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.searchPlaceLabel.text")); // NOI18N
 
@@ -181,6 +181,9 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         placeTable.setModel(gedcomPlaceTableModel);
         jScrollPane1.setViewportView(placeTable);
 
+        nbPlaces.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(nbPlaces, org.openide.util.NbBundle.getMessage(PlacesListTopComponent.class, "PlacesListTopComponent.nbPlaces.text")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -190,12 +193,15 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(filterGedcomPlaceTextField)
+                .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(filterGedcomPlaceButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(clearFilterGedcomPlaceButton))
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE)
+                .addComponent(clearFilterGedcomPlaceButton)
+                .addGap(18, 18, 18)
+                .addComponent(nbPlaces, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)
+                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -205,7 +211,8 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                     .addComponent(filterGedcomPlaceTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(filterGedcomPlaceButton)
                     .addComponent(clearFilterGedcomPlaceButton)
-                    .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(searchPlaceComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(nbPlaces))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
@@ -231,6 +238,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private javax.swing.JButton filterGedcomPlaceButton;
     private javax.swing.JTextField filterGedcomPlaceTextField;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel nbPlaces;
     private ancestris.modules.editors.placeeditor.topcomponents.EditorTable placeTable;
     private javax.swing.JComboBox searchPlaceComboBox;
     private javax.swing.JLabel searchPlaceLabel;
