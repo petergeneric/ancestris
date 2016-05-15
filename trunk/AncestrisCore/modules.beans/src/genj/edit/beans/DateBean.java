@@ -144,11 +144,11 @@ public class DateBean extends PropertyBean {
     if (format==set)
       return;
     
-    // signal
-    changeSupport.fireChangeEvent();
-
     // remember
     format = set;
+
+    // signal
+    changeSupport.fireChangeEvent();
 
     // prepare chooser with 1st prefix
     choose.setToolTipText(format.getName());
