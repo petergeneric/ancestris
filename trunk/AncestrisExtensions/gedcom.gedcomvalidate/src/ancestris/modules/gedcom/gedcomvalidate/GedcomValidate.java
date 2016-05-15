@@ -336,6 +336,16 @@ public class GedcomValidate implements Validator {
         if (minAgeFather > 0) {
             result.add(new TestAge("FAM:CHIL", "*:..:BIRT:DATE", "..:HUSB:*:..", TestAge.UNDER, minAgeFather, "minAgeFather"));
         }
+        if (minAgeMother > 0) {
+            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minAgeMother, "minAgeMother"));
+        }
+        if (maxAgeMother > 0) {
+            result.add(new TestAge("FAM:WIFE", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.OVER, maxAgeMother, "maxAgeMother"));
+        }
+        if (minAgeFather > 0) {
+            result.add(new TestAge("FAM:HUSB", "*:..:BIRT:DATE", "..:CHIL:*:..", TestAge.UNDER, minAgeFather, "minAgeFather"));
+        }
+
 
         // min/max age difference between sibling, spouses
         if (maxDiffAgeSibling > 0) {
