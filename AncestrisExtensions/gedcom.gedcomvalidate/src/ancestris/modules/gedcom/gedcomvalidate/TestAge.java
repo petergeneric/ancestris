@@ -155,7 +155,11 @@ public class TestAge extends Test {
                 words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), delta.getYears(), String.valueOf(years)));
             }
             if (explanation.equals("minAgeMother") || explanation.equals("maxAgeMother") || explanation.equals("minAgeFather")) {
-                words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, indi.toString(), delta.getYears(), mainEntity.toString(), String.valueOf(years)));
+                if (pit1.compareTo(pit2) < 0) {
+                    words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, indi.toString(), delta.getYears(), mainEntity.toString(), String.valueOf(years)));
+                } else {
+                    words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), delta.getYears(), indi.toString(), String.valueOf(years)));
+                }
             }
             if (explanation.equals("maxDiffAgeSibling") || explanation.equals("maxDiffAgeSpouses")) {
                 words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), indi.toString(), delta.getYears(), String.valueOf(years)));
