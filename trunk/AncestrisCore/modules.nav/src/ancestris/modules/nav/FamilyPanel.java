@@ -629,19 +629,19 @@ public final class FamilyPanel extends JPanel {
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
                 SelectionDispatcher.muteSelection(true);
                 try {
-                    if (bean != null && bean.getProperty() != null) {
+                    if (bean != null && bean.getProperty() != null) {                                       // Double click on someone = edit it  with an AncestrisEditor (not an Editor)
                         AncestrisEditor editor = AncestrisEditor.findEditor(bean.getProperty());
                         if (editor != null) {
                             editor.edit(bean.getProperty());
                         }
                     } else {
-                        getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));
+                        getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));         // Double click on empty = create person with an AncestrisEditor (not an Editor)
                     }
                     refresh();
                 } finally {
                     SelectionDispatcher.muteSelection(false);
                 }
-            } else if (evt.getClickCount() == 1) {
+            } else if (evt.getClickCount() == 1) {                                                          // Click on someone = show it => any open editor
                 // FIXME: test click count necessaire?
                 Property prop = bean.getProperty();
                 if (prop instanceof Entity) {
