@@ -25,6 +25,8 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
+import java.util.HashMap;
+import java.util.Map;
 import org.openide.util.Exceptions;
 
 /**
@@ -47,6 +49,8 @@ public class AssoWrapper {
     private String targetEventTag = "";         // Event tag of the associated event
     public String targetEventDesc = "";         // The event text to be displayed
     
+    public Map<String, NoteWrapper> refNotes = null;       // Dummy reference for compatibility reasons with EventWrapper ; will not be used
+    public Map<String, SourceWrapper> refSources = null;   // Dummy reference for compatibility reasons with EventWrapper ; will not be used
 
     public AssoWrapper(String text) {
         assoTxt = text;
@@ -72,7 +76,9 @@ public class AssoWrapper {
         
         Indi associatedIndi = (Indi) assoProperty.getEntity();
         Property eventProp = assoProperty.getTargetParent();
-        EventWrapper event = new EventWrapper(eventProp, null, null, null);
+        refNotes = new HashMap<String, NoteWrapper>();
+        refSources = new HashMap<String, SourceWrapper>();
+        EventWrapper event = new EventWrapper(eventProp, associatedIndi, refNotes, refSources);
         setValues(associatedIndi, assoProperty, event);
         
     }
@@ -114,16 +120,31 @@ public class AssoWrapper {
         assoLastname = assoIndi.getLastName();
         assoFirstname = assoIndi.getFirstName();
         assoSex = assoIndi.getSex();
-        assoOccupation = getOccupation(assoIndi);
+        assoOccupation = getOccupation(assoIndi, targetEvent);
         targetEventDesc = assoProp.getDisplayValue(false);
         PropertyRelationship relaP = (PropertyRelationship) assoProp.getProperty("RELA");
         assoTxt = relaP.getDisplayValue();
     }
 
-    public String getOccupation(Indi indi) {
+    public String getOccupation(Indi indi, EventWrapper event) {
         String occu = "";
-        // Select latest occupation
+        PropertyDate pDate = event.date;
+        PointInTime sourcePIT = pDate != null ? pDate.getStart() : null;
+        
         Property props[] = indi.getProperties("OCCU");
+        
+        // Return obvious value if no choice
+        if (props.length == 0) {
+            return "";
+        }
+        if (props.length == 1) {
+            return props[0].getDisplayValue();
+        }
+        
+        // Select first valid occupation at the date of the event (latest but before sourcePIT), if any
+        if (props.length > 1) {
+            occu = props[0].getDisplayValue(); // set default value in case nothing better found later
+        }
         PointInTime latestPIT = null;
         for (Property prop : props) {
             Property date = prop.getProperty("DATE");
@@ -133,12 +154,14 @@ public class AssoWrapper {
                 if (!pit.isValid()) {
                     pit = pdate.getStart();
                 }
-                if (latestPIT == null || pit.compareTo(latestPIT) > 0) {
+                if (latestPIT == null || (pit.compareTo(latestPIT) > 0 && (pit.compareTo(sourcePIT) <= 0))) {
                     latestPIT = pit;
                     occu = prop.getDisplayValue();
                 }
             } else {
-                occu = prop.getDisplayValue();
+                if (latestPIT == null) {
+                    occu = prop.getDisplayValue();
+                }
             }
         }
         return occu;
@@ -183,7 +206,7 @@ public class AssoWrapper {
         // Update individual
         assoIndi.setName(assoFirstname, assoLastname);
         assoIndi.setSex(assoSex);
-        putProperty(assoIndi, "OCCU", assoOccupation);
+        updateProperty(assoIndi, "OCCU", assoOccupation, targetEvent.eventProperty);
 
         // If association is null, create it
         if (assoProp == null) {
@@ -305,6 +328,49 @@ public class AssoWrapper {
         }
         TagPath result = property.getPath(false);
         return property.getEntity().getProperty(result) == property ? result : property.getPath(true); 
+    }
+
+    /**
+     * Update property of given tag:
+     * - if tag already exists with same value and same date, do nothing
+     * - if tag already exists with same value and different date, do nothing
+     * else:
+     * - if tag already exists with same value and no date, update date
+     * - if tag already exists with different value and same date, update value
+     * - if tag already exists with different value and different date, add tag
+     * @param property
+     * @param tag
+     * @param value
+     * @param date 
+     */
+    private void updateProperty(Property property, String tag, String newValue, Property sourceEvent) {
+        PropertyDate sourceDate = sourceEvent != null ? (PropertyDate) sourceEvent.getProperty("DATE") : null;
+        String newDate = sourceDate != null ? sourceDate.getValue() : "";
+        String oldDate = "";
+        Property samePropFound = null;
+        
+        // Look for best match property = same value & no date, or same date & different value
+        Property[] props = property.getProperties(tag);
+        for (Property prop : props){
+            Property date = prop.getProperty("DATE");
+            oldDate = date != null ? date.getValue() : "";
+            if ((newValue.equals(prop.getValue()) && oldDate.isEmpty()) || (!newValue.equals(prop.getValue()) && newDate.equals(oldDate))) {
+                samePropFound = prop;
+                break;
+            }
+        }
+        
+        // Now process match or no match
+        if (samePropFound != null) { // found
+            samePropFound.setValue(newValue);
+            putProperty(samePropFound, "DATE", newDate);
+        } else {
+            Property tagProp = property.addProperty(tag, newValue);
+            if (!newDate.isEmpty()) {
+                tagProp.addProperty("DATE", newDate);
+            }
+        }
+        
     }
 
     

@@ -226,7 +226,7 @@ class AssoWithTableModel extends AbstractTableModel {
         setValueAt(indi.getLastName(), row, 3);
         setValueAt(indi.getFirstName(), row, 4);
         setValueAt(PropertySex.getImage(indi.getSex()), row, 5);
-        setValueAt(assoModelSet.get(0).getOccupation(indi), row, 6);
+        setValueAt(assoModelSet.get(0).getOccupation(indi, (EventWrapper) getValueAt(row, 0)), row, 6);
     }
 
 

@@ -157,7 +157,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         arrayRelas = relaKeys.toArray(new String[relaKeys.size()]);
         Arrays.sort(arrayRelas);
         comboBoxRelas = new JComboBox(new DefaultComboBoxModel(arrayRelas));
-        comboBoxRelas.setMaximumRowCount(10);
+        comboBoxRelas.setMaximumRowCount(20);
         assoWithTable.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxRelas));
         assoWithTable.getColumnModel().getColumn(1).setCellRenderer(new OtherCellRenderer());
         comboBoxRelas.setEditable(true);
@@ -219,7 +219,7 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         arrayOccus = occuKeys.toArray(new String[occuKeys.size()]);
         Arrays.sort(arrayOccus);
         comboBoxOccus = new JComboBox(new DefaultComboBoxModel(arrayOccus));
-        comboBoxOccus.setMaximumRowCount(10);
+        comboBoxOccus.setMaximumRowCount(20);
         assoWithTable.getColumnModel().getColumn(6).setCellEditor(new DefaultCellEditor(comboBoxOccus));
         comboBoxOccus.setEditable(true);
         comboOccuFilter = (JTextField) comboBoxOccus.getEditor().getEditorComponent();
@@ -662,17 +662,18 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private void filterComboRela(String enteredText) {
 
         List<String> filterArray= new ArrayList<String>();
-        for (int i = 0; i < arrayRelas.length; i++) {
-            if (arrayRelas[i].toString().toLowerCase().contains(enteredText.toLowerCase())) {
-                filterArray.add(arrayRelas[i]);
+        for (String arrayRela : arrayRelas) {
+            if (arrayRela.toLowerCase().contains(enteredText.toLowerCase())) {
+                filterArray.add(arrayRela);
             }
         }
 
-        if (filterArray.size() > 0) {
-            comboBoxRelas.setModel(new DefaultComboBoxModel(filterArray.toArray()));
-            comboRelaFilter.setText(enteredText);
-            comboRelaFilter.setCaretPosition(enteredText.length());
+        if (filterArray.isEmpty()) {
+            filterArray.add(enteredText);
         }
+        comboBoxRelas.setModel(new DefaultComboBoxModel(filterArray.toArray()));
+        comboRelaFilter.setText(enteredText);
+        comboRelaFilter.setCaretPosition(enteredText.length());
 
         if (!comboBoxRelas.isPopupVisible()) {
             comboBoxRelas.showPopup();
@@ -683,9 +684,9 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private void filterComboIndi(String enteredText) {
 
         List<Entity> filterArray= new ArrayList<Entity>();
-        for (int i = 0; i < arrayIndis.length; i++) {
-            if (arrayIndis[i].toString().toLowerCase().contains(enteredText.toLowerCase())) {
-                filterArray.add(arrayIndis[i]);
+        for (Entity arrayIndi : arrayIndis) {
+            if (arrayIndi.toString().toLowerCase().contains(enteredText.toLowerCase())) {
+                filterArray.add(arrayIndi);
             }
         }
 
@@ -704,17 +705,18 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     private void filterComboOccu(String enteredText) {
 
         List<String> filterArray= new ArrayList<String>();
-        for (int i = 0; i < arrayOccus.length; i++) {
-            if (arrayOccus[i].toString().toLowerCase().contains(enteredText.toLowerCase())) {
-                filterArray.add(arrayOccus[i]);
+        for (String arrayOccu : arrayOccus) {
+            if (arrayOccu.toLowerCase().contains(enteredText.toLowerCase())) {
+                filterArray.add(arrayOccu);
             }
         }
 
-        if (filterArray.size() > 0) {
-            comboBoxOccus.setModel(new DefaultComboBoxModel(filterArray.toArray()));
-            comboOccuFilter.setText(enteredText);
-            comboOccuFilter.setCaretPosition(enteredText.length());
+        if (filterArray.isEmpty()) {
+            filterArray.add(enteredText);
         }
+        comboBoxOccus.setModel(new DefaultComboBoxModel(filterArray.toArray()));
+        comboOccuFilter.setText(enteredText);
+        comboOccuFilter.setCaretPosition(enteredText.length());
 
         if (!comboBoxOccus.isPopupVisible()) {
             comboBoxOccus.showPopup();
