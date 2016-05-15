@@ -637,12 +637,17 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     
     /**
-     * Set this point to the geoname tab and slects it so it displays the map with the corresponding location
+     * Set this point to the geoname tab and selects it so it displays the map with the corresponding location
      * @param geoPoint 
      */
     public void setGeoPoint(GeoPosition geoPoint) {
         geonamePlacesListModel.clear();
-        Place place = new PlaceFactory(mPlace, geoPoint);
+        Place place = null;
+        if (geoPoint == null) {
+            place = new PlaceFactory(mPlace);
+        } else {
+            place = new PlaceFactory(mPlace, geoPoint);
+        }
         geonamePlacesListModel.add(place);
     }
 
