@@ -1,8 +1,12 @@
 package ancestris.modules.editors.placeeditor.models;
 
+import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import genj.util.ReferenceSet;
+import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -11,49 +15,55 @@ import javax.swing.table.AbstractTableModel;
  */
 public class GedcomPlaceTableModel extends AbstractTableModel {
 
-    ReferenceSet gedcomPlacesMap = null;
-    String[] columsTitle;
+    private Gedcom gedcom = null;
+    private Map<String, Set<PropertyPlace>> placesMap = null;
+    private String[] columsTitle;
+    private String[][] data = null;
+    private int nbColumns = 0;
+    private int nbRows = 0;
 
-    public GedcomPlaceTableModel(String[] placeFormat) {
-        columsTitle = new String[placeFormat.length + 2];
+    public GedcomPlaceTableModel(Gedcom gedcom) {
+        this.gedcom = gedcom;
+        String[] placeFormat = PropertyPlace.getFormat(gedcom);
+        nbColumns = placeFormat.length + 2;
+        columsTitle = new String[nbColumns];
         
         int index = 0;
         for (; index < placeFormat.length; index++) {
             columsTitle[index] = placeFormat[index];
         }
-        
         columsTitle[index] = "Latitude";
         columsTitle[index + 1] = "Longitude";
     }
 
-    public void update(ReferenceSet gedcomPlacesMap) {
-        this.gedcomPlacesMap = gedcomPlacesMap;
+    public void update() {
+        placesMap = getGeoPlaces();
+        Set<String> places = placesMap.keySet();
+        nbRows = places.size();
+        data = new String[nbRows][nbColumns];
+        int row = 0;
+        for (String place : places) {
+            data[row] = PropertyPlace.getFormat(place);
+            row++;
+        }
+        
         fireTableDataChanged();
     }
 
     @Override
     public int getRowCount() {
-        if (gedcomPlacesMap == null) {
-            return 0;
-        }
-        return gedcomPlacesMap.getKeys().size();
+        return nbRows;
     }
 
     @Override
     public int getColumnCount() {
-        return columsTitle.length;
+        return nbColumns;
     }
 
     @Override
     public Object getValueAt(int row, int column) {
-        if (gedcomPlacesMap == null) {
-            return "";
-        }
-        Object[] toArray = gedcomPlacesMap.getKeys().toArray();
-        String key = (String) toArray[row];
-        if (key.split(PropertyPlace.JURISDICTION_SEPARATOR).length > column) {
-            String str = key.split(PropertyPlace.JURISDICTION_SEPARATOR)[column];
-            return str.trim();
+        if (data != null) {
+            return data[row][column];
         } else {
             return "";
         }
@@ -70,13 +80,37 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     }
 
     public Set<PropertyPlace> getValueAt(int row) {
-        if (gedcomPlacesMap == null) {
+        if (placesMap != null) {
+            Object[] toArray = placesMap.keySet().toArray();
+            return placesMap.get(toArray[row]);
+        } else {
             return null;
         }
-
-        Object[] toArray = gedcomPlacesMap.getKeys().toArray();
-        String key = (String) toArray[row];
-        return gedcomPlacesMap.getReferences(key);
     }
+
+
+    /**
+     * Get map of geo places with set of properties corresponding to them
+     * @return 
+     */
+    private Map<String, Set<PropertyPlace>> getGeoPlaces() {
+        Map<String, Set<PropertyPlace>> ret = new TreeMap<String, Set<PropertyPlace>>();
+        
+        for (String placeStr : gedcom.getReferenceSet("PLAC").getKeys(gedcom.getCollator())) {
+            Set<Property> props = gedcom.getReferenceSet("PLAC").getReferences(placeStr);
+            for (Property prop : props) {
+                String geoPlace = ((PropertyPlace) prop).getGeoValue();
+                Set<PropertyPlace> set = ret.get(geoPlace);
+                if (set == null) {
+                    set = new HashSet<PropertyPlace>();
+                    ret.put(geoPlace, set);
+                }
+                set.add((PropertyPlace) prop);
+            }
+        }
+        return ret;
+    }
+
+    
     
 }
