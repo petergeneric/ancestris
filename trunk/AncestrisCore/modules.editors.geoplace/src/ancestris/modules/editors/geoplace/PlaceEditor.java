@@ -97,5 +97,18 @@ public class PlaceEditor extends AncestrisEditor {
         return null;
     }
 
-    
+    @Override
+    public String getName(boolean canonical) {
+        if (canonical) {
+            return getClass().getCanonicalName();
+        } else {
+            return NbBundle.getMessage(PlaceEditor.class, "OpenIDE-Module-Name");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return getName(false);
+    }
+
 }
