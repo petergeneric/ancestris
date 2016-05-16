@@ -1,6 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.modules.editors.genealogyeditor.EditorTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
@@ -9,8 +10,8 @@ import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Note;
@@ -18,7 +19,7 @@ import genj.gedcom.Property;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
-import javax.swing.Action;
+import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -50,6 +51,9 @@ public class GenealogyEditorAction extends AncestrisEditor {
         Context context;
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
 
+            if (!(property instanceof Entity))  {
+                property = property.getEntity();
+            }
             if (property instanceof Indi) {
                 IndividualEditor individualEditor = new IndividualEditor(isNew);
                 individualEditor.setContext(context);
@@ -96,4 +100,18 @@ public class GenealogyEditorAction extends AncestrisEditor {
     public Property add(Property parent) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    public String getName(boolean canonical) {
+        if (canonical) {
+            return getClass().getCanonicalName();
+        } else {
+            return NbBundle.getMessage(EditorTopComponent.class, "OpenIDE-Module-Name");
+        }
+    }
+
+    @Override
+    public String toString() {
+        return getName(false);
+    }
+
 }

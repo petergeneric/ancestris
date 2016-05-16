@@ -62,8 +62,7 @@ import org.openide.windows.TopComponent;
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.EDITOR)
-public class EditorTopComponent extends AncestrisTopComponent
-        implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
+public class EditorTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "GenealogyEditor";  // NOI18N
     private static EditorTopComponent factory;
