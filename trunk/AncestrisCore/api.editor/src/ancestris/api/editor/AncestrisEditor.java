@@ -13,8 +13,6 @@ package ancestris.api.editor;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionDispatcher;
-import genj.gedcom.Entity;
-import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -28,7 +26,10 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle.Messages;
 import static ancestris.api.editor.Bundle.*;
 import ancestris.core.actions.CommonActions;
+import genj.gedcom.GedcomOptions;
+import java.util.List;
 import javax.swing.ImageIcon;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -46,25 +47,33 @@ public abstract class AncestrisEditor {
         }
     };
 
+    public static List<AncestrisEditor> findEditors() {
+        return (List<AncestrisEditor>) Lookup.getDefault().lookupAll(AncestrisEditor.class);
+    }
+
     /**
-     * return null if no editor can be found.
      * @param property
-     * @return 
+     * @return null if no editor can be found.
      */
     public static AncestrisEditor findEditor(Property property) {
         AncestrisEditor editor = null;
+        AncestrisEditor backupEditor = null;
         if (property == null) {
             return null;
         }
-        for (AncestrisEditor edt : Lookup.getDefault().lookupAll(AncestrisEditor.class)) {
-            if (edt.canEdit(property)) {
+        String canonicalName = GedcomOptions.getInstance().getDefaultEditor();
+        for (AncestrisEditor edt : findEditors()) {
+            // Return the editor that can edit property && is the default one && is active, or else just the last looped AncestrisEditor
+            if (edt.canEdit(property) && edt.getName(true).equals(canonicalName)) {
                 if (edt.isActive()) {
                     return edt;
                 }
                 editor = edt;
+            } else if (edt.canEdit(property)) {
+                backupEditor = edt;
             }
         }
-        return editor;
+        return editor != null ? editor : backupEditor;
     }
 
     public abstract boolean canEdit(Property property);
@@ -72,13 +81,15 @@ public abstract class AncestrisEditor {
     public abstract boolean isActive();
 
     /**
-     * Open editor panel as in {@link #edit(genj.gedcom.Property) } but 
-     * isNew parameter is used to display some meaningfull message if property
-     * has been crated.
+     * Open editor panel as in {@link #edit(genj.gedcom.Property) } but isNew
+     * parameter is used to display some meaningfull message if property has
+     * been crated.
+     *
      * @param property
      * @param isNew
      * @return The property updated
-     * @deprecated use {@link #edit(genj.gedcom.Property)} or {@link #add(genj.gedcom.Property) }
+     * @deprecated use {@link #edit(genj.gedcom.Property)} or {@link #add(genj.gedcom.Property)
+     * }
      */
     @Deprecated
     // We could add som setTitle method instead
@@ -87,12 +98,22 @@ public abstract class AncestrisEditor {
 //    public abstract Property edit(Property property, Property parent);
     public abstract Property add(Property parent);
 //    public abstract Property edit(Property property);
+
     public Property edit(Property property) {
         return edit(property, false);
     }
 
+    public abstract String getName(boolean canonical);
+
+    
+    
+    
+    
+    
+    
     /**
-     * This editor does nothing. It is created to avoid many check against null by findEditor
+     * This editor does nothing. It is created to avoid many check against null
+     * by findEditor
      */
     private static class NoOpEditor extends AncestrisEditor {
 
@@ -122,59 +143,82 @@ public abstract class AncestrisEditor {
         public Property add(Property parent) {
             return null;
         }
-    }
-@ActionID(category = "Edit",
-        id = "ancestris.api.editor.OpenEditorAction")
-@ActionRegistration(
-        displayName = "#OpenInEditor.title",
-        lazy=false
-)
-@ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
-@Messages("OpenInEditor.title=Edit/Modify")
-public final static class OpenEditorAction
-        extends AbstractAction
-        implements ContextAwareAction {
-    
-    static ImageIcon editorIcon = new ImageIcon(AncestrisEditor.class.getResource("editor.png")); // NOI18N
-
-    public @Override
-    void actionPerformed(ActionEvent e) {
-        assert false;
-    }
-
-    public @Override
-    Action createContextAwareInstance(Lookup context) {
-        Action action = CommonActions.NOOP;
-        Property property = context.lookup(Property.class);
-        AncestrisEditor editor = AncestrisEditor.findEditor(property);
-
-        if (editor != null){
-            action = new OpenEditor(property, editor);
-        }
-        return action;
-    }
-
-    private static final class OpenEditor extends AbstractAncestrisAction {
-
-        private final Property property;
-        private final AncestrisEditor editor;
-        
-        public OpenEditor(Property context, AncestrisEditor editor) {
-            this.property = context;
-            this.editor = editor;
-            setText(OpenInEditor_title());  // NOI18N
-            setImage(editorIcon);
-        }
 
         @Override
-        public void actionPerformed(ActionEvent e) {
-            SelectionDispatcher.muteSelection(true);
-            if (editor != null) {
-                editor.edit(property);
+        public String getName(boolean canonical) {
+            if (canonical) {
+                return getClass().getCanonicalName();
+            } else {
+                return NbBundle.getMessage(AncestrisEditor.class, "OpenIDE-Module-Name");
             }
-            SelectionDispatcher.muteSelection(false);
+        }
+        
+        @Override
+        public String toString() {
+            return getName(false);
         }
     }
-}
+    
+    
+    
+    
+    
+    
+    
+    
+
+    @ActionID(category = "Edit",
+            id = "ancestris.api.editor.OpenEditorAction")
+    @ActionRegistration(
+            displayName = "#OpenInEditor.title",
+            lazy = false
+    )
+    @ActionReferences({
+        @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @Messages("OpenInEditor.title=Edit/Modify")
+    public final static class OpenEditorAction
+            extends AbstractAction
+            implements ContextAwareAction {
+
+        static ImageIcon editorIcon = new ImageIcon(AncestrisEditor.class.getResource("editor.png")); // NOI18N
+
+        public @Override
+        void actionPerformed(ActionEvent e) {
+            assert false;
+        }
+
+        public @Override
+        Action createContextAwareInstance(Lookup context) {
+            Action action = CommonActions.NOOP;
+            Property property = context.lookup(Property.class);
+            AncestrisEditor editor = AncestrisEditor.findEditor(property);
+
+            if (editor != null) {
+                action = new OpenEditor(property, editor);
+            }
+            return action;
+        }
+
+        private static final class OpenEditor extends AbstractAncestrisAction {
+
+            private final Property property;
+            private final AncestrisEditor editor;
+
+            public OpenEditor(Property context, AncestrisEditor editor) {
+                this.property = context;
+                this.editor = editor;
+                setText(OpenInEditor_title());  // NOI18N
+                setImage(editorIcon);
+            }
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SelectionDispatcher.muteSelection(true);
+                if (editor != null) {
+                    editor.edit(property);
+                }
+                SelectionDispatcher.muteSelection(false);
+            }
+        }
+    }
 }
