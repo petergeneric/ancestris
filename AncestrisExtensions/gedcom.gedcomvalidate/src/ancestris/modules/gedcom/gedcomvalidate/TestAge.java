@@ -121,14 +121,14 @@ public class TestAge extends Test {
         // get birth
         PropertyDate birt = indi.getBirthDate();
         if (birt == null || !birt.isValid()) {
-            return;
+            continue;
         }
         PointInTime pit1 = birt.getStart();
 
         // calculate delta
         Delta delta = Delta.get(pit1, pit2);
         if (delta == null) {
-            return;
+            continue;
         }
 
         // test it 
@@ -141,7 +141,7 @@ public class TestAge extends Test {
                     WordBuffer words = new WordBuffer();
                     words.append(NbBundle.getMessage(this.getClass(), "err.twins", mainEntity.toString(), indi.toString(), String.valueOf(years)));
                     issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
-                    return;
+                    continue;
                 }
             }
             error = isError(m);
