@@ -1155,7 +1155,6 @@
                               <Component id="eventPlaceCombo" max="32767" attributes="0"/>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           </Group>
                           <Component id="eventNotePanel" pref="333" max="32767" attributes="0"/>
                           <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
