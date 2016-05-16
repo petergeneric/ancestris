@@ -11,13 +11,21 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(displayName = "#OptionsTab_Name_OptionFormat",
-//iconBase = "ancestris/app/OptionFormat.png",
-keywords = "#OptionsCategory_Keywords_OptionFormat",
-keywordsCategory = "r",
-location = "OptionsFormat",
-id="General",
-position = 4)
+@OptionsPanelController.SubRegistration(
+        location = "OptionFormat",
+        displayName = "#OptionsTab_Name_OptionFormat",
+        keywords = "#OptionsCategory_Keywords_OptionFormat",
+        keywordsCategory = "OptionFormat",
+        id = "General",
+        position = 150)
+
+//@OptionsPanelController.TopLevelRegistration(
+//        categoryName = "#OptionsCategory_Name_OptionFormat",
+//        iconBase = "ancestris/app/OptionFormat.png",
+//        id = "OptionFormat",
+//        keywords = "#OptionsCategory_Keywords_OptionFormat",
+//        keywordsCategory = "OptionFormat",
+//        position = 2)
 public final class OptionFormatOptionsPanelController extends OptionsPanelController {
 
     private OptionFormatPanel panel;
