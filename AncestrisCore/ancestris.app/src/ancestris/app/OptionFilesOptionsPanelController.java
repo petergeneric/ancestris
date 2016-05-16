@@ -11,11 +11,13 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.TopLevelRegistration(categoryName = "#OptionsCategory_Name_OptionFiles",
-iconBase = "ancestris/app/OptionFiles.png",
-keywords = "#OptionsCategory_Keywords_OptionFiles",
-keywordsCategory = "OptionFiles",
-position=2)
+@OptionsPanelController.TopLevelRegistration(
+        categoryName = "#OptionsCategory_Name_OptionFiles",
+        iconBase = "ancestris/app/OptionFiles.png",
+        id = "OptionFiles",
+        keywords = "#OptionsCategory_Keywords_OptionFiles",
+        keywordsCategory = "OptionFiles",
+        position = 3)
 public final class OptionFilesOptionsPanelController extends OptionsPanelController {
 
     private OptionFilesPanel panel;

@@ -4,11 +4,18 @@
  */
 package ancestris.app;
 
+import ancestris.api.editor.AncestrisEditor;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.util.Lifecycle;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomOptions;
+import genj.gedcom.Indi;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.SpinnerNumberModel;
 import org.openide.awt.StatusDisplayer;
 
 @SuppressWarnings(value={"unchecked", "rawtypes"})
@@ -16,10 +23,28 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     private final OptionDataOptionsPanelController controller;
     String[] encodings = Gedcom.ENCODINGS;
+    private AncestrisPreferences gedcomPrefs = null;
+    private GedcomOptions gedcomOptions = null;
+    private DefaultComboBoxModel comboModel = null;
+    private List<AncestrisEditor> editors = null;
 
     OptionDataPanel(OptionDataOptionsPanelController controller) {
         this.controller = controller;
+
+        gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
+        gedcomOptions = GedcomOptions.getInstance();
+        editors = new ArrayList<AncestrisEditor>();
+        Indi indi = new Indi();
+        for (AncestrisEditor edt : AncestrisEditor.findEditors()) {
+            if (edt.canEdit(indi)) {
+                editors.add(edt);
+            }
+        }
+        AncestrisEditor[] arrayEditors = editors.toArray(new AncestrisEditor[editors.size()]);
+        comboModel = new DefaultComboBoxModel(arrayEditors);
+                
         initComponents();
+        
     }
 
     /** This method is called from within the constructor to
@@ -31,357 +56,417 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel3 = new javax.swing.JPanel();
-        jLabel22 = new javax.swing.JLabel();
-        cbCreateSpouse = new javax.swing.JCheckBox();
-        jPanel1 = new javax.swing.JPanel();
-        jLabel20 = new javax.swing.JLabel();
-        jCheckBox18 = new javax.swing.JCheckBox();
-        jLabel21 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox(encodings);
-        jCheckBox19 = new javax.swing.JCheckBox();
-        jLabel9 = new javax.swing.JLabel();
-        idLength = new javax.swing.JSpinner();
-        cbAutoCommit = new javax.swing.JCheckBox();
-        jPanel4 = new javax.swing.JPanel();
+        mainPanel = new javax.swing.JPanel();
+        namesPanel = new javax.swing.JPanel();
+        cbNamesInUppercase = new javax.swing.JCheckBox();
         cbAddNameSubtags = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        cbGivenName = new javax.swing.JCheckBox();
         jtGivenTag = new javax.swing.JTextField();
         cbSpaceIsSep = new javax.swing.JCheckBox();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jPanel2 = new javax.swing.JPanel();
+        cbSameSpouseName = new javax.swing.JCheckBox();
+        IDPanel = new javax.swing.JPanel();
+        cbReuseIDs = new javax.swing.JCheckBox();
+        lDefaultIDLength = new javax.swing.JLabel();
+        idLength = new javax.swing.JSpinner();
+        placePanel = new javax.swing.JPanel();
         cbUseSpace = new javax.swing.JCheckBox();
+        encodingPanel = new javax.swing.JPanel();
+        lFileEncoding = new javax.swing.JLabel();
+        cboxEncoding = new javax.swing.JComboBox(encodings);
+        cbSaveEncoding = new javax.swing.JCheckBox();
+        editingPanel = new javax.swing.JPanel();
+        lDefaultEditor = new javax.swing.JLabel();
+        cboxDefaultEditor = new javax.swing.JComboBox();
+        cbAutoCommit = new javax.swing.JCheckBox();
+        nbCancellations = new javax.swing.JSpinner(new SpinnerNumberModel(10, 10, 300, 5));
+        lCancellations = new javax.swing.JLabel();
+        cbCreateSpouse = new javax.swing.JCheckBox();
 
         setRequestFocusEnabled(false);
 
-        jPanel3.setPreferredSize(new java.awt.Dimension(582, 384));
+        mainPanel.setPreferredSize(new java.awt.Dimension(582, 384));
 
-        jLabel22.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel22, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel22.text")); // NOI18N
+        namesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbCreateSpouse, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.text_1")); // NOI18N
-        cbCreateSpouse.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.toolTipText")); // NOI18N
-
-        jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jPanel1.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
-
-        jLabel20.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel20, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel20.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox18, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.text")); // NOI18N
-        jCheckBox18.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox18.toolTipText")); // NOI18N
-        jCheckBox18.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox18ActionPerformed(evt);
-            }
-        });
-
-        jLabel21.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel21, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel21.text")); // NOI18N
-
-        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jComboBox1.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox19, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.text")); // NOI18N
-        jCheckBox19.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox19.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jLabel9.text")); // NOI18N
-
-        idLength.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
-        idLength.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.idLength.toolTipText")); // NOI18N
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel20)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addComponent(jLabel9)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(idLength, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jCheckBox18))
-                .addGap(30, 30, 30)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel21)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox19)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel20)
-                        .addGap(30, 30, 30)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(idLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel21)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jCheckBox18))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jCheckBox19)))
-                .addContainerGap())
-        );
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbAutoCommit, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.text")); // NOI18N
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jPanel4.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbNamesInUppercase, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbNamesInUppercase.text")); // NOI18N
+        cbNamesInUppercase.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbNamesInUppercase.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
         cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.text")); // NOI18N
-        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox2.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox1.text")); // NOI18N
-        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox1.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbGivenName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbGivenName.text")); // NOI18N
+        cbGivenName.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbGivenNameActionPerformed(evt);
+            }
+        });
 
         jtGivenTag.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtGivenTag.text")); // NOI18N
         jtGivenTag.setMinimumSize(new java.awt.Dimension(64, 23));
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSpaceIsSep, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox3, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jCheckBox3.text")); // NOI18N
-        jCheckBox3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox3ActionPerformed(evt);
-            }
-        });
+        org.openide.awt.Mnemonics.setLocalizedText(cbSameSpouseName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.text")); // NOI18N
+        cbSameSpouseName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.toolTipText")); // NOI18N
 
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
+        javax.swing.GroupLayout namesPanelLayout = new javax.swing.GroupLayout(namesPanel);
+        namesPanel.setLayout(namesPanelLayout);
+        namesPanelLayout.setHorizontalGroup(
+            namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(namesPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jCheckBox1)
-                    .addComponent(cbAddNameSubtags)
-                    .addGroup(jPanel4Layout.createSequentialGroup()
-                        .addComponent(jCheckBox3)
+                .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(namesPanelLayout.createSequentialGroup()
+                        .addComponent(cbGivenName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(cbSpaceIsSep)
-                    .addComponent(jCheckBox2))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(jtGivenTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(namesPanelLayout.createSequentialGroup()
+                        .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbNamesInUppercase)
+                            .addComponent(cbAddNameSubtags)
+                            .addComponent(cbSpaceIsSep)
+                            .addComponent(cbSameSpouseName))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel4Layout.createSequentialGroup()
-                .addComponent(jCheckBox1)
+        namesPanelLayout.setVerticalGroup(
+            namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(namesPanelLayout.createSequentialGroup()
+                .addComponent(cbNamesInUppercase)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAddNameSubtags)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jCheckBox3)
+                .addGap(0, 0, 0)
+                .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbGivenName)
                     .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addComponent(cbSpaceIsSep)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jCheckBox2))
+                .addComponent(cbSameSpouseName))
         );
 
-        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jPanel2.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+        IDPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.IDPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbReuseIDs, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReuseIDs.text")); // NOI18N
+        cbReuseIDs.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReuseIDs.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lDefaultIDLength, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultIDLength.text")); // NOI18N
+
+        idLength.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
+        idLength.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.idLength.toolTipText")); // NOI18N
+
+        javax.swing.GroupLayout IDPanelLayout = new javax.swing.GroupLayout(IDPanel);
+        IDPanel.setLayout(IDPanelLayout);
+        IDPanelLayout.setHorizontalGroup(
+            IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(IDPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(IDPanelLayout.createSequentialGroup()
+                        .addComponent(cbReuseIDs)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(IDPanelLayout.createSequentialGroup()
+                        .addComponent(lDefaultIDLength)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(idLength)))
+                .addContainerGap())
+        );
+        IDPanelLayout.setVerticalGroup(
+            IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(IDPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(cbReuseIDs)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lDefaultIDLength)
+                    .addComponent(idLength, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.placePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbUseSpace, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbUseSpace.text")); // NOI18N
-        cbUseSpace.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cbUseSpaceActionPerformed(evt);
-            }
-        });
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        javax.swing.GroupLayout placePanelLayout = new javax.swing.GroupLayout(placePanel);
+        placePanel.setLayout(placePanelLayout);
+        placePanelLayout.setHorizontalGroup(
+            placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(placePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbUseSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(cbUseSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
+        placePanelLayout.setVerticalGroup(
+            placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(placePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cbUseSpace)
-                .addContainerGap(31, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        encodingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.encodingPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lFileEncoding, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lFileEncoding.text")); // NOI18N
+
+        cboxEncoding.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cboxEncoding.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbSaveEncoding, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSaveEncoding.text")); // NOI18N
+        cbSaveEncoding.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSaveEncoding.toolTipText")); // NOI18N
+
+        javax.swing.GroupLayout encodingPanelLayout = new javax.swing.GroupLayout(encodingPanel);
+        encodingPanel.setLayout(encodingPanelLayout);
+        encodingPanelLayout.setHorizontalGroup(
+            encodingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(encodingPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(cbAutoCommit))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(8, 8, 8)
-                                .addComponent(jLabel22)))
-                        .addContainerGap(228, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jPanel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(cbCreateSpouse, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 516, Short.MAX_VALUE)
-                            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(0, 0, Short.MAX_VALUE))))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel22)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbCreateSpouse)
-                .addGap(5, 5, 5)
-                .addComponent(cbAutoCommit)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(encodingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(encodingPanelLayout.createSequentialGroup()
+                        .addComponent(lFileEncoding)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboxEncoding, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(encodingPanelLayout.createSequentialGroup()
+                        .addComponent(cbSaveEncoding)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
+        encodingPanelLayout.setVerticalGroup(
+            encodingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(encodingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(encodingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lFileEncoding)
+                    .addComponent(cboxEncoding, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbSaveEncoding)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
 
-        jScrollPane1.setViewportView(jPanel3);
+        editingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.editingPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lDefaultEditor, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultEditor.text")); // NOI18N
+
+        cboxDefaultEditor.setModel(comboModel);
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbAutoCommit, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.text")); // NOI18N
+
+        nbCancellations.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.nbCancellations.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lCancellations, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lCancellations.text")); // NOI18N
+        lCancellations.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lCancellations.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbCreateSpouse, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.text_1")); // NOI18N
+        cbCreateSpouse.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbCreateSpouse.toolTipText")); // NOI18N
+
+        javax.swing.GroupLayout editingPanelLayout = new javax.swing.GroupLayout(editingPanel);
+        editingPanel.setLayout(editingPanelLayout);
+        editingPanelLayout.setHorizontalGroup(
+            editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(editingPanelLayout.createSequentialGroup()
+                        .addComponent(lDefaultEditor)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboxDefaultEditor, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(editingPanelLayout.createSequentialGroup()
+                        .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cbAutoCommit)
+                            .addGroup(editingPanelLayout.createSequentialGroup()
+                                .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lCancellations))
+                            .addComponent(cbCreateSpouse))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        editingPanelLayout.setVerticalGroup(
+            editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(editingPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(lDefaultEditor)
+                    .addComponent(cboxDefaultEditor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbAutoCommit)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lCancellations))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbCreateSpouse)
+                .addGap(0, 13, Short.MAX_VALUE))
+        );
+
+        javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
+        mainPanel.setLayout(mainPanelLayout);
+        mainPanelLayout.setHorizontalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(editingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(namesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(placePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(IDPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap(22, Short.MAX_VALUE))
+        );
+        mainPanelLayout.setVerticalGroup(
+            mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(mainPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(namesPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(placePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(mainPanelLayout.createSequentialGroup()
+                        .addComponent(IDPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(258, 258, 258))
+        );
+
+        namesPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.AccessibleContext.accessibleName")); // NOI18N
+        IDPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.IDPanel.AccessibleContext.accessibleName")); // NOI18N
+        placePanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.placePanel.AccessibleContext.accessibleName")); // NOI18N
+        encodingPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.encodingPanel.AccessibleContext.accessibleName")); // NOI18N
+
+        jScrollPane1.setViewportView(mainPanel);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 518, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jCheckBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox3ActionPerformed
-        jtGivenTag.setEnabled(jCheckBox3.isSelected());
-    }//GEN-LAST:event_jCheckBox3ActionPerformed
-
-    private void cbUseSpaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbUseSpaceActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cbUseSpaceActionPerformed
-
-    private void jCheckBox18ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox18ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jCheckBox18ActionPerformed
+    private void cbGivenNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbGivenNameActionPerformed
+        jtGivenTag.setEnabled(cbGivenName.isSelected());
+    }//GEN-LAST:event_cbGivenNameActionPerformed
 
     void load() {
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
-        genj.gedcom.GedcomOptions gedcomOptions = genj.gedcom.GedcomOptions.getInstance();
-
-        jCheckBox1.setSelected(gedcomOptions.isUpperCaseNames());
-        setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
-        cbCreateSpouse.setSelected(genj.gedcom.GedcomOptions.getInstance().getCreateSpouse());
-
-        setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
-        setEncoding(gedcomPrefs.get("defaultEncoding", ""));
-        jCheckBox19.setSelected(ancestris.app.AppOptions.isWriteBOM());
-        cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
-        cbAddNameSubtags.setSelected(genj.gedcom.GedcomOptions.getInstance().getAddNameSubtags());
+        // Names
+        cbNamesInUppercase.setSelected(gedcomOptions.isUpperCaseNames());
+        cbAddNameSubtags.setSelected(gedcomOptions.getAddNameSubtags());
+        cbGivenName.setSelected(!gedcomOptions.getGivenTag().isEmpty());
         jtGivenTag.setText(gedcomOptions.getGivenTag());
-        jCheckBox3.setSelected(!gedcomOptions.getGivenTag().isEmpty());
-        jCheckBox3ActionPerformed(new java.awt.event.ActionEvent(this,0,null));
+        cbGivenNameActionPerformed(new java.awt.event.ActionEvent(this,0,null));
         cbSpaceIsSep.setSelected(gedcomOptions.spaceIsSeparator());
+        setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
+
+        // ID Numbers
+        setIDFilling(gedcomPrefs.get("isFillGapsInIDs", ""));
         idLength.setValue(gedcomOptions.getEntityIdLength());
+        
+        // Places
         cbUseSpace.setSelected(gedcomOptions.isUseSpacedPlaces());
+
+        // Encoding
+        setEncoding(gedcomPrefs.get("defaultEncoding", ""));
+        cbSaveEncoding.setSelected(ancestris.app.AppOptions.isWriteBOM());
+
+        // Editing
+        cboxDefaultEditor.setSelectedItem(getEditorFromCanonicalName(gedcomOptions.getDefaultEditor()));
+        cbAutoCommit.setSelected(ConfirmChangeWidget.getAutoCommit());
+        nbCancellations.setValue(gedcomOptions.getNumberOfUndos());
+        cbCreateSpouse.setSelected(gedcomOptions.getCreateSpouse());
     }
 
     void store() {
-        AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
-        genj.gedcom.GedcomOptions gedcomOptions = genj.gedcom.GedcomOptions.getInstance();
-
-        gedcomOptions.setUpperCaseNames(jCheckBox1.isSelected());
+        // Names
+        gedcomOptions.setUpperCaseNames(cbNamesInUppercase.isSelected());
+        gedcomOptions.setAddNameSubtags(cbAddNameSubtags.isSelected());
+        gedcomOptions.setGivenTag(cbGivenName.isSelected()?jtGivenTag.getText().trim():"");
+        gedcomOptions.setSpaceIsSeparator(cbSpaceIsSep.isSelected());
         gedcomPrefs.put("setWifeLastname", getNamesSpouse());
 
-        gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
-
+        // ID Numbers
         gedcomPrefs.put("isFillGapsInIDs", getIdFilling());
-        gedcomPrefs.put("defaultEncoding", getEncoding());
-        ancestris.app.AppOptions.setWriteBOM(jCheckBox19.isSelected());
-        ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
-        genj.gedcom.GedcomOptions.getInstance().setAddNameSubtags(cbAddNameSubtags.isSelected());
-        StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
-        gedcomOptions.setGivenTag(jCheckBox3.isSelected()?jtGivenTag.getText().trim():"");
-        gedcomOptions.setSpaceIsSeparator(cbSpaceIsSep.isSelected());
         gedcomOptions.setEntityIdLength(Integer.valueOf(idLength.getValue().toString()));
-        
-        // FIXME: we could just reread gedcom files
+
+        // Places
         if (cbUseSpace.isSelected() != gedcomOptions.isUseSpacedPlaces()){
             Lifecycle.askForRestart();
             gedcomOptions.setUseSpacedPlaces(cbUseSpace.isSelected());
         }
+
+        // Encoding
+        gedcomPrefs.put("defaultEncoding", getEncoding());
+        ancestris.app.AppOptions.setWriteBOM(cbSaveEncoding.isSelected());
+
+        // Editing
+        gedcomOptions.setDefaultEditor(((AncestrisEditor)cboxDefaultEditor.getSelectedItem()).getName(true));
+        ConfirmChangeWidget.setAutoCommit(cbAutoCommit.isSelected());
+        gedcomOptions.setNumberOfUndos((Integer) (nbCancellations.getValue()));
+        gedcomOptions.setCreateSpouse(cbCreateSpouse.isSelected());
+        
+        // Display to user
+        StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionPanel.saved.statustext"));
     }
 
     public boolean valid() {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel IDPanel;
     private javax.swing.JCheckBox cbAddNameSubtags;
     private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
+    private javax.swing.JCheckBox cbGivenName;
+    private javax.swing.JCheckBox cbNamesInUppercase;
+    private javax.swing.JCheckBox cbReuseIDs;
+    private javax.swing.JCheckBox cbSameSpouseName;
+    private javax.swing.JCheckBox cbSaveEncoding;
     private javax.swing.JCheckBox cbSpaceIsSep;
     private javax.swing.JCheckBox cbUseSpace;
+    private javax.swing.JComboBox cboxDefaultEditor;
+    private javax.swing.JComboBox cboxEncoding;
+    private javax.swing.JPanel editingPanel;
+    private javax.swing.JPanel encodingPanel;
     private javax.swing.JSpinner idLength;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox18;
-    private javax.swing.JCheckBox jCheckBox19;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JCheckBox jCheckBox3;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
-    private javax.swing.JLabel jLabel22;
-    private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextField jtGivenTag;
+    private javax.swing.JLabel lCancellations;
+    private javax.swing.JLabel lDefaultEditor;
+    private javax.swing.JLabel lDefaultIDLength;
+    private javax.swing.JLabel lFileEncoding;
+    private javax.swing.JPanel mainPanel;
+    private javax.swing.JPanel namesPanel;
+    private javax.swing.JSpinner nbCancellations;
+    private javax.swing.JPanel placePanel;
     // End of variables declaration//GEN-END:variables
 
 
     void setNamesSpouse(String str) {
-        jCheckBox2.setSelected(str.equals("true") ? true : false);
+        cbSameSpouseName.setSelected(str.equals("true") ? true : false);
     }
 
     String getNamesSpouse() {
-        return jCheckBox2.isSelected() ? "true" : "false";
+        return cbSameSpouseName.isSelected() ? "true" : "false";
     }
 
     void setIDFilling(String str) {
         if (str.equals("")) {
             str = "true";
         }
-        jCheckBox18.setSelected(str.equals("true") ? true : false);
+        cbReuseIDs.setSelected(str.equals("true") ? true : false);
     }
 
     String getIdFilling() {
-        return jCheckBox18.isSelected() ? "true" : "false";
+        return cbReuseIDs.isSelected() ? "true" : "false";
     }
 
     void setEncoding(String str) {
@@ -395,11 +480,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
         if (i > encodings.length) {
             i = encodings.length;
         }
-        jComboBox1.setSelectedIndex(i);
+        cboxEncoding.setSelectedIndex(i);
     }
 
     String getEncoding() {
-        return jComboBox1.getSelectedIndex() + "";
+        return cboxEncoding.getSelectedIndex() + "";
     }
 
     private Integer getIntFromStr(String str) {
@@ -412,5 +497,15 @@ final class OptionDataPanel extends javax.swing.JPanel {
         }
         return i;
     }
+
+    private AncestrisEditor getEditorFromCanonicalName(String defaultEditor) {
+        for (AncestrisEditor edt : editors) {
+            if (edt.getName(true).equals(defaultEditor)) {
+                return edt;
+            }
+        }
+        return editors != null ? editors.get(0) : null;
+    }
+
 
 }

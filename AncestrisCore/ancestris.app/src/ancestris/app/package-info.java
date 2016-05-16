@@ -1,5 +1,5 @@
 @org.netbeans.spi.options.OptionsPanelController.ContainerRegistration(
-    id = "OptionsFormat",
+    id = "OptionFormat",
     categoryName = "#OptionsCategory_Name_OptionFormat",
     iconBase = "ancestris/app/OptionFormat.png",
     keywords = "#OptionsCategory_Keywords_OptionFormat",
