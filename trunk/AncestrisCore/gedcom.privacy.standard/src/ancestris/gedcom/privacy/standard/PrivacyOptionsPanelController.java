@@ -20,14 +20,13 @@ import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
 
-@OptionsPanelController.SubRegistration(location = "OptionsFormat",
-displayName = "#AdvancedOption_DisplayName_Privacy",
-keywords = "#AdvancedOption_Keywords_Privacy",
-keywordsCategory = "OptionsFormat/Privacy",
-id = "Privacy",
-position=200
-)
-
+@OptionsPanelController.SubRegistration(
+        location = "OptionFormat",
+        displayName = "#AdvancedOption_DisplayName_Privacy",
+        keywords = "#AdvancedOption_Keywords_Privacy",
+        keywordsCategory = "OptionFormat/Privacy",
+        id = "Privacy",
+        position = 200)
 public final class PrivacyOptionsPanelController extends OptionsPanelController {
 
     public static String PRIVACY_OPTIONS_CHANGED = "PrivacyOptionsChanged";
