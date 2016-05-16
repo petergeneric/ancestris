@@ -1235,8 +1235,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
-                        .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, 0))
+                        .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 333, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -1323,28 +1322,28 @@ public class IndiPanel extends Editor implements DocumentListener {
     }// </editor-fold>//GEN-END:initComponents
 
     private void maleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleRadioButtonActionPerformed
-        changes.setChanged(true);
+        triggerChange();
         if (mediaSet == null || mediaSet.isEmpty()) {
             setPhoto(null, PropertySex.MALE);
         }
     }//GEN-LAST:event_maleRadioButtonActionPerformed
 
     private void femaleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleRadioButtonActionPerformed
-        changes.setChanged(true);
+        triggerChange();
         if (mediaSet == null || mediaSet.isEmpty()) {
             setPhoto(null, PropertySex.FEMALE);
         }
     }//GEN-LAST:event_femaleRadioButtonActionPerformed
 
     private void unknownRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unknownRadioButtonActionPerformed
-        changes.setChanged(true);
+        triggerChange();
         if (mediaSet == null || mediaSet.isEmpty()) {
             setPhoto(null, PropertySex.UNKNOWN);
         }
     }//GEN-LAST:event_unknownRadioButtonActionPerformed
 
     private void privateCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_privateCheckBoxActionPerformed
-        changes.setChanged(true);
+        triggerChange();
     }//GEN-LAST:event_privateCheckBoxActionPerformed
 
     private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
@@ -1393,7 +1392,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (mediaIndex < 0) {
                 mediaIndex = 0;
             }
-            changes.setChanged(true);
+            triggerChange();
         }
         displayPhoto();        
     }//GEN-LAST:event_delMediaButtonActionPerformed
@@ -1515,7 +1514,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (event.eventNoteIndex < 0) {
                 event.eventNoteIndex = 0;
             }
-            changes.setChanged(true);
+            triggerChange();
         }
         displayEventNote(event);
     }//GEN-LAST:event_delNoteEventButtonActionPerformed
@@ -1569,7 +1568,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             if (event.eventSourceIndex < 0) {
                 event.eventSourceIndex = 0;
             }
-            changes.setChanged(true);
+            triggerChange();
         }
         displayEventSource(event);
     }//GEN-LAST:event_delSourceEventButtonActionPerformed
@@ -1660,7 +1659,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         displayEventTable();
         selectEvent(row);
-        changes.setChanged(true);
+        triggerChange();
     }//GEN-LAST:event_eventRemoveButtonActionPerformed
 
     private void eventOthersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventOthersButtonActionPerformed
@@ -2008,9 +2007,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         saveData();
     }
 
+    
+    private void triggerChange() {
+        changes.setChanged(true);
+        // If auto commit is on, users may expect data to be saved at every change... This is not done, I haven't found a way to do it properly with all the listeners around...
+        //        if (ConfirmChangeWidget.getAutoCommit()) {
+        //        }
+    }
 
-    
-    
     
     
     
@@ -2328,7 +2332,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     mediaSet.add(media);
                     mediaIndex = mediaSet.size() - 1;
                 }
-                changes.setChanged(true);
+                triggerChange();
                 b = true;
             } else {
                 if (exists) {
@@ -2340,7 +2344,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     mediaSet.add(media);
                     mediaIndex = mediaSet.size() - 1;
                 }
-                changes.setChanged(true);
+                triggerChange();
                 b = true;
             }
         } else if (o == fileButton) {
@@ -2377,7 +2381,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 mediaSet.add(media);
                 mediaIndex = mediaSet.size() - 1;
             }
-            changes.setChanged(true);
+            triggerChange();
             b = true;
         } else {
             textAreaPhotos.requestFocus();
@@ -2757,7 +2761,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 } else {
                     event.addNote(entity, noteText);
                 }
-                changes.setChanged(true);
+                triggerChange();
                 b = true;
             } else {
                 if (exists) {
@@ -2765,7 +2769,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 } else {
                     event.addNote(noteText);
                 }
-                changes.setChanged(true);
+                triggerChange();
                 b = true;
             }
         }
@@ -2848,7 +2852,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 } else {
                     event.addSource(entity);
                 }   
-                changes.setChanged(true);
+                triggerChange();
                 b = true;
             }
         } else if (o == fileButton) {
@@ -2883,7 +2887,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             } else {
                 event.addSource(file);
             }
-            changes.setChanged(true);
+            triggerChange();
             b = true;
         }
         return b;
@@ -2908,7 +2912,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 } else {
                     event.addSourceRepository(repo);
                 }
-                changes.setChanged(true);
+                triggerChange();
                 b = true;
             }
         }
@@ -2994,7 +2998,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
             }
             assoSet = assoManager.clone(assoManager.getSet());
-            changes.setChanged(true);
+            triggerChange();
             b = true;
         }
         return b;
@@ -3032,7 +3036,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             mediaSet.add(media);
             mediaIndex = mediaSet.size()-1;
         }
-        changes.setChanged(true);
+        triggerChange();
     }
 
     private void updateEventDescription(DocumentEvent e) {
@@ -3042,7 +3046,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventWrapper event = getCurrentEvent();
         if (event != null) {
             event.setDescription(eventDescription.getText());
-            changes.setChanged(true);
+            triggerChange();
         }
     }
 
@@ -3053,7 +3057,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventWrapper event = getCurrentEvent();
         if (event != null) {
             event.setPlace(eventPlaceText.getText());
-            changes.setChanged(true);
+            triggerChange();
         }
     }
 
@@ -3081,7 +3085,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             event.addNote(noteText);
         }
-        changes.setChanged(true);
+        triggerChange();
     }
 
     private void updateEventSourceText() {
@@ -3099,7 +3103,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             event.addSource(sourceTitle, sourceText);
         }
-        changes.setChanged(true);
+        triggerChange();
     }
 
 
@@ -3385,7 +3389,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
         displayEventTable();
         eventIndex = eventSet.size() - 1;
-        changes.setChanged(true);
+        triggerChange();
     }
     
     private int getEvent(String tag) {
@@ -3646,19 +3650,19 @@ public class IndiPanel extends Editor implements DocumentListener {
      */
     public void insertUpdate(DocumentEvent e) {
         if (!isBusyEvent) {
-            changes.setChanged(true);
+            triggerChange();
         }
     }
 
     public void removeUpdate(DocumentEvent e) {
         if (!isBusyEvent) {
-            changes.setChanged(true);
+            triggerChange();
         }
     }
 
     public void changedUpdate(DocumentEvent e) {
         if (!isBusyEvent) {
-            changes.setChanged(true);
+            triggerChange();
         }
     }
 

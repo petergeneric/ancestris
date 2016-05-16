@@ -115,12 +115,12 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         }
 
         // Quit if context is the same  
-        if (context != null && context.equals(this.context)) {
+        if (context.equals(this.context)) {
             return;
         }
 
         // Redisplay and Quit if same entity, different context, and if editor already exists
-        if (context != null && this.context != null && !context.equals(this.context) &&  context.getEntity().equals(this.context.getEntity()) && editor != null) {
+        if (this.context != null && !context.equals(this.context) &&  context.getEntity().equals(this.context.getEntity()) && editor != null) {
             this.context = context;
             editor.setContext(context);  
             return;

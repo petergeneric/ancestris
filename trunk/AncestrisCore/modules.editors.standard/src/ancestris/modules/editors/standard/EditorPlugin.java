@@ -12,6 +12,8 @@
 package ancestris.modules.editors.standard;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.modules.editors.standard.actions.EditorAction;
+import genj.gedcom.GedcomOptions;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -28,7 +30,9 @@ public class EditorPlugin extends AncestrisPlugin {
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
-        result.add(EditorTopComponent.class);
+        if (GedcomOptions.getInstance().getDefaultEditor().equals(EditorAction.class.getCanonicalName())) {
+            result.add(EditorTopComponent.class);
+        }
         return result;
     }
 }
