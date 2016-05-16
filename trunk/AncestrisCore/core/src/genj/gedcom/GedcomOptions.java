@@ -452,4 +452,16 @@ public class GedcomOptions {
         return getPreferences().get(CREATE_SPOUSE, false);
     }
 
+    
+    
+    private static final String DEFAULT_EDITOR = "gedcom.defaultEditor";         // NOI18N
+
+    public void setDefaultEditor(String defaultEditor) {
+        getPreferences().put(DEFAULT_EDITOR, defaultEditor);
+    }
+
+    public String getDefaultEditor() {
+        return getPreferences().get(DEFAULT_EDITOR, "ancestris.modules.editors.standard");
+    }
+
 }
