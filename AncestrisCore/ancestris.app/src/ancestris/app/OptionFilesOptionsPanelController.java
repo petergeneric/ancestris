@@ -26,7 +26,7 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
 
     public void update() {
         getPanel().load();
-        changed = false;
+        //changed = false;
     }
 
     public void applyChanges() {
@@ -34,7 +34,7 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
         App.setLogLevel(getPanel().getLogLevel());
         ActionOpenDefault action = Lookup.getDefault().lookup(ActionOpenDefault.class);
         action.getName();
-        changed = false;
+        //changed = false;
     }
 
     public void cancel() {
@@ -68,6 +68,7 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
     private OptionFilesPanel getPanel() {
         if (panel == null) {
             panel = new OptionFilesPanel(this);
+            changed = true;   // changed needs to be true to enable the Apply Button. I choose to always enable it.
         }
         return panel;
     }

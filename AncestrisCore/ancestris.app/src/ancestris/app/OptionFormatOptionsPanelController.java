@@ -34,12 +34,12 @@ public final class OptionFormatOptionsPanelController extends OptionsPanelContro
 
     public void update() {
         getPanel().load();
-        changed = false;
+        //changed = false;
     }
 
     public void applyChanges() {
         getPanel().store();
-        changed = false;
+        //changed = false;
     }
 
     public void cancel() {
@@ -73,6 +73,7 @@ public final class OptionFormatOptionsPanelController extends OptionsPanelContro
     private OptionFormatPanel getPanel() {
         if (panel == null) {
             panel = new OptionFormatPanel(this);
+            changed = true;   // changed needs to be true to enable the Apply Button. I choose to always enable it.
         }
         return panel;
     }
