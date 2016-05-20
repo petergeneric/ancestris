@@ -30,8 +30,10 @@ public class GeonamePlacesListModel extends AbstractListModel<String> implements
         for (int index1 = 0; index1 < aJurisdictions.length; index1++) {
             sJurisdictions += index1 == 0 ? (aJurisdictions[index1] != null ? aJurisdictions[index1] : "") : ", " + (aJurisdictions[index1] != null ? aJurisdictions[index1] : "");
         }
-        sJurisdictions += ", " + placesList.get(index).getLatitude().toString();
-        sJurisdictions += ", " + placesList.get(index).getLongitude().toString();
+        Double lat = placesList.get(index).getLatitude();
+        Double lon = placesList.get(index).getLongitude();
+        sJurisdictions += ", " + (lat == null ? "" : lat.toString());
+        sJurisdictions += ", " + (lon == null ? "" : lon.toString());
         return sJurisdictions;
     }
 
