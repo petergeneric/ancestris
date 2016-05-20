@@ -31,6 +31,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
+import java.awt.Component;
 import java.util.ArrayList;
 import org.openide.awt.MouseUtils;
 import org.openide.util.NbBundle;
@@ -104,6 +105,7 @@ public final class FamilyPanel extends JPanel {
                 return null;
             }
         };
+        
 
         // Siblings
         siblingsPanel = new EntitiesPanel(jScrollPane3) {
@@ -135,6 +137,7 @@ public final class FamilyPanel extends JPanel {
             }
         };
         eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
+        
     }
 
     public void setContext(Context context) {
@@ -191,16 +194,17 @@ public final class FamilyPanel extends JPanel {
         } else {
             wife.setContext(focusFam.getOtherSpouse(focusIndi));
         }
-        childrenPanel.update(
-                familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),
-                null);
+        childrenPanel.update(familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),null);
+        setTooltip(childrenPanel);
 
         Fam famChild = ((Indi) husband.getProperty()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
-        //siblingsPanel.update(husband.getContext(), null, new ABeanHandler(new ACreateChild(famChild, this)));
+
         siblingsPanel.update(husband.getProperty(), null);
+        setTooltip(siblingsPanel);
 
         oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty());
+        setTooltip(oFamsPanel);
 
         eventsPanel.update(husband.getProperty(), null);
 
@@ -214,6 +218,19 @@ public final class FamilyPanel extends JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        fatherPanel = new javax.swing.JPanel();
+        husbFather = new ancestris.modules.beans.ABluePrintBeans();
+        motherPanel = new javax.swing.JPanel();
+        husbMother = new ancestris.modules.beans.ABluePrintBeans();
+        indiPanel = new javax.swing.JPanel();
+        husband = new ancestris.modules.beans.ABluePrintBeans();
+        jLabel3 = new javax.swing.JLabel();
+        spousePanel = new javax.swing.JPanel();
+        wife = new ancestris.modules.beans.ABluePrintBeans();
+        jLabel2 = new javax.swing.JLabel();
+        otherSpousePanel = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jLabel1 = new javax.swing.JLabel();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         familySpouse = new ancestris.modules.beans.ABluePrintBeans();
@@ -221,37 +238,176 @@ public final class FamilyPanel extends JPanel {
         jPanel8 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         familyParent = new ancestris.modules.beans.ABluePrintBeans();
-        jPanel2 = new javax.swing.JPanel();
+        relativesPanel = new javax.swing.JPanel();
         eventsTab = new javax.swing.JPanel();
         jsEvents = new javax.swing.JScrollPane();
-        jPanel3 = new javax.swing.JPanel();
-        husbFather = new ancestris.modules.beans.ABluePrintBeans();
-        jPanel4 = new javax.swing.JPanel();
-        husbMother = new ancestris.modules.beans.ABluePrintBeans();
-        jPanel5 = new javax.swing.JPanel();
-        husband = new ancestris.modules.beans.ABluePrintBeans();
-        jLabel3 = new javax.swing.JLabel();
-        jPanel6 = new javax.swing.JPanel();
-        wife = new ancestris.modules.beans.ABluePrintBeans();
-        jLabel2 = new javax.swing.JLabel();
-        jPanel7 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jLabel1 = new javax.swing.JLabel();
 
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
 
-        jTabbedPane1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        jTabbedPane1.setFont(new java.awt.Font("Dialog", 3, 14)); // NOI18N
+        fatherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.fatherPanel.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
+
+        husbFather.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
+        husbFather.setMinimumSize(new java.awt.Dimension(0, 80));
+        husbFather.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout husbFatherLayout = new javax.swing.GroupLayout(husbFather);
+        husbFather.setLayout(husbFatherLayout);
+        husbFatherLayout.setHorizontalGroup(
+            husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        husbFatherLayout.setVerticalGroup(
+            husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout fatherPanelLayout = new javax.swing.GroupLayout(fatherPanel);
+        fatherPanel.setLayout(fatherPanelLayout);
+        fatherPanelLayout.setHorizontalGroup(
+            fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+        );
+        fatherPanelLayout.setVerticalGroup(
+            fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+        );
+
+        motherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.motherPanel.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
+
+        husbMother.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
+        husbMother.setMinimumSize(new java.awt.Dimension(0, 80));
+        husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
+
+        javax.swing.GroupLayout husbMotherLayout = new javax.swing.GroupLayout(husbMother);
+        husbMother.setLayout(husbMotherLayout);
+        husbMotherLayout.setHorizontalGroup(
+            husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        husbMotherLayout.setVerticalGroup(
+            husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 94, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout motherPanelLayout = new javax.swing.GroupLayout(motherPanel);
+        motherPanel.setLayout(motherPanelLayout);
+        motherPanelLayout.setHorizontalGroup(
+            motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+        );
+        motherPanelLayout.setVerticalGroup(
+            motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+        );
+
+        indiPanel.setBorder(null);
+
+        husband.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(51, 102, 255), null));
+        husband.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
+
+        javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
+        husband.setLayout(husbandLayout);
+        husbandLayout.setHorizontalGroup(
+            husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        husbandLayout.setVerticalGroup(
+            husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
+
+        javax.swing.GroupLayout indiPanelLayout = new javax.swing.GroupLayout(indiPanel);
+        indiPanel.setLayout(indiPanelLayout);
+        indiPanelLayout.setHorizontalGroup(
+            indiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        indiPanelLayout.setVerticalGroup(
+            indiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(indiPanelLayout.createSequentialGroup()
+                .addComponent(jLabel3)
+                .addGap(2, 2, 2)
+                .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        spousePanel.setBorder(null);
+
+        wife.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        wife.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
+        wife.setMinimumSize(new java.awt.Dimension(0, 40));
+        wife.setPreferredSize(new java.awt.Dimension(256, 60));
+
+        javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
+        wife.setLayout(wifeLayout);
+        wifeLayout.setHorizontalGroup(
+            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        wifeLayout.setVerticalGroup(
+            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 87, Short.MAX_VALUE)
+        );
+
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
+
+        javax.swing.GroupLayout spousePanelLayout = new javax.swing.GroupLayout(spousePanel);
+        spousePanel.setLayout(spousePanelLayout);
+        spousePanelLayout.setHorizontalGroup(
+            spousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(wife, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        spousePanelLayout.setVerticalGroup(
+            spousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(spousePanelLayout.createSequentialGroup()
+                .addComponent(jLabel2)
+                .addGap(2, 2, 2)
+                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
+        );
+
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jScrollPane2.setToolTipText("");
+
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel1.text")); // NOI18N
+
+        javax.swing.GroupLayout otherSpousePanelLayout = new javax.swing.GroupLayout(otherSpousePanel);
+        otherSpousePanel.setLayout(otherSpousePanelLayout);
+        otherSpousePanelLayout.setHorizontalGroup(
+            otherSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        otherSpousePanelLayout.setVerticalGroup(
+            otherSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(otherSpousePanelLayout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jTabbedPane1.setBorder(null);
+        jTabbedPane1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
 
         familySpouse.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        familySpouse.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "ClicEntTootlTipText")); // NOI18N
         familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout familySpouseLayout = new javax.swing.GroupLayout(familySpouse);
         familySpouse.setLayout(familySpouseLayout);
         familySpouseLayout.setHorizontalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGap(0, 608, Short.MAX_VALUE)
         );
         familySpouseLayout.setVerticalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -265,15 +421,15 @@ public final class FamilyPanel extends JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
-            .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
@@ -285,7 +441,7 @@ public final class FamilyPanel extends JPanel {
         familyParent.setLayout(familyParentLayout);
         familyParentLayout.setHorizontalGroup(
             familyParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 590, Short.MAX_VALUE)
+            .addGap(0, 608, Short.MAX_VALUE)
         );
         familyParentLayout.setVerticalGroup(
             familyParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -296,33 +452,34 @@ public final class FamilyPanel extends JPanel {
         jPanel8.setLayout(jPanel8Layout);
         jPanel8Layout.setHorizontalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familyParent, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE)
+            .addComponent(familyParent, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
         jPanel8Layout.setVerticalGroup(
             jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(familyParent, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
 
-        jPanel2.setBackground(java.awt.Color.white);
+        relativesPanel.setBackground(java.awt.Color.white);
+        relativesPanel.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText")); // NOI18N
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 592, Short.MAX_VALUE)
+        javax.swing.GroupLayout relativesPanelLayout = new javax.swing.GroupLayout(relativesPanel);
+        relativesPanel.setLayout(relativesPanelLayout);
+        relativesPanelLayout.setHorizontalGroup(
+            relativesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 610, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 144, Short.MAX_VALUE)
+        relativesPanelLayout.setVerticalGroup(
+            relativesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 140, Short.MAX_VALUE)
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.relativesPanel.TabConstraints.tabTitle"), relativesPanel); // NOI18N
 
         eventsTab.setBackground(java.awt.Color.white);
 
@@ -333,160 +490,18 @@ public final class FamilyPanel extends JPanel {
         eventsTab.setLayout(eventsTabLayout);
         eventsTabLayout.setHorizontalGroup(
             eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 592, Short.MAX_VALUE)
+            .addGap(0, 610, Short.MAX_VALUE)
             .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jsEvents, javax.swing.GroupLayout.DEFAULT_SIZE, 592, Short.MAX_VALUE))
+                .addComponent(jsEvents, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE))
         );
         eventsTabLayout.setVerticalGroup(
             eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 144, Short.MAX_VALUE)
+            .addGap(0, 140, Short.MAX_VALUE)
             .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
+                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.eventsTab.TabConstraints.tabTitle"), eventsTab); // NOI18N
-
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel3.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
-
-        husbFather.setMinimumSize(new java.awt.Dimension(0, 80));
-        husbFather.setPreferredSize(new java.awt.Dimension(256, 80));
-
-        javax.swing.GroupLayout husbFatherLayout = new javax.swing.GroupLayout(husbFather);
-        husbFather.setLayout(husbFatherLayout);
-        husbFatherLayout.setHorizontalGroup(
-            husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 291, Short.MAX_VALUE)
-        );
-        husbFatherLayout.setVerticalGroup(
-            husbFatherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-        );
-
-        jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel4.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 3, 14))); // NOI18N
-
-        husbMother.setMinimumSize(new java.awt.Dimension(0, 80));
-        husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
-
-        javax.swing.GroupLayout husbMotherLayout = new javax.swing.GroupLayout(husbMother);
-        husbMother.setLayout(husbMotherLayout);
-        husbMotherLayout.setHorizontalGroup(
-            husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 277, Short.MAX_VALUE)
-        );
-        husbMotherLayout.setVerticalGroup(
-            husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 80, Short.MAX_VALUE)
-        );
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 277, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-        );
-
-        jPanel5.setBorder(null);
-
-        javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
-        husband.setLayout(husbandLayout);
-        husbandLayout.setHorizontalGroup(
-            husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 303, Short.MAX_VALUE)
-        );
-        husbandLayout.setVerticalGroup(
-            husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 152, Short.MAX_VALUE)
-        );
-
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 3, 16));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
-        jPanel5.setLayout(jPanel5Layout);
-        jPanel5Layout.setHorizontalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addContainerGap(221, Short.MAX_VALUE))
-            .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel5Layout.setVerticalGroup(
-            jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel5Layout.createSequentialGroup()
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(husband, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jPanel6.setBorder(null);
-
-        wife.setMinimumSize(new java.awt.Dimension(0, 40));
-
-        javax.swing.GroupLayout wifeLayout = new javax.swing.GroupLayout(wife);
-        wife.setLayout(wifeLayout);
-        wifeLayout.setHorizontalGroup(
-            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 289, Short.MAX_VALUE)
-        );
-        wifeLayout.setVerticalGroup(
-            wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 56, Short.MAX_VALUE)
-        );
-
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 3, 14));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addContainerGap(230, Short.MAX_VALUE))
-            .addComponent(wife, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jLabel2)
-                .addGap(7, 7, 7)
-                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 3, 14));
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel1.text")); // NOI18N
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(166, Short.MAX_VALUE))
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 289, Short.MAX_VALUE)
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel7Layout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(7, 7, 7)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 67, Short.MAX_VALUE))
-        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -497,35 +512,32 @@ public final class FamilyPanel extends JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jPanel7, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 598, Short.MAX_VALUE))
+                            .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(otherSpousePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jPanel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(jPanel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(otherSpousePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -533,25 +545,25 @@ public final class FamilyPanel extends JPanel {
     private javax.swing.JPanel eventsTab;
     private ancestris.modules.beans.ABluePrintBeans familyParent;
     private ancestris.modules.beans.ABluePrintBeans familySpouse;
+    private javax.swing.JPanel fatherPanel;
     private ancestris.modules.beans.ABluePrintBeans husbFather;
     private ancestris.modules.beans.ABluePrintBeans husbMother;
     private ancestris.modules.beans.ABluePrintBeans husband;
+    private javax.swing.JPanel indiPanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel5;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JScrollPane jsEvents;
+    private javax.swing.JPanel motherPanel;
+    private javax.swing.JPanel otherSpousePanel;
+    private javax.swing.JPanel relativesPanel;
+    private javax.swing.JPanel spousePanel;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
 
@@ -585,6 +597,15 @@ public final class FamilyPanel extends JPanel {
 //            return false;
 //        }
         return true;
+    }
+
+    private void setTooltip(EntitiesPanel panel) {
+        for (Component c : panel.getComponents()) {
+            if (c instanceof ABluePrintBeans) {
+                ABluePrintBeans bean = (ABluePrintBeans) c;
+                bean.setToolTipText(NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText"));
+            }
+        }
     }
 
     private class ABeanHandler extends FilteredMouseAdapter {
@@ -629,19 +650,22 @@ public final class FamilyPanel extends JPanel {
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
                 SelectionDispatcher.muteSelection(true);
                 try {
-                    if (bean != null && bean.getProperty() != null) {                                       // Double click on someone = edit it  with an AncestrisEditor (not an Editor)
+                    // Double click on someone = edit it (with an AncestrisEditor, not an Editor)
+                    if (bean != null && bean.getProperty() != null) {                                       
                         AncestrisEditor editor = AncestrisEditor.findEditor(bean.getProperty());
                         if (editor != null) {
                             editor.edit(bean.getProperty());
                         }
                     } else {
-                        getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));         // Double click on empty = create person with an AncestrisEditor (not an Editor)
+                    // Double click on empty = create person (with an AncestrisEditor, not an Editor)
+                        getCreateAction().actionPerformed(new ActionEvent(evt.getSource(), 0, ""));         
                     }
                     refresh();
                 } finally {
                     SelectionDispatcher.muteSelection(false);
                 }
-            } else if (evt.getClickCount() == 1) {                                                          // Click on someone = show it => any open editor
+            // Click on someone = show it     
+            } else if (evt.getClickCount() == 1) {                                                          
                 // FIXME: test click count necessaire?
                 Property prop = bean.getProperty();
                 if (prop instanceof Entity) {
