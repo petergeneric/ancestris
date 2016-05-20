@@ -48,7 +48,12 @@ public class EditorAction extends AncestrisEditor {
     @Override
     public Property edit(Property property, boolean isNew) {
         Context contextToOpen;
-        if ((contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
+        if (property == null) {
+            contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
+        } else {
+            contextToOpen = new Context(property);
+        }
+        if (contextToOpen != null) {
             AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
             win.open();
             win.requestActive();
