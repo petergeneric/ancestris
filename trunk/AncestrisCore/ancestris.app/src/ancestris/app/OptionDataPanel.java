@@ -8,6 +8,7 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.util.Lifecycle;
 import genj.gedcom.Gedcom;
+import ancestris.core.CoreOptions;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.Indi;
 import genj.util.AncestrisPreferences;
@@ -70,6 +71,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         idLength = new javax.swing.JSpinner();
         placePanel = new javax.swing.JPanel();
         cbUseSpace = new javax.swing.JCheckBox();
+        cbSplitJuridictions = new javax.swing.JCheckBox();
         encodingPanel = new javax.swing.JPanel();
         lFileEncoding = new javax.swing.JLabel();
         cboxEncoding = new javax.swing.JComboBox(encodings);
@@ -187,19 +189,25 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(cbUseSpace, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbUseSpace.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbSplitJuridictions, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSplitJuridictions.text")); // NOI18N
+
         javax.swing.GroupLayout placePanelLayout = new javax.swing.GroupLayout(placePanel);
         placePanel.setLayout(placePanelLayout);
         placePanelLayout.setHorizontalGroup(
             placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(placePanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(cbUseSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbUseSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbSplitJuridictions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         placePanelLayout.setVerticalGroup(
             placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(placePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cbUseSpace)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cbSplitJuridictions)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -373,6 +381,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         
         // Places
         cbUseSpace.setSelected(gedcomOptions.isUseSpacedPlaces());
+        cbSplitJuridictions.setSelected(CoreOptions.getInstance().isSplitJurisdictions());
 
         // Encoding
         setEncoding(gedcomPrefs.get("defaultEncoding", ""));
@@ -402,6 +411,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
             Lifecycle.askForRestart();
             gedcomOptions.setUseSpacedPlaces(cbUseSpace.isSelected());
         }
+        CoreOptions.getInstance().setSplitJurisdictions(cbSplitJuridictions.isSelected());
 
         // Encoding
         gedcomPrefs.put("defaultEncoding", getEncoding());
@@ -431,6 +441,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbSameSpouseName;
     private javax.swing.JCheckBox cbSaveEncoding;
     private javax.swing.JCheckBox cbSpaceIsSep;
+    private javax.swing.JCheckBox cbSplitJuridictions;
     private javax.swing.JCheckBox cbUseSpace;
     private javax.swing.JComboBox cboxDefaultEditor;
     private javax.swing.JComboBox cboxEncoding;
