@@ -48,45 +48,51 @@ public class GenealogyEditorAction extends AncestrisEditor {
 
     @Override
     public Property edit(Property property, boolean isNew) {
-        Context context;
-        if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
-
+        Context contextToOpen;
+        if (property == null) {
+            contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
+        } else {
+            contextToOpen = new Context(property);
+        }
+        
+        
+        if (contextToOpen != null) {
             if (!(property instanceof Entity))  {
                 property = property.getEntity();
             }
             if (property instanceof Indi) {
                 IndividualEditor individualEditor = new IndividualEditor(isNew);
-                individualEditor.setContext(context);
+                individualEditor.setContext(contextToOpen);
                 individualEditor.showPanel();
                 return property;
             } else if (property instanceof Fam) {
                 FamilyEditor familyEditor = new FamilyEditor(isNew);
-                familyEditor.setContext(context);
+                familyEditor.setContext(contextToOpen);
                familyEditor.showPanel();
                 return property;
             } else if (property instanceof Note) {
                 NoteEditor noteEditor = new NoteEditor(isNew);
-                noteEditor.setContext(context);
+                noteEditor.setContext(contextToOpen);
                 noteEditor.showPanel();
                 return property;
             } else if (property instanceof Media) {
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor(isNew);
-                multiMediaObjectEditor.setContext(context);
+                multiMediaObjectEditor.setContext(contextToOpen);
                 multiMediaObjectEditor.showPanel();
                 return property;
             } else if (property instanceof Source) {
                 SourceEditor sourceEditor = new SourceEditor(isNew);
-                sourceEditor.setContext(context);
+                sourceEditor.setContext(contextToOpen);
                 sourceEditor.showPanel();
                 return property;
             } else if (property instanceof Repository) {
                 RepositoryEditor repositoryEditor = new RepositoryEditor(isNew);
-                repositoryEditor.setContext(context);
+                repositoryEditor.setContext(contextToOpen);
                 repositoryEditor.showPanel();
                 return property;
             } else if (property instanceof Submitter) {
                 SubmitterEditor submitterEditor = new SubmitterEditor(isNew);
-                submitterEditor.setContext(context);
+                submitterEditor.setContext(contextToOpen);
                 submitterEditor.showPanel();
                 return property;
             } else {
