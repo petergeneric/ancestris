@@ -33,6 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
@@ -166,7 +167,7 @@ public class App {
                 
                 //UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
                 
-                //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
                 
                 //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
                 
