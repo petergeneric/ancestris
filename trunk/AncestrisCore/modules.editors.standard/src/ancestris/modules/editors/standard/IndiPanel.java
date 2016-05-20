@@ -1588,7 +1588,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void assoEditButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assoEditButtonActionPerformed
         if (manageAssociations()) {
             displayAssociationsComboBox();
-            selectAssociation();
         }
         eventSourceTitle.requestFocus();
 
@@ -2549,7 +2548,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 if (!e.getValueIsAdjusting() && !isBusyEvent && eventTable.getSelectedRow() != -1) {
                     eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
                     displayEvent();
-                    selectAssociation();
+                    displayAssociationsComboBox();
                 }
             }
         });
@@ -2956,32 +2955,32 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
     
     private void displayAssociationsComboBox() {
-        cbModel.removeAllElements();
-        for (AssoWrapper asso : assoSet) {
-            cbModel.addElement(asso);
+        if (eventSet == null || eventSet.isEmpty() || assoSet == null) {
+            return;
         }
+
+        // Empty list
+        cbModel.removeAllElements();
+        
+        // Build new list with only event relatedd associations
+        EventWrapper event = getCurrentEvent();
+        for (AssoWrapper asso : assoSet) {
+            if (event.isGeneral || asso.targetEvent == event) {
+                cbModel.addElement(asso);
+            }
+        }
+        
+        // Set combo bow list
         if (cbModel.getSize() == 0) {
             cbModel.addElement(new AssoWrapper(NbBundle.getMessage(getClass(), "No_Association_Text")));
         }
         assoComboBox.setModel(cbModel);
+        assoComboBox.setSelectedIndex(0);
+        
         assoEditButton.setEnabled(!(eventSet.isEmpty() && assoSet.isEmpty()));
     }
 
     
-    private void selectAssociation() {
-        if (eventSet == null || eventSet.isEmpty() || assoSet == null) {
-            return;
-        }
-        EventWrapper event = eventSet.get(eventIndex);
-        if (assoComboBox.getModel().getSize() > 0) {
-            for (AssoWrapper asso : assoSet) {
-                if (asso.targetEvent.eventProperty == event.eventProperty) {
-                    assoComboBox.setSelectedItem(asso);
-                }
-            }
-        }
-    }
-
     
     private boolean manageAssociations() {
         boolean b = false;
