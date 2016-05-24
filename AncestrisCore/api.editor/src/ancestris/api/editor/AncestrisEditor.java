@@ -27,6 +27,7 @@ import org.openide.util.NbBundle.Messages;
 import static ancestris.api.editor.Bundle.*;
 import ancestris.core.actions.CommonActions;
 import genj.gedcom.GedcomOptions;
+import genj.gedcom.Indi;
 import java.util.List;
 import javax.swing.ImageIcon;
 import org.openide.util.NbBundle;
@@ -106,9 +107,18 @@ public abstract class AncestrisEditor {
     public abstract String getName(boolean canonical);
 
     
+    public abstract Action getCreateParentAction(Indi indi, int sex);
     
+    public abstract Action getCreateSpouseAction(Indi indi);
     
-    
+    public Action getDefaultAction(final Property property) {
+        return new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                edit(property);
+            }
+        };
+    }
     
     
     /**
@@ -156,6 +166,16 @@ public abstract class AncestrisEditor {
         @Override
         public String toString() {
             return getName(false);
+        }
+
+        @Override
+        public Action getCreateParentAction(Indi indi, int sex) {
+            return getDefaultAction(indi);
+        }
+
+        @Override
+        public Action getCreateSpouseAction(Indi indi) {
+            return getDefaultAction(indi);
         }
     }
     
