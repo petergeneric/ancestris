@@ -52,7 +52,7 @@ import org.openide.windows.TopComponent;
 public class EditorTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
-    final static Logger LOG = Logger.getLogger("ancestris.editor");
+    final static Logger LOG = Logger.getLogger("ancestris.cygnuseditor");
     
     // Main elements
     private Gedcom gedcom = null;
@@ -73,7 +73,6 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     private ConfirmChangeWidget confirmPanel;
 
 
-    
     /**
      * Initializers (#1)
      */
@@ -377,6 +376,10 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         return newContext;
     }
 
+    
+    public IndiPanel getEditor() {
+        return (IndiPanel) editor;
+    }
     
     
     

@@ -18,6 +18,7 @@ import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.privacy.standard.Options;
 import ancestris.modules.editors.geoplace.PlaceEditorPanel;
+import ancestris.modules.editors.standard.actions.ActionCreation;
 import ancestris.modules.editors.standard.tools.AssoManager;
 import ancestris.modules.editors.standard.tools.AssoWrapper;
 import ancestris.modules.editors.standard.tools.AutoCompletion;
@@ -61,6 +62,7 @@ import genj.gedcom.PropertyName;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
+import genj.util.ChangeSupport;
 import genj.util.Registry;
 import genj.util.Validator;
 import genj.view.ViewContext;
@@ -1607,7 +1609,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void assoEditIndiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_assoEditIndiActionPerformed
         AssoWrapper asso = (AssoWrapper) assoComboBox.getSelectedItem();
         if (asso.assoIndi != null) {
-            SelectionDispatcher.fireSelection(new Context(asso.assoIndi));
+            SelectionDispatcher.fireSelection(new Context(asso.assoIndi));     // fireselection because we are navigating to another entity
         }
     }//GEN-LAST:event_assoEditIndiActionPerformed
 
@@ -1671,7 +1673,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void indiAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiAddButtonActionPerformed
         IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, IndiCreator.REL_NONE, null, null);
-        SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+        getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
     }//GEN-LAST:event_indiAddButtonActionPerformed
 
     private void indiDelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiDelButtonActionPerformed
@@ -1869,17 +1871,21 @@ public class IndiPanel extends Editor implements DocumentListener {
     @Override
     protected void setContextImpl(Context context) {
         LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
-
+        
         // force data reload if to be reloaded or if entity selected is different
         if (reloadData || (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity())) {
             reloadData = true;
         }
         
         this.context = context;
+        this.gedcom = context.getGedcom();
+        if (gedcom == null) {
+            return;
+        }
+        
         Entity entity = context.getEntity();
         if (entity != null && (entity instanceof Indi)) {
             this.indi = (Indi) entity;
-            this.gedcom = indi.getGedcom();
 
             if (reloadData) {  // do not reload data when not necessary, for performance reasons when selecting properties in Gedcom editor for instance
                 loadData();
@@ -1943,7 +1949,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         } 
         
-        // Else select property if any (coming from fireSelection)
+        // Else select property if any (coming from fire Selection)
         Property propertyToDisplay = context.getProperty();
         if (propertyToDisplay != null && eventSet != null) {
             Property ent = propertyToDisplay.getEntity();
@@ -2012,6 +2018,23 @@ public class IndiPanel extends Editor implements DocumentListener {
         // If auto commit is on, users may expect data to be saved at every change... This is not done, I haven't found a way to do it properly with all the listeners around...
         //        if (ConfirmChangeWidget.getAutoCommit()) {
         //        }
+    }
+
+    private EditorTopComponent getEditorTopComponent() {
+        for (EditorTopComponent editorTopComponent : (List<EditorTopComponent>) AncestrisPlugin.lookupAll(EditorTopComponent.class)) {
+            if (editorTopComponent.getEditor() != null && editorTopComponent.getEditor() == this) {
+                return editorTopComponent;
+            }
+        }
+        return null;
+    }
+
+    public Indi getEditedIndi() {
+        return indi;
+    }
+
+    public ChangeSupport getChangeSupport() {
+        return changes;
     }
 
     
@@ -3136,15 +3159,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
             putSeparator = true;
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    if (changes.hasChanged()) {
-                        changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
-                    }
-                    IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, relation, null, null);
-                    SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
-                }
-            });
+            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation));
         }
         // attach father or mother 
         if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember == null) {
@@ -3178,7 +3193,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 changes.fireChangeEvent(new Boolean(true));
                             }
                             IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
-                            SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+                            getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
                         }
                     }
 
@@ -3200,7 +3215,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         changes.fireChangeEvent(new Boolean(true));
                     }
                     new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
-                    SelectionDispatcher.fireSelection(new Context(indi));
+                    getEditorTopComponent().setContext(new Context(indi));
                 }
             });
         }
@@ -3221,15 +3236,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
             putSeparator = true;
-            menuItem.addActionListener(new ActionListener() {
-                public void actionPerformed(ActionEvent ae) {
-                    if (changes.hasChanged()) {
-                        changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
-                    }
-                    IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, relation, currentSpouse, null);
-                    SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
-                }
-            });
+            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, currentSpouse));
         }
         // attach family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
@@ -3267,7 +3274,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 changes.fireChangeEvent(new Boolean(true));
                             }
                             IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
-                            SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
+                            getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
                         }
                     }
 
@@ -3290,7 +3297,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                             changes.fireChangeEvent(new Boolean(true));
                         }
                         new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
-                        SelectionDispatcher.fireSelection(new Context(indi));
+                        getEditorTopComponent().setContext(new Context(indi));
                     }
                 });
             }
@@ -3667,6 +3674,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
 
+
     
 
 
@@ -3806,7 +3814,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) familyTree.getLastSelectedPathComponent();
                 NodeWrapper node = (NodeWrapper) treeNode.getUserObject();
                 if (node.getEntity() != null) {
-                    SelectionDispatcher.fireSelection(new Context(node.getEntity()));
+                    SelectionDispatcher.fireSelection(new Context(node.getEntity()));   // fireselection because we are navigating to another entity
                 }
             }
         }
