@@ -57,6 +57,7 @@ public class ActionCreation extends AbstractAction {
         }
         IndiCreator indiCreator = new IndiCreator(type, indi, relation, spouse, null);
         editorTopComponent.setContext(new Context(indiCreator.getIndi()));
+        editorTopComponent.requestActive();
     }
 
     
