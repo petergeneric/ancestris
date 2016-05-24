@@ -15,9 +15,11 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
+import javax.swing.Action;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -110,5 +112,16 @@ public class PlaceEditor extends AncestrisEditor {
     public String toString() {
         return getName(false);
     }
+
+    @Override
+    public Action getCreateParentAction(Indi indi, int sex) {
+        return getDefaultAction(indi);
+    }
+
+    @Override
+    public Action getCreateSpouseAction(Indi indi) {
+        return getDefaultAction(indi);
+    }
+    
 
 }
