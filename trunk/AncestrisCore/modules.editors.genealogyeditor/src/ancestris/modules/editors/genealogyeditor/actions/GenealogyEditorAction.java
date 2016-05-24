@@ -19,6 +19,7 @@ import genj.gedcom.Property;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import javax.swing.Action;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -118,6 +119,26 @@ public class GenealogyEditorAction extends AncestrisEditor {
     @Override
     public String toString() {
         return getName(false);
+    }
+
+    @Override
+    public Action getCreateParentAction(Indi indi, int sex) {
+        return AActions.alwaysEnabled(
+                new ACreateParent(indi, sex, this),
+                "",
+                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.createparent.title"),
+                "ancestris/modules/editors/genealogyeditor/resources/indi_add.png", // NOI18N
+                true);
+    }
+
+    @Override
+    public Action getCreateSpouseAction(Indi indi) {
+        return AActions.alwaysEnabled(
+                new ACreateSpouse(indi, this),
+                "",
+                org.openide.util.NbBundle.getMessage(GenealogyEditorAction.class, "action.addspouse.title"),
+                "ancestris/modules/editors/standard/images/indi_add.png", // NOI18N
+                true);
     }
 
 }
