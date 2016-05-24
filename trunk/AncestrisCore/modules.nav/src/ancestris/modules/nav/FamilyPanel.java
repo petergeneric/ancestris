@@ -155,11 +155,13 @@ public final class FamilyPanel extends JPanel {
         if (entity instanceof Fam) {
             Fam family = (Fam) entity;
             if (family.getNoOfSpouses() == 0) {
+                refresh();
                 return;
             }
             // don't reset vue if focus fam is already this context's family:
             // spouses are not swapped if wife is focus indi
             if (family.equals(focusFam)) {
+                refresh();
                 return;
             }
             focusFam = ((Fam) entity);
@@ -169,11 +171,13 @@ public final class FamilyPanel extends JPanel {
             }
         } else if (entity instanceof Indi) {
             if (((Indi) entity).equals(focusIndi)) {
+                refresh();
                 return;
             }
             focusIndi = (Indi) entity;
             focusFam = null;
         } else {
+            refresh();
             return;
         }
         refresh();
@@ -187,6 +191,7 @@ public final class FamilyPanel extends JPanel {
         husband.setContext(focusIndi);
         husbFather.setContext(focusIndi.getBiologicalFather());
         husbMother.setContext(focusIndi.getBiologicalMother());
+        
         familySpouse.setContext(focusFam);
         if (focusFam == null) {
             wife.setContext(null);
