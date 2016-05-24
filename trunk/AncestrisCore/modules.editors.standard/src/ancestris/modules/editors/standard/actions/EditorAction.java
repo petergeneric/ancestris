@@ -13,12 +13,17 @@
 package ancestris.modules.editors.standard.actions;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.editors.standard.EditorTopComponent;
+import ancestris.modules.editors.standard.tools.IndiCreator;
 import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
+import java.util.List;
+import javax.swing.Action;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -77,6 +82,34 @@ public class EditorAction extends AncestrisEditor {
     @Override
     public String toString() {
         return getName(false);
+    }
+
+    @Override
+    public Action getCreateParentAction(Indi indi, int sex) {
+        for (EditorTopComponent editorTopComponent : (List<EditorTopComponent>) AncestrisPlugin.lookupAll(EditorTopComponent.class)) {
+            if (editorTopComponent.getEditor() != null && editorTopComponent.getEditor().getEditedIndi() == indi) {
+                return new ActionCreation(
+                        editorTopComponent, 
+                        IndiCreator.CREATION, 
+                        sex == PropertySex.MALE ? IndiCreator.REL_FATHER : IndiCreator.REL_MOTHER);
+                
+            }
+        }
+        return getDefaultAction(indi);
+    }
+
+    @Override
+    public Action getCreateSpouseAction(Indi indi) {
+        for (EditorTopComponent editorTopComponent : (List<EditorTopComponent>) AncestrisPlugin.lookupAll(EditorTopComponent.class)) {
+            if (editorTopComponent.getEditor() != null && editorTopComponent.getEditor().getEditedIndi() == indi) {
+                return new ActionCreation(
+                        editorTopComponent, 
+                        IndiCreator.CREATION, 
+                        IndiCreator.REL_PARTNER);
+                
+            }
+        }
+        return getDefaultAction(indi);
     }
     
     
