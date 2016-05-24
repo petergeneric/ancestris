@@ -55,7 +55,7 @@ public class ActionCreation extends AbstractAction {
         if (changes != null && changes.hasChanged()) {
             changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
         }
-        IndiCreator indiCreator = new IndiCreator(type, indi, relation, null, null);
+        IndiCreator indiCreator = new IndiCreator(type, indi, relation, spouse, null);
         editorTopComponent.setContext(new Context(indiCreator.getIndi()));
     }
 
