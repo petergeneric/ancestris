@@ -2040,8 +2040,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     
     
-    
-    
 
     
     
