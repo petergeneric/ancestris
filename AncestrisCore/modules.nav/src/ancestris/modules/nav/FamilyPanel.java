@@ -15,7 +15,6 @@ import ancestris.api.editor.AncestrisEditor;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
-import ancestris.modules.editors.standard.actions.EditorActions;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -699,7 +698,7 @@ public final class FamilyPanel extends JPanel {
                 // get NoOp editro
                 editor = AncestrisEditor.findEditor(null);
             }
-            return EditorActions.getCreateSpouseAction(indi,editor);
+            return editor.getCreateSpouseAction(indi);
         }
     }
 
@@ -726,7 +725,7 @@ public final class FamilyPanel extends JPanel {
                 editor = AncestrisEditor.findEditor(null);
             }
 
-            return EditorActions.getCreateParentAction(child, sex,editor);
+            return editor.getCreateParentAction(child, sex);
         }
     }
 
@@ -752,6 +751,10 @@ public final class FamilyPanel extends JPanel {
 //            return AncestrisEditor.findEditor(property).getCreateChildAction(property);
 //        }
 //    }
+    
+    
+    
+    
     private abstract class EntitiesPanel extends AListBean {
 
         public EntitiesPanel(JScrollPane pane) {
