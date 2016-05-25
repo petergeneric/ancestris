@@ -135,7 +135,7 @@ public class TestAge extends Test {
         boolean error = isError(delta.getYears());
         if (explanation.equals("minDiffAgeSibling")) {
             int m = delta.getMonths() + (12 * delta.getYears());
-            if (m == 0) {
+            if (m == 0 && pit1.isComplete() && pit2.isComplete()) {
                 int j = delta.getDays();
                 if (j < 2) {
                     WordBuffer words = new WordBuffer();
