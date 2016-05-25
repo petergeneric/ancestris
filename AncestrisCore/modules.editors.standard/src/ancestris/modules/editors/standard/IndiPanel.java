@@ -2015,8 +2015,10 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void triggerChange() {
         changes.setChanged(true);
-        // If auto commit is on, users may expect data to be saved at every change... This is not done, I haven't found a way to do it properly with all the listeners around...
+        // If auto commit is on, users may expect data to be saved at every change... That is not done : data is saved at change of contexxt only
+        // (I haven't found a way to do it properly with all the listeners around...)
         //        if (ConfirmChangeWidget.getAutoCommit()) {
+        //            savedata();
         //        }
     }
 

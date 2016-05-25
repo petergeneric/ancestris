@@ -25,6 +25,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.UnitOfWork;
 import java.awt.BorderLayout;
@@ -355,7 +356,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         Context newContext = ctx;
         
         String type = ctx.getEntity().getTag();
+        
         if (type.equals(Gedcom.FAM)) {
+            // For a FAMily, indi displayed is husband, otherwise wife, and event will be the FAM event
             Fam fam = (Fam) ctx.getEntity();
             Indi indi = fam.getHusband();
             if (indi == null) {
@@ -372,6 +375,32 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
                 }
                 newContext = new Context(ctx.getGedcom(), entities, properties);
             }
+        } else if (type.equals(Gedcom.NOTE)) {
+            // For a NOTE, indi displayed will be the first indi using that note, on the corresponding event (general or event)
+            // If not used, what should I display ???????? 
+            // Instead if I display the Note and underneath the list of Indis using it in every case, could be useful... => Choose !
+            //  If note is private to an indi, display indi directly
+            //  If note is common but used by only one indi, display it directly ?
+            //  etc.
+            Note note = (Note) ctx.getEntity();
+//            Indi indi = fam.getHusband();
+//            if (indi == null) {
+//                indi = fam.getWife();
+//            }
+        } else if (type.equals(Gedcom.SOUR)) {
+            // For a SOUR, indi displayed will be the first indi using that source, on the corresponding event (general or event)
+            // If not used, what should I display ????????
+            
+        } else if (type.equals(Gedcom.OBJE)) {
+            // For a OBJE, indi displayed will be the first indi using that obje, directly or through a source, on the corresponding event (general or event)
+            // If not used, what should I display ????????
+            
+        } else if (type.equals(Gedcom.REPO)) {
+            // For a REPO, indi displayed will be the first indi using that repo through a source, on the corresponding event (general or event)
+            // If not used, what should I display ????????
+            
+        } else if (type.equals(Gedcom.SUBM)) {
+            // For a SUBM, what should I display ???????? GedcomProperties ?
         }
         return newContext;
     }
