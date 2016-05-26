@@ -31,12 +31,12 @@ public final class GeonamesOptionsPanelController extends OptionsPanelController
 
     public void update() {
         getPanel().load();
-        changed = false;
+        //changed = false;
     }
 
     public void applyChanges() {
         getPanel().store();
-        changed = false;
+        //changed = false;
     }
 
     public void cancel() {
@@ -44,7 +44,7 @@ public final class GeonamesOptionsPanelController extends OptionsPanelController
     }
 
     public boolean isValid() {
-        return getPanel().valid();
+        return true; //getPanel().valid();
     }
 
     public boolean isChanged() {
@@ -70,6 +70,7 @@ public final class GeonamesOptionsPanelController extends OptionsPanelController
     private GeonamesPanel getPanel() {
         if (panel == null) {
             panel = new GeonamesPanel(this);
+            changed = true;   // changed needs to be true to enable the Apply Button. I choose to always enable it.
         }
         return panel;
     }
