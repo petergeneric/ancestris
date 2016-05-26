@@ -137,7 +137,7 @@ public class TestAge extends Test {
             int m = delta.getMonths() + (12 * delta.getYears());
             if (m == 0 && pit1.isComplete() && pit2.isComplete()) {
                 int j = delta.getDays();
-                if (j < 2) {
+                if (report.showTwins && j < 2) {
                     WordBuffer words = new WordBuffer();
                     words.append(NbBundle.getMessage(this.getClass(), "err.twins", mainEntity.toString(), indi.toString(), String.valueOf(years)));
                     issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));

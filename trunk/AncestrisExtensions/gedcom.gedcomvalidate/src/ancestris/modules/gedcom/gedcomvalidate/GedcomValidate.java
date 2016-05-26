@@ -79,6 +79,8 @@ public class GedcomValidate implements Validator {
     public int maxDiffAgeSpouses = modulePreferences.getInt("maxDiffAgeSpouses", 20);
     public PointInTime minYear = new PointInTime(0, 0, modulePreferences.getInt("minYear", 1));
     public PointInTime maxYear = new PointInTime(0, 0, modulePreferences.getInt("maxYear", 3000));
+    public boolean showTwins = modulePreferences.getBoolean("showTwins", false);
+    
     /* TODO
      *
      * [ ] individuals who are cremated more than MAX_BURRYING_OR_CREM years after they die

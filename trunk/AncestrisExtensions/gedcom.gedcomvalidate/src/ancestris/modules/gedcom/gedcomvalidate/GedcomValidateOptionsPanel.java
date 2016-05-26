@@ -50,6 +50,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         minAgeRETIFormattedTextField = new javax.swing.JFormattedTextField();
         minDiffAgeSiblingFormattedTextField = new javax.swing.JFormattedTextField();
         maxDiffAgeSiblingLabel1 = new javax.swing.JLabel();
+        cbTwins = new javax.swing.JCheckBox();
         jPanel3 = new javax.swing.JPanel();
         isPrivateValueValidCheckBox = new javax.swing.JCheckBox();
         isEmptyValueValidCheckBox = new javax.swing.JCheckBox();
@@ -181,6 +182,8 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(maxDiffAgeSiblingLabel1, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "minDiffAgeSibling")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbTwins, org.openide.util.NbBundle.getMessage(GedcomValidateOptionsPanel.class, "GedcomValidateOptionsPanel.cbTwins.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -201,18 +204,16 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(maxDiffAgeSpousesLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(maxAgeFatherLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(minAgeFatherLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(maxAgeMotherLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(minAgeMotherLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(maxDiffAgeSiblingLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(maxDiffAgeSiblingLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addGap(6, 6, 6))
                     .addComponent(maxAgeBAPMLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(minAgeMARRLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(minAgeRETILabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(minAgeRETILabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbTwins, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(maxDiffAgeSiblingLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(maxDiffAgeSiblingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(minAgeMotherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(maxAgeMotherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(minAgeFatherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(maxAgeFatherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(10, 10, 10))
         );
         jPanel2Layout.setVerticalGroup(
@@ -242,6 +243,8 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(minDiffAgeSiblingFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(maxDiffAgeSiblingLabel1))
+                .addGap(0, 0, 0)
+                .addComponent(cbTwins)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maxDiffAgeSpousesLabel)
@@ -430,6 +433,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         minAgeMotherFormattedTextField.setValue(modulePreferences.getInt("minAgeMother", 10));
         maxDiffAgeSiblingFormattedTextField.setValue(modulePreferences.getInt("maxDiffAgeSibling", 21));
         minDiffAgeSiblingFormattedTextField.setValue(modulePreferences.getInt("minDiffAgeSibling", 10));
+        cbTwins.setSelected(modulePreferences.getBoolean("showTwins", false));
         maxDiffAgeSpousesFormattedTextField.setValue(modulePreferences.getInt("maxDiffAgeSpouses", 20));
         
     }
@@ -456,6 +460,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         modulePreferences.putInt("minAgeMother", Integer.valueOf(minAgeMotherFormattedTextField.getText()));
         modulePreferences.putInt("maxDiffAgeSibling", Integer.valueOf(maxDiffAgeSiblingFormattedTextField.getText()));
         modulePreferences.putInt("minDiffAgeSibling", Integer.valueOf(minDiffAgeSiblingFormattedTextField.getText()));
+        modulePreferences.putBoolean("showTwins", Boolean.valueOf(cbTwins.isSelected()));
         modulePreferences.putInt("maxDiffAgeSpouses", Integer.valueOf(maxDiffAgeSpousesFormattedTextField.getText()));
     }
 
@@ -464,6 +469,7 @@ final class GedcomValidateOptionsPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox cbTwins;
     private javax.swing.JCheckBox isEmptyValueValidCheckBox;
     private javax.swing.JCheckBox isExtramaritalValidCheckBox;
     private javax.swing.JCheckBox isFileNotFoundValidCheckBox;
