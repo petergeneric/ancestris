@@ -20,13 +20,13 @@ public final class FlashListOptionsPanelController extends OptionsPanelControlle
     @Override
     public void update() {
         getPanel().load();
-        changed = false;
+        //changed = false;
     }
 
     @Override
     public void applyChanges() {
         getPanel().store();
-        changed = false;
+        //changed = false;
     }
 
     @Override
@@ -36,7 +36,7 @@ public final class FlashListOptionsPanelController extends OptionsPanelControlle
 
     @Override
     public boolean isValid() {
-        return getPanel().valid();
+        return true; //getPanel().valid();
     }
 
     @Override
@@ -67,6 +67,7 @@ public final class FlashListOptionsPanelController extends OptionsPanelControlle
     private FlashListPanel getPanel() {
         if (panel == null) {
             panel = new FlashListPanel(this);
+            changed = true;   // changed needs to be true to enable the Apply Button. I choose to always enable it.
         }
         return panel;
     }
