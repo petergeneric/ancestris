@@ -185,7 +185,7 @@ public final class FamilyPanel extends JPanel {
 
     private void refresh() {
 
-        if (focusFam == null && focusIndi.getNoOfFams() > 0) {
+        if (focusFam == null && focusIndi != null && focusIndi.getNoOfFams() > 0) {
             focusFam = focusIndi.getFamiliesWhereSpouse()[0];
         }
         husband.setContext(focusIndi);
