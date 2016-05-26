@@ -35,7 +35,7 @@ public final class TreeSharingOptionsPanelController extends OptionsPanelControl
     @Override
     public void update() {
         getPanel().load();
-        changed = false;
+        //changed = false;
     }
 
     @Override
@@ -44,7 +44,7 @@ public final class TreeSharingOptionsPanelController extends OptionsPanelControl
             @Override
             public void run() {
                 getPanel().store();
-                changed = false;
+                //changed = false;
             }
         });
     }
@@ -56,7 +56,7 @@ public final class TreeSharingOptionsPanelController extends OptionsPanelControl
 
     @Override
     public boolean isValid() {
-        return getPanel().valid();
+        return true; // getPanel().valid();
     }
 
     @Override
@@ -87,6 +87,7 @@ public final class TreeSharingOptionsPanelController extends OptionsPanelControl
     private TreeSharingOptionsPanel getPanel() {
         if (panel == null) {
             panel = new TreeSharingOptionsPanel(this);
+            changed = true;   // changed needs to be true to enable the Apply Button. I choose to always enable it.
         }
         return panel;
     }
