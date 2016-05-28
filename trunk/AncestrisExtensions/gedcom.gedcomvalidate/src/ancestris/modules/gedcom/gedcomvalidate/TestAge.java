@@ -133,20 +133,18 @@ public class TestAge extends Test {
 
         // test it 
         boolean error = isError(delta.getYears());
-        boolean likelyTwins = false;
         if (explanation.equals("minDiffAgeSibling")) {
             int m = delta.getMonths() + (12 * delta.getYears());
-            if (m == 0 && pit1.isComplete() && pit2.isComplete()) {
-                int j = delta.getDays();
-                likelyTwins = (m == 0) && (j < 2);
-                if (report.showTwins && likelyTwins) {
-                    WordBuffer words = new WordBuffer();
-                    words.append(NbBundle.getMessage(this.getClass(), "err.twins", mainEntity.toString(), indi.toString(), String.valueOf(years)));
-                    issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
-                    continue;
-                }
+            int j = delta.getDays();
+            boolean datesAreComplete = pit1.isComplete() && pit2.isComplete();
+            boolean likelyTwins = (m == 0) && (j < 2);
+            if (report.showTwins && datesAreComplete && likelyTwins) {
+                WordBuffer words = new WordBuffer();
+                words.append(NbBundle.getMessage(this.getClass(), "err.twins", mainEntity.toString(), indi.toString(), String.valueOf(years)));
+                issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
+                continue;
             }
-            error = isError(m) && !likelyTwins;
+            error = isError(m) && datesAreComplete && !likelyTwins;
         }
         if (error) {
             // Builds the error context
