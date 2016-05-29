@@ -2031,7 +2031,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         return null;
     }
 
-    public Indi getEditedIndi() {
+    @Override
+    public Entity getEditedEntity() {
         return indi;
     }
 

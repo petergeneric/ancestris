@@ -12,9 +12,12 @@
 
 package ancestris.modules.editors.standard.actions;
 
+import ancestris.api.editor.Editor;
 import ancestris.modules.editors.standard.EditorTopComponent;
+import ancestris.modules.editors.standard.IndiPanel;
 import ancestris.modules.editors.standard.tools.IndiCreator;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import genj.util.ChangeSupport;
 import java.awt.event.ActionEvent;
@@ -47,8 +50,16 @@ public class ActionCreation extends AbstractAction {
         this.relation = relation;
         this.spouse = spouse;
         
-        this.indi = editorTopComponent.getEditor().getEditedIndi();
-        this.changes = editorTopComponent.getEditor().getChangeSupport();
+        Entity entity = editorTopComponent.getEditor().getEditedEntity();
+        if (entity instanceof Indi) {
+            this.indi = (Indi) entity;
+        } else {
+            this.indi = null;
+        }
+        Editor editor = editorTopComponent.getEditor();
+        if (editor instanceof IndiPanel) {
+            this.changes = ((IndiPanel)editor).getChangeSupport();
+        }
     }
 
     public void actionPerformed(ActionEvent e) {

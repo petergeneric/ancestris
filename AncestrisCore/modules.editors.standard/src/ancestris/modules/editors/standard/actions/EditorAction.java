@@ -13,6 +13,7 @@
 package ancestris.modules.editors.standard.actions;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.editors.standard.EditorTopComponent;
 import ancestris.modules.editors.standard.tools.IndiCreator;
@@ -21,8 +22,13 @@ import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
+import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
+import genj.gedcom.Repository;
+import genj.gedcom.Source;
+import genj.gedcom.Submitter;
 import java.util.List;
 import javax.swing.Action;
 import org.openide.util.NbBundle;
@@ -39,16 +45,17 @@ public class EditorAction extends AncestrisEditor {
     @Override
     public boolean canEdit(Property property) {
         return (property instanceof Indi
-                || property instanceof Fam);
-//                || property instanceof Note
-//                || property instanceof Media
-//                || property instanceof Source
-//                || property instanceof Repository);
+                || property instanceof Fam
+                || property instanceof Note
+                || property instanceof Media
+                || property instanceof Source
+                || property instanceof Repository
+                || property instanceof Submitter);
     }
 
     @Override
     public boolean isActive() {
-        return false;
+        return true;
     }
 
     @Override
@@ -63,8 +70,8 @@ public class EditorAction extends AncestrisEditor {
             EditorTopComponent editorTopComponent = getCurrentEditorTopComponent(contextToOpen);
             if (editorTopComponent != null) {
                 //editorTopComponent.setContext(contextToOpen);
-                //editorTopComponent.requestActive();
                 SelectionDispatcher.fireSelection(contextToOpen);
+                editorTopComponent.requestActive();
             } else {
                 AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
                 win.open();
@@ -124,8 +131,9 @@ public class EditorAction extends AncestrisEditor {
     private EditorTopComponent getCurrentEditorTopComponent(Context context) {
         EditorTopComponent ret = null;
         for (EditorTopComponent editorTopComponent : (List<EditorTopComponent>) AncestrisPlugin.lookupAll(EditorTopComponent.class)) {
-            if (editorTopComponent.getEditor() != null) {
-                if (editorTopComponent.getEditor().getEditedIndi() == context.getEntity()) {
+            Editor editor = editorTopComponent.getEditor();
+            if (editor != null) {
+                if (editor.getEditedEntity() == context.getEntity())  {
                     return editorTopComponent;
                 }
                 ret = editorTopComponent;

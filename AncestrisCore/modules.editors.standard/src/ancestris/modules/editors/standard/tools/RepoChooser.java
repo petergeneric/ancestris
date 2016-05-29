@@ -349,7 +349,9 @@ public class RepoChooser extends JPanel implements DocumentListener {
         textFilter = new javax.swing.JTextField();
         jScrollPaneRepo = new javax.swing.JScrollPane();
         repoList = new javax.swing.JList(filteredModel);
+        jLabel1 = new javax.swing.JLabel();
 
+        setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.toolTipText")); // NOI18N
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
@@ -554,18 +556,26 @@ public class RepoChooser extends JPanel implements DocumentListener {
         });
         jScrollPaneRepo.setViewportView(repoList);
 
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneRepo)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(filterLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 296, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPaneRepo)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(filterLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 295, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel1)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -576,8 +586,9 @@ public class RepoChooser extends JPanel implements DocumentListener {
                     .addComponent(filterLabel)
                     .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneRepo, javax.swing.GroupLayout.DEFAULT_SIZE, 417, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jScrollPaneRepo, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane.setRightComponent(jPanel2);
@@ -701,6 +712,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JComboBox jComboBoxMedia;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAddress;
     private javax.swing.JLabel jLabelCaln;
     private javax.swing.JLabel jLabelMedia;
@@ -982,6 +994,9 @@ public class RepoChooser extends JPanel implements DocumentListener {
             }
             String text = entry.text.substring(0, Math.min(entry.text.length(), nbMaxCars)) + add;
             setPreferredSize(new Dimension(labelWidth, labelHeight));
+            // black : entity & used
+            // blue  : ?
+            // red   : not used
             String color = entry.isRepo && !entry.isUnused ? "black" : !entry.isRepo && !entry.isUnused ? "blue" : "red";
             if (entry.entity == null) { // new note
                 text = "<center><font size=+0><br><br><i><b>" + text + "</b></i></font></center>";
