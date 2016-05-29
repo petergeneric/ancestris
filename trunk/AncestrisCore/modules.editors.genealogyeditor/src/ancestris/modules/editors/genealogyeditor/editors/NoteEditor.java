@@ -243,4 +243,9 @@ public class NoteEditor extends EntityEditor {
             mNote.setValue(noteTextTextArea.getText());
         }
     }
+
+    @Override
+    public Entity getEditedEntity() {
+        return mNote;
+    }
 }

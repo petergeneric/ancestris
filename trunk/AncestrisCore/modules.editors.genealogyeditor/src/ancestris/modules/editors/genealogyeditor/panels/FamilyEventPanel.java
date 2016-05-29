@@ -340,7 +340,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                         .addComponent(EventTypeLabel)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(husbandAgeTextField, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(husbandAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(wifeAgeLabel)
                     .addComponent(wifeAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(husbandAgeLabel, GroupLayout.PREFERRED_SIZE, 19, GroupLayout.PREFERRED_SIZE)))

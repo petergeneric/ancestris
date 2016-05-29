@@ -178,7 +178,7 @@
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
-                              <Component id="husbandAgeTextField" alignment="3" min="-2" pref="19" max="-2" attributes="0"/>
+                              <Component id="husbandAgeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="wifeAgeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="wifeAgeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="husbandAgeLabel" alignment="3" min="-2" pref="19" max="-2" attributes="0"/>

@@ -1719,6 +1719,11 @@ public class FamilyEditor extends EntityEditor {
         updateOnGoing = false;
     }
 
+    @Override
+    public Entity getEditedEntity() {
+        return mFamily;
+    }
+
     private class EventsListSelectionHandler implements ListSelectionListener {
 
         @Override
