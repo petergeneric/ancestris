@@ -171,7 +171,6 @@ public final class IndividualEditor extends EntityEditor {
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        filler2 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         eventTypeComboBox = new javax.swing.JComboBox<String>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         deleteEventButton = new javax.swing.JButton();
@@ -288,8 +287,8 @@ public final class IndividualEditor extends EntityEditor {
                             .addComponent(SOSALabel)
                             .addComponent(SOSATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addGap(18, 18, 18))
+                        .addComponent(nameEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         individualInformationTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
@@ -302,7 +301,6 @@ public final class IndividualEditor extends EntityEditor {
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
-        jToolBar1.add(filler2);
 
         eventTypeComboBox.setModel(mEventsModel);
         eventTypeComboBox.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.eventTypeComboBox.toolTipText"), new Object[] {})); // NOI18N
@@ -351,9 +349,10 @@ public final class IndividualEditor extends EntityEditor {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, 0)
-                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(individualEventEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         eventsSplitPane.setRightComponent(jPanel1);
@@ -366,9 +365,10 @@ public final class IndividualEditor extends EntityEditor {
         );
         eventsPanelLayout.setVerticalGroup(
             eventsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, eventsPanelLayout.createSequentialGroup()
-                .addComponent(eventsSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                .addGap(0, 0, 0))
+            .addGroup(eventsPanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(eventsSplitPane)
+                .addContainerGap())
         );
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.eventsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/event.png")), eventsPanel); // NOI18N
@@ -476,13 +476,15 @@ public final class IndividualEditor extends EntityEditor {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(generalPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeDateLabel)
-                    .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(changeDateLabel)
+                        .addContainerGap())))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -696,7 +698,6 @@ public final class IndividualEditor extends EntityEditor {
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel familiesChildTreeTablePanel;
     private javax.swing.JPanel familiesSpousePanel;
     private ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel familiesSpouseTreeTablePanel;
-    private javax.swing.Box.Filler filler2;
     private javax.swing.Box.Filler filler3;
     private javax.swing.JPanel galleryPanel;
     private javax.swing.JPanel generalPanel;
