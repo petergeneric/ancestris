@@ -19,6 +19,7 @@ package ancestris.modules.wizards.newgedcom;
 
 import ancestris.api.editor.Editor;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.view.ViewContext;
 import java.awt.Component;
 
@@ -119,5 +120,10 @@ public class GedcomVisualPanel extends Editor {
 //            return gedcomPanel.getName();
 //        }
         return "";
+    }
+
+    @Override
+    public Entity getEditedEntity() {
+        return context.getEntity();
     }
 }
