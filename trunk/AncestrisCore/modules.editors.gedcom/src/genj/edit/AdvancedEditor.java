@@ -22,13 +22,10 @@
 package genj.edit;
 
 import ancestris.api.editor.Editor;
-import ancestris.app.App;
-import ancestris.app.StartupFiles;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
-import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.common.SelectEntityWidget;
@@ -373,6 +370,11 @@ import org.openide.windows.WindowManager;
     @Override
     public String getToolTipText() {
         return getName();
+    }
+
+    @Override
+    public Entity getEditedEntity() {
+        return view.getEntity();
     }
 
     /**

@@ -223,4 +223,9 @@ class BasicEditor extends Editor{
         return SwingUtilities.isDescendingFrom(focus, this) ? (PropertyBean) focus : null;
 
     }
+
+    @Override
+    public Entity getEditedEntity() {
+        return currentEntity;
+    }
 } //BasicEditor
