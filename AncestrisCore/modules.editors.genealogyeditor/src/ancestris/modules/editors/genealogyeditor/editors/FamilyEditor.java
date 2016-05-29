@@ -201,7 +201,7 @@ public class FamilyEditor extends EntityEditor {
                 .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        fatherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.fatherPanel.border.title"), new Object[] {}))); // NOI18N
+        fatherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.fatherPanel.border.title"), new Object[] {}), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP)); // NOI18N
         fatherPanel.setMinimumSize(new java.awt.Dimension(410, 135));
         fatherPanel.setPreferredSize(new java.awt.Dimension(410, 135));
 
@@ -315,7 +315,7 @@ public class FamilyEditor extends EntityEditor {
                             .addComponent(husbandDeathDateLabelDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addComponent(husbandNameTextField)
-                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 294, Short.MAX_VALUE)))
+                    .addComponent(fatherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)))
         );
         fatherPanelLayout.setVerticalGroup(
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -341,7 +341,7 @@ public class FamilyEditor extends EntityEditor {
                 .addContainerGap())
         );
 
-        motherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.motherPanel.border.title"), new Object[] {}))); // NOI18N
+        motherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.motherPanel.border.title"), new Object[] {}), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP)); // NOI18N
         motherPanel.setMinimumSize(new java.awt.Dimension(410, 135));
         motherPanel.setPreferredSize(new java.awt.Dimension(410, 135));
 
@@ -435,7 +435,7 @@ public class FamilyEditor extends EntityEditor {
                 .addComponent(wifeImageBean, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE)
+                    .addComponent(motherToolBar, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                     .addGroup(motherPanelLayout.createSequentialGroup()
                         .addGroup(motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(motherPanelLayout.createSequentialGroup()
