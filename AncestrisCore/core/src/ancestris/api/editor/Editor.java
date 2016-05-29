@@ -13,6 +13,7 @@ package ancestris.api.editor;
 
 import ancestris.view.ExplorerHelper;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.UnitOfWork;
@@ -46,6 +47,8 @@ public abstract class Editor extends JPanel {
     public abstract ViewContext getContext();
 
     public abstract Component getEditorComponent();
+
+    public abstract Entity getEditedEntity();
 
     //FIXME: we should specify what explorerHelper is in detail and this method too
     public ExplorerHelper getExplorerHelper(){
