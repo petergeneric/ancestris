@@ -1,13 +1,9 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import genj.gedcom.Property;
-import javax.swing.InputMap;
-import javax.swing.KeyStroke;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.text.DefaultEditorKit;
-import org.jdesktop.swingx.autocomplete.AutoCompleteDecorator;
 import org.openide.util.ChangeSupport;
 
 /**
@@ -129,7 +125,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
         eMailAddrLabel = new javax.swing.JLabel();
         eMailAddrTextField = new javax.swing.JTextField();
 
-        addressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.addressPanel.border.title"))); // NOI18N
+        addressPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(AddressEditorPanel.class, "AddressEditorPanel.addressPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP)); // NOI18N
 
         addressTextArea.setColumns(20);
         addressTextArea.setRows(5);
@@ -164,7 +160,7 @@ public class AddressEditorPanel extends javax.swing.JPanel {
             AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(AddressStructurePanelLayout.createSequentialGroup()
                 .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                    .addComponent(countryLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 110, Short.MAX_VALUE)
                     .addComponent(cityLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,15 +169,15 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                     .addComponent(addrLine3TextField)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, AddressStructurePanelLayout.createSequentialGroup()
                         .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(countryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addComponent(countryTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                             .addComponent(cityTextField))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(postalCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 78, Short.MAX_VALUE)
+                            .addComponent(postalCodeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
                             .addComponent(stateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(AddressStructurePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(postalCodeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                            .addComponent(postalCodeTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
                             .addComponent(stateTextField)))))
         );
         AddressStructurePanelLayout.setVerticalGroup(
