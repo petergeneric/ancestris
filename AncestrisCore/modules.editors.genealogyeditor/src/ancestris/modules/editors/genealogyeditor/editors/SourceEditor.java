@@ -528,4 +528,9 @@ public class SourceEditor extends EntityEditor {
             }
         }
     }
+
+    @Override
+    public Entity getEditedEntity() {
+        return mSource;
+    }
 }

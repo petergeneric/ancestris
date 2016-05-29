@@ -1037,6 +1037,11 @@ public final class IndividualEditor extends EntityEditor {
         updateOnGoing = false;
     }
 
+    @Override
+    public Entity getEditedEntity() {
+        return mIndividual;
+    }
+
     private class EventsListSelectionHandler implements ListSelectionListener {
 
         @Override

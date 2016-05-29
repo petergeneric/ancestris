@@ -249,4 +249,9 @@ public class RepositoryEditor extends EntityEditor {
         }
         addressEditorPanel.commit();
     }
+
+    @Override
+    public Entity getEditedEntity() {
+        return mRepository;
+    }
 }

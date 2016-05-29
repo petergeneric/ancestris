@@ -125,7 +125,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectTitleLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.multiMediaObjectTitleLabel.text")); // NOI18N
 
         multiMediaObjectTitleTextField.setMinimumSize(new java.awt.Dimension(303, 19));
-        multiMediaObjectTitleTextField.setPreferredSize(new java.awt.Dimension(303, 19));
+        multiMediaObjectTitleTextField.setPreferredSize(new java.awt.Dimension(303, 27));
 
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.changeDateLabel.text")); // NOI18N
@@ -324,5 +324,10 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 }
             }
         }
+    }
+
+    @Override
+    public Entity getEditedEntity() {
+        return mMultiMediaObject.getEntity();
     }
 }

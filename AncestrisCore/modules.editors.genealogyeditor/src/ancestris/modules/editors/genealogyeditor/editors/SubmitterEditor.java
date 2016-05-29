@@ -325,4 +325,9 @@ public class SubmitterEditor extends EntityEditor {
             addressEditorPanel.commit();
         }
     }
+
+    @Override
+    public Entity getEditedEntity() {
+        return mSubmitter;
+    }
 }
