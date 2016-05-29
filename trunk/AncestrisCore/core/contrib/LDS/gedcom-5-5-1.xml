@@ -363,6 +363,7 @@
   <LANG type="PropertySimpleValue" img="Place"/>
   +++++++++++++ References +++++++++++++
   <OBJE super="INDI:OBJE"/>
+  <NOTE super="INDI:NOTE"/>
   <RFN super="INDI:RFN"/>
   <RIN super="INDI:RIN"/>
   +++++++++++++ change +++++++++++++
