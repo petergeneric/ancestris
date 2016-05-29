@@ -12,7 +12,6 @@
 package ancestris.api.editor;
 
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -65,7 +64,7 @@ public abstract class AncestrisEditor {
         String canonicalName = GedcomOptions.getInstance().getDefaultEditor();
         for (AncestrisEditor edt : findEditors()) {
             // Return the editor that can edit property && is the default one && is active, or else just the last looped AncestrisEditor
-            if (edt.canEdit(property) && edt.getName(true).equals(canonicalName)) {
+            if (edt.canEdit(property) && edt.getName(true).contains(canonicalName)) {
                 if (edt.isActive()) {
                     return edt;
                 }
@@ -233,11 +232,11 @@ public abstract class AncestrisEditor {
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                SelectionDispatcher.muteSelection(true);
+                //SelectionDispatcher.muteSelection(true);
                 if (editor != null) {
                     editor.edit(property);
                 }
-                SelectionDispatcher.muteSelection(false);
+                //SelectionDispatcher.muteSelection(false);
             }
         }
     }
