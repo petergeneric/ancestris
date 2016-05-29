@@ -134,7 +134,10 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Father">
+            <TitledBorder position="2" title="Father">
+              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                <EtchetBorder/>
+              </Border>
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="FamilyEditor.fatherPanel.border.title" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </TitledBorder>
           </Border>
@@ -173,7 +176,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                       </Group>
                       <Component id="husbandNameTextField" max="32767" attributes="0"/>
-                      <Component id="fatherToolBar" pref="294" max="32767" attributes="0"/>
+                      <Component id="fatherToolBar" pref="310" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -369,7 +372,10 @@
       <Properties>
         <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
           <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-            <TitledBorder title="Mother">
+            <TitledBorder position="2" title="Mother">
+              <Border PropertyName="innerBorder" info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
+                <EtchetBorder/>
+              </Border>
               <ResourceString PropertyName="titleX" bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="FamilyEditor.motherPanel.border.title" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
             </TitledBorder>
           </Border>
@@ -390,7 +396,7 @@
                   <Component id="wifeImageBean" min="-2" pref="71" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="motherToolBar" alignment="0" pref="301" max="32767" attributes="0"/>
+                      <Component id="motherToolBar" alignment="0" pref="317" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">

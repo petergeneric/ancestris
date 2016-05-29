@@ -61,7 +61,7 @@ public class SubmitterEditor extends EntityEditor {
         multimediaObjectCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.MultimediaObjectCitationsTablePanel();
         noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
 
-        languagesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.languagesPanel.border.title"))); // NOI18N
+        languagesPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.languagesPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.TOP)); // NOI18N
 
         javax.swing.GroupLayout languagesPanelLayout = new javax.swing.GroupLayout(languagesPanel);
         languagesPanel.setLayout(languagesPanelLayout);
