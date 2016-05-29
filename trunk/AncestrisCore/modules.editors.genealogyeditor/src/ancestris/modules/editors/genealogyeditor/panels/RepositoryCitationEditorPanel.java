@@ -52,12 +52,10 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         repositoryPanel = new javax.swing.JPanel();
-        repositoryLabel = new javax.swing.JLabel();
-        repositoryTextField = new javax.swing.JTextField();
         addRepositoryButton = new javax.swing.JButton();
         editRepositoryButton = new javax.swing.JButton();
-        deleteRepositoryButton = new javax.swing.JButton();
         linkToRepositoryButton = new javax.swing.JButton();
+        deleteRepositoryButton = new javax.swing.JButton();
         repositoryCitationTabbedPanePanel = new javax.swing.JPanel();
         repositoryCitationTabbedPane = new javax.swing.JTabbedPane();
         shelfNumberPanel = new javax.swing.JPanel();
@@ -68,10 +66,8 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         editShelfNumberButton = new javax.swing.JButton();
         deleteShelfNumberButton = new javax.swing.JButton();
         noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
-
-        org.openide.awt.Mnemonics.setLocalizedText(repositoryLabel, org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.repositoryLabel.text")); // NOI18N
-
-        repositoryTextField.setEditable(false);
+        repositoryLabel = new javax.swing.JLabel();
+        repositoryTextField = new javax.swing.JTextField();
 
         addRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
         addRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.addRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
@@ -95,17 +91,6 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        deleteRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
-        deleteRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.deleteRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
-        deleteRepositoryButton.setFocusable(false);
-        deleteRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        deleteRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        deleteRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteRepositoryButtonActionPerformed(evt);
-            }
-        });
-
         linkToRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
         linkToRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.linkToRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
         linkToRepositoryButton.setFocusable(false);
@@ -117,32 +102,38 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        deleteRepositoryButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"))); // NOI18N
+        deleteRepositoryButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RepositoryCitationEditorPanel.deleteRepositoryButton.toolTipText"), new Object[] {})); // NOI18N
+        deleteRepositoryButton.setFocusable(false);
+        deleteRepositoryButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        deleteRepositoryButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        deleteRepositoryButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteRepositoryButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout repositoryPanelLayout = new javax.swing.GroupLayout(repositoryPanel);
         repositoryPanel.setLayout(repositoryPanelLayout);
         repositoryPanelLayout.setHorizontalGroup(
             repositoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(repositoryPanelLayout.createSequentialGroup()
-                .addComponent(repositoryLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(repositoryTextField)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addContainerGap()
                 .addComponent(addRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(linkToRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(editRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(deleteRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         repositoryPanelLayout.setVerticalGroup(
             repositoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(repositoryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                .addComponent(repositoryLabel)
-                .addComponent(repositoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(linkToRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(addRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(editRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addComponent(deleteRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(editRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(linkToRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(addRepositoryButton, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+            .addComponent(deleteRepositoryButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
 
         repositoryCitationTabbedPanePanel.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -206,7 +197,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             .addGroup(shelfNumberPanelLayout.createSequentialGroup()
                 .addComponent(shelfNumberToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(shelfNumberScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE))
+                .addComponent(shelfNumberScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
         );
 
         repositoryCitationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.shelfNumberPanel.TabConstraints.tabTitle"), shelfNumberPanel); // NOI18N
@@ -216,12 +207,16 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         repositoryCitationTabbedPanePanel.setLayout(repositoryCitationTabbedPanePanelLayout);
         repositoryCitationTabbedPanePanelLayout.setHorizontalGroup(
             repositoryCitationTabbedPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(repositoryCitationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+            .addComponent(repositoryCitationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 652, Short.MAX_VALUE)
         );
         repositoryCitationTabbedPanePanelLayout.setVerticalGroup(
             repositoryCitationTabbedPanePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(repositoryCitationTabbedPane)
         );
+
+        org.openide.awt.Mnemonics.setLocalizedText(repositoryLabel, org.openide.util.NbBundle.getMessage(RepositoryCitationEditorPanel.class, "RepositoryCitationEditorPanel.repositoryLabel.text")); // NOI18N
+
+        repositoryTextField.setEditable(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -230,7 +225,12 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(repositoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(repositoryLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(repositoryTextField)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(repositoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(repositoryCitationTabbedPanePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -238,7 +238,11 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(repositoryPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 20, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(repositoryLabel)
+                        .addComponent(repositoryTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(repositoryPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(repositoryCitationTabbedPanePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
