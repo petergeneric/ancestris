@@ -157,6 +157,7 @@ public class NoteChooser extends javax.swing.JPanel {
         textFilter = new javax.swing.JTextField();
         jScrollPaneNote = new javax.swing.JScrollPane();
         noteList = new javax.swing.JList(filteredModel);
+        jLabel1 = new javax.swing.JLabel();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -241,6 +242,9 @@ public class NoteChooser extends javax.swing.JPanel {
         });
         jScrollPaneNote.setViewportView(noteList);
 
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(NoteChooser.class, "NoteChooser.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -252,7 +256,10 @@ public class NoteChooser extends javax.swing.JPanel {
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(filterLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)))
+                        .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -263,7 +270,9 @@ public class NoteChooser extends javax.swing.JPanel {
                     .addComponent(filterLabel)
                     .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 355, Short.MAX_VALUE)
+                .addComponent(jScrollPaneNote, javax.swing.GroupLayout.DEFAULT_SIZE, 342, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel1)
                 .addContainerGap())
         );
 
@@ -329,8 +338,8 @@ public class NoteChooser extends javax.swing.JPanel {
                         }
                     });
                 }
-            } else {
-                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditNote"));
+            } else if (!note.isNote) {
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", entity.toString(true)));
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
@@ -349,6 +358,7 @@ public class NoteChooser extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPaneNote;
@@ -497,6 +507,9 @@ public class NoteChooser extends javax.swing.JPanel {
             }
             String text = entry.text.substring(0, Math.min(entry.text.length(), nbMaxCars)) + add;
             setPreferredSize(new Dimension(labelWidth, labelHeight));
+            // black : entity & used
+            // blue  : private note, used
+            // red   : not used
             String color = entry.isNote && !entry.isUnused ? "black" : !entry.isNote && !entry.isUnused ? "blue" : "red";
             if (entry.entity == null) { // new note
                 text = "<br><br><br><br>&lt;<b>" + text + "</b>&gt;";

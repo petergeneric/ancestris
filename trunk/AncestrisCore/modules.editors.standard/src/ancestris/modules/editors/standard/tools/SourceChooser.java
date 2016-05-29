@@ -196,6 +196,7 @@ public class SourceChooser extends javax.swing.JPanel {
         textFilter = new javax.swing.JTextField();
         jScrollPaneSource = new javax.swing.JScrollPane();
         sourceList = new javax.swing.JList(filteredModel);
+        jLabel1 = new javax.swing.JLabel();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -314,18 +315,26 @@ public class SourceChooser extends javax.swing.JPanel {
         });
         jScrollPaneSource.setViewportView(sourceList);
 
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SourceChooser.class, "SourceChooser.jLabel1.text")); // NOI18N
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPaneSource)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(filterLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)))
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPaneSource)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(filterLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textFilter, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -336,7 +345,9 @@ public class SourceChooser extends javax.swing.JPanel {
                     .addComponent(filterLabel)
                     .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneSource, javax.swing.GroupLayout.DEFAULT_SIZE, 344, Short.MAX_VALUE))
+                .addComponent(jScrollPaneSource, javax.swing.GroupLayout.DEFAULT_SIZE, 328, Short.MAX_VALUE)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jSplitPane.setRightComponent(jPanel2);
@@ -400,8 +411,8 @@ public class SourceChooser extends javax.swing.JPanel {
                         }
                     });
                 }
-            } else {
-                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditSource"));
+            } else if (!source.isSource) {
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", entity.toString(true)));
                 menu.add(menuItem);
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
@@ -424,6 +435,7 @@ public class SourceChooser extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLayeredPane jLayeredPane1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -584,6 +596,9 @@ public class SourceChooser extends javax.swing.JPanel {
             int labelHeight = THUMB_HEIGHT + 12 * nbLines;  // 12 pixels per line for font size 10 set in component netbeans parameters
             
             setPreferredSize(new Dimension(labelWidth, labelHeight));
+            // black : title & used
+            // blue  : no title & used
+            // red   : not used
             String color = entry.isTrueTitle && !entry.isUnused ? "black" : !entry.isTrueTitle && !entry.isUnused ? "blue" : "red";
             setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
             setIcon(entry.icon);
