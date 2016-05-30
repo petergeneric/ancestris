@@ -18,7 +18,7 @@ import org.openide.util.Utilities;
 @ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/Note_add.png",
         displayName = "#CTL_GenealogyEditorCreateNoteAction")
 @ActionReferences({
-    @ActionReference(path = "Toolbars/GenealogyEditor", position = 400)
+    @ActionReference(path = "Toolbars/GenealogyEditor", position = 500)
 })
 @Messages("CTL_GenealogyEditorCreateNoteAction=Create a new Note")
 public final class GenealogyEditorCreateNoteAction implements ActionListener {
