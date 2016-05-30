@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
-import ancestris.util.swing.DialogManager;
+import ancestris.modules.editors.geoplace.PlaceEditorPanel;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.awt.Component;
@@ -9,11 +9,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.event.ChangeListener;
-import org.openide.DialogDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -108,9 +108,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         aDateBean = new ancestris.modules.beans.ADateBean();
         placeLabel = new javax.swing.JLabel();
         placeTextField = new javax.swing.JTextField();
-        addPlaceButton = new javax.swing.JButton();
         editPlaceButton = new javax.swing.JButton();
-        linkToPlaceButton = new javax.swing.JButton();
         recordedEventsScrollPane = new javax.swing.JScrollPane();
         recordedEventsList = new javax.swing.JList();
 
@@ -126,17 +124,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         placeTextField.setEditable(false);
         placeTextField.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.placeTextField.text")); // NOI18N
 
-        addPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addPlaceButton.setMaximumSize(new java.awt.Dimension(26, 26));
-        addPlaceButton.setMinimumSize(new java.awt.Dimension(26, 26));
-        addPlaceButton.setPreferredSize(new java.awt.Dimension(26, 26));
-        addPlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addPlaceButtonActionPerformed(evt);
-            }
-        });
-
-        editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png"))); // NOI18N
         editPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
         editPlaceButton.setFocusable(false);
         editPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
@@ -147,20 +135,6 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         editPlaceButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 editPlaceButtonActionPerformed(evt);
-            }
-        });
-
-        linkToPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
-        linkToPlaceButton.setFocusable(false);
-        linkToPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        linkToPlaceButton.setMaximumSize(new java.awt.Dimension(26, 26));
-        linkToPlaceButton.setMinimumSize(new java.awt.Dimension(26, 26));
-        linkToPlaceButton.setPreferredSize(new java.awt.Dimension(26, 26));
-        linkToPlaceButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        linkToPlaceButton.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                linkToPlaceButtonActionPerformed(evt);
             }
         });
 
@@ -187,13 +161,9 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
                             .addComponent(dateLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 604, Short.MAX_VALUE)
+                            .addComponent(aDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(placeTextField)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(recordedEventsLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -205,77 +175,46 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(recordedEventsLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(recordedEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 221, Short.MAX_VALUE)
+                .addComponent(recordedEventsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(aDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(dateLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(linkToPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(editPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(placeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(placeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void addPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addPlaceButtonActionPerformed
-        Gedcom gedcom = mEvent.getGedcom();
-        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        int undoNb = gedcom.getUndoNb();
-
-        placeEditorPanel.set(mEvent, mPlace, null);
-
-        ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(
-                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-                placeEditorPanel);
-        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : "");
-            addPlaceButton.setVisible(false);
-            editPlaceButton.setVisible(true);
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }//GEN-LAST:event_addPlaceButtonActionPerformed
 
     private void editPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
         Gedcom gedcom = mEvent.getGedcom();
         int undoNb = gedcom.getUndoNb();
         final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        placeEditorPanel.set(mEvent, mPlace, null);
+        
+        JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { OKButton, cancelButton };
+        placeEditorPanel.setOKButton(OKButton);
+        placeEditorPanel.set(gedcom, mPlace, false);  //mAdress not used
 
         ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(
-                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
                 placeEditorPanel);
         eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+        eventEditorDialog.setOptions(options);
+        Object o = eventEditorDialog.show();
+        
+        placeEditorPanel.saveSize();
+        if (o == OKButton) {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();
+                        placeEditorPanel.commit(mEvent, mPlace);
                     }
                 });
             } catch (GedcomException ex) {
@@ -290,57 +229,10 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_editPlaceButtonActionPerformed
 
-    private void linkToPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
-        PlacesTablePanel placesTablePanel = new PlacesTablePanel(mEvent.getGedcom());
-        DialogManager.ADialog placesTablePanelDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
-                placesTablePanel);
-        placesTablePanelDialog.setDialogId(PlacesTablePanel.class.getName());
-
-        if (placesTablePanelDialog.show() == DialogDescriptor.OK_OPTION) {
-            final PropertyPlace selectedPlace = placesTablePanel.getSelectedPlace();
-            if (selectedPlace != null) {
-                try {
-                    mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            if (mPlace == null) {
-                                mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
-                            } else {
-                                mPlace.setValue(selectedPlace.format("all"));
-                            }
-                            if (selectedPlace.getMap() != null) {
-                                PropertyLatitude latitude = selectedPlace.getLatitude(true);
-                                PropertyLongitude longitude = selectedPlace.getLongitude(true);
-                                if (latitude != null) {
-                                    mPlace.setCoordinates(latitude.getValue(), longitude.getValue());
-                                }
-                            } else {
-                                if (mPlace.getMap() != null) {
-                                    mPlace.delProperty(mPlace.getMap());
-                                }
-                            }
-                        }
-                    }); // end of doUnitOfWork
-
-                    placeTextField.setText(mPlace.getDisplayValue());
-
-                    addPlaceButton.setVisible(false);
-                    editPlaceButton.setVisible(true);
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    }//GEN-LAST:event_linkToPlaceButtonActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.beans.ADateBean aDateBean;
-    private javax.swing.JButton addPlaceButton;
     private javax.swing.JLabel dateLabel;
     private javax.swing.JButton editPlaceButton;
-    private javax.swing.JButton linkToPlaceButton;
     private javax.swing.JLabel placeLabel;
     private javax.swing.JTextField placeTextField;
     private javax.swing.JLabel recordedEventsLabel;

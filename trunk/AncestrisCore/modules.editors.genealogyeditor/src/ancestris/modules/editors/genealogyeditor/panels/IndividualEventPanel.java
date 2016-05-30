@@ -2,6 +2,7 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.beans.ADateBean;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
+import ancestris.modules.editors.geoplace.PlaceEditorPanel;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
@@ -122,7 +123,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     };
     private Property mEvent = null;
     private Property mRoot;
-    private Property mAddress;
+    //private Property mAddress;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
     private PropertyAssociation mAssociation;
@@ -179,9 +180,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventCauseLabel = new JLabel();
         eventNameLabel = new JLabel();
         individualAgeTextField = new JTextField();
-        linkToPlaceButton = new JButton();
         editPlaceButton = new JButton();
-        addPlaceButton = new JButton();
         jScrollPane1 = new JScrollPane();
         eventDescriptorTextArea = new JTextArea();
         jScrollPane2 = new JScrollPane();
@@ -231,21 +230,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         individualAgeTextField.setColumns(4);
         individualAgeTextField.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.IndividualAgeTextField.toolTipText")); // NOI18N
 
-        linkToPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/link_add.png"))); // NOI18N
-        linkToPlaceButton.setToolTipText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.linkToPlaceButton.toolTipText"), new Object[] {})); // NOI18N
-        linkToPlaceButton.setFocusable(false);
-        linkToPlaceButton.setHorizontalTextPosition(SwingConstants.CENTER);
-        linkToPlaceButton.setMaximumSize(new Dimension(26, 26));
-        linkToPlaceButton.setMinimumSize(new Dimension(26, 26));
-        linkToPlaceButton.setPreferredSize(new Dimension(26, 26));
-        linkToPlaceButton.setVerticalTextPosition(SwingConstants.BOTTOM);
-        linkToPlaceButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                linkToPlaceButtonActionPerformed(evt);
-            }
-        });
-
-        editPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit.png"))); // NOI18N
+        editPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png"))); // NOI18N
         editPlaceButton.setToolTipText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
         editPlaceButton.setFocusable(false);
         editPlaceButton.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -256,17 +241,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         editPlaceButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent evt) {
                 editPlaceButtonActionPerformed(evt);
-            }
-        });
-
-        addPlaceButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_add.png"))); // NOI18N
-        addPlaceButton.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.addPlaceButton.toolTipText")); // NOI18N
-        addPlaceButton.setMaximumSize(new Dimension(26, 26));
-        addPlaceButton.setMinimumSize(new Dimension(26, 26));
-        addPlaceButton.setPreferredSize(new Dimension(26, 26));
-        addPlaceButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                addPlaceButtonActionPerformed(evt);
             }
         });
 
@@ -317,10 +291,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(placeTextField)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)
@@ -351,11 +321,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         .addComponent(aDateBean, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
-                    .addComponent(linkToPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(responsibleAgencyLabel)
@@ -436,86 +404,40 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void linkToPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_linkToPlaceButtonActionPerformed
-        PlacesTablePanel placesTablePanel = new PlacesTablePanel(mRoot.getGedcom());
-        if (mPlace != null) {
-            String filter = mPlace.getCity();
-            if (filter != null && filter.trim().length() != 0) {
-                placesTablePanel.setFilter(mPlace.getCity());
-            }
-        }
-        DialogManager.ADialog placesTableDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(PlacesTablePanel.class, "PlacesTableDialog.title.link"),
-                placesTablePanel);
-        placesTableDialog.setDialogId(PlacesTablePanel.class.getName());
-
-        if (placesTableDialog.show() == DialogDescriptor.OK_OPTION) {
-            final PropertyPlace selectedPlace = placesTablePanel.getSelectedPlace();
-            if (selectedPlace != null) {
-                try {
-                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                        @Override
-                        public void perform(Gedcom gedcom) throws GedcomException {
-                            if (mPlace == null) {
-                                mPlace = (PropertyPlace) mEvent.addProperty("PLAC", selectedPlace.format("all"));
-                            } else {
-                                mPlace.setValue(selectedPlace.format("all"));
-                            }
-
-                            if (selectedPlace.getMap() != null) {
-                                PropertyLatitude latitude = selectedPlace.getLatitude(true);
-                                PropertyLongitude longitude = selectedPlace.getLongitude(true);
-                                if (latitude != null) {
-                                    mPlace.setCoordinates(latitude.getValue(), longitude.getValue());
-                                }
-                            } else {
-                                if (mPlace.getMap() != null) {
-                                    mPlace.delProperty(mPlace.getMap());
-                                }
-                            }
-                        }
-                    }); // end of doUnitOfWork
-
-                    placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : "");
-
-                    addPlaceButton.setVisible(false);
-                    editPlaceButton.setVisible(true);
-                    changeSupport.fireChange();
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-        }
-    }//GEN-LAST:event_linkToPlaceButtonActionPerformed
-
     private void editPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
         int undoNb = gedcom.getUndoNb();
         final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        placeEditorPanel.set(mEvent, mPlace, mAddress);
+        
+        JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { OKButton, cancelButton };
+        placeEditorPanel.setOKButton(OKButton);
+        placeEditorPanel.set(gedcom, mPlace, false);  //mAdress not used
 
         ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(
-                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
+                NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
                 placeEditorPanel);
         eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+        eventEditorDialog.setOptions(options);
+        Object o = eventEditorDialog.show();
+        
+        placeEditorPanel.saveSize();
+        if (o == OKButton) {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();
+                        placeEditorPanel.commit(mEvent, mPlace);
                     }
                 });
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            mAddress = mEvent.getProperty("ADDR", false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress != null ? displayAddressValue(mAddress) : "");
+            //mAddress = mEvent.getProperty("ADDR", false);
+            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
             changeSupport.fireChange();
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -523,46 +445,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_editPlaceButtonActionPerformed
-
-    private void addPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_addPlaceButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
-        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        int undoNb = gedcom.getUndoNb();
-
-        placeEditorPanel.set(mEvent, mPlace, mAddress);
-
-        ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(
-                        PlaceEditorPanel.class, "PlaceEditorPanel.edit.title"),
-                placeEditorPanel);
-        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-
-        if (eventEditorDialog.show() == DialogDescriptor.OK_OPTION) {
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit();
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            mAddress = mEvent.getProperty("ADDR", false);
-            if (mPlace != null || mAddress != null) {
-                placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : mAddress != null ? displayAddressValue(mAddress) : "");
-                addPlaceButton.setVisible(false);
-                editPlaceButton.setVisible(true);
-                changeSupport.fireChange();
-            }
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }//GEN-LAST:event_addPlaceButtonActionPerformed
 
     private void associateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_associateButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
@@ -611,7 +493,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private JPanel EventDetailPanel;
     private JLabel IndividualAgeLabel;
     private ADateBean aDateBean;
-    private JButton addPlaceButton;
     private JButton associateButton;
     private JLabel dateLabel;
     private JButton editPlaceButton;
@@ -626,7 +507,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private JTextField individualAgeTextField;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
-    private JButton linkToPlaceButton;
     private MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
     private NoteCitationsTablePanel noteCitationsTablePanel;
     private JPanel notesPanel;
@@ -797,15 +677,15 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         }
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-        mAddress = mEvent.getProperty("ADDR", false);
-        if (mPlace != null || mAddress != null) {
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : displayAddressValue(mAddress));
-            addPlaceButton.setVisible(false);
-            editPlaceButton.setVisible(true);
+        //mAddress = mEvent.getProperty("ADDR", false);
+        if (mPlace != null) { // || mAddress != null) {
+            placeTextField.setText(mPlace.getDisplayValue());
+            //addPlaceButton.setVisible(false);
+            //editPlaceButton.setVisible(true);
         } else {
             placeTextField.setText("");
-            addPlaceButton.setVisible(true);
-            editPlaceButton.setVisible(false);
+            //addPlaceButton.setVisible(true);
+            //editPlaceButton.setVisible(false);
         }
 
         Property[] sourcesList = mEvent.getProperties("SOUR");
