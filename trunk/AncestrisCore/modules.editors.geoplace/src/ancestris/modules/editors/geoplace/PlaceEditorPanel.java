@@ -512,19 +512,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     /**
      * 
-     * @param place 
-     */
-    public void copyValue(PropertyPlace place) {
-        place.setValue(gedcomPlaceEditorPanel.getPlaceString(0));
-        String lat = gedcomPlaceEditorPanel.getLatitude();
-        String lon = gedcomPlaceEditorPanel.getLongitude();
-        if (!lat.isEmpty() && !lon.isEmpty()) {
-            place.setCoordinates(lat, lon);
-        }
-    }
-
-    /**
-     * 
      * @param OKButton 
      */
     public void setOKButton(JButton OKButton) {
@@ -536,6 +523,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @param place 
      */
     public void set(Gedcom gedcom, PropertyPlace place, boolean allPlaces) {
+        
+        if (place == null) {
+            place = new PropertyPlace("PLAC");
+        }
         
         this.mGedcom = gedcom;
         this.mPlace = place;
@@ -674,24 +665,42 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }
 
     /**
+     * 
+     * @param place 
+     */
+    public void copyValue(PropertyPlace place) {
+        place.setValue(gedcomPlaceEditorPanel.getPlaceString(0));
+        String lat = gedcomPlaceEditorPanel.getLatitude();
+        String lon = gedcomPlaceEditorPanel.getLongitude();
+        if (!lat.isEmpty() && !lon.isEmpty()) {
+            place.setCoordinates(lat, lon);
+        }
+    }
+
+    /**
      * Used for saving coordinates into gedcom directly, for one single place or all places in set
      */
     public void commit() {
-        String placeString = gedcomPlaceEditorPanel.getPlaceString(0);
         Set<PropertyPlace> tmpList = new HashSet<PropertyPlace>();
         tmpList.addAll(mPropertyPlaces);
         if (gedcomPlaceEditorPanel.isModified()) {
             for (PropertyPlace propertyPlace : tmpList) {
-                propertyPlace.setValue(placeString);
-                String lat = gedcomPlaceEditorPanel.getLatitude();
-                String lon = gedcomPlaceEditorPanel.getLongitude();
-                if (!lat.isEmpty() && !lon.isEmpty()) {
-                    propertyPlace.setCoordinates(lat, lon);
-                }
+                copyValue(propertyPlace);
             }
         }
     }
 
+    public void commit(Property parent, PropertyPlace place) {
+        if (gedcomPlaceEditorPanel.isModified()) {
+            if (place == null) {
+                place = (PropertyPlace) parent.addProperty(PropertyPlace.TAG, "");
+            }
+            copyValue(place);
+        }
+    }
+    
+    
+    
     public void runSearch() {
         searchPlaceButton.doClick();
     }
