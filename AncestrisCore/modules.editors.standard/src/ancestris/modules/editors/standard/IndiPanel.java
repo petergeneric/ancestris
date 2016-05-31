@@ -194,6 +194,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     JTextField firstnamesText = null;
     List<String> allLastNames = null;
     JTextField lastnameText = null;
+    List<String> allDescriptions = null;
+    JTextField eventDescriptionText = null;
+    EventDescriptionListener edl = null;
     List<String> allPlaces = null;
     JTextField eventPlaceText = null;
 
@@ -235,6 +238,8 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         firstnamesText = (JTextField) firstnamesCombo.getEditor().getEditorComponent();
         lastnameText = (JTextField) lastnameCombo.getEditor().getEditorComponent();
+        eventDescriptionText = (JTextField) eventDescriptionCombo.getEditor().getEditorComponent();
+        edl = new EventDescriptionListener();
         eventPlaceText = (JTextField) eventPlaceCombo.getEditor().getEditorComponent();
         
         registry = Registry.get(getClass());
@@ -306,7 +311,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         sourceImagePanel = imagePanel;
         eventRight = new javax.swing.JPanel();
         eventTitle = new javax.swing.JLabel();
-        eventDescription = new javax.swing.JTextField();
+        eventDescriptionCombo = new javax.swing.JComboBox();
         datelabel = new javax.swing.JLabel();
         eventDate = new genj.edit.beans.DateBean();
         dayOfWeek = new javax.swing.JLabel();
@@ -916,8 +921,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(eventTitle, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventTitle.text")); // NOI18N
 
-        eventDescription.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDescription.text")); // NOI18N
-        eventDescription.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDescription.toolTipText")); // NOI18N
+        eventDescriptionCombo.setEditable(true);
+        eventDescriptionCombo.setMaximumRowCount(19);
+        eventDescriptionCombo.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventDescriptionText.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(datelabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.datelabel.text")); // NOI18N
 
@@ -1148,7 +1154,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventSourcePanelLayout.setVerticalGroup(
             eventSourcePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventSourcePanelLayout.createSequentialGroup()
-                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 184, Short.MAX_VALUE)
+                .addComponent(scrollSourcesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 186, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(addSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1158,7 +1164,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1))
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 164, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1231,7 +1237,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(eventTitle)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(eventDescription))
+                        .addComponent(eventDescriptionCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGap(2, 2, 2))
                     .addGroup(eventRightLayout.createSequentialGroup()
                         .addComponent(placeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -1245,8 +1252,8 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(eventRightLayout.createSequentialGroup()
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(eventDescription, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eventTitle))
+                    .addComponent(eventTitle)
+                    .addComponent(eventDescriptionCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(datelabel)
@@ -1438,7 +1445,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void eventBuriButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBuriButtonActionPerformed
         createOrPreSelectEvent("BURI");
         selectEvent(getRowFromIndex(eventIndex));
-        eventDescription.requestFocus();
+        eventDescriptionText.requestFocus();
     }//GEN-LAST:event_eventBuriButtonActionPerformed
 
     private void scrollNotesEventAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollNotesEventAdjustmentValueChanged
@@ -1616,13 +1623,13 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void eventBirtButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBirtButtonActionPerformed
         createOrPreSelectEvent("BIRT");
         selectEvent(getRowFromIndex(eventIndex));
-        eventDescription.requestFocus();
+        eventDescriptionText.requestFocus();
     }//GEN-LAST:event_eventBirtButtonActionPerformed
 
     private void eventBaptButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventBaptButtonActionPerformed
         createOrPreSelectEvent("CHR");
         selectEvent(getRowFromIndex(eventIndex));
-        eventDescription.requestFocus();
+        eventDescriptionText.requestFocus();
     }//GEN-LAST:event_eventBaptButtonActionPerformed
 
     private void eventMarrButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventMarrButtonActionPerformed
@@ -1632,7 +1639,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void eventDeatButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventDeatButtonActionPerformed
         createOrPreSelectEvent("DEAT");
         selectEvent(getRowFromIndex(eventIndex));
-        eventDescription.requestFocus();
+        eventDescriptionText.requestFocus();
     }//GEN-LAST:event_eventDeatButtonActionPerformed
 
     private void eventOccuButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eventOccuButtonActionPerformed
@@ -1775,7 +1782,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton eventBuriButton;
     private genj.edit.beans.DateBean eventDate;
     private javax.swing.JButton eventDeatButton;
-    private javax.swing.JTextField eventDescription;
+    private javax.swing.JComboBox eventDescriptionCombo;
     private javax.swing.JPanel eventLeft;
     private javax.swing.JButton eventMarrButton;
     private javax.swing.JTextArea eventNote;
@@ -2160,7 +2167,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         nameDetails.addListeners(this);
         textAreaPhotos.getDocument().addDocumentListener(new PhotoTitleListener());
 
-        eventDescription.getDocument().addDocumentListener(new EventDescriptionListener());
         eventDate.addChangeListener(new EventDateListener());
         eventPlaceText.getDocument().addDocumentListener(new EventPlaceListener());
         
@@ -2618,7 +2624,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void showGeneralInformation(boolean show) {
         //eventTitle.setVisible(show);
-        eventDescription.setVisible(show);
+        eventDescriptionCombo.setVisible(show);
         datelabel.setVisible(show);
         eventDate.setVisible(show);
         dayOfWeek.setVisible(show);
@@ -2641,9 +2647,14 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventTitle.setText(event.title);
             
             if (!event.isGeneral) {
+                // Descriptions : list of items in combo box depens on event type
+                eventDescriptionText.getDocument().removeDocumentListener(edl);
+                allDescriptions = gedcom.getReferenceSet(event.getTag()).getKeys(gedcom.getCollator());
+                AutoCompletion.reset(eventDescriptionCombo, allDescriptions);
+                eventDescriptionText.getDocument().addDocumentListener(edl);
                 // Title
-                eventDescription.setText(event.description);
-                eventDescription.setCaretPosition(0);
+                eventDescriptionText.setText(event.description);
+                eventDescriptionText.setCaretPosition(0);
 
                 // Date
                 if (event.date != null) {
@@ -3068,7 +3079,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         EventWrapper event = getCurrentEvent();
         if (event != null) {
-            event.setDescription(eventDescription.getText());
+            event.setDescription(eventDescriptionText.getText());
             triggerChange();
         }
     }
@@ -3461,7 +3472,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (nbEvent == 0) {
             createEvent(fProp);
             selectEvent(getRowFromIndex(eventIndex));
-            eventDescription.requestFocus();
+            eventDescriptionText.requestFocus();
             return;
         }
         String nextLabel = nbEvent == 1 ? displayNextLabel : displayNextLabel+"_many";
@@ -3473,7 +3484,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             public void actionPerformed(ActionEvent ae) {
                 createEvent(fProp);
                 selectEvent(getRowFromIndex(eventIndex));
-                eventDescription.requestFocus();
+                eventDescriptionText.requestFocus();
             }
         });
         menuItem = new JMenuItem(NbBundle.getMessage(getClass(), nextLabel));
@@ -3483,7 +3494,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 int index = getNextEvent(tag);
                 if (index != -1) {
                     selectEvent(getRowFromIndex(index));
-                    eventDescription.requestFocus();
+                    eventDescriptionText.requestFocus();
                 }
             }
         });
@@ -3527,7 +3538,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 public void actionPerformed(ActionEvent ae) {
                     createEvent(fProp);
                     selectEvent(getRowFromIndex(eventIndex));
-                    eventDescription.requestFocus();
+                    eventDescriptionText.requestFocus();
                 }
             });
         }

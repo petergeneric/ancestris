@@ -613,6 +613,9 @@ public class EventWrapper {
     }
 
     
+    public String getTag() {
+        return hasAttribute ? eventProperty.getTag() : "TYPE";
+    }
     
     
     private String getDescription() {

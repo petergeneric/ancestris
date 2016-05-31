@@ -1147,7 +1147,8 @@
                           <Group type="102" alignment="0" attributes="0">
                               <Component id="eventTitle" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="eventDescription" max="32767" attributes="0"/>
+                              <Component id="eventDescriptionCombo" max="32767" attributes="0"/>
+                              <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="placeLabel" min="-2" max="-2" attributes="0"/>
@@ -1166,8 +1167,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="eventDescription" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="eventTitle" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="eventDescriptionCombo" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="2" attributes="0">
@@ -1206,13 +1207,15 @@
                 </Property>
               </Properties>
             </Component>
-            <Component class="javax.swing.JTextField" name="eventDescription">
+            <Component class="javax.swing.JComboBox" name="eventDescriptionCombo">
               <Properties>
-                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventDescription.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                <Property name="editable" type="boolean" value="true"/>
+                <Property name="maximumRowCount" type="int" value="19"/>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="0"/>
                 </Property>
                 <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventDescription.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                  <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.eventDescriptionText.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
               </Properties>
             </Component>
@@ -1463,7 +1466,7 @@
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
-                          <Component id="scrollSourcesEvent" pref="184" max="32767" attributes="0"/>
+                          <Component id="scrollSourcesEvent" pref="186" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="addSourceEventButton" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -1475,7 +1478,7 @@
                               <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventSourceScrollPane" pref="162" max="32767" attributes="0"/>
+                          <Component id="eventSourceScrollPane" pref="164" max="32767" attributes="0"/>
                           <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
                           <Component id="repoPanel" min="-2" max="-2" attributes="0"/>
                       </Group>
