@@ -3521,6 +3521,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         for (String name : names.keySet())     {
             final Property fProp = names.get(name);
             menuItem = new JMenuItem(fProp.getPropertyName(), fProp.getImage());
+            menuItem.setToolTipText("<html><table width=200><tr><td>"+fProp.getPropertyInfo()+"</td></tr></table></html");
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
