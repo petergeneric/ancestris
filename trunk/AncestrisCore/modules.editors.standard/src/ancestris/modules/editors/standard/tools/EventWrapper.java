@@ -290,17 +290,24 @@ public class EventWrapper {
                 NoteWrapper note = null;
                 if (prop instanceof PropertyNote) {
                     note = createUniqueNote((Note) ((PropertyNote) prop).getTargetEntity());
-                    note.setHostingProperty(prop);
+                    if (note != null) {
+                        note.setHostingProperty(prop);
+                        ret.add(note);
+                    }
                 } else {
                     note = new NoteWrapper(prop);
+                    ret.add(note);
                 }
-                ret.add(note);
+                
             }
         }
         return ret;
     }
 
     private NoteWrapper createUniqueNote(Note entity) {
+        if (entity == null) {
+            return null;
+        }
         NoteWrapper note = refNotes.get(entity.getId());
         if (note == null) {
             note = new NoteWrapper(entity);
@@ -365,8 +372,10 @@ public class EventWrapper {
                 continue;
             }
             SourceWrapper source = createUniqueSource((Source) propSource.getTargetEntity());
-            source.setHostingProperty(propSource);
-            ret.add(source);
+            if (source != null) {
+                source.setHostingProperty(propSource);
+                ret.add(source);
+            }
         }
         
         // Look for sources attached to event (source_citation included underneath SOUR tag)
@@ -390,6 +399,9 @@ public class EventWrapper {
     }
 
     private SourceWrapper createUniqueSource(Source entity) {
+        if (entity == null) {
+            return null;
+        }
         SourceWrapper source = refSources.get(entity.getId());
         if (source == null) {
             source = new SourceWrapper(entity);
