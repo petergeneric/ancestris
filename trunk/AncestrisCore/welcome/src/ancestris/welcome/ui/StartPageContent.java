@@ -46,14 +46,16 @@ package ancestris.welcome.ui;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Insets;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import ancestris.welcome.content.Constants;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Random;
 import org.openide.util.ImageUtilities;
 
@@ -61,13 +63,11 @@ import org.openide.util.ImageUtilities;
  *
  * @author S. Aubrecht & Frederic Lapeyre
  */
-public class StartPageContent extends JPanel implements Constants {
-
-//    private final static Color COLOR_TOP = new Color(90,136,242); // Sky Blue rather than brown (178,165,133)
-//    private final static Color COLOR_BOTTOM = new Color(212,225,255); // Light blue rather than light brown (235, 235, 235);
+public class StartPageContent extends JPanel implements Constants, MouseListener {
 
     private Image imgCenter;
-
+    private JComponent tabs;
+    private TopBar topbar;
 
     public StartPageContent() {
         super( new GridBagLayout() );
@@ -75,12 +75,14 @@ public class StartPageContent extends JPanel implements Constants {
         int nn = new Random().nextInt(24) + 1;                   // random.nextInt(max - min + 1) + min
         imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
         
-        JComponent tabs = new TabbedPane( new LearnAndDiscoverTab(), new MyAncestrisTab(), new WhatsNewTab());
+        tabs = new TabbedPane( new LearnAndDiscoverTab(), new MyAncestrisTab(), new WhatsNewTab());
         tabs.setBorder(BorderFactory.createEmptyBorder(10,15,15,15));
         tabs.setOpaque(false);
         
-        add(new TopBar(), new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(7,0,0,0), 0, 0) );
-        add(tabs, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0,0,0,0), 0, 0) );
+        topbar = new TopBar();
+        add(topbar, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(7, 0, 0, 0), 0, 0));
+        add(tabs, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+        addMouseListener(this);
     }
 
     @Override
@@ -88,26 +90,27 @@ public class StartPageContent extends JPanel implements Constants {
         Graphics2D g2d = (Graphics2D) g;
         int width = getWidth();
         int height = getHeight();
-
         g.drawImage(imgCenter, 0, 0, width, height, null);
-        
-//        // Add background image to the panel, from the top border
-//        int centerImageWidth = imgCenter.getWidth(null);
-//        int centerImageHeight = imgCenter.getHeight(null);
-//        int x = (width - centerImageWidth) / 2;
-//        int y = 0;
-//        g.drawImage(imgCenter, x, y, null);
-//
-//        // Add left and right top bar
-//        if( x > 0 ) {
-//            for( int i=0; i<=x; i++ ) {
-//                g.drawImage(imgLeft, i, y, null);
-//                g.drawImage(imgRight, width-i-1, y, null);
-//            }
-//        }
-//        
-//        // Add gradient
-//        g2d.setPaint(new GradientPaint(0, centerImageHeight, COLOR_TOP, 0, height, COLOR_BOTTOM));
-//        g2d.fillRect(0, centerImageHeight, width, height);
+    }
+
+    public void mouseClicked(MouseEvent e) {
+    }
+
+    public void mousePressed(MouseEvent e) {
+        topbar.setVisible(false);
+        tabs.setVisible(false);
+        //StatusDisplayer.getDefault().setStatusText("Release mouse to display Welcom Panel");
+    }
+
+    public void mouseReleased(MouseEvent e) {
+        topbar.setVisible(true);
+        tabs.setVisible(true);
+        //StatusDisplayer.getDefault().setStatusText(null);
+    }
+
+    public void mouseEntered(MouseEvent e) {
+    }
+
+    public void mouseExited(MouseEvent e) {
     }
 }
