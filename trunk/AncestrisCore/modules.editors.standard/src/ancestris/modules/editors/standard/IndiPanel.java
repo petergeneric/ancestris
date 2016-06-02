@@ -2070,7 +2070,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         refSources.clear();
         
         // Title
-        title.setText("<html> <font color=\"red\"><b>/!\\ UNDER CONSTRUCTION /!\\</b></font> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
+        title.setText("<html> <font color=\"red\"><b>/!\\ Bientôt Prêt !!! /!\\</b></font> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
