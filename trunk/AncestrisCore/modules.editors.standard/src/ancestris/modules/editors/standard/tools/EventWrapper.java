@@ -18,6 +18,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
+import genj.gedcom.Media;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
@@ -25,6 +26,7 @@ import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
+import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
@@ -74,6 +76,12 @@ public class EventWrapper {
     public String age = "";                 // Displayed age as a string in full (calculated)
     
 
+    // Event Media
+    public Map<String, MediaWrapper> refMedia = null;            // References to media from main editor
+    public List<MediaWrapper> eventMediaSet = null;
+    public List<MediaWrapper> eventMediaRemovedSet = null;
+    public int eventMediaIndex = 0;
+    
     // Event Notes
     public Map<String, NoteWrapper> refNotes = null;            // References to notes from main editor
     public List<NoteWrapper> eventNoteSet = null;               // Notes to add/update (to be saved in gedcom)
@@ -87,8 +95,9 @@ public class EventWrapper {
     public int eventSourceIndex = 0;
     
     
-    public EventWrapper(Property property, Indi indi, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
+    public EventWrapper(Property property, Indi indi, Map<String, MediaWrapper> refMedia, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
         
+        this.refMedia = refMedia;
         this.refNotes = refNotes;
         this.refSources = refSources;
         this.eventProperty = property;
@@ -155,6 +164,19 @@ public class EventWrapper {
         this.title = isGeneral ? this.eventLabel.getLongLabel() : this.eventLabel.getShortLabel();
         
         
+        // Media
+        if (eventMediaSet != null) {
+            eventMediaSet.clear();
+            eventMediaSet = null;
+        }
+        if (eventMediaRemovedSet != null) {
+            eventMediaRemovedSet.clear();
+            eventMediaRemovedSet = null;
+        }
+        eventMediaSet = getEventMedia(eventProperty);
+        eventMediaRemovedSet = new ArrayList<MediaWrapper>();
+        eventMediaIndex = 0;
+
         // Notes
         if (eventNoteSet != null) {
             eventNoteSet.clear();
@@ -182,7 +204,8 @@ public class EventWrapper {
         eventSourceIndex = 0;
     }
 
-    public EventWrapper(Entity entity, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
+    public EventWrapper(Entity entity, Map<String, MediaWrapper> refMedia, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
+        this.refMedia = refMedia;
         this.refNotes = refNotes;
         this.refSources = refSources;
         
@@ -273,6 +296,83 @@ public class EventWrapper {
         return ageAsDouble < 0;
     }
 
+    
+    
+    //
+    // MEDIA
+    //
+    
+    private List<MediaWrapper> getEventMedia(Property event) {
+        List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
+        if (event == null) {
+            return ret;
+        }
+        
+        // Look for media attached to event
+        Property[] mediaProps = event.getProperties("OBJE");
+        for (Property prop : mediaProps) {
+            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+                MediaWrapper media = null;
+                if (prop instanceof PropertyMedia) {
+                    media = createUniqueMedia((Media) ((PropertyMedia) prop).getTargetEntity());
+                    if (media != null) {
+                        media.setHostingProperty(prop);
+                        ret.add(media);
+                    }
+                } else {
+                    media = new MediaWrapper(prop);
+                    ret.add(media);
+                }
+                
+            }
+        }
+
+//        // Look for media directly attached to property (media always have a file, so look for all files underneath OBJE but not underneath SOUR)
+//        for (PropertyFile propFile : event.getProperties(PropertyFile.class)) {
+//            if (!Utils.parentTagsContains(propFile, "SOUR")) {
+//                Property propObje = getParentTag(propFile, "OBJE");
+//                ret.add(new MediaWrapper(propObje));
+//            }
+//        }
+//        
+//        // Look for media as links to entities
+//        for (PropertyMedia propMedia : event.getProperties(PropertyMedia.class)) {
+//            if (!Utils.parentTagsContains(propMedia.getParent(), "SOUR")) {
+//                ret.add(new MediaWrapper(propMedia));
+//            }
+//        }
+        
+        return ret;
+    }
+
+    private MediaWrapper createUniqueMedia(Media entity) {
+        if (entity == null) {
+            return null;
+        }
+        MediaWrapper media = refMedia.get(entity.getId());
+        if (media == null) {
+            media = new MediaWrapper(entity);
+            refMedia.put(entity.getId(), media);
+        }
+        return media;
+    }
+
+    public boolean addMedia(String mediaTitle) {
+        MediaWrapper media = new MediaWrapper(mediaTitle);
+        eventMediaSet.add(media);
+        eventMediaIndex = eventMediaSet.size() - 1;
+        return true;
+    }
+    
+    public boolean setMedia(String mediaTitle) {
+        eventMediaSet.get(eventMediaIndex).setTitle(mediaTitle);
+        return true;
+    }
+    
+
+    
+    
+    
     //
     // NOTES
     //
@@ -539,6 +639,14 @@ public class EventWrapper {
                 tmpPlace.setValue(place.getValue());
             }
             setCoordinates(place, tmpPlace);
+        }
+        
+        // Media
+        for (MediaWrapper media : eventMediaSet) {
+            media.update(eventProperty);
+        }
+        for (MediaWrapper media : eventMediaRemovedSet) {
+            media.remove();
         }
         
         // Notes

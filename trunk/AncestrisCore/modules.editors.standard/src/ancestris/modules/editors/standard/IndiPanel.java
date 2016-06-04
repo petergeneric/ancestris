@@ -55,9 +55,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyForeignXRef;
-import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
@@ -66,8 +64,10 @@ import genj.util.ChangeSupport;
 import genj.util.Registry;
 import genj.util.Validator;
 import genj.view.ViewContext;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Desktop;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
@@ -162,24 +162,20 @@ public class IndiPanel extends Editor implements DocumentListener {
     private ImagePanel imagePanel = null;
     private NameDetailsPanel nameDetails = null;
     
-    // Media
-    private List<MediaWrapper> mediaSet = null;
-    private int mediaIndex = 0, savedMediaIndex = -1;
-    private List<MediaWrapper> mediaRemovedSet = null;
-    private boolean isBusyMedia = false;
-    
     // Events
     private List<EventWrapper> eventSet = null;
     private List<EventWrapper> eventRemovedSet = null;
     private boolean isBusyEvent = false;
     private PlaceEditorPanel placeEditor = null;
+    private boolean isBusyEventMedia = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
+    public Map<String, MediaWrapper> refMedia = null;      // Reference to all media entities used by id, to avoid duplicates
     public Map<String, NoteWrapper> refNotes = null;       // Reference to all note entities used by id, to avoid duplicates
     public Map<String, SourceWrapper> refSources = null;   // Reference to all sources used by id, to avoid duplicates
-    private int eventIndex = 0, savedEventNoteIndex = -1, savedEventSourceIndex = -1;       // memory
-    private String savedEventTagDateDesc = "-1";                                            // memory
-    private Component savedFocusedControl = null;                                           // memory
+    private int eventIndex = 0, savedMediaIndex = -1, savedEventNoteIndex = -1, savedEventSourceIndex = -1;     // memory
+    private String savedEventTagDateDesc = "-1";                                                                // memory
+    private Component savedFocusedControl = null;                                                               // memory
     
     // Associations
     private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
@@ -221,6 +217,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
         placeEditor = new PlaceEditorPanel();
+        refMedia = new HashMap<String, MediaWrapper>();
         refNotes = new HashMap<String, NoteWrapper>();
         refSources = new HashMap<String, SourceWrapper>();
         
@@ -265,9 +262,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         photos = new javax.swing.JLabel();
         scrollPanePhotos = new javax.swing.JScrollPane();
         textAreaPhotos = new javax.swing.JTextArea();
-        scrollPhotos = new javax.swing.JScrollBar();
-        addMediaButton = new javax.swing.JButton();
-        delMediaButton = new javax.swing.JButton();
+        scrollMediaEvent = new javax.swing.JScrollBar();
+        addMediaEventButton = new javax.swing.JButton();
+        delMediaEventButton = new javax.swing.JButton();
         namePanel = new javax.swing.JPanel();
         TopButtonsdPanel = new javax.swing.JPanel();
         fatherButton = new javax.swing.JButton();
@@ -400,39 +397,39 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.setWrapStyleWord(true);
         scrollPanePhotos.setViewportView(textAreaPhotos);
 
-        scrollPhotos.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
-        scrollPhotos.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+        scrollMediaEvent.setOrientation(javax.swing.JScrollBar.HORIZONTAL);
+        scrollMediaEvent.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
             public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
-                scrollPhotosMouseWheelMoved(evt);
+                scrollMediaEventMouseWheelMoved(evt);
             }
         });
-        scrollPhotos.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
+        scrollMediaEvent.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
-                scrollPhotosAdjustmentValueChanged(evt);
+                scrollMediaEventAdjustmentValueChanged(evt);
             }
         });
 
-        addMediaButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(addMediaButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addMediaButton.text")); // NOI18N
-        addMediaButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addMediaButton.toolTipText")); // NOI18N
-        addMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        addMediaButton.setIconTextGap(0);
-        addMediaButton.setPreferredSize(new java.awt.Dimension(16, 16));
-        addMediaButton.addActionListener(new java.awt.event.ActionListener() {
+        addMediaEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/add.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(addMediaEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addMediaEventButton.text")); // NOI18N
+        addMediaEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.addMediaEventButton.toolTipText")); // NOI18N
+        addMediaEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        addMediaEventButton.setIconTextGap(0);
+        addMediaEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        addMediaEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                addMediaButtonActionPerformed(evt);
+                addMediaEventButtonActionPerformed(evt);
             }
         });
 
-        delMediaButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(delMediaButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delMediaButton.text")); // NOI18N
-        delMediaButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delMediaButton.toolTipText")); // NOI18N
-        delMediaButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        delMediaButton.setIconTextGap(0);
-        delMediaButton.setPreferredSize(new java.awt.Dimension(16, 16));
-        delMediaButton.addActionListener(new java.awt.event.ActionListener() {
+        delMediaEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/remove.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(delMediaEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delMediaEventButton.text")); // NOI18N
+        delMediaEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.delMediaEventButton.toolTipText")); // NOI18N
+        delMediaEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        delMediaEventButton.setIconTextGap(0);
+        delMediaEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        delMediaEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delMediaButtonActionPerformed(evt);
+                delMediaEventButtonActionPerformed(evt);
             }
         });
 
@@ -441,11 +438,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         mediaPanelLayout.setHorizontalGroup(
             mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mediaPanelLayout.createSequentialGroup()
-                .addComponent(scrollPhotos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(scrollMediaEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(addMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(addMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(delMediaButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(delMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addComponent(photos, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(scrollPanePhotos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
         );
@@ -457,9 +454,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addComponent(scrollPanePhotos, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(delMediaButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addMediaButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollPhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(delMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(scrollMediaEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         fatherButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/father.png"))); // NOI18N
@@ -1332,22 +1329,34 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void maleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maleRadioButtonActionPerformed
         triggerChange();
-        if (mediaSet == null || mediaSet.isEmpty()) {
-            setPhoto(null, PropertySex.MALE);
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventMediaSet == null || event.eventMediaSet.isEmpty()) {
+            setEventMedia(event, null, PropertySex.MALE);
         }
     }//GEN-LAST:event_maleRadioButtonActionPerformed
 
     private void femaleRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_femaleRadioButtonActionPerformed
         triggerChange();
-        if (mediaSet == null || mediaSet.isEmpty()) {
-            setPhoto(null, PropertySex.FEMALE);
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventMediaSet == null || event.eventMediaSet.isEmpty()) {
+            setEventMedia(event, null, PropertySex.FEMALE);
         }
     }//GEN-LAST:event_femaleRadioButtonActionPerformed
 
     private void unknownRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_unknownRadioButtonActionPerformed
         triggerChange();
-        if (mediaSet == null || mediaSet.isEmpty()) {
-            setPhoto(null, PropertySex.UNKNOWN);
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventMediaSet == null || event.eventMediaSet.isEmpty()) {
+            setEventMedia(event, null, PropertySex.UNKNOWN);
         }
     }//GEN-LAST:event_unknownRadioButtonActionPerformed
 
@@ -1355,28 +1364,36 @@ public class IndiPanel extends Editor implements DocumentListener {
         triggerChange();
     }//GEN-LAST:event_privateCheckBoxActionPerformed
 
-    private void scrollPhotosAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollPhotosAdjustmentValueChanged
-        if (isBusyMedia) {
+    private void scrollMediaEventAdjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {//GEN-FIRST:event_scrollMediaEventAdjustmentValueChanged
+        if (isBusyEventMedia) {
             return;
         }
-        int i = scrollPhotos.getValue();
-        if (mediaSet != null && !mediaSet.isEmpty() && i >= 0 && i < mediaSet.size() && i != mediaIndex) {
-            mediaIndex = scrollPhotos.getValue();
-            displayPhoto();
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
         }
-    }//GEN-LAST:event_scrollPhotosAdjustmentValueChanged
+        int i = scrollMediaEvent.getValue();
+        if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty() && i >= 0 && i < event.eventMediaSet.size() && i != event.eventMediaIndex) {
+            event.eventMediaIndex = scrollMediaEvent.getValue();
+            displayEventMedia(event);
+        }
+    }//GEN-LAST:event_scrollMediaEventAdjustmentValueChanged
 
     private void photosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_photosMouseClicked
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
         if (evt.getButton() == MouseEvent.BUTTON1) {
-            if (chooseMedia(mediaIndex)) {
-                displayPhoto();
+            if (chooseMedia(event, event.eventMediaIndex)) {
+                displayEventMedia(event);
                 textAreaPhotos.requestFocus();
             }
         } else if (evt.getButton() == MouseEvent.BUTTON3) {
-            if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
+            if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty() && (event.eventMediaIndex >= 0) && (event.eventMediaIndex < event.eventMediaSet.size())) {
                 try {
-                    if (mediaSet.get(mediaIndex) != null && mediaSet.get(mediaIndex).getFile() != null) {
-                        Desktop.getDesktop().open(mediaSet.get(mediaIndex).getFile());
+                    if (event.eventMediaSet.get(event.eventMediaIndex) != null && event.eventMediaSet.get(event.eventMediaIndex).getFile() != null) {
+                        Desktop.getDesktop().open(event.eventMediaSet.get(event.eventMediaIndex).getFile());
                     }
                 } catch (IOException ex) {
                     //Exceptions.printStackTrace(ex);
@@ -1385,26 +1402,34 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_photosMouseClicked
 
-    private void addMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaButtonActionPerformed
-        if (chooseMedia(mediaSet.size())) {
-            displayPhoto();
+    private void addMediaEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addMediaEventButtonActionPerformed
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (chooseMedia(event, event.eventMediaSet.size())) {
+            displayEventMedia(event);
             textAreaPhotos.requestFocus();
         }
-    }//GEN-LAST:event_addMediaButtonActionPerformed
+    }//GEN-LAST:event_addMediaEventButtonActionPerformed
 
-    private void delMediaButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaButtonActionPerformed
-        if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {
-            MediaWrapper media = mediaSet.get(mediaIndex);
-            mediaRemovedSet.add(media);
-            mediaSet.remove(mediaIndex);
-            mediaIndex--;
-            if (mediaIndex < 0) {
-                mediaIndex = 0;
+    private void delMediaEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delMediaEventButtonActionPerformed
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty() && (event.eventMediaIndex >= 0) && (event.eventMediaIndex < event.eventMediaSet.size())) {
+            MediaWrapper media = event.eventMediaSet.get(event.eventMediaIndex);
+            event.eventMediaRemovedSet.add(media);
+            event.eventMediaSet.remove(event.eventMediaIndex);
+            event.eventMediaIndex--;
+            if (event.eventMediaIndex < 0) {
+                event.eventMediaIndex = 0;
             }
             triggerChange();
         }
-        displayPhoto();        
-    }//GEN-LAST:event_delMediaButtonActionPerformed
+        displayEventMedia(event);      
+    }//GEN-LAST:event_delMediaEventButtonActionPerformed
 
     private void brothersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brothersButtonActionPerformed
         showPopupFamilyMenu(brothersButton, IndiCreator.REL_BROTHER, null, indi.getBrothers(true));
@@ -1463,25 +1488,29 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_scrollNotesEventAdjustmentValueChanged
 
-    private void scrollPhotosMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollPhotosMouseWheelMoved
+    private void scrollMediaEventMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollMediaEventMouseWheelMoved
         int notches = evt.getWheelRotation();
-        if (isBusyMedia) {
+        if (isBusyEventMedia) {
             return;
         }
-        if (mediaSet != null && !mediaSet.isEmpty()) {
-            int i = mediaIndex + notches;
-            if (i >= mediaSet.size()) {
-                i = mediaSet.size() - 1;
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty()) {
+            int i = event.eventMediaIndex + notches;
+            if (i >= event.eventMediaSet.size()) {
+                i = event.eventMediaSet.size() - 1;
             }
             if (i < 0) {
                 i = 0;
             }
-            mediaIndex = i;
-            displayPhoto();
+            event.eventMediaIndex = i;
+            displayEventMedia(event);
         }
         
         
-    }//GEN-LAST:event_scrollPhotosMouseWheelMoved
+    }//GEN-LAST:event_scrollMediaEventMouseWheelMoved
 
     private void scrollNotesEventMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_scrollNotesEventMouseWheelMoved
         int notches = evt.getWheelRotation();
@@ -1760,7 +1789,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel BottomButtonsPanel;
     private javax.swing.JPanel TopButtonsdPanel;
-    private javax.swing.JButton addMediaButton;
+    private javax.swing.JButton addMediaEventButton;
     private javax.swing.JButton addNoteEventButton;
     private javax.swing.JButton addSourceEventButton;
     private javax.swing.JLabel ageAtEvent;
@@ -1774,7 +1803,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton childrenButton;
     private javax.swing.JLabel datelabel;
     private javax.swing.JLabel dayOfWeek;
-    private javax.swing.JButton delMediaButton;
+    private javax.swing.JButton delMediaEventButton;
     private javax.swing.JButton delNoteEventButton;
     private javax.swing.JButton delSourceEventButton;
     private javax.swing.JButton eventBaptButton;
@@ -1828,10 +1857,10 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton repoEditButton;
     private javax.swing.JPanel repoPanel;
     private javax.swing.JTextField repoText;
+    private javax.swing.JScrollBar scrollMediaEvent;
     private javax.swing.JScrollBar scrollNotesEvent;
     private javax.swing.JScrollPane scrollPaneFamily;
     private javax.swing.JScrollPane scrollPanePhotos;
-    private javax.swing.JScrollBar scrollPhotos;
     private javax.swing.JScrollBar scrollSourcesEvent;
     private javax.swing.JSeparator separator;
     private javax.swing.JButton sistersButton;
@@ -1868,7 +1897,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Remember selections
         EventWrapper ew = getCurrentEvent();            
-        savedMediaIndex = mediaIndex;
+        savedMediaIndex = ew.eventMediaIndex;
         savedEventTagDateDesc = ew.getEventKey(flag);
         savedEventNoteIndex = ew.eventNoteIndex;
         savedEventSourceIndex = ew.eventSourceIndex;
@@ -1949,7 +1978,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void selectPropertyContext(Context context) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
         if (!savedEventTagDateDesc.equals("-1") && eventSet != null) {
-            scrollPhotos.setValue(savedMediaIndex);             savedMediaIndex = -1;
+            scrollMediaEvent.setValue(savedMediaIndex);             savedMediaIndex = -1;
             selectEvent(savedEventTagDateDesc);                 savedEventTagDateDesc = "-1";
             scrollNotesEvent.setValue(savedEventNoteIndex);     savedEventNoteIndex = -1;
             scrollSourcesEvent.setValue(savedEventSourceIndex); savedEventSourceIndex = -1;
@@ -2066,6 +2095,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         String str = "";
         int i = 0;
         boolean privateTagFound = false;
+        refMedia.clear();
         refNotes.clear();
         refSources.clear();
         
@@ -2103,23 +2133,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
         privateCheckBox.setSelected(privateTagFound);
         
-        // Medias
-        if (mediaSet != null) {
-            mediaSet.clear();
-            mediaSet = null;
-        }
-        if (mediaRemovedSet != null) {
-            mediaRemovedSet.clear();
-            mediaRemovedSet = null;
-        }
-        mediaSet = getMedia(indi);
-        mediaRemovedSet = new ArrayList<MediaWrapper>();
-        scrollPhotos.setMinimum(0);
-        scrollPhotos.setBlockIncrement(1);
-        scrollPhotos.setUnitIncrement(1);
-        mediaIndex = 0;
-        displayPhoto();
-
         // Family tree (parents, siblings, mariages and corresponding childrens)
         createFamilyNodes(indi);
         familyTree.repaint();
@@ -2203,9 +2216,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Save the rest
         //
-        saveMedia();
-
-        //
         saveEvents();
 
         //
@@ -2217,210 +2227,14 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     
 
-    
-    
     /***************************************************************************
-     * Media
+     * Sex
      */
     
-    private List<MediaWrapper> getMedia(Indi indi) {
-        List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
-        
-        // Look for media directly attached to indi (media always have a file, so look for all files underneath OBJE but not underneath SOUR)
-        for (PropertyFile propFile : indi.getProperties(PropertyFile.class)) {
-            if (!Utils.parentTagsContains(propFile, "SOUR")) {
-                Property propObje = getParentTag(propFile, "OBJE");
-                ret.add(new MediaWrapper(propObje));
-            }
-        }
-        
-        // Look for media as links to entities
-        for (PropertyMedia propMedia : indi.getProperties(PropertyMedia.class)) {
-            if (!Utils.parentTagsContains(propMedia.getParent(), "SOUR")) {
-                ret.add(new MediaWrapper(propMedia));
-            }
-        }
-        
-        return ret;
-    }
-
-    
-    private void saveMedia() {
-        //mediaSet
-        for (MediaWrapper media : mediaSet) {
-            media.update(indi);
-        }
-        for (MediaWrapper media : mediaRemovedSet) {
-            media.remove(indi);
-        }
-    }
-
-    
-    
-
-    
-    private Property getParentTag(Property prop, String tag) {
-        if (prop == null) {
-            return null;
-        }
-        Property parent = prop.getParent();
-        if (parent == null) {
-            return null;
-        }
-        if (parent.getTag().equals(tag)) {
-            return parent;
-        }
-        return getParentTag(parent, tag);
-    }
-
-    
-    
-    
-    private void displayPhoto() {
-        isBusyMedia = true;
-        if (mediaSet != null && !mediaSet.isEmpty() && (mediaIndex >= 0) && (mediaIndex < mediaSet.size())) {        
-            setPhoto(mediaSet.get(mediaIndex), indi.getSex());
-        } else {
-            setPhoto(null, getSex());
-        }
-        isBusyMedia = false;
-    }
-    
-    private void setPhoto(MediaWrapper media, int sex) {
-        
-        File file = null;
-        String localTitle = "";
-        ImageIcon defaultIcon = new ImageIcon(getSexImage(sex));
-        ImageIcon imageIcon = null;
-        
-        if (media != null) {
-            file = media.getFile();
-            localTitle = media.getTitle();
-        }
-        
-        // Photo
-        if (file != null && file.exists()) {
-            imageIcon = new ImageIcon(getImageFromFile(file, getClass()));
-        } else {
-            imageIcon = defaultIcon;
-        }
-
-        photos.setIcon(getResizedIcon(imageIcon, PHOTO_WIDTH, PHOTO_HEIGHT));   // preferred size of photo label but getPreferredSize() does not return those values...
-        photos.setText("");
-        
-        // Title
-        textAreaPhotos.setText(localTitle);
-        textAreaPhotos.setCaretPosition(0);
-        
-            
-        // Update scroll
-        scrollPhotos.setValues(mediaIndex, 1, 0, mediaSet.size());
-        scrollPhotos.setToolTipText(getScrollPhotosLabel());
-    }
-
-    private String getScrollPhotosLabel() {
-        return String.valueOf(mediaSet.size() > 0 ? mediaIndex + 1 : mediaIndex) + "/" + String.valueOf(mediaSet.size());
-    }
-
     private int getSex() {
         return maleRadioButton.isSelected() ? PropertySex.MALE : femaleRadioButton.isSelected() ? PropertySex.FEMALE : PropertySex.UNKNOWN;
     }
 
-    private Image getSexImage(int sex) {
-        return (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
-    }
-
-    private boolean chooseMedia(int index) {
-        boolean b = false;
-        boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
-        
-        JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
-        JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
-        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { mediaButton, fileButton, cancelButton };
-        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? mediaSet.get(index).getFile() : null,
-                exists ? getImageFromFile(mediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
-                exists ? mediaSet.get(index).getTitle() : "",
-                exists ? mediaSet.get(index) : null, 
-                mediaButton, cancelButton
-        );
-        int size = mediaChooser.getNbMedia();
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle", size), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
-        if (o == mediaButton) {
-            File file = mediaChooser.getSelectedFile();
-            String mediaTitle = mediaChooser.getSelectedTitle();
-            if (mediaChooser.isSelectedEntityMedia()) {
-                Media entity = (Media) mediaChooser.getSelectedEntity();
-                if (exists) {
-                    mediaSet.get(index).setTargetEntity(entity);
-                    mediaSet.get(index).setTitle(mediaTitle);
-                    mediaIndex = index;
-                } else {
-                    MediaWrapper media = new MediaWrapper(entity);
-                    media.setTitle(mediaTitle);
-                    mediaSet.add(media);
-                    mediaIndex = mediaSet.size() - 1;
-                }
-                triggerChange();
-                b = true;
-            } else {
-                if (exists) {
-                    mediaSet.get(index).setFile(file);
-                    mediaSet.get(index).setTitle(mediaTitle);
-                    mediaIndex = index;
-                } else {
-                    MediaWrapper media = new MediaWrapper(file, mediaTitle);
-                    mediaSet.add(media);
-                    mediaIndex = mediaSet.size() - 1;
-                }
-                triggerChange();
-                b = true;
-            }
-        } else if (o == fileButton) {
-            return chooseFileImage(index);
-        }
-        
-        return b;
-    }
-    
-    
-    
-    private boolean chooseFileImage(int index) {
-        boolean b = false;
-        boolean exists = (mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size());
-        
-        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Images")
-                .setFilesOnly(true)
-                .setDefaultBadgeProvider()
-                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
-                .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
-                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
-                .addFileFilter(FileChooserBuilder.getImageFilter())
-                .addFileFilter(FileChooserBuilder.getSoundFilter())
-                .addFileFilter(FileChooserBuilder.getVideoFilter())
-                .setAcceptAllFileFilterUsed(false)
-                .setFileHiding(true)
-                .showOpenDialog();
-        if (file != null) {
-            if (exists) {
-                mediaSet.get(index).setFile(file);
-                mediaIndex = index;
-            } else {
-                MediaWrapper media = new MediaWrapper(file);
-                mediaSet.add(media);
-                mediaIndex = mediaSet.size() - 1;
-            }
-            triggerChange();
-            b = true;
-        } else {
-            textAreaPhotos.requestFocus();
-        }
-        return b;
-    }
-
-    
-    
-    
     
     
     /***************************************************************************
@@ -2483,7 +2297,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         List<EventWrapper> ret = new ArrayList<EventWrapper>();
         
         // Start adding the general event which will only hold general notes and sources for the individual
-        ret.add(new EventWrapper(indi, indi, refNotes, refSources));
+        ret.add(new EventWrapper(indi, indi, refMedia, refNotes, refSources));
                 
         // Look for all individual events
         // - INDIVIDUAL_EVENT_STRUCTURE (birth, etc.)
@@ -2494,7 +2308,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             Property[] eventProps = indi.getProperties(tag);
             for (Property prop : eventProps) {
                 if (prop != null) {
-                    ret.add(new EventWrapper(prop, indi, refNotes, refSources));
+                    ret.add(new EventWrapper(prop, indi, refMedia, refNotes, refSources));
                 }
             }
         }
@@ -2509,7 +2323,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 Property[] eventProps = fam.getProperties(tag);
                 for (Property prop : eventProps) {
                     if (prop != null) {
-                        ret.add(new EventWrapper(prop, indi, refNotes, refSources));
+                        ret.add(new EventWrapper(prop, indi, refMedia, refNotes, refSources));
                     }
                 }
             }
@@ -2674,6 +2488,14 @@ public class IndiPanel extends Editor implements DocumentListener {
                 eventPlaceText.setCaretPosition(0);
             }
 
+            // Media
+            scrollMediaEvent.setMinimum(0);
+            scrollMediaEvent.setBlockIncrement(1);
+            scrollMediaEvent.setUnitIncrement(1);
+            event.eventMediaIndex = 0;
+            displayEventMedia(event);
+        
+            
             // Notes
             scrollNotesEvent.setMinimum(0);
             scrollNotesEvent.setBlockIncrement(1);
@@ -2726,6 +2548,170 @@ public class IndiPanel extends Editor implements DocumentListener {
         return b;
     }
     
+    
+    
+    
+    
+    
+    /***************************************************************************
+     * Media
+     */
+    
+    private void displayEventMedia(EventWrapper event) {
+        isBusyEventMedia = true;
+        if (event.eventMediaSet != null && !event.eventMediaSet.isEmpty() && (event.eventMediaIndex >= 0) && (event.eventMediaIndex < event.eventMediaSet.size())) {        
+            setEventMedia(event, event.eventMediaSet.get(event.eventMediaIndex), indi.getSex());
+        } else {
+            setEventMedia(event, null, getSex());
+        }
+        isBusyEventMedia = false;
+    }
+    
+    private void setEventMedia(EventWrapper event, MediaWrapper media, int sex) {
+        
+        File file = null;
+        String localTitle = "";
+        ImageIcon defaultIcon = new ImageIcon(getSexImage(sex));
+        ImageIcon imageIcon = null;
+        
+        if (media != null) {
+            file = media.getFile();
+            localTitle = media.getTitle();
+        }
+        
+        // Photo
+        textAreaPhotos.setFont(new Font("Deja Vu sans", Font.PLAIN, 11));
+        textAreaPhotos.setForeground(Color.BLACK);
+        if (file != null && file.exists()) {
+            imageIcon = new ImageIcon(getImageFromFile(file, getClass()));
+        } else {
+            // try to display main indi photo rather than default grey one
+            if (eventSet != null && !eventSet.isEmpty() 
+                    && eventSet.get(0) != null 
+                    && eventSet.get(0).eventMediaSet != null 
+                    && !eventSet.get(0).eventMediaSet.isEmpty() 
+                    && eventSet.get(0).eventMediaSet.get(0) != null 
+                    && eventSet.get(0).eventMediaSet.get(0).getFile() != null) {
+                File f0 = eventSet.get(0).eventMediaSet.get(0).getFile();
+                imageIcon = new ImageIcon(getImageFromFile(f0, getClass()));
+                localTitle = NbBundle.getMessage(getClass(), "IndiPanel.Photo_default");
+                textAreaPhotos.setFont(new Font("Deja Vu sans", Font.ITALIC, 9));
+                textAreaPhotos.setForeground(Color.GRAY);
+            } else {
+                imageIcon = defaultIcon;
+            }
+        }
+
+        photos.setIcon(getResizedIcon(imageIcon, PHOTO_WIDTH, PHOTO_HEIGHT));   // preferred size of photo label but getPreferredSize() does not return those values...
+        photos.setText("");
+        
+        // Title
+        textAreaPhotos.setText(localTitle);
+        textAreaPhotos.setCaretPosition(0);
+        
+            
+        // Update scroll
+        scrollMediaEvent.setValues(event.eventMediaIndex, 1, 0, event.eventMediaSet.size());
+        scrollMediaEvent.setToolTipText(getScrollPhotosLabel(event));
+    }
+
+    
+    private String getScrollPhotosLabel(EventWrapper event) {
+        return String.valueOf(event.eventMediaSet.size() > 0 ? event.eventMediaIndex + 1 : event.eventMediaIndex) + "/" + String.valueOf(event.eventMediaSet.size());
+    }
+
+    private Image getSexImage(int sex) {
+        return (sex == PropertySex.MALE ? PHOTO_MALE : (sex == PropertySex.FEMALE ? PHOTO_FEMALE : PHOTO_UNKNOWN));
+    }
+
+    private boolean chooseMedia(EventWrapper event, int index) {
+        boolean b = false;
+        boolean exists = (event.eventMediaSet != null) && (!event.eventMediaSet.isEmpty()) && (index >= 0) && (index < event.eventMediaSet.size());
+        
+        JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
+        JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { mediaButton, fileButton, cancelButton };
+        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getFile() : null,
+                exists ? getImageFromFile(event.eventMediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
+                exists ? event.eventMediaSet.get(index).getTitle() : "",
+                exists ? event.eventMediaSet.get(index) : null, 
+                mediaButton, cancelButton
+        );
+        int size = mediaChooser.getNbMedia();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle", size), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+        if (o == mediaButton) {
+            File file = mediaChooser.getSelectedFile();
+            String mediaTitle = mediaChooser.getSelectedTitle();
+            if (mediaChooser.isSelectedEntityMedia()) {
+                Media entity = (Media) mediaChooser.getSelectedEntity();
+                if (exists) {
+                    event.eventMediaSet.get(index).setTargetEntity(entity);
+                    event.eventMediaSet.get(index).setTitle(mediaTitle);
+                    event.eventMediaIndex = index;
+                } else {
+                    MediaWrapper media = new MediaWrapper(entity);
+                    media.setTitle(mediaTitle);
+                    event.eventMediaSet.add(media);
+                    event.eventMediaIndex = event.eventMediaSet.size() - 1;
+                }
+                triggerChange();
+                b = true;
+            } else {
+                if (exists) {
+                    event.eventMediaSet.get(index).setFile(file);
+                    event.eventMediaSet.get(index).setTitle(mediaTitle);
+                    event.eventMediaIndex = index;
+                } else {
+                    MediaWrapper media = new MediaWrapper(file, mediaTitle);
+                    event.eventMediaSet.add(media);
+                    event.eventMediaIndex = event.eventMediaSet.size() - 1;
+                }
+                triggerChange();
+                b = true;
+            }
+        } else if (o == fileButton) {
+            return chooseFileImage(event, index);
+        }
+        
+        return b;
+    }
+    
+    
+    
+    private boolean chooseFileImage(EventWrapper event, int index) {
+        boolean b = false;
+        boolean exists = (event.eventMediaSet != null) && (!event.eventMediaSet.isEmpty()) && (index >= 0) && (index < event.eventMediaSet.size());
+        
+        File file = new FileChooserBuilder(IndiPanel.class.getCanonicalName()+"Images")
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(getClass(), "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(getClass(), "FileChooserOKButton"))
+                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .addFileFilter(FileChooserBuilder.getImageFilter())
+                .addFileFilter(FileChooserBuilder.getSoundFilter())
+                .addFileFilter(FileChooserBuilder.getVideoFilter())
+                .setAcceptAllFileFilterUsed(false)
+                .setFileHiding(true)
+                .showOpenDialog();
+        if (file != null) {
+            if (exists) {
+                event.eventMediaSet.get(index).setFile(file);
+                event.eventMediaIndex = index;
+            } else {
+                MediaWrapper media = new MediaWrapper(file);
+                event.eventMediaSet.add(media);
+                event.eventMediaIndex = event.eventMediaSet.size() - 1;
+            }
+            triggerChange();
+            b = true;
+        } else {
+            textAreaPhotos.requestFocus();
+        }
+        return b;
+    }
+
     
     
     
@@ -3057,18 +3043,20 @@ public class IndiPanel extends Editor implements DocumentListener {
     /***************************************************************************
      * Updaters (user has made a change to in a field or control, data is stored in data structure)
      */
-    private void updatePhotoTitle(int index) {
-        if (isBusyMedia) {
+    private void updatePhotoTitle() {
+        if (isBusyEvent || isBusyEventMedia) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
             return;
         }
         String photoTitle = textAreaPhotos.getText();
-        if ((mediaSet != null) && (!mediaSet.isEmpty()) && (index >= 0) && (index < mediaSet.size())) {
-            mediaSet.get(index).setTitle(photoTitle);
-            mediaIndex = index;
+        if ((event.eventMediaSet != null) && (!event.eventMediaSet.isEmpty()) && (event.eventMediaIndex >= 0) && (event.eventMediaIndex < event.eventMediaSet.size())) {
+            event.eventMediaSet.get(event.eventMediaIndex).setTitle(photoTitle);
+            event.setMedia(photoTitle);
         } else {
-            MediaWrapper media = new MediaWrapper(photoTitle);
-            mediaSet.add(media);
-            mediaIndex = mediaSet.size()-1;
+            event.addMedia(photoTitle);
         }
         triggerChange();
     }
@@ -3377,7 +3365,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
         if (eventProp instanceof Entity) {
-            return new EventWrapper((Entity) eventProp, refNotes, refSources);
+            return new EventWrapper((Entity) eventProp, refMedia, refNotes, refSources);
         }
         return null;
     }
@@ -3404,7 +3392,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
     
     private void createEvent(Property prop) {
-        eventSet.add(new EventWrapper(prop, indi, refNotes, refSources));
+        eventSet.add(new EventWrapper(prop, indi, refMedia, refNotes, refSources));
         displayEventTable();
         eventIndex = eventSet.size() - 1;
         triggerChange();
@@ -3711,15 +3699,15 @@ public class IndiPanel extends Editor implements DocumentListener {
     private class PhotoTitleListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
-            updatePhotoTitle(mediaIndex);
+            updatePhotoTitle();
         }
 
         public void removeUpdate(DocumentEvent e) {
-            updatePhotoTitle(mediaIndex);
+            updatePhotoTitle();
         }
 
         public void changedUpdate(DocumentEvent e) {
-            updatePhotoTitle(mediaIndex);
+            updatePhotoTitle();
         }
     }
 
