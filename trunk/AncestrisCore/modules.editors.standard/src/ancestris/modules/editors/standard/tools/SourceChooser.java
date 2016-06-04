@@ -141,6 +141,7 @@ public class SourceChooser extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     sourceList.setSelectedValue(sourcei, true);
+                    sourceList.scrollRectToVisible(sourceList.getCellBounds(sourceList.getMinSelectionIndex(), sourceList.getMaxSelectionIndex()));
                 }
             });
         }

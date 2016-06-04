@@ -121,6 +121,8 @@ public class NoteChooser extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     noteList.setSelectedValue(notei, true);
+                    noteList.ensureIndexIsVisible(noteList.getSelectedIndex());
+                    noteList.scrollRectToVisible(noteList.getCellBounds(noteList.getMinSelectionIndex(), noteList.getMaxSelectionIndex()));
                 }
             });
         }

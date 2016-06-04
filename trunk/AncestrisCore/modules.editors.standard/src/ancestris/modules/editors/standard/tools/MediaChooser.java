@@ -140,6 +140,7 @@ public class MediaChooser extends javax.swing.JPanel {
                 @Override
                 public void run() {
                     mediaList.setSelectedValue(mediai, true);
+                    mediaList.scrollRectToVisible(mediaList.getCellBounds(mediaList.getMinSelectionIndex(), mediaList.getMaxSelectionIndex()));
                 }
             });
         }
