@@ -165,11 +165,11 @@
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="1" attributes="0">
-                  <Component id="scrollPhotos" max="32767" attributes="0"/>
+                  <Component id="scrollMediaEvent" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Component id="addMediaButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="addMediaEventButton" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                  <Component id="delMediaButton" min="-2" max="-2" attributes="0"/>
+                  <Component id="delMediaEventButton" min="-2" max="-2" attributes="0"/>
               </Group>
               <Component id="photos" alignment="0" max="32767" attributes="0"/>
               <Component id="scrollPanePhotos" alignment="0" pref="0" max="32767" attributes="0"/>
@@ -183,9 +183,9 @@
                   <Component id="scrollPanePhotos" pref="0" max="32767" attributes="0"/>
                   <EmptySpace min="-2" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <Component id="delMediaButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="addMediaButton" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="scrollPhotos" min="-2" max="-2" attributes="0"/>
+                      <Component id="delMediaEventButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="addMediaEventButton" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Component id="scrollMediaEvent" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -240,25 +240,25 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JScrollBar" name="scrollPhotos">
+        <Component class="javax.swing.JScrollBar" name="scrollMediaEvent">
           <Properties>
             <Property name="orientation" type="int" value="0"/>
           </Properties>
           <Events>
-            <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="scrollPhotosMouseWheelMoved"/>
-            <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="scrollPhotosAdjustmentValueChanged"/>
+            <EventHandler event="mouseWheelMoved" listener="java.awt.event.MouseWheelListener" parameters="java.awt.event.MouseWheelEvent" handler="scrollMediaEventMouseWheelMoved"/>
+            <EventHandler event="adjustmentValueChanged" listener="java.awt.event.AdjustmentListener" parameters="java.awt.event.AdjustmentEvent" handler="scrollMediaEventAdjustmentValueChanged"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="addMediaButton">
+        <Component class="javax.swing.JButton" name="addMediaEventButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/ancestris/modules/editors/standard/images/add.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addMediaButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addMediaEventButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addMediaButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.addMediaEventButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -271,19 +271,19 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addMediaButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="addMediaEventButtonActionPerformed"/>
           </Events>
         </Component>
-        <Component class="javax.swing.JButton" name="delMediaButton">
+        <Component class="javax.swing.JButton" name="delMediaEventButton">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
               <Image iconType="3" name="/ancestris/modules/editors/standard/images/remove.png"/>
             </Property>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delMediaButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delMediaEventButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delMediaButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.delMediaEventButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
               <Border info="org.netbeans.modules.form.compat2.border.BevelBorderInfo">
@@ -296,7 +296,7 @@
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delMediaButtonActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="delMediaEventButtonActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

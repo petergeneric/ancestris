@@ -49,6 +49,7 @@ public class AssoWrapper {
     private String targetEventTag = "";         // Event tag of the associated event
     public String targetEventDesc = "";         // The event text to be displayed
     
+    public Map<String, MediaWrapper> refMedia = null;       // Dummy reference for compatibility reasons with EventWrapper ; will not be used
     public Map<String, NoteWrapper> refNotes = null;       // Dummy reference for compatibility reasons with EventWrapper ; will not be used
     public Map<String, SourceWrapper> refSources = null;   // Dummy reference for compatibility reasons with EventWrapper ; will not be used
 
@@ -76,9 +77,10 @@ public class AssoWrapper {
         
         Indi associatedIndi = (Indi) assoProperty.getEntity();
         Property eventProp = assoProperty.getTargetParent();
+        refMedia = new HashMap<String, MediaWrapper>();
         refNotes = new HashMap<String, NoteWrapper>();
         refSources = new HashMap<String, SourceWrapper>();
-        EventWrapper event = new EventWrapper(eventProp, associatedIndi, refNotes, refSources);
+        EventWrapper event = new EventWrapper(eventProp, associatedIndi, refMedia, refNotes, refSources);
         setValues(associatedIndi, assoProperty, event);
         
     }

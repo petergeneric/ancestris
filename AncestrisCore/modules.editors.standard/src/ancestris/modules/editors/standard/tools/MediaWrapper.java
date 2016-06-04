@@ -16,7 +16,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
-import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
@@ -157,6 +156,10 @@ public class MediaWrapper {
     }
     
     
+    public void setHostingProperty(Property property) {
+        this.hostingProperty = property;
+    }
+
     
     
     
@@ -204,18 +207,18 @@ public class MediaWrapper {
      *    - Update : where it is
      * @param indi 
      */
-    public void update(Indi indi) {
+    public void update(Property mainProp) {
         // If it is a creation...
         if (hostingProperty == null) {
-            Gedcom gedcom = indi.getGedcom();
+            Gedcom gedcom = mainProp.getGedcom();
             if (gedcom.getGrammar().equals(Grammar.V55)) {
-                putMediaCitation(indi.addProperty("OBJE", ""));
+                putMediaCitation(mainProp.addProperty("OBJE", ""));
             } else {
                 try {
                     if (this.targetMedia == null) {
-                        this.targetMedia = indi.getGedcom().createEntity(Gedcom.OBJE);
+                        this.targetMedia = mainProp.getGedcom().createEntity(Gedcom.OBJE);
                     }
-                    indi.addMedia((Media) targetMedia);
+                    mainProp.addMedia((Media) targetMedia);
                     putMediaRecord((Media) targetMedia);
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
@@ -245,7 +248,7 @@ public class MediaWrapper {
         // Case of Media record and link not yet created (added and chosen from MediaChooser)
         if (recordType &&  !(hostingProperty instanceof PropertyMedia)) {
             putMediaRecord(targetMedia);
-            indi.addMedia((Media) targetMedia);
+            mainProp.addMedia((Media) targetMedia);
         }
     }
 
@@ -304,7 +307,7 @@ public class MediaWrapper {
         }
     }
 
-    public void remove(Indi indi) {
+    public void remove() {
         if (hostingProperty == null) {
             return;
         }
