@@ -30,14 +30,15 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("es"),
         new Locale("el"),
         new Locale("eo"),
+        new Locale("fi"),
         Locale.FRENCH,
+        new Locale("hu"),
         Locale.ITALIAN,
         new Locale("nl"),
         new Locale("no"),
         new Locale("pl"),
         new Locale("pt","PT"),
         new Locale("ru"),
-        new Locale("fi"),
         new Locale("sv")
     };
     private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
