@@ -83,20 +83,20 @@
                 <package>swingx.docking.ui</package>
             </public-packages>
             <class-path-extension>
+                <runtime-relative-path>ext/swingx-0.7.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/swingx-0.7.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
+                <runtime-relative-path>ext/jcommon-1.0.23.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jcommon-1.0.23.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/graphj.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/graphj.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
-                <runtime-relative-path>ext/jfreechart-1.0.13.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jfreechart-1.0.13.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/jcommon-1.0.16.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/jcommon-1.0.16.jar</binary-origin>
-            </class-path-extension>
-            <class-path-extension>
-                <runtime-relative-path>ext/swingx-0.7.jar</runtime-relative-path>
-                <binary-origin>release/modules/ext/swingx-0.7.jar</binary-origin>
+                <runtime-relative-path>ext/jfreechart-1.0.19.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/jfreechart-1.0.19.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
                 <runtime-relative-path>ext/junit.jar</runtime-relative-path>
