@@ -2270,7 +2270,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean privateTagFound = false;
         
         // Title
-        title.setText("<html> <font color=\"red\"><b>/!\\ Bientôt Prêt !!! /!\\</b></font> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
+        title.setText("<html> " + indi.getFirstName() + " " + indi.getLastName() + " </html> ");
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
@@ -2752,6 +2752,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Photo
         textAreaPhotos.setFont(new Font("DejaVu sans", Font.PLAIN, 11));
         textAreaPhotos.setForeground(Color.BLACK);
+        textAreaPhotos.setEditable(true);
         
         // Image
         if (file != null && file.exists()) {
@@ -2769,6 +2770,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 localTitle = NbBundle.getMessage(getClass(), "IndiPanel.Photo_default");
                 textAreaPhotos.setFont(new Font("DejavVu sans", Font.ITALIC, 9));
                 textAreaPhotos.setForeground(Color.GRAY);
+                textAreaPhotos.setEditable(false);
             } else {
                 photoPanel.setMedia(null, getSexImage(sex));
             }
@@ -3335,7 +3337,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             event.addMedia(photoTitle);
         }
-        propagateMedia((Media) event.eventMediaSet.get(event.eventMediaIndex).getTargetMedia(), photoTitle);
+        Entity ent = event.eventMediaSet.get(event.eventMediaIndex).getTargetMedia();
+        if (ent instanceof Media) {
+            propagateMedia((Media) ent, photoTitle);
+        }
+        
         triggerChange();
     }
 
@@ -3353,7 +3359,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             event.addNote(noteText);
         }
-        propagateNote((Note) event.eventNoteSet.get(event.eventNoteIndex).getTargetNote(), noteText);
+        Entity ent = event.eventNoteSet.get(event.eventNoteIndex).getTargetNote();
+        if (ent instanceof Note) {
+            propagateNote((Note) ent, noteText);
+        }
+        
         triggerChange();
     }
 
@@ -3374,7 +3384,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             event.addSource(sourceTitle, sourceText, mediaTitle);
         }
         SourceWrapper sourceW = event.eventSourceSet.get(event.eventSourceIndex);
-        propagateSource((Source) sourceW.getTargetSource(), sourceTitle, sourceText);
+        Entity ent = sourceW.getTargetSource();
+        if (ent instanceof Source) {
+            propagateSource((Source) ent, sourceTitle, sourceText);
+        }
         if (sourceW.sourceMediaSet != null && !sourceW.sourceMediaSet.isEmpty()) {
             MediaWrapper mediaW = sourceW.sourceMediaSet.get(sourceW.sourceMediaIndex);
             if (mediaW != null) {
