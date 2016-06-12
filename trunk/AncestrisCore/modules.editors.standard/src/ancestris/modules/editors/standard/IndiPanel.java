@@ -1771,7 +1771,8 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     private void indiAddButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiAddButtonActionPerformed
         IndiCreator indiCreator = new IndiCreator(IndiCreator.CREATION, indi, IndiCreator.REL_NONE, null, null);
-        getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
+        //getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
+        SelectionDispatcher.fireSelection(new Context(indiCreator.getIndi()));
     }//GEN-LAST:event_indiAddButtonActionPerformed
 
     private void indiDelButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiDelButtonActionPerformed
