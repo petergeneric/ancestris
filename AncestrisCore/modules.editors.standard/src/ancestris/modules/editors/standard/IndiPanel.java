@@ -168,9 +168,15 @@ public class IndiPanel extends Editor implements DocumentListener {
     private boolean isBusyEventMedia = false;
     private boolean isBusyEventNote = false;
     private boolean isBusyEventSource = false;
-    private int eventIndex = 0, savedMediaIndex = -1, savedEventNoteIndex = -1, savedEventSourceIndex = -1;     // memory
-    private String savedEventTagDateDesc = "-1";                                                                // memory
-    private Component savedFocusedControl = null;                                                               // memory
+    
+    // Memorise all posiitons to return on same selected bits
+    private String savedEventTagDateDesc = "-1";                                                               
+    private Component savedFocusedControl = null;                                                              
+    private int eventIndex = 0, 
+            savedEventMediaIndex = -1, 
+            savedEventNoteIndex = -1, 
+            savedEventSourceIndex = -1,
+            savedEventSourceMediaIndex = -1;          
     
     // Associations
     private DefaultComboBoxModel cbModel = new DefaultComboBoxModel();
@@ -2070,10 +2076,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Remember selections
         EventWrapper ew = getCurrentEvent();            
-        savedMediaIndex = ew.eventMediaIndex;
         savedEventTagDateDesc = ew.getEventKey(flag);
+        savedEventMediaIndex = ew.eventMediaIndex;
         savedEventNoteIndex = ew.eventNoteIndex;
         savedEventSourceIndex = ew.eventSourceIndex;
+        savedEventSourceMediaIndex = 0;
+        if (ew.eventSourceSet != null && !ew.eventSourceSet.isEmpty()) {
+            SourceWrapper sw = ew.eventSourceSet.get(ew.eventSourceIndex);
+            savedEventSourceMediaIndex = sw.sourceMediaIndex;
+        }
         savedFocusedControl = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
     
@@ -2140,21 +2151,16 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Select event corresponding to property
      * - if context is of different entity
      * - if context is an event, select if
-     * TODO:
-     * - if context if a wedding type event, select it
-     * - if context is an Asso type data, select it ?
-     * - if context is a note, select it
-     * - if context is a source, select it
-     * 
      * @param context 
      */
     private void selectPropertyContext(Context context) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
         if (!savedEventTagDateDesc.equals("-1") && eventSet != null) {
-            scrollMediaEvent.setValue(savedMediaIndex);             savedMediaIndex = -1;
-            selectEvent(savedEventTagDateDesc);                 savedEventTagDateDesc = "-1";
-            scrollNotesEvent.setValue(savedEventNoteIndex);     savedEventNoteIndex = -1;
-            scrollSourcesEvent.setValue(savedEventSourceIndex); savedEventSourceIndex = -1;
+            selectEvent(savedEventTagDateDesc);                     savedEventTagDateDesc = "-1";
+            scrollMediaEvent.setValue(savedEventMediaIndex);        savedEventMediaIndex = -1;
+            scrollNotesEvent.setValue(savedEventNoteIndex);         savedEventNoteIndex = -1;
+            scrollSourcesEvent.setValue(savedEventSourceIndex);     savedEventSourceIndex = -1;
+            scrollMediaSource.setValue(savedEventSourceMediaIndex); savedEventSourceMediaIndex = -1;
             return;
         } 
         
