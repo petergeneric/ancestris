@@ -49,22 +49,16 @@ public class JulianCalendar extends GregorianCalendar {
     if (year<0)
       year++;
 
-    int 
-      y = year,
-      m = month+1,
-      d = day+1;
+    // switched to algorithm under
+    // https://en.wikipedia.org/wiki/Julian_day#Converting_Julian_or_Gregorian_calendar_date_to_Julian_day_number
+    // to address issue with diff between simple 29/Feb - 1/Mar calculations as spotted by alwa83
     
-    if (m<2) {
-      y--;
-      m+=12;
-    }
-          
-    int
-      E = (int)(365.25*(y+4716)),
-      F = (int)(30.6001*(m+1)),
-      JD= d+E+F-1524;
-          
-    return JD;
+    int a = (14 - (month+1) )/12;
+    int y = year + 4800 - a;
+    int m = (month+1) + 12 * a - 3; 
+    
+    return (day+1) + (153 * m +2)/5 + (365 * y) + (y/4) - 32083 ;
+
   }
   
   /**
