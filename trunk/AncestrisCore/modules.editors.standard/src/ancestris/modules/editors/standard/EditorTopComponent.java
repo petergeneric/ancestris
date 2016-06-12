@@ -130,6 +130,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             editor.setContext(newContext);  
             return;
         }
+        this.context = newContext;
 
         // Reconnect to gedcom if different
         if (newContext.getGedcom() != gedcom) {
