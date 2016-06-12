@@ -24,13 +24,15 @@ public class WelcomePanel extends javax.swing.JPanel {
      */
     public WelcomePanel() {
         initComponents();
-        String message = "";
+        String message = "<html>";
         message += NbBundle.getMessage(getClass(), "TITL_WelcomeMessage");
         message += NbBundle.getMessage(getClass(), "OpenIDE-Module-Long-Description");
         message += NbBundle.getMessage(getClass(), "TITL_WelcomeData");
         message += NbBundle.getMessage(getClass(), "TITL_WelcomeHowTo");
-        textArea.setText(message);
-        textArea.setCaretPosition(0);
+        message += "</html>";
+        textPane.setContentType("text/html");
+        textPane.setText(message);
+        textPane.setCaretPosition(0);
     }
 
     /**
@@ -42,36 +44,26 @@ public class WelcomePanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        textArea = new javax.swing.JTextArea();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        textPane = new javax.swing.JTextPane();
 
-        textArea.setColumns(20);
-        textArea.setLineWrap(true);
-        textArea.setRows(15);
-        textArea.setWrapStyleWord(true);
-        jScrollPane1.setViewportView(textArea);
+        jScrollPane2.setViewportView(textPane);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 666, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 788, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 596, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 641, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextArea textArea;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextPane textPane;
     // End of variables declaration//GEN-END:variables
 }
