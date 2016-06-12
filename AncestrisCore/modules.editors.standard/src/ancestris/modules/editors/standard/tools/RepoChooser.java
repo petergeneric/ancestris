@@ -429,6 +429,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jComboBoxMedia.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonSave, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonSave.text")); // NOI18N
+        jButtonSave.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonSave.toolTipText")); // NOI18N
         jButtonSave.setEnabled(false);
         jButtonSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -437,6 +438,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonCancel, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonCancel.text")); // NOI18N
+        jButtonCancel.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonCancel.toolTipText")); // NOI18N
         jButtonCancel.setEnabled(false);
         jButtonCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -445,6 +447,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonDelete, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonDelete.text")); // NOI18N
+        jButtonDelete.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonDelete.toolTipText")); // NOI18N
         jButtonDelete.setEnabled(false);
         jButtonDelete.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

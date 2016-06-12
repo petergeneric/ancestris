@@ -15,16 +15,19 @@ package ancestris.modules.editors.standard.tools;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-import genj.gedcom.Grammar;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyRepository;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.openide.util.Exceptions;
 
 
@@ -183,7 +186,7 @@ SOUR entity
  *       +1 TEXT <TEXT_FROM_SOURCE>  {0:1}                          ==> 1 Text
  *         +2 [CONT|CONC] <TEXT_FROM_SOURCE>  {0:M}
  *       +1 <<SOURCE_REPOSITORY_CITATION>>  {0:1}                   ==> 1 Repo
- *       +1 <<MULTIMEDIA_LINK>>  {0:M}                              ==> 1 Media (use first media only) // TODO : MAKE IT MULTIPLE **************
+ *       +1 <<MULTIMEDIA_LINK>>  {0:M}                              ==> n Media 
  *       +1 <<NOTE_STRUCTURE>>  {0:M}
  *       +1 REFN <USER_REFERENCE_NUMBER>  {0:M}
  *         +2 TYPE <USER_REFERENCE_TYPE>  {0:1}
@@ -192,7 +195,7 @@ SOUR entity
  * 
  * 
  * 
- SOURCE_RECORD: = (5.5.1) = idem 5.5 (only use first repo and first media found)
+ SOURCE_RECORD: = (5.5.1) = idem 5.5 (only use first repo)
  * 
  * n @<XREF:SOUR>@ SOUR {1:1}
  *   +1 DATA {0:1}
@@ -211,7 +214,7 @@ SOUR entity
  *   +1 TEXT <TEXT_FROM_SOURCE> {0:1}                          ==> 1 Text
  *     +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
  *   +1 <<SOURCE_REPOSITORY_CITATION>> {0:M}                   ==> 1 Repo
- *   +1 <<MULTIMEDIA_LINK>> {0:M}                              ==> 1 Media (use first media only) // TODO : MAKE IT MULTIPLE **************
+ *   +1 <<MULTIMEDIA_LINK>> {0:M}                              ==> n Media
  *   +1 <<NOTE_STRUCTURE>> {0:M}
  *   +1 REFN <USER_REFERENCE_NUMBER> {0:M}
  *     +2 TYPE <USER_REFERENCE_TYPE> {0:1}
@@ -235,7 +238,7 @@ SOUR entity
  *       +2 TEXT <TEXT_FROM_SOURCE>  {0:M}
  *         +3 [ CONC | CONT ] <TEXT_FROM_SOURCE>  {0:M}
  *     +1 QUAY <CERTAINTY_ASSESSMENT>  {0:1}
- *     +1 <<MULTIMEDIA_LINK>>  {0:M}                                ==> Media not used // TODO : USE MEDIA AND MAKE IT MULTIPLE **************
+ *     +1 <<MULTIMEDIA_LINK>>  {0:M}                                ==> n Media
  *     +1 <<NOTE_STRUCTURE>>  {0:M}
  * 
  *   |              Systems not using source records                ==> Media (none)
@@ -266,7 +269,7 @@ SOUR entity
  *     +1 TEXT <TEXT_FROM_SOURCE> {0:M}                             ==> Text (update mode only)
  *        +2 [CONC|CONT] <TEXT_FROM_SOURCE> {0:M}
  *     +1 QUAY <CERTAINTY_ASSESSMENT> {0:1}
- *     +1 <<MULTIMEDIA_LINK>> {0:M}                                 ==> Media (update mode only)   // TODO : MAKE IT MULTIPLE **************
+ *     +1 <<MULTIMEDIA_LINK>> {0:M}                                 ==> n Media (update mode only) 
  *     +1 <<NOTE_STRUCTURE>> {0:M}
  *  ]
  * 
@@ -281,75 +284,237 @@ SOUR entity
  */
 public class SourceWrapper {
 
-    private boolean recordType = true;          // true if record type, false if citation type
+    private static int ENTITY_MOUNT = 0;
+    private static int CITATION_MOUNT = 1;
+    private static Map<String, Integer> mounts;   // table : gedcom name, type of mount
+    
+    
     private Property hostingProperty = null;    // the property the source property belongs to
+
+    private boolean recordType = true;          // source info : true if record type, false if citation type
     private Entity targetSource = null;         // the source entity
     private String title = "";                  // the source title
     private String text = "";                   // the source text
-    private Media targetMedia = null;           // the source media entity
-    private File file = null;                   // the media file of the source media entity
     private Repository targetRepo = null;       // the repository entity
     private String repoName = "";               // the name of the repository entity
+    // List of media for that source, owned by source entity or source property. Recognition based on MediaWrapper hosting property
+    public List<MediaWrapper> sourceMediaSet = null;
+    public List<MediaWrapper> sourceMediaRemovedSet = null;
+    public int sourceMediaIndex = 0;
+
     
-    // Constructor for source linked from host property (source_record as links to a source entity)
-    public SourceWrapper(PropertySource propertySource) {
-        if (propertySource == null) {
-            return;
+    
+    // Constructor for source as entity or as property
+    public SourceWrapper(Property hostingProperty) {
+        // Case of reading an indi with source entity
+        if (hostingProperty instanceof PropertySource) {
+            this.hostingProperty = hostingProperty;
+            setSourceFromEntity((Source) ((PropertySource) hostingProperty).getTargetEntity());
+        // Case of creating a new source    
+        } else if (hostingProperty instanceof Source) {
+            setSourceFromEntity((Source) hostingProperty);
+        // Case of reading an indi with source citation
+        } else {
+            this.hostingProperty = hostingProperty;
+            this.targetSource = null;
+            resetMediaSet();
+            setInfoFromCitation(hostingProperty);
+            getMediaFromProperty(hostingProperty);
         }
-        this.hostingProperty = propertySource;
-        setTargetEntity((Source) propertySource.getTargetEntity());
-        // TODO : ALSO GET MEDIA ATTACHED TO PROPERTY **************
     }
 
-    public void setTargetEntity(Source entity) {
-        this.targetSource = entity;
-        setInfoFromRecord(entity);
-    }
-
-    // Constructor for source directly within host property (source_citation included underneath SOUR tag)
-    public SourceWrapper(Property propertySour) {
-        this.hostingProperty = propertySour;
-        setInfoFromCitation(propertySour);
-    }
-
-    // Constructor for source added from source chooser
-    public SourceWrapper(Source entity) {
-        if (entity == null) {
-            return;
+    public void setSourceFromEntity(Source source) {
+        this.targetSource = source;
+        resetMediaSet();
+        setInfoFromRecord(source);
+        getMediaFromProperty(source);
+        if (hostingProperty != null) {
+            getMediaFromProperty(hostingProperty);
         }
-        setTargetEntity(entity);
-    }
-    
-    public void setHostingProperty(Property property) {
-        this.hostingProperty = property;
     }
 
-    
-   
-    // Constructor from repo chooser
-    public SourceWrapper(Repository repo) {
-        setRepo(repo);
-    }
-
-    // Constructor from choose file
-    public SourceWrapper(File f) {
-        setFile(f);
-    }
-    
-    // Constructor from change title
+    // Constructor from changed title
     public SourceWrapper(String title) {
         setTitle(title);
     }
 
-    // Constructor from choose file/title
-    public SourceWrapper(File f, String title) {
-        setFile(f);
-        setTitle(title);
+    // Constructor from choose Repository
+    public SourceWrapper(Repository repo) {
+        setRepo(repo);
+    }
+
+    
+    // Constructor from choose Media
+    public SourceWrapper(MediaWrapper media) {
+        resetMediaSet();
+        sourceMediaSet.add(media);
+    }
+    
+    // Constructor from choose File
+    public SourceWrapper(File f) {
+        setMediaFile(f);
+    }
+
+    
+    
+    
+    private void resetMediaSet() {
+        // Media
+        if (sourceMediaSet != null) {
+            sourceMediaSet.clear();
+            sourceMediaSet = null;
+        }
+        if (sourceMediaRemovedSet != null) {
+            sourceMediaRemovedSet.clear();
+            sourceMediaRemovedSet = null;
+        }
+        sourceMediaSet = new ArrayList<MediaWrapper>();
+        sourceMediaRemovedSet = new ArrayList<MediaWrapper>();
+        sourceMediaIndex = 0;
+    }
+    
+    public void getMediaFromProperty(Property property) {
+        if (sourceMediaSet == null || property == null) {
+            return;
+        }
+        
+        // Look for media attached to property
+        Property[] mediaProps = property.getProperties("OBJE");
+        for (Property prop : mediaProps) {
+            if (prop != null) {
+                MediaWrapper media = null;
+                if (prop instanceof PropertyMedia) {
+                    media = new MediaWrapper((Media) ((PropertyMedia) prop).getTargetEntity());
+                    if (media != null) {
+                        media.setHostingProperty(prop);
+                        sourceMediaSet.add(media);
+                    }
+                } else {
+                    media = new MediaWrapper(prop);
+                    sourceMediaSet.add(media);
+                }
+                
+            }
+        }
     }
     
     
     
+    public boolean isRecord() {
+        return recordType;
+    }
+
     
+    
+    
+    
+    public Entity getTargetSource() {
+        return targetSource;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String str) {
+        this.title = str;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    
+    
+    public void setMedia(MediaWrapper media, boolean addMedia) {
+        if (sourceMediaSet == null) {
+            resetMediaSet();
+        }
+        if (sourceMediaSet.isEmpty() || addMedia) {
+            sourceMediaSet.add(media);
+        } else {
+            sourceMediaSet.set(sourceMediaIndex, media);
+        }
+    }
+
+    public boolean deleteMedia() {
+        if (sourceMediaSet == null || sourceMediaSet.isEmpty() || sourceMediaRemovedSet == null) {
+            return false;
+        }
+        sourceMediaRemovedSet.add(sourceMediaSet.get(sourceMediaIndex));
+        sourceMediaSet.remove(sourceMediaIndex);
+        sourceMediaIndex--;
+        if (sourceMediaIndex < 0) {
+            sourceMediaIndex = 0;
+        }
+        return true;
+    }
+
+    public String getMediaTitle() {
+        if (sourceMediaSet == null || sourceMediaSet.isEmpty()) {
+            return "";
+        }
+        return sourceMediaSet.get(sourceMediaIndex).getTitle();
+    }
+
+    public void setMediaTitle(String title) {
+        if (sourceMediaSet == null) {
+            resetMediaSet();
+        }
+        if (sourceMediaSet.isEmpty()) {
+            sourceMediaSet.add(new MediaWrapper(title));
+        } else {
+            sourceMediaSet.get(sourceMediaIndex).setTitle(title);
+        }
+    }
+
+    public void setMediaFile(File f) {
+        if (sourceMediaSet == null) {
+            resetMediaSet();
+        }
+        if (sourceMediaSet.isEmpty()) {
+            sourceMediaSet.add(new MediaWrapper(f));
+        } else {
+            sourceMediaSet.get(sourceMediaIndex).setFile(f);
+        }
+    }
+
+    public File getMediaFile() {
+        if (sourceMediaSet == null || sourceMediaSet.isEmpty()) {
+            return null;
+        }
+        return sourceMediaSet.get(sourceMediaIndex).getFile();
+    }
+
+    public String getRepoName() {
+        return this.repoName;
+    }
+
+    public void setRepoName(String name) {
+        this.repoName = name;
+    }
+
+    public void setRepo(Repository repo) {
+        this.targetRepo = repo;
+        if (repo == null) {
+            this.repoName = "";
+        } else {
+            this.repoName = targetRepo.getRepositoryName();
+        }
+    }
+
+    public Repository getRepo() {
+        return targetRepo;
+    }
+    
+    
+
+    
+   
     
     
     /**
@@ -373,20 +538,6 @@ public class SourceWrapper {
             this.text = propText.getDisplayValue();
         } else {
             this.text = "";
-        }
-        Property propMedia = property.getProperty("OBJE", true);                /* media */  // TODO : MAKE IT MULTIPLE **************
-        if (propMedia != null && propMedia instanceof PropertyMedia) {
-            PropertyMedia pm = (PropertyMedia) propMedia;
-            this.targetMedia = (Media) pm.getTargetEntity();
-            this.file = targetMedia.getFile();
-        } else if (propMedia != null) {
-            this.targetMedia = null;
-            Property prop = propMedia.getProperty("FILE");
-            PropertyFile pFile = prop != null ? (PropertyFile) prop : null;
-            this.file = pFile != null ? pFile.getFile() : null;
-        } else {
-            this.targetMedia = null;
-            this.file = null;
         }
         Property propRepository = property.getProperty("REPO", true);           /* repo */
         if (propRepository != null && propRepository instanceof PropertyRepository) {
@@ -414,12 +565,6 @@ public class SourceWrapper {
         Property propText = property.getProperty("TEXT");                       /* text */
         if (propText != null) {
             this.text = propText.getDisplayValue();
-        }
-        Property propMedia = property.getProperty("OBJE", true);                /* media (5.5.1 only) */   // TODO : MAKE IT MULTIPLE **************
-        if (propMedia != null && propMedia instanceof PropertyMedia) {
-            PropertyMedia pm = (PropertyMedia) propMedia;
-            this.targetMedia = (Media) pm.getTargetEntity();
-            this.file = targetMedia.getFile();
         }
     }
     
@@ -460,10 +605,10 @@ public class SourceWrapper {
         // Case of property source as linked record already existing
         if (recordType && (hostingProperty instanceof PropertySource)) {
             putSourceRecord(targetSource);
-            // 2 situations : remplacement of the text of the same source or replacement of the source by another one
+            // 2 situations : replacement of the text of the same source or replacement of the source by another one
             PropertySource ps = (PropertySource) hostingProperty;
-            Source tse = (Source) ps.getTargetEntity();
-            if (targetMedia.equals(tse)) { // it was just an update of the same media, quit
+            Entity tse = ps.getTargetEntity();
+            if (targetSource.equals(tse)) { // it was just an update of the same media, quit
             } else { 
                 Utils.replaceRef(ps, tse, targetSource);
             }
@@ -494,8 +639,9 @@ public class SourceWrapper {
         putProperty(property, "TITL", title);
         putProperty(property, "TEXT", text);
         
-        // Put media, and create it if it does not exists 
-        putMedia(property, file);
+        // Put media items 
+        Property host = getDefaultHost(property); 
+        putMediaItems(host); 
         
         // Put repo, and create it if it does not exists
         if (targetRepo == null) {
@@ -513,7 +659,9 @@ public class SourceWrapper {
             Repository tmpRepo = (Repository) pr.getTargetEntity();
             if (tmpRepo != targetRepo) { // it points to another media entity, replace media.
                 property.delProperty(propRepository);
-                property.addRepository(targetRepo);
+                if (!repoName.isEmpty()) {
+                    property.addRepository(targetRepo);
+                }
             } 
         } else {
           property.addRepository(targetRepo);
@@ -532,8 +680,8 @@ public class SourceWrapper {
     private void putSourceCitation(Property property) {
         property.setValue(title);
         putProperty(property, "TEXT", text);
-        if (property.getMetaProperty().allows("OBJE") && (file != null)) {
-            putMedia(property, file);
+        if (property.getMetaProperty().allows("OBJE")) {
+            putMediaItems(property);
         }
 
     }
@@ -553,58 +701,6 @@ public class SourceWrapper {
 
 
     
-    
-    
-    
-    
-    public Entity getTargetSource() {
-        return targetSource;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String str) {
-        this.title = str;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File f) {
-        this.file = f;
-    }
-
-    public String getRepoName() {
-        return this.repoName;
-    }
-
-    public void setRepoName(String name) {
-        this.repoName = name;
-    }
-
-    public void setRepo(Repository entity) {
-        this.targetRepo = entity;
-        if (entity == null) {
-            this.repoName = "";
-        } else {
-            this.repoName = targetRepo.getRepositoryName();
-        }
-    }
-
-    public Repository getRepo() {
-        return targetRepo;
-    }
 
     
     
@@ -626,58 +722,71 @@ public class SourceWrapper {
     }
 
     /**
-     * Update or create media to a property
+     * Aligns (creates and updates) all media in sourceMediaSet with OBJE properties or records underneath property
      * @param property
-     * @param f 
      */
-    private void putMedia(Property property, File f) {
-
-        Gedcom gedcom = property.getGedcom();
-        if (gedcom.getGrammar().equals(Grammar.V55)) {  // v5.5
-            Property propMedia = property.getProperty("OBJE", true);
-            if (propMedia == null) {
-                propMedia = property.addProperty("OBJE", "");
-            }
-            putFile(propMedia, f);
-        } else {  // v5.5.1
-            if (targetMedia == null) {
-                try {
-                    targetMedia = (Media) property.getGedcom().createEntity(Gedcom.OBJE);
-                } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
-                }
-            }
-            putFile(targetMedia, f);
-
-            Property propMedia = property.getProperty("OBJE", true);
-            if (propMedia != null && propMedia instanceof PropertyMedia) {
-                PropertyMedia pm = (PropertyMedia) propMedia;
-                Media tmpMedia = (Media) pm.getTargetEntity();
-                if (tmpMedia != targetMedia) { // it points to another media entity, replace media.
-                    property.delProperty(propMedia);
-                    property.addMedia(targetMedia);
-                }
-            } else {
-                property.addMedia(targetMedia);
-            }
+    private void putMediaItems(Property property) {
+        if (sourceMediaSet == null || sourceMediaSet.isEmpty()) {
+            return;
+        }
+        for (MediaWrapper media : sourceMediaSet) {
+            media.update(property); 
+        }
+        for (MediaWrapper media : sourceMediaRemovedSet) {
+            media.remove();
         }
     }
 
     /**
-     * Update or create file value to a property
+     * OBJE can be mounted in two different ways. In case of creation, where do I choose ?
+     * If most OBJE for sources are mounted one way, it beccomes the default. I would rather not ask the usere because it should be transparent to the user.
+     * Returns hostingProperty if OBJE underneath "SOUR @xxx@" (PropertySource) rather than underneath @SOUR@ (Entity Source)
+     * If OBJE under SOUR are more than half under one type, this is the chosen type
      * @param property
-     * @param f 
+     * @return 
      */
-    private void putFile(Property property, File f) {
-        Property mediaFile = property.getProperty("FILE", true);
-        if (mediaFile == null) {
-            mediaFile = property.addProperty("FILE", "");
+    private Property getDefaultHost(Property property) {
+        if (mounts == null) {
+            mounts = new HashMap<String, Integer>();
         }
-        if (this.file != null && mediaFile instanceof PropertyFile) {
-            ((PropertyFile) mediaFile).addFile(f);
+        String gedcomName = property.getGedcom().getOrigin().getFile().getAbsolutePath();
+        Integer type = mounts.get(gedcomName);
+        if (type == null) {
+            type = getMountType(property.getGedcom());
+            mounts.put(gedcomName, type);
         }
+        return type == ENTITY_MOUNT ? property : hostingProperty;
     }
 
-    
-
+    /**
+     * Algorythm to get where OBJE for sources are mounted in general in the gedcom
+     * @return 
+     */
+    private Integer getMountType(Gedcom gedcom) {
+        
+        // Get all media throughout the whole gedcom, excluding those underneath SOUR only
+        double count = 0;
+        double total = 0;
+        String[] ENTITIES = { Gedcom.INDI, Gedcom.FAM };
+        for (String type : ENTITIES) {
+            Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(type);
+            for (Entity entity : entities) {
+                List<PropertySource> properties = entity.getProperties(PropertySource.class);
+                total += properties.size();
+                for (PropertySource prop : properties) {
+                    count += prop.getProperties("OBJE", true).length;
+                }
+            }
+        }
+        if (total == 0 || count == 0) {
+            return ENTITY_MOUNT;
+        }
+        
+        double ratio = count/total;
+        if (ratio > 0.5) {
+            return CITATION_MOUNT;
+        }
+        
+        return ENTITY_MOUNT;
+    }
 }

@@ -129,10 +129,6 @@ public class NoteChooser extends javax.swing.JPanel {
     }
     
 
-    private void displayIconAndTitle() {
-        displayIconAndTitle(noteText.getPreferredSize().width, noteText.getPreferredSize().height);
-    }
-    
     private void displayIconAndTitle(int width, int height) {
         noteTitle.setText("<html><center>" + mainTitle + "</center></html>");
         noteTitle.setPreferredSize(new Dimension(width, -1));
@@ -514,7 +510,7 @@ public class NoteChooser extends javax.swing.JPanel {
             // red   : not used
             String color = entry.isNote && !entry.isUnused ? "black" : !entry.isNote && !entry.isUnused ? "blue" : "red";
             if (entry.entity == null) { // new note
-                text = "<br><br><br><br>&lt;<b>" + text + "</b>&gt;";
+                text = "<center><font size=+0><br><br><i><b>" + text + "</b></i></font></center>";
             }
             setText("<html><center><font color="+color+">" + text + "</font></center></html>");
 

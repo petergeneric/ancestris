@@ -30,7 +30,6 @@ import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
-import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.time.Delta;
@@ -40,7 +39,6 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -77,29 +75,23 @@ public class EventWrapper {
     
 
     // Event Media
-    public Map<String, MediaWrapper> refMedia = null;            // References to media from main editor
     public List<MediaWrapper> eventMediaSet = null;
     public List<MediaWrapper> eventMediaRemovedSet = null;
     public int eventMediaIndex = 0;
     
     // Event Notes
-    public Map<String, NoteWrapper> refNotes = null;            // References to notes from main editor
     public List<NoteWrapper> eventNoteSet = null;               // Notes to add/update (to be saved in gedcom)
     public List<NoteWrapper> eventNoteRemovedSet = null;        // Notes to remove (to be saved in gedcom)
     public int eventNoteIndex = 0;
     
     // Event Sources with Media and Text and Repo
-    public Map<String, SourceWrapper> refSources = null;        // Reference to sources from main editor
     public List<SourceWrapper> eventSourceSet = null;           // Sources to add/update (to be saved in gedcom)
     public List<SourceWrapper> eventSourceRemovedSet = null;    // Sources to remove (to be saved in gedcom)
     public int eventSourceIndex = 0;
     
     
-    public EventWrapper(Property property, Indi indi, Map<String, MediaWrapper> refMedia, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
+    public EventWrapper(Property property, Indi indi) {
         
-        this.refMedia = refMedia;
-        this.refNotes = refNotes;
-        this.refSources = refSources;
         this.eventProperty = property;
         this.hostingEntity = property != null ? property.getEntity() : null;
 
@@ -204,11 +196,7 @@ public class EventWrapper {
         eventSourceIndex = 0;
     }
 
-    public EventWrapper(Entity entity, Map<String, MediaWrapper> refMedia, Map<String, NoteWrapper> refNotes, Map<String, SourceWrapper> refSources) {
-        this.refMedia = refMedia;
-        this.refNotes = refNotes;
-        this.refSources = refSources;
-        
+    public EventWrapper(Entity entity) {
         this.hostingEntity = entity;
         this.eventProperty = entity;
         this.eventLabel = new EventLabel(entity);
@@ -311,14 +299,12 @@ public class EventWrapper {
         // Look for media attached to event
         Property[] mediaProps = event.getProperties("OBJE");
         for (Property prop : mediaProps) {
-            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+            if (prop != null) {
                 MediaWrapper media = null;
                 if (prop instanceof PropertyMedia) {
-                    media = createUniqueMedia((Media) ((PropertyMedia) prop).getTargetEntity());
-                    if (media != null) {
-                        media.setHostingProperty(prop);
-                        ret.add(media);
-                    }
+                    media = new MediaWrapper((Media) ((PropertyMedia) prop).getTargetEntity());
+                    media.setHostingProperty(prop);
+                    ret.add(media);
                 } else {
                     media = new MediaWrapper(prop);
                     ret.add(media);
@@ -327,34 +313,7 @@ public class EventWrapper {
             }
         }
 
-//        // Look for media directly attached to property (media always have a file, so look for all files underneath OBJE but not underneath SOUR)
-//        for (PropertyFile propFile : event.getProperties(PropertyFile.class)) {
-//            if (!Utils.parentTagsContains(propFile, "SOUR")) {
-//                Property propObje = getParentTag(propFile, "OBJE");
-//                ret.add(new MediaWrapper(propObje));
-//            }
-//        }
-//        
-//        // Look for media as links to entities
-//        for (PropertyMedia propMedia : event.getProperties(PropertyMedia.class)) {
-//            if (!Utils.parentTagsContains(propMedia.getParent(), "SOUR")) {
-//                ret.add(new MediaWrapper(propMedia));
-//            }
-//        }
-        
         return ret;
-    }
-
-    private MediaWrapper createUniqueMedia(Media entity) {
-        if (entity == null) {
-            return null;
-        }
-        MediaWrapper media = refMedia.get(entity.getId());
-        if (media == null) {
-            media = new MediaWrapper(entity);
-            refMedia.put(entity.getId(), media);
-        }
-        return media;
     }
 
     public boolean addMedia(String mediaTitle) {
@@ -389,7 +348,7 @@ public class EventWrapper {
             if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
                 NoteWrapper note = null;
                 if (prop instanceof PropertyNote) {
-                    note = createUniqueNote((Note) ((PropertyNote) prop).getTargetEntity());
+                    note = new NoteWrapper((Note) ((PropertyNote) prop).getTargetEntity());
                     if (note != null) {
                         note.setHostingProperty(prop);
                         ret.add(note);
@@ -404,20 +363,8 @@ public class EventWrapper {
         return ret;
     }
 
-    private NoteWrapper createUniqueNote(Note entity) {
-        if (entity == null) {
-            return null;
-        }
-        NoteWrapper note = refNotes.get(entity.getId());
-        if (note == null) {
-            note = new NoteWrapper(entity);
-            refNotes.put(entity.getId(), note);
-        }
-        return note;
-    }
-    
     public boolean addNote(Note entity, String noteText) {
-        NoteWrapper note = createUniqueNote(entity);
+        NoteWrapper note = new NoteWrapper(entity);
         note.setText(noteText);
         eventNoteSet.add(note);
         eventNoteIndex = eventNoteSet.size() - 1;
@@ -465,24 +412,12 @@ public class EventWrapper {
             return ret;
         }
                 
-        // Look for sources attached to event (source_record as links to a source entity)
-        for (PropertySource propSource : event.getProperties(PropertySource.class)) {
-            // skip it for general sources more than 2 levels below indi
-            if (event instanceof Indi && !propSource.getParent().equals(event)) {
-                continue;
-            }
-            SourceWrapper source = createUniqueSource((Source) propSource.getTargetEntity());
-            if (source != null) {
-                source.setHostingProperty(propSource);
-                ret.add(source);
-            }
-        }
-        
-        // Look for sources attached to event (source_citation included underneath SOUR tag)
+        // Look for sources attached to event
         Property[] sourceProps = event.getProperties("SOUR");
         for (Property prop : sourceProps) {
-            if (prop != null && !(prop instanceof PropertySource)) {
-                ret.add(new SourceWrapper(prop));
+            if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
+                SourceWrapper source = new SourceWrapper(prop);
+                ret.add(source);
             }
         }
         
@@ -491,33 +426,32 @@ public class EventWrapper {
 
     
     
-    public SourceWrapper getEventSource() {
-        if ((eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size())) {
-            return eventSourceSet.get(eventSourceIndex);
-        }
-        return null;
-    }
-
-    private SourceWrapper createUniqueSource(Source entity) {
-        if (entity == null) {
-            return null;
-        }
-        SourceWrapper source = refSources.get(entity.getId());
-        if (source == null) {
-            source = new SourceWrapper(entity);
-            refSources.put(entity.getId(), source);
-        }
-        return source;
-    }
-    
+    // Add source at end of index for a new source designed by entity (called from sourceChooser)
     public boolean addSource(Source entity) {
-        SourceWrapper source = createUniqueSource(entity);
+        SourceWrapper source = new SourceWrapper(entity);
         eventSourceSet.add(source);
         eventSourceIndex = eventSourceSet.size() - 1;
         return true;
     }
     
-    public boolean addSource(File file) {
+    // Add source at end of index for a new source directly typed in title of text areas
+    public boolean addSource(String title, String text, String mediaTitle) {
+        SourceWrapper source = new SourceWrapper(title);
+        source.setText(text);
+        source.setMediaTitle(mediaTitle);
+        eventSourceSet.add(source);
+        eventSourceIndex = eventSourceSet.size() - 1;
+        return true;
+    }
+    
+    public boolean addSourceMedia(MediaWrapper media) {
+        SourceWrapper source = new SourceWrapper(media);
+        eventSourceSet.add(source);
+        eventSourceIndex = eventSourceSet.size() - 1;
+        return true;
+    }
+    
+    public boolean addSourceFile(File file) {
         SourceWrapper source = new SourceWrapper(file);
         eventSourceSet.add(source);
         eventSourceIndex = eventSourceSet.size() - 1;
@@ -530,39 +464,57 @@ public class EventWrapper {
         eventSourceIndex = eventSourceSet.size() - 1;
         return true;
     }
+
     
-    public boolean addSource(String title, String text) {
-        SourceWrapper source = new SourceWrapper(title);
-        source.setText(text);
-        eventSourceSet.add(source);
-        eventSourceIndex = eventSourceSet.size() - 1;
-        return true;
-    }
     
+    
+    // Change current source at index for a new source designed by entity (called from sourceChooser)
     public boolean setSource(Source entity, int index) {
-        eventSourceSet.get(index).setTargetEntity(entity);
+        eventSourceSet.get(index).setSourceFromEntity(entity);
         eventSourceIndex = index;
         return true;
     }
     
-    public boolean setSource(File file, int index) {
-        eventSourceSet.get(index).setFile(file);
-        eventSourceIndex = index;
+
+    // Change current title or text from directly entered title or text
+    public boolean setSource(String title, String text, String mediaTitle) {
+        SourceWrapper source = eventSourceSet.get(eventSourceIndex);
+        source.setTitle(title);
+        source.setText(text);
+        source.setMediaTitle(mediaTitle);
         return true;
     }
     
+    public boolean setSourceMedia(MediaWrapper media, boolean addMedia) {
+        eventSourceSet.get(eventSourceIndex).setMedia(media, addMedia);
+        return true;
+    }
+    
+    public boolean setSourceFile(File file) {
+        eventSourceSet.get(eventSourceIndex).setMediaFile(file);
+        return true;
+    }
+    
+    
+    // Change current repository from directly changed repository
     public boolean setSourceRepository(Repository repo) {
         eventSourceSet.get(eventSourceIndex).setRepo(repo);
         return true;
     }
     
-    public boolean setSource(String title, String text) {
-        SourceWrapper source = eventSourceSet.get(eventSourceIndex);
-        source.setTitle(title);
-        source.setText(text);
-        return true;
-    }
+  
     
+    
+    
+    
+    
+    public SourceWrapper getEventSource() {
+        if ((eventSourceSet != null) && (!eventSourceSet.isEmpty()) && (eventSourceIndex >= 0) && (eventSourceIndex < eventSourceSet.size())) {
+            return eventSourceSet.get(eventSourceIndex);
+        }
+        return null;
+    }
+
 
     
     
@@ -773,7 +725,7 @@ public class EventWrapper {
         }
     }
 
-
-
-
+    
+    
+    
 }
