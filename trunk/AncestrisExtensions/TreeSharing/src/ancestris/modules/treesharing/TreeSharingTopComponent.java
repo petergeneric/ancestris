@@ -138,6 +138,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private static TreeSharingTopComponent instance;
     private static final String PREFERRED_ID = "TreeSharingTopComponent";  // NOI18N
     private static final String ICON_PATH = "ancestris/modules/treesharing/resources/treesharing.png";
+    private static final String ICON_PATH_ON = "ancestris/modules/treesharing/resources/treesharingON.png";
     
     // Logger
     private static final Logger LOG = Logger.getLogger("ancestris.treesharing");
@@ -720,6 +721,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private void toggleOn() {
         Toolkit.getDefaultToolkit().beep();
         isBusy = true;
+        instance.setIcon(ImageUtilities.loadImage(ICON_PATH_ON, true));
         startSharingToggle.setToolTipText(true);
         stopSharingToggle.setToolTipText(false);
         dispatchShare(true);
@@ -731,6 +733,7 @@ public class TreeSharingTopComponent extends TopComponent {
         Toolkit.getDefaultToolkit().beep();
         Toolkit.getDefaultToolkit().beep();
         isBusy = true;
+        instance.setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         startSharingToggle.setToolTipText(false);
         stopSharingToggle.setToolTipText(true);
         dispatchShare(false);
