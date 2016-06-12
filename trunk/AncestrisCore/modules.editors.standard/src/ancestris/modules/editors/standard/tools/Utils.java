@@ -53,11 +53,11 @@ import org.openide.util.NbPreferences;
  */
 public class Utils {
     
-    private static Image IMG_INVALID_PHOTO = null;
-    private static Image IMG_VIDEO = null;
-    private static Image IMG_SOUND = null;
-    private static Image IMG_NO_SOURCE_MEDIA = null;
-    private static Image IMG_JUST_TEXT_MEDIA = null;
+    private static BufferedImage IMG_INVALID_PHOTO = null;
+    private static BufferedImage IMG_VIDEO = null;
+    private static BufferedImage IMG_SOUND = null;
+    private static BufferedImage IMG_NO_SOURCE_MEDIA = null;
+    private static BufferedImage IMG_JUST_TEXT_MEDIA = null;
     
     public static boolean parentTagsContains(Property prop, String tag) {
         if (prop == null) {
@@ -78,11 +78,11 @@ public class Utils {
         return parentTagsContains(parent, tag);
     }
     
-    public static Image getImageFromFile(File file, Class clazz) {
+    public static BufferedImage getImageFromFile(File file, Class clazz) {
         return getImageFromFile(file, clazz, false);
     }
     
-    public static Image getImageFromFile(File file, Class clazz, boolean noText) {
+    public static BufferedImage getImageFromFile(File file, Class clazz, boolean noText) {
         
         if (clazz != null) {
             try {
@@ -96,7 +96,7 @@ public class Utils {
             }
         }
 
-        Image image = null;
+        BufferedImage image = null;
 
         if (file == null) {
             return clazz == SourceChooser.SourceThumb.class && !noText ? IMG_JUST_TEXT_MEDIA : IMG_NO_SOURCE_MEDIA;
@@ -181,13 +181,12 @@ public class Utils {
 
 
     /**
-     * Replacement of the pointer to another entity (tme = old pointer, targetMedia = new pointer)
-     * (a bit cumbersome but better replace than delete/add in case other properties are children of the existing PropertyMedia).
-     * @param pm
-     * @param tme
-     * @param targetMedia 
+     * Replacement of the pointer to another entity (oldEntity = old pointer, newEntity = new pointer)
+     * (a bit cumbersome but better replace than delete/add in case other properties are children of the existing entity).
+     * @param pe
+     * @param oldEntity
+     * @param newEntity 
      */
-
     public static void replaceRef(PropertyXRef pe, Entity oldEntity, Entity newEntity) {
 
         // Remember former link

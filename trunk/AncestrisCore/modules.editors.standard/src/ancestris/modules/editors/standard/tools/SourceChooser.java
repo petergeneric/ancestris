@@ -32,13 +32,17 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import javax.imageio.ImageIO;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -59,6 +63,7 @@ import org.openide.windows.WindowManager;
  */
 public class SourceChooser extends javax.swing.JPanel {
 
+    private static BufferedImage SOURCE_UNKNOWN = null;
     private static int THUMB_WIDTH = 90;
     private static int THUMB_HEIGHT = 70;
     
@@ -73,8 +78,8 @@ public class SourceChooser extends javax.swing.JPanel {
     private File mainFile = null;
     private Image mainImage = null;
     private SourceWrapper mainSource = null;
-    private String mainTitle = null;
-    private String mainText = null;
+    private String mainTitle = "";
+    private String mainText = "";
     private JButton okButton = null;
     private JButton cancelButton = null;
     
@@ -83,13 +88,31 @@ public class SourceChooser extends javax.swing.JPanel {
     /**
      * Creates new form SourceChooser
      */
-    public SourceChooser(Gedcom gedcom, File file, Image image, String title, SourceWrapper source, JButton okButton, JButton cancelButton) {
+    public SourceChooser(Gedcom gedcom, SourceWrapper source, JButton okButton, JButton cancelButton) {
+        try {
+            if (SOURCE_UNKNOWN == null) {
+                SOURCE_UNKNOWN = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy.png"));
+            }
+        } catch (IOException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
         this.gedcom = gedcom;
-        mainFile = file;
-        mainImage = image;
         mainSource = source;
-        mainTitle = title;
-        mainText = "";
+        if (source != null) {
+            mainFile = source.getMediaFile();
+            mainTitle = source.getTitle();
+            mainText = source.getText();
+        }
+        if (mainFile != null) {
+            try {
+                mainImage = ImageIO.read(new FileInputStream(mainFile));
+            } catch (Exception ex) {
+                //Exceptions.printStackTrace(ex);
+                mainImage = SOURCE_UNKNOWN;
+            }
+        } else {
+            mainImage = SOURCE_UNKNOWN;
+        }
         this.okButton = okButton;
         this.cancelButton = cancelButton;
         
@@ -167,11 +190,11 @@ public class SourceChooser extends javax.swing.JPanel {
             sourceText.setText("");
             sourceText.setVisible(false);
             sourceMedia.setVisible(true);
-            imagePanel.setMedia(mainFile);
+            imagePanel.setMedia(mainFile, SOURCE_UNKNOWN);
         }
         jLayeredPane1.revalidate();
         jLayeredPane1.repaint();
-        photoTitle.setText("<html><center>" + mainTitle + "</center></html>");
+        photoTitle.setText("<html><center>&nbsp;" + mainTitle + "&nbsp;</center></html>");
         photoTitle.setPreferredSize(new Dimension(width, -1));
     }
     
@@ -458,6 +481,9 @@ public class SourceChooser extends javax.swing.JPanel {
         // Clear source list
         allSource.clear();
         
+        // Add new note
+        allSource.add(new SourceThumb());
+
         // Get all source throughout the whole gedcom, excluding those underneath SOUR only
         String[] ENTITIES = { Gedcom.INDI, Gedcom.FAM, Gedcom.SUBM };
         for (String type : ENTITIES) {
@@ -480,9 +506,9 @@ public class SourceChooser extends javax.swing.JPanel {
                         flag = false;
                     }
                     String text = "";
-                    Property sourceText = sourceFile.getParent().getProperty("TEXT");
-                    if (sourceText != null && !sourceText.getDisplayValue().trim().isEmpty()) {
-                        text = sourceText.getDisplayValue().trim();
+                    Property sourceTextLocal = sourceFile.getParent().getProperty("TEXT");
+                    if (sourceTextLocal != null && !sourceTextLocal.getDisplayValue().trim().isEmpty()) {
+                        text = sourceTextLocal.getDisplayValue().trim();
                     }
                     SourceThumb source = new SourceThumb(entity, file, title, text);
                     source.setTrueTitle(flag);
@@ -601,7 +627,11 @@ public class SourceChooser extends javax.swing.JPanel {
             // blue  : no title & used
             // red   : not used
             String color = entry.isTrueTitle && !entry.isUnused ? "black" : !entry.isTrueTitle && !entry.isUnused ? "blue" : "red";
-            setText("<html><center><font color="+color+">" + entry.title + "</font></center></html>");
+            String text = entry.title;
+            if (entry.entity == null) { // new source
+                text = "<center><i><b>" + text + "</b></i></center>";
+            }
+            setText("<html><center><font color="+color+">" + text + "</font></center></html>");
             setIcon(entry.icon);
 
             if (isSelected) {
@@ -639,6 +669,13 @@ public class SourceChooser extends javax.swing.JPanel {
         public boolean isTrueTitle = true;
         public boolean isUnused = false;
         
+        public SourceThumb() {
+            this.isSource = true;
+            this.entity = null;
+            this.title = NbBundle.getMessage(getClass(), "NewSourceTitle");
+            this.icon = new ImageIcon(SOURCE_UNKNOWN);
+        }
+
         public SourceThumb(Source entity, File file, String title, String text) {
             this.isSource = true;
             this.entity = entity;
@@ -700,14 +737,16 @@ public class SourceChooser extends javax.swing.JPanel {
     private class ThumbComparator implements Comparator<SourceThumb> {
 
         public int compare(SourceThumb o1, SourceThumb o2) {
+            String ent1 = o1.entity == null ? "0" : "1";
+            String ent2 = o2.entity == null ? "0" : "1";
             File file1 = o1.file;
             File file2 = o2.file;
             String str1 = file1 != null ? file1.getAbsolutePath() : "";
             String str2 = file2 != null ? file2.getAbsolutePath() : "";
-            String id1 = o1.entity.getId();
-            String id2 = o2.entity.getId();
-            String total1 = o1.title.toLowerCase() + str1 + id1;
-            String total2 = o2.title.toLowerCase() + str2 + id2;
+            String id1 = o1.entity != null ? o1.entity.getId() : "";
+            String id2 = o2.entity != null ? o2.entity.getId() : "";
+            String total1 = ent1 + o1.title.toLowerCase() + str1 + id1;
+            String total2 = ent2 + o2.title.toLowerCase() + str2 + id2;
             return total1.compareTo(total2);
         }
     }

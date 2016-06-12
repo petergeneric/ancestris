@@ -156,6 +156,10 @@ public class MediaWrapper {
     }
     
     
+    public Property getHostingProperty() {
+        return this.hostingProperty;
+    }
+
     public void setHostingProperty(Property property) {
         this.hostingProperty = property;
     }

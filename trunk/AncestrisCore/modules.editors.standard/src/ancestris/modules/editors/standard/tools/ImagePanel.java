@@ -12,18 +12,16 @@
 package ancestris.modules.editors.standard.tools;
 
 import ancestris.modules.editors.standard.IndiPanel;
+import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import javax.imageio.ImageIO;
-import org.openide.util.Exceptions;
 import org.openide.windows.WindowManager;
 
 /**
@@ -33,9 +31,9 @@ import org.openide.windows.WindowManager;
 public class ImagePanel extends javax.swing.JPanel {
 
     private IndiPanel callingPanel = null;
+    private BufferedImage IMG_DEFAULT = null;
     
     private int default_width = 197, default_height = 140;
-    private BufferedImage IMG_NO_SOURCE_MEDIA = null;
     private BufferedImage image = null;
     private File file = null;
     
@@ -59,28 +57,17 @@ public class ImagePanel extends javax.swing.JPanel {
         this.startX = 0;
         this.startY = 0;
         this.ready = false;
-        try {
-            IMG_NO_SOURCE_MEDIA = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy.png"));
-        } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        this.image = IMG_NO_SOURCE_MEDIA;
         initComponents();
-        if (callingPanel == null) {
-            setToolTipText(org.openide.util.NbBundle.getMessage(ImagePanel.class, "ImagePanel.toolTipText2"));
-        }
     }
 
-    public void setMedia(File file) {
+    public void setMedia(File file, BufferedImage defaultImage) {
         this.file = file;
+        this.IMG_DEFAULT = defaultImage;
+        
         if (file != null && file.exists()) {
-            try {
-                image = ImageIO.read(file);
-            } catch (IOException ex) {
-                image = IMG_NO_SOURCE_MEDIA;
-            }
+            image = getImageFromFile(file, getClass());
         } else {
-            image = IMG_NO_SOURCE_MEDIA;
+            image = defaultImage;
         }
         final ImagePanel ip = this;
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
@@ -142,7 +129,6 @@ public class ImagePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         setBorder(null);
-        setToolTipText(org.openide.util.NbBundle.getMessage(ImagePanel.class, "ImagePanel.toolTipText")); // NOI18N
         addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
                 formMouseDragged(evt);
@@ -176,7 +162,7 @@ public class ImagePanel extends javax.swing.JPanel {
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON1) {
-            callingPanel.chooseSource();
+            //nothing
         } else if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && file != null && file.exists()) {
             try {
                 Desktop.getDesktop().open(file);
@@ -227,7 +213,7 @@ public class ImagePanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void redraw() {
-        setMedia(this.file);
+        setMedia(this.file, IMG_DEFAULT);
     }
 
     
@@ -235,7 +221,7 @@ public class ImagePanel extends javax.swing.JPanel {
         return file;
     }
 
-    public Image getImage() {
+    public BufferedImage getImage() {
         return image;
     }
 

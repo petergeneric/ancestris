@@ -82,7 +82,7 @@ public class MediaChooser extends javax.swing.JPanel {
     /**
      * Creates new form MediaChooser
      */
-    public MediaChooser(Gedcom gedcom, File file, Image image, String title, MediaWrapper media, JButton okButton, JButton cancelButton) {
+    public MediaChooser(Gedcom gedcom, File file, Image image, String title, MediaWrapper media, JButton okButton, JButton cancelButton, boolean sourceImages) {
         this.gedcom = gedcom;
         mainFile = file;
         mainMedia = media;
@@ -92,7 +92,7 @@ public class MediaChooser extends javax.swing.JPanel {
         this.cancelButton = cancelButton;
         
         // Run media collection from separate thread
-        createMediaThumbs();
+        createMediaThumbs(sourceImages);
         Thread mediaThread = new Thread() {
             @Override
             public void run() {
@@ -426,35 +426,35 @@ public class MediaChooser extends javax.swing.JPanel {
     
     
     
-    private void createMediaThumbs() {
+    private void createMediaThumbs(boolean sourceImages) {
         
         // Clear media list
         allMedia.clear();
         
         // Get all media throughout the whole gedcom, excluding those underneath SOUR only
-        String[] ENTITIES = { Gedcom.INDI, Gedcom.FAM, Gedcom.SUBM };
+        String[] ENTITIES = { Gedcom.INDI, Gedcom.FAM, Gedcom.SOUR, Gedcom.SUBM };
         for (String type : ENTITIES) {
             Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(type);
             for (Entity entity : entities) {
                 List<PropertyFile> properties = entity.getProperties(PropertyFile.class);
                 for (PropertyFile mediaFile : properties) {
-                    if (isSourceOnly(mediaFile)) {
-                        continue;
+                    boolean isSourceMedia = isSourceOnly(mediaFile);
+                    if ((isSourceMedia && sourceImages) || (!isSourceMedia && !sourceImages)) {
+                        String title = "";
+                        File file = mediaFile.getFile();
+                        Property mediaTitle = mediaFile.getParent().getProperty("TITL");
+                        boolean flag = false;
+                        if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
+                            title = mediaTitle.getDisplayValue().trim();
+                            flag = true;
+                        } else {
+                            title = entity.toString(false).trim();
+                            flag = false;
+                        }
+                        MediaThumb media = new MediaThumb(entity, file, title);
+                        media.setTrueTitle(flag);
+                        allMedia.add(media);
                     }
-                    String title = "";
-                    File file = mediaFile.getFile();
-                    Property mediaTitle = mediaFile.getParent().getProperty("TITL");
-                    boolean flag = false;
-                    if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
-                        title = mediaTitle.getDisplayValue().trim();
-                        flag = true;
-                    } else {
-                        title = entity.toString(false).trim();
-                        flag = false;
-                    }
-                    MediaThumb media = new MediaThumb(entity, file, title);
-                    media.setTrueTitle(flag);
-                    allMedia.add(media);
                 }
             }
         }
@@ -465,35 +465,35 @@ public class MediaChooser extends javax.swing.JPanel {
         if (gedcom.getGrammar().equals(Grammar.V551)) {
             Collection<Media> entities = (Collection<Media>) gedcom.getEntities(Gedcom.OBJE);
             for (Media entity : entities) {
-                if (isSourceOnly(entity)) {
-                    continue;
-                }
-                File file = null;
-                String title = "";
-                Property mediaFile = entity.getProperty("FILE", true);
-                boolean flag = false;
-                if (mediaFile != null && mediaFile instanceof PropertyFile) {
-                    file = ((PropertyFile) mediaFile).getFile();
-                    Property mediaTitle = mediaFile.getProperty("TITL");
-                    if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
-                        title = mediaTitle.getDisplayValue().trim();
-                        flag = true;
-                    } else {
-                        Entity[] ents = PropertyXRef.getReferences(entity);
-                        if (ents.length > 0) {
-                            title = ents[0].toString(false).trim();
-                            flag = false;
+                boolean isSourceMedia = isSourceOnly(entity);
+                if ((isSourceMedia && sourceImages) || (!isSourceMedia && !sourceImages)) {
+                    File file = null;
+                    String title = "";
+                    Property mediaFile = entity.getProperty("FILE", true);
+                    boolean flag = false;
+                    if (mediaFile != null && mediaFile instanceof PropertyFile) {
+                        file = ((PropertyFile) mediaFile).getFile();
+                        Property mediaTitle = mediaFile.getProperty("TITL");
+                        if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
+                            title = mediaTitle.getDisplayValue().trim();
+                            flag = true;
                         } else {
-                            title = entity.toString(false).trim();
-                            flag = false;
+                            Entity[] ents = PropertyXRef.getReferences(entity);
+                            if (ents.length > 0) {
+                                title = ents[0].toString(false).trim();
+                                flag = false;
+                            } else {
+                                title = entity.toString(false).trim();
+                                flag = false;
+                            }
                         }
                     }
+                    MediaThumb media = new MediaThumb(entity, file, title);
+                    media.setTrueTitle(flag);
+                    Entity[] ents = PropertyXRef.getReferences(entity);
+                    media.setUnused(ents.length == 0);
+                    allMedia.add(media);
                 }
-                MediaThumb media = new MediaThumb(entity, file, title);
-                media.setTrueTitle(flag);
-                Entity[] ents = PropertyXRef.getReferences(entity);
-                media.setUnused(ents.length == 0); 
-                allMedia.add(media);
             }
         }
         
