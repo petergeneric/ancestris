@@ -465,7 +465,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
             }
 
             targetImage = scaleImage(f, IMG_LARGE_WIDTH, IMG_LARGE_HEIGHT);
-            dest = new File(System.getProperty("netbeans.user") + File.separator + removeExtension(f.getName()) + ".jpg");
+            File dir = new File(System.getProperty("netbeans.user") + File.separator + "config" + File.separator + "Preferences" +  NbPreferences.forModule(TreeSharingOptionsPanel.class).absolutePath());
+            dir.mkdirs();
+            dest = new File(dir, removeExtension(f.getName()) + ".jpg");
             return true;
 
         } catch (Exception ex) {
