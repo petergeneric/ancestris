@@ -274,6 +274,11 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             return;
         }
 
+        // Is busy committing ?
+        if (isBusyCommitting) {
+            return;
+        }
+
         // Changes?
         if (confirmPanel == null || !confirmPanel.hasChanged()) {
             return;
@@ -286,10 +291,6 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             return;
         }
 
-        // Is busy committing ?
-        if (isBusyCommitting) {
-            return;
-        }
         isBusyCommitting = true;
         try {
 
