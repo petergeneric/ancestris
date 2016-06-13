@@ -365,6 +365,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         jButton2.setText(""+nbCommonFams);
         jButton1.setEnabled(nbCommonIndis != 0);
         jButton2.setEnabled(nbCommonFams != 0);
+        
+        // Update icon if necessary
+        owner.updateIcon();
 
     }
 

@@ -685,6 +685,7 @@ public class TreeSharingTopComponent extends TopComponent {
 
         // Open the sharing locally
         shareAll = true;
+        updateIcon();
         
         // We have list of allowed members in "ancestrisMembers" with isAllowed set to true
         updateMembersList();
@@ -708,6 +709,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // Stop the sharing locally
         shareAll = false;
+        updateIcon();
         
         // Update members list
         updateMembersList();
@@ -721,7 +723,6 @@ public class TreeSharingTopComponent extends TopComponent {
     private void toggleOn() {
         Toolkit.getDefaultToolkit().beep();
         isBusy = true;
-        instance.setIcon(ImageUtilities.loadImage(ICON_PATH_ON, true));
         startSharingToggle.setToolTipText(true);
         stopSharingToggle.setToolTipText(false);
         dispatchShare(true);
@@ -733,7 +734,6 @@ public class TreeSharingTopComponent extends TopComponent {
         Toolkit.getDefaultToolkit().beep();
         Toolkit.getDefaultToolkit().beep();
         isBusy = true;
-        instance.setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         startSharingToggle.setToolTipText(false);
         stopSharingToggle.setToolTipText(true);
         dispatchShare(false);
@@ -741,6 +741,14 @@ public class TreeSharingTopComponent extends TopComponent {
         isBusy = false;
     }
 
+    
+    public void updateIcon() {
+        boolean atLeastAFlagIsOn = false;
+        for (SharedGedcom sg : sharedGedcoms) {
+            atLeastAFlagIsOn |= sg.isShared();
+        }
+        instance.setIcon(ImageUtilities.loadImage(isShareAllOn() && atLeastAFlagIsOn ? ICON_PATH_ON : ICON_PATH, true));
+    }
     
     
     private boolean isMyProfileOK() {
@@ -1169,7 +1177,7 @@ public class TreeSharingTopComponent extends TopComponent {
             });
         }
     }
-    
+
     
 
 }
