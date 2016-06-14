@@ -535,6 +535,7 @@ public class TreeSharingTopComponent extends TopComponent {
     @Override
     public void componentClosed() {
         stopSharingToggle.doClick();
+        updateIcon();
         refreshing = false;
         rememberMembers();
     }
@@ -882,6 +883,7 @@ public class TreeSharingTopComponent extends TopComponent {
                 public void run() {
                     timer.cancel();
                     stopSharingToggle.doClick();
+                    updateIcon();
                 }
             };
             timer = new Timer();
