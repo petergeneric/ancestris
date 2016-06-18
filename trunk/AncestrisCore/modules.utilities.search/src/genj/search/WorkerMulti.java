@@ -133,16 +133,16 @@ public class WorkerMulti extends Worker {
         }
         if (entity instanceof Fam) {
             Fam fam = (Fam) entity;
-            if (isMatch(fam)) {
+            Indi husb = fam.getHusband();
+            Indi wife = fam.getWife();
+            if (isMatch(fam, husb, wife)) {
                 addHit(fam);
                 return;
             }
-            Indi husb = fam.getHusband();
             if (husb != null && isMatch(husb)) {
                 addHit(fam);
                 return;
             }
-            Indi wife = fam.getWife();
             if (wife != null && isMatch(wife)) {
                 addHit(fam);
             }
@@ -159,13 +159,14 @@ public class WorkerMulti extends Worker {
                 && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isSingle));
     }
 
-    private boolean isMatch(Fam fam) {
+    private boolean isMatch(Fam fam, Indi husb, Indi wife) {
         if (isSingle) {
             return false;
         }
-        boolean ret = true;
+        String name = fam.toString(false);
+        boolean ret = isCommonString(name, lastnameText) && isCommonString(name, firstnameText); 
         if (birthFrom != minDate || deathTo != maxDate) {
-            ret = isCommonDate(getDate(fam.getMarriageDate()), birthFrom, deathTo);
+            ret &= isCommonDate(getDate(fam.getMarriageDate()), birthFrom, deathTo);
             if (!placeText.isEmpty()) {
                 return ret && isCommonPlace(fam, placeText);
             } else {
@@ -173,7 +174,7 @@ public class WorkerMulti extends Worker {
             }
         } else {
             if (!placeText.isEmpty()) {
-                return isCommonPlace(fam, placeText);
+                return ret && isCommonPlace(fam, placeText);
             } else {
                 return false;
             }
