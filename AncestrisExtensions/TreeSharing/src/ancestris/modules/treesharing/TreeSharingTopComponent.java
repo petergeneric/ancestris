@@ -796,6 +796,7 @@ public class TreeSharingTopComponent extends TopComponent {
         SharedGedcom newSharedGedcom = new SharedGedcom(this, gedcom, privacyToggle.isSelected());
         desktopPanel.addFrame(newSharedGedcom, findLocation(sharedGedcoms.size(), LEFT_OFFSET_GEDCOM, newSharedGedcom.getPreferredSize().height));
         sharedGedcoms.add(newSharedGedcom);
+        updateIcon();
     }
 
     
@@ -815,6 +816,7 @@ public class TreeSharingTopComponent extends TopComponent {
                 break;
             }
         }
+        updateIcon();
     }
 
     
