@@ -29,6 +29,7 @@ import genj.util.Registry;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -409,8 +410,17 @@ public class SourceChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_sourceListMouseClicked
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("sourceWindowWidth", evt.getComponent().getWidth());
-        registry.put("sourceWindowHeight", evt.getComponent().getHeight());
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int w = evt.getComponent().getWidth();
+        if (w > dim.width*8/10) {
+            w = dim.width*8/10;
+        }
+        int h = evt.getComponent().getHeight();
+        if (h > dim.height*8/10) {
+            h = dim.height*8/10;
+        }
+        registry.put("sourceWindowWidth", w);
+        registry.put("sourceWindowHeight", h);
     }//GEN-LAST:event_formComponentResized
 
     private void jSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSplitPanePropertyChange

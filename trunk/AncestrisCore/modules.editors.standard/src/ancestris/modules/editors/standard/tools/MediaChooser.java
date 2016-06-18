@@ -29,6 +29,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -366,8 +367,17 @@ public class MediaChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_labelPhotoMouseClicked
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("mediaWindowWidth", evt.getComponent().getWidth());
-        registry.put("mediaWindowHeight", evt.getComponent().getHeight());
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int w = evt.getComponent().getWidth();
+        if (w > dim.width*8/10) {
+            w = dim.width*8/10;
+        }
+        int h = evt.getComponent().getHeight();
+        if (h > dim.height*8/10) {
+            h = dim.height*8/10;
+        }
+        registry.put("mediaWindowWidth", w);
+        registry.put("mediaWindowHeight", h);
     }//GEN-LAST:event_formComponentResized
 
     private void jSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSplitPanePropertyChange

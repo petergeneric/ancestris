@@ -28,6 +28,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FontMetrics;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
@@ -447,8 +448,17 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("assoWindowWidth", evt.getComponent().getWidth());
-        registry.put("assoWindowHeight", evt.getComponent().getHeight());
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int w = evt.getComponent().getWidth();
+        if (w > dim.width*8/10) {
+            w = dim.width*8/10;
+        }
+        int h = evt.getComponent().getHeight();
+        if (h > dim.height*8/10) {
+            h = dim.height*8/10;
+        }
+        registry.put("assoWindowWidth", w);
+        registry.put("assoWindowHeight", h);
     }//GEN-LAST:event_formComponentResized
 
     private void assoSplitPanelPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_assoSplitPanelPropertyChange

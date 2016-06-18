@@ -34,6 +34,7 @@ import ancestris.modules.editors.standard.tools.MediaWrapper;
 import ancestris.modules.editors.standard.tools.NameDetailsPanel;
 import ancestris.modules.editors.standard.tools.NodeWrapper;
 import ancestris.modules.editors.standard.tools.NoteChooser;
+import ancestris.modules.editors.standard.tools.NoteDetailsPanel;
 import ancestris.modules.editors.standard.tools.NoteWrapper;
 import ancestris.modules.editors.standard.tools.RepoChooser;
 import ancestris.modules.editors.standard.tools.SourceChooser;
@@ -159,6 +160,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private ImagePanel photoPanel = null;
     private ImagePanel imagePanel = null;
     private NameDetailsPanel nameDetails = null;
+    private NoteDetailsPanel textDetails = null;
     
     // Events
     private List<EventWrapper> eventSet = null;
@@ -225,6 +227,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Components
         initComponents();
         nameDetails = new NameDetailsPanel();
+        textDetails = new NoteDetailsPanel();
         
         familyTree.setCellRenderer(new FamilyTreeRenderer());
         familyTree.addMouseListener(new FamilyTreeMouseListener());
@@ -325,6 +328,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         addNoteEventButton = new javax.swing.JButton();
         replaceNoteEventButton = new javax.swing.JButton();
         delNoteEventButton = new javax.swing.JButton();
+        maxNoteEventButton = new javax.swing.JButton();
         eventNoteScrollPane = new javax.swing.JScrollPane();
         eventNote = new javax.swing.JTextArea();
         scrollNotesEvent = new javax.swing.JScrollBar();
@@ -333,6 +337,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         addSourceEventButton = new javax.swing.JButton();
         replaceSourceEventButton = new javax.swing.JButton();
         delSourceEventButton = new javax.swing.JButton();
+        maxSourceEventButton = new javax.swing.JButton();
         eventSourceTitle = new javax.swing.JTextField();
         eventSourceScrollPane = new javax.swing.JScrollPane();
         eventSourceText = new javax.swing.JTextArea();
@@ -961,7 +966,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 172, Short.MAX_VALUE))
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -1059,6 +1064,16 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         });
 
+        maxNoteEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/maximize.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(maxNoteEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maxNoteEventButton.text")); // NOI18N
+        maxNoteEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maxNoteEventButton.toolTipText")); // NOI18N
+        maxNoteEventButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        maxNoteEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxNoteEventButtonActionPerformed(evt);
+            }
+        });
+
         eventNote.setColumns(20);
         eventNote.setLineWrap(true);
         eventNote.setRows(3);
@@ -1097,6 +1112,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addComponent(replaceNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(maxNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(eventNotePanelLayout.createSequentialGroup()
                 .addComponent(eventNoteScrollPane)
@@ -1110,7 +1127,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(noteLabel)
                     .addComponent(addNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(replaceNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(delNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(eventNoteScrollPane)
@@ -1151,6 +1169,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         delSourceEventButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 delSourceEventButtonActionPerformed(evt);
+            }
+        });
+
+        maxSourceEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/maximize.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(maxSourceEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maxSourceEventButton.text")); // NOI18N
+        maxSourceEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.maxSourceEventButton.toolTipText")); // NOI18N
+        maxSourceEventButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        maxSourceEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                maxSourceEventButtonActionPerformed(evt);
             }
         });
 
@@ -1230,6 +1258,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(replaceSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(2, 2, 2)
                         .addComponent(delSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(2, 2, 2)
+                        .addComponent(maxSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(eventSourceScrollPane)
                     .addComponent(repoPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1245,7 +1275,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(sourceLabel)
                     .addComponent(addSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(replaceSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(delSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(delSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(maxSourceEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
@@ -1918,6 +1949,32 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
     }//GEN-LAST:event_replaceSourceEventButtonActionPerformed
 
+    private void maxNoteEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxNoteEventButtonActionPerformed
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        textDetails.setText(eventNote.getText());
+        DialogManager.create(NbBundle.getMessage(getClass(), "IndiPanel.maxNoteEventButton.toolTipText"), textDetails).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(OK_ONLY_OPTION).show();
+        String noteStr = textDetails.getText();
+        if (!eventNote.getText().equals(noteStr)) {
+            eventNote.setText(noteStr);
+        }
+    }//GEN-LAST:event_maxNoteEventButtonActionPerformed
+
+    private void maxSourceEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_maxSourceEventButtonActionPerformed
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        textDetails.setText(eventSourceText.getText());
+        DialogManager.create(NbBundle.getMessage(getClass(), "IndiPanel.maxSourceEventButton.toolTipText"), textDetails).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(OK_ONLY_OPTION).show();
+        String sourceStr = textDetails.getText();
+        if (!eventSourceText.getText().equals(sourceStr)) {
+            eventSourceText.setText(sourceStr);
+        }
+    }//GEN-LAST:event_maxSourceEventButtonActionPerformed
+
     
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
@@ -2020,6 +2077,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JComboBox lastnameCombo;
     private javax.swing.JLabel lastnameLabel;
     private javax.swing.JRadioButton maleRadioButton;
+    private javax.swing.JButton maxNoteEventButton;
+    private javax.swing.JButton maxSourceEventButton;
     private javax.swing.JPanel mediaImagePanel;
     private javax.swing.JPanel mediaPanel;
     private javax.swing.JTextField mediaSourceText;
@@ -4102,7 +4161,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     /**
      * Document listener methods for Event Places
      */
-    private class EventNoteTextListener implements DocumentListener {
+    public class EventNoteTextListener implements DocumentListener {
 
         public void insertUpdate(DocumentEvent e) {
             updateEventNoteText();
