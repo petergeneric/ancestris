@@ -5,7 +5,6 @@ import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.GedcomLink;
 import ancestris.modules.releve.model.Record;
-import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.util.swing.HeadlessLabel;
@@ -126,6 +125,9 @@ public class ReleveTable extends JTable {
             public void mousePressed(MouseEvent e) {
                 JTable target = (JTable) e.getSource();
                 int row = target.rowAtPoint(e.getPoint());
+                if (row == -1) {
+                    return;
+                }
                 int column = target.columnAtPoint(e.getPoint());
 
                 if (column == 0) {
