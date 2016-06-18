@@ -1,21 +1,13 @@
-/**
- * GenJ - GenealogyJ
- *
- * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
- *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
- *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+/*
+ * Ancestris - http://www.ancestris.org
+ * 
+ * Copyright 2016 Ancestris
+ * 
+ * Author: Frédéric Lapeyre (frederic@ancestris.org).
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 package genj.search;
 
@@ -32,11 +24,9 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
 import genj.util.swing.ChoiceWidget;
-import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
-import ancestris.view.ExplorerHelper;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -66,82 +56,74 @@ import javax.swing.event.ListSelectionListener;
 import spin.Spin;
 
 /**
- * View for searching
+ *
+ * @author frederic
  */
 public class SearchView extends View {
 
+    
     /** formatting */
     private final static String OPEN = "<font color=red>",
             CLOSE = "</font>",
             NEWLINE = "<br>";
+    
     /** default values */
     private final static String[] DEFAULT_VALUES = {
-        "M(a|e)(i|y)er", "San.+Francisco", "^(M|F)"
+        "L(a|e)pe(i|y)re", "Paris.+France", "^(M|F)"
     },
             DEFAULT_TAGS = {
-        "NAME", "BIRT", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI"
+        "NAME", "BIRT", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI", "PLAC"
+    },
+            DEFAULT_STR = {
+        
     };
+    
+    private final static ImageIcon IMG_START = new ImageIcon(SearchView.class, "images/Start"),
+            IMG_STOP = new ImageIcon(SearchView.class, "images/Stop"),
+            IMG_CLEAN = new ImageIcon(SearchView.class, "images/Clean");
+    
     /** how many old values we remember */
     private final static int MAX_OLD = 16;
+    
     /** resources */
     /* package */ final static Resources RESOURCES = Resources.get(SearchView.class);
-    /** current context */
-    private Context context = new Context();
+
     /** registry */
     private final static Registry REGISTRY = Registry.get(SearchView.class);
+    
+    
+    
+    /** current context */
+    private Context context = new Context();
+    
     /** shown results */
-    private Results results = new Results();
-    private ResultWidget listResults = new ResultWidget();
-    /** headless label used for view creation */
-    private HeadlessLabel viewFactory = new HeadlessLabel(listResults.getFont());
+    private Results results1 = new Results();
+    private Results results2 = new Results();
+    private ResultWidget listResults1 = new ResultWidget(results1);
+    private ResultWidget listResults2 = new ResultWidget(results2);
+    
     /** criterias */
+    private ChoiceWidget choiceLastname, choiceFirstname, choicePlace;
     private ChoiceWidget choiceTag, choiceValue;
     private JCheckBox checkRegExp;
-    private JLabel labelCount;
-    private AbstractAncestrisAction actionStart = new ActionStart(), actionStop = new ActionStop();
+    private JLabel labelCount2;
+    
     /** history */
+    private LinkedList<String> oldLastnames, oldFirstnames, oldPlaces;
     private LinkedList<String> oldTags, oldValues;
-    /** images */
-    private final static ImageIcon IMG_START = new ImageIcon(SearchView.class, "images/Start"),
-            IMG_STOP = new ImageIcon(SearchView.class, "images/Stop");
+    
     /** worker */
-    private Worker worker;
+    private AbstractAncestrisAction actionStart = new ActionStart(), actionStop = new ActionStop(), actionClean = new ActionClean();
+    private WorkerMulti worker1;
+    private WorkerTag worker2;
 
+    
+    
     /**
      * Constructor
      */
     public SearchView() {
-
-        // setup worker
-        worker = new Worker((WorkerListener) Spin.over(new WorkerListener() {
-
-            @Override
-            public void more(List<Hit> hits) {
-                results.add(hits);
-                labelCount.setText("" + results.getSize());
-            }
-
-            @Override
-            public void started() {
-                // clear current results
-                results.clear();
-                labelCount.setText("");
-                actionStart.setEnabled(false);
-                actionStop.setEnabled(true);
-            }
-
-            @Override
-            public void stopped() {
-                actionStop.setEnabled(false);
-                actionStart.setEnabled(context.getGedcom() != null);
-            }
-        }));
-
-        // lookup old search values & settings
-        oldTags = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
-        oldValues = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
-        boolean useRegEx = REGISTRY.get("regexp", false);
-
+        
         // prepare an action listener connecting to click
         ActionListener aclick = new ActionListener() {
 
@@ -157,7 +139,79 @@ public class SearchView extends View {
             }
         };
 
-        // prepare search criteria
+        // prepare search criteria for MultiCriteria panel
+        oldLastnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
+        choiceLastname = new ChoiceWidget(oldLastnames);
+        choiceLastname.addActionListener(aclick);
+        oldFirstnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
+        choiceFirstname = new ChoiceWidget(oldFirstnames);
+        choiceFirstname.addActionListener(aclick);
+        oldPlaces = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
+        choicePlace = new ChoiceWidget(oldPlaces);
+        choicePlace.addActionListener(aclick);
+        
+        initComponents();
+        
+        birthFrom.addActionListener(aclick);
+        birthTo.addActionListener(aclick);
+        deathFrom.addActionListener(aclick);
+        deathTo.addActionListener(aclick);
+        
+        // setup worker
+        worker1 = new WorkerMulti((WorkerListener) Spin.over(new WorkerListener() {
+
+            @Override
+            public void more(List<Hit> hits) {
+                results1.add(hits);
+                labelCount1.setText("" + results1.getSize());
+            }
+
+            @Override
+            public void started() {
+                // clear current results
+                results1.clear();
+                labelCount1.setText("");
+                actionStart.setEnabled(false);
+                actionStop.setEnabled(true);
+            }
+
+            @Override
+            public void stopped() {
+                actionStop.setEnabled(false);
+                actionStart.setEnabled(context.getGedcom() != null);
+            }
+        }));
+
+        worker2 = new WorkerTag((WorkerListener) Spin.over(new WorkerListener() {
+
+            @Override
+            public void more(List<Hit> hits) {
+                results2.add(hits);
+                labelCount2.setText("" + results2.getSize());
+            }
+
+            @Override
+            public void started() {
+                // clear current results
+                results2.clear();
+                labelCount2.setText("");
+                actionStart.setEnabled(false);
+                actionStop.setEnabled(true);
+            }
+
+            @Override
+            public void stopped() {
+                actionStop.setEnabled(false);
+                actionStart.setEnabled(context.getGedcom() != null);
+            }
+        }));
+
+
+        // prepare search criteria for tag panel
+        oldTags = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
+        oldValues = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
+        boolean useRegEx = REGISTRY.get("regexp", false);
+
         JLabel labelValue = new JLabel(RESOURCES.getString("label.value"));
         checkRegExp = new JCheckBox(RESOURCES.getString("label.regexp"), useRegEx);
 
@@ -176,7 +230,7 @@ public class SearchView extends View {
         popupTags.addItems(createTagActions());
         popupTags.setMargin(new Insets(0, 0, 0, 0));
 
-        labelCount = new JLabel();
+        labelCount2 = new JLabel();
 
         JPanel paneCriteria = new JPanel();
         try {
@@ -188,7 +242,7 @@ public class SearchView extends View {
         // .. line 0
         gh.add(labelValue, 0, 0, 2, 1, 0, new Insets(0, 0, 0, 8));
         gh.add(checkRegExp, 2, 0, 1, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL);
-        gh.add(labelCount, 3, 0, 1, 1);
+        gh.add(labelCount2, 3, 0, 1, 1);
         // .. line 1
         gh.add(popupPatterns, 0, 1, 1, 1);
         gh.add(choiceValue, 1, 1, 3, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL, new Insets(3, 3, 3, 3));
@@ -198,16 +252,236 @@ public class SearchView extends View {
         gh.add(popupTags, 0, 3, 1, 1);
         gh.add(choiceTag, 1, 3, 3, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL, new Insets(0, 3, 3, 3));
 
-        // prepare layout
-        setLayout(new BorderLayout());
-        add(BorderLayout.NORTH, paneCriteria);
-        add(BorderLayout.CENTER, new JScrollPane(listResults));
-        choiceValue.requestFocusInWindow();
+        
+        
+        // prepare layout1
+        result1Panel.setLayout(new BorderLayout());
+        result1Panel.add(BorderLayout.CENTER, new JScrollPane(listResults1));
+        labelCount1.setText("");
+        choiceLastname.requestFocusInWindow();
+
+        // prepare layout2
+        tabTag.setLayout(new BorderLayout());
+        tabTag.add(BorderLayout.NORTH, paneCriteria);
+        tabTag.add(BorderLayout.CENTER, new JScrollPane(listResults2));
+        //choiceValue.requestFocusInWindow();
 
         // FIXME: right clic doesn't work because selection is handled by ListSelectionListener rather than MouseListener
-//        setExplorerHelper(new ExplorerHelper(listResults));
+//        setExplorerHelper(new ExplorerHelper(listResults2));
         // done
     }
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        tabMulti = new javax.swing.JPanel();
+        labelCount1 = new javax.swing.JLabel();
+        lastnameLabel = new javax.swing.JLabel();
+        firstnameLabel = new javax.swing.JLabel();
+        birthLabel = new javax.swing.JLabel();
+        birthFromLabel = new javax.swing.JLabel();
+        birthToLabel = new javax.swing.JLabel();
+        deathLabel = new javax.swing.JLabel();
+        deathFromLabel = new javax.swing.JLabel();
+        deathToLabel = new javax.swing.JLabel();
+        placeLabel = new javax.swing.JLabel();
+        lastnameText = choiceLastname;
+        firstnameText = choiceFirstname;
+        birthFrom = new javax.swing.JTextField();
+        birthTo = new javax.swing.JTextField();
+        deathFrom = new javax.swing.JTextField();
+        deathTo = new javax.swing.JTextField();
+        placetext = choicePlace;
+        maleCb = new javax.swing.JCheckBox();
+        femaleCb = new javax.swing.JCheckBox();
+        marrCb = new javax.swing.JCheckBox();
+        singleCb = new javax.swing.JCheckBox();
+        result1Panel = new javax.swing.JPanel();
+        tabTag = new javax.swing.JPanel();
+
+        tabMulti.setPreferredSize(new java.awt.Dimension(150, 354));
+
+        labelCount1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(labelCount1, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.labelCount1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(lastnameLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.lastnameLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(firstnameLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.firstnameLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(birthLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(birthFromLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFromLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(birthToLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthToLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(deathLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(deathFromLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathFromLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(deathToLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathToLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.placeLabel.text")); // NOI18N
+
+        birthFrom.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.text")); // NOI18N
+        birthFrom.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
+
+        birthTo.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthTo.text")); // NOI18N
+        birthTo.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
+
+        deathFrom.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathFrom.text")); // NOI18N
+        deathFrom.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
+
+        deathTo.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathTo.text")); // NOI18N
+        deathTo.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(femaleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.femaleCb.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(marrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.marrCb.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(singleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.singleCb.text")); // NOI18N
+
+        javax.swing.GroupLayout result1PanelLayout = new javax.swing.GroupLayout(result1Panel);
+        result1Panel.setLayout(result1PanelLayout);
+        result1PanelLayout.setHorizontalGroup(
+            result1PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        result1PanelLayout.setVerticalGroup(
+            result1PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 148, Short.MAX_VALUE)
+        );
+
+        javax.swing.GroupLayout tabMultiLayout = new javax.swing.GroupLayout(tabMulti);
+        tabMulti.setLayout(tabMultiLayout);
+        tabMultiLayout.setHorizontalGroup(
+            tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(tabMultiLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(tabMultiLayout.createSequentialGroup()
+                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lastnameLabel)
+                                    .addComponent(firstnameLabel)
+                                    .addComponent(birthLabel)
+                                    .addComponent(deathLabel)
+                                    .addComponent(placeLabel))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(tabMultiLayout.createSequentialGroup()
+                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(birthFromLabel)
+                                            .addComponent(deathFromLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(deathFrom)
+                                            .addComponent(birthFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(birthToLabel)
+                                            .addComponent(deathToLabel))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(birthTo, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+                                            .addComponent(deathTo)))
+                                    .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(placetext, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabMultiLayout.createSequentialGroup()
+                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(maleCb)
+                                    .addComponent(femaleCb))
+                                .addGap(18, 18, 18)
+                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(singleCb)
+                                    .addComponent(marrCb))
+                                .addGap(0, 0, Short.MAX_VALUE)))
+                        .addContainerGap())
+                    .addComponent(labelCount1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+        );
+        tabMultiLayout.setVerticalGroup(
+            tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(tabMultiLayout.createSequentialGroup()
+                .addComponent(labelCount1, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(3, 3, 3)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lastnameLabel)
+                    .addComponent(lastnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(firstnameLabel)
+                    .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(birthLabel)
+                    .addComponent(birthFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(birthTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(birthFromLabel)
+                    .addComponent(birthToLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(deathLabel)
+                    .addComponent(deathFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deathTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(deathFromLabel)
+                    .addComponent(deathToLabel))
+                .addGap(8, 8, 8)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(placeLabel)
+                    .addComponent(placetext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(maleCb)
+                    .addComponent(marrCb))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(singleCb)
+                    .addComponent(femaleCb))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/multiSearch.png")), tabMulti, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabToolTip")); // NOI18N
+
+        javax.swing.GroupLayout tabTagLayout = new javax.swing.GroupLayout(tabTag);
+        tabTag.setLayout(tabTagLayout);
+        tabTagLayout.setHorizontalGroup(
+            tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 309, Short.MAX_VALUE)
+        );
+        tabTagLayout.setVerticalGroup(
+            tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 375, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/tagSearch.png")), tabTag, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabToolTip")); // NOI18N
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
+        );
+    }// </editor-fold>//GEN-END:initComponents
+
+
+    
+
 
     public void start() {
 
@@ -217,24 +491,54 @@ public class SearchView extends View {
         }
 
         // stop worker
-        worker.stop();
+        getSelectedWorker().stop();
 
-        // prep args
-        String value = choiceValue.getText();
-        String tags = choiceTag.getText();
-        remember(choiceValue, oldValues, value);
-        remember(choiceTag, oldTags, tags);
-
-        // start anew
-        worker.start(context.getGedcom(), tags, value, checkRegExp.isSelected());
-
-        // done
+        Worker worker = getSelectedWorker();
+        if (worker instanceof WorkerMulti) {
+            remember(choiceLastname, oldLastnames, choiceLastname.getText());
+            remember(choiceFirstname, oldFirstnames, choiceFirstname.getText());
+            remember(choicePlace, oldPlaces, choicePlace.getText());
+            worker.start(context.getGedcom(), 
+                    choiceLastname.getText(), choiceFirstname.getText(), 
+                    birthFrom.getText(), birthTo.getText(), 
+                    deathFrom.getText(), deathTo.getText(),
+                    choicePlace.getText(),
+                    maleCb.isSelected(), femaleCb.isSelected(), 
+                    marrCb.isSelected(), singleCb.isSelected()
+            );
+        } else if (worker instanceof WorkerTag) {
+            String value = choiceValue.getText();
+            String tags = choiceTag.getText();
+            remember(choiceValue, oldValues, value);
+            remember(choiceTag, oldTags, tags);
+            worker.start(context.getGedcom(), tags, value, checkRegExp.isSelected());
+        }
     }
 
     public void stop() {
+        getSelectedWorker().stop();
+    }
 
-        worker.stop();
-
+    public void clean() {
+        if (jTabbedPane1.getSelectedComponent() == tabMulti) {
+            choiceLastname.setText("");
+            choiceFirstname.setText("");
+            choicePlace.setText("");
+            birthFrom.setText("");
+            birthTo.setText("");
+            deathFrom.setText("");
+            deathTo.setText("");
+            maleCb.setSelected(false);
+            femaleCb.setSelected(false);
+            marrCb.setSelected(false);
+            singleCb.setSelected(false);
+            choiceLastname.requestFocusInWindow();
+        } else {
+            choiceTag.setText("");
+            choiceValue.setText("");
+            choiceValue.requestFocusInWindow();
+        }
+        start();
     }
 
     /**
@@ -242,7 +546,11 @@ public class SearchView extends View {
      */
     @Override
     public void removeNotify() {
-        // keep old
+        // keep old (multi)
+        REGISTRY.put("old.lastnames", oldLastnames);
+        REGISTRY.put("old.firstnames", oldFirstnames);
+        REGISTRY.put("old.places", oldPlaces);
+        // keep old (tags)
         REGISTRY.put("regexp", checkRegExp.isSelected());
         REGISTRY.put("old.values", oldValues);
         REGISTRY.put("old.tags", oldTags);
@@ -257,11 +565,14 @@ public class SearchView extends View {
         if (context.getGedcom() != null && context.getGedcom() != newContext.getGedcom()) {
 
             stop();
-            results.clear();
-            labelCount.setText("");
+            results1.clear();
+            results2.clear();
+            labelCount1.setText("");
+            labelCount2.setText("");
             actionStart.setEnabled(false);
 
-            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results));
+            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results1));
+            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results2));
         }
 
         // keep new
@@ -270,7 +581,8 @@ public class SearchView extends View {
         // connect new
         if (context.getGedcom() != null) {
             context = new Context(newContext.getGedcom());
-            context.getGedcom().addGedcomListener((GedcomListener) Spin.over(results));
+            context.getGedcom().addGedcomListener((GedcomListener) Spin.over(results1));
+            context.getGedcom().addGedcomListener((GedcomListener) Spin.over(results2));
             actionStart.setEnabled(true);
         }
 
@@ -283,6 +595,7 @@ public class SearchView extends View {
     public void populate(ToolBar toolbar) {
         toolbar.add(actionStart);
         toolbar.add(actionStop);
+        toolbar.add(actionClean);
     }
 
     /**
@@ -350,12 +663,38 @@ public class SearchView extends View {
      */
     public List<Property> getResults() {
         List<Property> props = new ArrayList<Property>();
-        for (Hit hit : results.hits) {
+        for (Hit hit : getSelectedResults().hits) {
             props.add(hit.getProperty());
         }
         return props;
     }
 
+    
+    private Worker getSelectedWorker() {
+        Worker worker = null;
+        if (jTabbedPane1.getSelectedComponent() == tabMulti) {
+            worker = worker1;
+        } else {
+            worker = worker2;
+        }
+        return worker;
+    }
+    
+    private Results getSelectedResults() {
+        Results results = null;
+        if (jTabbedPane1.getSelectedComponent() == tabMulti) {
+            results = results1;
+        } else {
+            results = results2;
+        }
+        return results;
+    }
+    
+    
+    
+    
+    
+    
     /**
      * Action - select predefined paths
      */
@@ -385,6 +724,10 @@ public class SearchView extends View {
         }
     } //ActionPath
 
+    
+    
+    
+    
     /**
      * Action - insert regexp construct
      * {0} all text
@@ -459,6 +802,10 @@ public class SearchView extends View {
         }
     } //ActionInsert
 
+    
+    
+    
+    
     /**
      * Action - trigger search
      */
@@ -497,12 +844,37 @@ public class SearchView extends View {
     } //ActionStop
 
     /**
+     * Action - clean search criteria
+     */
+    private class ActionClean extends AbstractAncestrisAction {
+
+        /** constructor */
+        private ActionClean() {
+            setImage(IMG_CLEAN);
+            setTip(RESOURCES.getString("clean.tip"));
+            //setEnabled(false);
+        }
+
+        /** run */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            clean();
+        }
+    } //ActionStop
+
+    
+    
+    
+    
+    
+    
+    /**
      * Our result bucket
      */
     private static class Results extends AbstractListModel implements GedcomListener {
 
         /** the results */
-        private List<Hit> hits = new ArrayList<Hit>(Worker.MAX_HITS);
+        private List<Hit> hits = new ArrayList<Hit>(WorkerTag.MAX_HITS);
 
         /**
          * clear the results (sync to EDT)
@@ -596,11 +968,17 @@ public class SearchView extends View {
         }
     } //Results
 
+    
+    
+    
+    
     /**
      * our specialized list
      */
     private class ResultWidget extends JList implements ListSelectionListener, ListCellRenderer {
 
+        private final Results results;
+        
         /** our text component for rendering */
         private final JTextPane text = new JTextPane();
         /** background colors */
@@ -609,8 +987,9 @@ public class SearchView extends View {
         /**
          * Constructor
          */
-        private ResultWidget() {
+        private ResultWidget(final Results results) {
             super(results);
+            this.results = results;
             // colors
             bgColors[0] = getSelectionBackground();
             bgColors[1] = getBackground();
@@ -630,7 +1009,7 @@ public class SearchView extends View {
 
                 @Override
                 public void mouseClickedFiltered(MouseEvent e) {
-                    int row = listResults.getSelectedIndex();
+                    int row = getSelectedIndex();
                     if (row >= 0) {
                         // FIXME: action is handled here and selection is handled in changeSelection
                         Object cell = results.getHit(row).getProperty();
@@ -684,10 +1063,39 @@ public class SearchView extends View {
          */
         @Override
         public void valueChanged(ListSelectionEvent e) {
-            int row = listResults.getSelectedIndex();
+            int row = getSelectedIndex();
             if (row >= 0) {
                 SelectionDispatcher.fireSelection(new Context(results.getHit(row).getProperty()));
             }
         }
     } //ResultWidget
-} //SearchView
+    
+    
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTextField birthFrom;
+    private javax.swing.JLabel birthFromLabel;
+    private javax.swing.JLabel birthLabel;
+    private javax.swing.JTextField birthTo;
+    private javax.swing.JLabel birthToLabel;
+    private javax.swing.JTextField deathFrom;
+    private javax.swing.JLabel deathFromLabel;
+    private javax.swing.JLabel deathLabel;
+    private javax.swing.JTextField deathTo;
+    private javax.swing.JLabel deathToLabel;
+    private javax.swing.JCheckBox femaleCb;
+    private javax.swing.JLabel firstnameLabel;
+    private javax.swing.JComboBox firstnameText;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JLabel labelCount1;
+    private javax.swing.JLabel lastnameLabel;
+    private javax.swing.JComboBox lastnameText;
+    private javax.swing.JCheckBox maleCb;
+    private javax.swing.JCheckBox marrCb;
+    private javax.swing.JLabel placeLabel;
+    private javax.swing.JComboBox placetext;
+    private javax.swing.JPanel result1Panel;
+    private javax.swing.JCheckBox singleCb;
+    private javax.swing.JPanel tabMulti;
+    private javax.swing.JPanel tabTag;
+    // End of variables declaration//GEN-END:variables
+}
