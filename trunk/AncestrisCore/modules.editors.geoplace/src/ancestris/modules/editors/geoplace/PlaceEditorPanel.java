@@ -63,7 +63,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private Registry registry = null;
 
     // Map of geo coordinate places with their corresponding properties
-    Map<String, Set<PropertyPlace>> placesMap = null;
+    private Map<String, Set<PropertyPlace>> placesMap = null;
     
     // List of places found in the gedcom file and model in the list window
     private final DefaultListModel<String> gedcomPlacesListModel = new DefaultListModel<String>();
@@ -465,14 +465,18 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void gedcomPlacesListResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gedcomPlacesListResultMouseClicked
         if (evt.getClickCount() >= 2) {
             replacePlaceButton.doClick();
-            OKButton.doClick();
+            if (OKButton != null) {
+                OKButton.doClick();
+            }
         }
     }//GEN-LAST:event_gedcomPlacesListResultMouseClicked
 
     private void geonamesPlacesListResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_geonamesPlacesListResultMouseClicked
         if (evt.getClickCount() >= 2) {
             replacePlaceButton.doClick();
-            OKButton.doClick();
+            if (OKButton != null) {
+                OKButton.doClick();
+            }
         }
     }//GEN-LAST:event_geonamesPlacesListResultMouseClicked
 
@@ -533,8 +537,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         
         placesMap = getGeoPlaces();
         mPropertyPlaces = new HashSet<PropertyPlace>() {};
-        if (allPlaces) {
-            mPropertyPlaces.addAll(placesMap.get(place.getGeoValue()));
+        Set<PropertyPlace> tmpSet = placesMap.get(place.getGeoValue());
+        if (allPlaces && tmpSet != null) {
+             mPropertyPlaces.addAll(tmpSet);
         } else {
             mPropertyPlaces.add(place);
         }
