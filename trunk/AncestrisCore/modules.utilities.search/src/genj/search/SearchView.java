@@ -27,6 +27,7 @@ import genj.util.swing.ChoiceWidget;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
+import ancestris.util.swing.DialogManager;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -53,6 +54,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import org.openide.util.NbBundle;
 import spin.Spin;
 
 /**
@@ -80,7 +82,8 @@ public class SearchView extends View {
     
     private final static ImageIcon IMG_START = new ImageIcon(SearchView.class, "images/Start"),
             IMG_STOP = new ImageIcon(SearchView.class, "images/Stop"),
-            IMG_CLEAN = new ImageIcon(SearchView.class, "images/Clean");
+            IMG_CLEAN = new ImageIcon(SearchView.class, "images/Clean"),
+            IMG_CLEAR = new ImageIcon(SearchView.class, "images/ClearHistory");
     
     /** how many old values we remember */
     private final static int MAX_OLD = 16;
@@ -113,7 +116,7 @@ public class SearchView extends View {
     private LinkedList<String> oldTags, oldValues;
     
     /** worker */
-    private AbstractAncestrisAction actionStart = new ActionStart(), actionStop = new ActionStop(), actionClean = new ActionClean();
+    private AbstractAncestrisAction actionStart = new ActionStart(), actionStop = new ActionStop(), actionClean = new ActionClean(), actionClearHistory = new ActionClearHistory();
     private WorkerMulti worker1;
     private WorkerTag worker2;
 
@@ -541,6 +544,33 @@ public class SearchView extends View {
         start();
     }
 
+    public void clearHistory() {
+        if (DialogManager.YES_OPTION != DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ConfirmClear"), NbBundle.getMessage(getClass(), "MSG_ConfirmClear"))
+                .setMessageType(DialogManager.YES_NO_OPTION)
+                .setOptionType(DialogManager.YES_NO_OPTION).show()) {
+            return;
+        }
+        if (jTabbedPane1.getSelectedComponent() == tabMulti) {
+            REGISTRY.remove("old.lastnames");
+            REGISTRY.remove("old.firstnames");
+            REGISTRY.remove("old.places");
+            oldLastnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
+            oldFirstnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
+            oldPlaces = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
+            choiceLastname.setValues(oldLastnames);
+            choiceFirstname.setValues(oldFirstnames);
+            choicePlace.setValues(oldPlaces);
+        } else {
+            REGISTRY.remove("regexp");
+            REGISTRY.remove("old.values");
+            REGISTRY.remove("old.tags");
+            oldTags = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
+            oldValues = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
+            choiceTag.setValues(oldValues);
+            choiceValue.setValues(oldTags);
+        }
+    }
+
     /**
      * @see javax.swing.JComponent#removeNotify()
      */
@@ -596,6 +626,7 @@ public class SearchView extends View {
         toolbar.add(actionStart);
         toolbar.add(actionStop);
         toolbar.add(actionClean);
+        toolbar.add(actionClearHistory);
     }
 
     /**
@@ -863,6 +894,25 @@ public class SearchView extends View {
     } //ActionStop
 
     
+    /**
+     * Action - clear history of values
+     */
+    private class ActionClearHistory extends AbstractAncestrisAction {
+
+        /** constructor */
+        private ActionClearHistory() {
+            setImage(IMG_CLEAR);
+            setTip(RESOURCES.getString("clearHistory.tip"));
+            //setEnabled(false);
+        }
+
+        /** run */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            clearHistory();
+        }
+    } //ActionStop
+
     
     
     

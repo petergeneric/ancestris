@@ -343,7 +343,7 @@
         <Container class="javax.swing.JPanel" name="tabTag">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="By Tag" toolTip="Search by Gedcom Tag">
+              <JTabbedPaneConstraints tabName="By Tag" toolTip="&lt;html&gt;Search by Gedcom Tag&amp;nbsp;&lt;/html&gt;">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="genj/search/Bundle.properties" key="SearchView.tabTag.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
