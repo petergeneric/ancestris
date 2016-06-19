@@ -98,7 +98,7 @@ public class AutoCompletion extends PlainDocument {
             // If list is empty, add filter at the top of the list, replacing the previous string if necessary
             if (listArray.length == 0) {
                 String str0 = (String) comboBox.getItemAt(0);
-                if (!comboList.contains(str0)) {
+                if (comboBox.getItemCount() != 0 && !comboList.contains(str0)) {
                     comboBox.removeItemAt(0);
                 }
                 comboBox.insertItemAt(filter, 0);
