@@ -22,7 +22,6 @@ import genj.gedcom.Media;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAge;
-import genj.gedcom.PropertyChoiceValue;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
@@ -38,7 +37,10 @@ import java.io.File;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
@@ -50,6 +52,7 @@ import org.openide.util.NbBundle;
  */
 public class EventWrapper {
 
+    private static Set<String> ATTR_TAGS = new HashSet<String>(Arrays.asList("CAST", "DSCR", "EDUC", "IDNO", "NATI", "NCHI", "NMR", "OCCU", "PROP", "RELI", "SSN", "TITL"));
     public static String AGE_FORMAT = "#.###";   // Format of age displayed 
     
     public boolean isGeneral = true;        // true for the general event
@@ -692,12 +695,8 @@ public class EventWrapper {
     
     private String getDescription() {
         
-        if (eventProperty.getGedcom() != null) {  // for new properties, there is no gedcom and therefore no metaproperty
-            this.hasAttribute = this.eventProperty.getMetaProperty().getType() == PropertyChoiceValue.class;
-        } else {
-            String tag = this.eventProperty.getTag();
-            this.hasAttribute = "OCCU".equals(tag);
-        }
+        String tag = this.eventProperty.getTag();
+        this.hasAttribute = ATTR_TAGS.contains(tag);
         Property type = eventProperty.getProperty("TYPE");
         
         return hasAttribute ? eventProperty.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
