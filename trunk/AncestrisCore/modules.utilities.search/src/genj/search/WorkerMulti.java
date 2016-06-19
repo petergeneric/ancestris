@@ -131,22 +131,22 @@ public class WorkerMulti extends Worker {
                 addHit(indi);
             }
         }
-        if (entity instanceof Fam) {
-            Fam fam = (Fam) entity;
-            Indi husb = fam.getHusband();
-            Indi wife = fam.getWife();
-            if (isMatch(fam, husb, wife)) {
-                addHit(fam);
-                return;
-            }
-            if (husb != null && isMatch(husb)) {
-                addHit(fam);
-                return;
-            }
-            if (wife != null && isMatch(wife)) {
-                addHit(fam);
-            }
-        }
+//        if (entity instanceof Fam) {
+//            Fam fam = (Fam) entity;
+//            Indi husb = fam.getHusband();
+//            Indi wife = fam.getWife();
+//            if (isMatch(fam, husb, wife)) {
+//                addHit(fam);
+//                return;
+//            }
+//            if (husb != null && isMatch(husb)) {
+//                addHit(fam);
+//                return;
+//            }
+//            if (wife != null && isMatch(wife)) {
+//                addHit(fam);
+//            }
+//        }
     }
     
     private boolean isMatch(Indi indi) {
@@ -159,27 +159,27 @@ public class WorkerMulti extends Worker {
                 && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isSingle));
     }
 
-    private boolean isMatch(Fam fam, Indi husb, Indi wife) {
-        if (isSingle) {
-            return false;
-        }
-        String name = fam.toString(false);
-        boolean ret = isCommonString(name, lastnameText) && isCommonString(name, firstnameText); 
-        if (birthFrom != minDate || deathTo != maxDate) {
-            ret &= isCommonDate(getDate(fam.getMarriageDate()), birthFrom, deathTo);
-            if (!placeText.isEmpty()) {
-                return ret && isCommonPlace(fam, placeText);
-            } else {
-                return ret;
-            }
-        } else {
-            if (!placeText.isEmpty()) {
-                return ret && isCommonPlace(fam, placeText);
-            } else {
-                return false;
-            }
-        }
-    }
+//    private boolean isMatch(Fam fam, Indi husb, Indi wife) {
+//        if (isSingle) {
+//            return false;
+//        }
+//        String name = fam.toString(false);
+//        boolean ret = isCommonString(name, lastnameText) && isCommonString(name, firstnameText); 
+//        if (birthFrom != minDate || deathTo != maxDate) {
+//            ret &= isCommonDate(getDate(fam.getMarriageDate()), birthFrom, deathTo);
+//            if (!placeText.isEmpty()) {
+//                return ret && isCommonPlace(fam, placeText);
+//            } else {
+//                return ret;
+//            }
+//        } else {
+//            if (!placeText.isEmpty()) {
+//                return ret && isCommonPlace(fam, placeText);
+//            } else {
+//                return false;
+//            }
+//        }
+//    }
 
     private int getDate(Object arg, boolean isMin) {
         String dateStr = (String) arg;
@@ -211,17 +211,28 @@ public class WorkerMulti extends Worker {
         return date >= birthFrom && date <= birthTo;
     }
 
-    private boolean isCommonPlace(Entity ent, String placeText) {
+    private boolean isCommonPlace(Indi indi, String placeText) {
         if (placeText.isEmpty()) {
             return true;
         }
         placeText = placeText.toLowerCase();
-        for (PropertyPlace prop : ent.getProperties(PropertyPlace.class)) {
+        for (PropertyPlace prop : indi.getProperties(PropertyPlace.class)) {
             String place = prop.getDisplayValue();
             if (place.toLowerCase().contains(placeText)) {
                 return true;
             }
         }
+        
+        Fam fams[] = indi.getFamiliesWhereSpouse();
+        for (Fam fam : fams) {
+            for (PropertyPlace prop : fam.getProperties(PropertyPlace.class)) {
+                String place = prop.getDisplayValue();
+                if (place.toLowerCase().contains(placeText)) {
+                    return true;
+                }
+            }
+        }
+        
         return false;
     }
 
