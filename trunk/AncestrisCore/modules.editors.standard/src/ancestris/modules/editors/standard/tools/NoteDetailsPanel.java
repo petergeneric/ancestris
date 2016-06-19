@@ -18,6 +18,7 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Style;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -59,7 +60,12 @@ public class NoteDetailsPanel extends javax.swing.JPanel {
         noteText.setSelectionStart(start);
         noteText.setSelectionEnd(end);
         noteText.scrollToReference(selText != null ? selText : tmpText.substring(start, start));
-        noteText.requestFocusInWindow();
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                noteText.requestFocusInWindow();
+            }
+        });
     }
 
     /**
