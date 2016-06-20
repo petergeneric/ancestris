@@ -44,6 +44,7 @@ public class WorkerMulti extends Worker {
 
     private boolean isMale;
     private boolean isFemale;
+    private boolean isUnknown;
 
     private boolean isMarried;
     private boolean isSingle;
@@ -63,8 +64,9 @@ public class WorkerMulti extends Worker {
         placeText = (String) args[6];
         isMale = (Boolean) args[7];
         isFemale = (Boolean) args[8];
-        isMarried = (Boolean) args[9];
-        isSingle = (Boolean) args[10];
+        isUnknown = (Boolean) args[9];
+        isMarried = (Boolean) args[10];
+        isSingle = (Boolean) args[11];
         
         // sync up
         synchronized (lock) {
@@ -155,7 +157,7 @@ public class WorkerMulti extends Worker {
                 && isCommonDate(getDate(indi.getBirthDate()), birthFrom, birthTo)
                 && isCommonDate(getDate(indi.getDeathDate()), deathFrom, deathTo)
                 && isCommonPlace(indi, placeText)
-                && isSameSex(indi.getSex(), isMale, isFemale)
+                && isSameSex(indi.getSex(), isMale, isFemale, isUnknown)
                 && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isSingle));
     }
 
@@ -236,11 +238,11 @@ public class WorkerMulti extends Worker {
         return false;
     }
 
-    private boolean isSameSex(int sex, boolean male, boolean female) {
-        if (!male && !female) {
+    private boolean isSameSex(int sex, boolean male, boolean female, boolean unknown) {
+        if (!male && !female && !unknown) {
             return false;
         }
-        return (sex == PropertySex.MALE && male) || (sex == PropertySex.FEMALE && female);
+        return (sex == PropertySex.MALE && male) || (sex == PropertySex.FEMALE && female) || (sex == PropertySex.UNKNOWN && unknown);
     }
 
     private boolean isSameStatus(Fam[] familiesWhereSpouse, boolean married, boolean single) {
@@ -277,7 +279,7 @@ public class WorkerMulti extends Worker {
 
     private boolean isEmptyCriteria() {
         return (lastnameText.isEmpty() && firstnameText.isEmpty() && birthFrom == minDate && birthTo == maxDate 
-                && deathFrom == minDate && deathTo == maxDate && placeText.isEmpty() && !isMale && !isFemale && !isMarried && !isSingle);
+                && deathFrom == minDate && deathTo == maxDate && placeText.isEmpty() && !isMale && !isFemale && !isUnknown && !isMarried && !isSingle);
     }
 
 
