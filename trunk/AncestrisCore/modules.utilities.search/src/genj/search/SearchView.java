@@ -313,6 +313,7 @@ public class SearchView extends View {
         placetext = choicePlace;
         maleCb = new javax.swing.JCheckBox();
         femaleCb = new javax.swing.JCheckBox();
+        unknownCb = new javax.swing.JCheckBox();
         marrCb = new javax.swing.JCheckBox();
         singleCb = new javax.swing.JCheckBox();
         result1Panel = new javax.swing.JPanel();
@@ -359,6 +360,9 @@ public class SearchView extends View {
         femaleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(femaleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.femaleCb.text")); // NOI18N
 
+        unknownCb.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(unknownCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.unknownCb.text")); // NOI18N
+
         marrCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(marrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.marrCb.text")); // NOI18N
 
@@ -384,6 +388,7 @@ public class SearchView extends View {
             .addGroup(tabMultiLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelCount1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(tabMultiLayout.createSequentialGroup()
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(tabMultiLayout.createSequentialGroup()
@@ -414,17 +419,20 @@ public class SearchView extends View {
                                     .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                     .addComponent(placetext, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, tabMultiLayout.createSequentialGroup()
+                            .addGroup(tabMultiLayout.createSequentialGroup()
                                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(maleCb)
-                                    .addComponent(femaleCb))
-                                .addGap(18, 18, 18)
-                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(singleCb)
-                                    .addComponent(marrCb))
+                                    .addGroup(tabMultiLayout.createSequentialGroup()
+                                        .addComponent(marrCb)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(singleCb))
+                                    .addGroup(tabMultiLayout.createSequentialGroup()
+                                        .addComponent(maleCb)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(femaleCb)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(unknownCb)))
                                 .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())
-                    .addComponent(labelCount1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addContainerGap())))
         );
         tabMultiLayout.setVerticalGroup(
             tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -459,11 +467,12 @@ public class SearchView extends View {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maleCb)
-                    .addComponent(marrCb))
+                    .addComponent(femaleCb)
+                    .addComponent(unknownCb))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(singleCb)
-                    .addComponent(femaleCb))
+                    .addComponent(marrCb))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -519,7 +528,7 @@ public class SearchView extends View {
                     birthFrom.getText(), birthTo.getText(), 
                     deathFrom.getText(), deathTo.getText(),
                     choicePlace.getText(),
-                    maleCb.isSelected(), femaleCb.isSelected(), 
+                    maleCb.isSelected(), femaleCb.isSelected(), unknownCb.isSelected(),
                     marrCb.isSelected(), singleCb.isSelected()
             );
         } else if (worker instanceof WorkerTag) {
@@ -546,6 +555,7 @@ public class SearchView extends View {
             deathTo.setText("");
             maleCb.setSelected(true);
             femaleCb.setSelected(true);
+            unknownCb.setSelected(true);
             marrCb.setSelected(true);
             singleCb.setSelected(true);
             choiceLastname.requestFocusInWindow();
@@ -1160,5 +1170,6 @@ public class SearchView extends View {
     private javax.swing.JCheckBox singleCb;
     private javax.swing.JPanel tabMulti;
     private javax.swing.JPanel tabTag;
+    private javax.swing.JCheckBox unknownCb;
     // End of variables declaration//GEN-END:variables
 }
