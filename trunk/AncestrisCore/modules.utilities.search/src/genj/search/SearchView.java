@@ -55,6 +55,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 import spin.Spin;
 
 /**
@@ -261,7 +262,7 @@ public class SearchView extends View {
         result1Panel.setLayout(new BorderLayout());
         result1Panel.add(BorderLayout.CENTER, new JScrollPane(listResults1));
         labelCount1.setText("");
-        choiceLastname.requestFocusInWindow();
+        
 
         // prepare layout2
         tabTag.setLayout(new BorderLayout());
@@ -272,6 +273,14 @@ public class SearchView extends View {
         // FIXME: right clic doesn't work because selection is handled by ListSelectionListener rather than MouseListener
 //        setExplorerHelper(new ExplorerHelper(listResults2));
         // done
+        
+        
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                choiceLastname.requestFocusInWindow();
+            }
+        });
     }
 
     /**
@@ -344,12 +353,16 @@ public class SearchView extends View {
         deathTo.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathTo.text")); // NOI18N
         deathTo.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
 
+        maleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
 
+        femaleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(femaleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.femaleCb.text")); // NOI18N
 
+        marrCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(marrCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.marrCb.text")); // NOI18N
 
+        singleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(singleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.singleCb.text")); // NOI18N
 
         javax.swing.GroupLayout result1PanelLayout = new javax.swing.GroupLayout(result1Panel);
@@ -531,10 +544,10 @@ public class SearchView extends View {
             birthTo.setText("");
             deathFrom.setText("");
             deathTo.setText("");
-            maleCb.setSelected(false);
-            femaleCb.setSelected(false);
-            marrCb.setSelected(false);
-            singleCb.setSelected(false);
+            maleCb.setSelected(true);
+            femaleCb.setSelected(true);
+            marrCb.setSelected(true);
+            singleCb.setSelected(true);
             choiceLastname.requestFocusInWindow();
         } else {
             choiceTag.setText("");

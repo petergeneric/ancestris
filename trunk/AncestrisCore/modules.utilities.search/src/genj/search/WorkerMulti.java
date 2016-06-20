@@ -238,14 +238,14 @@ public class WorkerMulti extends Worker {
 
     private boolean isSameSex(int sex, boolean male, boolean female) {
         if (!male && !female) {
-            return true;
+            return false;
         }
         return (sex == PropertySex.MALE && male) || (sex == PropertySex.FEMALE && female);
     }
 
     private boolean isSameStatus(Fam[] familiesWhereSpouse, boolean married, boolean single) {
         if (!married && !single) {
-            return true;
+            return false;
         }
         return (married && (familiesWhereSpouse != null && familiesWhereSpouse.length != 0)) || (single && (familiesWhereSpouse == null || familiesWhereSpouse.length == 0));
     }
