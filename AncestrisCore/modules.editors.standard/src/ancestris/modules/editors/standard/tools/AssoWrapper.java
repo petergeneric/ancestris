@@ -91,7 +91,7 @@ public class AssoWrapper {
     }
     
     public boolean equals(AssoWrapper object) {
-        return (assoProp.equals(object.assoProp));
+        return (assoProp != null && assoProp.equals(object.assoProp));
     }
 
     /**
