@@ -24,6 +24,7 @@ import genj.gedcom.Property;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -91,8 +92,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
      * search in gedcom (not on EDT)
      */
     public void search(Gedcom gedcom) {
+        
+        Comparator<Property> comparator = new Comparator<Property>() {
+            @Override
+            public int compare(Property p1, Property p2) {
+                return p1.toString().compareTo(p2.toString());
+            }
+        };
+        
         for (int t = 0; t < Gedcom.ENTITIES.length && hitCount < MAX_HITS; t++) {
-            for (Entity entity : gedcom.getEntities(Gedcom.ENTITIES[t])) {
+            for (Entity entity : gedcom.getEntities(Gedcom.ENTITIES[t], comparator)) {
 
                 // next
                 search(entity, entity);

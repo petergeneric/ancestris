@@ -564,7 +564,7 @@ public class SearchView extends View {
             choiceValue.setText("");
             choiceValue.requestFocusInWindow();
         }
-        start();
+        getSelectedResults().clear();
     }
 
     public void clearHistory() {
