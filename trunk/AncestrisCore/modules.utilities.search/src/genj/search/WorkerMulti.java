@@ -131,6 +131,8 @@ public class WorkerMulti extends Worker {
             Indi indi = (Indi) entity;
             if (isMatch(indi)) {
                 addHit(indi);
+            } else {
+                System.out.println("DEBUG************* indi = "+indi);
             }
         }
 //        if (entity instanceof Fam) {
@@ -152,6 +154,10 @@ public class WorkerMulti extends Worker {
     }
     
     private boolean isMatch(Indi indi) {
+        if (indi.getId().equals("I2472")) {
+            String str = "ok";
+        }
+        
         return (isCommonString(indi.getLastName(), lastnameText)
                 && isCommonString(indi.getFirstName(), firstnameText)
                 && isCommonDate(getDate(indi.getBirthDate()), birthFrom, birthTo)
@@ -198,19 +204,19 @@ public class WorkerMulti extends Worker {
             return nullDate;
         }
         PointInTime pit = pDate.getStart();
-        if (pit == null) {
+        if (pit == null || !pit.isValid()) {
             return nullDate;
         }
         return pit.getYear();
     }
 
-    private boolean isCommonString(String lastName, String lastnameText) {
-        return lastName.toLowerCase().contains(lastnameText.toLowerCase());
+    private boolean isCommonString(String name, String nameText) {
+        return name.toLowerCase().contains(nameText.toLowerCase());
     }
 
     
-    private boolean isCommonDate(int date, int birthFrom, int birthTo) {
-        return date >= birthFrom && date <= birthTo;
+    private boolean isCommonDate(int date, int from, int to) {
+        return date >= from && date <= to;
     }
 
     private boolean isCommonPlace(Indi indi, String placeText) {
