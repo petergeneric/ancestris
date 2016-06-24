@@ -36,21 +36,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 /*package*/ abstract class Worker {
 
     /**
-     * max # hits
-     */
-    public final static int MAX_HITS = 5000;
-
-    /**
      * one listener
      */
     public WorkerListener listener;
+    public int max_hits;
+    public boolean case_sensitive;
 
     /**
      * current search state
      */
     public Gedcom gedcom;
     public Set<Entity> entities = new HashSet<Entity>();
-    public List<Hit> hits = new ArrayList<Hit>(MAX_HITS);
+    public List<Hit> hits = new ArrayList<Hit>();
     public int hitCount = 0;
     public Matcher matcher;
 
@@ -78,7 +75,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         }
     }
 
-    public abstract void start(Gedcom gedcom, Object... args);
+    public abstract void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args);
     
     public void flush() {
         // still more data to report?
@@ -100,7 +97,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
             }
         };
         
-        for (int t = 0; t < Gedcom.ENTITIES.length && hitCount < MAX_HITS; t++) {
+        for (int t = 0; t < Gedcom.ENTITIES.length && hitCount < max_hits; t++) {
             for (Entity entity : gedcom.getEntities(Gedcom.ENTITIES[t], comparator)) {
 
                 // next

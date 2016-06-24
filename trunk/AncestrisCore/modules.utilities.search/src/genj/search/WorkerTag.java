@@ -43,7 +43,7 @@ public class WorkerTag extends Worker {
      * start search
      */
     @Override
-    public void start(Gedcom gedcom, Object... args) {
+    public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args) {
         String tags = (String) args[0];
         String value = (String) args[1];
         Boolean regexp = (Boolean) args[2];
@@ -58,6 +58,8 @@ public class WorkerTag extends Worker {
 
             // prepare matcher & path
             this.gedcom = gedcom;
+            this.max_hits = max_hits;
+            this.case_sensitive = case_sensitive;
             this.matcher = getMatcher(value, regexp);
             this.tags = split(tags);
             this.hits.clear();
@@ -156,7 +158,7 @@ public class WorkerTag extends Worker {
             return;
         }
         // too many?
-        if (hitCount >= MAX_HITS) {
+        if (hitCount >= max_hits) {
             return;
         }
         // keep entity

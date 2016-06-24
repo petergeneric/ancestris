@@ -28,6 +28,7 @@ import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
+import genj.view.Images;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -71,6 +72,9 @@ public class SearchView extends View {
             NEWLINE = "<br>";
     
     /** default values */
+    private int max_hits;
+    private boolean case_sensitive;
+    
     private final static String[] DEFAULT_VALUES = {
         "L(a|e)pe(i|y)re", "Paris.+France", "^(M|F)"
     },
@@ -84,7 +88,8 @@ public class SearchView extends View {
     private final static ImageIcon IMG_START = new ImageIcon(SearchView.class, "images/Start"),
             IMG_STOP = new ImageIcon(SearchView.class, "images/Stop"),
             IMG_CLEAN = new ImageIcon(SearchView.class, "images/Clean"),
-            IMG_CLEAR = new ImageIcon(SearchView.class, "images/ClearHistory");
+            IMG_CLEAR = new ImageIcon(SearchView.class, "images/ClearHistory"),
+            IMG_SETTINGS = Images.imgSettings;
     
     /** how many old values we remember */
     private final static int MAX_OLD = 16;
@@ -117,7 +122,11 @@ public class SearchView extends View {
     private LinkedList<String> oldTags, oldValues;
     
     /** worker */
-    private AbstractAncestrisAction actionStart = new ActionStart(), actionStop = new ActionStop(), actionClean = new ActionClean(), actionClearHistory = new ActionClearHistory();
+    private AbstractAncestrisAction actionStart = new ActionStart(), 
+            actionStop = new ActionStop(), 
+            actionClean = new ActionClean(), 
+            actionClearHistory = new ActionClearHistory(),
+            actionSettings = new ActionSettings();
     private WorkerMulti worker1;
     private WorkerTag worker2;
 
@@ -143,6 +152,11 @@ public class SearchView extends View {
             }
         };
 
+        // Settings
+        SettingsPanel settingsPanel = new SettingsPanel(REGISTRY);
+        max_hits = settingsPanel.getMaxHits();
+        case_sensitive = settingsPanel.getCaseSensitive();
+        
         // prepare search criteria for MultiCriteria panel
         oldLastnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
         choiceLastname = new ChoiceWidget(oldLastnames);
@@ -523,7 +537,7 @@ public class SearchView extends View {
             remember(choiceLastname, oldLastnames, choiceLastname.getText());
             remember(choiceFirstname, oldFirstnames, choiceFirstname.getText());
             remember(choicePlace, oldPlaces, choicePlace.getText());
-            worker.start(context.getGedcom(), 
+            worker.start(context.getGedcom(), max_hits, case_sensitive,
                     choiceLastname.getText(), choiceFirstname.getText(), 
                     birthFrom.getText(), birthTo.getText(), 
                     deathFrom.getText(), deathTo.getText(),
@@ -536,7 +550,8 @@ public class SearchView extends View {
             String tags = choiceTag.getText();
             remember(choiceValue, oldValues, value);
             remember(choiceTag, oldTags, tags);
-            worker.start(context.getGedcom(), tags, value, checkRegExp.isSelected());
+            worker.start(context.getGedcom(), max_hits, case_sensitive,
+                    tags, value, checkRegExp.isSelected());
         }
     }
 
@@ -565,6 +580,7 @@ public class SearchView extends View {
             choiceValue.requestFocusInWindow();
         }
         getSelectedResults().clear();
+        labelCount1.setText("");
     }
 
     public void clearHistory() {
@@ -650,6 +666,9 @@ public class SearchView extends View {
         toolbar.add(actionStop);
         toolbar.add(actionClean);
         toolbar.add(actionClearHistory);
+        toolbar.addSeparator();
+        toolbar.addGlue();
+        toolbar.add(actionSettings);
     }
 
     /**
@@ -745,6 +764,15 @@ public class SearchView extends View {
     }
     
     
+    private void displaySettings() {
+        SettingsPanel settingsPanel = new SettingsPanel(REGISTRY);
+        DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChangeSettings"), settingsPanel)
+                .setMessageType(DialogManager.PLAIN_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION).show();
+        settingsPanel.setSettings();
+        max_hits = settingsPanel.getMaxHits();
+        case_sensitive = settingsPanel.getCaseSensitive();
+    }
     
     
     
@@ -937,6 +965,25 @@ public class SearchView extends View {
     } //ActionStop
 
     
+    /**
+     * Action - clear history of values
+     */
+    private class ActionSettings extends AbstractAncestrisAction {
+
+        /** constructor */
+        private ActionSettings() {
+            setImage(IMG_SETTINGS);
+            setTip(RESOURCES.getString("settings.tip"));
+            //setEnabled(false);
+        }
+
+        /** run */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            displaySettings();
+        }
+    } //ActionStop
+
     
     
     
@@ -947,7 +994,7 @@ public class SearchView extends View {
     private static class Results extends AbstractListModel implements GedcomListener {
 
         /** the results */
-        private List<Hit> hits = new ArrayList<Hit>(WorkerTag.MAX_HITS);
+        private List<Hit> hits = new ArrayList<Hit>();
 
         /**
          * clear the results (sync to EDT)

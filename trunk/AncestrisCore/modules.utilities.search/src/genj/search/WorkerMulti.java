@@ -54,7 +54,7 @@ public class WorkerMulti extends Worker {
     }
 
     @Override
-    public void start(Gedcom gedcom, Object... args) {
+    public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args) {
         lastnameText = (String) args[0];
         firstnameText = (String) args[1];
         birthFrom = getDate(args[2], true);
@@ -78,6 +78,8 @@ public class WorkerMulti extends Worker {
 
             // prepare matcher & path
             this.gedcom = gedcom;
+            this.max_hits = max_hits;
+            this.case_sensitive = case_sensitive;
             this.matcher = getMatcher(!lastnameText.isEmpty() ? lastnameText : firstnameText, false);
             this.hits.clear();
             this.entities.clear();
@@ -152,12 +154,8 @@ public class WorkerMulti extends Worker {
     }
     
     private boolean isMatch(Indi indi) {
-        if (indi.getId().equals("I2472")) {
-            String str = "ok";
-        }
-        
-        return (isCommonString(indi.getLastName(), lastnameText)
-                && isCommonString(indi.getFirstName(), firstnameText)
+        return (isCommonString(indi.getLastNames(), lastnameText)
+                && isCommonString(indi.getFirstNames(), firstnameText)
                 && isCommonDate(getDate(indi.getBirthDate()), birthFrom, birthTo)
                 && isCommonDate(getDate(indi.getDeathDate()), deathFrom, deathTo)
                 && isCommonPlace(indi, placeText)
@@ -208,8 +206,19 @@ public class WorkerMulti extends Worker {
         return pit.getYear();
     }
 
-    private boolean isCommonString(String name, String nameText) {
-        return name.toLowerCase().contains(nameText.toLowerCase());
+    private boolean isCommonString(String[] names, String nameText) {
+        for (String name : names) {
+            if (case_sensitive) {
+                if (name.contains(nameText)) {
+                    return true;
+                }
+            } else {
+                if (name.toLowerCase().contains(nameText.toLowerCase())) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     
@@ -221,11 +230,16 @@ public class WorkerMulti extends Worker {
         if (placeText.isEmpty()) {
             return true;
         }
-        placeText = placeText.toLowerCase();
         for (PropertyPlace prop : indi.getProperties(PropertyPlace.class)) {
             String place = prop.getDisplayValue();
-            if (place.toLowerCase().contains(placeText)) {
-                return true;
+            if (case_sensitive) {
+                if (place.contains(placeText)) {
+                    return true;
+                }
+            } else {
+                if (place.toLowerCase().contains(placeText.toLowerCase())) {
+                    return true;
+                }
             }
         }
         
@@ -233,8 +247,14 @@ public class WorkerMulti extends Worker {
         for (Fam fam : fams) {
             for (PropertyPlace prop : fam.getProperties(PropertyPlace.class)) {
                 String place = prop.getDisplayValue();
-                if (place.toLowerCase().contains(placeText)) {
-                    return true;
+                if (case_sensitive) {
+                    if (place.contains(placeText)) {
+                        return true;
+                    }
+                } else {
+                    if (place.toLowerCase().contains(placeText.toLowerCase())) {
+                        return true;
+                    }
                 }
             }
         }
@@ -262,7 +282,7 @@ public class WorkerMulti extends Worker {
         Matcher.Match[] matches = matcher.match(entity.toString(true));
         
         // too many?
-        if (hitCount >= MAX_HITS) {
+        if (hitCount >= max_hits) {
             return;
         }
         // keep entity
