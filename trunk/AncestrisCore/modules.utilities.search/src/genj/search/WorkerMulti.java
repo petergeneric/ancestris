@@ -131,8 +131,6 @@ public class WorkerMulti extends Worker {
             Indi indi = (Indi) entity;
             if (isMatch(indi)) {
                 addHit(indi);
-            } else {
-                System.out.println("DEBUG************* indi = "+indi);
             }
         }
 //        if (entity instanceof Fam) {
