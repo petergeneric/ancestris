@@ -420,11 +420,43 @@ public class Indi extends Entity {
     }
 
     /**
+     * Calculate indi's first names
+     */
+    public String[] getFirstNames() {
+        Property[] ps = getProperties("NAME", true);
+        if (ps == null) {
+            return null;
+        }
+        String[] firstNames = new String[ps.length];
+        int i = 0;
+        for (Property prop : ps) {
+            firstNames[i++] = ((PropertyName)prop).getFirstName();
+        }
+        return firstNames;
+    }
+
+    /**
      * Calculate indi's last name
      */
     public String getLastName() {
         PropertyName p = (PropertyName) getProperty("NAME", true);
         return p != null ? p.getLastName() : "";
+    }
+
+    /**
+     * Calculate indi's last names
+     */
+    public String[] getLastNames() {
+        Property[] ps = getProperties("NAME", true);
+        if (ps == null) {
+            return null;
+        }
+        String[] lastNames = new String[ps.length];
+        int i = 0;
+        for (Property prop : ps) {
+            lastNames[i++] = ((PropertyName)prop).getLastName();
+        }
+        return lastNames;
     }
 
     /**
