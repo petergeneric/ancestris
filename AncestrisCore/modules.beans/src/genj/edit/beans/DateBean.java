@@ -31,6 +31,7 @@ import genj.util.swing.PopupWidget;
 import genj.util.swing.TextFieldWidget;
 
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -138,6 +139,18 @@ public class DateBean extends PropertyBean {
         pDate.setValue(format, date1.getValue(), date2.getValue(), phrase.getText());
     }
 
+    // ActionListener
+    public void addActionListener(ActionListener a) {
+        date1.addActionListener(a);
+        date2.addActionListener(a);
+    }
+
+    public void removeActionListener(ActionListener a) {
+        date1.removeActionListener(a);
+        date2.removeActionListener(a);
+    }
+    
+    
     // Getters of fields
     public Format getFormat() {
         return format;
