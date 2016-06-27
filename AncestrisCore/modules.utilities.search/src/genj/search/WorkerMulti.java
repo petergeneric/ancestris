@@ -256,7 +256,11 @@ public class WorkerMulti extends Worker {
         // Complete ranges in case of ranges
         if (isRange(dateBean.getFormat())) {
             if (dateFound == null) {
-                return true;
+                if (dFrom != null || mFrom != null || yFrom != null || dTo != null || mTo != null || yTo != null) { // date found is null and criteria not empty, return false
+                    return false;
+                } else { // date found is null but no criteria has been indicated, return true
+                    return true;
+                }
             }
             if (dFrom == null) {
                 dFrom = 0;
@@ -358,9 +362,12 @@ public class WorkerMulti extends Worker {
                 bMonth = (mFrom >= m1 && mFrom <= m2) || (m1 >= mFrom && m1 <= mTo);
                 bYear = (yFrom >= y1 && yFrom <= y2) || (y1 >= yFrom && y1 <= yTo);
             } else {
-                bDay = (d1 == null) || (d1 >= dFrom && d1 <= dTo);
-                bMonth = (m1 == null) || (m1 >= mFrom && m1 <= mTo);
-                bYear = (y1 == null) || (y1 >= yFrom && y1 <= yTo);
+                bDay = (d1 != null && d1 >= dFrom && d1 <= dTo);
+                bMonth = (m1 != null && m1 >= mFrom && m1 <= mTo);
+                bYear = (y1 != null && y1 >= yFrom && y1 <= yTo);
+                if (d1 == null && m1 == null && y1 == null && (dFrom != null || mFrom != null || yFrom != null || dTo != null || mTo != null || yTo != null)) {
+                    bDay = false;
+                }
             }
         } 
         // Search for exact criteria in case criteria is NOT a date range
