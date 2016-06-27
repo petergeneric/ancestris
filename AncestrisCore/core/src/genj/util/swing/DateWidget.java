@@ -36,6 +36,7 @@ import java.util.List;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import java.awt.event.ActionListener;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -220,6 +221,24 @@ public class DateWidget extends JPanel {
    */
   public void removeChangeListener(ChangeListener l) {
     changeSupport.removeChangeListener(l);
+  }
+
+  /**
+   * Add action listener
+   */
+  public void addActionListener(ActionListener a) {
+    widgetYear.addActionListener(a);
+    widgetMonth.addActionListener(a);
+    widgetDay.addActionListener(a);
+  }
+
+  /**
+   * Remove action listener
+   */
+  public void removeActionListener(ActionListener a) {
+    widgetYear.removeActionListener(a);
+    widgetMonth.removeActionListener(a);
+    widgetDay.removeActionListener(a);
   }
 
   /**
