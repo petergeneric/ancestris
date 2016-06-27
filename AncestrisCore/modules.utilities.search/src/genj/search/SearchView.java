@@ -28,6 +28,7 @@ import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
+import genj.gedcom.PropertyDate;
 import genj.view.Images;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -44,6 +45,8 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import javax.swing.AbstractListModel;
+import static javax.swing.BorderFactory.createEmptyBorder;
+import static javax.swing.BorderFactory.createLineBorder;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -65,11 +68,6 @@ import spin.Spin;
  */
 public class SearchView extends View {
 
-    
-    /** formatting */
-    private final static String OPEN = "<font color=red>",
-            CLOSE = "</font>",
-            NEWLINE = "<br>";
     
     /** default values */
     private int max_hits;
@@ -170,10 +168,8 @@ public class SearchView extends View {
         
         initComponents();
         
-        birthFrom.addActionListener(aclick);
-        birthTo.addActionListener(aclick);
-        deathFrom.addActionListener(aclick);
-        deathTo.addActionListener(aclick);
+        birthDateBean.addActionListener(aclick);
+        deathDateBean.addActionListener(aclick);
         
         // setup worker
         worker1 = new WorkerMulti((WorkerListener) Spin.over(new WorkerListener() {
@@ -273,6 +269,10 @@ public class SearchView extends View {
         
         
         // prepare layout1
+        birthDateBean.setPropertyImpl(null);
+        deathDateBean.setPropertyImpl(null);
+        birthDateBean.setFormat(PropertyDate.BETWEEN_AND);
+        deathDateBean.setFormat(PropertyDate.BETWEEN_AND);
         result1Panel.setLayout(new BorderLayout());
         result1Panel.add(BorderLayout.CENTER, new JScrollPane(listResults1));
         labelCount1.setText("");
@@ -312,18 +312,12 @@ public class SearchView extends View {
         lastnameLabel = new javax.swing.JLabel();
         firstnameLabel = new javax.swing.JLabel();
         birthLabel = new javax.swing.JLabel();
-        birthFromLabel = new javax.swing.JLabel();
-        birthToLabel = new javax.swing.JLabel();
         deathLabel = new javax.swing.JLabel();
-        deathFromLabel = new javax.swing.JLabel();
-        deathToLabel = new javax.swing.JLabel();
         placeLabel = new javax.swing.JLabel();
         lastnameText = choiceLastname;
         firstnameText = choiceFirstname;
-        birthFrom = new javax.swing.JTextField();
-        birthTo = new javax.swing.JTextField();
-        deathFrom = new javax.swing.JTextField();
-        deathTo = new javax.swing.JTextField();
+        birthDateBean = new genj.edit.beans.DateBean();
+        deathDateBean = new genj.edit.beans.DateBean();
         placetext = choicePlace;
         maleCb = new javax.swing.JCheckBox();
         femaleCb = new javax.swing.JCheckBox();
@@ -344,29 +338,9 @@ public class SearchView extends View {
 
         org.openide.awt.Mnemonics.setLocalizedText(birthLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(birthFromLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFromLabel.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(birthToLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthToLabel.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(deathLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(deathFromLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathFromLabel.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(deathToLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathToLabel.text")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.placeLabel.text")); // NOI18N
-
-        birthFrom.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.text")); // NOI18N
-        birthFrom.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
-
-        birthTo.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthTo.text")); // NOI18N
-        birthTo.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
-
-        deathFrom.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathFrom.text")); // NOI18N
-        deathFrom.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
-
-        deathTo.setText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathTo.text")); // NOI18N
-        deathTo.setToolTipText(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.birthFrom.toolTipText")); // NOI18N
 
         maleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
@@ -391,7 +365,7 @@ public class SearchView extends View {
         );
         result1PanelLayout.setVerticalGroup(
             result1PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 148, Short.MAX_VALUE)
+            .addGap(0, 150, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout tabMultiLayout = new javax.swing.GroupLayout(tabMulti);
@@ -402,51 +376,35 @@ public class SearchView extends View {
             .addGroup(tabMultiLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(labelCount1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(labelCount1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lastnameLabel)
+                            .addComponent(firstnameLabel)
+                            .addComponent(birthLabel)
+                            .addComponent(deathLabel)
+                            .addComponent(placeLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(placetext, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(deathDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(birthDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(tabMultiLayout.createSequentialGroup()
                         .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(tabMultiLayout.createSequentialGroup()
-                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lastnameLabel)
-                                    .addComponent(firstnameLabel)
-                                    .addComponent(birthLabel)
-                                    .addComponent(deathLabel)
-                                    .addComponent(placeLabel))
+                                .addComponent(marrCb)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(tabMultiLayout.createSequentialGroup()
-                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(birthFromLabel)
-                                            .addComponent(deathFromLabel))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(deathFrom)
-                                            .addComponent(birthFrom, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(birthToLabel)
-                                            .addComponent(deathToLabel))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(birthTo, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                                            .addComponent(deathTo)))
-                                    .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(placetext, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addComponent(singleCb))
                             .addGroup(tabMultiLayout.createSequentialGroup()
-                                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(tabMultiLayout.createSequentialGroup()
-                                        .addComponent(marrCb)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(singleCb))
-                                    .addGroup(tabMultiLayout.createSequentialGroup()
-                                        .addComponent(maleCb)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(femaleCb)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(unknownCb)))
-                                .addGap(0, 0, Short.MAX_VALUE)))
-                        .addContainerGap())))
+                                .addComponent(maleCb)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(femaleCb)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(unknownCb)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
             tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -461,19 +419,13 @@ public class SearchView extends View {
                     .addComponent(firstnameLabel)
                     .addComponent(firstnameText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(birthLabel)
-                    .addComponent(birthFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(birthTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(birthFromLabel)
-                    .addComponent(birthToLabel))
+                    .addComponent(birthDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(deathLabel)
-                    .addComponent(deathFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deathTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(deathFromLabel)
-                    .addComponent(deathToLabel))
+                    .addComponent(deathDateBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(8, 8, 8)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(placeLabel)
@@ -487,8 +439,9 @@ public class SearchView extends View {
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(singleCb)
                     .addComponent(marrCb))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/multiSearch.png")), tabMulti, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabToolTip")); // NOI18N
@@ -497,11 +450,11 @@ public class SearchView extends View {
         tabTag.setLayout(tabTagLayout);
         tabTagLayout.setHorizontalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 309, Short.MAX_VALUE)
+            .addGap(0, 367, Short.MAX_VALUE)
         );
         tabTagLayout.setVerticalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 375, Short.MAX_VALUE)
+            .addGap(0, 399, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/tagSearch.png")), tabTag, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabToolTip")); // NOI18N
@@ -539,8 +492,8 @@ public class SearchView extends View {
             remember(choicePlace, oldPlaces, choicePlace.getText());
             worker.start(context.getGedcom(), max_hits, case_sensitive,
                     choiceLastname.getText(), choiceFirstname.getText(), 
-                    birthFrom.getText(), birthTo.getText(), 
-                    deathFrom.getText(), deathTo.getText(),
+                    birthDateBean, 
+                    deathDateBean,
                     choicePlace.getText(),
                     maleCb.isSelected(), femaleCb.isSelected(), unknownCb.isSelected(),
                     marrCb.isSelected(), singleCb.isSelected()
@@ -564,10 +517,10 @@ public class SearchView extends View {
             choiceLastname.setText("");
             choiceFirstname.setText("");
             choicePlace.setText("");
-            birthFrom.setText("");
-            birthTo.setText("");
-            deathFrom.setText("");
-            deathTo.setText("");
+            birthDateBean.setPropertyImpl(null);
+            birthDateBean.setFormat(PropertyDate.BETWEEN_AND);
+            deathDateBean.setPropertyImpl(null);
+            deathDateBean.setFormat(PropertyDate.BETWEEN_AND);
             maleCb.setSelected(true);
             femaleCb.setSelected(true);
             unknownCb.setSelected(true);
@@ -666,8 +619,8 @@ public class SearchView extends View {
         toolbar.add(actionStop);
         toolbar.add(actionClean);
         toolbar.add(actionClearHistory);
-        toolbar.addSeparator();
         toolbar.addGlue();
+        toolbar.addSeparator();
         toolbar.add(actionSettings);
     }
 
@@ -1098,8 +1051,6 @@ public class SearchView extends View {
     private class ResultWidget extends JList implements ListSelectionListener, ListCellRenderer {
 
         private final Results results;
-        
-        /** our text component for rendering */
         private final JTextPane text = new JTextPane();
         /** background colors */
         private final Color[] bgColors = new Color[3];
@@ -1122,11 +1073,7 @@ public class SearchView extends View {
             setCellRenderer(this);
             addListSelectionListener(this);
             text.setOpaque(true);
-                        //XXX: rework double click handler
-            // patch selecting
-            // Copied from PropertyTableWidget
             addMouseListener(new FilteredMouseAdapter() {
-
                 @Override
                 public void mouseClickedFiltered(MouseEvent e) {
                     int row = getSelectedIndex();
@@ -1139,7 +1086,6 @@ public class SearchView extends View {
                     }
                 }
             });
-
         }
 
         /**
@@ -1160,9 +1106,6 @@ public class SearchView extends View {
             return new ViewContext(context.getGedcom(), null, properties);
         }
 
-        /**
-         * we know about action delegates and will use that here if applicable
-         */
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Hit hit = (Hit) value;
@@ -1170,11 +1113,10 @@ public class SearchView extends View {
             // prepare color
             int c = isSelected ? 0 : 1 + (hit.getEntity() & 1);
             text.setBackground(bgColors[c]);
+            text.setBorder(isSelected ? createLineBorder(getSelectionBackground(), 1, false) : createEmptyBorder(2, 2, 2, 2));
 
             // show hit document (includes image and text)
             text.setDocument(hit.getDocument());
-
-            // done
             return text;
         }
 
@@ -1192,16 +1134,10 @@ public class SearchView extends View {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JTextField birthFrom;
-    private javax.swing.JLabel birthFromLabel;
+    private genj.edit.beans.DateBean birthDateBean;
     private javax.swing.JLabel birthLabel;
-    private javax.swing.JTextField birthTo;
-    private javax.swing.JLabel birthToLabel;
-    private javax.swing.JTextField deathFrom;
-    private javax.swing.JLabel deathFromLabel;
+    private genj.edit.beans.DateBean deathDateBean;
     private javax.swing.JLabel deathLabel;
-    private javax.swing.JTextField deathTo;
-    private javax.swing.JLabel deathToLabel;
     private javax.swing.JCheckBox femaleCb;
     private javax.swing.JLabel firstnameLabel;
     private javax.swing.JComboBox firstnameText;
