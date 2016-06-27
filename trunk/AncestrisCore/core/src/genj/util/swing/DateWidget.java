@@ -110,6 +110,7 @@ public class DateWidget extends JPanel {
 
     widgetCalendar = new PopupWidget();
     widgetCalendar.addItems(switches);
+    widgetCalendar.setPreferredSize(new Dimension(26,20));
 
     altDisplay = new JLabel("");
 
@@ -253,57 +254,96 @@ public class DateWidget extends JPanel {
     // done
   }
 
+    /**
+     * Get current value
+     *
+     * @return
+     */
+    public PointInTime getValue() {
+
+        Integer u = PointInTime.UNKNOWN, d = u, m = u, y = u;
+
+        // analyze day
+        d = getDay();
+        if (d == null) {
+            return null;
+        }
+
+        // analyze year
+        y = getYear();
+        if (y == null) {
+            return null;
+        }
+
+        // analyze month
+        m = getMonth();
+        if (m == null) {
+            return null;
+        }
+
+        // generate result
+        PointInTime result = new PointInTime(d, m, y, calendar);
+
+        // is it valid?
+        if ((d == u && m == u && y == u) || result.isValid()) {
+            return result;
+        }
+
+        // done
+        return null;
+    }
+
   /**
-   * Get current value
+   * Get current integer value
    */
-  public PointInTime getValue() {
-
-    int u = PointInTime.UNKNOWN, d = u, m = u, y = u;
-
-    // analyze day
-    String day = widgetDay.getText().trim();
-    if (day.length() > 0) {
-      try {
-        d = Integer.parseInt(day) - 1;
-      } catch (NumberFormatException e) {
-        return null;
+  public Integer getDay() {
+      Integer d = PointInTime.UNKNOWN;
+      String day = widgetDay.getText().trim();
+      if (day.length() > 0) {
+          try {
+              d = Integer.parseInt(day) - 1;
+          } catch (NumberFormatException e) {
+              return null;
+          }
       }
-    }
-    // analyze year
-    String year = widgetYear.getText().trim();
-    if (year.length() > 0) {
-      try {
-        y = calendar.getYear(year);
-      } catch (GedcomException e) {
-        return null;
+      return d;
+  }
+  
+  public Integer getMonth() {
+      Integer m = PointInTime.UNKNOWN;
+      String month = widgetMonth.getText();
+      if (month.length() > 0) {
+          try {
+              m = Integer.parseInt(month) - 1;
+          } catch (NumberFormatException e) {
+              String[] months = calendar.getMonths(true);
+              for (m = 0; m < months.length; m++) {
+                  if (month.equalsIgnoreCase(months[m])) {
+                      break;
+                  }
+              }
+              if (m == months.length) {
+                  return null;
+              }
+          }
       }
-    }
-    // analyze month
-    String month = widgetMonth.getText();
-    if (month.length() > 0) {
-      try {
-        m = Integer.parseInt(month) - 1;
-      } catch (NumberFormatException e) {
-        String[] months = calendar.getMonths(true);
-        for (m = 0; m < months.length; m++)
-          if (month.equalsIgnoreCase(months[m]))
-            break;
-        if (m == months.length)
-          return null;
-      }
-    }
-
-    // generate result
-    PointInTime result = new PointInTime(d, m, y, calendar);
-
-    // is it valid?
-    if ((d == u && m == u && y == u) || result.isValid())
-      return result;
-
-    // done
-    return null;
+      return m;
   }
 
+  public Integer getYear() {
+      Integer y = PointInTime.UNKNOWN;
+      String year = widgetYear.getText().trim();
+      if (year.length() > 0) {
+          try {
+              y = calendar.getYear(year);
+          } catch (GedcomException e) {
+              return null;
+          }
+      }
+      return y;
+  }
+  
+  
   /**
    * Update the status icon
    */
@@ -344,6 +384,8 @@ public class DateWidget extends JPanel {
       for (SwitchCalendar switcher : switches)
       switcher.preview();
   }
+  
+  
     private void setAltDisplay(){
 
     }
