@@ -2930,6 +2930,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addFileFilter(FileChooserBuilder.getImageFilter())
                 .addFileFilter(FileChooserBuilder.getSoundFilter())
                 .addFileFilter(FileChooserBuilder.getVideoFilter())
+                .addFileFilter(FileChooserBuilder.getPdfFilter())
                 .setAcceptAllFileFilterUsed(false)
                 .setFileHiding(true)
                 .showOpenDialog();
@@ -3197,6 +3198,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addFileFilter(FileChooserBuilder.getImageFilter())
                 .addFileFilter(FileChooserBuilder.getSoundFilter())
                 .addFileFilter(FileChooserBuilder.getVideoFilter())
+                .addFileFilter(FileChooserBuilder.getPdfFilter())
                 .setAcceptAllFileFilterUsed(false)
                 .setFileHiding(true)
                 .setDefaultPreviewer()

@@ -17,6 +17,7 @@ import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import static ancestris.util.swing.FileChooserBuilder.imgExtensions;
 import static ancestris.util.swing.FileChooserBuilder.sndExtensions;
 import static ancestris.util.swing.FileChooserBuilder.vidExtensions;
+import static ancestris.util.swing.FileChooserBuilder.pdfExtensions;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -56,6 +57,7 @@ public class Utils {
     private static BufferedImage IMG_INVALID_PHOTO = null;
     private static BufferedImage IMG_VIDEO = null;
     private static BufferedImage IMG_SOUND = null;
+    private static BufferedImage IMG_PDF = null;
     private static BufferedImage IMG_NO_SOURCE_MEDIA = null;
     private static BufferedImage IMG_JUST_TEXT_MEDIA = null;
     
@@ -89,6 +91,7 @@ public class Utils {
                 IMG_INVALID_PHOTO = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/invalid_photo.png"));
                 IMG_VIDEO = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/video.png"));
                 IMG_SOUND = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/sound.png"));
+                IMG_PDF = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/pdf.png"));
                 IMG_NO_SOURCE_MEDIA = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy_small.png"));
                 IMG_JUST_TEXT_MEDIA = ImageIO.read(clazz.getResourceAsStream("/ancestris/modules/editors/standard/images/source_text_only_small.png"));
             } catch (IOException ex) {
@@ -112,6 +115,8 @@ public class Utils {
             image = IMG_VIDEO;
         } else if (Arrays.asList(sndExtensions).contains(getExtension(file))) {
             image = IMG_SOUND;
+        } else if (Arrays.asList(pdfExtensions).contains(getExtension(file))) {
+            image = IMG_PDF;
         } else {
             image = IMG_INVALID_PHOTO;
         }
