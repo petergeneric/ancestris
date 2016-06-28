@@ -18,7 +18,7 @@ import javax.swing.table.TableRowSorter;
  */
 public class EditorTable extends JTable {
 
-    private Registry mRegistry = null;
+    private Registry registry = null;
     private String mTableId;
 
     public EditorTable() {
@@ -30,10 +30,10 @@ public class EditorTable extends JTable {
     }
 
     public void setID(Gedcom gedcom, String tableId) {
-        mRegistry = gedcom.getRegistry();
+        registry = gedcom.getRegistry();
         mTableId = tableId;
         for (int index = 0; index < columnModel.getColumnCount(); index++) {
-            int columnSize = mRegistry.get(mTableId + ".column" + index + ".size", 100);
+            int columnSize = registry.get(mTableId + ".column" + index + ".size", 100);
             columnModel.getColumn(index).setPreferredWidth(columnSize);
         }
         getColumnModel().addColumnModelListener(new EditorTableTableColumnModelListener());
@@ -72,7 +72,7 @@ public class EditorTable extends JTable {
         @Override
         public void columnMarginChanged(ChangeEvent ce) {
             for (int index = 0; index < columnModel.getColumnCount(); index++) {
-                mRegistry.put(mTableId + ".column" + index + ".size", columnModel.getColumn(index).getPreferredWidth());
+                registry.put(mTableId + ".column" + index + ".size", columnModel.getColumn(index).getPreferredWidth());
             }
         }
         @Override

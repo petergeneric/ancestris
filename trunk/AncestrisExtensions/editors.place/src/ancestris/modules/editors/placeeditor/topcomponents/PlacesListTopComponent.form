@@ -95,6 +95,9 @@
           <Connection code="new DefaultComboBoxModel(PropertyPlace.getFormat(gedcom))" type="code"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="searchPlaceComboBoxItemStateChanged"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
