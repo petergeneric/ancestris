@@ -21,6 +21,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.RowFilter;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
@@ -34,6 +36,7 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -45,6 +48,7 @@ import org.openide.windows.RetainLocation;
 public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomListener {
 
     final static Logger LOG = Logger.getLogger("ancestris.editor");
+    private genj.util.Registry registry = null;
 
     static final String ICON_PATH = "ancestris/modules/editors/placeeditor/actions/Place.png";
     private static final String PREFERRED_ID = "PlaceListTopComponent";
@@ -81,6 +85,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     public boolean createPanel() {
 
         this.gedcom = getGedcom();
+        registry = gedcom.getRegistry();
         gedcomPlaceTableModel = new GedcomPlaceTableModel(gedcom);
 
         initComponents();
@@ -109,9 +114,25 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
 
-        updateGedcomPlaceTable();
+        String memoField = registry.get("placeTableFilter", "");
+        if (!memoField.isEmpty()) {
+            searchPlaceComboBox.setSelectedItem(memoField);
+        }
+        int c = searchPlaceComboBox.getSelectedIndex();
+        
         placeTable.setID(gedcom, PlacesListTopComponent.class.getName());
         placeTableSorter = (TableRowSorter) placeTable.getRowSorter();
+        ArrayList list = new ArrayList();
+        list.add( new RowSorter.SortKey(c, SortOrder.ASCENDING) );
+        placeTableSorter.setSortKeys(list);
+        updateGedcomPlaceTable();
+        
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                filterGedcomPlaceTextField.requestFocusInWindow();
+            }
+        });
         
         return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
     }
@@ -120,7 +141,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private void updateGedcomPlaceTable() {
         gedcomPlaceTableModel.update();
         nbPlaces.setText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.nbPlaces.text", gedcomPlaceTableModel.getRowCount()));
-        ((TableRowSorter) placeTable.getRowSorter()).sort();
+        placeTableSorter.sort();
     }
 
     private void newFilter(String filter) {
@@ -176,6 +197,11 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         });
 
         searchPlaceComboBox.setModel(new DefaultComboBoxModel(PropertyPlace.getFormat(gedcom)));
+        searchPlaceComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                searchPlaceComboBoxItemStateChanged(evt);
+            }
+        });
 
         placeTable.setAutoCreateRowSorter(true);
         placeTable.setModel(gedcomPlaceTableModel);
@@ -233,6 +259,11 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         filterGedcomPlaceTextField.setText("");
         newFilter(filterGedcomPlaceTextField.getText());
     }//GEN-LAST:event_clearFilterGedcomPlaceButtonActionPerformed
+
+    private void searchPlaceComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_searchPlaceComboBoxItemStateChanged
+        registry.put("placeTableFilter", (String) searchPlaceComboBox.getSelectedItem());
+    }//GEN-LAST:event_searchPlaceComboBoxItemStateChanged
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton clearFilterGedcomPlaceButton;
     private javax.swing.JButton filterGedcomPlaceButton;
