@@ -375,9 +375,9 @@ public class WorkerMulti extends Worker {
             if (isRange(dateFound.getFormat())) {
                 return false;
             } else {
-                bDay = (dFrom == null) || (dFrom != null && d1 != null && dFrom.compareTo(d1) == 0);
-                bMonth = (mFrom == null) || (mFrom != null && m1 != null && mFrom.compareTo(m1) == 0);
-                bYear = (yFrom == null) || (yFrom != null && y1 != null && yFrom.compareTo(y1) == 0);
+                bDay = (dFrom == null) || (d1 != null && dFrom.compareTo(d1) == 0);
+                bMonth = (mFrom == null) || (m1 != null && mFrom.compareTo(m1) == 0);
+                bYear = (yFrom == null) || (y1 != null && yFrom.compareTo(y1) == 0);
                 if (d1 == null && m1 == null && y1 == null && (dFrom != null || mFrom != null || yFrom != null)) {
                     bDay = false;
                 }
