@@ -62,6 +62,7 @@ public class DateWidget extends JPanel {
   private List<SwitchCalendar> switches;
   private Calendar preferedCalendar;
   private Calendar alternateCalendar;
+  private boolean visibleCalendar = false;
 
   /** change support */
   private ChangeSupport changeSupport = new ChangeSupport(this) {
@@ -372,10 +373,12 @@ public class DateWidget extends JPanel {
       Calendar helpCalendar = null;
     if (value == null) {
       // show 'X' on disabled button
+      
       widgetCalendar.setEnabled(false);
       widgetCalendar.setDisabledIcon(MetaProperty.IMG_ERROR);
     } else {
       // show current calendar on enabled button
+      widgetCalendar.setVisible(true);    
       widgetCalendar.setEnabled(true);
       widgetCalendar.setIcon(calendar.getImage());
       if (value.getCalendar() == preferedCalendar) {
@@ -384,6 +387,7 @@ public class DateWidget extends JPanel {
           helpCalendar = preferedCalendar;
       }
     }
+    widgetCalendar.setVisible(areValidDaysMonths() && widgetYear.getText().isEmpty() ? visibleCalendar : true);  
 
       if (helpCalendar == null){
           altDisplay.setVisible(false);
@@ -404,9 +408,35 @@ public class DateWidget extends JPanel {
       switcher.preview();
   }
   
-  
-    private void setAltDisplay(){
+    private boolean areValidDaysMonths() {
+        // test day validity
+        if (!widgetDay.getText().isEmpty()) {
+            Integer d = getDay();
+            if (d == null) {
+                return false;
+            }
+            PointInTime result = new PointInTime(d, 0, 2016, calendar);
+            if (!result.isValid()) {
+                return false;
+            }
+        }
+        // test day validity
+        if (!widgetMonth.getText().isEmpty()) {
+            Integer m = getMonth();
+            if (m == null) {
+                return false;
+            }
+            PointInTime result = new PointInTime(0, m, 2016, calendar);
+            if (!result.isValid()) {
+                return false;
+            }
+        }
+        return true;
+    }
 
+  
+    public void setVisibleCalendar(boolean flag){
+        visibleCalendar = flag;
     }
 
   /**
