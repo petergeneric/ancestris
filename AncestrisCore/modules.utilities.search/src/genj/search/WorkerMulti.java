@@ -29,9 +29,6 @@ import java.util.logging.Logger;
 
 public class WorkerMulti extends Worker {
 
-    private static PointInTime minPIT = new PointInTime(1, 1, -999999);
-    private static PointInTime maxPIT = new PointInTime(1, 1, +999999);
-    
     private String lastnameText;
     private String firstnameText;
     
@@ -91,6 +88,7 @@ public class WorkerMulti extends Worker {
                         flush();
                     } catch (Throwable t) {
                         Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
+                        t.printStackTrace();
                     } finally {
                         synchronized (lock) {
                             thread = null;
@@ -152,7 +150,8 @@ public class WorkerMulti extends Worker {
     }
     
     private boolean isMatch(Indi indi) {
-        if (indi.getId().equals("I2111")) {
+        System.out.println("DEBUG****** indi ="+indi.getId());
+        if (indi.getId().equals("I15")) {
             String str= "";
         }
         return (isCommonString(indi.getLastNames(), lastnameText)
@@ -327,29 +326,6 @@ public class WorkerMulti extends Worker {
             y1 = null;
         }
         
-        // Complete ranges in case of ranges
-        if (isRange(dateFound.getFormat())) {
-            if (d1 == null) {
-                d1 = 0;
-            }
-            if (d2 == null) {
-                d2 = 31;
-            }
-            if (m1 == null) {
-                m1 = 0;
-            }
-            if (m2 == null) {
-                m2 = 12;
-            }
-            if (y1 == null) {
-                y1 = -99999999;
-            }
-            if (y2 == null) {
-                y2 = +99999999;
-            }
-        }
-        
-        
         // Results to be tested
         boolean bDay = false;
         boolean bMonth = false;
@@ -358,9 +334,9 @@ public class WorkerMulti extends Worker {
         // Search between date bits in case criteria is a date range
         if (isRange(dateBean.getFormat())) {
             if (isRange(dateFound.getFormat())) {
-                bDay = (dFrom >= d1 && dFrom <= d2) || (d1 >= dFrom && d1 <= dTo);
-                bMonth = (mFrom >= m1 && mFrom <= m2) || (m1 >= mFrom && m1 <= mTo);
-                bYear = (yFrom >= y1 && yFrom <= y2) || (y1 >= yFrom && y1 <= yTo);
+                bDay = d1 != null && d2 != null && ((dFrom >= d1 && dFrom <= d2) || (d1 >= dFrom && d1 <= dTo));
+                bMonth = m1 != null && m2 != null && ((mFrom >= m1 && mFrom <= m2) || (m1 >= mFrom && m1 <= mTo));
+                bYear = y1 != null && y2 != null && ((yFrom >= y1 && yFrom <= y2) || (y1 >= yFrom && y1 <= yTo));
             } else {
                 bDay = (d1 != null && d1 >= dFrom && d1 <= dTo);
                 bMonth = (m1 != null && m1 >= mFrom && m1 <= mTo);
