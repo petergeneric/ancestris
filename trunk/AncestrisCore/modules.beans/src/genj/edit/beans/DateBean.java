@@ -110,10 +110,6 @@ public class DateBean extends PropertyBean {
         date2.setPreferedCalendar(prefered, alternate);
     }
     
-    public void setVisibleCalendar(boolean flag) {
-        date1.setVisibleCalendar(flag);
-        date2.setVisibleCalendar(flag);
-    }
 
 
     @Override
