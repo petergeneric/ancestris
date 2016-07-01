@@ -338,6 +338,39 @@ public class WorkerMulti extends Worker {
                 bMonth = m1 != null && m2 != null && ((mFrom >= m1 && mFrom <= m2) || (m1 >= mFrom && m1 <= mTo));
                 bYear = y1 != null && y2 != null && ((yFrom >= y1 && yFrom <= y2) || (y1 >= yFrom && y1 <= yTo));
             } else {
+                // d/m/y vs a range: df/mf/yf to dt/mt/yt. Range is complete due to the completion above
+                // Case of:
+
+                // 2 -:
+                // 5/-/- to -/-/- ? ==> any date where day is 5 or after (before completion)
+                // -/5/ to -/-/- ? ==> any date where month is June or after (before completion)
+                // -/-/5 to -/-/- ? ==> any date where year is 5 of after (before completion)
+                // -/-/- to 5/-/- ? ==> ...before...
+                // -/-/- to -/5/- ? ==> ...before...
+                // -/-/- to -/-/5 ? ==> ...before...
+                // -/5/- to 5/-/- ? ==> ...month is June or after and day is before 5...
+
+                // 1 -
+                // 15/5/- to 10/6/- ? ==> any date between 15/5 and 10/6 of any year (before completion)
+                // 15/-/5 to 10/-/5 ? ==> 
+                // -/5/5 to -/5/5 ? ==> 
+                
+                // -/5/5 to -/-/- ? ==> 
+                // 5/-/5 to -/-/- ? ==> 
+                // 5/5/- to -/-/- ? ==> 
+
+                // -/5/5 to 5/-/- ? ==> 
+                // 5/-/5 to -/5/- ? ==> 
+                // 5/5/- to -/-/5 ? ==> 
+
+                // -/5/5 to 5/-/- ? ==> 
+                // 5/-/5 to -/5/- ? ==> 
+                // 5/5/- to -/-/5 ? ==> 
+
+                // no -
+                // 15/5/5 to 10/6/5 ? ==> any date between 15/5 and 10/6 of year 5 (no need for completion)
+                
+                
                 bDay = (d1 != null && d1 >= dFrom && d1 <= dTo);
                 bMonth = (m1 != null && m1 >= mFrom && m1 <= mTo);
                 bYear = (y1 != null && y1 >= yFrom && y1 <= yTo);
