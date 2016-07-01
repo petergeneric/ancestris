@@ -62,7 +62,6 @@ public class DateWidget extends JPanel {
   private List<SwitchCalendar> switches;
   private Calendar preferedCalendar;
   private Calendar alternateCalendar;
-  private boolean visibleCalendar = false;
 
   /** change support */
   private ChangeSupport changeSupport = new ChangeSupport(this) {
@@ -305,7 +304,7 @@ public class DateWidget extends JPanel {
         PointInTime result = new PointInTime(d, m, y, calendar);
 
         // is it valid?
-        if ((d == u && m == u && y == u) || result.isValid()) {
+        if ((d.equals(u) && m.equals(u) && y.equals(u)) || result.isValid()) {
             return result;
         }
 
@@ -373,7 +372,6 @@ public class DateWidget extends JPanel {
       Calendar helpCalendar = null;
     if (value == null) {
       // show 'X' on disabled button
-      
       widgetCalendar.setEnabled(false);
       widgetCalendar.setDisabledIcon(MetaProperty.IMG_ERROR);
     } else {
@@ -387,7 +385,6 @@ public class DateWidget extends JPanel {
           helpCalendar = preferedCalendar;
       }
     }
-    widgetCalendar.setVisible(areValidDaysMonths() && widgetYear.getText().isEmpty() ? visibleCalendar : true);  
 
       if (helpCalendar == null){
           altDisplay.setVisible(false);
@@ -435,9 +432,6 @@ public class DateWidget extends JPanel {
     }
 
   
-    public void setVisibleCalendar(boolean flag){
-        visibleCalendar = flag;
-    }
 
   /**
    * Return the maximum size this component should be sized to
