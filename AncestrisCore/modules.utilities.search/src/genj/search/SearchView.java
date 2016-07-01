@@ -170,8 +170,6 @@ public class SearchView extends View {
         
         birthDateBean.addActionListener(aclick);
         deathDateBean.addActionListener(aclick);
-        birthDateBean.setVisibleCalendar(false);
-        deathDateBean.setVisibleCalendar(false);
         
         // setup worker
         worker1 = new WorkerMulti((WorkerListener) Spin.over(new WorkerListener() {
