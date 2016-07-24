@@ -279,6 +279,15 @@ public class DateWidget extends JPanel {
      * @return
      */
     public PointInTime getValue() {
+        return getValue(true);
+    }
+    
+    /**
+     * Get current value
+     *
+     * @return
+     */
+    public PointInTime getValue(boolean forceValid) {
 
         Integer u = PointInTime.UNKNOWN, d = u, m = u, y = u;
 
@@ -304,7 +313,7 @@ public class DateWidget extends JPanel {
         PointInTime result = new PointInTime(d, m, y, calendar);
 
         // is it valid?
-        if ((d.equals(u) && m.equals(u) && y.equals(u)) || result.isValid()) {
+        if ((d.equals(u) && m.equals(u) && y.equals(u)) || result.isValid() || !forceValid) {
             return result;
         }
 
