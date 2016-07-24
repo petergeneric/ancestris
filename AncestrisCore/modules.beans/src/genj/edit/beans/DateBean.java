@@ -158,29 +158,14 @@ public class DateBean extends PropertyBean {
         return format;
     }
 
-    public Integer getFromDay() {
-        return date1.getDay();
+    public PointInTime getFromPIT() {
+        return date1.getValue(false);
     }
 
-    public Integer getFromMonth() {
-        return date1.getMonth();
+    public PointInTime getToPIT() {
+        return date2.getValue(false);
     }
 
-    public Integer getFromYear() {
-        return date1.getYear();
-    }
-
-    public Integer getToDay() {
-        return date2.getDay();
-    }
-
-    public Integer getToMonth() {
-        return date2.getMonth();
-    }
-
-    public Integer getToYear() {
-        return date2.getYear();
-    }
 
     /**
      * Setup format
