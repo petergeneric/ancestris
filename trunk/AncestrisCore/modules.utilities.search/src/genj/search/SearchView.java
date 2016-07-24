@@ -324,6 +324,7 @@ public class SearchView extends View {
         unknownCb = new javax.swing.JCheckBox();
         marrCb = new javax.swing.JCheckBox();
         singleCb = new javax.swing.JCheckBox();
+        allButCb = new javax.swing.JCheckBox();
         result1Panel = new javax.swing.JPanel();
         tabTag = new javax.swing.JPanel();
 
@@ -357,6 +358,8 @@ public class SearchView extends View {
         singleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(singleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.singleCb.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(allButCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.allButCb.text")); // NOI18N
+
         javax.swing.GroupLayout result1PanelLayout = new javax.swing.GroupLayout(result1Panel);
         result1Panel.setLayout(result1PanelLayout);
         result1PanelLayout.setHorizontalGroup(
@@ -389,21 +392,21 @@ public class SearchView extends View {
                             .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(placetext, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(deathDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(deathDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
                             .addComponent(birthDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(tabMultiLayout.createSequentialGroup()
-                                .addComponent(marrCb)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(singleCb))
-                            .addGroup(tabMultiLayout.createSequentialGroup()
-                                .addComponent(maleCb)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(femaleCb)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(unknownCb)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(maleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(femaleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(unknownCb)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(tabMultiLayout.createSequentialGroup()
+                        .addComponent(marrCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(singleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(allButCb)))
                 .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
@@ -438,7 +441,8 @@ public class SearchView extends View {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(singleCb)
-                    .addComponent(marrCb))
+                    .addComponent(marrCb)
+                    .addComponent(allButCb))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -496,7 +500,7 @@ public class SearchView extends View {
                     deathDateBean,
                     choicePlace.getText(),
                     maleCb.isSelected(), femaleCb.isSelected(), unknownCb.isSelected(),
-                    marrCb.isSelected(), singleCb.isSelected()
+                    marrCb.isSelected(), singleCb.isSelected(), allButCb.isSelected()
             );
         } else if (worker instanceof WorkerTag) {
             String value = choiceValue.getText();
@@ -1135,6 +1139,7 @@ public class SearchView extends View {
     
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox allButCb;
     private genj.edit.beans.DateBean birthDateBean;
     private javax.swing.JLabel birthLabel;
     private genj.edit.beans.DateBean deathDateBean;
