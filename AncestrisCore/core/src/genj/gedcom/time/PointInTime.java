@@ -265,7 +265,7 @@ public class PointInTime implements Comparable<PointInTime> {
 //    set(cal.toPointInTime(jd));
   }  
 
-  PointInTime convertIncomplete(Calendar cal) throws GedcomException{
+  public PointInTime convertIncomplete(Calendar cal) throws GedcomException{
       PointInTime pt;
       if (day == UNKNOWN)
           if (month  == UNKNOWN){
