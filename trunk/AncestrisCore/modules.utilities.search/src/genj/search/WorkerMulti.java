@@ -147,10 +147,9 @@ public class WorkerMulti extends Worker {
     }
     
     private boolean isMatch(Indi indi) {
-//        System.out.println("DEBUG****** indi ="+indi.getId());
-        if (indi.getId().equals("I1242")) {
-            String str= "";
-        }
+//        if (indi.getId().equals("I1242")) {
+//            String str= "";
+//        }
         return (isCommonString(indi.getLastNames(), lastnameText)
                 && isCommonString(indi.getFirstNames(), firstnameText)
                 && isCommonDate(indi.getBirthDate(), birthDateBean)
@@ -331,8 +330,8 @@ public class WorkerMulti extends Worker {
      *               +-1     |  1    C-A   C-B   C-E   C-C   C-D   C-G   C-I 
      *                       |
      * 
-     *  Test spot               X     X     X     X     X     X     .     .
-     *       range              X     X     X     X     X     X     .     .
+     *  Test spot               X     X     X     X     X     X     X     X
+     *       range              X     X     X     X     X     X     X     X
      */
     private boolean match(PointInTime pit, int matchType, PointInTime pitRef) {
         int N = PointInTime.UNKNOWN;
