@@ -237,6 +237,15 @@ public class EventWrapper {
      */
     public void calcAge(Indi indi, Property property) {
         
+        // Get stored age if available
+        Property pReadAge = property.getProperty("AGE");
+        String readAge = null;
+        String foundAge = NbBundle.getMessage(getClass(), "Found_Age");
+        if (pReadAge != null) {
+            PropertyAge pAge = (PropertyAge) pReadAge;
+            readAge = pAge.getDisplayValue();
+        }
+        
         // Get birth date
         birthDate = indi.getBirthDate();
         
@@ -274,7 +283,7 @@ public class EventWrapper {
         eventAge = df.format(d);
         
         // age
-        age = "(" + PropertyAge.getLabelForAge() + ": " + (d<0 ? "-" : "") + delta.toString() + ")";
+        age = "(" + PropertyAge.getLabelForAge() + ": " + (d<0 ? "-" : "") + delta.toString() + (readAge != null ? " - " + foundAge + ": " + readAge : "") +")";
     }
     
     
