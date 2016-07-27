@@ -511,16 +511,20 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
             AssoWrapper asso = (AssoWrapper) assoWithSet.get(row);
             if (asso != null) {
                 final Entity ent = asso.assoIndi;
-                JPopupMenu menu = new JPopupMenu();
-                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "AssoManager.ShowEntity", ent.toString(true)));
-                menu.add(menuItem);
-                menuItem.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent ae) {
-                        cancelButton.doClick();
-                        SelectionDispatcher.fireSelection(new Context(ent));
+                if (ent != null) {
+                    JPopupMenu menu = new JPopupMenu();
+                    JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), hasChanged ? "AssoManager.SaveFirst" : "AssoManager.ShowEntity", ent.toString(true)));
+                    menu.add(menuItem);
+                    if (!hasChanged) {
+                        menuItem.addActionListener(new ActionListener() {
+                            public void actionPerformed(ActionEvent ae) {
+                                cancelButton.doClick();
+                                SelectionDispatcher.fireSelection(new Context(ent));
+                            }
+                        });
                     }
-                });
-                menu.show(assoWithTable, evt.getX(), evt.getY());
+                    menu.show(assoWithTable, evt.getX(), evt.getY());
+                }
             }
         }
     }//GEN-LAST:event_assoWithTableMousePressed
@@ -535,14 +539,16 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
                     return;
                 }
                 JPopupMenu menu = new JPopupMenu();
-                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "AssoManager.ShowEntity", targetProperty.getEntity().toString(true)));
+                JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), hasChanged ? "AssoManager.SaveFirst" : "AssoManager.ShowEntity", targetProperty.getEntity().toString(true)));
                 menu.add(menuItem);
-                menuItem.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent ae) {
-                        cancelButton.doClick();
-                        SelectionDispatcher.fireSelection(new Context(targetProperty));
-                    }
-                });
+                if (!hasChanged) {
+                    menuItem.addActionListener(new ActionListener() {
+                        public void actionPerformed(ActionEvent ae) {
+                            cancelButton.doClick();
+                            SelectionDispatcher.fireSelection(new Context(targetProperty));
+                        }
+                    });
+                }
                 menu.show(assoOfList, evt.getX(), evt.getY());
             }
         }

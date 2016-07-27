@@ -121,8 +121,6 @@ public class AssoWrapper {
 
     public String getOccupation(Indi indi, EventWrapper event) {
         String occu = "";
-        PropertyDate pDate = event.date;
-        PointInTime sourcePIT = pDate != null ? pDate.getStart() : null;
         
         Property props[] = indi.getProperties("OCCU");
         
@@ -134,29 +132,37 @@ public class AssoWrapper {
             return props[0].getDisplayValue();
         }
         
-        // Select first valid occupation at the date of the event (latest but before sourcePIT), if any
+        // Set default value in case nothing better found later
         if (props.length > 1) {
-            occu = props[0].getDisplayValue(); // set default value in case nothing better found later
+            occu = props[0].getDisplayValue(); 
         }
-        PointInTime latestPIT = null;
-        for (Property prop : props) {
-            Property date = prop.getProperty("DATE");
-            if (date != null) {
-                PropertyDate pdate = (PropertyDate) date;
-                PointInTime pit = pdate.getEnd();
-                if (!pit.isValid()) {
-                    pit = pdate.getStart();
-                }
-                if (latestPIT == null || (pit.compareTo(latestPIT) > 0 && (pit.compareTo(sourcePIT) <= 0))) {
-                    latestPIT = pit;
-                    occu = prop.getDisplayValue();
-                }
-            } else {
-                if (latestPIT == null) {
-                    occu = prop.getDisplayValue();
+
+        // Select first valid occupation at the date of the event (latest but before sourcePIT), if any
+        if (event != null) {
+            PropertyDate pDate = event.date;
+            PointInTime sourcePIT = pDate != null ? pDate.getStart() : null;
+
+            PointInTime latestPIT = null;
+            for (Property prop : props) {
+                Property date = prop.getProperty("DATE");
+                if (date != null) {
+                    PropertyDate pdate = (PropertyDate) date;
+                    PointInTime pit = pdate.getEnd();
+                    if (!pit.isValid()) {
+                        pit = pdate.getStart();
+                    }
+                    if (latestPIT == null || (pit.compareTo(latestPIT) > 0 && (pit.compareTo(sourcePIT) <= 0))) {
+                        latestPIT = pit;
+                        occu = prop.getDisplayValue();
+                    }
+                } else {
+                    if (latestPIT == null) {
+                        occu = prop.getDisplayValue();
+                    }
                 }
             }
         }
+        
         return occu;
     }
 
@@ -358,9 +364,11 @@ public class AssoWrapper {
             samePropFound.setValue(newValue);
             putProperty(samePropFound, "DATE", newDate);
         } else {
-            Property tagProp = property.addProperty(tag, newValue);
-            if (!newDate.isEmpty()) {
-                tagProp.addProperty("DATE", newDate);
+            if (!newValue.isEmpty()) {
+                Property tagProp = property.addProperty(tag, newValue);
+                if (!newDate.isEmpty()) {
+                    tagProp.addProperty("DATE", newDate);
+                }
             }
         }
         
