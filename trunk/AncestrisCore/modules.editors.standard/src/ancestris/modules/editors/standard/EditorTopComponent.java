@@ -268,13 +268,6 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
 
     
     private void commit(boolean ask) {
-        // we only consider committing IF we're still in a visible top level ancestor (window) - otherwise we assume
-        // that the containing window was closed and we're not going to throw a dialog out there or do a change
-        // behind the covers - we really would need a about-to-close hook for contained components here :(
-        if (!isOpened()) {
-            return;
-        }
-
         // Is busy committing ?
         if (isBusyCommitting) {
             return;
@@ -282,6 +275,11 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
 
         // Changes?
         if (confirmPanel == null || !confirmPanel.hasChanged()) {
+            return;
+        }
+
+        // We only consider committing IF we're still in a visible top level ancestor (window)
+        if (!isOpen) {
             return;
         }
 
@@ -320,10 +318,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
 
     
     private void cancel() {
-        // we only consider cancelling IF we're still in a visible top level ancestor (window) - otherwise we assume
-        // that the containing window was closed and we're not going to throw a dialog out there or do a change
-        // behind the covers - we really would need a about-to-close hook for contained components here :(
-        if (!isOpened()) {
+        // We only consider cancelling IF we're still in a visible top level ancestor (window)
+        if (!isOpen) {
             return;
         }
 
