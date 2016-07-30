@@ -106,6 +106,8 @@ public class AncestrisTopComponent extends TopComponent
      */
     private final ExplorerManager manager;
     private Lookup lookup;
+    
+    public boolean isOpen = false; // method isOpened() cannot be called from withing a thread that is not AWT, so define this flag instead.
 
     public AncestrisTopComponent() {
         super();
@@ -218,6 +220,7 @@ public class AncestrisTopComponent extends TopComponent
             }
         }
         super.open();
+        isOpen = true;
     }
 
     @Override
@@ -360,6 +363,7 @@ public class AncestrisTopComponent extends TopComponent
     public void componentClosed() {
         persistMode();
         AncestrisPlugin.unregister(this);
+        isOpen = false;
     }
 
     // code pour forcer la persistence des mode (place ici aussi car ne fonctionne pas tjs dans close
