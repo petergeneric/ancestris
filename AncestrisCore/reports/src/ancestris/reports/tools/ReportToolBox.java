@@ -151,103 +151,100 @@ public class ReportToolBox extends Report {
   } // end_of_start
 
   
-  /**
-  * ### 1 ### Re-Generation of Ids in Gedcom file
-  */
-  private boolean toolSettingIDs(Gedcom gedcom, Object object) {
+    /**
+     * ### 1 ### Re-Generation of Ids in Gedcom file
+     */
+    private boolean toolSettingIDs(Gedcom gedcom, Object object) {
     // Logic:
-    //    Get all IDs for INDI, FAM, NOTE, SOUR, SUBM, REPO and assign new ones from 1
-    //    (use temporary ids to avoid duplicates and locks)
-    // Get the options
-    final SettingIDs settings = (SettingIDs)object;
-    String entityTypes[] = {
-       "all", 
-       Gedcom.INDI, 
-       Gedcom.FAM, 
-       Gedcom.NOTE, 
-       Gedcom.SOUR,   
-       Gedcom.SUBM,   
-       Gedcom.REPO   
-       };
-  
-    int pad = 1;
-    if (settings.paddingId >0 && settings.paddingId < 11) 
-       pad = settings.paddingId;
-    final DecimalFormat formatNbrs = new DecimalFormat("000000000000".substring(0,pad));
-   
-    /* use the following in Java 1.5
-    String formatNbrs = "%1d";
-    if (settings.paddingId >0 && settings.paddingId < 11) 
-       formatNbrs = "%0"+String.valueOf(settings.paddingId)+"d";
-      */
-    
-    // Loop over all entity types
-    for (int i = 0; i < entityTypes.length; i++) { 
-       if ((i == 0) || ((settings.entToDo != 0) && (settings.entToDo != i))) continue;
-       Collection<? extends Entity> entities = gedcom.getEntities(entityTypes[i]);
-       final String entityIDPrefix = gedcom.getNextAvailableID(entityTypes[i]).substring(0,1);
-       final Map<String,String> listID = new TreeMap<String,String>(); // sorted mapping list
-       String oldID, newID = "";
-       int iCounter = 0;
-       String key, ID;
-       
-       // First loop to get list of ids and sort on value of entity
-       log.write(translate("Entity")+" "+entityTypes[i]+"...");
-       log.write("("+translate("MustPrefix")+" '"+entityIDPrefix+"')");
-       for (Entity entity: entities) {
-         ID = entity.getId();
-         key = entity.toString();
-         listID.put(key, ID);
-         } // end loop
-       log.write(translate("Size")+" "+listID.size());
+        //    Get all IDs for INDI, FAM, NOTE, SOUR, SUBM, REPO and assign new ones from 1
+        //    (use temporary ids to avoid duplicates and locks)
+        // Get the options
+        final SettingIDs settings = (SettingIDs) object;
+        String entityTypes[] = {
+            "all",
+            Gedcom.INDI,
+            Gedcom.FAM,
+            Gedcom.NOTE,
+            Gedcom.SOUR,
+            Gedcom.SUBM,
+            Gedcom.REPO
+        };
 
-       // Second loop to give temp ids in order to avoid duplicates
-       try {
-       gedcom.doUnitOfWork(new UnitOfWork() { public void perform(Gedcom gedcom) throws GedcomException { 
+        int pad = 1;
+        if (settings.paddingId > 0 && settings.paddingId < 11) {
+            pad = settings.paddingId;
+        }
+        final DecimalFormat formatNbrs = new DecimalFormat("000000000000".substring(0, pad));
 
-       int iCounter = 0;
-       for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
-         String key = (String)it.next();
-         String oldID = listID.get(key);
-         Entity entity = gedcom.getEntity(oldID);
-         iCounter++;       
-         log.write(oldID+" --> "+entityIDPrefix+settings.prefixID+formatNbrs.format(iCounter)+settings.suffixID, false);
-         String newID = entityIDPrefix+settings.prefixID+"XYZAWZ"+iCounter+settings.suffixID;  // Just a weird string ensuring no duplicates with existing ids
-         try {
-            entity.setId(newID); 
-            listID.put(key, newID);
-            } catch (GedcomException e) {
-            log.write(e.getMessage());
+        // Loop over all entity types
+        for (int i = 0; i < entityTypes.length; i++) {
+            if ((i == 0) || ((settings.entToDo != 0) && (settings.entToDo != i))) {
+                continue;
             }
-         } // proceed with other entity
+            Collection<? extends Entity> entities = gedcom.getEntities(entityTypes[i]);
+            final String entityIDPrefix = gedcom.getNextAvailableID(entityTypes[i]).substring(0, 1);
+            final Map<String, String> listID = new TreeMap<String, String>(); // sorted mapping list
+            String key, ID;
 
-       // Third loop to give final ids
-       iCounter = 0;
-       for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
-         String key = (String)it.next();
-         String oldID = listID.get(key);
-         Entity entity = gedcom.getEntity(oldID);
-         iCounter++;
-         String newID = entityIDPrefix+settings.prefixID+formatNbrs.format(iCounter)+settings.suffixID;
-         try {
-            entity.setId(newID); 
+            // First loop to get list of ids and sort on value of entity
+            log.write(translate("Entity") + " " + entityTypes[i] + "...");
+            log.write("(" + translate("MustPrefix") + " '" + entityIDPrefix + "')");
+            for (Entity entity : entities) {
+                ID = entity.getId();
+                key = entity.toString();
+                listID.put(key, ID);
+            } // end loop
+            log.write(translate("Size") + " " + listID.size());
+
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+                    public void perform(Gedcom gedcom) throws GedcomException {
+
+                        // Second loop to give temp ids in order to avoid duplicates
+                        int iCounter = 0;
+                        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
+                            String key = (String) it.next();
+                            String oldID = listID.get(key);
+                            Entity entity = gedcom.getEntity(oldID);
+                            iCounter++;
+                            log.write(oldID + " --> " + entityIDPrefix + settings.prefixID + formatNbrs.format(iCounter) + settings.suffixID, false);
+                            String newID = entityIDPrefix + settings.prefixID + "XYZAWZ" + iCounter + settings.suffixID;  // Just a weird string ensuring no duplicates with existing ids
+                            try {
+                                entity.setId(newID);
+                                listID.put(key, newID);
+                            } catch (GedcomException e) {
+                                log.write(e.getMessage());
+                            }
+                        } // proceed with other entity
+
+                        // Third loop to give final ids
+                        iCounter = 0;
+                        for (Iterator it = listID.keySet().iterator(); it.hasNext();) {
+                            String key = (String) it.next();
+                            String oldID = listID.get(key);
+                            Entity entity = gedcom.getEntity(oldID);
+                            iCounter++;
+                            String newID = entityIDPrefix + settings.prefixID + formatNbrs.format(iCounter) + settings.suffixID;
+                            try {
+                                entity.setId(newID);
+                            } catch (GedcomException e) {
+                                log.write(e.getMessage());
+                            }
+                        } // proceed with other entity
+
+                    }
+                }); // end of doUnitOfWork
             } catch (GedcomException e) {
-            log.write(e.getMessage());
+                log.write(e.getMessage());
             }
-         } // proceed with other entity
 
-       } }); // end of doUnitOfWork
-       } catch (GedcomException e) {
-       log.write(e.getMessage());
-       }
+        } // proceed with other entity type
 
-       } // proceed with other entity type
+        log.write(translate("EntityIdDone"));
 
-    log.write(translate("EntityIdDone"));
-
-    return true;  
-    // done
-  }
+        return true;
+        // done
+    }
 
   /**
   * ### 2 + 3 ### Re-generation of sosa numbers to individuals of the gedcom
