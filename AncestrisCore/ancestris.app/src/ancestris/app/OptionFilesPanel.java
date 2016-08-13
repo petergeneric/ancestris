@@ -69,6 +69,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         jLabel14 = new javax.swing.JLabel();
         logLevel = new javax.swing.JComboBox();
+        jcbOpenNothing = new javax.swing.JCheckBox();
         jcbAlwaysOpen = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
         nbBackups = new javax.swing.JSpinner();
@@ -118,6 +119,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jcbOpenNothing, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenNothing.text")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jcbAlwaysOpen, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbAlwaysOpen.text")); // NOI18N
         jcbAlwaysOpen.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenOnlyEmpty.tooltip")); // NOI18N
 
@@ -130,42 +133,54 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(12, 12, 12)
+                        .addComponent(jLabel3)))
+                .addGap(37, 37, 37))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
+                        .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(jLabel5)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jTextField3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton3))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel12)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel13)
-                                            .addComponent(jLabel14)
-                                            .addComponent(jLabel4))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(nbBackups)
-                                            .addComponent(logLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(24, 24, 24)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(12, 12, 12)
-                                        .addComponent(jcbAlwaysOpen))
-                                    .addComponent(jTextField3)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE))
+                                    .addComponent(jLabel13)
+                                    .addComponent(jLabel14)
+                                    .addComponent(jLabel4))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jButton2)
-                                    .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING))))))
-                .addGap(30, 30, 30))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(nbBackups)
+                                    .addComponent(logLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addGap(24, 24, 24)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addGap(30, 30, 30))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jcbOpenNothing)
+                            .addComponent(jcbAlwaysOpen))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -180,7 +195,9 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                     .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jcbAlwaysOpen)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jcbOpenNothing)
+                .addGap(12, 12, 12)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -200,7 +217,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(nbBackups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(25, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -220,9 +237,9 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
 
         setGedcomFile(ancestris.core.CoreOptions.getInstance().getDefaultGedcom());
+        jcbOpenNothing.setSelected(ancestris.core.CoreOptions.getInstance().getOpenNothingAtStartup());
         jcbAlwaysOpen.setSelected(ancestris.core.CoreOptions.getInstance().getAlwaysOpenDefault());
         setReportDir(gedcomPrefs.get("reportDir", System.getProperty("user.home")));
-
 
         jSpinner1.setValue(ancestris.app.AppOptions.getMaxLogSizeKB());
         setLogLevel(Registry.get(App.class).get("logLevel", "INFO"));
@@ -233,6 +250,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
 
         ancestris.core.CoreOptions.getInstance().setDefaultGedcom(getGedcomFile());
+        ancestris.core.CoreOptions.getInstance().setOpenNothingAtStartup(jcbOpenNothing.isSelected());
         ancestris.core.CoreOptions.getInstance().setAlwaysOpenDefault(jcbAlwaysOpen.isSelected());
         gedcomPrefs.put("reportDir", getReportDir());
         ancestris.app.AppOptions.setMaxLogSizeKB(Integer.valueOf(jSpinner1.getValue().toString()));
@@ -269,6 +287,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JTextField jTextField2;
     private javax.swing.JTextField jTextField3;
     private javax.swing.JCheckBox jcbAlwaysOpen;
+    private javax.swing.JCheckBox jcbOpenNothing;
     private javax.swing.JComboBox logLevel;
     private javax.swing.JSpinner nbBackups;
     // End of variables declaration//GEN-END:variables

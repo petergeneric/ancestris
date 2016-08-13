@@ -239,6 +239,7 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
+                <package>ancestris</package>
                 <package>ancestris.app</package>
                 <package>ancestris.explorer</package>
                 <package>ancestris.util</package>

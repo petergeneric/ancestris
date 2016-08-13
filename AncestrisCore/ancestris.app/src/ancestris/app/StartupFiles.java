@@ -24,7 +24,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.URLMapper;
 import org.openide.util.Lookup;
 
@@ -154,19 +153,21 @@ public abstract class StartupFiles {
         public List<FileObject> getAll() {
             List<String> list = REGISTRY.get(KEY, new ArrayList<String>());
             List<FileObject> result = new ArrayList<FileObject>(5);
-            for (String file : list) {
-                try {
-                    result.add(URLMapper.findFileObject(new URL(file)));
-                } catch (MalformedURLException ex) {
+            if (!ancestris.core.CoreOptions.getInstance().getOpenNothingAtStartup()) {
+                for (String file : list) {
+                    try {
+                        result.add(URLMapper.findFileObject(new URL(file)));
+                    } catch (MalformedURLException ex) {
+                    }
                 }
-            }
-            // ne pas ouvrir si onlyempty est positionne
-            if (result == null || result.isEmpty() || ancestris.core.CoreOptions.getInstance().getAlwaysOpenDefault()) {
-                URL defaultURL = ancestris.core.CoreOptions.getInstance().getDefaultGedcom();
-                if (defaultURL != null) {
-                    FileObject defaultGedcom = URLMapper.findFileObject(defaultURL);
-                    if (defaultGedcom!=null && !result.contains(defaultGedcom)) {
-                        result.add(defaultGedcom);
+                // ne pas ouvrir si onlyempty est positionne
+                if (result == null || result.isEmpty() || ancestris.core.CoreOptions.getInstance().getAlwaysOpenDefault()) {
+                    URL defaultURL = ancestris.core.CoreOptions.getInstance().getDefaultGedcom();
+                    if (defaultURL != null) {
+                        FileObject defaultGedcom = URLMapper.findFileObject(defaultURL);
+                        if (defaultGedcom != null && !result.contains(defaultGedcom)) {
+                            result.add(defaultGedcom);
+                        }
                     }
                 }
             }

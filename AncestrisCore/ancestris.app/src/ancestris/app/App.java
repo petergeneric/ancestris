@@ -36,7 +36,6 @@ import javax.swing.SwingUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
-import org.openide.util.Lookup;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -94,6 +93,7 @@ public class App {
     }
 
     public static void close() {
+        EnvironmentChecker.logOff();
         // persist options
         OptionProvider.persistAll();
         // Store registry
@@ -103,6 +103,7 @@ public class App {
         // done
 
         LOG.info("/Shutdown");
+        LOG.info("==================>     A N C E S T R I S      is      closed      <======================================\n\n");
 
     }
 
@@ -119,24 +120,24 @@ public class App {
             // Catch anything that might happen
             try {
 
-                // prepare our master log and own LogManager for Ancestris
+                // Prepare our master log and own LogManager for Ancestris
                 LOG = Logger.getLogger("ancestris");
 
-                // create our home directory
+                // Create our home directory
                 File home = new File(EnvironmentChecker.getProperty("user.home.ancestris", null, "determining home directory"));
                 home.mkdirs();
                 if (!home.exists() || !home.isDirectory()) {
                     throw new IOException("Can't initialize home directoy " + home);
                 }
 
-                // prepare some basic logging for now
+                // Prepare some basic logging for now
                 Formatter formatter = new LogFormatter();
                 setLogLevel("INFO");
 
                 System.setOut(new PrintStream(new LogOutputStream(Level.INFO, "System", "out")));
                 System.setErr(new PrintStream(new LogOutputStream(Level.WARNING, "System", "err")));
 
-                // initialize options first (creates a registry view within the above registry only containing the options)
+                // Initialize options first (creates a registry view within the above registry only containing the options)
                 OptionProvider.getAllOptions();
 
                 // Setup File Logging and check environment
@@ -148,7 +149,7 @@ public class App {
                 Logger.getLogger("ancestris").addHandler(handler);
 
                 // Log is up
-                LOG.info("\n\n==================8<================================================================");
+                LOG.info("\n\n==================>     A N C E S T R I S      is      starting      <======================================");
                 LOG.info("Startup");
 
                 // Priorite sur le parametre passe en ligne de commande
@@ -159,15 +160,11 @@ public class App {
                 }
 
                 // Startup Information
-                LOG.info("Version = " + Lookup.getDefault().lookup(Version.class).getBuildString());
-                LOG.info("Date = " + new Date());
                 EnvironmentChecker.log();
 
-                
-                //UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
-                
+                // Look and Feel, only for local development & testing : do not let code to be executed in the uploaded version
                 //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                
+                //UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
                 //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
                 
                 // Patch up Ancestris menu for Mac if applicable
@@ -181,13 +178,14 @@ public class App {
                 }
                 
 
-                // check VM version
+                // Check VM version
                 //TODO: demander une version >1.6 dans NB
-                // setup control center
+                
+                // Setup control center
                 LOG.info("Launching control center...");
                 center = new ControlCenter();
                 
-                // done
+                // Done
                 LOG.info("/Startup");
                 LOG.info("   ");
 
