@@ -92,6 +92,14 @@ public class CoreOptions {
         appOptions.put("alwaysOpenDefault", alwaysOpen);
     }
 
+    public boolean getOpenNothingAtStartup() {
+        return appOptions.get("openNothingAtStartup", false);
+    }
+
+    public void setOpenNothingAtStartup(boolean openNothingAtStartup) {
+        appOptions.put("openNothingAtStartup", openNothingAtStartup);
+    }
+
     /**
      * Show/Hide hidden files in open file dialog box.
      * Defaults to "Don't show hidden files"
