@@ -65,8 +65,8 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
-import javax.swing.JToolBar;
 import javax.swing.ToolTipManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -179,14 +179,14 @@ public class TimelineView extends View {
         scrollContent = new ScrollPaneWidget(content);
         scrollContent.setViewportBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         scrollContent.setBackground(Color.WHITE);
-//    scrollContent = new ScrollPaneWidget(new ViewPortAdapter(content));
+        //scrollContent = new ScrollPaneWidget(new ViewPortAdapter(content));
         scrollContent.setColumnHeaderView(new ViewPortAdapter(ruler));
         scrollContent.getViewport().addChangeListener(new ChangeListener() {
 
             @Override
             public void stateChanged(ChangeEvent e) {
                 // easy : translation and remember
-                int x = scrollContent.getViewport().getViewPosition().x + scrollContent.getViewport().getSize().width / 2;
+                double x = scrollContent.getViewport().getViewPosition().x + scrollContent.getViewport().getSize().width / 2;
                 centeredYear = pixel2year(x);
             }
         });
@@ -352,6 +352,20 @@ public class TimelineView extends View {
     }
 
     /**
+     * Set tooltipText for slider and scrollbar
+     */
+    public void setTooltipText() {
+        double cmPY = Math.floor(cmPerYear*100) / 100;
+        sliderCmPerYear.setToolTipText(cmPY + " " + resources.getString("view.peryear.tip") + " ("+sliderCmPerYear.getValue()+"%)");
+
+        JScrollBar sb = scrollContent.getHorizontalScrollBar();
+        String minYear = String.valueOf((int)pixel2year(sb.getMinimum()));
+        String year = String.valueOf((int) pixel2year(sb.getValue()) + 1);
+        String maxYear = String.valueOf((int)pixel2year(sb.getMaximum()));
+        sb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
+    }
+    
+    /**
      * @see genj.view.ToolBarSupport#populate(JToolBar)
      */
     @Override
@@ -359,9 +373,8 @@ public class TimelineView extends View {
 
         // create a slider for cmPerYear
         int value = (int) (Math.log((cmPerYear - MIN_CM_PER_YEAR) / (MAX_CM_PER_YEAR - MIN_CM_PER_YEAR) * Math.exp(10)) * 10);
-
         sliderCmPerYear = new SliderWidget(1, 100, Math.min(100, Math.max(1, value)));
-        sliderCmPerYear.setToolTipText(resources.getString("view.peryear.tip"));
+        setTooltipText();
         sliderCmPerYear.addChangeListener(new ChangeCmPerYear());
         sliderCmPerYear.setOpaque(false);
 
@@ -408,7 +421,7 @@ public class TimelineView extends View {
     /**
      * Calculates a year from given pixel position
      */
-    protected double pixel2year(int x) {
+    protected double pixel2year(double x) {
         return model.min + x / (DPC.getX() * cmPerYear);
     }
 
@@ -493,6 +506,8 @@ public class TimelineView extends View {
             graphics.translate(-model.min, 0);
             // let ruler do its things      
             rulerRenderer.render(graphics, model);
+            // Set tooltips
+            setTooltipText();
             // done
         }
 
@@ -502,7 +517,7 @@ public class TimelineView extends View {
         @Override
         public Dimension getPreferredSize() {
             return new Dimension(
-                    content.getPreferredSize().width,
+                    (int) ((model.max - model.min) * DPC.getX() * cmPerYear),   // content.getPreferredSize().width,
                     getFontMetrics(getFont()).getHeight() + 1);
         }
 
@@ -679,12 +694,13 @@ public class TimelineView extends View {
         public void stateChanged(ChangeEvent e) {
             double center = centeredYear;
             // get the new value
-            cmPerYear = MIN_CM_PER_YEAR
-                    + Math.exp(sliderCmPerYear.getValue() * 0.1) / Math.exp(10) * (MAX_CM_PER_YEAR - MIN_CM_PER_YEAR);
+            cmPerYear = MIN_CM_PER_YEAR + Math.exp(sliderCmPerYear.getValue() * 0.1) / Math.exp(10) * (MAX_CM_PER_YEAR - MIN_CM_PER_YEAR);
             // update model
             model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear);
             // re-center
             scroll2year(center);
+            // update tootip
+            setTooltipText();
             // done
         }
     } //ChangeCmPerYear
