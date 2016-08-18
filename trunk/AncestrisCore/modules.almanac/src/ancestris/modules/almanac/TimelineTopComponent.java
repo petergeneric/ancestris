@@ -1,3 +1,10 @@
+/**
+ * Ancestris
+ *
+ * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2016 Frederic Lapeyre <frederic@ancestris.org>
+ * 
+ */
 /*
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
