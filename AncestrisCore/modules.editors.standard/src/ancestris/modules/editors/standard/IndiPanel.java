@@ -3298,7 +3298,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Empty list
         cbModel.removeAllElements();
         
-        // Build new list with only event relatedd associations
+        // Build new list with only event related associations
         EventWrapper event = getCurrentEvent();
         for (AssoWrapper asso : assoSet) {
             if (event.isGeneral || asso.targetEvent == event) {
@@ -3306,7 +3306,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
         }
         
-        // Set combo bow list
+        // Set combo box list
         if (cbModel.getSize() == 0) {
             cbModel.addElement(new AssoWrapper(NbBundle.getMessage(getClass(), "No_Association_Text")));
         }
