@@ -1,7 +1,8 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris
  *
  * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2016 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -19,6 +20,7 @@
  */
 package genj.timeline;
 
+import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionDispatcher;
 import genj.almanac.Almanac;
 import genj.almanac.Event;
@@ -41,6 +43,7 @@ import genj.util.swing.ViewPortAdapter;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import ancestris.swing.ToolBar;
+import genj.util.swing.ImageIcon;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -50,6 +53,7 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -65,6 +69,7 @@ import java.util.Map;
 import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ToolTipManager;
@@ -88,7 +93,8 @@ public class TimelineView extends View {
     /** our content */
     private Content content;
     /** our current selection */
-    private Set<Model.Event> selection = new HashSet<Model.Event>();
+    private Set<Model.Event> selectionEvent = new HashSet<Model.Event>();
+    private Set<Model.EventSerie> selectionEventSerie = new HashSet<Model.EventSerie>();
     /** our ruler */
     private Ruler ruler;
     /** our slider for cm per year */
@@ -120,10 +126,17 @@ public class TimelineView extends View {
     /** settings */
     private boolean isPaintDates = true,
             isPaintGrid = false,
-            isPaintTags = true;
+            isPaintTags = true,
+            isPackIndi = false;
     /** registry we keep */
     private final static Registry REGISTRY = Registry.get(TimelineView.class);
     private ModelListener callback = new ModelListener();
+    /** modes */
+    public static int INDI_MODE = 0;
+    public static int EVENT_MODE = 1;
+    public int mode = INDI_MODE;
+    private CenterTreeToIndividual cttiButton;
+    private CenterToSelectionAction ctsButton;
 
     /**
      * Constructor
@@ -143,22 +156,28 @@ public class TimelineView extends View {
         isPaintDates = REGISTRY.get("paintdates", true);
         isPaintGrid = REGISTRY.get("paintgrid", false);
         isPaintTags = REGISTRY.get("painttags", false);
+        isPackIndi = REGISTRY.get("packindi", false);
 
         colors.put("background", Color.WHITE);
         colors.put("text", Color.BLACK);
         colors.put("tag", Color.GREEN);
         colors.put("date", Color.GRAY);
-        colors.put("timespan", Color.BLUE);
+        colors.put("timespanM", Color.BLUE);
+        colors.put("timespanF", Color.RED);
+        colors.put("timespanU", Color.GRAY);
         colors.put("grid", Color.LIGHT_GRAY);
         colors.put("selected", Color.RED);
         colors = REGISTRY.get("color", colors);
 
         String[] ignored = REGISTRY.get("almanac.ignore", new String[0]);
         ignoredAlmanacCategories.addAll(Arrays.asList(ignored));
+        
+        mode = REGISTRY.get("display.mode", mode);
 
         // create/keep our sub-parts
         model = new Model();
         model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear);
+        model.setPackIndi(isPackIndi);
 
         String[] ps = REGISTRY.get("paths", (String[]) null);
         if (ps != null) {
@@ -170,6 +189,8 @@ public class TimelineView extends View {
                 }
             }
             model.setPaths(paths);
+        } else {
+            model.setPaths(null);
         }
 
         content = new Content();
@@ -179,10 +200,9 @@ public class TimelineView extends View {
         scrollContent = new ScrollPaneWidget(content);
         scrollContent.setViewportBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
         scrollContent.setBackground(Color.WHITE);
-        //scrollContent = new ScrollPaneWidget(new ViewPortAdapter(content));
         scrollContent.setColumnHeaderView(new ViewPortAdapter(ruler));
         scrollContent.getViewport().addChangeListener(new ChangeListener() {
-
+        
             @Override
             public void stateChanged(ChangeEvent e) {
                 // easy : translation and remember
@@ -231,6 +251,7 @@ public class TimelineView extends View {
         REGISTRY.put("cmaftevent", (float) cmAftEvent);
         REGISTRY.put("paintdates", isPaintDates);
         REGISTRY.put("paintgrid", isPaintGrid);
+        REGISTRY.put("packindi", isPackIndi);
         REGISTRY.put("painttags", isPaintTags);
         REGISTRY.put("filter", model.getPaths());
         REGISTRY.put("centeryear", (float) centeredYear);
@@ -243,6 +264,8 @@ public class TimelineView extends View {
         }
         REGISTRY.put("almanac.ignore", ignored);
 
+        REGISTRY.put("display.mode", mode);
+        
         // done
         super.removeNotify();
     }
@@ -327,6 +350,24 @@ public class TimelineView extends View {
     }
 
     /**
+     * Accessor - pack individuals
+     */
+    public boolean isPackIndi() {
+        return isPackIndi;
+    }
+
+    /**
+     * Accessor - pack individuals
+     */
+    public void setPackIndi(boolean set) {
+        isPackIndi = set;
+        model.setPackIndi(isPackIndi);
+        createLayers();
+        selectionEventSerie = model.getIndis(content.getContext());
+        centerToSelection();
+    }
+
+    /**
      * Sets the time allocated per event
      */
     public void setCMPerEvents(double before, double after) {
@@ -363,6 +404,12 @@ public class TimelineView extends View {
         String year = String.valueOf((int) pixel2year(sb.getValue()) + 1);
         String maxYear = String.valueOf((int)pixel2year(sb.getMaximum()));
         sb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
+
+        int h = getFontMetrics(getFont()).getHeight() + 1;
+        JScrollBar vsb = scrollContent.getVerticalScrollBar();
+        String value = Integer.toString((int) vsb.getValue() / h);
+        String total = Integer.toString(model.getLayersNumber(mode));
+        vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total)); // + " ; increment = "+vsb.getUnitIncrement());
     }
     
     /**
@@ -377,11 +424,19 @@ public class TimelineView extends View {
         setTooltipText();
         sliderCmPerYear.addChangeListener(new ChangeCmPerYear());
         sliderCmPerYear.setOpaque(false);
+        cttiButton = new CenterTreeToIndividual();
+        ctsButton = new CenterToSelectionAction();
 
         toolbar.add(sliderCmPerYear);
-
-        toolbar.add(new Settings());
+        toolbar.addSeparator();
+        toolbar.add(new ToggleModeAction());
+        toolbar.add(ctsButton);
+        toolbar.add(cttiButton);
+        toolbar.addSeparator();
         toolbar.add(new ScreenshotAction(content));
+        toolbar.add(new JLabel(" "), "growx, pushx, center");
+        toolbar.addSeparator();
+        toolbar.add(new Settings());
 
     }
 
@@ -393,18 +448,25 @@ public class TimelineView extends View {
 
         if (context == null) {
             model.setGedcom(null);
-            selection.clear();
+            selectionEvent.clear();
+            selectionEventSerie.clear();
         } else {
-            model.setGedcom(context.getGedcom());
-            selection = model.getEvents(context);
-            
+            model.setGedcom(context);
+            selectionEvent = model.getEvents(context);
+            selectionEventSerie = model.getIndis(context);
         }
-        if (!selection.isEmpty()){
-            //FIXME: doesn't scroll vertically
-            makeVisible(selection.iterator().next());
+        
+        if (cttiButton != null & ctsButton != null) {
+            cttiButton.setEnabled(!selectionEventSerie.isEmpty());
+            cttiButton.setTip();
+            ctsButton.setEnabled(!selectionEventSerie.isEmpty() && !selectionEvent.isEmpty());
+            ctsButton.setTip();
         }
+        
         // do a repaint, too
         content.repaint();
+
+        centerToSelection();
 
         // done
     }
@@ -418,6 +480,14 @@ public class TimelineView extends View {
         return model.getEvent(year, layer);
     }
 
+    /**
+     * Returns the indi at given position
+     */
+    protected Model.EventSerie getIndiAt(Point pos) {
+        double year = pixel2year(pos.x);
+        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
+        return model.getEventSerie(year, layer);
+    }
     /**
      * Calculates a year from given pixel position
      */
@@ -433,18 +503,53 @@ public class TimelineView extends View {
         int x = (int) ((year - model.min) * DPC.getX() * cmPerYear) - scrollContent.getViewport().getWidth() / 2;
         scrollContent.getHorizontalScrollBar().setValue(x);
         scrollContent.getHorizontalScrollBar().setUnitIncrement((int) (DPC.getX() * cmPerYear));
+        scrollContent.getVerticalScrollBar().setUnitIncrement((int) (Math.max(3, Math.log10(model.getLayersNumber(mode))) * (getFontMetrics(getFont()).getHeight() + 1)));
+    }
+
+    protected void scroll2layer(int layer) {
+        int y = (int) (layer * (getFontMetrics(getFont()).getHeight() + 1)    -    (scrollContent.getViewport().getHeight() / 3));
+        if (y < 0) {
+            y = 0;
+        }
+        scrollContent.revalidate();
+        scrollContent.getVerticalScrollBar().setValue(y);
     }
 
     /**
      * Make sure the given event is visible
+     * 
      */
     protected void makeVisible(Model.Event event) {
-        double min = model.min + scrollContent.getHorizontalScrollBar().getValue() / DPC.getX() / cmPerYear,
-                max = min + scrollContent.getViewport().getWidth() / DPC.getX() / cmPerYear;
+        scroll2year(event.from);
+        scroll2layer(model.getLayerFromEvent(event));
+    }
 
-        if (event.to > max || event.from < min) {
-            scroll2year(event.from);
+    /**
+     * Make sure the given event is visible
+     * 
+     */
+    protected void makeVisible(Model.EventSerie eventSerie) {
+        scroll2year(eventSerie.from);
+        scroll2layer(model.getLayerFromEventSerie(eventSerie));
+    }
+
+    private void centerToSelection() {
+        if (mode == INDI_MODE) {
+            if (!selectionEventSerie.isEmpty()) {
+                makeVisible(selectionEventSerie.iterator().next());
+            }
+        } else {
+            if (!selectionEvent.isEmpty()) {
+                makeVisible(selectionEvent.iterator().next());
+            }
         }
+    }
+
+    private void createLayers() {
+        model.createIndiLayers();
+        revalidate();
+        repaint();
+        scrollContent.setViewportView(content); // need to refresh vertical scroll bar
     }
 
     /**
@@ -496,7 +601,9 @@ public class TimelineView extends View {
             rulerRenderer.cBackground = colors.get("background");
             rulerRenderer.cText = colors.get("text");
             rulerRenderer.cTick = rulerRenderer.cText;
-            rulerRenderer.cTimespan = colors.get("timespan");
+            rulerRenderer.cTimespanM = colors.get("timespanM");
+            rulerRenderer.cTimespanF = colors.get("timespanF");
+            rulerRenderer.cTimespanU = colors.get("timespanU");
             rulerRenderer.acats = getAlmanacCategories();
             // prepare UnitGraphics
             UnitGraphics graphics = new UnitGraphics(
@@ -587,8 +694,14 @@ public class TimelineView extends View {
             }
 
             List<Property> props = new ArrayList<Property>();
-            for (Model.Event event : selection) {
-                props.add(event.pe);
+            if (mode == INDI_MODE) {
+                for (Model.EventSerie eventSerie : selectionEventSerie) {
+                    props.add(eventSerie.getProperty());
+                }
+            } else {
+                for (Model.Event event : selectionEvent) {
+                    props.add(event.pe);
+                }
             }
 
             return new ViewContext(gedcom, null, props);
@@ -601,7 +714,7 @@ public class TimelineView extends View {
         public Dimension getPreferredSize() {
             return new Dimension(
                     (int) ((model.max - model.min) * DPC.getX() * cmPerYear),
-                    model.layers.size() * (getFontMetrics(getFont()).getHeight() + 1));
+                    model.getLayersNumber(mode) * (getFontMetrics(getFont()).getHeight() + 1));
         }
 
         /**
@@ -617,12 +730,19 @@ public class TimelineView extends View {
             }
 
             // let the renderer do its work
-            contentRenderer.selection = rsel ? selection : Collections.<Model.Event>emptySet();
+            if (mode == INDI_MODE) {
+                contentRenderer.selectionEventSerie = rsel ? selectionEventSerie : Collections.<Model.EventSerie>emptySet();
+            } else {
+                contentRenderer.selectionEvent = rsel ? selectionEvent : Collections.<Model.Event>emptySet();
+            }
+            
             contentRenderer.cBackground = colors.get("background");
             contentRenderer.cText = colors.get("text");
             contentRenderer.cDate = colors.get("date");
             contentRenderer.cTag = colors.get("tag");
-            contentRenderer.cTimespan = colors.get("timespan");
+            contentRenderer.cTimespanM = colors.get("timespanM");
+            contentRenderer.cTimespanF = colors.get("timespanF");
+            contentRenderer.cTimespanU = colors.get("timespanU");
             contentRenderer.cGrid = colors.get("grid");
             contentRenderer.cSelected = colors.get("selected");
             contentRenderer.paintDates = isPaintDates;
@@ -637,7 +757,7 @@ public class TimelineView extends View {
             graphics.translate(-model.min, 0);
 
             // go for it      
-            contentRenderer.render(graphics, model);
+            contentRenderer.render(graphics, model, mode);
 
             // done
         }
@@ -651,16 +771,25 @@ public class TimelineView extends View {
             }
 
             if (!e.isShiftDown()) {
-                selection.clear();
+                selectionEvent.clear();
+                selectionEventSerie.clear();
             }
 
             // find context click to select and tell about
-            Model.Event hit = getEventAt(e.getPoint());
-            if (hit != null) {
-                selection.add(hit);
-
-                // tell about it
-                SelectionDispatcher.fireSelection(e, getContext());
+            if (mode == INDI_MODE) {
+                Model.EventSerie hit = getIndiAt(e.getPoint());
+                if (hit != null) {
+                    selectionEventSerie.add(hit);
+                    // tell about it
+                    SelectionDispatcher.fireSelection(e, getContext());
+                }
+            } else {
+                Model.Event hit = getEventAt(e.getPoint());
+                if (hit != null) {
+                    selectionEvent.add(hit);
+                    // tell about it
+                    SelectionDispatcher.fireSelection(e, getContext());
+                }
             }
 
             // show
@@ -693,12 +822,19 @@ public class TimelineView extends View {
         @Override
         public void stateChanged(ChangeEvent e) {
             double center = centeredYear;
+            int layer = scrollContent.getVerticalScrollBar().getValue() / (getFontMetrics(getFont()).getHeight() + 1);
             // get the new value
             cmPerYear = MIN_CM_PER_YEAR + Math.exp(sliderCmPerYear.getValue() * 0.1) / Math.exp(10) * (MAX_CM_PER_YEAR - MIN_CM_PER_YEAR);
             // update model
             model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear);
             // re-center
-            scroll2year(center);
+            if ((mode == INDI_MODE && !selectionEventSerie.isEmpty()) || (mode == EVENT_MODE && !selectionEvent.isEmpty())) {
+                centerToSelection();
+            } else {
+                scroll2year(center);
+                scroll2layer(layer);
+            }
+            
             // update tootip
             setTooltipText();
             // done
@@ -736,4 +872,108 @@ public class TimelineView extends View {
             return new TimelineViewSettings(TimelineView.this);
         }
     }
+    
+    /**
+     * Action to toggle between individual mode or event mode
+     */
+    private class ToggleModeAction extends AbstractAncestrisAction {
+
+        private ImageIcon indiIcon, eventIcon;
+        
+        /**
+         * Constructor
+         */
+        private ToggleModeAction() {
+            indiIcon = new ImageIcon(this, "indi");
+            eventIcon = new ImageIcon(this, "event");
+            setIcon();
+            setTip();
+        }
+        
+        private void setIcon() {
+            setImage(mode == INDI_MODE ? indiIcon : eventIcon);
+            cttiButton.setEnabled(mode == INDI_MODE);
+        }
+
+        private void setTip() {
+            setTip(resources.getString(mode == INDI_MODE ? "toggle.toEvent.tip" : "toggle.toIndi.tip"));
+        }
+        /**
+         * @see genj.util.swing.AbstractAncestrisAction#execute()
+         */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            mode = 1 - mode;
+            setIcon();
+            setTip();
+            revalidate();
+            repaint();
+            scrollContent.setViewportView(content); // need to refresh vertical scroll bar
+            centerToSelection();
+        }
+
+    } 
+
+    /**
+     * Action to center to selection
+     */
+    private class CenterTreeToIndividual extends AbstractAncestrisAction {
+
+        /**
+         * Constructor
+         */
+        private CenterTreeToIndividual() {
+            setImage(new ImageIcon(this, "centertree"));
+            setTip();
+        }
+        
+        private void setTip() {
+            if (selectionEventSerie.isEmpty()) {
+                setTip(resources.getString("centertree.tip.none"));
+            } else {
+                setTip(resources.getString("centertree.tip", selectionEventSerie.iterator().next()));
+            }
+        }
+        /**
+         * @see genj.util.swing.AbstractAncestrisAction#execute()
+         */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            createLayers();
+            repaint();
+            centerToSelection();
+        }
+
+    } 
+
+    /**
+     * Action to center to selection
+     */
+    private class CenterToSelectionAction extends AbstractAncestrisAction {
+
+        /**
+         * Constructor
+         */
+        private CenterToSelectionAction() {
+            setImage(new ImageIcon(this, "root"));
+            setTip();
+        }
+        
+        public void setTip() {
+            if (selectionEventSerie.isEmpty()) {
+                setTip(resources.getString("root.tip.none"));
+            } else {
+                setTip(resources.getString("root.tip", selectionEventSerie.iterator().next()));
+            }
+        }
+        /**
+         * @see genj.util.swing.AbstractAncestrisAction#execute()
+         */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            centerToSelection();
+        }
+
+    } 
+    
 } //TimelineView

@@ -209,6 +209,7 @@ public class Almanac {
 
             if (files.length == 0) {
                 LOG.info("Found no file(s) in " + dir.getAbsoluteFile());
+                LOG.info("Trying resources... ");
             } else {
                 // load each one
                 for (int f = 0; f < files.length; f++) {

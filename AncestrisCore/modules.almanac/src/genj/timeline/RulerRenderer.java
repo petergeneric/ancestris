@@ -139,7 +139,7 @@ public class RulerRenderer extends ContentRenderer {
     private void renderAlmanac(UnitGraphics g) {
 
         // prepare drawing - color, clip, years etc.
-        g.setColor(cTimespan);
+        g.setColor(cTimespanM);
         Rectangle2D clip = g.getClip();
         PointInTime from = Model.toPointInTime(clip.getX()),
                 to = Model.toPointInTime(clip.getMaxX());
