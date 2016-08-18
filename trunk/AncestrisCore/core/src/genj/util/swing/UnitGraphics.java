@@ -27,6 +27,7 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.Shape;
+import java.awt.Stroke;
 import java.awt.font.LineMetrics;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
@@ -159,6 +160,16 @@ public class UnitGraphics {
   }
   
   /**
+   * Draw a dotted line
+   */
+  public void draw(double x1, double y1, double x2, double y2, Stroke stroke) {
+      Stroke defaultStroke = graphics.getStroke();
+      graphics.setStroke(stroke);
+      draw(x1, y1, x2, y2);
+      graphics.setStroke(defaultStroke);
+  }
+  
+  /**
    * Draw text
    */
   public void draw(String str, double x, double y, double xalign, double yalign) {
@@ -211,9 +222,16 @@ public class UnitGraphics {
    * Draw Image at given position
    */
   public void draw(ImageIcon img, double x, double y, double xalign, double yalign) {
+      draw (img, x, y, xalign, yalign, 0, 0);
+  }
+  
+  /**
+   * Draw Image at given position
+   */
+  public void draw(ImageIcon img, double x, double y, double xalign, double yalign, int dx, int dy) {
     int
-      ix = (int)(x*unitx - xalign*img.getIconWidth ()),
-      iy = (int)(y*unity - yalign*img.getIconHeight());
+      ix = (int)(x*unitx - xalign*img.getIconWidth () + dx),
+      iy = (int)(y*unity - yalign*img.getIconHeight() + dy);
     img.paintIcon(graphics, ix, iy);
   }
   
