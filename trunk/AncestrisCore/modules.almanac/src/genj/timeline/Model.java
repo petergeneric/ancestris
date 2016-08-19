@@ -726,17 +726,17 @@ import java.util.concurrent.CopyOnWriteArrayList;
             Indi ancestorWife = getOldestAgnaticAncestor(wife);
             PropertyDate ahbd = ancestorHusb.getBirthDate();
             PropertyDate awbd = ancestorWife.getBirthDate();
-            if (ahbd.isValid() && awbd.isValid()) {
+            if (ahbd != null && awbd != null && ahbd.isValid() && awbd.isValid()) {
                 if (awbd.compareTo(ahbd) > 0) {
                     return husb;
                 } else {
                     return wife;
                 }
             }
-            if (!ahbd.isValid() && awbd.isValid()) {
+            if ((ahbd == null || !ahbd.isValid()) && (awbd != null && awbd.isValid())) {
                 return wife;
             }
-            if (ahbd.isValid() && !awbd.isValid()) {
+            if ((ahbd != null && ahbd.isValid()) && (awbd == null || !awbd.isValid())) {
                 return husb;
             }
             return husb;
