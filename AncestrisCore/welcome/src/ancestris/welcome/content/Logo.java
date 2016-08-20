@@ -67,21 +67,24 @@ public class Logo extends JPanel implements Constants, MouseListener {
     private String url;
 
     public static Logo createArvernesLogo() {
-        return new Logo( ARVERNES_LOGO_IMAGE, BundleSupport.getURL( "ArvernesLogo" ) ); // NOI18N
+        return new Logo( ARVERNES_LOGO_IMAGE, BundleSupport.getURL( "ArvernesLogo" ),  // NOI18N
+                BundleSupport.getLabel( "ArvernesLogo_tip" )); 
     }
 
     public static Logo createJavaLogo() {
-        return new Logo( JAVA_LOGO_IMAGE, BundleSupport.getURL( "JavaLogo" ) ); // NOI18N
+        return new Logo( JAVA_LOGO_IMAGE, BundleSupport.getURL( "JavaLogo" ),  // NOI18N
+                BundleSupport.getLabel( "JavaLogo_tip" ) ); 
     }
 
     /** Creates a new instance of RecentProjects */
-    public Logo( String img, String url ) {
+    public Logo( String img, String url, String tip ) {
         super( new BorderLayout() );
         Icon image = ImageUtilities.loadImageIcon(img, true);
         JLabel label = new JLabel( image );
         label.setBorder( BorderFactory.createEmptyBorder() );
         label.setOpaque( false );
         label.addMouseListener( this );
+        label.setToolTipText(tip);
         setOpaque( false );
         add( label, BorderLayout.CENTER );
         setCursor( Cursor.getPredefinedCursor(Cursor.HAND_CURSOR) );
