@@ -157,5 +157,40 @@ public class Utilities {
     }
     
     
+    /**
+     * (added by FL for quicksearch)
+     * Utility method to extract bit of phrase from a text at a matching string.
+     * @return a String containing the derived text or null.
+     */
+    static private int margin = 20;
+    static private String bit = "...";
+
+    static public String getPhraseBit(String text, String find) {
+        
+        text = text.replaceAll("(?:\\n|\\r)", " ");
+        String str = text.toLowerCase();
+        String q = find.toLowerCase();
+        int index = str.indexOf(q);
+        if (index == -1) {
+            return null;
+        }
+        // Extract margin characters on each side and trim first and last word if not complete
+        int start = Math.max(index - margin, 0), end = Math.min(text.length(), index + q.length() + margin);
+        for (int i = start ; i >= 0 ; i--) {
+            if (str.charAt(i) == ' ') {
+                start = i+1;
+                break;
+            }
+        }
+        for (int i = end ; i < text.length() ; i++) {
+            if (str.charAt(i) == ' ') {
+                end = i;
+                break;
+            }
+        }
+        
+        return bit + text.substring(start, end) + bit;
+    }
+    
     
 }

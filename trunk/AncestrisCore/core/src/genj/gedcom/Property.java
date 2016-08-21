@@ -737,6 +737,24 @@ public abstract class Property implements Comparable<Property> {
         }
     }
 
+    
+    public List<Property> getAllProperties(String tag) {
+        List<Property> props = new ArrayList<Property>(10);
+        getAllPropertiesRecursively(props, tag);
+        return props;
+    }
+
+    @SuppressWarnings("unchecked")
+    private void getAllPropertiesRecursively(List<Property> props, String tag) {
+        for (int c = 0; c < getNoOfProperties(); c++) {
+            Property child = getProperty(c);
+            if (child.getTag().equals(tag)) {
+                props.add(child);
+            }
+            child.getAllPropertiesRecursively(props, tag);
+        }
+    }
+    
     /**
      * Returns a sub-property position
      */
