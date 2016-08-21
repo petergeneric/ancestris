@@ -935,6 +935,30 @@ public class Gedcom implements Comparable {
     }
 
     /**
+     * Returns entities of given type NOTE
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Note> getNotes() {
+        return (Collection<Note>) getEntities(NOTE);
+    }
+
+    /**
+     * Returns entities of given type SOURCE
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Source> getSources() {
+        return (Collection<Source>) getEntities(SOUR);
+    }
+
+    /**
+     * Returns entities of given type OBJE
+     */
+    @SuppressWarnings("unchecked")
+    public Collection<Media> getMedias() {
+        return (Collection<Media>) getEntities(OBJE);
+    }
+
+    /**
      * Returns entities of given type sorted by given path (can be empty or null)
      */
     public Entity[] getEntities(String tag, String sortPath) {
