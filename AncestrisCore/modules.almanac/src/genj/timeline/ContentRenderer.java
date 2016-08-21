@@ -111,7 +111,7 @@ public class ContentRenderer {
     /**
      * selected color
      */
-    /*package*/ Color cSelected = null;
+    /*package*/ Color cSelected = null, cSelectedBg = null;
 
     /**
      * Renders the model
@@ -280,9 +280,9 @@ public class ContentRenderer {
         }
 
         // draw its text 
-        g.setFont(RenderOptions.getInstance().getDefaultFont());
-        g.setColor(em ? cSelected : cText);
         String txt = event.content;
+        g.setFont(RenderOptions.getInstance().getDefaultFont());
+        g.draw(txt, event.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
         g.draw(txt, event.from, level + 1, 0, 1, dx, 0);
         dx += fm.stringWidth(txt) + fm.charWidth(' ');
 
@@ -353,10 +353,9 @@ public class ContentRenderer {
         }
 
         // draw its text 
-        g.setFont(RenderOptions.getInstance().getDefaultFont());
-        g.setColor(em ? cSelected : cText);
         String txt = eventSerie.content;
-        g.draw(txt, eventSerie.from, level + 1, 0, 1, dx, 0);
+        g.setFont(RenderOptions.getInstance().getDefaultFont());
+        g.draw(txt, eventSerie.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
         dx += fm.stringWidth(txt) + fm.charWidth(' ');
 
         // draw its date

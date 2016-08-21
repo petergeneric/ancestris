@@ -167,6 +167,7 @@ public class TimelineView extends View {
         colors.put("timespanU", Color.GRAY);
         colors.put("grid", Color.LIGHT_GRAY);
         colors.put("selected", Color.RED);
+        colors.put("selectedBg", new Color(254, 255, 150)); // same color as in the Cygnus editor for selection of individual
         colors = REGISTRY.get("color", colors);
 
         String[] ignored = REGISTRY.get("almanac.ignore", new String[0]);
@@ -745,6 +746,7 @@ public class TimelineView extends View {
             contentRenderer.cTimespanU = colors.get("timespanU");
             contentRenderer.cGrid = colors.get("grid");
             contentRenderer.cSelected = colors.get("selected");
+            contentRenderer.cSelectedBg = colors.get("selectedBg");
             contentRenderer.paintDates = isPaintDates;
             contentRenderer.paintGrid = isPaintGrid;
             contentRenderer.paintTags = isPaintTags;

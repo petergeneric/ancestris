@@ -634,6 +634,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
     /**
      * Create our indiLayers traversing the trees from the ancestors
+     * TODO: put in thread and improve performance or the recurse
      */
     public void createIndiLayers() {
         
