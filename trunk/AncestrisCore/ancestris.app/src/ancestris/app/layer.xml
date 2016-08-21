@@ -240,7 +240,10 @@
         </folder>
         <file name="Versioning_hidden"/>
         <folder name="View">
-            <file name="Separator1.instance_hidden"/>
+            <file name="Separator1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="-990"/>
+            </file>
             <file name="org-netbeans-core-multiview-EditorsAction.instance_hidden"/>
             <file name="org-netbeans-core-multiview-SplitAction.instance_hidden"/>
             <file name="Separator1_1_2.instance">
