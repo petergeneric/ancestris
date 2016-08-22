@@ -37,6 +37,7 @@ public class NoteQuickSearch implements SearchProvider {
                     if (rep == null) {
                         continue;
                     }
+                    rep += " (" + note.getId() + ")";
                     if (!response.addResult(createAction(note), rep)) {
                         return;
                     }
@@ -58,6 +59,7 @@ public class NoteQuickSearch implements SearchProvider {
                             if (rep == null) {
                                 continue;
                             }
+                            rep += " (" + noteProp.getEntity().getId() + ")";
                             if (!response.addResult(createAction(noteProp), rep)) {
                                 return;
                             } else {

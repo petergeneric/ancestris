@@ -36,6 +36,7 @@ public class SourQuickSearch implements SearchProvider {
                     if (rep == null) {
                         continue;
                     }
+                    rep += " (" + source.getId() + ")";
                     if (!response.addResult(createAction(source), rep)) {
                         return;
                     }
@@ -57,6 +58,7 @@ public class SourQuickSearch implements SearchProvider {
                             if (rep == null) {
                                 continue;
                             }
+                            rep += " (" + noteProp.getEntity().getId() + ")";
                             if (!response.addResult(createAction(noteProp), rep)) {
                                 return;
                             } else {
