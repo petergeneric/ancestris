@@ -162,7 +162,7 @@ public class Utilities {
      * Utility method to extract bit of phrase from a text at a matching string.
      * @return a String containing the derived text or null.
      */
-    static private int margin = 20;
+    static private int margin = 15;
     static private String bit = "...";
 
     static public String getPhraseBit(String text, String find) {
