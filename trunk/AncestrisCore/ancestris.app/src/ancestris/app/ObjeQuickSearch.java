@@ -36,6 +36,7 @@ public class ObjeQuickSearch implements SearchProvider {
                     if (rep == null) {
                         continue;
                     }
+                    rep += " (" + media.getId() + ")";
                     if (!response.addResult(createAction(media), rep)) {
                         return;
                     }
@@ -57,6 +58,7 @@ public class ObjeQuickSearch implements SearchProvider {
                             if (rep == null) {
                                 continue;
                             }
+                            rep += " (" + noteProp.getEntity().getId() + ")";
                             if (!response.addResult(createAction(noteProp), rep)) {
                                 return;
                             } else {
