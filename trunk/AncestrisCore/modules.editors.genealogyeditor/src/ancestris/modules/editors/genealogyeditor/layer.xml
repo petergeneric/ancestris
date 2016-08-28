@@ -4,7 +4,7 @@
     <folder name="Actions"/>
     <folder name="Toolbars">
         <folder name="GenealogyEditor">
-            <attr name="position" intvalue="790"/>
+            <attr name="position" intvalue="700"/>
             <attr name="displayName" bundlevalue="ancestris.modules.editors.genealogyeditor.Bundle#CTL_EditorGenealogyAction"/>
         </folder>
     </folder>
