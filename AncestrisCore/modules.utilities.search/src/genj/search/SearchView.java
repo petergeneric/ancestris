@@ -11,6 +11,7 @@
  */
 package genj.search;
 
+import ancestris.api.search.SearchResults;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionDispatcher;
@@ -42,8 +43,10 @@ import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.AbstractListModel;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.BorderFactory.createLineBorder;
@@ -59,6 +62,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 import spin.Spin;
 
@@ -66,7 +70,8 @@ import spin.Spin;
  *
  * @author frederic
  */
-public class SearchView extends View {
+@ServiceProvider(service = SearchResults.class)
+public class SearchView extends View implements SearchResults {
 
     
     /** default values */
@@ -98,6 +103,8 @@ public class SearchView extends View {
     /** registry */
     private final static Registry REGISTRY = Registry.get(SearchView.class);
     
+    /** instances */
+    public static Set<SearchResults> instances = null;
     
     
     /** current context */
@@ -110,13 +117,13 @@ public class SearchView extends View {
     private ResultWidget listResults2 = new ResultWidget(results2);
     
     /** criterias */
-    private ChoiceWidget choiceLastname, choiceFirstname, choicePlace;
+    private ChoiceWidget choiceLastname, choiceFirstname, choicePlace, choiceOccu;
     private ChoiceWidget choiceTag, choiceValue;
     private JCheckBox checkRegExp;
     private JLabel labelCount2;
     
     /** history */
-    private LinkedList<String> oldLastnames, oldFirstnames, oldPlaces;
+    private LinkedList<String> oldLastnames, oldFirstnames, oldPlaces, oldOccupations;
     private LinkedList<String> oldTags, oldValues;
     
     /** worker */
@@ -129,11 +136,21 @@ public class SearchView extends View {
     private WorkerTag worker2;
 
     
+    @Override
+    public Set<SearchResults> getInstances() {
+        return instances;
+    }
+
     
     /**
      * Constructor
      */
     public SearchView() {
+        
+        if (instances == null) {
+            instances = new HashSet<SearchResults>();
+        }
+        instances.add(this);
         
         // prepare an action listener connecting to click
         ActionListener aclick = new ActionListener() {
@@ -165,6 +182,9 @@ public class SearchView extends View {
         oldPlaces = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
         choicePlace = new ChoiceWidget(oldPlaces);
         choicePlace.addActionListener(aclick);
+        oldOccupations = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
+        choiceOccu = new ChoiceWidget(oldOccupations);
+        choiceOccu.addActionListener(aclick);
         
         initComponents();
         
@@ -314,11 +334,13 @@ public class SearchView extends View {
         birthLabel = new javax.swing.JLabel();
         deathLabel = new javax.swing.JLabel();
         placeLabel = new javax.swing.JLabel();
+        occuLabel = new javax.swing.JLabel();
         lastnameText = choiceLastname;
         firstnameText = choiceFirstname;
         birthDateBean = new genj.edit.beans.DateBean();
         deathDateBean = new genj.edit.beans.DateBean();
         placetext = choicePlace;
+        occuText = choiceOccu;
         maleCb = new javax.swing.JCheckBox();
         femaleCb = new javax.swing.JCheckBox();
         unknownCb = new javax.swing.JCheckBox();
@@ -342,6 +364,8 @@ public class SearchView extends View {
         org.openide.awt.Mnemonics.setLocalizedText(deathLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.deathLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.placeLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(occuLabel, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.occuLabel.text")); // NOI18N
 
         maleCb.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(maleCb, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.maleCb.text")); // NOI18N
@@ -368,7 +392,7 @@ public class SearchView extends View {
         );
         result1PanelLayout.setVerticalGroup(
             result1PanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
+            .addGap(0, 267, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout tabMultiLayout = new javax.swing.GroupLayout(tabMulti);
@@ -381,19 +405,11 @@ public class SearchView extends View {
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelCount1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lastnameLabel)
-                            .addComponent(firstnameLabel)
-                            .addComponent(birthLabel)
-                            .addComponent(deathLabel)
-                            .addComponent(placeLabel))
+                        .addComponent(marrCb)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lastnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(firstnameText, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(placetext, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(deathDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
-                            .addComponent(birthDateBean, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                        .addComponent(singleCb)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(allButCb))
                     .addGroup(tabMultiLayout.createSequentialGroup()
                         .addComponent(maleCb)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -402,11 +418,21 @@ public class SearchView extends View {
                         .addComponent(unknownCb)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(tabMultiLayout.createSequentialGroup()
-                        .addComponent(marrCb)
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lastnameLabel)
+                            .addComponent(firstnameLabel)
+                            .addComponent(birthLabel)
+                            .addComponent(deathLabel)
+                            .addComponent(placeLabel)
+                            .addComponent(occuLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(singleCb)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(allButCb)))
+                        .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(occuText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lastnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(firstnameText, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(placetext, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(deathDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, 278, Short.MAX_VALUE)
+                            .addComponent(birthDateBean, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         tabMultiLayout.setVerticalGroup(
@@ -435,6 +461,10 @@ public class SearchView extends View {
                     .addComponent(placetext, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(occuLabel)
+                    .addComponent(occuText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(tabMultiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(maleCb)
                     .addComponent(femaleCb)
                     .addComponent(unknownCb))
@@ -443,9 +473,8 @@ public class SearchView extends View {
                     .addComponent(singleCb)
                     .addComponent(marrCb)
                     .addComponent(allButCb))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(result1Panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/multiSearch.png")), tabMulti, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabMulti.TabConstraints.tabToolTip")); // NOI18N
@@ -458,7 +487,7 @@ public class SearchView extends View {
         );
         tabTagLayout.setVerticalGroup(
             tabTagLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 399, Short.MAX_VALUE)
+            .addGap(0, 535, Short.MAX_VALUE)
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/genj/search/images/tagSearch.png")), tabTag, org.openide.util.NbBundle.getMessage(SearchView.class, "SearchView.tabTag.TabConstraints.tabToolTip")); // NOI18N
@@ -471,12 +500,21 @@ public class SearchView extends View {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane1)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jTabbedPane1)
+                .addGap(0, 0, 0))
         );
     }// </editor-fold>//GEN-END:initComponents
 
-
-    
+    /**
+     * prepare to close
+     */
+    @Override
+    public void closing() {
+        super.closing();
+        instances.remove(this);
+        
+    }
 
 
     public void start() {
@@ -494,11 +532,12 @@ public class SearchView extends View {
             remember(choiceLastname, oldLastnames, choiceLastname.getText());
             remember(choiceFirstname, oldFirstnames, choiceFirstname.getText());
             remember(choicePlace, oldPlaces, choicePlace.getText());
+            remember(choiceOccu, oldOccupations, choiceOccu.getText());
             worker.start(context.getGedcom(), max_hits, case_sensitive,
                     choiceLastname.getText(), choiceFirstname.getText(), 
                     birthDateBean, 
                     deathDateBean,
-                    choicePlace.getText(),
+                    choicePlace.getText(),choiceOccu.getText(),
                     maleCb.isSelected(), femaleCb.isSelected(), unknownCb.isSelected(),
                     marrCb.isSelected(), singleCb.isSelected(), allButCb.isSelected()
             );
@@ -521,6 +560,7 @@ public class SearchView extends View {
             choiceLastname.setText("");
             choiceFirstname.setText("");
             choicePlace.setText("");
+            choiceOccu.setText("");
             birthDateBean.setPropertyImpl(null);
             birthDateBean.setFormat(PropertyDate.BETWEEN_AND);
             deathDateBean.setPropertyImpl(null);
@@ -553,9 +593,11 @@ public class SearchView extends View {
             oldLastnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
             oldFirstnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
             oldPlaces = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
+            oldOccupations = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
             choiceLastname.setValues(oldLastnames);
             choiceFirstname.setValues(oldFirstnames);
             choicePlace.setValues(oldPlaces);
+            choiceOccu.setValues(oldOccupations);
         } else {
             REGISTRY.remove("regexp");
             REGISTRY.remove("old.values");
@@ -576,6 +618,7 @@ public class SearchView extends View {
         REGISTRY.put("old.lastnames", oldLastnames);
         REGISTRY.put("old.firstnames", oldFirstnames);
         REGISTRY.put("old.places", oldPlaces);
+        REGISTRY.put("old.occupationss", oldOccupations);
         // keep old (tags)
         REGISTRY.put("regexp", checkRegExp.isSelected());
         REGISTRY.put("old.values", oldValues);
@@ -688,15 +731,18 @@ public class SearchView extends View {
         return result;
     }
 
-    /**
-     * Return list of results
-     */
-    public List<Property> getResults() {
+    @Override
+    public List<Property> getResultProperties() {
         List<Property> props = new ArrayList<Property>();
         for (Hit hit : getSelectedResults().hits) {
             props.add(hit.getProperty());
         }
         return props;
+    }
+
+    @Override
+    public Gedcom getGedcom() {
+        return context == null ? null : context.getGedcom();
     }
 
     
@@ -730,7 +776,7 @@ public class SearchView extends View {
         max_hits = settingsPanel.getMaxHits();
         case_sensitive = settingsPanel.getCaseSensitive();
     }
-    
+
     
     
     
@@ -1092,12 +1138,12 @@ public class SearchView extends View {
                 }
             });
         }
-
+        
         /**
          * ContextProvider - callback
          */
         public ViewContext getContext() {
-
+            
             if (context == null) {
                 return null;
             }
@@ -1153,6 +1199,8 @@ public class SearchView extends View {
     private javax.swing.JComboBox lastnameText;
     private javax.swing.JCheckBox maleCb;
     private javax.swing.JCheckBox marrCb;
+    private javax.swing.JLabel occuLabel;
+    private javax.swing.JComboBox occuText;
     private javax.swing.JLabel placeLabel;
     private javax.swing.JComboBox placetext;
     private javax.swing.JPanel result1Panel;
