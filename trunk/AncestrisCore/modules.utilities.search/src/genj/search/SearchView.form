@@ -21,7 +21,10 @@
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jTabbedPane1" alignment="0" max="32767" attributes="0"/>
+          <Group type="102" alignment="0" attributes="0">
+              <Component id="jTabbedPane1" max="32767" attributes="0"/>
+              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+          </Group>
       </Group>
     </DimensionLayout>
   </Layout>
@@ -56,26 +59,16 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="result1Panel" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="labelCount1" max="32767" attributes="0"/>
-                          <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lastnameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="firstnameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="birthLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="deathLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="placeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="lastnameText" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="firstnameText" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="placetext" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="deathDateBean" alignment="0" pref="287" max="32767" attributes="0"/>
-                                  <Component id="birthDateBean" alignment="0" max="32767" attributes="0"/>
-                              </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="marrCb" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="singleCb" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="allButCb" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="maleCb" min="-2" max="-2" attributes="0"/>
@@ -86,11 +79,23 @@
                               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
-                              <Component id="marrCb" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lastnameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="firstnameLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="birthLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="deathLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="placeLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="occuLabel" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="singleCb" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="allButCb" min="-2" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="occuText" max="32767" attributes="0"/>
+                                  <Component id="lastnameText" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="firstnameText" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="placetext" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="deathDateBean" alignment="0" pref="278" max="32767" attributes="0"/>
+                                  <Component id="birthDateBean" alignment="0" max="32767" attributes="0"/>
+                              </Group>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -126,7 +131,12 @@
                           <Component id="placeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="placetext" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="occuLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="occuText" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="maleCb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="femaleCb" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -138,9 +148,8 @@
                           <Component id="marrCb" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="allButCb" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace type="unrelated" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="result1Panel" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -189,6 +198,13 @@
                 </Property>
               </Properties>
             </Component>
+            <Component class="javax.swing.JLabel" name="occuLabel">
+              <Properties>
+                <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                  <ResourceString bundle="genj/search/Bundle.properties" key="SearchView.occuLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                </Property>
+              </Properties>
+            </Component>
             <Component class="javax.swing.JComboBox" name="lastnameText">
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceLastname"/>
@@ -206,6 +222,11 @@
             <Component class="javax.swing.JComboBox" name="placetext">
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choicePlace"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="occuText">
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="choiceOccu"/>
               </AuxValues>
             </Component>
             <Component class="javax.swing.JCheckBox" name="maleCb">
@@ -265,7 +286,7 @@
                 </DimensionLayout>
                 <DimensionLayout dim="1">
                   <Group type="103" groupAlignment="0" attributes="0">
-                      <EmptySpace min="0" pref="150" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="267" max="32767" attributes="0"/>
                   </Group>
                 </DimensionLayout>
               </Layout>
@@ -297,7 +318,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="399" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="535" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>

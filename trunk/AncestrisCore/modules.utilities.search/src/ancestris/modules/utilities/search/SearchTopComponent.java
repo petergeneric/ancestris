@@ -7,12 +7,8 @@ package ancestris.modules.utilities.search;
 import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
-import genj.gedcom.Property;
-import genj.search.SearchView;
 import genj.search.SearchViewFactory;
 import genj.view.ViewFactory;
-import java.util.List;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -30,6 +26,7 @@ public final class SearchTopComponent extends GenjViewTopComponent {
     private static SearchTopComponent factory;
     private static ViewFactory viewfactory = new SearchViewFactory();
 
+    @Override
     public ViewFactory getViewFactory() {
         return viewfactory;
     }
@@ -38,6 +35,7 @@ public final class SearchTopComponent extends GenjViewTopComponent {
      * Gets default instance. Do not use directly: reserved for *.settings files only,
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
+     * @return 
      */
     public static synchronized SearchTopComponent getFactory() {
         if (factory == null) {
@@ -46,12 +44,14 @@ public final class SearchTopComponent extends GenjViewTopComponent {
         return factory;
     }
 
+    @Override
     public void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
         super.writeProperties(p);
     }
 
+    @Override
     public void readProperties(java.util.Properties p) {
         super.readProperties(p);
     }
@@ -61,8 +61,4 @@ public final class SearchTopComponent extends GenjViewTopComponent {
         return PREFERRED_ID;
     }
 
-    public List<Property> getResultProperties() {
-//        return ((SearchViewFactory)viewfactory).getEditView().getResults();
-        return ((SearchView) getView()).getResults();
-    }
 }

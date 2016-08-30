@@ -41,7 +41,7 @@ public class WorkerMulti extends Worker {
     private DateBean birthDateBean;
     private DateBean deathDateBean;
 
-    private String placeText;
+    private String placeText, occuText;
 
     private boolean isMale;
     private boolean isFemale;
@@ -63,12 +63,13 @@ public class WorkerMulti extends Worker {
         birthDateBean = (DateBean) args[2];
         deathDateBean = (DateBean) args[3];
         placeText = (String) args[4];
-        isMale = (Boolean) args[5];
-        isFemale = (Boolean) args[6];
-        isUnknown = (Boolean) args[7];
-        isMarried = (Boolean) args[8];
-        isSingle = (Boolean) args[9];
-        isAllBut = (Boolean) args[10];
+        occuText = (String) args[5];
+        isMale = (Boolean) args[6];
+        isFemale = (Boolean) args[7];
+        isUnknown = (Boolean) args[8];
+        isMarried = (Boolean) args[9];
+        isSingle = (Boolean) args[10];
+        isAllBut = (Boolean) args[11];
         
         // sync up
         synchronized (lock) {
@@ -155,6 +156,7 @@ public class WorkerMulti extends Worker {
                 && isCommonDate(indi.getBirthDate(), birthDateBean)
                 && isCommonDate(indi.getDeathDate(), deathDateBean)
                 && isCommonPlace(indi, placeText)
+                && isCommonOccupation(indi, occuText)
                 && isSameSex(indi.getSex(), isMale, isFemale, isUnknown)
                 && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isSingle));
     }
@@ -506,6 +508,26 @@ public class WorkerMulti extends Worker {
                     if (place.toLowerCase().contains(placeText.toLowerCase())) {
                         return true;
                     }
+                }
+            }
+        }
+        
+        return false;
+    }
+
+    private boolean isCommonOccupation(Indi indi, String occuText) {
+        if (occuText.isEmpty()) {
+            return true;
+        }
+        for (Property prop : indi.getAllProperties("OCCU")) {
+            String occupation = prop.getDisplayValue();
+            if (case_sensitive) {
+                if (occupation.contains(occuText)) {
+                    return true;
+                }
+            } else {
+                if (occupation.toLowerCase().contains(occuText.toLowerCase())) {
+                    return true;
                 }
             }
         }
