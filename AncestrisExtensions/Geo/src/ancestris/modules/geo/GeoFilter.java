@@ -4,13 +4,13 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.api.search.SearchResults;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
-import ancestris.modules.utilities.search.SearchTopComponent;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,13 +18,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.Set;
 import javax.swing.JComboBox;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import org.openide.windows.TopComponent;
 
 /**
  *
@@ -460,34 +459,36 @@ public class GeoFilter {
             return null;
         }
         List<Indi> indis = new ArrayList<Indi>();
-        Set<TopComponent> tcSet = TopComponent.getRegistry().getOpened();
-        for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
-            TopComponent topComponent = it.next();
-            if (topComponent instanceof SearchTopComponent &&gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
-                for (Iterator<Property> it1 = ((SearchTopComponent) topComponent).getResultProperties().iterator(); it1.hasNext();) {
-                    Property prop = it1.next();
-                    String tag = prop.getTag();
-                    if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
-                        continue;
-                    }
-                    if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
-                        prop = prop.getEntity();
-                    }
-                    if (prop instanceof Indi) {
-                        indis.add((Indi) prop);
-                    } else if (prop instanceof Fam) {
-                        Indi indi = ((Fam) prop).getHusband();
-                        if (indi != null) {
-                            indis.add(indi);
+        
+        for (SearchResults selectionResults : Lookup.getDefault().lookupAll(SearchResults.class)) {
+            for (SearchResults instance : selectionResults.getInstances()) {
+                Gedcom searchGedcom = instance.getGedcom();
+                if (searchGedcom != null && searchGedcom.getName().equals(gedcom.getName())) {
+                    for (Property prop : instance.getResultProperties()) {
+                        String tag = prop.getTag();
+                        if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
+                            continue;
                         }
-                        indi = ((Fam) prop).getWife();
-                        if (indi != null) {
-                            indis.add(indi);
+                        if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
+                            prop = prop.getEntity();
+                        }
+                        if (prop instanceof Indi) {
+                            indis.add((Indi) prop);
+                        } else if (prop instanceof Fam) {
+                            Indi indi = ((Fam) prop).getHusband();
+                            if (indi != null) {
+                                indis.add(indi);
+                            }
+                            indi = ((Fam) prop).getWife();
+                            if (indi != null) {
+                                indis.add(indi);
+                            }
                         }
                     }
+                    return indis;
                 }
-                return indis;
             }
+            break;
         }
         return null;
     }
