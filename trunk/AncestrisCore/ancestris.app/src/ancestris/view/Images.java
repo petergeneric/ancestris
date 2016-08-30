@@ -32,6 +32,8 @@ final public class Images {
     imgOpen         = new ImageIcon(Images.class,"images/Open"),
     imgExit         = new ImageIcon(Images.class,"images/Exit"),
     imgSave         = new ImageIcon(Images.class,"images/Save"),
+    imgFind         = new ImageIcon(Images.class,"images/Find"),
+    imgReplace      = new ImageIcon(Images.class,"images/Replace"),
     imgAbout        = new ImageIcon(Images.class,"images/About"),
     imgHelp         = new ImageIcon(Images.class,"images/Help"),
     imgProperties   = new ImageIcon(Images.class,"images/Properties");

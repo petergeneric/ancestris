@@ -29,6 +29,49 @@
         <folder name="Edit">
             <file name="ancestris-app-ActionHistory.instance">
             </file>
+            <file name="org-openide-actions-CopyAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.callback"/>
+                <attr name="key" stringvalue="copy-to-clipboard"/>
+                <attr name="iconBase" stringvalue="org/openide/resources/actions/copy.gif"/>
+                <attr name="displayName" bundlevalue="org.openide.actions.Bundle#Copy"/>
+            </file>
+            <file name="org-openide-actions-CutAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.callback"/>
+                <attr name="key" stringvalue="cut-to-clipboard"/>
+                <attr name="iconBase" stringvalue="org/openide/resources/actions/cut.gif"/>
+                <attr name="displayName" bundlevalue="org.openide.actions.Bundle#Cut"/>
+            </file>
+            <file name="org-openide-actions-PasteAction.instance">
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.callback"/>
+                <attr name="key" stringvalue="paste-from-clipboard"/>
+                <attr name="iconBase" stringvalue="org/openide/resources/actions/paste.gif"/>
+                <attr name="displayName" bundlevalue="org.openide.actions.Bundle#Paste"/>
+            </file>
+            <file name="org-openide-actions-DeleteAction.instance_hidden"/>
+            <file name="ancestris-app-ActionFind.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionFind"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionFind"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-openide-actions-FindAction.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="ancestris-app-ActionReplace.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionReplace"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionReplace"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Replace.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-openide-actions-ReplaceAction.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Replace.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
         </folder>
         <folder name="File">
             <file name="ancestris-app-ActionNew.instance">
@@ -126,6 +169,9 @@
     <file name="HTTPServer_DUMMY_hidden"/>
     <file name="Maven2Templates_hidden"/>
     <folder name="Menu">
+        <folder name="Edit">
+            <file name="org-openide-actions-DeleteAction.shadow_hidden"/>
+        </folder>
         <file name="BuildProject_hidden"/>
         <folder name="File">
             <file name="ancestris-app-ActionNew.shadow">
@@ -431,7 +477,7 @@
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
         <file name="Standard.xml" url="Standard.xml"/>
         <folder name="Nav">
-            <attr name="position" intvalue="700"/>
+            <attr name="position" intvalue="800"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Nav"/>
             <file name="ancestris-app-ActionHistory.shadow">
                 <attr name="originalFile" stringvalue="Actions/Edit/ancestris-app-ActionHistory.instance"/>

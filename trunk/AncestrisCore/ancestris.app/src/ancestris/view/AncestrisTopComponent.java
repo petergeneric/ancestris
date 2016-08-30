@@ -41,10 +41,10 @@ import javax.swing.JFrame;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
-import javax.swing.text.DefaultEditorKit;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
+import org.openide.filesystems.FileUtil;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
 import org.openide.nodes.Node;
@@ -111,21 +111,23 @@ public class AncestrisTopComponent extends TopComponent
 
     public AncestrisTopComponent() {
         super();
-//        associateLookup(tcLookup);
+        //        associateLookup(tcLookup);
         // toutes les fenetres peuvent aller dans tous les modes
         putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
 
         /* from ExplorerUtils javadoc: */
         this.manager = new ExplorerManager();
         ActionMap map = this.getActionMap();
-        map.put(DefaultEditorKit.copyAction, ExplorerUtils.actionCopy(manager));
-        map.put(DefaultEditorKit.cutAction, ExplorerUtils.actionCut(manager));
-        map.put(DefaultEditorKit.pasteAction, ExplorerUtils.actionPaste(manager));
-        map.put("delete", ExplorerUtils.actionDelete(manager, true)); // or false
+        map.put("org.openide.actions.FindAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionFind.instance", Action.class));
+        map.put("org.openide.actions.ReplaceAction", FileUtil.getConfigObject("Actions/Edit/ancestris-app-ActionReplace.instance", Action.class));        
 
         // following line tells the top component which lookup should be associated with it
         associateLookup(ExplorerUtils.createLookup(manager, map));
+
     }
+    
+    
+    
 //XXX: try to find lookup from gedcomdirectory. this breaks lookup logic: we have to redesign this !!!
 //    @Override
 //    public Lookup getLookup() {
