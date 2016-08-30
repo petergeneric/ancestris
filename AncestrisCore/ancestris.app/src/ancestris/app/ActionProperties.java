@@ -16,7 +16,6 @@ import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.view.Images;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.Iterator;
 import org.openide.awt.ActionID;

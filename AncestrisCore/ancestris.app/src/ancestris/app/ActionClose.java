@@ -8,6 +8,8 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.Images;
 import genj.gedcom.Context;
 import ancestris.core.actions.AbstractAncestrisContextAction;
+import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.view.AncestrisTopComponent;
 import java.awt.event.ActionEvent;
 import org.openide.util.NbBundle;
 
@@ -44,6 +46,15 @@ public class ActionClose extends AbstractAncestrisContextAction {
      */
     @Override
     public void actionPerformed(ActionEvent event) {
+        // Make sure a gedcom top component is active in order to ensure that a contextChanged message will be send to all windows
+        // (if focus is on the Welcome page, the contextChange message is not sent and menus remain enabled)
+        for (AncestrisTopComponent aTC : AncestrisPlugin.lookupAll(AncestrisTopComponent.class)) {
+            if (aTC.isOpen && aTC.isShowing()) {
+                aTC.requestActive();
+                break;
+            }
+        }
+        
         if (contextBeingClosed != null) {
             GedcomDirectory.getDefault().closeGedcom(contextBeingClosed);
         } else {
