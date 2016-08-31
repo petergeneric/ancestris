@@ -27,7 +27,12 @@
     <attr name="Menu\File\org-openide-actions-SaveAsAction.instance\position" intvalue="2100"/>
     <folder name="Actions">
         <folder name="Edit">
-            <file name="ancestris-app-ActionHistory.instance_hidden"/>
+            <file name="ancestris-app-ActionHistory.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Forward.png"/>
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionHistory"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>    
             <file name="org-openide-actions-GotoAction.instance_hidden"/>
             <file name="org-openide-actions-DeleteAction.instance_hidden"/>
             <file name="org-openide-actions-CopyAction.instance">
