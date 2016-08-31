@@ -152,6 +152,8 @@ public class ReplacePanel extends javax.swing.JPanel {
         
         // All components
         initComponents();
+        replacewithLabel.setVisible(replaceMode == true);
+        replaceCombo.setVisible(replaceMode == true);
         FilterPopupListener fpl = new FilterPopupListener();
         entityPopupMenu.addPopupMenuListener(fpl);
         propertyPopupMenu.addPopupMenuListener(fpl);
