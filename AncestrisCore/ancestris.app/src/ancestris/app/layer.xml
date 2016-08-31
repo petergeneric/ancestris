@@ -51,7 +51,7 @@
             <file name="org-netbeans-modules-quicksearch-QuickSearchAction.instance">
                 <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
             </file>
-            <file name="ancestris-app-ActionFind.instance">
+            <file name="org-openide-actions-FindAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionFind"/>
                 <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
@@ -59,20 +59,12 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-            <file name="org-openide-actions-FindAction.instance">
-                <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
-                <attr name="noIconInMenu" boolvalue="false"/>
-            </file>
-            <file name="ancestris-app-ActionReplace.instance">
+            <file name="org-openide-actions-ReplaceAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionReplace"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionReplace"/>
                 <attr name="iconBase" stringvalue="ancestris/app/Replace.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-            </file>
-            <file name="org-openide-actions-ReplaceAction.instance">
-                <attr name="iconBase" stringvalue="ancestris/app/Replace.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
