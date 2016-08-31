@@ -58,7 +58,7 @@ import org.openide.windows.TopComponent;
 public class ShowWelcomeAction extends CallableSystemAction {
 
     public ShowWelcomeAction() {
-        putValue("noIconInMenu", Boolean.TRUE); // NOI18N
+        putValue("noIconInMenu", Boolean.FALSE); // NOI18N
     }
 
     public void performAction() {
@@ -83,7 +83,7 @@ public class ShowWelcomeAction extends CallableSystemAction {
     }
     
     @Override protected String iconResource() {
-        return "ancestris/welcome/resources/welcome.gif";  //NOI18N
+        return "ancestris/welcome/resources/welcome.png";  //NOI18N
     }
     
     public HelpCtx getHelpCtx() {
