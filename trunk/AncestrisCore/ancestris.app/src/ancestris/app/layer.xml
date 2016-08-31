@@ -27,8 +27,9 @@
     <attr name="Menu\File\org-openide-actions-SaveAsAction.instance\position" intvalue="2100"/>
     <folder name="Actions">
         <folder name="Edit">
-            <file name="ancestris-app-ActionHistory.instance">
-            </file>
+            <file name="ancestris-app-ActionHistory.instance_hidden"/>
+            <file name="org-openide-actions-GotoAction.instance_hidden"/>
+            <file name="org-openide-actions-DeleteAction.instance_hidden"/>
             <file name="org-openide-actions-CopyAction.instance">
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.callback"/>
                 <attr name="key" stringvalue="copy-to-clipboard"/>
@@ -47,7 +48,9 @@
                 <attr name="iconBase" stringvalue="org/openide/resources/actions/paste.gif"/>
                 <attr name="displayName" bundlevalue="org.openide.actions.Bundle#Paste"/>
             </file>
-            <file name="org-openide-actions-DeleteAction.instance_hidden"/>
+            <file name="org-netbeans-modules-quicksearch-QuickSearchAction.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
+            </file>
             <file name="ancestris-app-ActionFind.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionFind"/>
