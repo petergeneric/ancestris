@@ -170,7 +170,12 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.instance">
+                <attr name="displayName" bundlevalue="ancestris.welcome.resources.Bundle#LBL_InstallPlugins"/>
                 <attr name="iconBase" stringvalue="ancestris/app/Extension.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.instance">
+                <attr name="iconBase" stringvalue="org/netbeans/modules/autoupdate/ui/resources/newUpdates.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
@@ -248,11 +253,6 @@
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="40"/>
             </file>
-            <file name="org-netbeans-core-actions-LogAction.shadow">
-                <attr name="position" intvalue="45"/>
-                <attr name="originalFile" stringvalue="Actions/View/org-netbeans-core-actions-LogAction.instance"/>
-            </file>
-
             <file name="SeparatorAPropos.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="49"/>
@@ -266,6 +266,8 @@
             <file name="org-netbeans-modules-javadoc-search-IndexOverviewAction.shadow_hidden"/>
             <file name="org-netbeans-modules-javadoc-search-SearchDocAction.shadow_hidden"/>
             <file name="master-help.xml_hidden"/>
+            <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow_hidden">
+            </file>
         </folder>
         <file name="Profile_hidden"/>
         <file name="Refactoring_hidden"/>
@@ -291,13 +293,18 @@
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="99"/>
             </file>
-            <file name="MyOptions.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
-                <attr name="position" intvalue="101"/>
-            </file>
             <file name="ActionSaveLayout.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/ancestris-app-SaveLayoutAction.instance"/>
                 <attr name="position" intvalue="150"/>
+            </file>
+            <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow">
+                <!--org.netbeans.modules.autoupdate.ui.actions.CheckForUpdatesAction-->
+                <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.instance"/>
+                <attr intvalue="1300" name="position"/>
+            </file>
+            <file name="MyOptions.shadow">
+                <attr name="originalFile" stringvalue="Actions/Tools/MyOptions.instance"/>
+                <attr name="position" intvalue="2000"/>
             </file>
         </folder>
         <file name="Versioning_hidden"/>
@@ -353,12 +360,18 @@
             <file name="org-netbeans-core-windows-actions-GlobalPropertiesAction.shadow_hidden"/>
             <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
             <file name="org-netbeans-core-windows-actions-UndockAction.shadow_hidden"/>
+            <file name="org-netbeans-core-actions-LogAction.shadow">
+                <attr name="position" intvalue="1000"/>
+                <attr name="originalFile" stringvalue="Actions/View/org-netbeans-core-actions-LogAction.instance"/>
+            </file>
         </folder>
 -->
         <folder name="Window">
             <file name="GedcomExplorerAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-explorer-GedcomExplorerAction.instance"/>
                 <attr name="position" intvalue="100"/>
+            </file>
+            <file name="org-netbeans-core-actions-LogAction.shadow_hidden">
             </file>
             <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
             <file name="Tools_hidden"/>
