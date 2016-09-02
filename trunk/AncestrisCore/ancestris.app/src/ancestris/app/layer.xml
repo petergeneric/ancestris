@@ -14,7 +14,6 @@
     <attr name="Menu\File\org-netbeans-modules-openfile-OpenFileAction.shadow\position" intvalue="1000"/>
     <attr name="Menu\File\org-netbeans-modules-openfile-RecentFileAction.instance\position" intvalue="1100"/>
     <attr name="Menu\File\org-netbeans-modules-print-action-PageSetupAction.shadow\position" intvalue="2400"/>
-    <attr name="Menu\File\org-netbeans-modules-print-action-PrintAction.shadow\position" intvalue="2500"/>
     <attr name="Menu\File\org-netbeans-modules-project-ui-CloseProject.shadow\position" intvalue="900"/>
     <attr name="Menu\File\org-netbeans-modules-project-ui-CustomizeProject.shadow\position" intvalue="1400"/>
     <attr name="Menu\File\org-netbeans-modules-project-ui-NewFile.shadow\position" intvalue="400"/>
@@ -101,15 +100,20 @@
             <file name="ancestris-app-ActionClose.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionClose"/>
             </file>
-            <file name="org-openide-actions-SaveAction.instance">
-                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
-            </file>
              <!--<file name="ancestris-app-ActionSave.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionSave"/>
                 <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
             </file>-->
             <file name="ancestris-app-ActionSaveAs.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionSaveAs"/>
+            </file>
+            <file name="org-netbeans-modules-print-action-PrintAction.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.print.resources.Bundle"/>
+                <attr name="delegate" newvalue="org.netbeans.modules.print.action.PrintAction"/>
+                <attr name="displayName" bundlevalue="org.netbeans.modules.print.action.Bundle#TLT_Print_Action"/>
+                <attr name="iconBase" stringvalue="ancestris/app/Print.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
         <folder name="Tools">
@@ -160,6 +164,16 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
+        <folder name="System">
+            <file name="org-openide-actions-SaveAction.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+            <file name="org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.instance">
+                <attr name="iconBase" stringvalue="ancestris/app/Extension.png"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
+        </folder>
     </folder>
     <file name="BugtrackingOptionsDialog_hidden"/>
     <file name="DTDs_hidden"/>
@@ -195,12 +209,6 @@
                 <attr name="position" intvalue="1801"/>
                 <attr name="noIconInMenu" boolvalue="true"/>
             </file>-->
-            <file name="org-openide-actions-SaveAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
-                <attr name="position" intvalue="1850"/>
-                <attr name="noIconInMenu" boolvalue="false"/>
-            </file>
             <file name="ancestris-app-ActionSaveAs.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/ancestris-app-ActionSaveAs.instance"/>
                 <attr name="position" intvalue="1900"/>
@@ -213,6 +221,14 @@
             <file name="ancestris-app-ActionProperties.shadow-separatorAfter.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="2060"/>
+            </file>
+            <file name="org-openide-actions-SaveAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
+                <attr name="position" intvalue="1850"/>
+            </file>
+            <file name="org-netbeans-modules-print-action-PrintAction.shadow"> 
+                <attr name="originalFile" stringvalue="Actions/File/org-netbeans-modules-print-action-PrintAction.instance"/>
+                <attr name="position" intvalue="2200"/>
             </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
         </folder>
