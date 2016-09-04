@@ -55,6 +55,7 @@ final public class Images {
     public static ImageIcon imgPDF = new ImageIcon(Images.class,"images/PDF");
     public static ImageIcon imgText = new ImageIcon(Images.class,"images/Text");
     public static ImageIcon imgZip = new ImageIcon(Images.class,"images/Zip");
+    public static ImageIcon imgAlm = new ImageIcon(Images.class,"images/Alm");
     
     
     
