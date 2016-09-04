@@ -22,6 +22,7 @@ package genj.almanac;
 
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.PointInTime;
+import genj.timeline.AlmanacPanel;
 import genj.util.EnvironmentChecker;
 import genj.util.PackageUtils;
 import genj.util.Resources;
@@ -70,8 +71,8 @@ public class Almanac {
     private List<Event> events = new ArrayList<Event>();
     
     /** almanacs per country or region or anything else */
-    private Set<String> almanacs = new HashSet<String>();
     private static String ALMANAC_EXTENSION = ".almanac";
+    private Set<String> almanacs = new HashSet<String>();
     /** categories */
     private Set<String> categories = new HashSet<String>();
     /** whether we've loaded all events */
@@ -91,29 +92,39 @@ public class Almanac {
      * Constructor
      */
     private Almanac() {
-        // load what we can find async
-        new Thread(new Runnable() {
+        init();
+    }
 
-            public void run() {
-                try {
-                    if ("fr".equals(Locale.getDefault().getLanguage())) {
-                        new AlmanacLoader().load();
-                    } else {
+    /**
+     * Wait for events to be loaded (this blocks)
+     */
+    public boolean init() {
+        synchronized (events) {
+            events.clear();
+            // load what we can find async
+            new Thread(new Runnable() {
+
+                public void run() {
+                    try {
+                        if ("fr".equals(Locale.getDefault().getLanguage())) {
+                            new AlmanacLoader().load();
+                        } else {
                         // XXX: All events are loaded from files. We will modify this by
-                        // XXX: we will have to create some API for Almanac provider and rewrites WikipediaLoader
+                            // XXX: we will have to create some API for Almanac provider and rewrites WikipediaLoader
 //                        new WikipediaLoader().load();
-                        new AlmanacLoader().load();
+                            new AlmanacLoader().load();
+                        }
+                    } catch (Throwable t) {
                     }
-                } catch (Throwable t) {
+                    LOG.info("Loaded " + events.size() + " events");
+                    synchronized (events) {
+                        isLoaded = true;
+                        events.notifyAll();
+                    }
                 }
-                LOG.info("Loaded " + events.size() + " events");
-                synchronized (events) {
-                    isLoaded = true;
-                    events.notifyAll();
-                }
-            }
-        }).start();
-        // done for now
+            }).start();
+        }
+        return true;
     }
 
     /**
@@ -130,6 +141,16 @@ public class Almanac {
             }
         }
         return true;
+    }
+
+    /**
+     * User directory for almanacs
+     */
+    public File getUserDir() {
+        return new File(EnvironmentChecker.getProperty(
+                new String[]{"ancestris.almanac.dir", "user.home.ancestris/almanac"},
+                "contrib/almanac",
+                "Find almanac files"));
     }
 
     /**
@@ -190,15 +211,15 @@ public class Almanac {
     /**
      * Accessor - events by point in time
      */
-    public Iterator<Event> getEvents(PointInTime when, int days, Set<String> almanacs, Set<String> cats) throws GedcomException {
-        return new Range(when, days, almanacs, cats);
+    public Iterator<Event> getEvents(PointInTime when, int days, Set<String> almanacs, Set<String> cats, int sigLevel) throws GedcomException {
+        return new Range(when, days, almanacs, cats, sigLevel);
     }
 
     /**
      * Accessor - a range of events by (gregorian) year
      */
-    public Iterator<Event> getEvents(PointInTime from, PointInTime to, Set<String> almanacs, Set<String> cats) {
-        return new Range(from, to, almanacs, cats);
+    public Iterator<Event> getEvents(PointInTime from, PointInTime to, Set<String> almanacs, Set<String> cats, int sigLevel) {
+        return new Range(from, to, almanacs, cats, sigLevel);
     }
 
     /**
@@ -320,10 +341,7 @@ public class Almanac {
 
         /** look into ./contrib/almanac */
         protected File getDirectory() {
-            return new File(EnvironmentChecker.getProperty(
-                    new String[]{"ancestris.almanac.dir", "user.home.ancestris/almanac"},
-                    "contrib/almanac",
-                    "find almanac files"));
+            return getUserDir();
         }
 
         /**
@@ -394,7 +412,7 @@ public class Almanac {
                 return null;
             }
             // done
-            return new Event(almanacName, cats, time, desc);
+            return new Event(almanacName, cats, sig, time, desc);
         }
 
         /** derive category names for key */
@@ -536,7 +554,7 @@ public class Almanac {
             List<String> cats = Collections.singletonList(addCategory(group));
 
             // create event
-            return new Event(almanacName, cats, pit, text);
+            return new Event(almanacName, cats, AlmanacPanel.MIN_SIG, pit, text);
         }
 
         @Override
@@ -556,11 +574,12 @@ public class Almanac {
         private Event next;
         private Set<String> almanacs;
         private Set<String> cats;
+        private int sigLevel;
 
         /**
          * Constructor
          */
-        Range(PointInTime when, int days, Set<String> almanacs, Set<String> cats) throws GedcomException {
+        Range(PointInTime when, int days, Set<String> almanacs, Set<String> cats, int sigLevel) throws GedcomException {
 
             earliest = new PointInTime(1 - 1, 1 - 1, when.getYear() - 1);
             latest = new PointInTime(31 - 1, 12 - 1, when.getYear() + 1);
@@ -570,7 +589,7 @@ public class Almanac {
             originDelta = days;
 
             // init
-            init(almanacs, cats);
+            init(almanacs, cats, sigLevel);
 
             // done
         }
@@ -578,7 +597,7 @@ public class Almanac {
         /**
          * Constructor
          */
-        Range(PointInTime from, PointInTime to, Set<String> almanacs, Set<String> cats) {
+        Range(PointInTime from, PointInTime to, Set<String> almanacs, Set<String> cats, int sigLevel) {
 
             if (!from.isValid() || !to.isValid()) {
                 throw new IllegalArgumentException();
@@ -588,13 +607,14 @@ public class Almanac {
             latest = to;
 
             // init
-            init(almanacs, cats);
+            init(almanacs, cats, sigLevel);
         }
 
-        private void init(Set<String> almanacs, Set<String> cats) {
+        private void init(Set<String> almanacs, Set<String> cats, int sigLevel) {
 
             this.almanacs = almanacs;
             this.cats = cats;
+            this.sigLevel = sigLevel;
 
             synchronized (events) {
                 end = events.size();
@@ -641,6 +661,10 @@ public class Almanac {
                     }
                     // good category?
                     if (cats != null && !next.isCategory(cats)) {
+                        continue;
+                    }
+                    // good level?
+                    if (sigLevel > -1 && !next.isLevel(sigLevel)) {
                         continue;
                     }
 
