@@ -47,6 +47,7 @@ public class RulerRenderer extends ContentRenderer {
     /**
      * almanac categories
      */
+    /*package*/ Set<String> almanacs = null;
     /*package*/ Set<String> acats = null;
 
     /**
@@ -148,7 +149,7 @@ public class RulerRenderer extends ContentRenderer {
         double timePerPixel = dotSize.x;
 
         // iterate over according years
-        Iterator almanac = Almanac.getInstance().getEvents(from, to, acats);
+        Iterator almanac = Almanac.getInstance().getEvents(from, to, almanacs, acats);
         double last = 0;
         while (almanac.hasNext()) {
             // event to handle

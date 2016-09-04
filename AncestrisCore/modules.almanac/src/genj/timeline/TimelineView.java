@@ -108,6 +108,8 @@ public class TimelineView extends View implements SelectionListener {
     private ContentRenderer contentRenderer = new ContentRenderer();
     /** almanac categories */
     private List<String> ignoredAlmanacCategories = new ArrayList<String>();
+    private List<String> ignoredAlmanacsList = new ArrayList<String>();
+    
     /** min/max's */
     /* package */ final static double MIN_CM_PER_YEAR = 0.1D,
             DEF_CM_PER_YEAR = 1.0D,
@@ -171,6 +173,8 @@ public class TimelineView extends View implements SelectionListener {
         colors.put("selectedBg", new Color(254, 255, 150)); // same color as in the Cygnus editor for selection of individual
         colors = REGISTRY.get("color", colors);
 
+        String[] ignoredNames = REGISTRY.get("almanac.ignorenames", new String[0]);
+        ignoredAlmanacsList.addAll(Arrays.asList(ignoredNames));
         String[] ignored = REGISTRY.get("almanac.ignore", new String[0]);
         ignoredAlmanacCategories.addAll(Arrays.asList(ignored));
         
@@ -251,6 +255,12 @@ public class TimelineView extends View implements SelectionListener {
         REGISTRY.put("color", colors);
         REGISTRY.put("paths", model.getPaths());
 
+        String[] ignoredNames = new String[ignoredAlmanacsList.size()];
+        for (int i = 0; i < ignoredNames.length; i++) {
+            ignoredNames[i] = ignoredAlmanacsList.get(i).toString();
+        }
+        REGISTRY.put("almanac.ignorenames", ignoredNames);
+
         String[] ignored = new String[ignoredAlmanacCategories.size()];
         for (int i = 0; i < ignored.length; i++) {
             ignored[i] = ignoredAlmanacCategories.get(i).toString();
@@ -279,12 +289,31 @@ public class TimelineView extends View implements SelectionListener {
     }
 
     /**
+     * Accessor - almanac list
+     */
+    public Set<String> getAlmanacList() {
+        HashSet<String> result = new HashSet<String>(Almanac.getInstance().getAlmanacs());
+        result.removeAll(ignoredAlmanacsList);
+        return result;
+    }
+
+    /**
      * Accessor - almanac categories
      */
     public Set<String> getAlmanacCategories() {
         HashSet<String> result = new HashSet<String>(Almanac.getInstance().getCategories());
         result.removeAll(ignoredAlmanacCategories);
         return result;
+    }
+
+    /**
+     * Accessor - hidden almanac category keys
+     */
+    public void setAlmanacs(Set<String> set) {
+        ignoredAlmanacsList.clear();
+        ignoredAlmanacsList.addAll(Almanac.getInstance().getAlmanacs());
+        ignoredAlmanacsList.removeAll(set);
+        repaint();
     }
 
     /**
@@ -633,6 +662,7 @@ public class TimelineView extends View implements SelectionListener {
             rulerRenderer.cTimespanM = colors.get("timespanM");
             rulerRenderer.cTimespanF = colors.get("timespanF");
             rulerRenderer.cTimespanU = colors.get("timespanU");
+            rulerRenderer.almanacs = getAlmanacList();
             rulerRenderer.acats = getAlmanacCategories();
             // prepare UnitGraphics
             UnitGraphics graphics = new UnitGraphics(
@@ -678,7 +708,7 @@ public class TimelineView extends View implements SelectionListener {
             WordBuffer text = new WordBuffer();
             int cursor = Cursor.DEFAULT_CURSOR;
             try {
-                Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacCategories());
+                Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacList(), getAlmanacCategories());
                 if (almanac.hasNext()) {
                     text.append("<html><body>");
                     for (int i = 0; i < 10 && almanac.hasNext(); i++) {

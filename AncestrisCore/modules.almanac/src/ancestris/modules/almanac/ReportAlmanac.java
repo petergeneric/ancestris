@@ -72,7 +72,7 @@ public class ReportAlmanac extends Report {
       return;
 
     // report it
-    report(getAlmanac().getEvents(from, to, null));
+    report(getAlmanac().getEvents(from, to, null, null));
 
   }
 
@@ -137,7 +137,7 @@ public class ReportAlmanac extends Report {
     println(translate("header", new Object[]{ gedcom, from, to}));
     println("--------------------------------------------------------");
 
-    return getAlmanac().getEvents(from, to, null);
+    return getAlmanac().getEvents(from, to, null, null);
   }
 
   /**
