@@ -60,9 +60,9 @@ public class TimelineViewSettings extends JTabbedPane {
     private ListSelectionWidget<TagPath> pathsList;
 
     /**
-     * a widget for selecting almanac event libraries / categories
+     * almanac panel
      */
-    private ListSelectionWidget<String> almanacsList;
+    private AlmanacPanel almanacPanel = null;
 
     /**
      * Checkbox for options
@@ -79,7 +79,7 @@ public class TimelineViewSettings extends JTabbedPane {
      */
     private ColorsWidget colorWidget;
 
-    private Commit commit;
+    public Commit commit;
 
     /**
      * @see genj.view.Settings#init(genj.view.ViewManager)
@@ -90,6 +90,8 @@ public class TimelineViewSettings extends JTabbedPane {
 
         commit = new Commit(view);
 
+        
+        
         // events to pick from
         pathsList = new ListSelectionWidget<TagPath>() {
             @Override
@@ -111,25 +113,24 @@ public class TimelineViewSettings extends JTabbedPane {
         pathsList.setCheckedChoices(view.getModel().getPaths());
         pathsList.addChangeListener(commit);
 
-        // categories to select from
-        almanacsList = new ListSelectionWidget<String>() {
-            protected String getText(String choice) {
-                return "<html><body>" + choice + "</body></html>";
-            }
-        };
+        
+        
+        
+        // Almanac list and categories
         Almanac almanac = Almanac.getInstance();
         almanac.waitLoaded();
-        List<String> cats = almanac.getCategories();
-        almanacsList.setChoices(cats);
-        almanacsList.setCheckedChoices(view.getAlmanacCategories());
-        almanacsList.addChangeListener(commit);
-
+        almanacPanel = new AlmanacPanel(almanac, view, commit);
+        
+        
         // create a panel for options
         JPanel panelOptions = new JPanel(new NestedBlockLayout(
                 "<col><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><check gx=\"1\"/><row><label/><spin/></row><row><label/><spin/></row></col>"
         ));
         panelOptions.setOpaque(false);
 
+        
+        
+        
         // ... checkboxes    
         checkTags = createCheck("info.show.tags", view.isPaintTags());
         checkDates = createCheck("info.show.dates", view.isPaintDates());
@@ -165,8 +166,8 @@ public class TimelineViewSettings extends JTabbedPane {
 
         // layout 
         add(resources.getString("page.main"), panelMain);
+        add(resources.getString("page.almanac"), almanacPanel);
         add(resources.getString("page.colors"), colorWidget);
-        add(resources.getString("page.almanac"), almanacsList);
 
         // done
     }
@@ -178,7 +179,7 @@ public class TimelineViewSettings extends JTabbedPane {
         return result;
     }
 
-    private class Commit implements ChangeListener, ActionListener {
+    public class Commit implements ChangeListener, ActionListener {
 
         private TimelineView view;
 
@@ -213,7 +214,8 @@ public class TimelineViewSettings extends JTabbedPane {
             }
 
             // almanac categories
-            view.setAlmanacCategories(almanacsList.getCheckedChoices());
+            view.setAlmanacs(almanacPanel.getCheckedAlmanacs());
+            view.setAlmanacCategories(almanacPanel.getCheckedCategories());
         }
     }
 
