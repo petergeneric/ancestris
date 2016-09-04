@@ -49,6 +49,7 @@ public class RulerRenderer extends ContentRenderer {
      */
     /*package*/ Set<String> almanacs = null;
     /*package*/ Set<String> acats = null;
+    /*package*/ int sigLevel = AlmanacPanel.MAX_SIG;
 
     /**
      * a tick
@@ -149,7 +150,7 @@ public class RulerRenderer extends ContentRenderer {
         double timePerPixel = dotSize.x;
 
         // iterate over according years
-        Iterator almanac = Almanac.getInstance().getEvents(from, to, almanacs, acats);
+        Iterator almanac = Almanac.getInstance().getEvents(from, to, almanacs, acats, sigLevel);
         double last = 0;
         while (almanac.hasNext()) {
             // event to handle

@@ -109,6 +109,7 @@ public class TimelineView extends View implements SelectionListener {
     /** almanac categories */
     private List<String> ignoredAlmanacCategories = new ArrayList<String>();
     private List<String> ignoredAlmanacsList = new ArrayList<String>();
+    private int almanacSigLevel = AlmanacPanel.MAX_SIG;
     
     /** min/max's */
     /* package */ final static double MIN_CM_PER_YEAR = 0.1D,
@@ -177,6 +178,7 @@ public class TimelineView extends View implements SelectionListener {
         ignoredAlmanacsList.addAll(Arrays.asList(ignoredNames));
         String[] ignored = REGISTRY.get("almanac.ignore", new String[0]);
         ignoredAlmanacCategories.addAll(Arrays.asList(ignored));
+        almanacSigLevel = REGISTRY.get("almanac.siglevel", (int) AlmanacPanel.MAX_SIG);
         
         mode = REGISTRY.get("display.mode", mode);
 
@@ -266,6 +268,7 @@ public class TimelineView extends View implements SelectionListener {
             ignored[i] = ignoredAlmanacCategories.get(i).toString();
         }
         REGISTRY.put("almanac.ignore", ignored);
+        REGISTRY.put("almanac.siglevel", almanacSigLevel);
 
         REGISTRY.put("display.mode", mode);
         
@@ -307,6 +310,12 @@ public class TimelineView extends View implements SelectionListener {
     }
 
     /**
+     * Accessor - almanac list
+     */
+    public int getAlmanacSigLevel() {
+        return almanacSigLevel;
+    }
+    /**
      * Accessor - hidden almanac category keys
      */
     public void setAlmanacs(Set<String> set) {
@@ -323,6 +332,14 @@ public class TimelineView extends View implements SelectionListener {
         ignoredAlmanacCategories.clear();
         ignoredAlmanacCategories.addAll(Almanac.getInstance().getCategories());
         ignoredAlmanacCategories.removeAll(set);
+        repaint();
+    }
+
+    /**
+     * Accessor - set almanac importance level
+     */
+    public void setAlmanacSigLevel(int set) {
+        almanacSigLevel = set;
         repaint();
     }
 
@@ -664,6 +681,7 @@ public class TimelineView extends View implements SelectionListener {
             rulerRenderer.cTimespanU = colors.get("timespanU");
             rulerRenderer.almanacs = getAlmanacList();
             rulerRenderer.acats = getAlmanacCategories();
+            rulerRenderer.sigLevel = getAlmanacSigLevel();
             // prepare UnitGraphics
             UnitGraphics graphics = new UnitGraphics(
                     g,
@@ -708,7 +726,7 @@ public class TimelineView extends View implements SelectionListener {
             WordBuffer text = new WordBuffer();
             int cursor = Cursor.DEFAULT_CURSOR;
             try {
-                Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacList(), getAlmanacCategories());
+                Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacList(), getAlmanacCategories(), getAlmanacSigLevel());
                 if (almanac.hasNext()) {
                     text.append("<html><body>");
                     for (int i = 0; i < 10 && almanac.hasNext(); i++) {

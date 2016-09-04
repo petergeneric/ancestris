@@ -35,13 +35,15 @@ public class Event implements Comparable<Event> {
   private String desc;
   private String almanac;
   private List<String> cats;
+  private int sigLevel;
   private long julianDay;
   
   /** constructor */
-  public Event(String setAlmanac, List<String> setCats, PointInTime setTime, String setText) throws GedcomException {
+  public Event(String setAlmanac, List<String> setCats, int setSigLevel, PointInTime setTime, String setText) throws GedcomException {
     pit = setTime;
     almanac = setAlmanac;
     cats = setCats;
+    sigLevel = setSigLevel;
     desc = setText;
     // make sure its julian day is good
     julianDay = pit.getJulianDay();
@@ -64,6 +66,11 @@ public class Event implements Comparable<Event> {
         return true;
     }
     return false;
+  }
+  
+  /* Test for level */
+  protected boolean isLevel(int criteria) {
+    return criteria >= sigLevel;
   }
   
   /** to String */
@@ -98,6 +105,13 @@ public class Event implements Comparable<Event> {
    */
   public List<String> getCategories() {
     return cats;
+  }
+  
+  /**
+   * Accessor
+   */
+  public int getSigLevel() {
+    return sigLevel;
   }
   
   /**
