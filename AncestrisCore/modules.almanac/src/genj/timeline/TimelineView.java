@@ -44,6 +44,7 @@ import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import ancestris.swing.ToolBar;
 import genj.util.swing.ImageIcon;
+import genj.view.SelectionListener;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -60,10 +61,10 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +80,7 @@ import javax.swing.event.ChangeListener;
 /**
  * Component for showing entities' events in a timeline view
  */
-public class TimelineView extends View {
+public class TimelineView extends View implements SelectionListener {
 
     /** the units we use */
     private final DPI DPI;
@@ -93,8 +94,8 @@ public class TimelineView extends View {
     /** our content */
     private Content content;
     /** our current selection */
-    private Set<Model.Event> selectionEvent = new HashSet<Model.Event>();
-    private Set<Model.EventSerie> selectionEventSerie = new HashSet<Model.EventSerie>();
+    private List<Model.Event> selectionEvent = new LinkedList<Model.Event>();
+    private List<Model.EventSerie> selectionEventSerie = new LinkedList<Model.EventSerie>();
     /** our ruler */
     private Ruler ruler;
     /** our slider for cm per year */
@@ -215,16 +216,7 @@ public class TimelineView extends View {
         // layout
         setLayout(new BorderLayout());
         add(scrollContent, BorderLayout.CENTER);
-
-        // scroll to last centered year
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-
-            @Override
-            public void run() {
-                centeredYear = REGISTRY.get("centeryear", 0F);
-                scroll2year(centeredYear);
-            }
-        });
+        centeredYear = REGISTRY.get("centeryear", 0F);
 
         // done
     }
@@ -364,7 +356,7 @@ public class TimelineView extends View {
         isPackIndi = set;
         model.setPackIndi(isPackIndi);
         createLayers();
-        selectionEventSerie = model.getIndis(content.getContext());
+        selectionEventSerie = model.getIndis();
         centerToSelection();
     }
 
@@ -453,20 +445,14 @@ public class TimelineView extends View {
             selectionEventSerie.clear();
         } else {
             model.setGedcom(context);
-            selectionEvent = model.getEvents(context);
-            selectionEventSerie = model.getIndis(context);
-        }
-        
-        if (cttiButton != null & ctsButton != null) {
-            cttiButton.setEnabled(!selectionEventSerie.isEmpty());
-            cttiButton.setTip();
-            ctsButton.setEnabled(!selectionEventSerie.isEmpty() && !selectionEvent.isEmpty());
-            ctsButton.setTip();
+            selectionEvent = model.getEvents();
+            selectionEventSerie = model.getIndis();
         }
         
         // do a repaint, too
         content.repaint();
 
+        // Center selection
         centerToSelection();
 
         // done
@@ -501,26 +487,57 @@ public class TimelineView extends View {
      */
     protected void scroll2year(double year) {
         centeredYear = year;
-        int x = (int) ((year - model.min) * DPC.getX() * cmPerYear) - scrollContent.getViewport().getWidth() / 2;
-        scrollContent.getHorizontalScrollBar().setValue(x);
+        int minX = scrollContent.getHorizontalScrollBar().getValue()+10;
+        int maxX = minX + scrollContent.getViewport().getWidth()-90;
+        int newX = (int) ((year - model.min) * DPC.getX() * cmPerYear);
+
+        // Determines if newY is already Visible (between min and max)
+        if ((maxX < minX) || (newX > minX && newX < maxX)) {
+            return;
+        }
+        // Else show newY in the middle
+        newX = newX - scrollContent.getViewport().getWidth() / 2;
+        scrollContent.revalidate();
+        scrollContent.getHorizontalScrollBar().setValue(newX);
+        
         scrollContent.getHorizontalScrollBar().setUnitIncrement((int) (DPC.getX() * cmPerYear));
         scrollContent.getVerticalScrollBar().setUnitIncrement((int) (Math.max(3, Math.log10(model.getLayersNumber(mode))) * (getFontMetrics(getFont()).getHeight() + 1)));
     }
 
     protected void scroll2layer(int layer) {
-        int y = (int) (layer * (getFontMetrics(getFont()).getHeight() + 1)    -    (scrollContent.getViewport().getHeight() / 3));
-        if (y < 0) {
-            y = 0;
+        int layerHeight = getFontMetrics(getFont()).getHeight() + 1;
+        int windowHeight = scrollContent.getViewport().getHeight();
+        int northBand = 2*layerHeight;
+        int southBand = windowHeight - 4*layerHeight;
+        int minY = scrollContent.getVerticalScrollBar().getValue() + northBand;
+        int maxY = minY + southBand;
+        int newY = (int) (layer * layerHeight);
+
+        // Determines if newY is already Visible (between min and max)
+        if ((maxY < minY) || (newY > minY && newY < maxY)) {
+            return;
+        }
+        
+        // Else show newY in the middle
+        if (newY <= minY && (minY-newY <= northBand)) {
+            newY -= northBand; 
+        } else if (newY >= maxY && (newY-maxY <= southBand)) {
+            newY -= southBand;
+        } else {
+            newY = (int) (newY - (windowHeight / 2));
+        }
+        if (newY < 0) {
+            newY = 0;
         }
         scrollContent.revalidate();
-        scrollContent.getVerticalScrollBar().setValue(y);
+        scrollContent.getVerticalScrollBar().setValue(newY);
     }
 
     /**
      * Make sure the given event is visible
      * 
      */
-    protected void makeVisible(Model.Event event) {
+    private void makeVisible(Model.Event event) {
         scroll2year(event.from);
         scroll2layer(model.getLayerFromEvent(event));
     }
@@ -529,19 +546,30 @@ public class TimelineView extends View {
      * Make sure the given event is visible
      * 
      */
-    protected void makeVisible(Model.EventSerie eventSerie) {
+    private void makeVisible(Model.EventSerie eventSerie) {
         scroll2year(eventSerie.from);
         scroll2layer(model.getLayerFromEventSerie(eventSerie));
     }
 
-    private void centerToSelection() {
+    public void centerToSelection() {
+
+        if (cttiButton == null || ctsButton == null) {
+            return;
+        }
+        
+        cttiButton.setEnabled(!selectionEventSerie.isEmpty());
+        cttiButton.setTip();
+        ctsButton.setEnabled(!selectionEventSerie.isEmpty() && !selectionEvent.isEmpty());
+        ctsButton.setTip();
+        
+
         if (mode == INDI_MODE) {
             if (!selectionEventSerie.isEmpty()) {
-                makeVisible(selectionEventSerie.iterator().next());
+                makeVisible(selectionEventSerie.get(selectionEventSerie.size()-1));
             }
         } else {
             if (!selectionEvent.isEmpty()) {
-                makeVisible(selectionEvent.iterator().next());
+                makeVisible(selectionEvent.get(selectionEvent.size()-1));
             }
         }
     }
@@ -694,7 +722,7 @@ public class TimelineView extends View {
                 return null;
             }
 
-            List<Property> props = new ArrayList<Property>();
+            List<Property> props = new LinkedList<Property>();
             if (mode == INDI_MODE) {
                 for (Model.EventSerie eventSerie : selectionEventSerie) {
                     props.add(eventSerie.getProperty());
@@ -732,9 +760,9 @@ public class TimelineView extends View {
 
             // let the renderer do its work
             if (mode == INDI_MODE) {
-                contentRenderer.selectionEventSerie = rsel ? selectionEventSerie : Collections.<Model.EventSerie>emptySet();
+                contentRenderer.selectionEventSerie = rsel ? selectionEventSerie : new LinkedList<Model.EventSerie>();
             } else {
-                contentRenderer.selectionEvent = rsel ? selectionEvent : Collections.<Model.Event>emptySet();
+                contentRenderer.selectionEvent = rsel ? selectionEvent : new LinkedList<Model.Event>();
             }
             
             contentRenderer.cBackground = colors.get("background");

@@ -33,10 +33,9 @@ import java.awt.Stroke;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * A renderer knowing how to render a ruler for the timeline
@@ -72,8 +71,8 @@ public class ContentRenderer {
      * current selection
      */
     /*package*/ 
-    Set<Model.Event> selectionEvent = new HashSet<Model.Event>();
-    Set<Model.EventSerie> selectionEventSerie = new HashSet<Model.EventSerie>();
+    List<Model.Event> selectionEvent = new LinkedList<Model.Event>();
+    List<Model.EventSerie> selectionEventSerie = new LinkedList<Model.EventSerie>();
 
     /**
      * background color

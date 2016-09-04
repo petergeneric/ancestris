@@ -14,12 +14,14 @@ package ancestris.modules.almanac;
 import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
+import genj.timeline.TimelineView;
 import genj.timeline.TimelineViewFactory;
 import genj.view.ViewFactory;
 //import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
+import org.openide.windows.WindowManager;
 
 /**
  * Top component which displays something.
@@ -64,4 +66,23 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     protected String preferredID() {
         return PREFERRED_ID;
     }
+
+    /**
+     * On timeline activation, need to force selected individual to appear
+     * (if TopComponent visible at launch, selection works in timelineview ;
+     * but if TopComponent hiddent at launch, selection does not work ; So this method forces to redo CenterSelection after component is shown).
+     */
+    @Override
+    protected void componentActivated() {
+        super.componentActivated();
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                ((TimelineView) getView()).centerToSelection();
+            }
+        });
+    }
+
+
+
 }
