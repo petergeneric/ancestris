@@ -179,6 +179,7 @@ public class FileChooserBuilder {
     public static String[] tblExtensions = {"txt", "csv"};
     public static String[] htmExtensions = {"html"};
     public static String[] zipExtensions = {"zip"};
+    public static String[] almExtensions = {"almanac"};
 
     private static String DIMX = "dimX";
     private static String DIMY = "dimY";
@@ -669,6 +670,8 @@ public class FileChooserBuilder {
             icon = Images.imgText;
         } else if (Arrays.asList(zipExtensions).contains(extension)) {
             icon = Images.imgZip;
+        } else if (Arrays.asList(almExtensions).contains(extension)) {
+            icon = Images.imgAlm;
         } // add more at will !
 
         return icon;
@@ -718,6 +721,10 @@ public class FileChooserBuilder {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Zip"), zipExtensions);
     }
 
+    public static FileNameExtensionFilter getAlmanacFilter() {
+        return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Almanac"), almExtensions);
+    }
+     
     
     
     
