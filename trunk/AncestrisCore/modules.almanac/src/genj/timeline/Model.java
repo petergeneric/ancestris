@@ -350,10 +350,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
     /**
      * Returns the events that cover the given context
      */
-    protected Set<Event> getEvents(Context context) {
+    protected List<Event> getEvents() {
 
-        Set<Event> propertyHits = new HashSet<Event>();
-        Set<Event> entityHits = new HashSet<Event>();
+        List<Event> propertyHits = new LinkedList<Event>();
+        List<Event> entityHits = new LinkedList<Event>();
 
         List<? extends Property> props = context.getProperties();
         List<Entity> ents = getAllContextEntities(context);
@@ -381,10 +381,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
     /**
      * Returns the events that cover the given context
      */
-    protected Set<EventSerie> getIndis(Context context) {
+    protected List<EventSerie> getIndis() {
 
-        Set<EventSerie> propertyHits = new HashSet<EventSerie>();
-        Set<EventSerie> entityHits = new HashSet<EventSerie>();
+        List<EventSerie> propertyHits = new LinkedList<EventSerie>();
+        List<EventSerie> entityHits = new LinkedList<EventSerie>();
 
         List<? extends Property> props = context.getProperties();
         List<? extends Entity> ents = getAllContextEntities(context);

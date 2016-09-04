@@ -92,12 +92,17 @@ public class TimelineViewSettings extends JTabbedPane {
 
         // events to pick from
         pathsList = new ListSelectionWidget<TagPath>() {
+            @Override
             protected ImageIcon getIcon(TagPath path) {
                 Grammar grammar = Grammar.V55;
                 if (gedcom != null) {
                     grammar = gedcom.getGrammar();
                 }
                 return grammar.getMeta(path).getImage();
+            }
+            @Override
+            protected String getText(TagPath path) {
+                return path.getName();
             }
         };
         if (gedcom != null) {
