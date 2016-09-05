@@ -14,10 +14,15 @@ package genj.timeline;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.almanac.Almanac;
-import genj.util.swing.ListSelectionWidget;
+import java.awt.Component;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.Set;
+import javax.swing.DefaultListModel;
+import javax.swing.JCheckBox;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.NbBundle;
@@ -28,9 +33,11 @@ import org.openide.util.NbBundle;
  */
 public class AlmanacPanel extends javax.swing.JPanel {
 
-    private ListSelectionWidget<String> almanacsList, almanacCategories;
     private Almanac almanac;
+    private TimelineView view;
+    private TimelineViewSettings.Commit commit;
 
+    private DefaultListModel almanacModel, categoriesModel;
     private SpinnerNumberModel spinmodel;
     public static int MAX_SIG = 9;
     public static int MIN_SIG = 0;
@@ -41,44 +48,69 @@ public class AlmanacPanel extends javax.swing.JPanel {
     public AlmanacPanel(Almanac almanac, TimelineView view, TimelineViewSettings.Commit commit) {
 
         this.almanac = almanac;
+        this.view = view;
+        this.commit = commit;
         
-        // List
-        almanacsList = new ListSelectionWidget<String>() {
-            protected String getText(String choice) {
-                return "<html><body>" + choice + "</body></html>";
-            }
-        };
-        almanacsList.setChoices(almanac.getAlmanacs());
-        almanacsList.setCheckedChoices(view.getAlmanacList());
-        almanacsList.addChangeListener(commit);
-        
+        // Almanacs
+        almanacModel = new DefaultListModel();
+        reloadAlmanacs();
+
         // Categories
-        almanacCategories = new ListSelectionWidget<String>() {
-            protected String getText(String choice) {
-                return "<html><body>" + choice + "</body></html>";
-            }
-        };
-        almanacCategories.setChoices(almanac.getCategories());
-        almanacCategories.setCheckedChoices(view.getAlmanacCategories());
-        almanacCategories.addChangeListener(commit);
+        categoriesModel = new DefaultListModel();
+        Set<String> selectedCat = view.getAlmanacCategories();
+        for (String cat : almanac.getCategories()) {
+            JCheckBox cb = new JCheckBox(cat, selectedCat.contains(cat));
+            cb.addChangeListener(commit);
+            categoriesModel.addElement(cb);
+        }
+        
 
         int value = Math.min(MAX_SIG, view.getAlmanacSigLevel());
         spinmodel = new SpinnerNumberModel(value, MIN_SIG, MAX_SIG, 1);
         
         initComponents();
-        sigSpinner.addChangeListener(commit);
-        listScrollPane.setViewportView(almanacsList);
-        catScrollPane.setViewportView(almanacCategories);
         
+        almList.setCellRenderer(new CheckBoxesListCellrenderer());
+        catList.setCellRenderer(new CheckBoxesListCellrenderer());
+        sigSpinner.addChangeListener(commit);
+    }
+    
+    private void reloadAlmanacs() {
+        almanacModel.removeAllElements();
+        Set<String> selectedAlm = view.getAlmanacList();
+        for (String alm : almanac.getAlmanacs()) {
+            JCheckBox cb = new JCheckBox(alm, selectedAlm.contains(alm));
+            cb.addChangeListener(commit);
+            almanacModel.addElement(cb);
+        }
+        if (almList != null) {
+            almList.setModel(almanacModel);
+            listScrollPane.setViewportView(almList);
+            spinmodel.setStepSize(1); // force commit
+        }
         
     }
     
     public Set<String> getCheckedAlmanacs() {
-        return almanacsList.getCheckedChoices();
+        Set<String> ret = new HashSet<String>();
+        for (int i = 0 ; i < almanacModel.getSize() ; i++) {
+            JCheckBox cb = (JCheckBox) almanacModel.getElementAt(i);
+            if (cb.isSelected()) {
+                ret.add(cb.getText());
+            }
+        }
+        return ret;
     }
 
     public Set<String> getCheckedCategories() {
-        return almanacCategories.getCheckedChoices();
+        Set<String> ret = new HashSet<String>();
+        for (int i = 0 ; i < categoriesModel.getSize() ; i++) {
+            JCheckBox cb = (JCheckBox) categoriesModel.getElementAt(i);
+            if (cb.isSelected()) {
+                ret.add(cb.getText());
+            }
+        }
+        return ret;
     }
 
     public int getAlmanacSigLevel() {
@@ -95,8 +127,10 @@ public class AlmanacPanel extends javax.swing.JPanel {
 
         listLabel = new javax.swing.JLabel();
         listScrollPane = new javax.swing.JScrollPane();
+        almList = new javax.swing.JList(almanacModel);
         catLabel = new javax.swing.JLabel();
         catScrollPane = new javax.swing.JScrollPane();
+        catList = new javax.swing.JList(categoriesModel);
         addButton = new javax.swing.JButton();
         removeButton = new javax.swing.JButton();
         sigLabel = new javax.swing.JLabel();
@@ -104,7 +138,22 @@ public class AlmanacPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(listLabel, org.openide.util.NbBundle.getMessage(AlmanacPanel.class, "AlmanacPanel.listLabel.text")); // NOI18N
 
+        almList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        almList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                almListMouseClicked(evt);
+            }
+        });
+        listScrollPane.setViewportView(almList);
+
         org.openide.awt.Mnemonics.setLocalizedText(catLabel, org.openide.util.NbBundle.getMessage(AlmanacPanel.class, "AlmanacPanel.catLabel.text")); // NOI18N
+
+        catList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                catListMouseClicked(evt);
+            }
+        });
+        catScrollPane.setViewportView(catList);
 
         org.openide.awt.Mnemonics.setLocalizedText(addButton, org.openide.util.NbBundle.getMessage(AlmanacPanel.class, "AlmanacPanel.addButton.text")); // NOI18N
         addButton.addActionListener(new java.awt.event.ActionListener() {
@@ -130,23 +179,24 @@ public class AlmanacPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(removeButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 166, Short.MAX_VALUE)
-                    .addComponent(addButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(listScrollPane)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(addButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(listLabel, javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(listScrollPane, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(removeButton, javax.swing.GroupLayout.DEFAULT_SIZE, 196, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(listLabel)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 58, Short.MAX_VALUE)
                         .addComponent(catLabel)
-                        .addGap(0, 60, Short.MAX_VALUE))
-                    .addComponent(catScrollPane)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sigLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(sigSpinner)))
+                        .addGap(0, 41, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(catScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(sigLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(sigSpinner)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -159,8 +209,8 @@ public class AlmanacPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(listScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 292, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(listScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE)
+                        .addGap(18, 18, 18)
                         .addComponent(addButton))
                     .addComponent(catScrollPane))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -188,7 +238,8 @@ public class AlmanacPanel extends javax.swing.JPanel {
             try {
                 FileUtils.copyFile(source, dest);
                 almanac.init();
-                spinmodel.setStepSize(1); // force commit
+                almanac.waitLoaded();
+                reloadAlmanacs();
             } catch (IOException e) {
                 //e.printStackTrace();
             }
@@ -218,15 +269,37 @@ public class AlmanacPanel extends javax.swing.JPanel {
             if (o == DialogManager.YES_OPTION) {
                 file.delete();
                 almanac.init();
-                spinmodel.setStepSize(1); // force commit
+                almanac.waitLoaded();
+                reloadAlmanacs();
             }
         }
     }//GEN-LAST:event_removeButtonActionPerformed
 
+    private void almListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_almListMouseClicked
+        int index = almList.locationToIndex(evt.getPoint());
+        if (index != -1) {
+            JCheckBox cb = (JCheckBox) almanacModel.get(index);
+            cb.setSelected(!cb.isSelected());
+            almList.repaint();
+        }
+
+    }//GEN-LAST:event_almListMouseClicked
+
+    private void catListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_catListMouseClicked
+        int index = catList.locationToIndex(evt.getPoint());
+        if (index != -1) {
+            JCheckBox cb = (JCheckBox) categoriesModel.get(index);
+            cb.setSelected(!cb.isSelected());
+            catList.repaint();
+        }
+    }//GEN-LAST:event_catListMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addButton;
+    private javax.swing.JList almList;
     private javax.swing.JLabel catLabel;
+    private javax.swing.JList catList;
     private javax.swing.JScrollPane catScrollPane;
     private javax.swing.JLabel listLabel;
     private javax.swing.JScrollPane listScrollPane;
@@ -234,5 +307,17 @@ public class AlmanacPanel extends javax.swing.JPanel {
     private javax.swing.JLabel sigLabel;
     private javax.swing.JSpinner sigSpinner;
     // End of variables declaration//GEN-END:variables
+
+    private class CheckBoxesListCellrenderer implements ListCellRenderer {
+
+        public CheckBoxesListCellrenderer() {
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+            JCheckBox cb = (JCheckBox) value;
+            return cb;
+        }
+    }
 
 }
