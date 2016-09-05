@@ -100,6 +100,8 @@ public class Almanac {
      */
     public boolean init() {
         synchronized (events) {
+            almanacs.clear();
+            categories.clear();
             events.clear();
             // load what we can find async
             new Thread(new Runnable() {

@@ -187,12 +187,13 @@ public class TimelineViewSettings extends JTabbedPane {
             this.view = view;
         }
 
+        @Override
         public void stateChanged(ChangeEvent e) {
             actionPerformed(null);
         }
 
+        @Override
         public void actionPerformed(ActionEvent e) {
-
             // choosen EventTags
             view.getModel().setPaths(pathsList.getCheckedChoices());
 
