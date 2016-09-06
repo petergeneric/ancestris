@@ -357,7 +357,7 @@ public class Almanac {
         /** create an event */
         protected Event load(String almanacName, String line) throws GedcomException {
             // comment?
-            if (line.startsWith("#")) {
+            if (line.startsWith("#") || line.startsWith(" ")) {
                 return null;
             }
             // break it by ';'
@@ -385,16 +385,26 @@ public class Almanac {
             if (!country.equals(";")) {
                 cols.nextToken();
             }
-            // #4 significance
+            // #4 state
+            String state = cols.nextToken().trim();
+            if (!state.equals(";")) {
+                cols.nextToken();
+            }
+            // #5 region
+            String region = cols.nextToken().trim();
+            if (!region.equals(";")) {
+                cols.nextToken();
+            }
+            // #6 significance
             int sig = Integer.parseInt(cols.nextToken());
             cols.nextToken();
-            // #5 type
+            // #7 type
             List<String> cats = getCategories(cols.nextToken().trim());
             if (cats.isEmpty()) {
                 return null;
             }
             cols.nextToken();
-            // #6 and following description
+            // #8 and following description
             String desc = null;
             while (cols.hasMoreTokens()) {
                 String translation = cols.nextToken().trim();

@@ -50,13 +50,19 @@
 #                ch : Switzerland
 #                gb : United Kingdom
 #                us : United States
-# Parameter #4 : Importance of this event (a positive integer value, between
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
 #                0 to 9), with :
 #                0 = major important event. This event will be displayed, always.
 #                1 = important event.
 #                2 = less important event.
 #                etc...
-# Parameter #5 : Type, with :
+# Parameter #7 : Type, with :
 #                W = War
 #                P = Political event
 #                B = Birthday
@@ -69,18 +75,18 @@
 #                R = Reigns
 #                A list of types is allowed, e.g. WP describes an event
 #                in the context of a war with political proportions.
-# Parameter #6 : The event description in a specific language - a prefix
+# Parameter #8 : The event description in a specific language - a prefix
 #                of a valid ISO-639 language code is required:
 #                de = German
 #                en = English
 #                fr = French
 #                it = Italian
-# Parameter #7+: More event descriptions in different languages (again
+# Parameter #9+: More event descriptions in different languages (again
 #                separated by ';')
 #
 # Here's an example for Bruxelles rising.
 #
-# 18300825;;be;3;P;fr=Soulèvement de Bruxelles
+# 18300825;;be;;;3;P;fr=Soulèvement de Bruxelles
 #
 # --------------------------- F R E N C H    S E C T I O N  ----------------------------
 #
@@ -125,7 +131,11 @@
 #                gb : Royaume uni
 #                se : Suede
 #                ch : Suisse
-# Paramètre #4 : L'importance de cet événement (un chiffre positif à 
+# Parameter #4 : Etat
+#                
+# Parameter #5 : Region
+#                
+# Paramètre #6 : L'importance de cet événement (un chiffre positif à 
 #                choisir entre 
 #                0 et 9), avec :
 #                0 = événement d'une importance majeure. Cet événénement 
@@ -133,7 +143,7 @@
 #                1 = événement moins important.
 #                2 = événement encore moins important.
 #                etc...
-# Paramètre #5 : Le type d'événement, avec :
+# Paramètre #7 : Le type d'événement, avec :
 #                W = Guerre
 #                P = Evénement politique
 #                B = Anniversaire
@@ -148,19 +158,19 @@
 #                sera utilisé pour décrire un événement ayant une 
 #                connotation de guerre avec des conséquences politiques 
 #                importantes.
-# Paramètre #6 : Une description de l'événement dans un langage donné - 
+# Paramètre #8 : Une description de l'événement dans un langage donné - 
 #                il faut utiliser un préfix avec un code ISO-639 
 #                obligatoirement, ainsi :
 #                de = Allemand
 #                en = Anglais
 #                fr = Français
 #                it = Italien
-# Paramètre #7+: De plus amples descriptions de l'événément en différentes 
+# Paramètre #9+: De plus amples descriptions de l'événément en différentes 
 #                langues (à nouveau en les séparant par un point-virgule ';')
 #
 # Voici un exemple pour l'entrée du Duc de Guise entrant dans Paris le 9 mai 1588
 #
-# 15880509;;fr;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
 #
 #
 # Note de l'auteur : J'ai volontairement fait débuter les événements vers 1600 et 
