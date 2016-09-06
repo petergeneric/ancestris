@@ -99,6 +99,7 @@ public class Almanac {
      * Wait for events to be loaded (this blocks)
      */
     public boolean init() {
+        isLoaded = false;
         synchronized (events) {
             almanacs.clear();
             categories.clear();

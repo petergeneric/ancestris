@@ -85,7 +85,6 @@ public class AlmanacPanel extends javax.swing.JPanel {
         }
         if (almList != null) {
             almList.setModel(almanacModel);
-            listScrollPane.setViewportView(almList);
             spinmodel.setStepSize(1); // force commit
         }
         
