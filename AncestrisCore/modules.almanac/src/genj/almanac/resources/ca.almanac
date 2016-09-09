@@ -207,56 +207,7 @@
 #==============================================================================
 #
 #
-# I - Political Informations (abbr. P)
-#
-17590626;;ca;3;P;fr=Siège de la ville de Québec.;en=The city of Québec is besieged.
-
-#
-#
-# II - War Events (abbr. W)
-#
-
-#
-#
-# III - Founding Events (abbr. F)
-#
-
-#
-#
-# IV - Discovery Events (abbr. Y)
-#
-
-#
-#
-# V - Invention Events (abbr. I)
-#
-
-#
-#
-# VI - Birthdays (abbr. B)
-#
-
-#
-#
-# VII - Weddings (abbr. X)
-#
-
-
-#
-#
-# VIII - Deaths (abbr. D)
-#
-
-#
-#
-# IX - Misc. Events
-#
-
-#
-#
-# X - Reigns of the Canadian Presidents
-#
-
+17590626;;ca;;;3;P;fr=Siège de la ville de Québec.;en=The city of Québec is besieged.
 #
 #
 #

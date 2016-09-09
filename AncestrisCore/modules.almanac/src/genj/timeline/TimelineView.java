@@ -59,10 +59,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
+import java.text.Collator;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,6 +88,8 @@ public class TimelineView extends View implements SelectionListener {
     private final Point2D DPC;
     /** resources */
     private Resources resources = Resources.get(this);
+    private String prefix = resources.getString("info.almanac") + "-";
+
     /** keeping track of our colors */
     /* package */ Map<String, Color> colors = new HashMap<String, Color>();
     /** our model */
@@ -172,7 +175,6 @@ public class TimelineView extends View implements SelectionListener {
         colors.put("grid", Color.LIGHT_GRAY);
         colors.put("selected", Color.RED);
         colors.put("selectedBg", new Color(254, 255, 150)); // same color as in the Cygnus editor for selection of individual
-        colors = REGISTRY.get("color", colors);
 
         String[] ignoredNames = REGISTRY.get("almanac.ignorenames", new String[0]);
         ignoredAlmanacsList.addAll(Arrays.asList(ignoredNames));
@@ -201,9 +203,10 @@ public class TimelineView extends View implements SelectionListener {
             model.setPaths(null);
         }
 
-        content = new Content();
+        // Init panels
         ruler = new Ruler();
-
+        content = new Content();
+        
         // all that fits in a scrollpane
         scrollContent = new ScrollPaneWidget(content);
         scrollContent.setViewportBorder(BorderFactory.createEmptyBorder(5, 0, 0, 0));
@@ -292,10 +295,17 @@ public class TimelineView extends View implements SelectionListener {
     }
 
     /**
+     * Accessor - registry
+     */
+    public Registry getRegistry() {
+        return REGISTRY;
+    }
+
+    /**
      * Accessor - almanac list
      */
-    public Set<String> getAlmanacList() {
-        HashSet<String> result = new HashSet<String>(Almanac.getInstance().getAlmanacs());
+    public List<String> getAlmanacList() {
+        List<String> result = new ArrayList<String>(Almanac.getInstance().getAlmanacs());
         result.removeAll(ignoredAlmanacsList);
         return result;
     }
@@ -303,8 +313,8 @@ public class TimelineView extends View implements SelectionListener {
     /**
      * Accessor - almanac categories
      */
-    public Set<String> getAlmanacCategories() {
-        HashSet<String> result = new HashSet<String>(Almanac.getInstance().getCategories());
+    public List<String> getAlmanacCategories() {
+        List<String> result = new ArrayList<String>(Almanac.getInstance().getCategories());
         result.removeAll(ignoredAlmanacCategories);
         return result;
     }
@@ -343,6 +353,22 @@ public class TimelineView extends View implements SelectionListener {
         repaint();
     }
 
+    /**
+     * Accessor - get almanac color labels
+     */
+    public List<String> getAlmanacColorLabels() {
+        List<String> ret = new ArrayList<String>();
+        Collator comparator = getCollator();
+        comparator.setStrength (Collator.PRIMARY);
+        List<String> alms = new ArrayList<String>(Almanac.getInstance().getAlmanacs());
+        Collections.sort(alms, comparator);
+        for (String alm : alms) {
+            ret.add(prefix + alm);
+        }
+        return ret;
+    }
+    
+    
     /**
      * Accessor - paint tags
      */
@@ -627,6 +653,13 @@ public class TimelineView extends View implements SelectionListener {
         scrollContent.setViewportView(content); // need to refresh vertical scroll bar
     }
 
+    public Collator getCollator() {
+        if (content == null) {
+            return Collator.getInstance(getLocale());
+        }
+        return content.getContext().getGedcom().getCollator();
+    }
+
     /**
      * The ruler 'at the top'
      */
@@ -673,6 +706,10 @@ public class TimelineView extends View implements SelectionListener {
         @Override
         protected void paintComponent(Graphics g) {
             // let the renderer do its work
+            for (String alm : getAlmanacColorLabels()) {
+                colors.put(alm, Color.BLUE);
+            }
+            colors = REGISTRY.get("color", colors);
             rulerRenderer.cBackground = colors.get("background");
             rulerRenderer.cText = colors.get("text");
             rulerRenderer.cTick = rulerRenderer.cText;
@@ -728,13 +765,14 @@ public class TimelineView extends View implements SelectionListener {
             try {
                 Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacList(), getAlmanacCategories(), getAlmanacSigLevel());
                 if (almanac.hasNext()) {
-                    text.append("<html><body>");
+                    text.append("<html><body><div width=\"" + TimelineView.this.getWidth() * 2 / 3 + "\"><ul>");
                     for (int i = 0; i < 10 && almanac.hasNext(); i++) {
-                        text.append("<div width=\"" + TimelineView.this.getWidth() / 2 + "\">");
-                        text.append(almanac.next());
-                        text.append("</div>");
+                        Event event = almanac.next();
+                        Color color = colors.get(prefix+event.getAlmanac());
+                        String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+                        text.append("<li color=\"" + hex + "\">" + event.toString() + "</li><br>");
                     }
-                    text.append("</body></html>");
+                    text.append("</ul></div></body></html>");
                     cursor = Cursor.TEXT_CURSOR;
                 }
             } catch (GedcomException ex) {
@@ -813,6 +851,10 @@ public class TimelineView extends View implements SelectionListener {
                 contentRenderer.selectionEvent = rsel ? selectionEvent : new LinkedList<Model.Event>();
             }
             
+            for (String alm : getAlmanacColorLabels()) {
+                colors.put(alm, Color.BLUE);
+            }
+            colors = REGISTRY.get("color", colors);
             contentRenderer.cBackground = colors.get("background");
             contentRenderer.cText = colors.get("text");
             contentRenderer.cDate = colors.get("date");

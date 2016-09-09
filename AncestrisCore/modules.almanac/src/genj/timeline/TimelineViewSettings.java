@@ -160,7 +160,8 @@ public class TimelineViewSettings extends JTabbedPane {
         List<String> keys = new ArrayList<String>(view.colors.keySet());
         Collections.sort(keys);
         for (String key : keys) {
-            colorWidget.addColor(key, resources.getString("color." + key), view.colors.get(key));
+            String name = resources.getString("color." + key).replace("color.", "");
+            colorWidget.addColor(key, name, view.colors.get(key));
         }
         colorWidget.addChangeListener(commit);
 
@@ -204,15 +205,14 @@ public class TimelineViewSettings extends JTabbedPane {
             view.setPackIndi(packIndi.isSelected());
 
             // sliders
-            view.setCMPerEvents(
-                    ((Double) spinCmBefEvent.getModel().getValue()).doubleValue(),
-                    ((Double) spinCmAftEvent.getModel().getValue()).doubleValue()
-            );
+            view.setCMPerEvents(((Double) spinCmBefEvent.getModel().getValue()), ((Double) spinCmAftEvent.getModel().getValue()));
 
             // colors
             for (String key : view.colors.keySet()) {
                 view.colors.put(key, colorWidget.getColor(key));
             }
+            view.getRegistry().put("color", view.colors);
+            
 
             // almanac categories
             view.setAlmanacs(almanacPanel.getCheckedAlmanacs());
