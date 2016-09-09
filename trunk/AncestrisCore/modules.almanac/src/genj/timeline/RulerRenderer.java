@@ -32,7 +32,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.Line2D;
 import java.awt.geom.Rectangle2D;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 /**
  * A renderer knowing how to render a ruler for the timeline
@@ -47,8 +47,8 @@ public class RulerRenderer extends ContentRenderer {
     /**
      * almanac categories
      */
-    /*package*/ Set<String> almanacs = null;
-    /*package*/ Set<String> acats = null;
+    /*package*/ List<String> almanacs = null;
+    /*package*/ List<String> acats = null;
     /*package*/ int sigLevel = AlmanacPanel.MAX_SIG;
 
     /**

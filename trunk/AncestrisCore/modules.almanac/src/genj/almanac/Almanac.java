@@ -194,7 +194,7 @@ public class Almanac {
     }
 
     /**
-     * Accessor - categories
+     * Accessor - almanacs
      */
     public List<String> getAlmanacs() {
         synchronized (almanacs) {
@@ -212,16 +212,31 @@ public class Almanac {
     }
 
     /**
+     * Accessor - categories within an almanac file
+     */
+    public List<String> getCategories(String almanac) {
+        synchronized (categories) {
+            Set<String> ret = new HashSet<String>();
+            for (Event event : events) {
+                if (event.getAlmanac().equalsIgnoreCase(almanac)) {
+                    ret.addAll(event.getCategories());
+                }
+            }
+            return new ArrayList<String>(ret);
+        }
+    }
+
+    /**
      * Accessor - events by point in time
      */
-    public Iterator<Event> getEvents(PointInTime when, int days, Set<String> almanacs, Set<String> cats, int sigLevel) throws GedcomException {
+    public Iterator<Event> getEvents(PointInTime when, int days, List<String> almanacs, List<String> cats, int sigLevel) throws GedcomException {
         return new Range(when, days, almanacs, cats, sigLevel);
     }
 
     /**
      * Accessor - a range of events by (gregorian) year
      */
-    public Iterator<Event> getEvents(PointInTime from, PointInTime to, Set<String> almanacs, Set<String> cats, int sigLevel) {
+    public Iterator<Event> getEvents(PointInTime from, PointInTime to, List<String> almanacs, List<String> cats, int sigLevel) {
         return new Range(from, to, almanacs, cats, sigLevel);
     }
 
@@ -585,14 +600,14 @@ public class Almanac {
         private long origin = -1;
         private long originDelta;
         private Event next;
-        private Set<String> almanacs;
-        private Set<String> cats;
+        private List<String> almanacs;
+        private List<String> cats;
         private int sigLevel;
 
         /**
          * Constructor
          */
-        Range(PointInTime when, int days, Set<String> almanacs, Set<String> cats, int sigLevel) throws GedcomException {
+        Range(PointInTime when, int days, List<String> almanacs, List<String> cats, int sigLevel) throws GedcomException {
 
             earliest = new PointInTime(1 - 1, 1 - 1, when.getYear() - 1);
             latest = new PointInTime(31 - 1, 12 - 1, when.getYear() + 1);
@@ -610,7 +625,7 @@ public class Almanac {
         /**
          * Constructor
          */
-        Range(PointInTime from, PointInTime to, Set<String> almanacs, Set<String> cats, int sigLevel) {
+        Range(PointInTime from, PointInTime to, List<String> almanacs, List<String> cats, int sigLevel) {
 
             if (!from.isValid() || !to.isValid()) {
                 throw new IllegalArgumentException();
@@ -623,7 +638,7 @@ public class Almanac {
             init(almanacs, cats, sigLevel);
         }
 
-        private void init(Set<String> almanacs, Set<String> cats, int sigLevel) {
+        private void init(List<String> almanacs, List<String> cats, int sigLevel) {
 
             this.almanacs = almanacs;
             this.cats = cats;

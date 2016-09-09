@@ -170,7 +170,7 @@
 #
 # Voici un exemple pour l'entrée du Duc de Guise entrant dans Paris le 9 mai 1588
 #
-# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+# 15880509;;be;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
 #
 #
 # Note de l'auteur : J'ai volontairement fait débuter les événements vers 1600 et 
@@ -207,56 +207,8 @@
 #==============================================================================
 #
 #
-# I - Political Informations (abbr. P)
 #
-18300825;;be;3;P;fr=Soulèvement de Bruxelles.
-
-#
-#
-# II - War Events (abbr. W)
-#
-
-#
-#
-# III - Founding Events (abbr. F)
-#
-
-#
-#
-# IV - Discovery Events (abbr. Y)
-#
-
-#
-#
-# V - Invention Events (abbr. I)
-#
-
-#
-#
-# VI - Birthdays (abbr. B)
-#
-
-#
-#
-# VII - Weddings (abbr. X)
-#
-
-
-#
-#
-# VIII - Deaths (abbr. D)
-#
-
-#
-#
-# IX - Misc. Events
-#
-
-#
-#
-# X - Reigns of the Belgium Kings
-#
-
+18300825;;be;;;3;P;fr=Soulèvement de Bruxelles.
 #
 #
 #

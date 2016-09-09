@@ -24,7 +24,6 @@ import genj.gedcom.time.PointInTime;
 import genj.util.WordBuffer;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * A CDay event
@@ -55,12 +54,12 @@ public class Event implements Comparable<Event> {
   }
   
   /* Test for country */
-  protected boolean isAlmanac(Set<String> criteria) {
+  protected boolean isAlmanac(List<String> criteria) {
     return criteria.contains(almanac);
   }
   
   /* Test for category */
-  protected boolean isCategory(Set<String> criteria) {
+  protected boolean isCategory(List<String> criteria) {
     for (int c=0; c<cats.size(); c++) {
       if (criteria.contains(cats.get(c)))
         return true;
