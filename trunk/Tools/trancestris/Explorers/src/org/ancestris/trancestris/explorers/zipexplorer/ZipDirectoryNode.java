@@ -27,10 +27,9 @@ public class ZipDirectoryNode extends AbstractNode {
     @Override
     public String getHtmlDisplayName() {
         if (directory.isTranslated() == false) {
-                return "<font color='#FF0000'>" + directory.getName() + " (" + (int)(((float) (directory.getTranslatedLineCount()) / (float) directory.getLineCount()) * 100) + " %) </font>";
-
+            return "<font color='#FF0000'>" + directory.getName() + " (" + (int) (((float) (directory.getTranslatedLineCount()) / (float) directory.getLineCount()) * 100) + " %) </font>";
         } else {
-           return "<font color='#0000FF'>" + directory.getName() + " (" + (int)(((float) (directory.getTranslatedLineCount()) / (float) directory.getLineCount()) * 100) + " %) </font>";
+            return "<font color='#0000FF'>" + directory.getName() + " (" + (int) (((float) (directory.getTranslatedLineCount()) / (float) directory.getLineCount()) * 100) + " %) </font>";
         }
     }
 
