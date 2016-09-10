@@ -94,6 +94,27 @@ public class ZipDirectory implements PropertyChangeListener {
         }
     }
 
+    public void putRef(ZipEntry zipEntry, InputStream inputstream) throws IOException {
+        String filePath = zipEntry.getName();
+        StringTokenizer tokenizefilePath = new StringTokenizer(filePath, "/");
+        putRef(tokenizefilePath, zipEntry, inputstream, filePath);
+    }
+
+    private void putRef(StringTokenizer tokenizefilePath, ZipEntry zipEntry, InputStream inputstream, String filePath) throws IOException {
+        String token = tokenizefilePath.nextToken();
+        if (!tokenizefilePath.hasMoreTokens()) {
+            this.resourceFile.putRef(zipEntry, inputstream, token);
+        } else {
+            if (dirs.containsKey(token) == true) {
+                dirs.get(token).putRef(tokenizefilePath, zipEntry, inputstream, filePath);
+//            } else {
+//                ZipDirectory zipDirectory = new ZipDirectory(token);
+//                dirs.put(token, zipDirectory);
+//                zipDirectory.putRef(tokenizefilePath, zipEntry, inputstream, filePath);
+            }
+        }
+    }
+
     public String getName() {
         return directoryName;
     }
