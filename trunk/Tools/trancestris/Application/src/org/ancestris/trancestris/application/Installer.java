@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import java.util.prefs.BackingStoreException;
 import java.util.prefs.Preferences;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 import org.ancestris.trancestris.application.actions.DownloadBundlePanel;
 import org.ancestris.trancestris.application.actions.SendTranslationAction;
 import org.ancestris.trancestris.application.actions.SendTranslationPanel;
@@ -172,6 +173,11 @@ public class Installer extends ModuleInstall {
                 File bundleFile = null;
                 URL url;
 
+                try {
+                    UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+                } catch (Exception ex) {
+                    Exceptions.printStackTrace(ex);
+                }
                 dirName = modulePreferences.get("Dossier", System.getProperty("user.dir"));
                 fileName = modulePreferences.get("Fichier", "Ancestris_Bundles.zip");
                 bundleFile = new File(dirName + System.getProperty("file.separator") + fileName);
