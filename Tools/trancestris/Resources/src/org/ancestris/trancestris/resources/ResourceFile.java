@@ -37,12 +37,14 @@ public class ResourceFile {
     private String directoryPath = "";
     private Locale fromLocale = null;
     private Locale toLocale = null;
+    private ResourceStructure refLanguage = null;
     private ResourceStructure defaultLanguage = null;
     private ResourceStructure fromLanguage = null;
     private ResourceStructure toLanguage = null;
     private ArrayList<String> content = null;
     private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
+    private TreeMap<String, ResourceStructure> resourceRefFiles = new TreeMap<String, ResourceStructure>();
     private TreeMap<String, ResourceStructure> resourceFiles = new TreeMap<String, ResourceStructure>();
     private boolean modified = false;
     private boolean translationCreated = false;
@@ -58,6 +60,14 @@ public class ResourceFile {
         ResourceStructure resourceStructure = resourceParser.parseFile();
         resourceStructure.setZipEntry(zipEntry);
         resourceFiles.put(bundleName, resourceStructure);
+    }
+
+    public void putRef(ZipEntry zipEntry, InputStream inputStream, String bundleName) throws IOException {
+        ResourceParser resourceParser = new ResourceParser(inputStream);
+        resourceParser.initParser();
+        ResourceStructure resourceStructure = resourceParser.parseFile();
+        resourceStructure.setZipEntry(zipEntry);
+        resourceRefFiles.put(bundleName, resourceStructure);
     }
 
     public Set<String> getFiles() {
@@ -194,6 +204,9 @@ public class ResourceFile {
             fromBundleName = PREFIX + "_" + fromLocale.getLanguage() + SUFFIX;
         }
 
+        // load Referenced Language
+        refLanguage = resourceRefFiles.get(PREFIX + SUFFIX);
+        
         // load Default Language
         defaultLanguage = resourceFiles.get(PREFIX + SUFFIX);
 
@@ -229,12 +242,29 @@ public class ResourceFile {
             Pattern p = Pattern.compile("NOI18N$");
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
+                // no need for translation if:
+                // - null or empty
+                // - not to be translated
+                // - if default language "comment" is the same as in the previous referenced default language archive
+                // - already translated (a translation exists)
+                // Should add : !!!!!!!!!!!!!!!!!!!
+                // - if a translation exists but no default language key exist
                 if (line.getValue() != null && !line.getValue().isEmpty()) {
                     String comment = line.getComment();
                     if (comment != null && p.matcher(comment).find()) {
                         not_translated = Math.max(0, not_translated - 1);
-                    } else if (toLanguage.getLine(line.getKey()) != null) {
-                        not_translated = Math.max(0, not_translated - 1);
+                    } else {
+                        String value = line.getValue();
+                        String refValue = "";
+                        if (refLanguage != null) {
+                            ResourceItem.ResourceLine refLine = refLanguage.getLine(line.getKey());
+                            refValue = refLine != null ? refLine.getValue() : "";
+                        }
+                        if (refValue != null && !refValue.isEmpty() && refValue.equals(value)) {
+                            if (toLanguage.getLine(line.getKey()) != null) {
+                                not_translated = Math.max(0, not_translated - 1);
+                            }
+                        }
                     }
                 } else {
                     not_translated = Math.max(0, not_translated - 1);
@@ -265,6 +295,14 @@ public class ResourceFile {
     public int getTranslatedLineCount () {
         return getLineCount() - not_translated;
     }
+    
+    public String getRefValue(int i) {
+        if (refLanguage != null) {
+            return refLanguage.getLine(content.get(i)).getValue();
+        }
+        return null;
+    }
+    
     
     public String getLine(int i) {
         ResourceItem.ResourceLine line = null;
@@ -359,9 +397,21 @@ public class ResourceFile {
                     }
 
                     if (fromValue != null) {
+                        // line is to be translated if different from reference
+                        if (refLanguage != null) {
+                            ResourceLine refLine = refLanguage.getLine(content.get(i));
+                            if (refLine != null) {
+                                String refValue = refLine.getValue();
+                                if (refValue != null && !refValue.equals(fromValue)) {
+                                    return -2;
+                                }
+                            }
+                        }
+                        
+                        // line is now tested against translation
                         String to = toLine.getValue() != null ? toLine.getValue() : "";
                         if (fromValue.equalsIgnoreCase(to)) {
-                            // From and to line are the same sholud be translated
+                            // From and to line are the same should be translated
                             return -1;
                         } else {
                             // The line seems translated

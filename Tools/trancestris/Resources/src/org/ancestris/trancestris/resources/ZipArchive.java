@@ -20,6 +20,7 @@ public class ZipArchive implements PropertyChangeListener {
 
     private static final Logger logger = Logger.getLogger(ZipArchive.class.getName());
     private ZipDirectory root;
+    private File zipRefFile = null;
     private File zipFile = null;
     private Locale toLocale;
     private Locale fromLocale;
@@ -29,13 +30,15 @@ public class ZipArchive implements PropertyChangeListener {
         logger.log(Level.INFO, "Open Archive {0}", inputFile.getAbsolutePath());
 
         this.zipFile = inputFile;
+        this.zipRefFile = getRefFileFromFile();
         this.toLocale = toLocale;
         this.fromLocale = fromLocale;
         this.root = new ZipDirectory("");
         this.root.addPropertyChangeListener(this);
 
+        // Read current zip file
         try {
-            ZipFile zipInputFile = new ZipFile(inputFile);
+            ZipFile zipInputFile = new ZipFile(zipFile);
 
             // Get Reference Bundle
             for (Enumeration<? extends ZipEntry> e = ((Enumeration<? extends ZipEntry>) zipInputFile.entries()); e.hasMoreElements();) {
@@ -46,12 +49,33 @@ public class ZipArchive implements PropertyChangeListener {
                     inputStream.close();
                 }
             }
-
             zipInputFile.close();
         } catch (IOException ioe) {
             logger.log(Level.SEVERE, null, ioe);
         }
 
+
+        // Read referenced zip file and store resource into the current zip file resource
+        if(zipRefFile.exists()) { 
+            try {
+
+                ZipFile zipInputFile = new ZipFile(zipRefFile);
+
+                // Get Reference Bundle
+                for (Enumeration<? extends ZipEntry> e = ((Enumeration<? extends ZipEntry>) zipInputFile.entries()); e.hasMoreElements();) {
+                    ZipEntry zipEntry = e.nextElement();
+                    if (!zipEntry.isDirectory()) {
+                        InputStream inputStream = zipInputFile.getInputStream(zipEntry);
+                        root.putRef(zipEntry, inputStream);
+                        inputStream.close();
+                    }
+                }
+                zipInputFile.close();
+            } catch (IOException ioe) {
+                logger.log(Level.SEVERE, null, ioe);
+            }
+        }
+        
         root.setTranslation(fromLocale, toLocale);
     }
 
@@ -69,6 +93,19 @@ public class ZipArchive implements PropertyChangeListener {
                 return false;
             }
         } else {
+            return false;
+        }
+    }
+
+    public boolean writeRef() {
+        try {
+            logger.log(Level.INFO, "Save reference archive {0}", zipRefFile.getName());
+            ZipOutputStream outputStream = new ZipOutputStream(new BufferedOutputStream(new FileOutputStream(this.zipRefFile)));
+            root.writeTo(outputStream, "");
+            outputStream.close();
+            return true;
+        } catch (IOException ioe) {
+            logger.log(Level.SEVERE, null, ioe);
             return false;
         }
     }
@@ -145,5 +182,15 @@ public class ZipArchive implements PropertyChangeListener {
      */
     public boolean isChange() {
         return change;
+    }
+
+    private File getRefFileFromFile() {
+        if (zipFile == null) {
+            return null;
+        }
+        
+        String dirName = zipFile.getParent();
+        String fileName = "Ancestris_RefBundles.zip";
+        return new File(dirName + System.getProperty("file.separator") + fileName);
     }
 }
