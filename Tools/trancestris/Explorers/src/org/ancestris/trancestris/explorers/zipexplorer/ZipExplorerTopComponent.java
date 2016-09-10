@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Locale;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.editors.actions.EditorSearchPanel;
 import org.ancestris.trancestris.resources.ZipArchive;
@@ -51,6 +52,12 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     private ZipRootNode newZipRootNode = null;
 
     public ZipExplorerTopComponent() {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
         initComponents();
         setName(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_ZipExplorerTopComponent"));
         setToolTipText(NbBundle.getMessage(ZipExplorerTopComponent.class, "HINT_ZipExplorerTopComponent"));
@@ -231,7 +238,9 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
 
         zipArchive = new ZipArchive(zipFile, fromLocale, toLocale);
         Frame mainWindow = WindowManager.getDefault().getMainWindow();
-        mainWindow.setTitle(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_MainWindow_Title", fromLocale.getDisplayLanguage(), toLocale.getDisplayLanguage(), (int) (((float) (zipArchive.getTranslatedLineCount()) / (float) zipArchive.getLineCount()) * 100)));
+        mainWindow.setTitle(NbBundle.getMessage(ZipExplorerTopComponent.class, "CTL_MainWindow_Title", fromLocale.getDisplayLanguage(), 
+                toLocale.getDisplayLanguage(), 
+                (int) (((float) (zipArchive.getTranslatedLineCount()) / (float) zipArchive.getLineCount()) * 100)));
         editorSearchPanel.setFromLocaleToggleButtonText(fromLocale.getDisplayLanguage());
         editorSearchPanel.setToLocaleToggleButtonText(toLocale.getDisplayLanguage());
         newZipRootNode = new ZipRootNode(zipArchive);
