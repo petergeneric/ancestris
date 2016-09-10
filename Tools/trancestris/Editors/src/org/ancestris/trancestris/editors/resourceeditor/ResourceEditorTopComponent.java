@@ -106,16 +106,29 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             Color foreground;
             Color background;
             switch (getResourceFile().getLineState(index)) {
+                // The line has changed 
+                case -2:
+                    foreground = new Color(29, 152, 00);
+                    background = list.getBackground();
+                    String tip = getResourceFile().getRefValue(index);
+                    if (tip.contains("<html>")) {
+                        tip = tip.replace("<html>", "<...>").replace("</html>", "<...>");
+                    }
+                    setToolTipText(tip);
+                    break;
+
                 // The line is the same
                 case -1:
                     foreground = Color.BLUE;
                     background = list.getBackground();
+                    setToolTipText(NbBundle.getMessage(getClass(), "ResourceEditorTopComponent.SameTranslation"));
                     break;
 
                 // the line is not translated
                 case 0:
                     foreground = Color.RED;
-                    background = Color.LIGHT_GRAY;
+                    background = list.getBackground();
+                    setToolTipText(null);
                     break;
 
                 // the line is translated or non modifiable
@@ -123,12 +136,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 default:
                     foreground = list.getForeground();
                     background = list.getBackground();
+                    setToolTipText(null);
                     break;
             }
             if (isSelected) {
                 // for Arvernes specific pb
-                setBackground(Color.DARK_GRAY);
-                setForeground(Color.YELLOW);
+                setBackground(Color.LIGHT_GRAY);
+                setForeground(foreground);
 //                    setBackground(list.getSelectionBackground());
 //                    setForeground(list.getSelectionForeground());
             } else {
