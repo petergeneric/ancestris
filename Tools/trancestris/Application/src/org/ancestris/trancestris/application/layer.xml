@@ -18,6 +18,12 @@
                 <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/save-icon.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipRefBundleAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SaveZipRefBundleAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_SaveZipRefBundleAction"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="true"/>
+            </file>
             <file name="org-ancestris-trancestris-application-actions-SendTranslationAction.instance">
                 <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.SendTranslationAction"/>
                 <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_SendTranslationAction"/>
@@ -75,6 +81,10 @@
             <file name="org-ancestris-trancestris-application-actions-SaveZipBundleAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SaveZipBundleAction.instance"/>
                 <attr name="position" intvalue="1550"/>
+            </file>
+            <file name="org-ancestris-trancestris-application-actions-SaveZipRefBundleAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SaveZipRefBundleAction.instance"/>
+                <attr name="position" intvalue="1600"/>
             </file>
             <file name="org-ancestris-trancestris-application-actions-SendTranslationAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-SendTranslationAction.instance"/>
