@@ -106,9 +106,16 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
             Color foreground;
             Color background;
             switch (getResourceFile().getLineState(index)) {
-                // The line has changed 
-                case -2:
-                    foreground = new Color(29, 152, 00);
+                // Translation is missing
+                case 3:
+                    foreground = ResourceFile.TR_MISSING_COL;
+                    background = list.getBackground();
+                    setToolTipText(null);
+                    break;
+
+                // Translation is to be updated
+                case 2:
+                    foreground = ResourceFile.TR_UPDATE_COL;
                     background = list.getBackground();
                     String tip = getResourceFile().getRefValue(index);
                     if (tip.contains("<html>")) {
@@ -117,22 +124,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     setToolTipText(tip);
                     break;
 
-                // The line is the same
-                case -1:
-                    foreground = Color.BLUE;
+                // Translation is the same
+                case 1:
+                    foreground = ResourceFile.TR_SAME_COL;
                     background = list.getBackground();
                     setToolTipText(NbBundle.getMessage(getClass(), "ResourceEditorTopComponent.SameTranslation"));
                     break;
 
-                // the line is not translated
+                // Translation appears ok
                 case 0:
-                    foreground = Color.RED;
-                    background = list.getBackground();
-                    setToolTipText(null);
-                    break;
-
-                // the line is translated or non modifiable
-                case 1:
                 default:
                     foreground = list.getForeground();
                     background = list.getBackground();
@@ -143,8 +143,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                 // for Arvernes specific pb
                 setBackground(Color.LIGHT_GRAY);
                 setForeground(foreground);
-//                    setBackground(list.getSelectionBackground());
-//                    setForeground(list.getSelectionForeground());
             } else {
                 setBackground(background);
                 setForeground(foreground);
@@ -287,8 +285,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         jPanel6.add(jPanel1, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerSize(10);
-        jSplitPane1.setForeground(java.awt.Color.black);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(0.75);
 
@@ -358,6 +354,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel4.add(buttonConfirmTranslation);
 
         org.openide.awt.Mnemonics.setLocalizedText(nextButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.nextButton.text")); // NOI18N
+        nextButton.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.nextButton.toolTipText")); // NOI18N
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nextButtonActionPerformed(evt);
@@ -373,6 +370,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         logger.log(Level.INFO, "Selected index is {0}", i);
 
+        // Store update
         if (i >= 0) {
             String oldValue = getResourceFile().getLineTranslation(i);
             String newValue = textAreaTranslation.getText();
@@ -386,12 +384,13 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
 
         // Search for the first next non translated line
         while (i + 1 < getResourceFileView().getModel().getSize()) {
-            if (getResourceFile().getLineState(++i) == 0) {
+            if (getResourceFile().getLineState(++i) > 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 getResourceFileView().setSelectedIndex(i);
                 break;
             }
         }
+       
     }//GEN-LAST:event_buttonConfirmTranslationActionPerformed
 
     private void resourceFileViewValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_resourceFileViewValueChanged
@@ -436,7 +435,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         logger.log(Level.INFO, "Selected index is {0}", i);
         // Search for the first next non translated line
         while (i - 1 >= 0) {
-            if (getResourceFile().getLineState(--i) == 0) {
+            if (getResourceFile().getLineState(--i) > 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 getResourceFileView().setSelectedIndex(i);
                 break;
@@ -451,7 +450,7 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         logger.log(Level.INFO, "Selected index is {0}", i);
         // Search for the first next non translated line
         while (i + 1 < getResourceFileView().getModel().getSize()) {
-            if (getResourceFile().getLineState(++i) == 0) {
+            if (getResourceFile().getLineState(++i) > 0) {
                 logger.log(Level.INFO, "New selected index is {0}", i);
                 getResourceFileView().setSelectedIndex(i);
                 break;
