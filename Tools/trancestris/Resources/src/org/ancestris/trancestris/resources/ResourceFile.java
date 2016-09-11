@@ -4,6 +4,7 @@ package org.ancestris.trancestris.resources;
 // Jad home page: http://www.geocities.com/kpdus/jad.html
 // Decompiler options: packimports(3) 
 // Source File Name:   ResourceFile.java
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -42,16 +43,25 @@ public class ResourceFile {
     private ResourceStructure fromLanguage = null;
     private ResourceStructure toLanguage = null;
     private ArrayList<String> content = null;
-    private int not_translated;
     private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
     private TreeMap<String, ResourceStructure> resourceRefFiles = new TreeMap<String, ResourceStructure>();
     private TreeMap<String, ResourceStructure> resourceFiles = new TreeMap<String, ResourceStructure>();
     private boolean modified = false;
     private boolean translationCreated = false;
 
+    private int translation_none;         // counts lines where a translation should be made and none is found (red)
+    private int translation_update;       // counts lines where a translation exists but english has changed since (green)
+    private int translation_same;         // counts lines where english text and translation are the same (blue)
+    
+    public static Color TR_MISSING_COL = Color.RED;
+    public static Color TR_UPDATE_COL = new Color(29, 152, 00);
+    public static Color TR_SAME_COL = Color.BLUE;
+
     ResourceFile(String directoryPath) {
         this.directoryPath = directoryPath;
-        not_translated = 0;
+        translation_none = 0;
+        translation_update = 0;
+        translation_same = 0;
     }
 
     public void put(ZipEntry zipEntry, InputStream inputStream, String bundleName) throws IOException {
@@ -238,40 +248,28 @@ public class ResourceFile {
             }
 
             Iterator<ResourceItem.ResourceLine> it = defaultLanguage.iterator();
-            not_translated = getLineCount();
             Pattern p = Pattern.compile("NOI18N$");
+            
+            // Loop on lines
             while (it.hasNext()) {
                 ResourceItem.ResourceLine line = it.next();
-                // no need for translation if:
-                // - null or empty
-                // - not to be translated
-                // - if default language "comment" is the same as in the previous referenced default language archive
-                // - already translated (a translation exists)
-                // Should add : !!!!!!!!!!!!!!!!!!!
-                // - if a translation exists but no default language key exist
-                if (line.getValue() != null && !line.getValue().isEmpty()) {
-                    String comment = line.getComment();
-                    if (comment != null && p.matcher(comment).find()) {
-                        not_translated = Math.max(0, not_translated - 1);
-                    } else {
-                        String value = line.getValue();
-                        if (refLanguage != null) {
-                            String refValue = "";
-                            ResourceItem.ResourceLine refLine = refLanguage.getLine(line.getKey());
-                            refValue = refLine != null ? refLine.getValue() : "";
-                            if (refValue != null && !refValue.isEmpty() && refValue.equals(value)) {
-                                if (toLanguage.getLine(line.getKey()) != null) {
-                                    not_translated = Math.max(0, not_translated - 1);
-                                }
-                            }
-                        } else {
-                            if (toLanguage.getLine(line.getKey()) != null) {
-                                not_translated = Math.max(0, not_translated - 1);
-                            }
-                        }
-                    }
-                } else {
-                    not_translated = Math.max(0, not_translated - 1);
+                int state = getLineState(line);
+                switch (state) {
+                    case 3:  // translation is missing
+                        translation_none++;
+                        break;
+                        
+                    case 2: // translation is to be updated
+                        translation_update++;
+                        break;
+                        
+                    case 1: // translation is the same, should probably be updated
+                        translation_same++;
+                        break;
+                        
+                    case 0: // line appears to be properly translated
+                    default:
+                        break;
                 }
             }
         } else {
@@ -280,12 +278,27 @@ public class ResourceFile {
     }
 
     public boolean isTranslated() {
-        return not_translated == 0;
+        int total = translation_none + translation_update + translation_same;
+        return total == 0;
     }
 
+    public Color getColor() {
+        if (translation_none != 0) {
+            return TR_MISSING_COL;
+        }
+        if (translation_update != 0) {
+            return TR_UPDATE_COL;
+        }
+        if (translation_same != 0) {
+            return TR_SAME_COL;
+        }
+        return Color.BLACK;
+    }
+    
     public int getTranslatedPercent() {
-        logger.log(Level.INFO, "{0}: Lines count {1} not translated {2}", new Object[]{directoryPath, getLineCount(), not_translated});
-        return (int) (((float) (getLineCount() - not_translated) / (float) getLineCount()) * 100);
+        int total = translation_none + translation_update;
+        logger.log(Level.INFO, "{0}: Lines count {1} not translated {2}", new Object[]{directoryPath, getLineCount(), total});
+        return (int) (((float) (getLineCount() - total) / (float) getLineCount()) * 100);
     }
 
     public int getLineCount() {
@@ -297,7 +310,8 @@ public class ResourceFile {
     }
 
     public int getTranslatedLineCount () {
-        return getLineCount() - not_translated;
+        int total = translation_none + translation_update;
+        return getLineCount() - total;
     }
     
     public String getRefValue(int i) {
@@ -371,68 +385,109 @@ public class ResourceFile {
         ResourceItem.PropertyComment comment = defaultLanguage.getLine(content.get(i)).getPropertyComment();
         ResourceItem.PropertyKey key = defaultLanguage.getLine(content.get(i)).getPropertyKey();
         ResourceItem.PropertyValue value = new ResourceItem.PropertyValue(s);
-        if (old == null) {
-            not_translated--;
-        }
         if (key != null) {
+            int oldState = getLineState(defaultLanguage.getLine(content.get(i)));
             toLanguage.put(key, value, comment);
+            int newState = getLineState(defaultLanguage.getLine(content.get(i)));
+            if (oldState != newState) {
+                switch (newState) {
+                    case 3:  // translation is now missing
+                        translation_none++;
+                        if (oldState == 1) {
+                            translation_same--;
+                        } else if (oldState == 2) {
+                            translation_update--;
+                        }
+                        break;
+
+                    case 2: // translation is to be updated
+                        translation_update++;
+                        if (oldState == 1) {
+                            translation_same--;
+                        } else if (oldState == 3) {
+                            translation_none--;
+                        }
+                        break;
+
+                    case 1: // translation is the same, should probably be updated
+                        translation_same++;
+                        if (oldState == 3) {
+                            translation_none--;
+                        } else if (oldState == 2) {
+                            translation_update--;
+                        }
+                        break;
+
+                    case 0: // line appears to be properly translated
+                    default:
+                        break;
+                }
+            }
         }
         modified = true;
         fire(content.get(i), old, s);
     }
 
-    public int getLineState(int i) {
-        if (defaultLanguage != null) {
-            String comment = defaultLanguage.getLine(content.get(i)).getComment();
-            Pattern p = Pattern.compile("NOI18N$");
+    private int getLineState(ResourceLine line) {
+                
+        if (defaultLanguage == null) {
+            return 0;
+        }
+                
+        String value = line.getValue();
+        
+        String comment = line.getComment();
 
-            if (comment != null && p.matcher(comment).find()) {
-                // the line shall not be translated
-                return 1;
-            } else {
-                ResourceLine toLine = toLanguage.getLine(content.get(i));
-                if (toLine != null) {
-                    String fromValue = null;
+        // Skip if value is null
+        if (value == null) {
+            return 0;
+        }
 
-                    if (fromLanguage != null && fromLanguage.getLine(content.get(i)) != null) {
-                        fromValue = fromLanguage.getLine(content.get(i)).getValue();
-                    } else {
-                        fromValue = defaultLanguage.getLine(content.get(i)).getValue();
-                    }
+        // Skip if Line is not to be translated (comment includes "NOI18N$")
+        Pattern p = Pattern.compile("NOI18N$");
+        if (comment != null && p.matcher(comment).find()) {
+            return 0;
+        }
 
-                    if (fromValue != null) {
-                        // line is to be translated if different from reference
-                        if (refLanguage != null) {
-                            ResourceLine refLine = refLanguage.getLine(content.get(i));
-                            if (refLine != null) {
-                                String refValue = refLine.getValue();
-                                if (refValue != null && !refValue.equals(fromValue)) {
-                                    return -2;
-                                }
-                            }
-                        }
-                        
-                        // line is now tested against translation
-                        String to = toLine.getValue() != null ? toLine.getValue() : "";
-                        if (fromValue.equalsIgnoreCase(to)) {
-                            // From and to line are the same should be translated
-                            return -1;
-                        } else {
-                            // The line seems translated
-                            return 1;
-                        }
-                    } else {
-                        // should not append
-                        return -1;
-                    }
-                } else {
-                    // The line shall be translated
-                    return 0;
+        // Skip if value is empty and translation is null
+        ResourceItem.ResourceLine toLine = toLanguage.getLine(line.getKey());
+        if (value.isEmpty() && toLine == null) {
+            return 0;
+        }
+
+        // Identifies if translation is missing
+        if (!value.isEmpty() && toLine == null) {
+            return 3;
+        }
+        String toValue = toLine.getValue();
+        if (!value.isEmpty() && toValue.isEmpty()) {
+            return 3;
+        }
+
+        // Identifies if translation is to be updated
+        if (value.isEmpty() && !toValue.isEmpty()) {
+            return 2;
+        }
+        if (refLanguage != null) {
+            ResourceItem.ResourceLine refLine = refLanguage.getLine(line.getKey());
+            if (refLine != null) {
+                String refValue = refLine.getValue();
+                if (refValue != null && !refValue.equals(value)) {
+                    return 2;
                 }
             }
-        } else {
-            return -1;
         }
+
+        // Identifies if translation is the same
+        if (!value.isEmpty() && value.equals(toValue)) {
+            return 1;
+        }
+        
+        return 0;
+    }
+    
+    public int getLineState(int i) {
+        return getLineState(defaultLanguage.getLine(content.get(i)));
     }
 
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
