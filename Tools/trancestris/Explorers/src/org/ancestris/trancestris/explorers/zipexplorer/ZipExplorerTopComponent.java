@@ -4,6 +4,7 @@
  */
 package org.ancestris.trancestris.explorers.zipexplorer;
 
+import java.awt.Color;
 import java.awt.Frame;
 import java.beans.PropertyVetoException;
 import java.io.File;
@@ -13,6 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.UIManager;
 import javax.swing.tree.TreeSelectionModel;
 import org.ancestris.trancestris.editors.actions.EditorSearchPanel;
+import org.ancestris.trancestris.resources.ResourceFile;
 import org.ancestris.trancestris.resources.ZipArchive;
 import org.openide.nodes.Children;
 import org.openide.util.Exceptions;
@@ -73,6 +75,10 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
         Lookup lookup = ExplorerUtils.createLookup(zipExplorerManager, getActionMap());
         proxyLookup = new ProxyLookup(lookup, new AbstractLookup(instanceContent));
         associateLookup(proxyLookup);
+        missingButton.setForeground(ResourceFile.TR_MISSING_COL);
+        missingButton.setText(missingButton.getText());
+        updateButton.setForeground(ResourceFile.TR_UPDATE_COL);
+        updateButton.setText(updateButton.getText());
     }
 
     public void selectNode(String nodePath) {
@@ -104,57 +110,124 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jButton1 = new javax.swing.JButton();
-        jSeparator1 = new javax.swing.JSeparator();
-        jButton2 = new javax.swing.JButton();
+        allButton = new javax.swing.JButton();
+        missingButton = new javax.swing.JButton();
+        updateButton = new javax.swing.JButton();
+        selectionButton = new javax.swing.JButton();
+        collButton = new javax.swing.JButton();
         beanTreeView = new BeanTreeView();
 
         setLayout(new java.awt.BorderLayout());
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.X_AXIS));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.jButton1.text")); // NOI18N
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(allButton, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.allButton.text")); // NOI18N
+        allButton.setToolTipText(org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.allButton.toolTipText")); // NOI18N
+        allButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                allButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton1);
-        jPanel1.add(jSeparator1);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.jButton2.text")); // NOI18N
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(missingButton, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.missingButton.text")); // NOI18N
+        missingButton.setToolTipText(org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.missingButton.toolTipText")); // NOI18N
+        missingButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                missingButtonActionPerformed(evt);
             }
         });
-        jPanel1.add(jButton2);
+
+        org.openide.awt.Mnemonics.setLocalizedText(updateButton, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.updateButton.text")); // NOI18N
+        updateButton.setToolTipText(org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.updateButton.toolTipText")); // NOI18N
+        updateButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(selectionButton, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.selectionButton.text")); // NOI18N
+        selectionButton.setToolTipText(org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.selectionButton.toolTipText")); // NOI18N
+        selectionButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectionButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(collButton, org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.collButton.text")); // NOI18N
+        collButton.setToolTipText(org.openide.util.NbBundle.getMessage(ZipExplorerTopComponent.class, "ZipExplorerTopComponent.collButton.toolTipText")); // NOI18N
+        collButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                collButtonActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addComponent(allButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(missingButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(updateButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(selectionButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 53, Short.MAX_VALUE)
+                .addComponent(collButton)
+                .addContainerGap())
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addComponent(allButton)
+                .addComponent(missingButton)
+                .addComponent(updateButton)
+                .addComponent(collButton)
+                .addComponent(selectionButton))
+        );
 
         add(jPanel1, java.awt.BorderLayout.NORTH);
         add(beanTreeView, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void allButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_allButtonActionPerformed
         if (beanTreeView != null) {
             ((BeanTreeView) beanTreeView).expandAll();
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_allButtonActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void collButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_collButtonActionPerformed
         if (beanTreeView != null && newZipRootNode != null) {
             Children children = newZipRootNode.getChildren();
-
             for (Node node : children.getNodes()) {
-                ((BeanTreeView) beanTreeView).collapseNode(node);
+                collapseNode(node);
             }
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_collButtonActionPerformed
+
+    private void updateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateButtonActionPerformed
+        expandColor(ResourceFile.TR_UPDATE_COL);
+    }//GEN-LAST:event_updateButtonActionPerformed
+
+    private void missingButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_missingButtonActionPerformed
+        expandColor(ResourceFile.TR_MISSING_COL);
+    }//GEN-LAST:event_missingButtonActionPerformed
+
+    private void selectionButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectionButtonActionPerformed
+        if (beanTreeView != null) {
+            for (Node node : zipExplorerManager.getSelectedNodes()) {
+                expandNode(node);
+            }
+        }
+    }//GEN-LAST:event_selectionButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton allButton;
     private javax.swing.JScrollPane beanTreeView;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton collButton;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton missingButton;
+    private javax.swing.JButton selectionButton;
+    private javax.swing.JButton updateButton;
     // End of variables declaration//GEN-END:variables
 
     /**
@@ -252,4 +325,50 @@ public final class ZipExplorerTopComponent extends TopComponent implements Explo
     public ZipArchive getBundles() {
         return zipArchive;
     }
+
+    private void expandNode(Node node) {
+        for (Node n : node.getChildren().getNodes()) {
+            expandNode(n);
+        }
+        ((BeanTreeView) beanTreeView).expandNode(node);
+        
+    }
+
+    private void collapseNode(Node node) {
+        for (Node n : node.getChildren().getNodes()) {
+            collapseNode(n);
+        }
+        ((BeanTreeView) beanTreeView).collapseNode(node);
+    }
+
+    private void expandNodeColor(Node node, Color color) {
+        ZipDirectoryNode zipNode = (ZipDirectoryNode) node;
+        if (zipNode.directory.getColor() == color) {
+            ((BeanTreeView) beanTreeView).expandNode(node);
+        }
+        for (Node n : node.getChildren().getNodes()) {
+            if (!n.isLeaf()) {
+                expandNodeColor(n, color);
+            }
+        }
+    }
+
+    private void expandColor(Color color) {
+        if (beanTreeView != null) {
+            Node[] nodes = zipExplorerManager.getSelectedNodes();
+            if (nodes.length == 0) {
+                nodes = newZipRootNode.getChildren().getNodes();
+            }
+            for (Node node : nodes) {
+                if (node instanceof ZipRootNode) {
+                    for (Node n : newZipRootNode.getChildren().getNodes()) {
+                        expandNodeColor(n, color);
+                    }
+                } else {
+                    expandNodeColor(node, color);
+                }
+            }
+        }
+    }
+
 }
