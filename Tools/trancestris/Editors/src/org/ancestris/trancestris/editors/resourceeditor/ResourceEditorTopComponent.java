@@ -121,6 +121,9 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     if (tip.contains("<html>")) {
                         tip = tip.replace("<html>", "<...>").replace("</html>", "<...>");
                     }
+                    if (value.isEmpty()) {
+                        setText(NbBundle.getMessage(getClass(), "ResourceEditorTopComponent.empty"));
+                    }
                     setToolTipText(tip);
                     break;
 
@@ -354,7 +357,6 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
         jPanel4.add(buttonConfirmTranslation);
 
         org.openide.awt.Mnemonics.setLocalizedText(nextButton, org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.nextButton.text")); // NOI18N
-        nextButton.setToolTipText(org.openide.util.NbBundle.getMessage(ResourceEditorTopComponent.class, "ResourceEditorTopComponent.nextButton.toolTipText")); // NOI18N
         nextButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 nextButtonActionPerformed(evt);
