@@ -255,12 +255,16 @@ public class ResourceFile {
                         not_translated = Math.max(0, not_translated - 1);
                     } else {
                         String value = line.getValue();
-                        String refValue = "";
                         if (refLanguage != null) {
+                            String refValue = "";
                             ResourceItem.ResourceLine refLine = refLanguage.getLine(line.getKey());
                             refValue = refLine != null ? refLine.getValue() : "";
-                        }
-                        if (refValue != null && !refValue.isEmpty() && refValue.equals(value)) {
+                            if (refValue != null && !refValue.isEmpty() && refValue.equals(value)) {
+                                if (toLanguage.getLine(line.getKey()) != null) {
+                                    not_translated = Math.max(0, not_translated - 1);
+                                }
+                            }
+                        } else {
                             if (toLanguage.getLine(line.getKey()) != null) {
                                 not_translated = Math.max(0, not_translated - 1);
                             }
