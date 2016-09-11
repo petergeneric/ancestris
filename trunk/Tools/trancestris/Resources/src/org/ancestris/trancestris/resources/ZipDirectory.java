@@ -170,27 +170,43 @@ public class ZipDirectory implements PropertyChangeListener {
     }
 
     public Color getColor() {
+        if (getName().equals("releve")) {
+            String str = "";
+        }
         Color maxColor = Color.BLACK;
         for (ZipDirectory zipDirectory : dirs.values()) {
             Color color = zipDirectory.getColor();
-            if (maxColor == Color.BLACK) {
-                maxColor = color;
-                continue;
-            }
-            if (color == ResourceFile.TR_MISSING_COL) {
+            if (color == ResourceFile.TR_MISSING_COL || maxColor == ResourceFile.TR_MISSING_COL) {
                 return color;
             }
-            if (maxColor == ResourceFile.TR_SAME_COL && (color == ResourceFile.TR_MISSING_COL || color == ResourceFile.TR_UPDATE_COL)) {
-                maxColor = color;
+            if (color == ResourceFile.TR_UPDATE_COL) {
+                maxColor = ResourceFile.TR_UPDATE_COL;
+                continue;
+            }
+            if (color == ResourceFile.TR_SAME_COL) {
+                if (maxColor == Color.BLACK) {
+                    maxColor = ResourceFile.TR_SAME_COL;
+                }
                 continue;
             }
         }
 
         if (resourceFile != null) {
-            return resourceFile.getColor();
-        } else {
-            return maxColor;
+            Color color = resourceFile.getColor();
+            if (color == ResourceFile.TR_MISSING_COL || maxColor == ResourceFile.TR_MISSING_COL) {
+                return color;
+            }
+            if (color == ResourceFile.TR_UPDATE_COL) {
+                return ResourceFile.TR_UPDATE_COL;
+            }
+            if (color == ResourceFile.TR_SAME_COL) {
+                if (maxColor == Color.BLACK) {
+                    return ResourceFile.TR_SAME_COL;
+                }
+                return maxColor;
+            }
         }
+        return maxColor;
     }
 
     
