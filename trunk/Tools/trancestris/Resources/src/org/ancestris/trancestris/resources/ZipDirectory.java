@@ -170,9 +170,6 @@ public class ZipDirectory implements PropertyChangeListener {
     }
 
     public Color getColor() {
-        if (getName().equals("releve")) {
-            String str = "";
-        }
         Color maxColor = Color.BLACK;
         for (ZipDirectory zipDirectory : dirs.values()) {
             Color color = zipDirectory.getColor();
