@@ -1,5 +1,6 @@
 package org.ancestris.trancestris.resources;
 
+import java.awt.Color;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -168,6 +169,31 @@ public class ZipDirectory implements PropertyChangeListener {
         }
     }
 
+    public Color getColor() {
+        Color maxColor = Color.BLACK;
+        for (ZipDirectory zipDirectory : dirs.values()) {
+            Color color = zipDirectory.getColor();
+            if (maxColor == Color.BLACK) {
+                maxColor = color;
+                continue;
+            }
+            if (color == ResourceFile.TR_MISSING_COL) {
+                return color;
+            }
+            if (maxColor == ResourceFile.TR_SAME_COL && (color == ResourceFile.TR_MISSING_COL || color == ResourceFile.TR_UPDATE_COL)) {
+                maxColor = color;
+                continue;
+            }
+        }
+
+        if (resourceFile != null) {
+            return resourceFile.getColor();
+        } else {
+            return maxColor;
+        }
+    }
+
+    
     public List<String> search(String expression, boolean fromLocale, boolean caseSensitive) {
         ArrayList<String> directoryNamesArray = new ArrayList<String>();
         for (ZipDirectory zipDirectory : dirs.values()) {
@@ -230,6 +256,7 @@ public class ZipDirectory implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent pce) {
+        //DEBUG TODO ZipExplorerTopComponent.updateZipDisplay();
         fire(this.getName(), null, null);
     }
 
@@ -242,4 +269,5 @@ public class ZipDirectory implements PropertyChangeListener {
             pcls[i].propertyChange(new PropertyChangeEvent(this, propertyName, old, nue));
         }
     }
+
 }
