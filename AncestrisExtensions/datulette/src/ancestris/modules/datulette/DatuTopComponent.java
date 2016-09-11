@@ -13,7 +13,6 @@ import genj.util.swing.DateWidget;
 import java.awt.Dimension;
 import java.util.logging.Logger;
 import javax.swing.Box;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -49,10 +48,11 @@ public final class DatuTopComponent extends TopComponent {
         jSliderGap.setMinorTickSpacing(10);
         jSliderGap.setPaintTicks(true);
         jSliderGap.setPaintLabels(true);
+        jSliderGap.setValue(gap);
+        jTextFieldGap.setText(String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.year"), gap));
         jComboBox1.setSelectedItem(from);
         jComboBox2.setSelectedItem(to);
-        Border PanelBorder = jPanel5.getBorder();
-        ((TitledBorder) PanelBorder).setTitle(from.toString());
+        ((TitledBorder) jPanel5.getBorder()).setTitle("");
 
         setName(NbBundle.getMessage(DatuTopComponent.class, "CTL_DatuTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
@@ -66,8 +66,6 @@ public final class DatuTopComponent extends TopComponent {
                     if (pit != null) {
                         from = pit.getCalendar();
                         jComboBox1.setSelectedItem(from);
-                        Border PanelBorder = jPanel5.getBorder();
-                        ((TitledBorder) PanelBorder).setTitle(from.toString());
                         if (pit.getCalendar().equals(PointInTime.GREGORIAN)) {
                             jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
                         } else if (pit.getCalendar().equals(PointInTime.FRENCHR)) {
@@ -85,10 +83,22 @@ public final class DatuTopComponent extends TopComponent {
     }
 
     public void update() {
+        try {
+            incertitude = Integer.parseInt(jTextFieldGap1.getText());
+        } catch (NumberFormatException ex) {
+            incertitude = 0;
+        }
+
+        if (incertitude == 1) {
+            jLabel4.setText(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.month"));
+        } else if (gap != 0) {
+            jLabel4.setText(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.months"));
+        }
+
         if (dw1.getValue() != null) {
             PointInTime Pit = dw1.getValue();
             if (Pit.isComplete()) {
-                jDisplay1.setText(calcule(Pit));
+                jLabel1.setText(calcule(Pit));
             }
         }
     }
@@ -156,7 +166,9 @@ public final class DatuTopComponent extends TopComponent {
                 pitMaxi.set(to);
             } catch (GedcomException ex) {
             }
-            result = String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.FromTo"), pitMini.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG), pitMaxi.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG));
+            result = String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.FromTo"), 
+                    pitMini.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG), 
+                    pitMaxi.toString(new WordBuffer(), GedcomOptions.GedcomDateFormat.LONG));
         }
 
         return result;
@@ -182,7 +194,7 @@ public final class DatuTopComponent extends TopComponent {
         jTextFieldGap1 = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jPanel6 = new javax.swing.JPanel();
-        jDisplay1 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
         jComboBox1 = new javax.swing.JComboBox<Calendar>(PointInTime.CALENDARS);
         jLabel3 = new javax.swing.JLabel();
         jComboBox2 = new javax.swing.JComboBox<Calendar>(PointInTime.CALENDARS);
@@ -232,9 +244,7 @@ public final class DatuTopComponent extends TopComponent {
         jSliderGap.addChangeListener(formListener);
 
         jTextFieldGap.setEditable(false);
-        jTextFieldGap.setColumns(9);
-        jTextFieldGap.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
-        jTextFieldGap.setForeground(java.awt.Color.lightGray);
+        jTextFieldGap.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
         jTextFieldGap.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldGap.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap.text")); // NOI18N
 
@@ -243,17 +253,20 @@ public final class DatuTopComponent extends TopComponent {
         jPanel3Layout.setHorizontalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addComponent(jSliderGap, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSliderGap, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldGap, javax.swing.GroupLayout.DEFAULT_SIZE, 73, Short.MAX_VALUE)
+                .addComponent(jTextFieldGap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(3, 3, 3)
-                .addComponent(jSliderGap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jTextFieldGap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldGap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addComponent(jSliderGap, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
 
         jPanel7.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jPanel7.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("DejaVu Sans", 1, 12), java.awt.Color.black)); // NOI18N
@@ -279,7 +292,7 @@ public final class DatuTopComponent extends TopComponent {
                 .addGap(9, 9, 9)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTextFieldGap1)
+                .addComponent(jTextFieldGap1, javax.swing.GroupLayout.DEFAULT_SIZE, 139, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel4)
                 .addGap(0, 0, 0))
@@ -297,23 +310,24 @@ public final class DatuTopComponent extends TopComponent {
         jPanel6.setOpaque(false);
         jPanel6.setPreferredSize(new java.awt.Dimension(196, 93));
 
-        jDisplay1.setEditable(false);
-        jDisplay1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
-        jDisplay1.setForeground(java.awt.Color.red);
-        jDisplay1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        jDisplay1.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jDisplay1.text")); // NOI18N
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jLabel1.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jDisplay1)
+            .addGroup(jPanel6Layout.createSequentialGroup()
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jDisplay1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                .addContainerGap()
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 45, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<Calendar>(PointInTime.CALENDARS));
@@ -351,14 +365,14 @@ public final class DatuTopComponent extends TopComponent {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel6, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -393,12 +407,12 @@ public final class DatuTopComponent extends TopComponent {
         }
 
         public void keyReleased(java.awt.event.KeyEvent evt) {
+            if (evt.getSource() == jTextFieldGap1) {
+                DatuTopComponent.this.jTextFieldGap1KeyReleased(evt);
+            }
         }
 
         public void keyTyped(java.awt.event.KeyEvent evt) {
-            if (evt.getSource() == jTextFieldGap1) {
-                DatuTopComponent.this.jTextFieldGap1KeyTyped(evt);
-            }
         }
 
         public void stateChanged(javax.swing.event.ChangeEvent evt) {
@@ -408,29 +422,12 @@ public final class DatuTopComponent extends TopComponent {
         }
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jTextFieldGap1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldGap1KeyTyped
-        String text = jTextFieldGap1.getText();
-        try {
-            incertitude = Integer.parseInt(text);
-        } catch (NumberFormatException ex) {
-            jTextFieldGap1.setText("0");
-            incertitude = 0;
-        }
-
-        if (incertitude == 1) {
-            jLabel4.setText(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.month"));
-        } else if (gap != 0) {
-            jLabel4.setText(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.months"));
-        }
-        update();
-    }//GEN-LAST:event_jTextFieldGap1KeyTyped
-
     private void jSliderGapStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_jSliderGapStateChanged
         if (!jSliderGap.getValueIsAdjusting()) {
             // Gap  value
             gap = jSliderGap.getValue();
             String texte = "";
-            if (gap == 1) {
+            if (gap == 1 || gap == 0) {
                 texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.year"), gap);
             } else if (gap != 0) {
                 texte += String.format(NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.years"), gap);
@@ -452,8 +449,8 @@ public final class DatuTopComponent extends TopComponent {
             from = (Calendar) jComboBox1.getSelectedItem();
             try {
                 pit.set(from);
-                Border PanelBorder = jPanel5.getBorder();
-                ((TitledBorder) PanelBorder).setTitle(from.toString());
+                //Border PanelBorder = jPanel5.getBorder();
+                //((TitledBorder) PanelBorder).setTitle(from.toString());
                 if (updateInProgress == false) {
                     dw1.setValue(pit);
                 }
@@ -464,10 +461,14 @@ public final class DatuTopComponent extends TopComponent {
         }
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
+    private void jTextFieldGap1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldGap1KeyReleased
+        update();
+    }//GEN-LAST:event_jTextFieldGap1KeyReleased
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox<Calendar> jComboBox1;
     private javax.swing.JComboBox<Calendar> jComboBox2;
-    private javax.swing.JTextField jDisplay1;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
