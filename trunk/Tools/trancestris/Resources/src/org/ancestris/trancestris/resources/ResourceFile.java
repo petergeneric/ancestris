@@ -487,6 +487,9 @@ public class ResourceFile {
     }
     
     public int getLineState(int i) {
+        if (content == null || defaultLanguage == null) {
+            return 0;
+        }
         return getLineState(defaultLanguage.getLine(content.get(i)));
     }
 
