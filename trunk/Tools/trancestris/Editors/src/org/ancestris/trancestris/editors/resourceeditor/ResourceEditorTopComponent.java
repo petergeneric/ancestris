@@ -118,13 +118,15 @@ public final class ResourceEditorTopComponent extends TopComponent implements Lo
                     foreground = ResourceFile.TR_UPDATE_COL;
                     background = list.getBackground();
                     String tip = getResourceFile().getRefValue(index);
-                    if (tip.contains("<html>")) {
-                        tip = tip.replace("<html>", "<...>").replace("</html>", "<...>");
+                    if (tip != null) {
+                        if (tip.contains("<html>")) {
+                            tip = tip.replace("<html>", "<...>").replace("</html>", "<...>");
+                        }
+                        setToolTipText(tip);
                     }
                     if (value.isEmpty()) {
                         setText(NbBundle.getMessage(getClass(), "ResourceEditorTopComponent.empty"));
                     }
-                    setToolTipText(tip);
                     break;
 
                 // Translation is the same
