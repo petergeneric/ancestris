@@ -87,7 +87,7 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
     }
 
     /** Creates new form EditorOpenActionPanel */
-    public OpenZipBundlePanel() {
+    public OpenZipBundlePanel(boolean mode) {
         fromLocale = getLocaleFromString(NbPreferences.forModule(OpenZipBundlePanel.class).get("fromLocale", Locale.ENGLISH.toString()));
         toLocale = getLocaleFromString(NbPreferences.forModule(OpenZipBundlePanel.class).get("toLocale", Locale.getDefault().toString()));
         String dirName = NbPreferences.forModule(OpenZipBundlePanel.class).get("Dossier", System.getProperty("user.dir"));
@@ -101,6 +101,9 @@ public class OpenZipBundlePanel extends javax.swing.JPanel {
         if (zipFile != null) {
             bundleFileNameTextField.setText(zipFile.toString());
         }
+        
+        bundleFileNameTextField.setVisible(mode); // "false" for language change only
+        openFileChooserButton.setVisible(mode);
     }
 
     /** This method is called from within the constructor to
