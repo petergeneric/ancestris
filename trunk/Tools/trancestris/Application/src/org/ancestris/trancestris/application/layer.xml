@@ -38,6 +38,13 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
+            <file name="org-ancestris-trancestris-application-actions-ChangeLanguageAction.instance">
+                <attr name="delegate" newvalue="org.ancestris.trancestris.application.actions.ChangeLanguageAction"/>
+                <attr name="displayName" bundlevalue="org.ancestris.trancestris.application.actions.Bundle#CTL_ChangeLanguageAction"/>
+                <attr name="iconBase" stringvalue="org/ancestris/trancestris/application/actions/ico_translate.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
+            </file>
         </folder>
         <folder name="System">
             <file name="org-openide-actions-PageSetupAction.instance_hidden"/>
@@ -56,6 +63,10 @@
     </folder>
     <folder name="Menu">
         <folder name="Edit">
+            <file name="org-ancestris-trancestris-application-actions-ChangeLanguageAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-ChangeLanguageAction.instance"/>
+                <attr name="position" intvalue="1900"/>
+            </file>
             <file name="org-ancestris-trancestris-application-actions-SearchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-application-actions-SearchAction.instance"/>
                 <attr name="position" intvalue="2050"/>
@@ -142,6 +153,10 @@
         <folder name="Edit">
             <attr name="position" intvalue="500"/>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>
+            <file name="org-ancestris-trancestris-application-actions-ChangeLanguageAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/File/org-ancestris-trancestris-application-actions-ChangeLanguageAction.instance"/>
+                <attr name="position" intvalue="50"/>
+            </file>
             <file name="org-ancestris-trancestris-application-actions-SearchAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/Tools/org-ancestris-trancestris-application-actions-SearchAction.instance"/>
                 <attr name="position" intvalue="100"/>

@@ -18,19 +18,19 @@ import org.openide.util.NbPreferences;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
-public final class OpenZipBundleAction implements ActionListener {
+public final class ChangeLanguageAction implements ActionListener {
 
     File zipFile = null;
     Locale fromLocale = null;
     Locale toLocale = null;
-    OpenZipBundlePanel openZipBundlePanel = new OpenZipBundlePanel(true);
+    OpenZipBundlePanel openZipBundlePanel = new OpenZipBundlePanel(false);
 
     @Override
     public void actionPerformed(ActionEvent e) {
 
         DialogDescriptor zipExplorerOpenActionDescriptor = new DialogDescriptor(
                 openZipBundlePanel,
-                NbBundle.getMessage(OpenZipBundlePanel.class, "CTL_OpenZipBundleAction"),
+                NbBundle.getMessage(OpenZipBundlePanel.class, "CTL_ChangeLanguageAction"),
                 true,
                 null);
 
