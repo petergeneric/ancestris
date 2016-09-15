@@ -356,6 +356,9 @@ public abstract class PropertyXRef extends Property {
             if (r != Integer.MAX_VALUE) {
                 return r;
             }
+            if (e1.getClass() != e2.getClass()) {
+                return e1.toString().compareTo(e2.toString());
+            }
             return e1.getDisplayComparator().compare(e1, e2);
         }
     }

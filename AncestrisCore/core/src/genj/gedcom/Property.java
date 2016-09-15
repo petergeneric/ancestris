@@ -1104,6 +1104,9 @@ public abstract class Property implements Comparable<Property> {
     // XXX:replace all compareTo to use PropertyComparator2
     public int compareTo(Property that) {
         // no gedcom available?
+        if (this.getClass() != that.getClass()) {
+            return this.toString().compareTo(that.toString());
+        }
         return getComparator().compare(this, that);
     }
 
