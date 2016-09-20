@@ -36,6 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.swing.JCheckBox;
@@ -185,7 +186,7 @@ public class PathTreeWidget extends JScrollPane {
       // change for tag path
       if (value instanceof TagPath) {
         TagPath path = (TagPath)value; 
-        setText( path.getLast() + " ("+Gedcom.getName(path.getLast())+")");
+        setText(Gedcom.getName(path.getLast())  + " ("+path.getLast()+")");
         setIcon( grammar.getMeta(path).getImage() );
         checkbox.setSelected(model.getSelection().contains(value));
         panel.invalidate(); // make sure no preferred side is cached
@@ -202,7 +203,7 @@ public class PathTreeWidget extends JScrollPane {
   private class Model implements TreeModel {
     
     /** the tag-paths to choose from */
-    private Set<TagPath> paths = new HashSet<TagPath>();
+    private TreeSet<TagPath> paths = new TreeSet<TagPath>();
 
     /** the selection */
     private Set<TagPath> selection = new HashSet<TagPath>();
@@ -222,7 +223,7 @@ public class PathTreeWidget extends JScrollPane {
       selection = new HashSet<TagPath>(Arrays.asList(ss));
       
       // keep paths
-      paths = new HashSet<TagPath>();
+      paths = new TreeSet<TagPath>();
       paths.addAll(Arrays.asList(ps));
       paths.addAll(Arrays.asList(ss));
       
