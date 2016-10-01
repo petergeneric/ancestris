@@ -61,9 +61,9 @@ public class GeonamesPlacesList implements SearchPlace {
                         toponymSearchCriteria.setStyle(Style.FULL);
                         toponymSearchCriteria.setLanguage(Locale.getDefault().toString());
                         toponymSearchCriteria.setQ(searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
-                        logger.log(Level.FINE, "Call to WebService.search for toponym - "+ TimingUtility.geInstance().getTime());
+                        logger.log(Level.FINE, "Call to WebService.search for toponym - "+ TimingUtility.getInstance().getTime());
                         toponymSearchResult = WebService.search(toponymSearchCriteria);
-                        logger.log(Level.FINE, "Answer from WebService.search for toponym- "+ TimingUtility.geInstance().getTime());
+                        logger.log(Level.FINE, "Answer from WebService.search for toponym- "+ TimingUtility.getInstance().getTime());
 
                         for (Toponym toponym : toponymSearchResult.getToponyms()) {
                             
@@ -78,9 +78,9 @@ public class GeonamesPlacesList implements SearchPlace {
                                 continue;
                             }
                             postalCodeSearchCriteria.setCountryCode(cc);
-                            logger.log(Level.FINE, "Call to WebService.search for postal code - "+ TimingUtility.geInstance().getTime());
+                            logger.log(Level.FINE, "Call to WebService.search for postal code - "+ TimingUtility.getInstance().getTime());
                             postalCodeSearchResult = WebService.postalCodeSearch(postalCodeSearchCriteria);
-                            logger.log(Level.FINE, "Answer from WebService.search for postal code- "+ TimingUtility.geInstance().getTime());
+                            logger.log(Level.FINE, "Answer from WebService.search for postal code- "+ TimingUtility.getInstance().getTime());
 
                             if (!postalCodeSearchResult.isEmpty()) {
                                 for (PostalCode postalCode : postalCodeSearchResult) {
