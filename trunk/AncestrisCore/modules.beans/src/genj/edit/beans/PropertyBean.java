@@ -257,7 +257,7 @@ public abstract class PropertyBean extends JPanel {
         this.property = property;
         this.session = session;
 
-        LOG.log(Level.FINER, "{0}: setPropertyImpl {1}", new Object[]{TimingUtility.geInstance().getTime(),this.getClass().getCanonicalName()});
+        LOG.log(Level.FINER, "{0}: setPropertyImpl {1}", new Object[]{TimingUtility.getInstance().getTime(),this.getClass().getCanonicalName()});
         setPropertyImpl(property);
 
         changeSupport.setChanged(false);
