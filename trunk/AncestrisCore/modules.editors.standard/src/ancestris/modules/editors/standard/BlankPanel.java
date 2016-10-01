@@ -109,7 +109,7 @@ public class BlankPanel extends Editor {
 
     @Override
     protected void setContextImpl(Context context) {
-        LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
+        LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().start");
         
         this.context = context;
         Entity localEntity = context.getEntity();
@@ -178,7 +178,7 @@ public class BlankPanel extends Editor {
             
         }
 
-        LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
+        LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().finish");
     }
 
     @Override

@@ -2150,7 +2150,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     @Override
     protected void setContextImpl(Context context) {
-        LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().start");
+        LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().start");
         
         // force data reload if to be reloaded or if entity selected is different
         if (reloadData || (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity())) {
@@ -2204,7 +2204,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             
         }
 
-        LOG.finer(TimingUtility.geInstance().getTime() + ": setContextImpl().finish");
+        LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().finish");
     }
 
     /**
