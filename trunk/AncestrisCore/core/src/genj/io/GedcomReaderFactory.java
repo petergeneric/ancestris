@@ -250,7 +250,7 @@ public class GedcomReaderFactory {
             long total = System.currentTimeMillis();
             LOG.log(Level.INFO, "{0}: {1} loaded in {2}s (header {3}s, records {4}s, linking {5}s ({6}))",
                     new Object[]{
-                        TimingUtility.geInstance().getTime(), 
+                        TimingUtility.getInstance().getTime(), 
                         gedcom.getName(), 
                         (total - start) / 1000, 
                         (header - start) / 1000, 
