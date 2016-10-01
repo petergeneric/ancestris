@@ -9,7 +9,7 @@ public class TimingUtility {
     private long start;
     static private TimingUtility instance;
 
-    public static TimingUtility geInstance(){
+    public static TimingUtility getInstance(){
         if (instance == null)
             instance = new TimingUtility();
         return instance;

@@ -387,7 +387,7 @@ public abstract class GedcomMgr {
 
         @Override
         public Context setGedcom(Gedcom gedcom) {
-            LOG.log(Level.FINE, "{0}: setGedcom", TimingUtility.geInstance().getTime());
+            LOG.log(Level.FINE, "{0}: setGedcom", TimingUtility.getInstance().getTime());
             Context context = new Context();
 
             // restore context
@@ -404,10 +404,10 @@ public abstract class GedcomMgr {
             }
 
             // tell everone
-            LOG.log(Level.FINE, "{0}: gedcomOpened", TimingUtility.geInstance().getTime());
+            LOG.log(Level.FINE, "{0}: gedcomOpened", TimingUtility.getInstance().getTime());
             gedcomOpened(gedcom);
 
-            LOG.log(Level.FINE, "{0}: fireSelection", TimingUtility.geInstance().getTime());
+            LOG.log(Level.FINE, "{0}: fireSelection", TimingUtility.getInstance().getTime());
             //FIXME: done also in GedcomDirectory. Must not be done here as this class is general purpose
             //SelectionSink.Dispatcher.fireSelection(null, context, true);
             return context;

@@ -596,7 +596,7 @@ public abstract class GedcomDirectory {
         TopComponent tc = null;
         Map<String, TopComponent> name2tc = new HashMap<String, TopComponent>();
         for (Class clazz : openedViews) {
-            LOG.log(Level.FINE, "{0}: {1} opened", new Object[]{TimingUtility.geInstance().getTime(), clazz.getCanonicalName()});
+            LOG.log(Level.FINE, "{0}: {1} opened", new Object[]{TimingUtility.getInstance().getTime(), clazz.getCanonicalName()});
             try {
                 tc = (TopComponent) clazz.newInstance();
 
