@@ -86,6 +86,7 @@ import org.openide.util.TaskListener;
      * limits
      */
     public double max = Double.NaN, min = Double.NaN;
+    public double now = today();
 
     /**
      * a filter for events that we're interested in
@@ -105,9 +106,11 @@ import org.openide.util.TaskListener;
      */
     
     // Data maps for sorted elements
-    public Map<Double, Event> eventMap = new TreeMap<Double, Event>();
-    public Map<Indi, EventSerie> indiSeries = new HashMap<Indi, EventSerie>();
-
+    private Map<Double, Event> eventMap = new TreeMap<Double, Event>();
+    private Map<Indi, EventSerie> indiSeries = new HashMap<Indi, EventSerie>();
+    private static Double incrementD = 0.00000001;
+    
+    
     // Layers
     public List<List<Event>> eventLayers = new ArrayList<List<Event>>();
     public List<List<EventSerie>> indiLayers = new ArrayList<List<EventSerie>>();
@@ -116,7 +119,7 @@ import org.openide.util.TaskListener;
     /**
      * time per event
      */
-    double timeBeforeEvent = 0.5D, timeAfterEvent = 2.0D;
+    double timeBeforeEvent = 0.5D, timeAfterEvent = 2.0D, cmPerYear = 0D;
     static int EST_SPAN = 9;  // number of years to estimate life span when dates are not indicated
     static int EST_LIVING = 100;  // number of years to estimate a living person 
     boolean isPackIndi = false;   // true means pack layers for indi 
@@ -243,7 +246,7 @@ import org.openide.util.TaskListener;
     /**
      * change time per event
      */
-    /*package*/ void setTimePerEvent(double before, double after, boolean redraw) {
+    /*package*/ void setTimePerEvent(double before, double after, double cm, boolean redraw) {
         // already there?
         if (timeBeforeEvent == before && timeAfterEvent == after) {
             return;
@@ -253,9 +256,10 @@ import org.openide.util.TaskListener;
             return;
         }
         
-        // reset min, max and timespace
+        // reset min, max and zoom
         timeBeforeEvent = before;
         timeAfterEvent = after;
+        cmPerYear = cm;
         
         if (redraw) {
             layoutLayers(false);
@@ -287,7 +291,7 @@ import org.openide.util.TaskListener;
         if (!eventMap.isEmpty()) {
             List<Double> tmpList = new ArrayList(eventMap.keySet());
             min = tmpList.get(0) - 2*timeBeforeEvent;
-            max = tmpList.get(eventMap.size()-1) + 2*timeAfterEvent;
+            max = Math.max(tmpList.get(eventMap.size()-1), now+1) + 2*timeAfterEvent;
         }
     }
 
@@ -296,12 +300,33 @@ import org.openide.util.TaskListener;
         return !isRebuilding && !isRedrawing;
     }
     
+
+    public double getCmPerYear(){
+        return cmPerYear;
+    }
+    
+
+    
+    /**
+     * Convert a point in time into a gregorian year (double)
+     */
+    private static double today() {
+        java.util.Calendar cal = java.util.Calendar.getInstance();
+        PointInTime pit = new PointInTime(cal);
+        try {
+            return toDouble(pit, false);
+        } catch (GedcomException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+        return 0d;
+    }
+
     
     
     /**
      * Convert a point in time into a gregorian year (double)
      */
-    /*package*/ static double toDouble(PointInTime pit, boolean roundUp) throws GedcomException {
+    public static double toDouble(PointInTime pit, boolean roundUp) throws GedcomException {
 
         // all Gregorian for now
         Calendar calendar = PointInTime.GREGORIAN;
@@ -940,11 +965,10 @@ import org.openide.util.TaskListener;
         while (es.hasNext()) {
             ph.progress(progressCounter++);
             Entity ent = (Entity) es.next();
-            List ps = ent.getProperties(PropertyEvent.class);
-            for (Object p : ps) {
-                PropertyEvent pe = (PropertyEvent) p;
-                if (tags.contains(pe.getTag())) {
-                    createEventFromEntityEvent(ent, pe);
+            Property[] props = ent.getProperties();
+            for (Property p : props) {
+                if (tags.contains(p.getTag())) {
+                    createEventFromEntityEvent(ent, (PropertyEvent) p);
                 }
             }
         }
@@ -963,13 +987,17 @@ import org.openide.util.TaskListener;
             return;
         }
 
-        // Event is valid. So insert it in event layers and insert it in indiLayers. 
+        // Event is valid. Update events and indis series. 
         try {
             // Create event
             Event e = new Event(pe, pd);
 
             // Store event
-            eventMap.put(e.from, e);
+            Double key = e.from;
+            while (eventMap.containsKey(key)) {
+                key += incrementD;
+            }
+            eventMap.put(key, e);
 
             // Store indis
             if (ent instanceof Indi) {
@@ -1018,32 +1046,47 @@ import org.openide.util.TaskListener;
         eventLayers.clear();
         
         // Use interim map 
+        Double gap = Math.max(timeBeforeEvent, timeAfterEvent);
         SortedMap<Double, Integer> endLimits = new TreeMap<Double, Integer>();
         Double firstKey = null;
-        Iterator<Event> iterator = eventMap.values().iterator();
+        Iterator<Double> iterator = eventMap.keySet().iterator();
+        if (!iterator.hasNext()) {
+            return;
+        }
         
         // Init first element to avoid looping everytime on initial test
-        Event firstEvent = iterator.next();
+        Double key = iterator.next();
+        Double lKey = 0D;
+        Event event = eventMap.get(key);
         List<Event> layer = new LinkedList<Event>();
-        layer.add(firstEvent);
-        endLimits.put(firstEvent.to + timeAfterEvent, eventLayers.size());
+        layer.add(event);
+        endLimits.put(key - event.from + event.to + gap, eventLayers.size());
         eventLayers.add(layer);
         ph.progress(progressCounter++);
         
         // Loop on remaining events after the first one
         while (iterator.hasNext()) {
-            Event event = iterator.next();
+            key = iterator.next();
+            event = eventMap.get(key);
             firstKey = endLimits.firstKey();
-            if (event.from - timeBeforeEvent > firstKey) {
+            if (key > firstKey) {
                 int l = endLimits.get(firstKey);
                 layer = eventLayers.get(l);
                 layer.add(event);
-                endLimits.put(event.to + timeAfterEvent, l);
                 endLimits.remove(firstKey);
+                lKey = key - event.from + event.to + gap;
+                while (endLimits.containsKey(lKey)) {
+                    lKey += incrementD;
+                }
+                endLimits.put(lKey, l);
             } else {
                 layer = new LinkedList<Event>();
                 layer.add(event);
-                endLimits.put(event.to + timeAfterEvent, eventLayers.size());
+                lKey = key - event.from + event.to + gap;
+                while (endLimits.containsKey(lKey)) {
+                    lKey += incrementD;
+                }
+                endLimits.put(lKey, eventLayers.size());
                 eventLayers.add(layer);
             }
             ph.progress(progressCounter++);
@@ -1052,43 +1095,53 @@ import org.openide.util.TaskListener;
     
     private void createIndiPackedLayers(ProgressHandle ph) {
         
-        Map<Double, EventSerie> indiMap = new TreeMap<Double, EventSerie> ();
+        Map<Double, EventSerie> indiMap = new TreeMap<Double, EventSerie>();
+        Double tKey = 0D;
         for (EventSerie es : indiSeries.values()) {
-            indiMap.put(es.from, es);
+            tKey = es.from;
+            while (indiMap.containsKey(tKey)) {
+                tKey += incrementD;
             }
+            indiMap.put(tKey, es);
+        }
 
-        
+        // Use interim map 
+        Double gap = Math.max(timeBeforeEvent, timeAfterEvent);
         SortedMap<Double, Integer> endLimits = new TreeMap<Double, Integer>();
         Double firstKey = null;
-        Iterator<EventSerie> iterator = indiMap.values().iterator();
+        Iterator<Double> iterator = indiMap.keySet().iterator();
         
         // Init first element to avoid looping everytime on initial test
-        EventSerie firstEvent = iterator.next();
+        Double key = iterator.next();
+        Double lKey = 0D;
+        EventSerie event = indiMap.get(key);
         List<EventSerie> layer = new LinkedList<EventSerie>();
-        layer.add(firstEvent);
-        endLimits.put(firstEvent.to + timeAfterEvent, indiLayers.size());
+        layer.add(event);
+        endLimits.put(key - event.from + event.to + gap, indiLayers.size());
         indiLayers.add(layer);
         ph.progress(progressCounter++);
         
         // Loop on remaining events after the first one
         while (iterator.hasNext()) {
-            EventSerie event = iterator.next();
+            key = iterator.next();
+            event = indiMap.get(key);
             firstKey = endLimits.firstKey();
-            if (event.from - timeBeforeEvent > firstKey) {
+            if (key > firstKey) {
                 int l = endLimits.get(firstKey);
                 layer = indiLayers.get(l);
                 layer.add(event);
-                endLimits.put(event.to + timeAfterEvent, l);
                 endLimits.remove(firstKey);
+                lKey = key - event.from + event.to + gap;
+                endLimits.put(lKey, l);
             } else {
                 layer = new LinkedList<EventSerie>();
                 layer.add(event);
-                endLimits.put(event.to + timeAfterEvent, indiLayers.size());
+                lKey = key - event.from + event.to + gap;
+                endLimits.put(lKey, indiLayers.size());
                 indiLayers.add(layer);
             }
             ph.progress(progressCounter++);
         }
-        
     }
     
 
@@ -1478,9 +1531,8 @@ import org.openide.util.TaskListener;
             if (contains("DEAT")) {
                 return maxDate;
             } else {
-                int now = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
                 if (maxDate < (now - EST_LIVING)) {
-                    return maxDate + EST_SPAN;
+                    return Math.min(maxDate + EST_SPAN, now);
                 } else {
                     return now;
                 }

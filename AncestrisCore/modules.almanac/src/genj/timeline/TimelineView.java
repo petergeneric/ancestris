@@ -186,7 +186,7 @@ public class TimelineView extends View implements SelectionListener {
 
         // create/keep our sub-parts
         model = new Model(TimelineView.this);
-        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, false);
+        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, cmPerYear, false);
         model.setPackIndi(isPackIndi, false);
 
         String[] ps = REGISTRY.get("paths", (String[]) null);
@@ -438,7 +438,7 @@ public class TimelineView extends View implements SelectionListener {
         cmBefEvent = before;
         cmAftEvent = after;
         // update model
-        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, redraw);
+        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, cmPerYear, redraw);
         repaint();
     }
 
@@ -979,7 +979,7 @@ public class TimelineView extends View implements SelectionListener {
             // get the new value
             cmPerYear = MIN_CM_PER_YEAR + Math.exp(sliderCmPerYear.getValue() * 0.1) / Math.exp(10) * (MAX_CM_PER_YEAR - MIN_CM_PER_YEAR);
             // update model
-            model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, true);
+            model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, cmPerYear, true);
             // done
         }
     } //ChangeCmPerYear

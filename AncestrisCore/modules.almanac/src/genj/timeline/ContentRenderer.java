@@ -261,15 +261,19 @@ public class ContentRenderer {
             g.draw(toMark, event.to, level + 1, true);
         }
 
-        // clipping from here    
-        g.pushClip(event.from, level, next == null ? Integer.MAX_VALUE : next.from, level + 1);
-
         int dx = 0;
+        double left = event.from-1;
+        double right = left + 1 + 10/model.cmPerYear;
+        if (next != null) {
+            right = Math.min(right, next.from);
+        }
 
         // draw its image
         if (!paintTags) {
             ImageIcon img = event.pe.getImage(false);
+            g.pushClip(left, level, right, level + 2);
             g.draw(img, event.from, level + 0.5, 0, 0.5);
+            g.popClip();
             dx += img.getIconWidth() + 2;
         }
 
@@ -277,26 +281,28 @@ public class ContentRenderer {
         if (paintTags) {
             String tag = Gedcom.getName(event.pe.getTag());
             g.setColor(cTag);
+            g.pushClip(left, level, right, level + 2);
             g.draw(tag, event.from, level + 1, 0, 1, dx, 0);
+            g.popClip();
             dx += fm.stringWidth(tag) + fm.charWidth(' ');
         }
 
         // draw its text 
         String txt = event.content;
         g.setFont(RenderOptions.getInstance().getDefaultFont());
+        g.pushClip(left, level, right, level + 2);
         g.draw(txt, event.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
-        g.draw(txt, event.from, level + 1, 0, 1, dx, 0);
+        g.popClip();
         dx += fm.stringWidth(txt) + fm.charWidth(' ');
 
         // draw its date
         if (paintDates) {
             String date = " (" + event.pd.getDisplayValue() + ')';
             g.setColor(cDate);
+            g.pushClip(left, level, right, level + 2);
             g.draw(date, event.from, level + 1, 0, 1, dx, 0);
+            g.popClip();
         }
-
-        // done with clipping
-        g.popClip();
 
         // done
     }
@@ -334,15 +340,19 @@ public class ContentRenderer {
         }
         
         
-        // clipping from here    
-        g.pushClip(eventSerie.from, level, next == null ? Integer.MAX_VALUE : next.from, level + 1);
-
         int dx = 6;
+        double left = eventSerie.from-1;
+        double right = left + 1 + 10/model.cmPerYear;
+        if (next != null) {
+            right = Math.min(right, next.from);
+        }
 
         // draw its image
         if (!paintTags) {
             ImageIcon img = eventSerie.getImage();
+            g.pushClip(left, level, right, level + 2);
             g.draw(img, eventSerie.from, level + 0.5, 0, 0.5, dx, 0);
+            g.popClip();
             dx += img.getIconWidth() + 2;
         }
 
@@ -350,25 +360,28 @@ public class ContentRenderer {
         if (paintTags) {
             String tag = Gedcom.getName(eventSerie.getTag());
             g.setColor(cTag);
+            g.pushClip(left, level, right, level + 2);
             g.draw(tag, eventSerie.from, level + 1, 0, 1, dx, 0);
+            g.popClip();
             dx += fm.stringWidth(tag) + fm.charWidth(' ');
         }
 
         // draw its text 
         String txt = eventSerie.content;
         g.setFont(RenderOptions.getInstance().getDefaultFont());
+        g.pushClip(left, level, right, level + 2);
         g.draw(txt, eventSerie.from, level + 1, 0, 1, dx, 0, em ? cSelected : cText, em ? cSelectedBg : null);   // null background: do not repaint background when not necessary
+        g.popClip();
         dx += fm.stringWidth(txt) + fm.charWidth(' ');
 
         // draw its date
         if (paintDates) {
             String date = " (" + eventSerie.getDisplayDates() + ')';
             g.setColor(cDate);
+            g.pushClip(left, level, right, level + 2);
             g.draw(date, eventSerie.from, level + 1, 0, 1, dx, 0);
+            g.popClip();
         }
-
-        // done with clipping
-        g.popClip();
 
         // done
     }
