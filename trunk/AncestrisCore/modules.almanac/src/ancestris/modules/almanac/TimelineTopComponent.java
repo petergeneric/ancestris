@@ -35,6 +35,7 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     private static final String PREFERRED_ID = "TimelineTopComponent";
     private static TimelineTopComponent factory;
     private static ViewFactory viewfactory = new TimelineViewFactory();
+    private boolean firstActivation = false;
 
     public ViewFactory getViewFactory() {
         return viewfactory;
@@ -75,12 +76,15 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
     @Override
     protected void componentActivated() {
         super.componentActivated();
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            @Override
-            public void run() {
-                ((TimelineView) getView()).centerToSelection();
-            }
-        });
+        if (!firstActivation) {
+            firstActivation = true;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    ((TimelineView) getView()).centerToSelection();
+                }
+            });
+        }
     }
 
 

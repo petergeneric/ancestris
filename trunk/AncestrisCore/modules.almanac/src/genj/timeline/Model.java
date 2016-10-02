@@ -20,6 +20,7 @@
 package genj.timeline;
 
 import ancestris.core.TextOptions;
+import ancestris.util.TimingUtility;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -48,18 +49,33 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.Stack;
+import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.netbeans.api.progress.ProgressHandle;
+import org.netbeans.api.progress.ProgressHandleFactory;
+import org.openide.util.Cancellable;
+import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
+import org.openide.util.RequestProcessor;
+import org.openide.util.Task;
+import org.openide.util.TaskListener;
 
 /**
  * A model that wraps the Gedcom information in a timeline fashion
  */
-/*package*/ class Model implements GedcomListener {
+    class Model implements GedcomListener {
 
+        
+    private static final Logger LOG = Logger.getLogger("ancestris.chronology");
+        
     /**
      * the context and gedcom we're looking at
      */
@@ -69,8 +85,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
     /**
      * limits
      */
-    /*package*/
-    double max = Double.NaN, min = Double.NaN;
+    public double max = Double.NaN, min = Double.NaN;
 
     /**
      * a filter for events that we're interested in
@@ -88,16 +103,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
     /**
      * our levels
      */
-    /*package*/
-    public List<List<Event>> eventLayers;
-    public List<List<EventSerie>> indiLayers;
-    public Map<Indi, EventSerie> indiSeries;
-    private Set<Indi> tmpRecursedIndi;
+    
+    // Data maps for sorted elements
+    public Map<Double, Event> eventMap = new TreeMap<Double, Event>();
+    public Map<Indi, EventSerie> indiSeries = new HashMap<Indi, EventSerie>();
+
+    // Layers
+    public List<List<Event>> eventLayers = new ArrayList<List<Event>>();
+    public List<List<EventSerie>> indiLayers = new ArrayList<List<EventSerie>>();
+
 
     /**
      * time per event
      */
-    /*package*/
     double timeBeforeEvent = 0.5D, timeAfterEvent = 2.0D;
     static int EST_SPAN = 9;  // number of years to estimate life span when dates are not indicated
     static int EST_LIVING = 100;  // number of years to estimate a living person 
@@ -108,17 +126,36 @@ import java.util.concurrent.CopyOnWriteArrayList;
      */
     private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
 
+
+    /**
+     * multi-threading
+     */
+    private RequestProcessor.Task layoutAllLayersThread, layoutEventLayersThread, layoutIndiLayersThread;
+    private final Object lock = new Object();
+    private boolean isRebuilding = false;
+    private boolean isRedrawing = false;
+    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private int progressCounter = 0;
+
+    /**
+     * interaction with view
+     */
+    private final TimelineView view;
+
+    
+    
     /**
      * Constructor
      */
     /*package*/
-    public Model() {
+    public Model(TimelineView view) {
+        this.view = view;
     }
 
     /**
      * Sets the filter - set of Tags we consider
      */
-    public void setPaths(Collection<TagPath> set) {
+    public void setPaths(Collection<TagPath> set, boolean rebuild) {
 
         if (set == null) {
             set = Arrays.asList(TagPath.toArray(DEFAULT_PATHS));
@@ -131,9 +168,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
             paths.add(path);
             tags.add(path.getLast());
         }
-
-        // re-generate events
-        createLayers();
+        
+        if (rebuild) {
+            createAndLayoutAllLayers();
+        }
 
         // done
     }
@@ -148,19 +186,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
     /**
      * context and gedcom to look at
      */
-    /*package*/ void setGedcom(Context context) {
+    public void setGedcom(Context context) {
 
-        // noop
         if (context == null) {
             return;
         }
-        this.context = context;
         
         Gedcom newGedcom = context.getGedcom();
         if (gedcom == newGedcom) {
+            if (this.context != context) {
+                this.context = context;
+                view.update();
+            }
             return;
         }
 
+        this.context = context;
+        
         // old?
         if (gedcom != null) {
             gedcom.removeGedcomListener(this);
@@ -174,11 +216,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
             gedcom.addGedcomListener(this);
         }
 
-        // create events
-        createLayers();
-
+        // create events because gedcom is different
+        createAndLayoutAllLayers();
     }
 
+    
+    
+    private void updateView() {
+        view.update();
+    }
 
     /**
      * Add a listener
@@ -197,21 +243,61 @@ import java.util.concurrent.CopyOnWriteArrayList;
     /**
      * change time per event
      */
-    /*package*/ void setTimePerEvent(double before, double after) {
+    /*package*/ void setTimePerEvent(double before, double after, boolean redraw) {
         // already there?
         if (timeBeforeEvent == before && timeAfterEvent == after) {
             return;
         }
-        // remember
+        
+        if (eventMap == null || indiSeries == null) {
+            return;
+        }
+        
+        // reset min, max and timespace
         timeBeforeEvent = before;
         timeAfterEvent = after;
-        // layout the events we've got
-        if (eventLayers != null) {
-            layoutEvents();
+        
+        if (redraw) {
+            layoutLayers(false);
         }
+
         // done
     }
 
+    public void setPackIndi(boolean set, boolean redraw) {
+        isPackIndi = set;
+        if (redraw) {
+            layoutLayers(true);
+        }
+    }
+    
+    
+    public void layoutLayers(boolean indiOnly) {
+        setMinMax();
+        if (isRebuilding || isRedrawing) {
+            return;
+        }
+        if (!indiOnly) {
+            layoutEventLayers();
+        }
+        layoutIndiLayers();
+    }
+    
+    private void setMinMax() {
+        if (!eventMap.isEmpty()) {
+            List<Double> tmpList = new ArrayList(eventMap.keySet());
+            min = tmpList.get(0) - 2*timeBeforeEvent;
+            max = tmpList.get(eventMap.size()-1) + 2*timeAfterEvent;
+        }
+    }
+
+
+    public boolean isReady() {
+        return !isRebuilding && !isRedrawing;
+    }
+    
+    
+    
     /**
      * Convert a point in time into a gregorian year (double)
      */
@@ -312,7 +398,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
         // done
         return null;
     }
-
+    
     public int getLayerFromEvent(Event event) {
         if (event == null) {
             return 0;
@@ -345,68 +431,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
             layer++;
         }
         return 0;
-    }
-
-    /**
-     * Returns the events that cover the given context
-     */
-    protected List<Event> getEvents() {
-
-        List<Event> propertyHits = new LinkedList<Event>();
-        List<Event> entityHits = new LinkedList<Event>();
-
-        List<? extends Property> props = context.getProperties();
-        List<Entity> ents = getAllContextEntities(context);
-
-        for (List<Event> eventLayer : eventLayers) {
-            Iterator events = ((List) eventLayer).iterator();
-            while (events.hasNext()) {
-                Event event = (Event) events.next();
-                for (int j = 0; j < ents.size(); j++) {
-                    if (ents.get(j) == event.getEntity()) {
-                        entityHits.add(event);
-                    }
-                }
-                for (int i = 0; i < props.size(); i++) {
-                    if (event.getProperty() == props.get(i) || event.getProperty().contains(props.get(i))) {
-                        propertyHits.add(event);
-                    }
-                }
-            }
-        }
-
-        return propertyHits.isEmpty() ? entityHits : propertyHits;
-    }
-
-    /**
-     * Returns the events that cover the given context
-     */
-    protected List<EventSerie> getIndis() {
-
-        List<EventSerie> propertyHits = new LinkedList<EventSerie>();
-        List<EventSerie> entityHits = new LinkedList<EventSerie>();
-
-        List<? extends Property> props = context.getProperties();
-        List<? extends Entity> ents = getAllContextEntities(context);
-
-        for (List<EventSerie> indiLayer : indiLayers) {
-            Iterator indis = ((List) indiLayer).iterator();
-            while (indis.hasNext()) {
-                EventSerie eventSerie = (EventSerie) indis.next();
-                for (int j = 0; j < ents.size(); j++) {
-                    if (ents.get(j) == eventSerie.getEntity()) {
-                        entityHits.add(eventSerie);
-                    }
-                }
-                for (int i = 0; i < props.size(); i++) {
-                    if (eventSerie.getProperty() == props.get(i) || eventSerie.contains(props.get(i))) {
-                        propertyHits.add(eventSerie);
-                    }
-                }
-            }
-        }
-
-        return propertyHits.isEmpty() ? entityHits : propertyHits;
     }
 
     /**
@@ -443,262 +467,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
         return ents;
     }
 
-    
-    /**
-     * Returns the filter - set of Tags we consider
-     */
-    public Set<TagPath> getPaths() {
-        return Collections.unmodifiableSet(paths);
-    }
 
-    /**
-     * Trigger callback - our structure has changed
-     */
-    private void fireStructureChanged() {
-        for (int l = listeners.size() - 1; l >= 0; l--) {
-            (listeners.get(l)).structureChanged();
-        }
-    }
-
-    /**
-     * Trigger callback - our data has changed
-     */
-    private void fireDataChanged() {
-        for (int l = listeners.size() - 1; l >= 0; l--) {
-            (listeners.get(l)).dataChanged();
-        }
-    }
-
-    /**
-     * Retags events for given entity
-     */
-    private void contentEvents(Entity entity) {
-        // loop through eventLayers
-        for (List<Event> eventLayer : eventLayers) {
-            List layer = (List) eventLayer;
-            Iterator events = layer.iterator();
-            while (events.hasNext()) {
-                Event event = (Event) events.next();
-                if (event.pe.getEntity() == entity) {
-                    event.content();
-                }
-            }
-        }
-        // loop through indiLayers
-        for (List<EventSerie> indiLayer : indiLayers) {
-            List layer = (List) indiLayer;
-            Iterator eventSeries = layer.iterator();
-            while (eventSeries.hasNext()) {
-                EventSerie eventSerie = (EventSerie) eventSeries.next();
-                if (eventSerie.getEntity() == entity) {
-                    eventSerie.content();
-                }
-            }
-        }
-        // done
-    }
-
-    /**
-     * Gather Events
-     */
-    private void createLayers() {
-        // reset
-        min = Double.MAX_VALUE;
-        max = -Double.MAX_VALUE;
-
-        // prepare some space
-        eventLayers = new ArrayList<List<Event>>(10);
-        indiLayers = new ArrayList<List<EventSerie>>(10);
-        indiSeries = new HashMap<Indi, EventSerie>();
-
-        // look for events in INDIs and FAMs
-        if (gedcom != null) {
-            createLayersFrom(gedcom.getEntities(Gedcom.INDI).iterator());
-            createLayersFrom(gedcom.getEntities(Gedcom.FAM).iterator());
-            // Create indi layers now that they are built
-            createIndiLayers();
-        }
-
-        // Extend time by before/after
-        max += timeAfterEvent;
-        min -= timeBeforeEvent;
-
-        // Trigger
-        fireStructureChanged();
-
-        // done
-    }
-
-    /**
-     * Gather Events for given entities
-     *
-     * @param es list of entities to find events in
-     */
-    private void createLayersFrom(Iterator es) {
-        // loop through entities
-        while (es.hasNext()) {
-            Entity ent = (Entity) es.next();
-            List ps = ent.getProperties(PropertyEvent.class);
-            for (Object p : ps) {
-                PropertyEvent pe = (PropertyEvent) p;
-                if (tags.contains(pe.getTag())) {
-                    createEventFrom(ent, pe);
-                }
-            }
-        }
-        // done
-    }
-
-    /**
-     * Gather Event for given PropertyEvent
-     *
-     * @param pe property to use
-     */
-    private void createEventFrom(Entity ent, PropertyEvent pe) {
-        // we need a valid date for new event
-        PropertyDate pd = pe.getDate();
-        if (pd == null || !pd.isValid() || !pd.isComparable()) {
-            return;
-        }
-
-        // Event is valid. So insert it in event layers and insert it in indiLayers. 
-        try {
-            // Create event
-            Event e = new Event(pe, pd);
-
-            // Insert Event in layers of events
-            insertEvent(e);
-
-            // Get corresponding indis along the way
-            if (ent instanceof Indi) {
-                updateIndi((Indi) ent, e);
-            } else if (ent instanceof Fam) {
-                Fam fam = (Fam) ent;
-                Indi husb = fam.getHusband();
-                if (husb != null) {
-                    updateIndi(husb, e);
-                }
-                Indi wife = fam.getWife();
-                if (wife != null) {
-                    updateIndi(wife, e);
-                }
-                // done
-            }
-        } catch (GedcomException e) {
-        }
-        // done
-    }
-
-    /**
-     * Create or update EventSeries for individuals
-     */
-    private void updateIndi(Indi indi, Event e) {
-
-        // Get EventSerie for that indi, or else create it
-        EventSerie es = indiSeries.get(indi);
-        if (es == null) {
-            es = new EventSerie(indi);
-            indiSeries.put(indi, es);
-        }
-
-        // Add event to the serie
-        es.addEvent(e);
-
-        // done
-    }
-
-    /**
-     * Insert the Event into one of our eventLayers
-     */
-    private void insertEvent(Event e) {
-
-        // remember min and max
-        min = Math.min(Math.floor(e.from), min);
-        max = Math.max(Math.ceil(e.to), max);
-
-        // find a level that suits us
-        for (List<Event> layer : eventLayers) {
-            if (insertEvent(e, layer)) {
-                return;
-            }
-            // continue
-        }
-
-        // create a new layer
-        List<Event> layer = new LinkedList<Event>();
-        eventLayers.add(layer);
-        layer.add(e);
-
-        // done
-    }
-
-    /**
-     * Create our indiLayers traversing the trees from the ancestors
-     * TODO: put in thread and improve performance or the recurse
-     */
-    public void createIndiLayers() {
-        
-        if (context == null) {
-            return; 
-        }
-
-        // Reset everything
-        tmpRecursedIndi = new HashSet<Indi>();
-        indiLayers.clear();
-        for (EventSerie es : indiSeries.values()) {
-            es.layered = false;
-        }
-
-        // Insert empty layer at the top
-        List<EventSerie> layer = new LinkedList<EventSerie>();
-        indiLayers.add(layer);
-        layer.add(new EventSerie(null));
-
-        // (Re)build layers using scan traverse of the tree from root indi, getting ancestor-most individual along the way and descending kids
-        Entity entity = context.getEntity();
-        Indi rootIndi = getIndiFromEntity(entity);
-        if (rootIndi != null) {
-            recurseTree(getOldestAgnaticAncestor(rootIndi));
-        }
-
-        // Do the same for the remaining individuals, starting with the longuest trees, but in other layers, separating each "tree" by a blank line
-        List<EventSerie> values = new LinkedList(indiSeries.values());
-        Collections.sort(values, new Comparator() {
-            @Override
-            public int compare(Object o1, Object o2) {
-                double d1 = ((EventSerie) (o1)).from;
-                double d2 = ((EventSerie) (o2)).from;
-                if (d1 == d2) {
-                    return 0;
-                }
-                if (d1 < d2) {
-                    return -1;
-                }
-                if (d1 > d2) {
-                    return +1;
-                }
-                return 0;
-            }
-        });
-        for (EventSerie es : values) {
-            if (es.layered) {
-                continue;
-            }
-            // add empty layer and reset base layer
-            if (indiLayers.size() > 1 && !isPackIndi) {
-                layer = new LinkedList<EventSerie>();
-                indiLayers.add(layer);
-                layer.add(new EventSerie(null));
-            }
-            recurseTree(getOldestAgnaticAncestor(es.indi));
-        }
-
-        // Insert empty layer at bottom
-        layer = new LinkedList<EventSerie>();
-        indiLayers.add(layer);
-        layer.add(new EventSerie(null));
-    }
-        
     private Indi getIndiFromEntity(Entity entity) {
         if (entity == null) {
             return null; 
@@ -761,6 +530,670 @@ import java.util.concurrent.CopyOnWriteArrayList;
     }
     
     
+    /**
+     * Returns the filter - set of Tags we consider
+     */
+    public Set<TagPath> getPaths() {
+        return Collections.unmodifiableSet(paths);
+    }
+
+    /**
+     * Trigger callback - our structure has changed
+     */
+    private void fireStructureChanged() {
+        for (int l = listeners.size() - 1; l >= 0; l--) {
+            (listeners.get(l)).structureChanged();
+        }
+    }
+
+    /**
+     * Trigger callback - our data has changed
+     */
+    private void fireDataChanged() {
+        for (int l = listeners.size() - 1; l >= 0; l--) {
+            (listeners.get(l)).dataChanged();
+        }
+    }
+
+    /**
+     * Retags events for given entity
+     */
+    private void contentEvents(Entity entity) {
+        // loop through eventLayers
+        for (List<Event> eventLayer : eventLayers) {
+            List layer = (List) eventLayer;
+            Iterator events = layer.iterator();
+            while (events.hasNext()) {
+                Event event = (Event) events.next();
+                if (event.pe.getEntity() == entity) {
+                    event.content();
+                }
+            }
+        }
+        // loop through indiLayers
+        for (List<EventSerie> indiLayer : indiLayers) {
+            List layer = (List) indiLayer;
+            Iterator eventSeries = layer.iterator();
+            while (eventSeries.hasNext()) {
+                EventSerie eventSerie = (EventSerie) eventSeries.next();
+                if (eventSerie.getEntity() == entity) {
+                    eventSerie.content();
+                }
+            }
+        }
+        // done
+    }
+    
+    public int getMaxLayersNumber() {
+        return Math.max(indiLayers == null ? 0 : indiLayers.size(), eventLayers == null ? 0 : eventLayers.size());
+    }
+    
+    public int getLayersNumber(int mode) {
+        if (mode == TimelineView.INDI_MODE) {
+            return indiLayers == null ? 0 : indiLayers.size();
+        } else {
+            return eventLayers == null ? 0 : eventLayers.size();
+        }
+    }
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Rebuild all layers from scratch
+     */
+    private void createAndLayoutAllLayers() {
+        
+        if (gedcom == null || isRebuilding) {
+            return;
+        }
+        
+        final TimingUtility tu = new TimingUtility();
+        LOG.log(Level.FINER, tu.getTime() + " - Launch tasks to create all events, individuals and then lay out the layers");
+
+        // reset sizes and maps
+        min = Double.MAX_VALUE;
+        max = -Double.MAX_VALUE;
+        eventMap.clear();
+        indiSeries.clear();
+
+        // the progress bar
+        final ProgressHandle ph = ProgressHandleFactory.createHandle("", new Cancellable() {
+            @Override
+            public boolean cancel() {
+                if (null == layoutAllLayersThread) {
+                    return false;
+                }
+                return layoutAllLayersThread.cancel();
+            }
+        });
+        
+        // Define task to be launched
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (lock) {
+                    while (isRebuilding || isRedrawing) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                    isRebuilding = true;
+                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...Start.");
+                    try {
+                        // Calculate events
+                        ph.setDisplayName(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg1"));
+                        ph.start(); 
+                        ph.switchToDeterminate(gedcom.getIndis().size() + gedcom.getFamilies().size());
+                        progressCounter = 0;
+                        createEventsFromEntities(gedcom.getEntities(Gedcom.INDI).iterator(), ph);
+                        createEventsFromEntities(gedcom.getEntities(Gedcom.FAM).iterator(), ph);
+                        isRebuilding = false;
+                        
+                        // Create layers in two separate tasks
+                        setMinMax();
+                        layoutEventLayers();
+                        layoutIndiLayers();
+                        lock.notifyAll();
+                        
+                    } catch (Throwable t) {
+                        Exceptions.printStackTrace(t);
+                    }
+                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...End.");
+                }
+            }
+        };
+        
+        layoutAllLayersThread = RP.create(runnable); //the task is not started yet
+
+        layoutAllLayersThread.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                ph.finish();
+                isRebuilding = false;
+            }
+        });
+
+        layoutAllLayersThread.schedule(0); //start the task
+
+        // done
+    }
+    
+    /**
+     * Layout events by using the existing set of events and re-stacking them in
+     * eventLayers
+     */
+    private void layoutEventLayers() {
+
+        if (gedcom == null) {
+            return;
+        }
+        
+        final TimingUtility tu = new TimingUtility();
+        LOG.log(Level.FINER, tu.getTime() + " - Launch task to lay out EVENT layers");
+        
+        // the progress bar
+        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg2"), new Cancellable() {
+            @Override
+            public boolean cancel() {
+                if (null == layoutEventLayersThread) {
+                    return false;
+                }
+                return layoutEventLayersThread.cancel();
+            }
+        });
+
+        
+        // Define task to be launched
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (lock) {
+                    while (isRebuilding || isRedrawing) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                    isRedrawing = true;
+                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out EVENT layers...Start.");
+                    try {
+                        ph.start(); 
+                        ph.switchToDeterminate(eventMap.size());
+                        progressCounter = 0;
+                        createEventLayers(ph);
+                        lock.notifyAll();
+                    
+                    } catch (Throwable t) {
+                        Exceptions.printStackTrace(t);
+                    }
+                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out EVENT layers...End.");
+                }
+            }
+        };
+        
+        layoutEventLayersThread = RP.create(runnable); //the task is not started yet
+
+        layoutEventLayersThread.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                ph.finish();
+
+                // Trigger change
+                fireStructureChanged();
+                
+                isRedrawing = false;
+            }
+        });
+
+        layoutEventLayersThread.schedule(0); //start the task
+
+        // done
+    }
+
+    /**
+     * Layout indi layers
+     */
+    private void layoutIndiLayers() {
+        
+        if (gedcom == null) {
+            return;
+        }
+        
+        final TimingUtility tu = new TimingUtility();
+        LOG.log(Level.FINER, tu.getTime() + " - Launch task to lay out INDI layers");
+
+        // the progress bar
+        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg2"), new Cancellable() {
+            @Override
+            public boolean cancel() {
+                if (null == layoutIndiLayersThread) {
+                    return false;
+                }
+                return layoutIndiLayersThread.cancel();
+            }
+        });
+        
+        // Define task to be launched
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                synchronized (lock) {
+                    while (isRebuilding || isRedrawing) {
+                        try {
+                            lock.wait();
+                        } catch (InterruptedException ex) {
+                            Exceptions.printStackTrace(ex);
+                        }
+                    }
+                    isRedrawing = true;
+                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out INDI layers...Start.");
+                    try {
+                        ph.start(); 
+                        ph.switchToDeterminate(gedcom.getIndis().size());
+                        progressCounter = 0;
+                        createIndiLayers(ph);
+                        lock.notifyAll();
+
+                    } catch (Throwable t) {
+                        Exceptions.printStackTrace(t);
+                    }
+                    LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to lay out INDI layers...End.");
+                }
+            }
+        };
+        
+        layoutIndiLayersThread = RP.create(runnable); //the task is not started yet
+
+        layoutIndiLayersThread.addTaskListener(new TaskListener() {
+            @Override
+            public void taskFinished(Task task) {
+                ph.finish();
+                
+                // Trigger change
+                fireStructureChanged();
+                
+                isRedrawing = false;
+                updateView();
+            }
+        });
+
+        layoutIndiLayersThread.schedule(0); //start the task
+
+        // done
+    }
+    
+    /**
+     * Returns the events that cover the given context
+     */
+    protected LinkedList<Event> getEvents() {
+        
+        final LinkedList<Event> propertyHits = new LinkedList<Event>();
+        final LinkedList<Event> entityHits = new LinkedList<Event>();
+
+        if (eventLayers == null || eventLayers.isEmpty()) {
+            return entityHits;
+        }
+        
+        List<? extends Property> props = context.getProperties();
+        List<Entity> ents = getAllContextEntities(context);
+
+        synchronized (lock) {
+            while (isRebuilding || isRedrawing) {
+                try {
+                    lock.wait();
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+            }
+            for (List<Event> eventLayer : eventLayers) {
+                Iterator events = ((List) eventLayer).iterator();
+                while (events.hasNext()) {
+                    Event event = (Event) events.next();
+                    for (Entity ent : ents) {
+                        if (ent == event.getEntity()) {
+                            entityHits.add(event);
+                        }
+                    }
+                    for (int i = 0; i < props.size(); i++) {
+                        if (event.getProperty() == props.get(i) || event.getProperty().contains(props.get(i))) {
+                            propertyHits.add(event);
+                        }
+                    }
+                }
+            }
+            lock.notifyAll();
+        }
+        
+        return propertyHits.isEmpty() ? entityHits : propertyHits;
+    }
+
+    /**
+     * Returns the events that cover the given context
+     */
+    protected List<EventSerie> getIndis() {
+
+        final LinkedList<EventSerie> propertyHits = new LinkedList<EventSerie>();
+        final LinkedList<EventSerie> entityHits = new LinkedList<EventSerie>();
+
+        if (indiLayers == null || indiLayers.isEmpty()) {
+            return entityHits;
+        }
+        
+        synchronized (lock) {
+            List<? extends Property> props = context.getProperties();
+            List<? extends Entity> ents = getAllContextEntities(context);
+
+            for (List<EventSerie> indiLayer : indiLayers) {
+                Iterator indis = ((List) indiLayer).iterator();
+                while (indis.hasNext()) {
+                    EventSerie eventSerie = (EventSerie) indis.next();
+                    for (int j = 0; j < ents.size(); j++) {
+                        if (ents.get(j) == eventSerie.getEntity()) {
+                            entityHits.add(eventSerie);
+                        }
+                    }
+                    for (int i = 0; i < props.size(); i++) {
+                        if (eventSerie.getProperty() == props.get(i) || eventSerie.contains(props.get(i))) {
+                            propertyHits.add(eventSerie);
+                        }
+                    }
+                }
+            }
+            lock.notifyAll();
+        }
+
+        return propertyHits.isEmpty() ? entityHits : propertyHits;
+    }
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    
+    
+    
+    /**
+     * Gather Events for given entities
+     *
+     * @param es list of entities to find events in
+     */
+    private void createEventsFromEntities(Iterator es, ProgressHandle ph) {
+        // loop through entities
+        while (es.hasNext()) {
+            ph.progress(progressCounter++);
+            Entity ent = (Entity) es.next();
+            List ps = ent.getProperties(PropertyEvent.class);
+            for (Object p : ps) {
+                PropertyEvent pe = (PropertyEvent) p;
+                if (tags.contains(pe.getTag())) {
+                    createEventFromEntityEvent(ent, pe);
+                }
+            }
+        }
+        // done
+    }
+
+    /**
+     * Gather Event for given PropertyEvent
+     *
+     * @param pe property to use
+     */
+    private void createEventFromEntityEvent(Entity ent, PropertyEvent pe) {
+        // we need a valid date for new event
+        PropertyDate pd = pe.getDate();
+        if (pd == null || !pd.isValid() || !pd.isComparable()) {
+            return;
+        }
+
+        // Event is valid. So insert it in event layers and insert it in indiLayers. 
+        try {
+            // Create event
+            Event e = new Event(pe, pd);
+
+            // Store event
+            eventMap.put(e.from, e);
+
+            // Store indis
+            if (ent instanceof Indi) {
+                updateEventSeriesWithIndi((Indi) ent, e);
+            } else if (ent instanceof Fam) {
+                Fam fam = (Fam) ent;
+                Indi husb = fam.getHusband();
+                if (husb != null) {
+                    updateEventSeriesWithIndi(husb, e);
+                }
+                Indi wife = fam.getWife();
+                if (wife != null) {
+                    updateEventSeriesWithIndi(wife, e);
+                }
+                // done
+            }
+        } catch (GedcomException e) {
+        }
+        // done
+    }
+
+    /**
+     * Create or update EventSeries for individuals
+     */
+    private void updateEventSeriesWithIndi(Indi indi, Event e) {
+
+        // Get EventSerie for that indi, or else create it
+        EventSerie es = indiSeries.get(indi);
+        if (es == null) {
+            es = new EventSerie(indi);
+            indiSeries.put(indi, es);
+        }
+
+        // Add event to the serie
+        es.addEvent(e);
+
+        // done
+    }
+
+    /**
+     * Create our eventLayers from the sorted set of eventMap. Algorythm is optimized for speed.
+     */
+    private void createEventLayers(ProgressHandle ph) {
+        
+        // Reset everything
+        eventLayers.clear();
+        
+        // Use interim map 
+        SortedMap<Double, Integer> endLimits = new TreeMap<Double, Integer>();
+        Double firstKey = null;
+        Iterator<Event> iterator = eventMap.values().iterator();
+        
+        // Init first element to avoid looping everytime on initial test
+        Event firstEvent = iterator.next();
+        List<Event> layer = new LinkedList<Event>();
+        layer.add(firstEvent);
+        endLimits.put(firstEvent.to + timeAfterEvent, eventLayers.size());
+        eventLayers.add(layer);
+        ph.progress(progressCounter++);
+        
+        // Loop on remaining events after the first one
+        while (iterator.hasNext()) {
+            Event event = iterator.next();
+            firstKey = endLimits.firstKey();
+            if (event.from - timeBeforeEvent > firstKey) {
+                int l = endLimits.get(firstKey);
+                layer = eventLayers.get(l);
+                layer.add(event);
+                endLimits.put(event.to + timeAfterEvent, l);
+                endLimits.remove(firstKey);
+            } else {
+                layer = new LinkedList<Event>();
+                layer.add(event);
+                endLimits.put(event.to + timeAfterEvent, eventLayers.size());
+                eventLayers.add(layer);
+            }
+            ph.progress(progressCounter++);
+        }
+    }
+    
+    private void createIndiPackedLayers(ProgressHandle ph) {
+        
+        Map<Double, EventSerie> indiMap = new TreeMap<Double, EventSerie> ();
+        for (EventSerie es : indiSeries.values()) {
+            indiMap.put(es.from, es);
+            }
+
+        
+        SortedMap<Double, Integer> endLimits = new TreeMap<Double, Integer>();
+        Double firstKey = null;
+        Iterator<EventSerie> iterator = indiMap.values().iterator();
+        
+        // Init first element to avoid looping everytime on initial test
+        EventSerie firstEvent = iterator.next();
+        List<EventSerie> layer = new LinkedList<EventSerie>();
+        layer.add(firstEvent);
+        endLimits.put(firstEvent.to + timeAfterEvent, indiLayers.size());
+        indiLayers.add(layer);
+        ph.progress(progressCounter++);
+        
+        // Loop on remaining events after the first one
+        while (iterator.hasNext()) {
+            EventSerie event = iterator.next();
+            firstKey = endLimits.firstKey();
+            if (event.from - timeBeforeEvent > firstKey) {
+                int l = endLimits.get(firstKey);
+                layer = indiLayers.get(l);
+                layer.add(event);
+                endLimits.put(event.to + timeAfterEvent, l);
+                endLimits.remove(firstKey);
+            } else {
+                layer = new LinkedList<EventSerie>();
+                layer.add(event);
+                endLimits.put(event.to + timeAfterEvent, indiLayers.size());
+                indiLayers.add(layer);
+            }
+            ph.progress(progressCounter++);
+        }
+        
+    }
+    
+
+    
+    
+    /**
+     * Create our indiLayers traversing the trees from the ancestors
+     */
+    public void createIndiLayers(ProgressHandle ph) {
+        
+        if (context == null) {
+            return; 
+        }
+
+        // Reset everything
+        indiLayers.clear();
+        if (isPackIndi) {
+            createIndiPackedLayers(ph);
+            return;
+        }
+        Set<Indi> tmpTraversedIndi = new HashSet<Indi>();
+        for (EventSerie es : indiSeries.values()) {
+            es.layered = false;
+        }
+
+        // Insert empty layer at the top
+        List<EventSerie> layer = new LinkedList<EventSerie>();
+        indiLayers.add(layer);
+        layer.add(new EventSerie(null));
+
+        // (Re)build layers using scan traverse of the tree from root indi, getting ancestor-most individual along the way and descending kids
+        Entity entity = context.getEntity();
+        Indi rootIndi = getIndiFromEntity(entity);
+        if (rootIndi != null) {
+            traverseTreeFromIndi(rootIndi, tmpTraversedIndi, ph);
+        }
+
+        // Do the same for the remaining individuals, but in other layers, separating each "tree" by a blank line
+        List<EventSerie> values = new LinkedList(indiSeries.values());
+        Collections.sort(values, new Comparator() {
+            @Override
+            public int compare(Object o1, Object o2) {
+                double d1 = ((EventSerie) (o1)).from;
+                double d2 = ((EventSerie) (o2)).from;
+                if (d1 == d2) {
+                    return 0;
+                }
+                if (d1 < d2) {
+                    return -1;
+                }
+                if (d1 > d2) {
+                    return +1;
+                }
+                return 0;
+            }
+        });
+        for (EventSerie es : values) {
+            if (es.layered) {
+                continue;
+            }
+            // add empty layer and reset base layer
+            if (indiLayers.size() > 1 && !isPackIndi) {
+                layer = new LinkedList<EventSerie>();
+                indiLayers.add(layer);
+                layer.add(new EventSerie(null));
+            }
+            traverseTreeFromIndi(es.indi, tmpTraversedIndi, ph);
+        }
+
+        // Insert empty layer at bottom
+        layer = new LinkedList<EventSerie>();
+        indiLayers.add(layer);
+        layer.add(new EventSerie(null));
+    }
+        
+    
+    private void traverseTreeFromIndi(Indi rootIndi, Set<Indi> set, ProgressHandle ph) {
+        if (rootIndi == null) {
+            return;
+        }
+
+        Stack<Indi> indiStack = new Stack<Indi>();
+        
+        Indi indi = getOldestAgnaticAncestor(rootIndi);
+        while (indi != null) {
+            if (!set.contains(indi)) {
+                set.add(indi);
+                EventSerie es = indiSeries.get(indi);
+                if (es != null && !es.layered) {
+                    es.layered = true;
+                    List<EventSerie> layer = new LinkedList<EventSerie>();
+                    layer.add(es);
+                    indiLayers.add(layer);
+                }
+                ph.progress(progressCounter++);
+            }
+            indi = getNextIndiInTree(indi, set, indiStack);
+        }
+    }
+    
+    /**
+     * Get oldest ancestor from agnatic line
+     * @param indi
+     * @return oldest ancestor or individual itself. Never returns null.
+     */
     private Indi getOldestAgnaticAncestor(Indi indi) {
         Fam fam = indi.getFamilyWhereBiologicalChild();
         if (fam != null) {
@@ -768,157 +1201,85 @@ import java.util.concurrent.CopyOnWriteArrayList;
             if (father != null) {
                 return getOldestAgnaticAncestor(father);
             }
+            Indi mother = fam.getWife();
+            if (mother != null) {
+                return getOldestAgnaticAncestor(mother);
+            }
         }
         return indi;
     }
 
-    public void recurseTree(Indi indi) {
-        if (indi == null || tmpRecursedIndi.contains(indi)) {
-            return;
-        }
-        tmpRecursedIndi.add(indi);
-        insertEventSerie(indiSeries.get(indi));
+    /**
+     * Get next indi in tree from indi position
+     * Logical of next individual is as follows:
+     * - spouse oldest ancestor, if not already done, or
+     * - 
+     * @param indi
+     * @param set
+     * @return 
+     */
+    public Indi getNextIndiInTree(Indi indi, Set<Indi> set, Stack<Indi> stack) {
+        
         Fam[] fams = indi.getFamiliesWhereSpouse();
         for (Fam fam : fams) {
             Indi spouse = fam.getOtherSpouse(indi);
-            if (spouse != null && !tmpRecursedIndi.contains(spouse)) {
+            if (spouse != null && !set.contains(spouse)) {
                 Indi ancestor = getOldestAgnaticAncestor(spouse);
-                if (ancestor != null) {
-                    recurseTree(ancestor);
+                stack.push(indi);
+                if (ancestor != null && !set.contains(ancestor)) {
+                    return ancestor;
+                } else {
+                    return spouse;
                 }
             }
-            Indi[] children = fam.getChildren(true);
+            Indi[] children = fam.getChildren(true); // get children sorted
             for (Indi child : children) {
-                recurseTree(child);
-            }
-        }
-        
-    }
-
-    
-    /**
-     * Insert the EventSerie into one of our indiLayers
-     */
-    private void insertEventSerie(EventSerie es) {
-        // return if already layered
-        if (es == null || es.layered) {
-            return;
-        }
-        es.layered = true;
-
-        if (isPackIndi) {
-            // Either find a level that suits us (leave first layer empty)
-            for (int iLayer = 1; iLayer < indiLayers.size(); iLayer++) {
-                if (insertEventSerie(es, indiLayers.get(iLayer))) {
-                    return;
+                if (!set.contains(child)) {
+                    stack.push(child);
+                    return child;
                 }
-                // continue
             }
         }
-
-        // Or else create a new layer
-        List<EventSerie> layer = new LinkedList<EventSerie>();
-        indiLayers.add(layer);
-        layer.add(es);
- 
-        // done
-    }
-
-    /**
-     * Insert the Event into a layer
-     *
-     * @return whether that was successfull
-     */
-    private boolean insertEvent(Event candidate, List<Event> layer) {
-        // loop through layer
-        ListIterator<Event> events = layer.listIterator();
-        do {
-            Event event = events.next();
-            // before?
-            if (candidate.to + timeAfterEvent < event.from - timeBeforeEvent) {
-                events.previous();
-                events.add(candidate);
-                return true;
-            }
-            // overlap?
-            if (candidate.from - timeBeforeEvent < event.to + timeAfterEvent) {
-                return false;
-            }
-            // after?
-        } while (events.hasNext());
-        // after!
-        events.add(candidate);
-        return true;
-    }
-
-    /**
-     * Insert the EventSerie into a layer
-     *
-     * @return whether that was successfull
-     */
-    private boolean insertEventSerie(EventSerie candidate, List<EventSerie> layer) {
-        // loop through layer
-        ListIterator<EventSerie> eventSeries = layer.listIterator();
-        do {
-            EventSerie eventSerie = eventSeries.next();
-            // before?
-            if (candidate.to + timeAfterEvent < eventSerie.from - timeBeforeEvent) {
-                eventSeries.previous();
-                eventSeries.add(candidate);
-                return true;
-            }
-            // overlap?
-            if (candidate.from - timeBeforeEvent < eventSerie.to + timeAfterEvent) {
-                return false;
-            }
-            // after?
-        } while (eventSeries.hasNext());
-        // after!
-        eventSeries.add(candidate);
-        return true;
-    }
-
-    /**
-     * Layout events by using the existing set of events and re-stacking them in
-     * eventLayers
-     */
-    private void layoutEvents() {
-        // reset
-        min = Double.MAX_VALUE;
-        max = -Double.MAX_VALUE;
-        // keep old and create some new space
-        List<List<Event>> old = eventLayers;
-        eventLayers = new ArrayList<List<Event>>(10);
-        // loop through old
-        for (List<Event> layer : old) {
-            for (Event event : layer) {
-                insertEvent(event);
+        Fam fam = indi.getFamilyWhereBiologicalChild();
+        if (fam != null) {
+            Indi[] children = fam.getChildren(true); // get children sorted
+            for (Indi child : children) {
+                if (!set.contains(child)) {
+                    stack.push(child);
+                    return child;
+                }
             }
         }
-        // extend time by before/after
-        max += timeAfterEvent;
-        min -= timeBeforeEvent;
-        // trigger
-        fireStructureChanged();
-        // done
+        if (!stack.empty()) {
+            return stack.pop();
+        }
+        return null;
     }
 
-    public int getMaxLayersNumber() {
-        return Math.max(indiLayers.size(), eventLayers.size());
-    }
+
     
-    public int getLayersNumber(int mode) {
-        if (mode == TimelineView.INDI_MODE) {
-            return indiLayers.size();
-        } else {
-            return eventLayers.size();
-        }
-    }
-
-    void setPackIndi(boolean set) {
-        isPackIndi = set;
-    }
-
+    
+    
+    
+    
+ 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * An event in our model
      */
@@ -1004,6 +1365,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
         }
     } //Event
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * An event serie in our model (events of an individual)
      */
@@ -1192,6 +1563,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
     } //EventSerie
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * Interface for listeners
      */
@@ -1210,12 +1596,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        createLayers();
+        createAndLayoutAllLayers();
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        createLayers();
+        createAndLayoutAllLayers();
     }
 
     @Override
@@ -1231,11 +1617,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
         if (deleted instanceof PropertyDate) {
-            createLayers();
+            createAndLayoutAllLayers();
         } else if (deleted instanceof PropertyName) {
             contentEvents(property.getEntity());
             fireDataChanged();
         }
     }
 
-} //TimelineModel 
+}
