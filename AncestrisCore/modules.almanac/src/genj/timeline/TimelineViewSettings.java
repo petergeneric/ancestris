@@ -180,6 +180,16 @@ public class TimelineViewSettings extends JTabbedPane {
         return result;
     }
 
+    private JSpinner createSpinner(double min, double value, double max, String tip) {
+        JSpinner result = new JSpinner(new SpinnerNumberModel(value, min, max, 0.1D));
+        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(result, "##0.0");
+        result.setEditor(editor);
+        result.addChangeListener(editor);
+        result.addChangeListener(commit);
+        result.setToolTipText(resources.getString(tip));
+        return result;
+    }
+
     public class Commit implements ChangeListener, ActionListener {
 
         private TimelineView view;
@@ -190,22 +200,37 @@ public class TimelineViewSettings extends JTabbedPane {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            actionPerformed(null);
+            actionPerformed(new ActionEvent(e.getSource(), 0, ""));
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
+            Object source = e.getSource();
+            String command = e.getActionCommand();
+            if (source instanceof ListSelectionWidget) {
+                command = "rebuild";
+            }
+            if (source instanceof JSpinner) {
+                command = "redraw";
+            }
+            if (source instanceof JCheckBox) {
+                JCheckBox cb = (JCheckBox) source;
+                if (cb == packIndi) {
+                    command = "redraw";
+                }
+            }
+            
             // choosen EventTags
-            view.getModel().setPaths(pathsList.getCheckedChoices());
-
+            view.getModel().setPaths(pathsList.getCheckedChoices(), command.equals("rebuild"));
+            
             // checks
             view.setPaintTags(checkTags.isSelected());
             view.setPaintDates(checkDates.isSelected());
             view.setPaintGrid(checkGrid.isSelected());
-            view.setPackIndi(packIndi.isSelected());
 
             // sliders
-            view.setCMPerEvents(((Double) spinCmBefEvent.getModel().getValue()), ((Double) spinCmAftEvent.getModel().getValue()));
+            view.setCMPerEvents(((Double) spinCmBefEvent.getModel().getValue()), ((Double) spinCmAftEvent.getModel().getValue()), command.equals("redraw"));
+            view.setPackIndi(packIndi.isSelected(), command.equals("redraw"));
 
             // colors
             for (String key : view.colors.keySet()) {
@@ -219,16 +244,6 @@ public class TimelineViewSettings extends JTabbedPane {
             view.setAlmanacCategories(almanacPanel.getCheckedCategories());
             view.setAlmanacSigLevel(almanacPanel.getAlmanacSigLevel());
         }
-    }
-
-    private JSpinner createSpinner(double min, double value, double max, String tip) {
-        JSpinner result = new JSpinner(new SpinnerNumberModel(value, min, max, 0.1D));
-        JSpinner.NumberEditor editor = new JSpinner.NumberEditor(result, "##0.0");
-        result.setEditor(editor);
-        result.addChangeListener(editor);
-        result.addChangeListener(commit);
-        result.setToolTipText(resources.getString(tip));
-        return result;
     }
 
 } //TimelineViewSettings

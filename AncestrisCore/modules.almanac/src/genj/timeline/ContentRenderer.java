@@ -142,7 +142,7 @@ public class ContentRenderer {
     /**
      * Renders a grid
      */
-    private final void renderGrid(UnitGraphics g, Model model) {
+    private void renderGrid(UnitGraphics g, Model model) {
         // check 
         if (!paintGrid) {
             return;
@@ -163,11 +163,14 @@ public class ContentRenderer {
     /**
      * Renders layers
      */
-    private final void renderLayers(UnitGraphics g, Model model, int mode) {
+    private void renderLayers(UnitGraphics g, Model model, int mode) {
+        List eventLayers = mode == TimelineView.INDI_MODE ? model.indiLayers : model.eventLayers;
+        if (eventLayers == null) {
+            return;
+        }
         // check clip as we go
         Rectangle2D clip = g.getClip();
         // loop on layers to display, events or indis, depending on user switch 
-        List eventLayers = mode == TimelineView.INDI_MODE ? model.indiLayers : model.eventLayers;
         for (int l = 0; l < eventLayers.size(); l++) {
             if (l < Math.floor(clip.getMinY()) || l > Math.ceil(clip.getMaxY())) {
                 continue;
@@ -211,7 +214,7 @@ public class ContentRenderer {
     /**
      * Renders a layer of EventSeries
      */
-    private final void renderEventSeries(UnitGraphics g, Model model, List layer, int level) {
+    private void renderEventSeries(UnitGraphics g, Model model, List layer, int level) {
         // check clip as we go
         Rectangle2D clip = g.getClip();
         // loop through event series
@@ -237,7 +240,7 @@ public class ContentRenderer {
     /**
      * Renders an Event
      */
-    private final void renderEvent(UnitGraphics g, Model model, Model.Event event, Model.Event next, int level) {
+    private void renderEvent(UnitGraphics g, Model model, Model.Event event, Model.Event next, int level) {
 
         // calculate some parameters
         boolean em = selectionEvent.contains(event);
@@ -301,7 +304,7 @@ public class ContentRenderer {
     /**
      * Renders an EventSerie
      */
-    private final void renderEventSerie(UnitGraphics g, Model model, Model.EventSerie eventSerie, Model.EventSerie next, int level) {
+    private void renderEventSerie(UnitGraphics g, Model model, Model.EventSerie eventSerie, Model.EventSerie next, int level) {
 
         // discard empty series
         if (eventSerie.indi == null) {

@@ -142,8 +142,8 @@ public class TimelineView extends View implements SelectionListener {
     public static int INDI_MODE = 0;
     public static int EVENT_MODE = 1;
     public int mode = INDI_MODE;
-    private CenterTreeToIndividual cttiButton;
     private CenterToSelectionAction ctsButton;
+    private CenterTreeToIndividual cttiButton;
 
     /**
      * Constructor
@@ -185,9 +185,9 @@ public class TimelineView extends View implements SelectionListener {
         mode = REGISTRY.get("display.mode", mode);
 
         // create/keep our sub-parts
-        model = new Model();
-        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear);
-        model.setPackIndi(isPackIndi);
+        model = new Model(TimelineView.this);
+        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, false);
+        model.setPackIndi(isPackIndi, false);
 
         String[] ps = REGISTRY.get("paths", (String[]) null);
         if (ps != null) {
@@ -198,9 +198,9 @@ public class TimelineView extends View implements SelectionListener {
                 } catch (Throwable t) {
                 }
             }
-            model.setPaths(paths);
+            model.setPaths(paths, true); // rebuild all
         } else {
-            model.setPaths(null);
+            model.setPaths(null, false);
         }
 
         // Init panels
@@ -424,23 +424,22 @@ public class TimelineView extends View implements SelectionListener {
     /**
      * Accessor - pack individuals
      */
-    public void setPackIndi(boolean set) {
+    public void setPackIndi(boolean set, boolean redraw) {
         isPackIndi = set;
-        model.setPackIndi(isPackIndi);
-        createLayers();
-        selectionEventSerie = model.getIndis();
-        centerToSelection();
+        model.setPackIndi(set, redraw);
+        repaint();
     }
 
     /**
      * Sets the time allocated per event
      */
-    public void setCMPerEvents(double before, double after) {
+    public void setCMPerEvents(double before, double after, boolean redraw) {
         // remember
         cmBefEvent = before;
         cmAftEvent = after;
         // update model
-        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear);
+        model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, redraw);
+        repaint();
     }
 
     /**
@@ -458,26 +457,6 @@ public class TimelineView extends View implements SelectionListener {
     }
 
     /**
-     * Set tooltipText for slider and scrollbar
-     */
-    public void setTooltipText() {
-        double cmPY = Math.floor(cmPerYear*100) / 100;
-        sliderCmPerYear.setToolTipText(cmPY + " " + resources.getString("view.peryear.tip") + " ("+sliderCmPerYear.getValue()+"%)");
-
-        JScrollBar sb = scrollContent.getHorizontalScrollBar();
-        String minYear = String.valueOf((int)pixel2year(sb.getMinimum()));
-        String year = String.valueOf((int) pixel2year(sb.getValue()) + 1);
-        String maxYear = String.valueOf((int)pixel2year(sb.getMaximum()));
-        sb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
-
-        int h = getFontMetrics(getFont()).getHeight() + 1;
-        JScrollBar vsb = scrollContent.getVerticalScrollBar();
-        String value = Integer.toString((int) vsb.getValue() / h);
-        String total = Integer.toString(model.getLayersNumber(mode));
-        vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total)); // + " ; increment = "+vsb.getUnitIncrement());
-    }
-    
-    /**
      * @see genj.view.ToolBarSupport#populate(JToolBar)
      */
     @Override
@@ -489,8 +468,8 @@ public class TimelineView extends View implements SelectionListener {
         setTooltipText();
         sliderCmPerYear.addChangeListener(new ChangeCmPerYear());
         sliderCmPerYear.setOpaque(false);
-        cttiButton = new CenterTreeToIndividual();
         ctsButton = new CenterToSelectionAction();
+        cttiButton = new CenterTreeToIndividual();
 
         toolbar.add(sliderCmPerYear);
         toolbar.addSeparator();
@@ -510,43 +489,83 @@ public class TimelineView extends View implements SelectionListener {
      */
     @Override
     public void setContext(Context context) {
-
+        selectionEvent.clear();
+        selectionEventSerie.clear();
         if (context == null) {
             model.setGedcom(null);
-            selectionEvent.clear();
-            selectionEventSerie.clear();
         } else {
             model.setGedcom(context);
-            selectionEvent = model.getEvents();
-            selectionEventSerie = model.getIndis();
         }
-        
-        // do a repaint, too
-        content.repaint();
+    }
 
-        // Center selection
-        centerToSelection();
+    public void update() {
+        selectionEvent = model.getEvents();
+        selectionEventSerie = model.getIndis();
+        int layer = scrollContent.getVerticalScrollBar().getValue() / (getFontMetrics(getFont()).getHeight() + 1);
+        if ((mode == INDI_MODE && !selectionEventSerie.isEmpty()) || (mode == EVENT_MODE && !selectionEvent.isEmpty())) {
+            centerToSelection();
+        } else {
+            scroll2year(centeredYear);
+            scroll2layer(layer);
+        }
+        setTooltipText();
+        repaint();
+        scrollContent.setViewportView(content); // need to refresh vertical scroll bar
+    }
+    
+    public void centerToSelection() {
 
-        // done
+        if (ctsButton == null || cttiButton == null || !model.isReady()) {
+            return;
+        }
+         
+        if (mode == INDI_MODE) {
+            boolean enabled = !selectionEventSerie.isEmpty();
+            Model.EventSerie eventSerie = enabled ? selectionEventSerie.get(selectionEventSerie.size()-1) : null;
+            String text = eventSerie == null ? "" : eventSerie.toString();
+            ctsButton.setEnabled(enabled);
+            ctsButton.setTip(enabled, text);
+            cttiButton.setEnabled(enabled);
+            cttiButton.setTip(enabled, text);
+            if (enabled) {
+                makeVisible(eventSerie);
+            }
+        } else {
+            boolean enabled = !selectionEvent.isEmpty();
+            Model.Event event = enabled ? selectionEvent.get(selectionEvent.size()-1) : null;
+            String text = event == null ? "" : event.toString();
+            ctsButton.setEnabled(enabled);
+            ctsButton.setTip(enabled, text);
+            cttiButton.setEnabled(false);
+            cttiButton.setTip(false, "");
+            if (enabled) {
+                makeVisible(event);
+            }
+        }
     }
 
     /**
-     * Returns the event at given position
+     * Set tooltipText for slider and scrollbar
      */
-    protected Model.Event getEventAt(Point pos) {
-        double year = pixel2year(pos.x);
-        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
-        return model.getEvent(year, layer);
-    }
+    public void setTooltipText() {
+        double cmPY = Math.floor(cmPerYear*100) / 100;
+        sliderCmPerYear.setToolTipText(cmPY + " " + resources.getString("view.peryear.tip") + " ("+sliderCmPerYear.getValue()+"%)");
 
-    /**
-     * Returns the indi at given position
-     */
-    protected Model.EventSerie getIndiAt(Point pos) {
-        double year = pixel2year(pos.x);
-        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
-        return model.getEventSerie(year, layer);
+        JScrollBar hsb = scrollContent.getHorizontalScrollBar();
+        hsb.setUnitIncrement((int) (DPC.getX() * cmPerYear));
+        String minYear = String.valueOf((int)pixel2year(hsb.getMinimum()));
+        String year = String.valueOf((int) pixel2year(hsb.getValue()) + 1);
+        String maxYear = String.valueOf((int)pixel2year(hsb.getMaximum()));
+        hsb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
+
+        int h = getFontMetrics(getFont()).getHeight() + 1;
+        JScrollBar vsb = scrollContent.getVerticalScrollBar();
+        vsb.setUnitIncrement((int) (2 * (getFontMetrics(getFont()).getHeight() + 1)));
+        String value = Integer.toString((int) vsb.getValue() / h);
+        String total = Integer.toString(model.getLayersNumber(mode));
+        vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total)); 
     }
+    
     /**
      * Calculates a year from given pixel position
      */
@@ -571,9 +590,6 @@ public class TimelineView extends View implements SelectionListener {
         newX = newX - scrollContent.getViewport().getWidth() / 2;
         scrollContent.revalidate();
         scrollContent.getHorizontalScrollBar().setValue(newX);
-        
-        scrollContent.getHorizontalScrollBar().setUnitIncrement((int) (DPC.getX() * cmPerYear));
-        scrollContent.getVerticalScrollBar().setUnitIncrement((int) (Math.max(3, Math.log10(model.getLayersNumber(mode))) * (getFontMetrics(getFont()).getHeight() + 1)));
     }
 
     protected void scroll2layer(int layer) {
@@ -623,34 +639,22 @@ public class TimelineView extends View implements SelectionListener {
         scroll2layer(model.getLayerFromEventSerie(eventSerie));
     }
 
-    public void centerToSelection() {
-
-        if (cttiButton == null || ctsButton == null) {
-            return;
-        }
-        
-        cttiButton.setEnabled(!selectionEventSerie.isEmpty());
-        cttiButton.setTip();
-        ctsButton.setEnabled(!selectionEventSerie.isEmpty() && !selectionEvent.isEmpty());
-        ctsButton.setTip();
-        
-
-        if (mode == INDI_MODE) {
-            if (!selectionEventSerie.isEmpty()) {
-                makeVisible(selectionEventSerie.get(selectionEventSerie.size()-1));
-            }
-        } else {
-            if (!selectionEvent.isEmpty()) {
-                makeVisible(selectionEvent.get(selectionEvent.size()-1));
-            }
-        }
+    /**
+     * Returns the event at given position
+     */
+    protected Model.Event getEventAt(Point pos) {
+        double year = pixel2year(pos.x);
+        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
+        return model.getEvent(year, layer);
     }
 
-    private void createLayers() {
-        model.createIndiLayers();
-        revalidate();
-        repaint();
-        scrollContent.setViewportView(content); // need to refresh vertical scroll bar
+    /**
+     * Returns the indi at given position
+     */
+    protected Model.EventSerie getIndiAt(Point pos) {
+        double year = pixel2year(pos.x);
+        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
+        return model.getEventSerie(year, layer);
     }
 
     public Collator getCollator() {
@@ -660,6 +664,23 @@ public class TimelineView extends View implements SelectionListener {
         return content.getContext().getGedcom().getCollator();
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * The ruler 'at the top'
      */
@@ -765,7 +786,7 @@ public class TimelineView extends View implements SelectionListener {
             try {
                 Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacList(), getAlmanacCategories(), getAlmanacSigLevel());
                 if (almanac.hasNext()) {
-                    text.append("<html><body><div width=\"" + TimelineView.this.getWidth() * 2 / 3 + "\"><ul>");
+                    text.append("<html><body><div width=\"" + TimelineView.this.getWidth() * 0.4 + "\"><ul>");
                     for (int i = 0; i < 10 && almanac.hasNext(); i++) {
                         Event event = almanac.next();
                         Color color = colors.get(prefix+event.getAlmanac());
@@ -784,6 +805,18 @@ public class TimelineView extends View implements SelectionListener {
         }
     } //Ruler
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
      * The content for displaying the timeline model
      */
@@ -876,8 +909,10 @@ public class TimelineView extends View implements SelectionListener {
                     getFontMetrics(getFont()).getHeight() + 1);
             graphics.translate(-model.min, 0);
 
-            // go for it      
-            contentRenderer.render(graphics, model, mode);
+            // go for it     
+            if (model.isReady()) {
+                contentRenderer.render(graphics, model, mode);
+            }
 
             // done
         }
@@ -941,22 +976,10 @@ public class TimelineView extends View implements SelectionListener {
         /** @see javax.swing.event.ChangeListener#stateChanged(ChangeEvent) */
         @Override
         public void stateChanged(ChangeEvent e) {
-            double center = centeredYear;
-            int layer = scrollContent.getVerticalScrollBar().getValue() / (getFontMetrics(getFont()).getHeight() + 1);
             // get the new value
             cmPerYear = MIN_CM_PER_YEAR + Math.exp(sliderCmPerYear.getValue() * 0.1) / Math.exp(10) * (MAX_CM_PER_YEAR - MIN_CM_PER_YEAR);
             // update model
-            model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear);
-            // re-center
-            if ((mode == INDI_MODE && !selectionEventSerie.isEmpty()) || (mode == EVENT_MODE && !selectionEvent.isEmpty())) {
-                centerToSelection();
-            } else {
-                scroll2year(center);
-                scroll2layer(layer);
-            }
-            
-            // update tootip
-            setTooltipText();
+            model.setTimePerEvent(cmBefEvent / cmPerYear, cmAftEvent / cmPerYear, true);
             // done
         }
     } //ChangeCmPerYear
@@ -1044,14 +1067,14 @@ public class TimelineView extends View implements SelectionListener {
          */
         private CenterTreeToIndividual() {
             setImage(new ImageIcon(this, "centertree"));
-            setTip();
+            setTip(true, "");
         }
         
-        private void setTip() {
-            if (selectionEventSerie.isEmpty()) {
-                setTip(resources.getString("centertree.tip.none"));
+        private void setTip(boolean enabled, String text) {
+            if (enabled) {
+                setTip(resources.getString("centertree.tip", text));
             } else {
-                setTip(resources.getString("centertree.tip", selectionEventSerie.iterator().next()));
+                setTip(resources.getString(mode == INDI_MODE ? "centertree.tip.none" : "centertree.tip.noneforthismode"));
             }
         }
         /**
@@ -1059,9 +1082,7 @@ public class TimelineView extends View implements SelectionListener {
          */
         @Override
         public void actionPerformed(ActionEvent event) {
-            createLayers();
-            repaint();
-            centerToSelection();
+            model.layoutLayers(true);
         }
 
     } 
@@ -1076,14 +1097,14 @@ public class TimelineView extends View implements SelectionListener {
          */
         private CenterToSelectionAction() {
             setImage(new ImageIcon(this, "root"));
-            setTip();
+            setTip(true, "");
         }
         
-        public void setTip() {
-            if (selectionEventSerie.isEmpty()) {
-                setTip(resources.getString("root.tip.none"));
+        public void setTip(boolean enabled, String text) {
+            if (enabled) {
+                setTip(resources.getString("root.tip", text));
             } else {
-                setTip(resources.getString("root.tip", selectionEventSerie.iterator().next()));
+                setTip(resources.getString("root.tip.none"));
             }
         }
         /**
