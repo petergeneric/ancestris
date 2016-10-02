@@ -15,7 +15,7 @@ public class TimingUtility {
         return instance;
     }
 
-    private TimingUtility(){
+    public TimingUtility(){
         reset();
     }
     
