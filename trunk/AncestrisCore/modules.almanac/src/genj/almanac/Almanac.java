@@ -627,8 +627,11 @@ public class Almanac {
          */
         Range(PointInTime from, PointInTime to, List<String> almanacs, List<String> cats, int sigLevel) {
 
-            if (!from.isValid() || !to.isValid()) {
-                throw new IllegalArgumentException();
+            if (!from.isValid()) {
+                from = new PointInTime(1,1,1);
+            }
+            if (!to.isValid()) {
+                to = new PointInTime(1,1,1);
             }
 
             earliest = from;

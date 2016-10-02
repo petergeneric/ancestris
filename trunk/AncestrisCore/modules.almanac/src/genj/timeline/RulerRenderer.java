@@ -79,9 +79,9 @@ public class RulerRenderer extends ContentRenderer {
         //renderYear(graphics, to, step, 1.0D);
 
         from += width;
-        to += -width;
+        to += width;
 
-        for (double year = Math.floor(from / step) * step; year < to; year += step) {
+        for (double year = Math.floor(from / step) * step; year <= to; year += step) {
             renderYear(graphics, year, step, 0.5D);
         }
 
