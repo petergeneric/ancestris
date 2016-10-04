@@ -971,6 +971,9 @@ import org.openide.util.TaskListener;
                     createEventFromEntityEvent(ent, (PropertyEvent) p);
                 }
             }
+            if (Thread.currentThread().isInterrupted()) {
+                return;
+            }
         }
         // done
     }
