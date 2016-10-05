@@ -1007,6 +1007,9 @@ public class TimelineView extends View implements SelectionListener {
             repaint();
         }
     } // ModelListener
+    
+    
+    
 
     private class Settings extends SettingsAction {
 
