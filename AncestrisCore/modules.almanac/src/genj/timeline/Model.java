@@ -139,6 +139,7 @@ import org.openide.util.TaskListener;
     private boolean isRedrawing = false;
     private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
     private int progressCounter = 0;
+    private boolean isGedcomChanging = false;
 
     /**
      * interaction with view
@@ -241,6 +242,9 @@ import org.openide.util.TaskListener;
      */
     /*package*/ void removeListener(Listener listener) {
         listeners.remove(listener);
+        if (gedcom != null) {
+            gedcom.removeGedcomListener(this);
+        }
     }
 
     /**
@@ -645,12 +649,6 @@ import org.openide.util.TaskListener;
         final TimingUtility tu = new TimingUtility();
         LOG.log(Level.FINER, tu.getTime() + " - Launch tasks to create all events, individuals and then lay out the layers");
 
-        // reset sizes and maps
-        min = Double.MAX_VALUE;
-        max = -Double.MAX_VALUE;
-        eventMap.clear();
-        indiSeries.clear();
-
         // the progress bar
         final ProgressHandle ph = ProgressHandleFactory.createHandle("", new Cancellable() {
             @Override
@@ -676,6 +674,12 @@ import org.openide.util.TaskListener;
                     }
                     isRebuilding = true;
                     LOG.log(Level.FINER, tu.getTime() + " - Executing tasks to create all events, individuals and then lay out the layers...Start.");
+                    // reset sizes and maps
+                    min = Double.MAX_VALUE;
+                    max = -Double.MAX_VALUE;
+                    eventMap.clear();
+                    indiSeries.clear();
+
                     try {
                         // Calculate events
                         ph.setDisplayName(NbBundle.getMessage(getClass(), "TXT_CreateLayers_Msg1"));
@@ -1649,14 +1653,26 @@ import org.openide.util.TaskListener;
         public void structureChanged();
     } //ModelListener
 
+    
+    
+    
+    
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        createAndLayoutAllLayers();
+        if (!isGedcomChanging) {
+            isGedcomChanging = true;
+            createAndLayoutAllLayers();
+            isGedcomChanging = false;
+        }
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        createAndLayoutAllLayers();
+        if (!isGedcomChanging) {
+            isGedcomChanging = true;
+            createAndLayoutAllLayers();
+            isGedcomChanging = false;
+        }
     }
 
     @Override
@@ -1671,11 +1687,15 @@ import org.openide.util.TaskListener;
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        if (deleted instanceof PropertyDate) {
-            createAndLayoutAllLayers();
-        } else if (deleted instanceof PropertyName) {
-            contentEvents(property.getEntity());
-            fireDataChanged();
+        if (!isGedcomChanging) {
+            isGedcomChanging = true;
+            if (deleted instanceof PropertyDate) {
+                createAndLayoutAllLayers();
+            } else if (deleted instanceof PropertyName) {
+                contentEvents(property.getEntity());
+                fireDataChanged();
+            }
+            isGedcomChanging = false;
         }
     }
 
