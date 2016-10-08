@@ -946,10 +946,51 @@ import org.openide.util.TaskListener;
 
         return propertyHits.isEmpty() ? entityHits : propertyHits;
     }
-
-    
     
 
+    /**
+     * Free up memory
+     */
+    public void eraseAll() {
+        
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                // List<List<Event>> eventLayers  
+                for (Iterator<List<Event>> it = eventLayers.iterator(); it.hasNext();) {
+                    for (Iterator<Event> it2 = it.next().iterator(); it2.hasNext();) {
+                        it2.next();
+                        it2.remove();
+                    }
+                    it.remove();
+                }
+
+                // List<List<EventSerie>> indiLayers  
+                for (Iterator<List<EventSerie>> it = indiLayers.iterator(); it.hasNext();) {
+                    for (Iterator<EventSerie> it2 = it.next().iterator(); it2.hasNext();) {
+                        it2.next();
+                        it2.remove();
+                    }
+                    it.remove();
+                }
+
+                // Map<Double, Event> eventMap
+                for (Iterator<Map.Entry<Double, Event>> it = eventMap.entrySet().iterator(); it.hasNext();) {
+                    it.next();
+                    it.remove();
+                }
+
+                // Map<Indi, EventSerie> indiSeries
+                for (Iterator<Map.Entry<Indi, EventSerie>> it = indiSeries.entrySet().iterator(); it.hasNext();) {
+                    it.next();
+                    it.remove();
+                }
+                System.gc();
+            }
+        };
+        
+        new RequestProcessor("interruptible tasks", 1, true).create(runnable).schedule(0);
+    }
     
     
     
@@ -1315,6 +1356,8 @@ import org.openide.util.TaskListener;
         }
         return null;
     }
+
+
 
 
     
