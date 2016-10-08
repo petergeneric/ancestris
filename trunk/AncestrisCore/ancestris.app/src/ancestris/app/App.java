@@ -186,6 +186,16 @@ public class App {
                 center = new ControlCenter();
                 
                 // Done
+                new java.util.Timer().schedule(
+                        new java.util.TimerTask() {
+                            @Override
+                            public void run() {
+                                System.gc();
+                            }
+                        },
+                        10000
+                );
+
                 LOG.info("/Startup");
                 LOG.info("   ");
 
