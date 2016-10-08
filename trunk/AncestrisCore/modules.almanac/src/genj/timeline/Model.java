@@ -784,6 +784,7 @@ import org.openide.util.TaskListener;
                 fireStructureChanged();
                 
                 isRedrawing = false;
+                System.gc();
             }
         });
 
@@ -856,6 +857,7 @@ import org.openide.util.TaskListener;
                 
                 isRedrawing = false;
                 updateView();
+                System.gc();
             }
         });
 
