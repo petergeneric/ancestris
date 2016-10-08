@@ -214,6 +214,7 @@ public class GedcomReaderFactory {
          */
         private void readGedcom() throws IOException {
 
+            System.gc();
             long start = System.currentTimeMillis();
 
             // Read the Header
@@ -258,6 +259,7 @@ public class GedcomReaderFactory {
                         lazyLinks.size()
                     });
 
+            System.gc();
             // Done
         }
 
@@ -477,7 +479,7 @@ public class GedcomReaderFactory {
                 try {
 
                     result = gedcom.createEntity(tag, xref);
-
+                    
                     // warn about missing xref if it's a well known type
                     if (result.getClass() != Entity.class && xref.length() == 0) {
                         context.handleWarning(getLines(), RESOURCES.getString("read.warn.recordnoid", Gedcom.getName(tag)), new Context(result));

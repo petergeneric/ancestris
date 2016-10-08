@@ -229,21 +229,34 @@ public abstract class GedcomMgr {
         return gedcom.getOrigin();
     }
 
-    public boolean gedcomClose(Context context) {
+    public boolean gedcomClose(final Context context) {
         // tell
         gedcomClosed(context.getGedcom());
 
         // remember context
         context.getGedcom().getRegistry().put("context", context.toString());
 
+        
         // closes all views
         for (AncestrisViewInterface gjvTc : AncestrisPlugin.lookupAll(AncestrisViewInterface.class)) {
             if (context.getGedcom().equals(gjvTc.getGedcom())) {
-                if (!gjvTc.close()) {
-                    return false;
-                }
+                gjvTc.close();
             }
         }
+
+        // Release gedcom and clear memory
+        context.getGedcom().eraseAll();
+
+        new java.util.Timer().schedule(
+                new java.util.TimerTask() {
+                    @Override
+                    public void run() {
+                        System.gc();
+                    }
+                },
+                5000
+        );
+        
         return true;
     }
     /** Instance of default gedcom manager. */

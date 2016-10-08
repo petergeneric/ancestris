@@ -275,6 +275,17 @@ public class Entity extends Property {
         return ENTITYComparator.getInstance();
     }
 
+    public void eraseAll() {
+        eraseProperties(this);
+    }
+
+    private void eraseProperties(Property parent) {
+        for (Property child : parent.getProperties()) {
+            eraseProperties(child);
+            parent.delProperty(child);
+        }
+    }
+
     /**
      * Entity comparator: compare by id.
      */
