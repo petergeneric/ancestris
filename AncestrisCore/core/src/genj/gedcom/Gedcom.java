@@ -36,17 +36,18 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.RequestProcessor;
 
 /**
  * The object-representation of a Gedom file
@@ -55,7 +56,6 @@ import java.util.logging.Logger;
 public class Gedcom implements Comparable {
 
     final static Logger LOG = Logger.getLogger("ancestris.gedcom");
-    final static private Random seed = new Random();
     final static Resources resources = Resources.get(Gedcom.class);
 
     public final static String PASSWORD_UNKNOWN = "unknown";
@@ -908,6 +908,7 @@ public class Gedcom implements Comparable {
      * Returns all entities
      */
     public List<Entity> getEntities() {
+        System.gc();
         return Collections.unmodifiableList(allEntities);
     }
 
@@ -915,6 +916,7 @@ public class Gedcom implements Comparable {
      * Returns entities of given type
      */
     public Collection<? extends Entity> getEntities(String tag) {
+        System.gc();
         return Collections.unmodifiableCollection(getEntityMap(tag).values());
     }
 
@@ -923,6 +925,7 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Fam> getFamilies() {
+        System.gc();
         return (Collection<Fam>) getEntities(FAM);
     }
 
@@ -931,6 +934,7 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Indi> getIndis() {
+        System.gc();
         return (Collection<Indi>) getEntities(INDI);
     }
 
@@ -939,6 +943,7 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Note> getNotes() {
+        System.gc();
         return (Collection<Note>) getEntities(NOTE);
     }
 
@@ -947,6 +952,7 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Source> getSources() {
+        System.gc();
         return (Collection<Source>) getEntities(SOUR);
     }
 
@@ -955,6 +961,7 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Media> getMedias() {
+        System.gc();
         return (Collection<Media>) getEntities(OBJE);
     }
 
@@ -962,6 +969,7 @@ public class Gedcom implements Comparable {
      * Returns entities of given type sorted by given path (can be empty or null)
      */
     public Entity[] getEntities(String tag, String sortPath) {
+        System.gc();
         return getEntities(tag, sortPath != null && sortPath.length() > 0 ? new PropertyComparator(sortPath) : null);
     }
 
@@ -969,6 +977,7 @@ public class Gedcom implements Comparable {
      * Returns entities of given type sorted by comparator (can be null)
      */
     public Entity[] getEntities(String tag, Comparator<Property> comparator) {
+        System.gc();
         Collection<Entity> ents = getEntityMap(tag).values();
         Entity[] result = ents.toArray(new Entity[ents.size()]);
         // sort by comparator or entity
@@ -1669,6 +1678,97 @@ public class Gedcom implements Comparable {
 
     }
 
+    /**
+     * Free up memory
+     */
+    public void eraseAll() {
+        
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                freeUpMemory();
+            }
+        };
+        new RequestProcessor("interruptible tasks", 1, true).create(runnable).schedule(0);
+    }
+    
+    private void freeUpMemory() {
+        // Large content :
+        // LinkedList<Entity> allEntities
+        for (Iterator<Entity> it = allEntities.iterator(); it.hasNext();) {
+            Entity entity = (Entity) it.next();
+            entity.eraseAll();
+            it.remove();
+        }
+        
+        // Map<String, Integer> propertyTag2valueCount  
+        for (Iterator<Map.Entry<String, Integer>> it = propertyTag2valueCount.entrySet().iterator(); it.hasNext();) {
+            it.next();
+            it.remove();
+        }
+
+        // Map<String, Map<String, Entity>> tag2id2entity
+        for (Iterator<Map.Entry<String, Map<String, Entity>>> it = tag2id2entity.entrySet().iterator(); it.hasNext();) {
+            Map<String, Entity> map = (Map<String, Entity>) it.next().getValue();
+            for (Iterator<Map.Entry<String, Entity>> it2 = map.entrySet().iterator(); it2.hasNext();) {
+                it2.next();
+                it2.remove();
+            }
+            it.remove();
+        }
+        
+        // Map<String, ReferenceSet<String, Property>> tags2refsets
+        for (Iterator<Map.Entry<String, ReferenceSet<String, Property>>> it = tags2refsets.entrySet().iterator(); it.hasNext();) {
+            ReferenceSet<String, Property> refset = (ReferenceSet<String, Property>) it.next().getValue();
+            refset.eraseAll();
+            refset = null;
+            it.remove();
+        }
+        
+        // List<List<Undo>> undoHistory  
+        for (Iterator<List<Undo>> it = undoHistory.iterator(); it.hasNext();) {
+            for (Iterator<Undo> it2 = it.next().iterator(); it2.hasNext();) {
+                it2.next();
+                it2.remove();
+            }
+            it.remove();
+        }
+                
+        // List<List<Undo>> redoHistory  
+        for (Iterator<List<Undo>> it = redoHistory.iterator(); it.hasNext();) {
+            for (Iterator<Undo> it2 = it.next().iterator(); it2.hasNext();) {
+                it2.next();
+                it2.remove();
+            }
+            it.remove();
+        }
+                
+        // Small content
+        listeners = null;
+        lastChange = null;      // PropertyChange
+        submitter = null;       // 1 entity
+        origin = null;          // Origin
+        lock = null;            // Lock
+        registry = null;        // Registry
+        grammar = null;         // Grammar
+        
+        // Erase simple variables
+        destination = null;
+        writeSemaphore = null;
+        encoding = null;
+        language = null;
+        cachedLocale = null;
+        cachedCollator = null;
+        placeFormat = null;
+        password = null;
+        noName = null;
+        
+        System.gc();
+    }
+
+    
+    
+    
   /**
    * Undo
    */

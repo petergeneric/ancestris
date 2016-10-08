@@ -132,6 +132,7 @@ public class PropertyReader {
       // commit collected value
       prop.setValue(collector.getValue());
     }
+    
   
     // loop over subs
     while (true) {
@@ -152,12 +153,13 @@ public class PropertyReader {
       //  1 BIRT
       //  3 DATE
       // we simply spit out a warning and continue as if nothing happened
-      if (level>currentLevel+1) {
-        trackBadLevel(level, prop);
-        for (int i=currentLevel;i<level-1;i++) 
-          prop = prop.addProperty("_TAG", "");
-      }
-    
+      if (level > currentLevel + 1) {
+            trackBadLevel(level, prop);
+            for (int i = currentLevel; i < level - 1; i++) {
+                prop = prop.addProperty("_TAG", "");
+            }
+        }
+      
       // remember current line
       int lineNoForChild = lines;
 

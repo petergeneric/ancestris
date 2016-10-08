@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,5 +146,18 @@ public class ReferenceSet<KEY,REF> {
       
     return result;
   }
+
+    public void eraseAll() {
+        //  private Map<KEY,Set<REF>> key2references = new HashMap<KEY,Set<REF>>();
+        for (Iterator<Map.Entry<KEY, Set<REF>>> it = key2references.entrySet().iterator(); it.hasNext();) {
+            Set<REF> set = (Set<REF>) it.next().getValue();
+            for (Iterator<REF> it2 = set.iterator(); it2.hasNext();) {
+                it2.next();
+                it2.remove();
+            }
+            it.remove();
+        }
+        
+    }
 
 } //ReferenceSet
