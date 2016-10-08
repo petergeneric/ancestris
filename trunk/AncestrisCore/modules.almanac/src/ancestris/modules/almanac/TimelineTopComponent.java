@@ -87,6 +87,12 @@ public final class TimelineTopComponent extends GenjViewTopComponent {
         }
     }
 
+    @Override
+    public void componentClosed() {
+        super.componentClosed();
+        ((TimelineView) getView()).eraseModel();
+    }
+
 
 
 }

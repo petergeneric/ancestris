@@ -295,6 +295,13 @@ public class TimelineView extends View implements SelectionListener {
     }
 
     /**
+     * Accessor - the model
+     */
+    public void eraseModel() {
+        model.eraseAll();
+    }
+
+    /**
      * Accessor - registry
      */
     public Registry getRegistry() {
