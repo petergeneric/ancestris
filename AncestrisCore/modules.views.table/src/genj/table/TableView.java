@@ -34,6 +34,10 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
+import static genj.table.Bundle.filter_txt_file;
+import static genj.table.Bundle.tableview_action_export;
+import static genj.table.Bundle.tableview_export_dialog_title;
+import static genj.table.Bundle.tableview_export_error;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.view.SettingsAction;
@@ -54,9 +58,11 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
-import static genj.table.Bundle.*;
 import java.awt.Component;
+import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.util.RequestProcessor;
 
 /**
  * Component for showing entities of a gedcom file in a tabular way
@@ -289,7 +295,7 @@ public class TableView extends View {
 
         // tell to table
         if (currentModel != null) {
-            propertyTable.setModel(new Model(currentModel.getGedcom(), currentMode));
+            propertyTable.setModel(currentMode.getModel());
             propertyTable.setColumnLayout(currentMode.layout);
             filter.setColumn(currentMode.getColFilter());
             filter.refresh();
@@ -310,18 +316,18 @@ public class TableView extends View {
         PropertyTableModel old = propertyTable.getModel();
         if (context.getGedcom() == null) {
             if (old != null) {
-                propertyTable.setModel(null);
+                eraseAll();
             }
             return;
         }
 
-        // new gedcom?
-        if (old == null || old.getGedcom() != context.getGedcom()) {
+        // starting a new gedcom?
+        if (old == null) {
             // refresh modes
             for (Mode mode : modes.values()) {
                 mode.load(context.getGedcom());
             }
-            propertyTable.setModel(new Model(context.getGedcom(), currentMode));
+            propertyTable.setModel(currentMode.getModel());
             propertyTable.setColumnLayout(currentMode.layout);
             filter.setColumn(currentMode.getColFilter());
         }
@@ -334,8 +340,7 @@ public class TableView extends View {
             }
         }
 
-        if (mode == currentMode) // select
-        {
+        if (mode == currentMode) { // select
             propertyTable.select(context);
         }
     }
@@ -402,6 +407,20 @@ public class TableView extends View {
         // continue
         super.removeNotify();
     }
+
+    
+    
+    public void eraseAll() {
+        for (Mode mode : modes.values()) {
+            mode.eraseAll();
+        }
+    }
+    
+    
+    
+    
+    
+    
 
     /**
      * Action - settings
@@ -514,15 +533,146 @@ public class TableView extends View {
         }
     } //Download
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     /**
-     * A PropertyTableModelWrapper
+     * A mode is a configuration for a set of entities
+     * The date set Model corresponding to the mode is included in the Mode
      */
-    private static class Model extends AbstractPropertyTableModel {
+    /* package */ class Mode extends AbstractAncestrisAction {
+
+        /** attributes */
+        private String tag;
+        private final String[] defaults;
+        private TagPath[] paths;
+        private String layout;
+        private int colFilter;
+        
+        /** data */
+        private Gedcom gedcom;
+        private Model model;
+        
+        
+
+        /** constructor */
+        private Mode(String t, String[] d) {
+            // remember
+            tag = t;
+            defaults = d;
+            paths = TagPath.toArray(defaults);
+            colFilter = 0;
+
+            // look
+            setTip(resources.getString("mode.tip", Gedcom.getName(tag, true)));
+            setImage(Gedcom.getEntityImage(tag));
+        }
+
+        private PropertyTableModel getModel() {
+            if (model == null) {
+                model = new Model(gedcom, this);
+            }
+            return model;
+        }
+
+        public int getColFilter() {
+            return colFilter;
+        }
+
+        public void setColFilter(int colFilter) {
+            this.colFilter = colFilter;
+        }
+
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setSelected(true);
+        }
+
+        @Override
+        public boolean setSelected(boolean selected) {
+            if (selected) {
+                setMode(this);
+            }
+            return super.setSelected(selected);
+        }
+
+        /** load properties from registry */
+        private void load() {
+            load(getGedcom());
+        }
+
+        private void load(Gedcom gedcom) {
+            this.gedcom = gedcom;
+            
+            Registry r = (gedcom == null) ? REGISTRY : gedcom.getRegistry();
+
+            String[] ps = r.get(tag + ".paths", (String[]) null);
+            if (ps != null) {
+                paths = TagPath.toArray(ps);
+            }
+
+            layout = r.get(tag + ".layout", defaultLayouts.get(tag));
+            setColFilter(r.get(tag + ".colfilter", 0));
+        }
+
+        /** set paths */
+        /* package */ void setPaths(TagPath[] set) {
+            paths = set;
+            if (currentMode == this) {
+                setMode(currentMode);
+            }
+        }
+
+        /** get paths */
+        /* package */ TagPath[] getPaths() {
+            return paths;
+        }
+
+        /** save properties from registry */
+        private void save() {
+            Registry r = (gedcom == null) ? REGISTRY : gedcom.getRegistry();
+
+            // grab current column widths & sort column
+            if (currentMode == this && propertyTable.getModel() != null) {
+                layout = propertyTable.getColumnLayout();
+                colFilter = filter.getColFilter();
+            }
+            r.put(tag + ".paths", paths);
+            r.put(tag + ".layout", layout);
+            r.put(tag + ".colfilter", getColFilter());
+        }
+
+        /** tag */
+        /* package */ String getTag() {
+            return tag;
+        }
+
+        private void eraseAll() {
+            if (model != null) {
+                model.eraseAll();
+            }
+        }
+
+    } //Mode
+    
+    
+    /**
+     * A PropertyTableModelWrapper contains the data set for a given entity type (and therefore for a given mode)
+     */
+    private class Model extends AbstractPropertyTableModel {
 
         /** mode */
-        private final Mode mode;
+        private final Mode mode; // the mode the model belongs to.
+        
         /** our cached rows */
-        private List<Entity> rows;
+        private List<Entity> rows;  // the data set 
 
         /** constructor */
         private Model(Gedcom gedcom, Mode set) {
@@ -648,102 +798,35 @@ public class TableView extends View {
             }
             // done
         }
+
+        private void eraseAll() {
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    // List<Entity> rows
+                    int s = rows.size() - 1;
+                    for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
+                        it.next();
+                        it.remove();
+                    }
+                    fireRowsDeleted(0, s);
+                    try {
+                        TimeUnit.SECONDS.sleep(15); // wait for rows deleted to be performed
+                        propertyTable.eraseAll();
+                        System.gc();
+                    } catch (InterruptedException ex) {
+                        //Exceptions.printStackTrace(ex);
+                    }
+                }
+            };
+
+            new RequestProcessor("interruptible tasks", 1, true).create(runnable).schedule(0);
+        }
+        
+        
+        
     } //Model
 
-    /**
-     * A mode is a configuration for a set of entities
-     */
-    /* package */ class Mode extends AbstractAncestrisAction {
-
-        /** attributes */
-        private String tag;
-        private final String[] defaults;
-        private TagPath[] paths;
-        private String layout;
-        private int colFilter;
-
-        /** constructor */
-        private Mode(String t, String[] d) {
-            // remember
-            tag = t;
-            defaults = d;
-            paths = TagPath.toArray(defaults);
-            colFilter = 0;
-
-            // look
-            setTip(resources.getString("mode.tip", Gedcom.getName(tag, true)));
-            setImage(Gedcom.getEntityImage(tag));
-        }
-
-        public int getColFilter() {
-            return colFilter;
-        }
-
-        public void setColFilter(int colFilter) {
-            this.colFilter = colFilter;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            setSelected(true);
-        }
-
-        @Override
-        public boolean setSelected(boolean selected) {
-            if (selected) {
-                setMode(this);
-            }
-            return super.setSelected(selected);
-        }
-
-        /** load properties from registry */
-        private void load() {
-            load(getGedcom());
-        }
-
-        private void load(Gedcom gedcom) {
-            Registry r = (gedcom == null) ? REGISTRY : gedcom.getRegistry();
-
-            String[] ps = r.get(tag + ".paths", (String[]) null);
-            if (ps != null) {
-                paths = TagPath.toArray(ps);
-            }
-
-            layout = r.get(tag + ".layout", defaultLayouts.get(tag));
-            setColFilter(r.get(tag + ".colfilter", 0));
-        }
-
-        /** set paths */
-        /* package */ void setPaths(TagPath[] set) {
-            paths = set;
-            if (currentMode == this) {
-                setMode(currentMode);
-            }
-        }
-
-        /** get paths */
-        /* package */ TagPath[] getPaths() {
-            return paths;
-        }
-
-        /** save properties from registry */
-        private void save() {
-            Registry r = (getGedcom() == null) ? REGISTRY : getGedcom().getRegistry();
-
-            // grab current column widths & sort column
-            if (currentMode == this && propertyTable.getModel() != null) {
-                layout = propertyTable.getColumnLayout();
-                colFilter = filter.getColFilter();
-            }
-            r.put(tag + ".paths", paths);
-            r.put(tag + ".layout", layout);
-            r.put(tag + ".colfilter", getColFilter());
-        }
-
-        /** tag */
-        /* package */ String getTag() {
-            return tag;
-        }
-    } //Mode
+    
 } //TableView
 
