@@ -69,4 +69,12 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
     protected String preferredID() {
         return PREFERRED_ID;
     }
+    
+    @Override
+    public void componentClosed() {
+        super.componentClosed();
+        System.gc();
+    }
+
+    
 }

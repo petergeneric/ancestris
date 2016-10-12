@@ -113,7 +113,7 @@ import org.openide.windows.WindowManager;
         try {
             return Toolkit.getDefaultToolkit().getSystemClipboard();
         } catch (Throwable t) {
-            return new Clipboard("GenJ");
+            return new Clipboard("Ancestris");
         }
 
     }
