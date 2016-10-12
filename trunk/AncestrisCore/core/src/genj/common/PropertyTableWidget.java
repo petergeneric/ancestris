@@ -27,7 +27,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
@@ -43,7 +42,9 @@ import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
@@ -74,6 +75,7 @@ public class PropertyTableWidget extends JPanel {
     private boolean ignoreSelection = false;
     private int visibleRowCount = -1;
     private TransferHandler transferer;
+    private Map<PropertyTableModel, Table.Model> tableModels;
 
     /**
      * Constructor
@@ -172,6 +174,16 @@ public class PropertyTableWidget extends JPanel {
         visibleRowCount = rows;
         revalidate();
         repaint();
+    }
+
+    public void eraseAll() {
+        if (tableModels == null) {
+            return;
+        }
+        for (PropertyTableModel key : tableModels.keySet()) {
+            Table.Model model = tableModels.get(key);
+            model.eraseCells();
+        }
     }
 
     /**
@@ -528,18 +540,29 @@ public class PropertyTableWidget extends JPanel {
         }  
 
         /**
-         * setting a property model
+         * Setting a property model
+         * 2016, FL : add possibility to handle several models through the same table
          */
         final void setPropertyTableModel(PropertyTableModel propertyModel) {
             // remember
             this.propertyModel = propertyModel;
             // pass through 
             if (propertyModel == null) {
+                eraseAll();
+                tableModels = null;
                 return;
             }
 
-            Model tableModel = new Model(propertyModel);
-            setModel(tableModel);
+            if (tableModels == null) {
+                tableModels = new HashMap<PropertyTableModel, Model>();
+            }
+            Model model = tableModels.get(propertyModel);
+            if (model == null) {
+                model = new Model(propertyModel);
+                tableModels.put(propertyModel, model);
+            }
+            setModel(model);
+            System.gc();
             // done
         }
 
@@ -672,12 +695,12 @@ public class PropertyTableWidget extends JPanel {
         /**
          * The logical model
          */
-        private class Model extends AbstractTableModel implements PropertyTableModelListener {//, SortableTableModel.RowComparator {
+        private class Model extends AbstractTableModel implements PropertyTableModelListener {   //, SortableTableModel.RowComparator {
 
             /** our model */
             private PropertyTableModel model;
             /** cached table content */
-            private Property cells[][];
+            private Property cells[][] = null;
 
             /** constructor */
             private Model(PropertyTableModel set) {
@@ -686,13 +709,20 @@ public class PropertyTableWidget extends JPanel {
                 // done
             }
 
-            private Gedcom getGedcom() {
-                return model != null ? model.getGedcom() : null;
+            public void eraseCells() {
+                if (cells == null) {
+                    return;
+                }
+                for (int r = 0; r < cells.length; r++) {
+                    for (int c = 0; c < cells[r].length; c++) {
+                        cells[r][c] = null;
+                    }
+                }
+                cells = null;
             }
 
             @Override
             public void handleRowsAdded(PropertyTableModel model, int rowStart, int rowEnd) {
-
                 // flush cell state
                 int rows = model.getNumRows(),
                         cols = model.getNumCols();
@@ -706,7 +736,7 @@ public class PropertyTableWidget extends JPanel {
             public void handleRowsDeleted(PropertyTableModel model, int rowStart, int rowEnd) {
                 // flush cell state
                 int rows = model.getNumRows(),
-                        cols = model.getNumCols();
+                    cols = model.getNumCols();
                 cells = new Property[rows][cols];
 
                 // tell about it
@@ -715,6 +745,9 @@ public class PropertyTableWidget extends JPanel {
 
             @Override
             public void handleRowsChanged(PropertyTableModel model, int rowStart, int rowEnd, int col) {
+                if (cells == null) {
+                    return;
+                }
                 // flush cell state
                 for (int i = rowStart; i <= rowEnd; i++) {
                     cells[i][col] = null;

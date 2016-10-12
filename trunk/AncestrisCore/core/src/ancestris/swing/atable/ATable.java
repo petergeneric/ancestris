@@ -56,7 +56,8 @@ public class ATable extends JTable {
     /** cached collator */
     private Collator cachedCollator = null;
 
-    private ATableRowSorter<TableModel> sorter;
+    private Map<TableModel, ATableRowSorter<TableModel>> sorters;
+    private ATableRowSorter<TableModel> currentSorter;
     private ATableFilterWidget filterText;
     private JPanel shortcuts;
 
@@ -66,22 +67,56 @@ public class ATable extends JTable {
         getTableHeader().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent aEvent) {
-                if (sorter != null) {
+                if (currentSorter != null) {
                     int columnIdx = getColumnModel().getColumnIndexAtX(aEvent.getX());
                     if (!aEvent.isControlDown()) {
-                        sorter.toggleSortOrder(columnIdx, true);
+                        currentSorter.toggleSortOrder(columnIdx, true);
                     } else {
-                        sorter.toggleSortOrder(columnIdx, false);
+                        currentSorter.toggleSortOrder(columnIdx, false);
                     }
                 }
             }
         });
     }
 
+    @Override
+    public void setModel(TableModel tableModel) {
+        super.setModel(tableModel); 
+        if (sorters == null) {
+            sorters = new HashMap<TableModel, ATableRowSorter<TableModel>>();
+        }
+        currentSorter = sorters.get(tableModel);
+        if (currentSorter == null) {
+            currentSorter = new ATableRowSorter<TableModel>(tableModel);
+            currentSorter.addRowSorterListener(new RowSorterListener() {
+                @Override
+                public void sorterChanged(RowSorterEvent e) {
+                    createShortcuts();
+                }
+            });
+            sorters.put(tableModel, currentSorter);
+            // listen to changes for generating shortcuts
+            tableModel.addTableModelListener(new TableModelListener() {
+                @Override
+                public void tableChanged(TableModelEvent e) {
+                    if (e.getLastRow() == Integer.MAX_VALUE) {
+                        createShortcuts();
+                    }
+                }
+            });
+        }
+        setRowSorter(currentSorter);
+
+        if (filterText != null) {
+            filterText.setSorter(currentSorter);
+        }
+        System.gc();
+    }
+
     public void setFilterWidget(ATableFilterWidget filter) {
         filterText = filter;
         if (filterText != null) {
-            filterText.setSorter(sorter);
+            filterText.setSorter(currentSorter);
         }
     }
 
@@ -96,35 +131,6 @@ public class ATable extends JTable {
         });
     }
 
-    @Override
-    public void setModel(TableModel tableModel) {
-        super.setModel(tableModel); //To change body of generated methods, choose Tools | Templates.
-        sorter = new ATableRowSorter<TableModel>(tableModel);
-        sorter.addRowSorterListener(new RowSorterListener() {
-
-            @Override
-            public void sorterChanged(RowSorterEvent e) {
-                createShortcuts();
-            }
-        });
-        setRowSorter(sorter);
-
-        // listen to changes for generating shortcuts
-        tableModel.addTableModelListener(new TableModelListener() {
-
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                if (e.getLastRow() == Integer.MAX_VALUE) {
-                    createShortcuts();
-                }
-            }
-        });
-
-        if (filterText != null) {
-            filterText.setSorter(sorter);
-        }
-    }
-
     public void tsvExport(File file) throws IOException {
         TableModel model = getModel();
         FileWriter writer = new FileWriter(file);
@@ -135,7 +141,7 @@ public class ATable extends JTable {
 
         writer.write("\n");
 
-        for (int r = 0; r < sorter.getViewRowCount(); r++) {
+        for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
             for (int col = 0; col < model.getColumnCount(); col++) {
                 writer.write(exportCellValue(model.getValueAt(convertRowIndexToModel(r), col), r, col));
                 writer.write("\t");
@@ -215,8 +221,8 @@ public class ATable extends JTable {
         List<AbstractAncestrisAction> actions = new ArrayList<AbstractAncestrisAction>(26);
 
         String cursor = "";
-        for (int r = 0; r < sorter.getViewRowCount(); r++) {
-            int vr = (dir == SortOrder.ASCENDING ? r : sorter.getViewRowCount() - r - 1);
+        for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
+            int vr = (dir == SortOrder.ASCENDING ? r : currentSorter.getViewRowCount() - r - 1);
             // FIXME: try not to use Property here
             Property prop = (Property) model.getValueAt(convertRowIndexToModel(vr), col);
             if (prop == null) {
@@ -278,8 +284,8 @@ public class ATable extends JTable {
         shortcuts.repaint();
 
         // anything we can offer? need ascending sorted column and at least 10 rows
-        if (sorter != null && !sorter.getSortKeys().isEmpty()) {
-            SortKey prim = sorter.getSortKeys().get(0);
+        if (currentSorter != null && !currentSorter.getSortKeys().isEmpty()) {
+            SortKey prim = currentSorter.getSortKeys().get(0);
 
             if (prim.getSortOrder() == SortOrder.UNSORTED) {
                 return;
@@ -290,7 +296,7 @@ public class ATable extends JTable {
     }
 
     public ATableRowSorter<TableModel> getSorter() {
-        return sorter;
+        return currentSorter;
     }
 
     private static class LinkWidget extends JButton {
