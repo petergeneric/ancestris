@@ -279,14 +279,12 @@ public class TableView extends View {
     /**
      * Sets the type of entities to look at
      */
-    /* package */ void setMode(Mode set) {
+    /* package */ void setMode(Mode set, boolean reset) {
 
         REGISTRY.put("mode", set.getTag());
 
-        PropertyTableModel currentModel = propertyTable.getModel();
-
         // give mode a change to grab what it wants to preserve
-        if (currentModel != null && currentMode != null) {
+        if (currentMode != null) {
             currentMode.save();
         }
 
@@ -294,12 +292,14 @@ public class TableView extends View {
         currentMode = set;
 
         // tell to table
+        PropertyTableModel currentModel = propertyTable.getModel();
         if (currentModel != null) {
-            propertyTable.setModel(currentMode.getModel());
+            propertyTable.setModel(currentMode.getModel(), reset);
             propertyTable.setColumnLayout(currentMode.layout);
             filter.setColumn(currentMode.getColFilter());
             filter.refresh();
         }
+        System.gc();
     }
 
     @Override
@@ -317,6 +317,7 @@ public class TableView extends View {
         if (context.getGedcom() == null) {
             if (old != null) {
                 eraseAll();
+                System.gc();
             }
             return;
         }
@@ -327,7 +328,7 @@ public class TableView extends View {
             for (Mode mode : modes.values()) {
                 mode.load(context.getGedcom());
             }
-            propertyTable.setModel(currentMode.getModel());
+            propertyTable.setModel(currentMode.getModel(), false);
             propertyTable.setColumnLayout(currentMode.layout);
             filter.setColumn(currentMode.getColFilter());
         }
@@ -598,7 +599,7 @@ public class TableView extends View {
         @Override
         public boolean setSelected(boolean selected) {
             if (selected) {
-                setMode(this);
+                setMode(this, false);
             }
             return super.setSelected(selected);
         }
@@ -624,9 +625,11 @@ public class TableView extends View {
 
         /** set paths */
         /* package */ void setPaths(TagPath[] set) {
-            paths = set;
-            if (currentMode == this) {
-                setMode(currentMode);
+            if (areDifferent(set, paths)) {
+                paths = set;
+                if (currentMode == this) {
+                    setMode(currentMode, true);
+                }
             }
         }
 
@@ -635,6 +638,18 @@ public class TableView extends View {
             return paths;
         }
 
+        private boolean areDifferent(TagPath[] set1, TagPath[] set2) {
+            if (set1.length != set2.length) {
+                return true;
+            }
+            for (int i = 0 ; i < set1.length ; i++) {
+                if (set1[i].compareTo(set2[i]) != 0) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
         /** save properties from registry */
         private void save() {
             Registry r = (gedcom == null) ? REGISTRY : gedcom.getRegistry();
