@@ -91,7 +91,7 @@ public class PropertyTableWidget extends JPanel {
 
         // create table comp
         table = new Table();
-        setModel(propertyModel);
+        setModel(propertyModel, false);
         setRowSelection(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         setColSelection(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
@@ -166,8 +166,8 @@ public class PropertyTableWidget extends JPanel {
     /**
      * Setter for current model
      */
-    public void setModel(PropertyTableModel set) {
-        table.setPropertyTableModel(set);
+    public void setModel(PropertyTableModel set, boolean reset) {
+        table.setPropertyTableModel(set, reset);
     }
 
     public void setVisibleRowCount(int rows) {
@@ -392,7 +392,7 @@ public class PropertyTableWidget extends JPanel {
          */
         Table() {
 
-            setPropertyTableModel(null);
+            setPropertyTableModel(null, false);
             Renderer r = new Renderer();
             r.setFont(getFont());
             defaultRowHeight = r.getPreferredSize().height;
@@ -543,13 +543,14 @@ public class PropertyTableWidget extends JPanel {
          * Setting a property model
          * 2016, FL : add possibility to handle several models through the same table
          */
-        final void setPropertyTableModel(PropertyTableModel propertyModel) {
+        final void setPropertyTableModel(PropertyTableModel propertyModel, boolean reset) {
             // remember
             this.propertyModel = propertyModel;
             // pass through 
             if (propertyModel == null) {
                 eraseAll();
                 tableModels = null;
+                System.gc();
                 return;
             }
 
@@ -560,6 +561,10 @@ public class PropertyTableWidget extends JPanel {
             if (model == null) {
                 model = new Model(propertyModel);
                 tableModels.put(propertyModel, model);
+            }
+            if (reset) {
+                model.eraseCells();
+                tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
             }
             setModel(model);
             System.gc();
@@ -656,7 +661,6 @@ public class PropertyTableWidget extends JPanel {
             if (ged == null) {
                 return null;
             }
-            TableModel model = getModel();
 
             // one row one col?
             List<Property> properties = new ArrayList<Property>();
@@ -717,8 +721,13 @@ public class PropertyTableWidget extends JPanel {
                     for (int c = 0; c < cells[r].length; c++) {
                         cells[r][c] = null;
                     }
+                    cells[r] = null;
                 }
                 cells = null;
+                TableModelListener[] listeners = getListeners(TableModelListener.class);
+                for (TableModelListener l : listeners) {
+                    removeTableModelListener(l);
+                }
             }
 
             @Override

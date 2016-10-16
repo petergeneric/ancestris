@@ -78,7 +78,11 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
     }
 
     private void setHeaders(TableModel model) {
-        headers = new ArrayList<String>();
+        if (headers == null) {
+            headers = new ArrayList<String>();
+        } else {
+            headers.clear();
+        }
         for (int c = 0; c < model.getColumnCount(); c++) {
             headers.add(model.getColumnName(c));
         }

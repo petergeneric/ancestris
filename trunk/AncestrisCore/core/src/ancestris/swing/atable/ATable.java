@@ -45,6 +45,7 @@ import javax.swing.event.RowSorterEvent;
 import javax.swing.event.RowSorterListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 /**
@@ -82,11 +83,14 @@ public class ATable extends JTable {
     @Override
     public void setModel(TableModel tableModel) {
         super.setModel(tableModel); 
+        if (tableModel instanceof DefaultTableModel) {
+            return;
+        }
         if (sorters == null) {
             sorters = new HashMap<TableModel, ATableRowSorter<TableModel>>();
         }
         currentSorter = sorters.get(tableModel);
-        if (currentSorter == null) {
+        if (currentSorter == null) {                                            
             currentSorter = new ATableRowSorter<TableModel>(tableModel);
             currentSorter.addRowSorterListener(new RowSorterListener() {
                 @Override
@@ -105,12 +109,12 @@ public class ATable extends JTable {
                 }
             });
         }
+        
         setRowSorter(currentSorter);
 
         if (filterText != null) {
             filterText.setSorter(currentSorter);
         }
-        System.gc();
     }
 
     public void setFilterWidget(ATableFilterWidget filter) {
@@ -218,7 +222,7 @@ public class ATable extends JTable {
         Collator collator = getCollator();
 
         // loop over rows and create actions
-        List<AbstractAncestrisAction> actions = new ArrayList<AbstractAncestrisAction>(26);
+        List<AbstractAncestrisAction> actions = new ArrayList<AbstractAncestrisAction>(3);
 
         String cursor = "";
         for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
