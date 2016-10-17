@@ -28,6 +28,7 @@ import javax.swing.JCheckBox;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.event.ChangeEvent;
 import org.apache.commons.io.FileUtils;
 import org.openide.util.NbBundle;
 
@@ -45,6 +46,10 @@ public class AlmanacPanel extends javax.swing.JPanel {
     private SpinnerNumberModel spinmodel;
     public static int MAX_SIG = 9;
     public static int MIN_SIG = 0;
+    
+    private boolean allCheckedAlms = true;
+    private boolean allCheckedCats = true;
+
     
     /**
      * Creates new form almanacPanel
@@ -67,6 +72,8 @@ public class AlmanacPanel extends javax.swing.JPanel {
         
         initComponents();
         
+        cbAllAlms.setSelected(allCheckedAlms);
+        cbAllCats.setSelected(allCheckedCats);
         almList.setCellRenderer(new CheckBoxesListCellrenderer());
         catList.setCellRenderer(new CheckBoxesListCellrenderer());
         sigSpinner.addChangeListener(commit);
@@ -84,6 +91,9 @@ public class AlmanacPanel extends javax.swing.JPanel {
         List<String> selectedAlm = view.getAlmanacList();
         for (String alm : alms) {
             JCheckBox cb = new JCheckBox(alm, selectedAlm.contains(alm));
+            if (!cb.isSelected()) {
+                allCheckedAlms = false;
+            }
             cb.addChangeListener(commit);
             almanacModel.addElement(cb);
         }
@@ -110,6 +120,9 @@ public class AlmanacPanel extends javax.swing.JPanel {
         List<String> selectedCat = view.getAlmanacCategories();
         for (String cat : cats) {
             JCheckBox cb = new JCheckBox(cat, selectedCat.contains(cat));
+            if (!cb.isSelected()) {
+                allCheckedCats = false;
+            }
             cb.addChangeListener(commit);
             categoriesModel.addElement(cb);
         }
@@ -357,6 +370,7 @@ public class AlmanacPanel extends javax.swing.JPanel {
             reloadCategories();
             checkAllCats();
             catList.repaint();
+            commit.stateChanged(new ChangeEvent(cbAllCats));
         }
 
     }//GEN-LAST:event_almListMouseClicked
@@ -373,8 +387,9 @@ public class AlmanacPanel extends javax.swing.JPanel {
     private void cbAllAlmsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAllAlmsActionPerformed
         checkAllAlms();
         reloadCategories();
-        checkAllCats();
         almList.repaint();
+        cbAllCats.setSelected(true);
+        checkAllCats();
         catList.repaint();
     }//GEN-LAST:event_cbAllAlmsActionPerformed
 
