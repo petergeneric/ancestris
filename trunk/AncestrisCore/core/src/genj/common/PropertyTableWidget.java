@@ -166,6 +166,10 @@ public class PropertyTableWidget extends JPanel {
     /**
      * Setter for current model
      */
+    public void setModel(PropertyTableModel set) {
+        table.setPropertyTableModel(set, false);
+    }
+
     public void setModel(PropertyTableModel set, boolean reset) {
         table.setPropertyTableModel(set, reset);
     }
