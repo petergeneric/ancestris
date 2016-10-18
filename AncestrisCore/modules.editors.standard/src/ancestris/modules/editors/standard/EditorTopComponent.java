@@ -255,8 +255,6 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
 
 
     
-    
-    
     /**
      * Updates
      */

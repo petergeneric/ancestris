@@ -189,15 +189,15 @@ public class IndiPanel extends Editor implements DocumentListener {
     private List<ViewContext> errorSet = null;
     
     // Filters
-    List<String> allFirstNames = null;
-    JTextField firstnamesText = null;
-    List<String> allLastNames = null;
-    JTextField lastnameText = null;
-    List<String> allDescriptions = null;
-    JTextField eventDescriptionText = null;
-    EventDescriptionListener edl = null;
-    List<String> allPlaces = null;
-    JTextField eventPlaceText = null;
+    private List<String> allFirstNames = null;
+    private JTextField firstnamesText = null;
+    private List<String> allLastNames = null;
+    private JTextField lastnameText = null;
+    private List<String> allDescriptions = null;
+    private JTextField eventDescriptionText = null;
+    private EventDescriptionListener edl = null;
+    private List<String> allPlaces = null;
+    private JTextField eventPlaceText = null;
 
     
     /**
