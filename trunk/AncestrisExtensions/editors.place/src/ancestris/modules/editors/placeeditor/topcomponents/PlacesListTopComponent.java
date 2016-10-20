@@ -369,5 +369,11 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         }
     }
 
+    @Override
+    public void componentClosed() {
+        super.componentClosed();
+        gedcomPlaceTableModel.eraseModel();
+    }
+
     
 }
