@@ -4,6 +4,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -109,6 +110,19 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
             }
         }
         return ret;
+    }
+
+    public void eraseModel() {
+        // Map<String, Set<PropertyPlace>> placesMap = null;
+        for (Iterator<Map.Entry<String, Set<PropertyPlace>>> it = placesMap.entrySet().iterator(); it.hasNext();) {
+            Set<PropertyPlace> set = (Set<PropertyPlace>) it.next().getValue();
+            for (Iterator<PropertyPlace> it2 = set.iterator(); it2.hasNext();) {
+                it2.next();
+                it2.remove();
+            }
+            it.remove();
+        }
+        placesMap = null;
     }
 
     
