@@ -248,7 +248,8 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                             if (PropertyPlace.format(null).length() > 0) {
                                 doc.nextTableRow();
                                 doc.nextTableCell("colspan=6, width=100%");
-                                doc.addText(PropertyPlace.format(null));
+                                String str = PropertyPlace.format(null).replaceAll("\\<.*?>","").replaceAll(",", " ").trim().replaceAll(" ", ", ");
+                                doc.addText(str);
                             }
                         }
 
