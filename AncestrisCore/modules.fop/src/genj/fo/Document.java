@@ -23,7 +23,6 @@ import genj.util.ImageSniffer;
 import genj.util.Resources;
 import java.awt.geom.Dimension2D;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -1136,123 +1135,123 @@ select="$header-width * 0.3333"/><xsl:text>pc</xsl:text>
     }
   }
   
-  /**
-   * A test main
-   */
-  public static void main(String[] args) {
-    
-    try {
-    
-      Document doc = new Document("Testing FO");
-      
-      doc.addText("A paragraph");
-      doc.nextParagraph("start-indent=10pt");
-      doc.addText("The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ");
-
-      doc.nextParagraph("text-decoration=underline");
-      doc.addText("this paragraph is underlined");
-      
-      doc.nextParagraph();
-      doc.addText("this line contains ");
-      doc.addText("underlined", "text-decoration=underline");
-      doc.addText(" text");
-      
-      doc.startList();
-      doc.nextListItem("genj:label=a)");
-      doc.addText("A foo'd bullet");
-      doc.nextListItem("genj:label=b)");
-      doc.addText("A foo'd bullet");
-      doc.nextListItem();
-      doc.addText("A normal bullet");
-
-      doc.addTOC();
-      doc.startSection("Section 1");
-      doc.addText("here comes a ").addText("table", "font-weight=bold, color=rgb(255,0,0)").addText(" for you:");
-      doc.addImage(new File("C:/Documents and Settings/Nils/My Documents/Java/Workspace/GenJ/gedcom/meiern.jpg"), "vertical-align=middle");
-      doc.addImage(new File("C:/Documents and Settings/Nils/My Documents/My Pictures/usamap.gif"), "vertical-align=middle");
-      
-//      doc.startTable("width=100%,border=0.5pt solid black,genj:csv=true");
-//      doc.addTableColumn("column-width=10%");
-//      doc.addTableColumn("column-width=10%");
-//      doc.addTableColumn("column-width=80%");
-//      doc.nextTableCell("color=red");
-//      doc.addText("AA");
-//      doc.nextTableCell();
-//      doc.addText("AB");
-//      doc.nextTableCell();
-//      //doc.addText("AC");
-//      doc.nextTableCell();
-//      doc.addText("BA"); // next row
-//      doc.nextTableCell("number-columns-spanned=2");
-//      doc.addText("BB+BC");
-//      doc.nextTableRow();
-//      doc.addText("CA");
-//      doc.nextTableCell();
-//      doc.addText("CB");
-//      doc.nextTableCell();
-//      doc.addText("CC");
-//      doc.endTable();
-//  
-//      doc.startList();
-//      doc.nextListItem();
-//      doc.addText("Item 1");
-//      doc.addText(" with text talking about");
-//      doc.addIndexTerm("Animals", "Mammals");
-//      doc.addText(" elephants and ");
-//      doc.addIndexTerm("Animals", "Mammals", "Horse");
-//      doc.addText(" horses as well as ");
-//      doc.addIndexTerm("Animals", "Mammals", "Horse");
-//      doc.addText(" ponys and even ");
-//      doc.addIndexTerm("Animals", "Fish", "");
-//      doc.addText(" fish");
+//  /**
+//   * A test main
+//   */
+//  public static void main(String[] args) {
+//    
+//    try {
+//    
+//      Document doc = new Document("Testing FO");
+//      
+//      doc.addText("A paragraph");
+//      doc.nextParagraph("start-indent=10pt");
+//      doc.addText("The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. The quick brown fox jumps over the lazy dog. ");
+//
+//      doc.nextParagraph("text-decoration=underline");
+//      doc.addText("this paragraph is underlined");
+//      
 //      doc.nextParagraph();
-//      doc.addText("and a newline");
-//      doc.nextListItem();
-//      doc.addText("Item 2");
+//      doc.addText("this line contains ");
+//      doc.addText("underlined", "text-decoration=underline");
+//      doc.addText(" text");
+//      
 //      doc.startList();
-//      doc.addText("Item 2.1");
+//      doc.nextListItem("genj:label=a)");
+//      doc.addText("A foo'd bullet");
+//      doc.nextListItem("genj:label=b)");
+//      doc.addText("A foo'd bullet");
 //      doc.nextListItem();
-//      doc.addText("Item 2.2");
-//      doc.endList();
-//      doc.endList();
+//      doc.addText("A normal bullet");
+//
+//      doc.addTOC();
+//      doc.startSection("Section 1");
+//      doc.addText("here comes a ").addText("table", "font-weight=bold, color=rgb(255,0,0)").addText(" for you:");
+//      doc.addImage(new File("C:/Documents and Settings/Nils/My Documents/Java/Workspace/GenJ/gedcom/meiern.jpg"), "vertical-align=middle");
+//      doc.addImage(new File("C:/Documents and Settings/Nils/My Documents/My Pictures/usamap.gif"), "vertical-align=middle");
+//      
+////      doc.startTable("width=100%,border=0.5pt solid black,genj:csv=true");
+////      doc.addTableColumn("column-width=10%");
+////      doc.addTableColumn("column-width=10%");
+////      doc.addTableColumn("column-width=80%");
+////      doc.nextTableCell("color=red");
+////      doc.addText("AA");
+////      doc.nextTableCell();
+////      doc.addText("AB");
+////      doc.nextTableCell();
+////      //doc.addText("AC");
+////      doc.nextTableCell();
+////      doc.addText("BA"); // next row
+////      doc.nextTableCell("number-columns-spanned=2");
+////      doc.addText("BB+BC");
+////      doc.nextTableRow();
+////      doc.addText("CA");
+////      doc.nextTableCell();
+////      doc.addText("CB");
+////      doc.nextTableCell();
+////      doc.addText("CC");
+////      doc.endTable();
+////  
+////      doc.startList();
+////      doc.nextListItem();
+////      doc.addText("Item 1");
+////      doc.addText(" with text talking about");
+////      doc.addIndexTerm("Animals", "Mammals");
+////      doc.addText(" elephants and ");
+////      doc.addIndexTerm("Animals", "Mammals", "Horse");
+////      doc.addText(" horses as well as ");
+////      doc.addIndexTerm("Animals", "Mammals", "Horse");
+////      doc.addText(" ponys and even ");
+////      doc.addIndexTerm("Animals", "Fish", "");
+////      doc.addText(" fish");
+////      doc.nextParagraph();
+////      doc.addText("and a newline");
+////      doc.nextListItem();
+////      doc.addText("Item 2");
+////      doc.startList();
+////      doc.addText("Item 2.1");
+////      doc.nextListItem();
+////      doc.addText("Item 2.2");
+////      doc.endList();
+////      doc.endList();
+////      doc.addText("Text");
+////  
+//      doc.startSection("Section 2");
+//      doc.addText("Text and a page break");
+////      doc.nextPage();
+//      
+//      doc.addTOCEntry("Foo");
+//      
+//      doc.startSection("Section 3");
 //      doc.addText("Text");
+//
+//      Format format;
+//      if (args.length>0)
+//        format = Format.getFormat(args[0]);
+//      else 
+//        format = new PDFFormat();
+//
+//      File file = null;
+//      String ext = format.getFileExtension();
+//      if (ext!=null) {
+//        file = new File("c:/temp/foo."+ext);
+//      }
+//      format.format(doc, file);
+//
+//      if (file!=null)
+//        Runtime.getRuntime().exec("c:/Program Files/Internet Explorer/iexplore.exe \""+file.getAbsolutePath()+"\"");
+//
+//    } catch (IOException e) {
+//      e.printStackTrace();
+//    }
+//  }
 //  
-      doc.startSection("Section 2");
-      doc.addText("Text and a page break");
-//      doc.nextPage();
-      
-      doc.addTOCEntry("Foo");
-      
-      doc.startSection("Section 3");
-      doc.addText("Text");
-
-      Format format;
-      if (args.length>0)
-        format = Format.getFormat(args[0]);
-      else 
-        format = new PDFFormat();
-
-      File file = null;
-      String ext = format.getFileExtension();
-      if (ext!=null) {
-        file = new File("c:/temp/foo."+ext);
-      }
-      format.format(doc, file);
-
-      if (file!=null)
-        Runtime.getRuntime().exec("c:/Program Files/Internet Explorer/iexplore.exe \""+file.getAbsolutePath()+"\"");
-
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
-  
-  // XXX: marker to help convert package w/o entity ref
- private class Entitya {
-// XXX: entity was converted to string using:
-     //entity.getTag()+"_"+entity.getId()
-     /*
-      * add in Entity getAnchor() {return ...}
-      */
- } 
+//  // XXX: marker to help convert package w/o entity ref
+// private class Entitya {
+//// XXX: entity was converted to string using:
+//     //entity.getTag()+"_"+entity.getId()
+//     /*
+//      * add in Entity getAnchor() {return ...}
+//      */
+// } 
 }
