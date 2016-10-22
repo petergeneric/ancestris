@@ -54,6 +54,8 @@ import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.loaders.DataObject;
+import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Lookup;
 import spin.Spin;
 
@@ -382,9 +384,20 @@ public abstract class GedcomMgr {
                     DialogDisplayer.getDefault().notify(nd);
                 }
             } catch (GedcomIOException ex) {
-                // tell the user about it
+                // Tell the user about it
                 DialogManager.createError(FileUtil.getFileDisplayName(input),
-                        RES.getString("cc.open.read_error", "" + ex.getLine()) + ":\n" + ex.getMessage()).show();
+                        ex.getMessage() + "\n(" + RES.getString("cc.open.read_error", "" + ex.getLine()) + ")\n" ).show();
+                // For later, store the fact in the dataobject that things went wrong when loading the file
+                DataObject dao;
+                try {
+                    dao = DataObject.find(input);
+                    GedcomDataObject gdao = dao.getLookup().lookup(GedcomDataObject.class);
+                    if (gdao != null) {
+                        gdao.setCancelled(true);
+                    }
+                } catch (DataObjectNotFoundException ex1) {
+                    //Exceptions.printStackTrace(ex1);
+                }
                 // abort
                 return null;
             } finally {

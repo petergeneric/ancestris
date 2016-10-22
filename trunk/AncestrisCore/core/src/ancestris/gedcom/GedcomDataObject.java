@@ -48,6 +48,8 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
     private final Lookup lookup;
     private final InstanceContent lookupContents = new InstanceContent();
     private final Lookup.Result<Context> result;
+    private FileObject fileObject = null;
+    private boolean isCancelled = false;
 //    private GedcomMgr gedcomMgr;
     /**
      * SaveCookie for this support instance. The cookie is adding/removing data
@@ -65,6 +67,7 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
      */
     public GedcomDataObject(FileObject pf, MultiFileLoader loader) throws DataObjectExistsException, IOException {
         super(pf, loader);
+        fileObject = pf;
         this.saveCookie = new SaveCookie() {
 
             /**
@@ -98,13 +101,28 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
         });
 
         registerEditor("text/x-gedcom", true);
-        //XXX: fix it
-        this.context = GedcomMgr.getDefault().openGedcom(pf);
-        context.getGedcom().addGedcomListener(this);
-        GedcomDirectory.getDefault().registerGedcom(this);
-        undoredo = new GedcomUndoRedo((context.getGedcom()));
-        //XXX: is this still used?
-        AncestrisPlugin.register(this);
+        load();
+    }
+
+    public boolean load() {
+        try {
+            this.context = GedcomMgr.getDefault().openGedcom(fileObject);
+            context.getGedcom().addGedcomListener(this);
+            GedcomDirectory.getDefault().registerGedcom(this);
+            undoredo = new GedcomUndoRedo((context.getGedcom()));
+            AncestrisPlugin.register(this);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public void setCancelled(boolean set) {
+        isCancelled = set;
+    }
+
+    public boolean isCancelled() {
+        return isCancelled;
     }
 
     @Override
