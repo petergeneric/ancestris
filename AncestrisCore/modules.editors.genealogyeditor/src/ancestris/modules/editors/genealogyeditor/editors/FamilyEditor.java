@@ -1300,7 +1300,9 @@ public class FamilyEditor extends EntityEditor {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            mFamily.delProperty(mEventsListModel.remove(index));
+                            if (index >= 0 && index < mEventsListModel.getSize()) {
+                                mFamily.delProperty(mEventsListModel.remove(index));
+                            }
                         }
                     }); // end of doUnitOfWork
                     ArrayList<Property> eventsProperties = new ArrayList<Property>();
