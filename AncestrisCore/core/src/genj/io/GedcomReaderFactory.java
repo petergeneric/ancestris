@@ -225,7 +225,7 @@ public class GedcomReaderFactory {
             // Read records after the other
             while (reader.readEntity() != null) {
                 if (cancel) {
-                    throw new GedcomIOException("Cancelled", getLines());
+                    throw new GedcomIOException(RESOURCES.getString("read.warn.cancelled"), getLines());
                 }
             }
 

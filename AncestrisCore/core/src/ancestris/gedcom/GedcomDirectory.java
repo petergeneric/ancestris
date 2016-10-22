@@ -269,6 +269,15 @@ public abstract class GedcomDirectory {
             if (gdao == null) {
                 return null;
             }
+            if (gdao.isCancelled()) {
+                gdao.setCancelled(false);
+                return null;
+            }
+            if (gdao.getContext() == null) {
+                if (!gdao.load()) {
+                    return null;
+                }
+            }
             registerGedcom(gdao);
             context = gdao.getContext();
             openDefaultViews(context);
