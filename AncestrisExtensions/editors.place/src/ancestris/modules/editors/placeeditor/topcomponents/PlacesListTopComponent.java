@@ -20,9 +20,10 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JToolTip;
+import javax.swing.Popup;
+import javax.swing.PopupFactory;
 import javax.swing.RowFilter;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
@@ -93,7 +94,25 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         placeTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                if (e.getClickCount() == 2) {
+                if (e.getClickCount() == 1) {
+                    JToolTip tooltip = new JToolTip();
+                    tooltip.setTipText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.edit.tip"));
+                    PopupFactory popupFactory = PopupFactory.getSharedInstance();
+                    int x = e.getXOnScreen();
+                    int y = e.getYOnScreen();
+                    final Popup tooltipContainer = popupFactory.getPopup(e.getComponent(), tooltip, x, y);
+                    tooltipContainer.show();
+                    (new Thread(new Runnable() {
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                            }
+                            tooltipContainer.hide();
+                        }
+
+                    })).start();
+                } else if (e.getClickCount() == 2) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
                     placesEditorPanel = new PlaceEditorPanel();
@@ -118,13 +137,9 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         if (!memoField.isEmpty()) {
             searchPlaceComboBox.setSelectedItem(memoField);
         }
-        int c = searchPlaceComboBox.getSelectedIndex();
         
-        placeTable.setID(gedcom, PlacesListTopComponent.class.getName());
-        placeTableSorter = (TableRowSorter) placeTable.getRowSorter();
-        ArrayList list = new ArrayList();
-        list.add( new RowSorter.SortKey(c, SortOrder.ASCENDING) );
-        placeTableSorter.setSortKeys(list);
+        placeTable.setID(gedcom, PlacesListTopComponent.class.getName(), searchPlaceComboBox.getSelectedIndex());
+        placeTableSorter = placeTable.getSorter();
         updateGedcomPlaceTable();
         
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
