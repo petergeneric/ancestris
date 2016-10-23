@@ -2,9 +2,13 @@ package ancestris.modules.editors.placeeditor.topcomponents;
 
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
+import java.text.Collator;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
+import javax.swing.SortOrder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
@@ -19,7 +23,8 @@ import javax.swing.table.TableRowSorter;
 public class EditorTable extends JTable {
 
     private Registry registry = null;
-    private String mTableId;
+    private String mTableId = null;
+    private TableRowSorter<TableModel> sorter = null;
 
     public EditorTable() {
         super();
@@ -29,7 +34,7 @@ public class EditorTable extends JTable {
         super(dm);
     }
 
-    public void setID(Gedcom gedcom, String tableId) {
+    public void setID(Gedcom gedcom, String tableId, int selectedColumn) {
         registry = gedcom.getRegistry();
         mTableId = tableId;
         for (int index = 0; index < columnModel.getColumnCount(); index++) {
@@ -40,24 +45,36 @@ public class EditorTable extends JTable {
 
         
         // Set sorter 
-        // FL: 2016-02-28 : for some unknown reason, default row sorter sorts strings excluding spaces... Using string sorter below solves the issue.
-        // Returning getColumnClass as String does not solve the issue (!?!?)
-        RowSorter<? extends TableModel> rowSorter = getRowSorter();
-        if (getRowSorter() == null) {
-            setRowSorter(new TableRowSorter<TableModel>(getModel()));
-            rowSorter = getRowSorter();
-        }
+        // FL: 2016-02-28 : for some unknown reason, default row sorter sorts strings excluding spaces... We also need to sort case insensitive
+        final Collator collator = gedcom.getCollator(); // case insensitive and local characters accounted for (but spaces ignored ???)
         Comparator strComparator = new Comparator() {
             @Override
             public int compare(Object o1, Object o2) {
-                return o1.toString().toLowerCase().compareTo(o2.toString().toLowerCase());
+                return collator.compare(o1.toString().replace(" ", "!"), o2.toString().replace(" ", "!"));   // fix space comparison ("!" is next to "space" in ASCII table)
             }
         };
+        sorter = new TableRowSorter<TableModel>(getModel());
         for (int c = 0; c < getColumnModel().getColumnCount(); c++) {
-            ((TableRowSorter) rowSorter).setComparator(c, strComparator);
+            sorter.setComparator(c, strComparator);
         }
+        setRowSorter(sorter);
+   
+        // Sort on selectedColumn first, then others starting from the first (otherwise other column do not benefit from the proper sorter/comparator above)
+        List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+        sortKeys.add( new RowSorter.SortKey(selectedColumn, SortOrder.ASCENDING) );
+        for (int c = 0; c < getColumnCount() ; c++) {
+            if (c != selectedColumn) {
+                sortKeys.add( new RowSorter.SortKey(c, SortOrder.ASCENDING) );
+            }
+        }
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
+        
     }
     
+    public TableRowSorter<TableModel> getSorter() {
+        return sorter;
+    }
 
     private class EditorTableTableColumnModelListener implements TableColumnModelListener {
         @Override
