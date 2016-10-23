@@ -6,8 +6,6 @@ package ancestris.modules.geo;
 
 import ancestris.api.editor.AncestrisEditor;
 //XXX: DAN: remove direct dependency to editors, use lookup
-import ancestris.modules.editors.gedcom.EditTopComponent;
-import ancestris.modules.editors.gedcom.GedcomEditorPlugin;
 import ancestris.modules.editors.geoplace.PlaceEditor;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
@@ -43,8 +41,6 @@ import org.openide.util.ImageUtilities;
  */
 class GeoNode extends AbstractNode implements PropertyChangeListener {
 
-    private final static String GEDCOM_EDITOR = NbBundle.getMessage(GedcomEditorPlugin.class, "OpenIDE-Module-Name");
-    
     public GeoNode(GeoPlacesList gpl) {
         super(new GeoChildrenNodes(gpl));
         setDisplayName(NbBundle.getMessage(GeoListTopComponent.class, "GeoListRoot") + " " + gpl.getGedcom().getName());
@@ -108,7 +104,6 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                         new GeoAction("ACTION_SelectEvent"),
                         null,
                         new GeoAction("ACTION_EditEvent", getDefaultEditorsName()),
-                        new GeoAction("ACTION_EditEvent", GEDCOM_EDITOR),
                         null,
                         new GeoAction("ACTION_HelpEvent")};
         } else {
@@ -223,11 +218,6 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 if (GeoPlacesList.getInstance(obj.getGedcom()).setPlaceDisplayFormat(obj.getPlace())) {
                     GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
                 }
-            } else if (actionName.equals("ACTION_EditEvent"+GEDCOM_EDITOR)) {
-                EditTopComponent etc = new EditTopComponent();
-                etc.init(new Context( obj.getProperty()));
-                etc.open();
-                etc.requestActive();
             } else if (actionName.equals("ACTION_EditEvent"+getDefaultEditorsName())) {
                 AncestrisEditor editor = AncestrisEditor.findEditor(obj.getProperty().getEntity());
                 if (editor != null) {
