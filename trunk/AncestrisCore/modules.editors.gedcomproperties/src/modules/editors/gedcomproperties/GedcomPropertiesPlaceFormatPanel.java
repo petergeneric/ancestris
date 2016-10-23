@@ -14,12 +14,18 @@ package modules.editors.gedcomproperties;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertyPlace;
+import genj.util.Registry;
+import java.awt.Dimension;
 import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
 import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Constants {
+
+    private Registry registry = null;
+    private final String winWidth = "gedcomProperties4Width";
+    private final String winHeight = "gedcomProperties4Height";
 
     public static final int DEFAULT_MODE = UPDATE;
 
@@ -36,6 +42,9 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         this.parent = parent;
         mode = parent.getMode();
         initComponents();
+        registry = Registry.get(getClass());
+        this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
+        
         updateDisplay();
     }
 
@@ -77,6 +86,11 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(500, 375));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
@@ -343,6 +357,11 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
     }//GEN-LAST:event_jButton5ActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put(winWidth, evt.getComponent().getWidth());
+        registry.put(winHeight, evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.Box.Filler filler1;

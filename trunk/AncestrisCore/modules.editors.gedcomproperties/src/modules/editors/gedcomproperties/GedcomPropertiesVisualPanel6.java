@@ -11,16 +11,25 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.util.Registry;
+import java.awt.Dimension;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesVisualPanel6 extends JPanel {
 
+    private Registry registry = null;
+    private final String winWidth = "gedcomProperties6Width";
+    private final String winHeight = "gedcomProperties6Height";
+    
     /**
      * Creates new form GedcomPropertiesVisualPanel6
      */
     public GedcomPropertiesVisualPanel6() {
         initComponents();
+        registry = Registry.get(getClass());
+        this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
+        
     }
 
     @Override
@@ -51,6 +60,11 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel {
         jLabel6 = new javax.swing.JLabel();
 
         setBorder(null);
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
@@ -159,6 +173,11 @@ public final class GedcomPropertiesVisualPanel6 extends JPanel {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put(winWidth, evt.getComponent().getWidth());
+        registry.put(winHeight, evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;

@@ -11,18 +11,27 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.util.Registry;
+import java.awt.Dimension;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesVisualPanel1 extends JPanel implements Constants {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
+    private Registry registry = null;
+    private final String winWidth = "gedcomProperties1Width";
+    private final String winHeight = "gedcomProperties1Height";
     
     /**
      * Creates new form GedcomPropertiesVisualPanel1
      */
     public GedcomPropertiesVisualPanel1() {
         initComponents();
+
+        registry = Registry.get(getClass());
+        this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
+        
         if (mode == UPDATE) {
             jTextField1.setEditable(false);
         }
@@ -56,6 +65,11 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel implements Consta
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(520, 400));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         jScrollPane2.setBorder(null);
         jScrollPane2.setViewportBorder(null);
@@ -138,6 +152,11 @@ public final class GedcomPropertiesVisualPanel1 extends JPanel implements Consta
             .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put(winWidth, evt.getComponent().getWidth());
+        registry.put(winHeight, evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
