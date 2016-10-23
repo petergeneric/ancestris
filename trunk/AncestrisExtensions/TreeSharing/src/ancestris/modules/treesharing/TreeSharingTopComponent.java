@@ -488,8 +488,8 @@ public class TreeSharingTopComponent extends TopComponent {
     
     public void updateMembersList() {
         resetAncestrisMembers();
-        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", ancestrisMembers.size()));
         final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
+        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", n));
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {

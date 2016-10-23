@@ -17,8 +17,11 @@ import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontMetrics;
 import java.util.List;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPopupMenu;
@@ -29,7 +32,6 @@ import javax.swing.border.Border;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
@@ -71,13 +73,10 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         table.getTableHeader().setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_SortHeader"));
         
         // Resize first column
-        table.getColumnModel().getColumn(0).setPreferredWidth(20);
+        table.getTableHeader().setResizingAllowed(false);
+        table.getTableHeader().setReorderingAllowed(false);
+        table.getColumnModel().getColumn(0).setPreferredWidth(25);
         
-        // Set tooltip text for name column (is string and does not loose its format)
-        DefaultTableCellRenderer rendererCol1 = new DefaultTableCellRenderer();
-        rendererCol1.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_Allowed"));
-        table.getColumnModel().getColumn(1).setCellRenderer(rendererCol1);        
-
         // Remove grid lines
         table.setShowHorizontalLines(false);
         table.setShowVerticalLines(false);
@@ -88,17 +87,20 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         allowedLabel.setBorder(headerBorder);
         JLabel nameLabel = new JLabel("", MEMBER_ICON, JLabel.CENTER);
         nameLabel.setBorder(headerBorder);
-        TableCellRenderer renderer = new JComponentTableCellRenderer();
+        TableCellRenderer renderer = new HeaderCellRenderer();
         table.getColumnModel().getColumn(0).setHeaderRenderer(renderer);
         table.getColumnModel().getColumn(1).setHeaderRenderer(renderer);
         table.getColumnModel().getColumn(0).setHeaderValue(allowedLabel);
         table.getColumnModel().getColumn(1).setHeaderValue(nameLabel);
 
-        // Set font bold for my pseudo in the pseudo column
-        table.getColumnModel().getColumn(1).setCellRenderer(new BoldCellRenderer(owner.getPreferredPseudo()));
+        // Set renderes for both columns, font bold for my pseudo in the pseudo column
+        table.getColumnModel().getColumn(0).setCellRenderer(new TickCellRenderer());
+        table.getColumnModel().getColumn(1).setCellRenderer(new NameCellRenderer(owner.getPreferredPseudo()));
 
         // Display table in scrolable dropdown in this component
         jscrollpane = new JScrollPane(table);
+        jscrollpane.setBackground(table.getBackground());
+        jscrollpane.setBorder(BorderFactory.createEmptyBorder(0,0,0,0));
         add(jscrollpane);
         updateTable();
         
@@ -115,19 +117,30 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         }
 
         // Resize table based on its number of lines (max 15 lines)
+        table.getColumnModel().getColumn(1).setPreferredWidth(getMaxWidth());
         Dimension preferredSize = table.getPreferredSize();
-        preferredSize.width += 30;
+        // ...Calculate height
         preferredSize.height = table.getRowHeight()*Math.min(15, model.getRowCount()+1) + 5;
         if (model.getRowCount() == 0) {
-            preferredSize.height = 0;
+            preferredSize.height = 20;
         }
+        // ...Set updated size
         table.setPreferredScrollableViewportSize(preferredSize);
 
         // Refresh scrollpane
-        //model.fireTableDataChanged();
         jscrollpane.repaint();
     }
 
+    private int getMaxWidth() {
+        FontMetrics fm = getFontMetrics(getFont().deriveFont(Font.BOLD));
+        int width = 100, w = 0;
+        for (int row = 0; row < table.getRowCount(); row++) {
+            w = fm.stringWidth((String) model.getValueAt(row, 1)) + 15;
+            width = Math.max(width, w);
+        }
+        return width;
+    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -202,6 +215,9 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
         @Override
         public Object getValueAt(int row, int col) {
+            if (data.length == 0) {
+                return col == 0 ? new Boolean(false) : new String("");
+            }
             return data[row][col];
         }
 
@@ -234,7 +250,7 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
 
     }
     
-    class JComponentTableCellRenderer implements TableCellRenderer {
+    class HeaderCellRenderer implements TableCellRenderer {
 
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
@@ -243,11 +259,40 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
         }
     }
     
-    class BoldCellRenderer extends JLabel implements TableCellRenderer {
+    
+    
+    class TickCellRenderer extends JCheckBox implements TableCellRenderer {
+
+        public TickCellRenderer() {
+            setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_Allowed"));
+            setHorizontalAlignment(JLabel.CENTER);
+        }
+        
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            
+            setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
+            setSelected((value != null && ((Boolean) value).booleanValue()));
+            setOpaque(true);
+            return this;
+        }
+    }
+    
+    
+   
+    class NameCellRenderer extends JLabel implements TableCellRenderer {
 
         String myPseudo = "";
         
-        public BoldCellRenderer(String myPseudo) {
+        public NameCellRenderer(String myPseudo) {
             this.myPseudo = myPseudo;
         }
         
@@ -262,11 +307,19 @@ public class MembersPopup extends JPopupMenu implements TableModelListener {
                 setFont(f.deriveFont(Font.PLAIN));
             }
             setText(cellText);
+            setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            if (isSelected) {
+                setBackground(table.getSelectionBackground());
+                setForeground(table.getSelectionForeground());
+            } else {
+                setBackground(table.getBackground());
+                setForeground(table.getForeground());
+            }
+            setOpaque(true);
             return this;
 
             
         }
     }
-   
     
 }
