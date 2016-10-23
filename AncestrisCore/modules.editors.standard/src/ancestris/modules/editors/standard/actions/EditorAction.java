@@ -69,7 +69,6 @@ public class EditorAction extends AncestrisEditor {
         if (contextToOpen != null) {
             EditorTopComponent editorTopComponent = getCurrentEditorTopComponent(contextToOpen);
             if (editorTopComponent != null) {
-                //editorTopComponent.setContext(contextToOpen);
                 SelectionDispatcher.fireSelection(contextToOpen);
                 editorTopComponent.requestActive();
             } else {
