@@ -13,6 +13,7 @@ package modules.editors.gedcomproperties;
 
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
+import java.awt.Dimension;
 import java.util.Calendar;
 import javax.swing.JPanel;
 import javax.swing.event.DocumentEvent;
@@ -31,12 +32,19 @@ import org.openide.util.NbBundle;
 public final class GedcomPropertiesVisualPanel2 extends JPanel implements Constants, DocumentListener {
 
     private final int mode = GedcomPropertiesWizardIterator.getMode();
+    private Registry registry = null;
+    private final String winWidth = "gedcomProperties2Width";
+    private final String winHeight = "gedcomProperties2Height";
     
     /**
      * Creates new form GedcomPropertiesVisualPanel2
      */
     public GedcomPropertiesVisualPanel2() {
         initComponents();
+
+        registry = Registry.get(getClass());
+        this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
+        
         updateButtons();
         jTextField3.getDocument().addDocumentListener(this);
         jTextArea4.getDocument().addDocumentListener(this);
@@ -91,6 +99,11 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(522, 400));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         jScrollPane2.setBorder(null);
         jScrollPane2.setViewportBorder(null);
@@ -281,6 +294,11 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
         saveSubmitterAsDefault();
         updateButtons();
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put(winWidth, evt.getComponent().getWidth());
+        registry.put(winHeight, evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;

@@ -11,12 +11,17 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.util.Registry;
+import java.awt.Dimension;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesVisualPanel5 extends JPanel implements Constants {
     
     private final int mode = GedcomPropertiesWizardIterator.getMode();
+    private Registry registry = null;
+    private final String winWidth = "gedcomProperties5Width";
+    private final String winHeight = "gedcomProperties5Height";
 
     private String strSour = "";
     private String strName = "";
@@ -31,6 +36,9 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel implements Consta
      */
     public GedcomPropertiesVisualPanel5() {
         initComponents();
+        registry = Registry.get(getClass());
+        this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
+        
     }
 
     @Override
@@ -53,6 +61,11 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel implements Consta
 
         setBorder(null);
         setPreferredSize(new java.awt.Dimension(520, 400));
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setViewportBorder(null);
@@ -101,6 +114,11 @@ public final class GedcomPropertiesVisualPanel5 extends JPanel implements Consta
             .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put(winWidth, evt.getComponent().getWidth());
+        registry.put(winHeight, evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
