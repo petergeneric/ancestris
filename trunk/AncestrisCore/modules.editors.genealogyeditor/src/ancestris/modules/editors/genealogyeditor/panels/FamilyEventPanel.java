@@ -95,6 +95,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private boolean mWifeAgeModified = false;
     private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
+    private boolean mPlaceModified = false;
     private boolean mResponsibleAgencyModified = false;
 
     /**
@@ -113,6 +114,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         husbandAgeTextField.getDocument().putProperty("name", "husbandAgeTextField");
         wifeAgeTextField.getDocument().addDocumentListener(changeListner);
         wifeAgeTextField.getDocument().putProperty("name", "wifeAgeTextField");
+        placeTextField.getDocument().addDocumentListener(changeListner);
+        placeTextField.getDocument().putProperty("name", "placeTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
         sourceCitationsTablePanel.addChangeListener(changeListner);
@@ -174,7 +177,6 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         placeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         placeLabel.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.placeLabel.text")); // NOI18N
 
-        placeTextField.setEditable(false);
         placeTextField.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.placeTextField.text")); // NOI18N
 
         privateRecordToggleButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -394,6 +396,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         
         placeEditorPanel.saveSize();
         if (o == OKButton) {
+            placeTextField.getDocument().removeDocumentListener(changeListner);
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -409,6 +412,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             //mAddress = mEvent.getProperty("ADDR", false);
             placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : ""); //mAddress != null ? displayAddressValue(mAddress) : "");
             changeSupport.fireChange();
+            placeTextField.getDocument().addDocumentListener(changeListner);
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -548,7 +552,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         PropertyAge husbandAge = (PropertyAge) mEvent.getPropertyByPath(".:HUSB:AGE");
         if (husbandAge != null) {
             husbandAgeTextField.setText(husbandAge.getDisplayValue());
-            if (mDate.isValid() && ((Fam) mRoot).getHusband().getBirthDate().isValid()) {
+            Indi husband = ((Fam) mRoot).getHusband();
+            Property pBirth = husband != null ? husband.getBirthDate() : null;
+            if (mDate.isValid() && pBirth != null && pBirth.isValid()) {
                 husbandAgeTextField.setEditable(false);
             } else {
                 husbandAgeTextField.setText("");
@@ -579,7 +585,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         PropertyAge wifeAge = (PropertyAge) mEvent.getPropertyByPath(".:WIFE:AGE");
         if (wifeAge != null) {
             wifeAgeTextField.setText(wifeAge.getDisplayValue());
-            if (mDate.isValid() && ((Fam) mRoot).getWife().getBirthDate().isValid()) {
+            Indi wife = ((Fam) mRoot).getWife();
+            Property pBirth = wife != null ? wife.getBirthDate() : null;
+            if (mDate.isValid() && pBirth != null && pBirth.isValid()) {
                 wifeAgeTextField.setEditable(false);
             } else {
                 wifeAgeTextField.setText("");
@@ -638,6 +646,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         mWifeAgeModified = false;
         mEventNameModified = false;
         mEventTypeModified = false;
+        mPlaceModified = false;
         mResponsibleAgencyModified = false;
 
         changeListner.unmute();
@@ -739,6 +748,16 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                 }
 
+                if (mPlaceModified) {
+                    mPlaceModified = false;
+                    Property place = mEvent.getProperty("PLAC", false);
+                    if (place != null) {
+                        place.setValue(placeTextField.getText());
+                    } else {
+                        mEvent.addProperty("PLAC", placeTextField.getText());
+                    }
+                }
+
                 if (mResponsibleAgencyModified) {
                     mResponsibleAgencyModified = false;
                     Property responsibleAgency = mEvent.getProperty("AGNC", false);
@@ -809,6 +828,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("wifeAgeTextField")) {
                         mWifeAgeModified = true;
                     }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -839,6 +861,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("wifeAgeTextField")) {
                         mWifeAgeModified = true;
                     }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -868,6 +893,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                     if (propertyName.equals("wifeAgeTextField")) {
                         mWifeAgeModified = true;
+                    }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
