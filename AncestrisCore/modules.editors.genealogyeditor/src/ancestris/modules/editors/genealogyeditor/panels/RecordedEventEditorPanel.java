@@ -121,7 +121,6 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         placeLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         placeLabel.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.placeLabel.text")); // NOI18N
 
-        placeTextField.setEditable(false);
         placeTextField.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.placeTextField.text")); // NOI18N
 
         editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png"))); // NOI18N
@@ -301,6 +300,12 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
             aDateBean.commit();
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
+        }
+        Property place = mEvent.getProperty("PLAC", false);
+        if (place != null) {
+            place.setValue(placeTextField.getText());
+        } else {
+            mEvent.addProperty("PLAC", placeTextField.getText());
         }
     }
 

@@ -65,6 +65,7 @@ public class FamilyEditor extends EntityEditor {
         }
     };
     private Context context;
+    private Context selectedEventContext;
     private Fam mFamily;
     private Indi mHusband;
     private Indi mWife;
@@ -83,6 +84,7 @@ public class FamilyEditor extends EntityEditor {
     public FamilyEditor(boolean isNew) {
         super(isNew);
         initComponents();
+        selectedEventContext = null;
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
         familyEventPanel.setVisible(false);
         familyEventPanel.addChangeListener(changes);
@@ -1178,8 +1180,7 @@ public class FamilyEditor extends EntityEditor {
                         FamilyEditor.class, "FamilyEditor.deleteHusbandConfirmation.title"),
                 NbBundle.getMessage(
                         FamilyEditor.class, "FamilyEditor.deleteHusbandConfirmation.text",
-                        mFamily.getHusband(),
-                        mFamily));
+                        mFamily.getHusband()));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
             try {
                 mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -1211,8 +1212,7 @@ public class FamilyEditor extends EntityEditor {
                         FamilyEditor.class, "FamilyEditor.deleteWifeConfirmation.title"),
                 NbBundle.getMessage(
                         FamilyEditor.class, "FamilyEditor.deleteWifeConfirmation.text",
-                        mFamily.getWife(),
-                        mFamily));
+                        mFamily.getWife()));
         if (createYesNo.show() == DialogManager.YES_OPTION) {
             try {
                 mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -1322,10 +1322,13 @@ public class FamilyEditor extends EntityEditor {
     }//GEN-LAST:event_deleteEventButtonActionPerformed
 
     private void eventsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventsListValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            return;
+        }
         int index = eventsList.getSelectedIndex();
         if (index != -1 && index < mEventsListModel.getSize()) {
             Property prop = mEventsListModel.getValueAt(index);
-            context = new Context(prop);
+            selectedEventContext = new Context(prop);
         }
     }//GEN-LAST:event_eventsListValueChanged
 
@@ -1453,7 +1456,7 @@ public class FamilyEditor extends EntityEditor {
 
             // Select context event from property 
             int index = 0;
-            Property prop = context.getProperty();
+            Property prop = selectedEventContext == null ? context.getProperty() : selectedEventContext.getProperty();
             if (prop != null) {
                 index = mEventsListModel.indexOf(prop);
                 if (index == -1) {
@@ -1730,19 +1733,19 @@ public class FamilyEditor extends EntityEditor {
         public void valueChanged(ListSelectionEvent lse) {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
             if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
-                if (familyEventPanel.hasChanged()) {
-                    try {
-                        mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                familyEventPanel.commit();
-                            }
-                        });
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
+//                if (familyEventPanel.hasChanged()) {
+//                    try {
+//                        mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                            @Override
+//                            public void perform(Gedcom gedcom) throws GedcomException {
+//                                familyEventPanel.commit();
+//                            }
+//                        });
+//                    } catch (GedcomException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                }
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     familyEventPanel.set(mFamily, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
                     familyEventPanel.setVisible(true);

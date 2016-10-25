@@ -134,6 +134,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private boolean mIndividualAgeModified = false;
     private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
+    private boolean mPlaceModified = false;
     private boolean mResponsibleAgencyModified = false;
 
     /**
@@ -150,6 +151,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventDescriptorTextArea.getDocument().putProperty("name", "eventDescriptorTextArea");
         individualAgeTextField.getDocument().addDocumentListener(changeListner);
         individualAgeTextField.getDocument().putProperty("name", "individualAgeTextField");
+        placeTextField.getDocument().addDocumentListener(changeListner);
+        placeTextField.getDocument().putProperty("name", "placeTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
         sourceCitationsTablePanel.addChangeListener(changeListner);
@@ -201,7 +204,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         placeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         placeLabel.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeLabel.text")); // NOI18N
 
-        placeTextField.setEditable(false);
         placeTextField.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeTextField.text")); // NOI18N
 
         privateRecordToggleButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
@@ -424,6 +426,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         
         placeEditorPanel.saveSize();
         if (o == OKButton) {
+            placeTextField.getDocument().removeDocumentListener(changeListner);
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -439,6 +442,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             //mAddress = mEvent.getProperty("ADDR", false);
             placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
             changeSupport.fireChange();
+            placeTextField.getDocument().addDocumentListener(changeListner);
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -707,6 +711,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         mIndividualAgeModified = false;
         mEventNameModified = false;
         mEventTypeModified = false;
+        mPlaceModified = false;
         mResponsibleAgencyModified = false;
 
         changeListner.unmute();
@@ -764,7 +769,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                                 eventCause.setValue(causeText);
                             }
                         } else if (eventCause != null) {
-                            mRoot.delProperty(eventCause);
+                            mEvent.delProperty(eventCause);
                         }
                     }
                 } else {
@@ -824,6 +829,16 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                         age.setValue(individualAgeTextField.getText() + " y");
                     } else {
                         mEvent.addProperty("AGE", individualAgeTextField.getText() + " y");
+                    }
+                }
+
+                if (mPlaceModified) {
+                    mPlaceModified = false;
+                    Property place = mEvent.getProperty("PLAC", false);
+                    if (place != null) {
+                        place.setValue(placeTextField.getText());
+                    } else {
+                        mEvent.addProperty("PLAC", placeTextField.getText());
                     }
                 }
 
@@ -894,6 +909,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
                     }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -921,6 +939,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
                     }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -947,6 +968,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
+                    }
+                    if (propertyName.equals("placeTextField")) {
+                        mPlaceModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;

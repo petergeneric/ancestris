@@ -56,6 +56,7 @@ import org.openide.util.NbBundle;
 public final class IndividualEditor extends EntityEditor {
 
     private Context context;
+    private Context selectedEventContext;
     private Indi mIndividual;
     private Property mEvent = null;
     private Property mMultiMediaObject;
@@ -121,6 +122,7 @@ public final class IndividualEditor extends EntityEditor {
     public IndividualEditor(boolean isNew) {
         super(isNew);
         initComponents();
+        selectedEventContext = null;
         eventsList.getSelectionModel().addListSelectionListener(new EventsListSelectionHandler());
         individualEventEditorPanel.setVisible(false);
         nameEditorPanel.addChangeListener(changes);
@@ -667,10 +669,13 @@ public final class IndividualEditor extends EntityEditor {
     }//GEN-LAST:event_eventTypeComboBoxActionPerformed
 
     private void eventsListValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_eventsListValueChanged
+        if (!evt.getValueIsAdjusting()) {
+            return;
+        }
         int index = eventsList.getSelectedIndex();
         if (index != -1 && index < mEventsListModel.getSize()) {
             Property prop = mEventsListModel.getValueAt(index);
-            context = new Context(prop);
+            selectedEventContext = new Context(prop);
         }
     }//GEN-LAST:event_eventsListValueChanged
 
@@ -840,13 +845,13 @@ public final class IndividualEditor extends EntityEditor {
 
             // Select context event from property 
             int index = 0;
-            Property prop = context.getProperty();
+            Property prop = selectedEventContext == null ? context.getProperty() : selectedEventContext.getProperty();
             if (prop != null) {
                 index = mEventsListModel.indexOf(prop);
                 if (index == -1) {
                     index = 0;
                 }
-            } 
+            }
             eventsList.setSelectedIndex(index);
 
             /*
@@ -1049,19 +1054,19 @@ public final class IndividualEditor extends EntityEditor {
         public void valueChanged(ListSelectionEvent lse) {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
             if (!lse.getValueIsAdjusting() && !lsm.isSelectionEmpty()) {
-                if (individualEventEditorPanel.hasChanged()) {
-                    try {
-                        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-                            @Override
-                            public void perform(Gedcom gedcom) throws GedcomException {
-                                individualEventEditorPanel.commit();
-                            }
-                        });
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
-                }
+//                if (individualEventEditorPanel.hasChanged()) {
+//                    try {
+//                        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
+//
+//                            @Override
+//                            public void perform(Gedcom gedcom) throws GedcomException {
+//                                individualEventEditorPanel.commit();
+//                            }
+//                        });
+//                    } catch (GedcomException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                }
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     individualEventEditorPanel.set(mIndividual, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
                     individualEventEditorPanel.setVisible(true);
