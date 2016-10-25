@@ -728,10 +728,6 @@ public class PropertyTableWidget extends JPanel {
                     cells[r] = null;
                 }
                 cells = null;
-                TableModelListener[] listeners = getListeners(TableModelListener.class);
-                for (TableModelListener l : listeners) {
-                    removeTableModelListener(l);
-                }
             }
 
             @Override
