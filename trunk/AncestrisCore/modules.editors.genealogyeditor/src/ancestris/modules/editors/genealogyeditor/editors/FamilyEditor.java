@@ -10,6 +10,8 @@ import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
@@ -1449,6 +1451,24 @@ public class FamilyEditor extends EntityEditor {
                     familyEvents.add(property);
                 }
             }
+            Collections.sort(familyEvents, new Comparator<Property>() {
+                @Override
+                public int compare(Property p1, Property p2) {
+                    PropertyDate pDate1 = (PropertyDate) p1.getProperty("DATE");
+                    PropertyDate pDate2 = (PropertyDate) p2.getProperty("DATE");
+                    if (pDate1 == null && pDate2 == null) {
+                        return 0;
+                    }
+                    if (pDate1 != null && pDate2 == null) {
+                        return +1;
+                    }
+                    if (pDate1 == null && pDate2 != null) {
+                        return -1;
+                    }
+                    return pDate1.compareTo(pDate2);
+                }
+
+            });
             familyEventPanel.setVisible(false);
             mEventsListModel.clear();
             mEventsListModel.addAll(familyEvents);

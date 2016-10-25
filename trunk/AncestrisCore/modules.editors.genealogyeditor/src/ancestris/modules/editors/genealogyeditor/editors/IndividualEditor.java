@@ -11,6 +11,8 @@ import java.awt.Component;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
@@ -816,29 +818,30 @@ public final class IndividualEditor extends EntityEditor {
              * +1 <<INDIVIDUAL_EVENT_STRUCTURE>>
              * +1 <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>
              */
-            ArrayList<Property> individualEvents = new ArrayList<Property>();
+            List<Property> individualEvents = new ArrayList<Property>();
             for (Property property : mIndividual.getProperties()) {
                 if (mIndividualEventsTags.contains(property.getTag())) {
                     individualEvents.add(property);
                 }
             }
+            Collections.sort(individualEvents, new Comparator<Property>() {
+                @Override
+                public int compare(Property p1, Property p2) {
+                    PropertyDate pDate1 = (PropertyDate) p1.getProperty("DATE");
+                    PropertyDate pDate2 = (PropertyDate) p2.getProperty("DATE");
+                    if (pDate1 == null && pDate2 == null) {
+                        return 0;
+                    }
+                    if (pDate1 != null && pDate2 == null) {
+                        return +1;
+                    }
+                    if (pDate1 == null && pDate2 != null) {
+                        return -1;
+                    }
+                    return pDate1.compareTo(pDate2);
+                }
 
-            // Set default Events
-/*        if (individualEvents.isEmpty() == true) {
-             try {
-             mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-             @Override
-             public void perform(Gedcom gedcom) throws GedcomException {
-             mEvent = mIndividual.addProperty("BIRT", "");
-             }
-             }); // end of doUnitOfWork
-             individualEvents.add(mEvent);
-             } catch (GedcomException ex) {
-             Exceptions.printStackTrace(ex);
-             }
-             }
-             */
+            });
             mEventsListModel.clear();
             mEventsListModel.addAll(individualEvents);
             seteventTypeComboBox(individualEvents);
