@@ -20,6 +20,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -32,6 +33,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AncestrisEditor.class,position = 100)
 public class PlaceEditor extends AncestrisEditor {
     private final PlaceEditorPanel editorPanel;
+    private static ImageIcon editorIcon = new ImageIcon(PlaceEditor.class.getResource("resources/geo.png")); // NOI18N
 
     public PlaceEditor() {
         editorPanel = new PlaceEditorPanel();
@@ -108,6 +110,11 @@ public class PlaceEditor extends AncestrisEditor {
         }
     }
 
+    @Override
+    public ImageIcon getIcon() {
+        return editorIcon; // default
+    }
+        
     @Override
     public String toString() {
         return getName(false);
