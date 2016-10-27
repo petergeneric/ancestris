@@ -20,6 +20,7 @@ import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -30,6 +31,8 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = AncestrisEditor.class, position = 200)
 public class GenealogyEditorAction extends AncestrisEditor {
+
+    private ImageIcon editorIcon = new ImageIcon(EditorTopComponent.class.getResource("resources/Editor.png")); // NOI18N
 
     @Override
     public boolean canEdit(Property property) {
@@ -114,6 +117,11 @@ public class GenealogyEditorAction extends AncestrisEditor {
         } else {
             return NbBundle.getMessage(EditorTopComponent.class, "OpenIDE-Module-Name");
         }
+    }
+
+    @Override
+    public ImageIcon getIcon() {
+        return editorIcon;
     }
 
     @Override
