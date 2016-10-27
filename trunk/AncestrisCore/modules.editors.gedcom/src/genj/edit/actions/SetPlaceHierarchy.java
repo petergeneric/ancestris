@@ -25,10 +25,8 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-import genj.gedcom.Grammar;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.TagPath;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import genj.util.swing.TextAreaWidget;
@@ -60,7 +58,8 @@ import org.openide.util.NbBundle;
     @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
 public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInterface {
 
-    private static final ImageIcon IMG = Grammar.V55.getMeta(TagPath.valueOf("INDI:BIRT:PLAC")).getImage();
+    //private static final ImageIcon IMG = Grammar.V55.getMeta(TagPath.valueOf("INDI:BIRT:PLAC")).getImage();
+    private static genj.util.swing.ImageIcon IMG = new ImageIcon(new javax.swing.ImageIcon(SetPlaceHierarchy.class.getResource("parameters.png"))); // NOI18N
 
     /** the place to use as the global example */
     private PropertyPlace place;
