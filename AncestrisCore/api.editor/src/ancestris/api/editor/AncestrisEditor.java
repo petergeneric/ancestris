@@ -27,6 +27,7 @@ import static ancestris.api.editor.Bundle.*;
 import ancestris.core.actions.CommonActions;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertyPlace;
 import java.util.List;
 import javax.swing.ImageIcon;
 import org.openide.util.NbBundle;
@@ -69,6 +70,8 @@ public abstract class AncestrisEditor {
                     return edt;
                 }
                 editor = edt;
+            } else if (edt.canEdit(property) && (property instanceof PropertyPlace) && (edt.getName(true).contains("PlaceEditor"))) {
+                return edt;
             } else if (edt.canEdit(property)) {
                 backupEditor = edt;
             }
@@ -103,6 +106,8 @@ public abstract class AncestrisEditor {
         return edit(property, false);
     }
 
+    public abstract ImageIcon getIcon();
+
     public abstract String getName(boolean canonical);
 
     
@@ -118,6 +123,7 @@ public abstract class AncestrisEditor {
             }
         };
     }
+
     
     
     /**
@@ -127,6 +133,8 @@ public abstract class AncestrisEditor {
     private static class NoOpEditor extends AncestrisEditor {
 
         public static final AncestrisEditor instance = new NoOpEditor();
+        private static ImageIcon editorIcon = new ImageIcon(AncestrisEditor.class.getResource("editor_cygnus.png")); // NOI18N
+
 
         @Override
         public boolean canEdit(Property property) {
@@ -176,6 +184,12 @@ public abstract class AncestrisEditor {
         public Action getCreateSpouseAction(Indi indi) {
             return getDefaultAction(indi);
         }
+
+        @Override
+        public ImageIcon getIcon() {
+            return editorIcon; // default
+        }
+
     }
     
     
@@ -192,14 +206,9 @@ public abstract class AncestrisEditor {
             displayName = "#OpenInEditor.title",
             lazy = false
     )
-    @ActionReferences({
-        @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReferences({@ActionReference(path = "Ancestris/Actions/GedcomProperty")})
     @Messages("OpenInEditor.title=Edit/Modify")
-    public final static class OpenEditorAction
-            extends AbstractAction
-            implements ContextAwareAction {
-
-        static ImageIcon editorIcon = new ImageIcon(AncestrisEditor.class.getResource("editor.png")); // NOI18N
+    public final static class OpenEditorAction extends AbstractAction implements ContextAwareAction {
 
         public @Override
         void actionPerformed(ActionEvent e) {
@@ -227,7 +236,7 @@ public abstract class AncestrisEditor {
                 this.property = context;
                 this.editor = editor;
                 setText(OpenInEditor_title());  // NOI18N
-                setImage(editorIcon);
+                setImage(editor.getIcon());
             }
 
             @Override
