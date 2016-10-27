@@ -31,6 +31,7 @@ import genj.gedcom.Source;
 import genj.gedcom.Submitter;
 import java.util.List;
 import javax.swing.Action;
+import javax.swing.ImageIcon;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.util.lookup.ServiceProvider;
@@ -42,6 +43,8 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AncestrisEditor.class, position = 195)
 public class EditorAction extends AncestrisEditor {
     
+    private ImageIcon editorIcon = new ImageIcon(EditorTopComponent.class.getResource("editeur_standard.png")); // NOI18N
+
     @Override
     public boolean canEdit(Property property) {
         return (property instanceof Indi
@@ -93,6 +96,11 @@ public class EditorAction extends AncestrisEditor {
         }
     }
     
+    @Override
+    public ImageIcon getIcon() {
+        return editorIcon;
+    }
+
     @Override
     public String toString() {
         return getName(false);
