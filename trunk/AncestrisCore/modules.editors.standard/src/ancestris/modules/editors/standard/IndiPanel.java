@@ -4232,6 +4232,9 @@ public class IndiPanel extends Editor implements DocumentListener {
             int selRow = familyTree.getRowForLocation(e.getX(), e.getY());
             if (selRow != -1 && e.getClickCount() == 2) {
                 DefaultMutableTreeNode treeNode = (DefaultMutableTreeNode) familyTree.getLastSelectedPathComponent();
+                if (treeNode == null) {
+                    return;
+                }
                 NodeWrapper node = (NodeWrapper) treeNode.getUserObject();
                 if (node.getEntity() != null) {
                     SelectionDispatcher.fireSelection(new Context(node.getEntity()));   // fireselection because we are navigating to another entity
