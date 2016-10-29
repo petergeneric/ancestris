@@ -59,8 +59,8 @@ import javax.swing.JToggleButton;
 import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
 import java.awt.Component;
+import java.util.Collections;
 import java.util.Iterator;
-import java.util.concurrent.TimeUnit;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.RequestProcessor;
 
@@ -706,7 +706,7 @@ public class TableView extends View {
         public int getNumRows() {
             // cache entities if not there yet
             if (rows == null) {
-                rows = new ArrayList<Entity>(super.getGedcom().getEntities(mode.getTag()));
+                rows = Collections.synchronizedList(new ArrayList<Entity>(super.getGedcom().getEntities(mode.getTag())));
             }
             // ready
             return rows.size();
@@ -748,11 +748,13 @@ public class TableView extends View {
             if (!mode.getTag().equals(entity.getTag())) {
                 return;
             }
-            // add it
-            rows.add(entity);
-            // tell about it
-            fireRowsAdded(rows.size() - 1, rows.size() - 1);
-            // done
+            synchronized (rows) {
+                // add it
+                rows.add(entity);
+                // tell about it
+                fireRowsAdded(rows.size() - 1, rows.size() - 1);
+                // done
+            }
         }
 
         /** gedcom callback */
@@ -762,14 +764,16 @@ public class TableView extends View {
             if (!mode.getTag().equals(entity.getTag())) {
                 return;
             }
-            // delete it
-            for (int i = 0; i < rows.size(); i++) {
-                if (rows.get(i) == entity) {
-                    rows.remove(i);
-                    // tell about it
-                    fireRowsDeleted(i, i);
-                    // done
-                    return;
+            synchronized (rows) {
+                // delete it
+                for (int i = 0; i < rows.size(); i++) {
+                    if (rows.get(i) == entity) {
+                        rows.remove(i);
+                        // tell about it
+                        fireRowsDeleted(i, i);
+                        // done
+                        return;
+                    }
                 }
             }
             // hmm, strange
@@ -799,38 +803,36 @@ public class TableView extends View {
             if (!mode.getTag().equals(entity.getTag())) {
                 return;
             }
-            // a path we're interested in?
-            TagPath[] paths = mode.getPaths();
-            for (int i = 0; i < paths.length; i++) {
-                if (paths[i].equals(path)) {
-                    for (int j = 0; j < rows.size(); j++) {
-                        if (rows.get(j) == entity) {
-                            fireRowsChanged(j, j, i);
-                            return;
+            synchronized (rows) {
+                // a path we're interested in?
+                TagPath[] paths = mode.getPaths();
+                for (int i = 0; i < paths.length; i++) {
+                    if (paths[i].equals(path)) {
+                        for (int j = 0; j < rows.size(); j++) {
+                            if (rows.get(j) == entity) {
+                                fireRowsChanged(j, j, i);
+                                return;
+                            }
                         }
                     }
                 }
+                // done
             }
-            // done
         }
 
         private void eraseAll() {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
-                    // List<Entity> rows
-                    int s = rows.size() - 1;
-                    for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
-                        it.next();
-                        it.remove();
-                    }
-                    fireRowsDeleted(0, s);
-                    try {
-                        TimeUnit.SECONDS.sleep(15); // wait for rows deleted to be performed
+                    synchronized (rows) {
+                        int s = rows.size() - 1;
+                        for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
+                            it.next();
+                            it.remove();
+                        }
+                        fireRowsDeleted(0, s);
                         propertyTable.eraseAll();
                         System.gc();
-                    } catch (InterruptedException ex) {
-                        //Exceptions.printStackTrace(ex);
                     }
                 }
             };
