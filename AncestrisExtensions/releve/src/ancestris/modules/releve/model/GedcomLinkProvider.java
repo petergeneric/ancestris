@@ -4,7 +4,6 @@ import ancestris.modules.releve.dnd.MergeQuery;
 import static ancestris.modules.releve.dnd.MergeQuery.isSameFirstName;
 import static ancestris.modules.releve.dnd.MergeQuery.isSameLastName;
 import genj.gedcom.Fam;
-import static genj.gedcom.Fam.PATH_FAMMARRDATE;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
@@ -35,31 +34,34 @@ public class GedcomLinkProvider {
     static final TagPath indiEvenDateTag = new TagPath("INDI:EVEN:DATE");
     static final TagPath willDateTag = new TagPath("INDI:WILL:DATE");
     
+    // attributs temporaires 
+    Collection<Indi> indiList;
+    Collection<Fam> famList;
+    
     public void init(final RecordModel recordModel, Gedcom gedcom, boolean state) {
         this.gedcom = gedcom;
         this.showGedcomLink = state;
 
-        if (gedcom != null && showGedcomLink == true ) {
-
-//           (new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        
-//                        for (int i = 0; i < recordModel.getRowCount(); i++) {
-//                            Record record = recordModel.getRecord(i);
-//                            addRecord(record);
-//                            
-//                        }
-//                        recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() -1);
-//                    }
-//
-//                })).start();
+        if (gedcom != null && showGedcomLink == true ) {            
+            // je recupere les individus du gedcom dans l'attibut temporaire pour optimiser les recherches
+            indiList = gedcom.getIndis();
+            // je recupere les familles du gedcom dans l'attibut temporaire pour optimiser les recherches 
+            famList = gedcom.getFamilies();
+            
+            // je nettoie le reultat avant de faire la recherche 
+            gedcomLinkList.clear();
+            
             for (int i = 0; i < recordModel.getRowCount(); i++) {
                 Record record = recordModel.getRecord(i);
                 addRecord(record);
             }
+            // j'affiche le resultat 
             recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
 
+            // je nettoie les attributs temporaires;
+            indiList.clear();
+            famList.clear();
+            
         } else {
             gedcomLinkList.clear();
             recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
@@ -111,7 +113,7 @@ public class GedcomLinkProvider {
             recordBirthDate = birthRecord.getEventDateProperty();   
         } 
         
-        Collection<Indi> indiList = gedcom.getIndis();
+        //Collection<Indi> indiList = gedcom.getIndis();
         
         for( Indi indi : indiList) {
 
@@ -154,9 +156,9 @@ public class GedcomLinkProvider {
                     && !MergeQuery.isSameFirstName(birthRecord.getIndiFirstName().getValue(), indi.getFirstName())) {
                 continue;
             }
-
+            
             gedcomLink.setEntity(indi);
-            gedcomLink.setProperty(recordBirthDate);
+            gedcomLink.setProperty(gedcomBirthDate);
             gedcomLink.setCompareResult(GedcomLink.CompareResult.EQUAL);
             break;
 
@@ -171,17 +173,17 @@ public class GedcomLinkProvider {
         
         PropertyDate recordDeathDate = deathRecord.getEventDateProperty();
         
-        Collection<Indi> indiList = gedcom.getIndis();
+        //Collection<Indi> indiList = gedcom.getIndis();
         
         for( Indi indi : indiList) {
 
             // date de deces egale   
-            PropertyDate gedcomDate = indi.getDeathDate();
-            if (recordDeathDate != null && gedcomDate != null && recordDeathDate.getStart().isValid() && gedcomDate.getStart().isValid() ) {
+            PropertyDate gedcomDeathDate = indi.getDeathDate();
+            if (recordDeathDate != null && gedcomDeathDate != null && recordDeathDate.getStart().isValid() && gedcomDeathDate.getStart().isValid() ) {
                 boolean equal;
                 try {
                     int recordJulianDay = recordDeathDate.getStart().getJulianDay();
-                    int childJulianDay = gedcomDate.getStart().getJulianDay();
+                    int childJulianDay = gedcomDeathDate.getStart().getJulianDay();
                     equal = recordJulianDay == childJulianDay;
                 } catch (GedcomException ex) {
                     equal = false;
@@ -216,7 +218,7 @@ public class GedcomLinkProvider {
             }
 
             gedcomLink.setEntity(indi);
-            gedcomLink.setProperty(recordDeathDate);            
+            gedcomLink.setProperty(gedcomDeathDate);            
             gedcomLink.setCompareResult(GedcomLink.CompareResult.EQUAL);
             break;
 
@@ -230,8 +232,10 @@ public class GedcomLinkProvider {
 
         PropertyDate recordMarriageDate = marriageRecord.getEventDateProperty();
 
-        Collection<Fam> famList = gedcom.getFamilies();
+        //Collection<Fam> famList = gedcom.getFamilies();
 
+        Property gedcomFamMarriageDate = null;
+        
         for (Fam fam : famList) {
             Indi husband = fam.getHusband();
             Indi wife = fam.getWife();
@@ -252,6 +256,7 @@ public class GedcomLinkProvider {
                                 int gedcomJulianDay = eventPit.getJulianDay();
                                 if (recordJulianDay == gedcomJulianDay) {
                                     eventDateFound = true; 
+                                    gedcomFamMarriageDate = famEventDate;
                                     break;
                                 }
                             }
@@ -299,7 +304,7 @@ public class GedcomLinkProvider {
             }
 
             gedcomLink.setEntity(fam);
-            gedcomLink.setProperty(recordMarriageDate);            
+            gedcomLink.setProperty(gedcomFamMarriageDate);            
             gedcomLink.setCompareResult(GedcomLink.CompareResult.EQUAL);
             break;
 
@@ -314,7 +319,6 @@ public class GedcomLinkProvider {
         GedcomLink gedcomLink = null;
 
         PropertyDate recordEventDate = miscRecord.getEventDateProperty();
-
         String eventType = miscRecord.getEventType().toString().toLowerCase();
         if (eventType.equals("cm") || eventType.indexOf("mariage") != -1) {
             // je cherche l'évènement sur la famille
@@ -322,6 +326,7 @@ public class GedcomLinkProvider {
 
         }
         if (gedcomLink == null) {
+            Property gedcomMiscEventDate = null;
             // je cherche l'évènement sur l'individu
             TagPath[]tagPathList = {indiEvenDateTag, willDateTag };
             try {
@@ -335,7 +340,7 @@ public class GedcomLinkProvider {
                     // si la date d'insinuation n'est pas renseignée, j'utilise la date de l'évènement
                     recordJulianDay = recordEventDate.getStart().getJulianDay();
                 }
-                Collection<Indi> indiList = gedcom.getIndis();
+                indiList = gedcom.getIndis();
                 for (Indi indi : indiList) {
                     
                     boolean eventDateFound = false;
@@ -347,6 +352,7 @@ public class GedcomLinkProvider {
                                     int gedcomJulianDay = eventPit.getJulianDay();
                                     if (recordJulianDay == gedcomJulianDay) {
                                         eventDateFound = true;
+                                        gedcomMiscEventDate = indiEventDate;
                                         break;
                                     }
                                 }
@@ -381,7 +387,7 @@ public class GedcomLinkProvider {
 
                     gedcomLink = new GedcomLink(miscRecord);
                     gedcomLink.setEntity(indi);
-                    gedcomLink.setProperty(recordEventDate);
+                    gedcomLink.setProperty(gedcomMiscEventDate);
                     gedcomLink.setCompareResult(GedcomLink.CompareResult.EQUAL);
                     break;
 
