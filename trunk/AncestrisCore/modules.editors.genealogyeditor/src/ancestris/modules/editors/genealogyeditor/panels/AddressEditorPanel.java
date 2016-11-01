@@ -659,10 +659,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                         mFaxModified = true;
                     }
                     if (propertyName.equals("httpAddrTextField")) {
-                        meMailAddrModified = true;
+                        mHttpAddrModified = true;
                     }
                     if (propertyName.equals("eMailAddrTextField")) {
-                        mHttpAddrModified = true;
+                        meMailAddrModified = true;
                     }
 
                     changeSupport.fireChange();
@@ -708,10 +708,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                         mFaxModified = true;
                     }
                     if (propertyName.equals("httpAddrTextField")) {
-                        meMailAddrModified = true;
+                        mHttpAddrModified = true;
                     }
                     if (propertyName.equals("eMailAddrTextField")) {
-                        mHttpAddrModified = true;
+                        meMailAddrModified = true;
                     }
 
                     changeSupport.fireChange();
@@ -757,10 +757,10 @@ public class AddressEditorPanel extends javax.swing.JPanel {
                         mFaxModified = true;
                     }
                     if (propertyName.equals("httpAddrTextField")) {
-                        meMailAddrModified = true;
+                        mHttpAddrModified = true;
                     }
                     if (propertyName.equals("eMailAddrTextField")) {
-                        mHttpAddrModified = true;
+                        meMailAddrModified = true;
                     }
 
                     changeSupport.fireChange();
