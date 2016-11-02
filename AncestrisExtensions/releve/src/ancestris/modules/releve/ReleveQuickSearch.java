@@ -64,51 +64,51 @@ public class ReleveQuickSearch implements SearchProvider {
                         switch (fieldType) {
                             case indiFirstName:
                             case indiLastName:
-                                resultDisplay = record.getIndiFirstName().toString()+ " " + record.getIndiLastName().toString();
+                                resultDisplay = record.getIndiLastName().toString()+ " " + record.getIndiFirstName().toString();
                                 break;
                             case indiMarriedFirstName:
                             case indiMarriedLastName:
-                                resultDisplay = record.getIndiMarriedFirstName().toString()+ " " + record.getIndiMarriedLastName().toString();
+                                resultDisplay = record.getIndiMarriedLastName().toString()+ " " + record.getIndiMarriedFirstName().toString();
                                 break;
                             case indiFatherFirstName:
                             case indiFatherLastName:
-                                resultDisplay = record.getIndiFatherFirstName().toString()+ " " + record.getIndiFatherLastName().toString();
+                                resultDisplay = record.getIndiFatherLastName().toString()+ " " + record.getIndiFatherFirstName().toString();
                                 break;
                             case indiMotherFirstName:
                             case indiMotherLastName:
-                                resultDisplay = record.getIndiMotherFirstName().toString()+ " " + record.getIndiMotherLastName().toString();
+                                resultDisplay = record.getIndiMotherLastName().toString()+ " " + record.getIndiMotherFirstName().toString();
                                 break;
                             case wifeFirstName:
                             case wifeLastName:
-                                resultDisplay = record.getWifeFirstName().toString()+ " " + record.getWifeLastName().toString();
+                                resultDisplay = record.getWifeLastName().toString()+ " " + record.getWifeFirstName().toString();
                                 break;
                             case wifeMarriedFirstName:
                             case wifeMarriedLastName:
-                                resultDisplay = record.getWifeMarriedFirstName().toString()+ " " + record.getWifeMarriedLastName().toString();
+                                resultDisplay = record.getWifeMarriedLastName().toString()+ " " + record.getWifeMarriedFirstName().toString();
                                 break;
                             case wifeFatherFirstName:
                             case wifeFatherLastName:
-                                resultDisplay = record.getWifeFatherFirstName().toString()+ " " + record.getWifeFatherLastName().toString();
+                                resultDisplay = record.getWifeFatherLastName().toString()+ " " + record.getWifeFatherFirstName().toString();
                                 break;
                             case wifeMotherFirstName:
                             case wifeMotherLastName:
-                                resultDisplay = record.getWifeMotherFirstName().toString()+ " " + record.getWifeMotherLastName().toString();
+                                resultDisplay = record.getWifeMotherLastName().toString()+ " " + record.getWifeMotherFirstName().toString();
                                 break;
                             case witness1FirstName:
                             case witness1LastName:
-                                resultDisplay = record.getWitness1FirstName().toString()+ " " + record.getWitness1LastName().toString();
+                                resultDisplay = record.getWitness1LastName().toString()+ " " + record.getWitness1FirstName().toString();
                                 break;
                             case witness2FirstName:
                             case witness2LastName:
-                                resultDisplay = record.getWitness2FirstName().toString()+ " " + record.getWitness2LastName().toString();
+                                resultDisplay = record.getWitness2LastName().toString()+ " " + record.getWitness2FirstName().toString();
                                 break;
                             case witness3FirstName:
                             case witness3LastName:
-                                resultDisplay = record.getWitness3FirstName().toString()+ " " + record.getWitness3LastName().toString();
+                                resultDisplay = record.getWitness3LastName().toString()+ " " + record.getWitness3FirstName().toString();
                                 break;
                             case witness4FirstName:
                             case witness4LastName:
-                                resultDisplay = record.getWitness4FirstName().toString()+ " " + record.getWitness4LastName().toString();
+                                resultDisplay = record.getWitness4LastName().toString()+ " " + record.getWitness4FirstName().toString();
                                 break;
                             case generalComment:
                                 String text = field.toString();
