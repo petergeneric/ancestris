@@ -320,7 +320,7 @@ public class GedcomLinkProvider {
 
         PropertyDate recordEventDate = miscRecord.getEventDateProperty();
         String eventType = miscRecord.getEventType().toString().toLowerCase();
-        if (eventType.equals("cm") || eventType.indexOf("mariage") != -1) {
+        if (eventType.contains("cm") || eventType.contains("mariage") ) {
             // je cherche l'évènement sur la famille
             gedcomLink = findMarriage(miscRecord, marbDateTag, marcDateTag, marlDateTag, evenDateTag);
 
@@ -340,7 +340,6 @@ public class GedcomLinkProvider {
                     // si la date d'insinuation n'est pas renseignée, j'utilise la date de l'évènement
                     recordJulianDay = recordEventDate.getStart().getJulianDay();
                 }
-                indiList = gedcom.getIndis();
                 for (Indi indi : indiList) {
                     
                     boolean eventDateFound = false;
