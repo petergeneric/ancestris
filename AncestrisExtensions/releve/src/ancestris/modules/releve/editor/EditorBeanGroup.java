@@ -2,6 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.DataManager.RecordType;
+import ancestris.modules.releve.model.Field.FieldType;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;
@@ -145,9 +146,23 @@ public class EditorBeanGroup {
         return groupArray.get(recordType);
     }
 
-//    static public EditorBeanGroup getGroup(RecordType recordType, GroupId groupId) {
-//        return groupMap.get(recordType).get(groupId);
-//    }
+    /**
+     * retourne le groupe dans lequel est le champ d'un type de releve
+     * @param recordType
+     * @param fieldType
+     * @return 
+     */
+    static public EditorBeanGroup getGroup(RecordType recordType, FieldType fieldType) {
+        ArrayList<EditorBeanGroup> beanGroups = groupArray.get(recordType);
+        for( EditorBeanGroup beanGroup : beanGroups ) {
+            for( EditorBeanField beanField:  beanGroup.getFields() ) {
+                if( beanField.getFieldType() == fieldType) {
+                    return beanGroup;
+                }
+            }
+        }
+        return null;
+    }
 
     static public void loadPreferences() {
         for (RecordType recordType : RecordType.values()) {
