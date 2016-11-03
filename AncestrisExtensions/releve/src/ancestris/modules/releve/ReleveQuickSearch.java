@@ -2,9 +2,12 @@ package ancestris.modules.releve;
 
 import ancestris.modules.releve.model.Record;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.modules.releve.editor.EditorBeanField;
+import ancestris.modules.releve.editor.EditorBeanGroup;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.RecordModel;
+import java.util.regex.Pattern;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
@@ -23,114 +26,54 @@ public class ReleveQuickSearch implements SearchProvider {
      * @param request Search request object that contains information what to search for
      * @param response Search response object that stores search results. Note that it's important to react to return value of SearchResponse.addResult(...) method and stop computation if false value is returned.
      */
-
-    static private FieldType fieldTypes[] = {
+    
+    private static final FieldType lastNameFieldTypes[] = {
         FieldType.indiLastName , FieldType.indiMarriedLastName,  FieldType.indiFatherLastName , FieldType.indiMotherLastName,
         FieldType.wifeLastName , FieldType.wifeMarriedLastName,  FieldType.wifeFatherLastName , FieldType.wifeMotherLastName,
         FieldType.witness1LastName, FieldType.witness2LastName, FieldType.witness3LastName, FieldType.witness4LastName,
-
+    };
+            
+    private static final FieldType firstNameFieldTypes[] = {    
         FieldType.indiFirstName , FieldType.indiMarriedFirstName,  FieldType.indiFatherFirstName , FieldType.indiMotherFirstName,
         FieldType.wifeFirstName , FieldType.wifeMarriedFirstName,  FieldType.wifeFatherFirstName , FieldType.wifeMotherFirstName,
         FieldType.witness1FirstName, FieldType.witness2FirstName, FieldType.witness3FirstName, FieldType.witness4FirstName,
-
-        FieldType.generalComment
-
     } ;
-
+    
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized (this) {
+
+            // recherche avec la meme methode que Utilities.wordsMatch
+            // Utilities.wordsMatch(String text, String resquestPattern) {
+            //  resquestPattern = resquestPattern.replaceAll(" +", ".+");
+            //  return text.matches(".*" + resquestPattern + ".*");
+            //}            
+            //String  pattern = request.getText().toLowerCase().replaceAll(" +", ".+");
+
+            Pattern espacePattern = Pattern.compile(" +");
+            String resquestPattern = espacePattern.matcher(request.getText().toLowerCase()).replaceAll(".+");
+
+            // je cherche dans toutes les instances de ReleveTopComponent
             for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
-                //searchInModel( tc, tc.getDataManager().getReleveBirthModel(), request, response);
-                //searchInModel( tc, tc.getDataManager().getReleveMarriageModel(), request, response);
-                //searchInModel( tc, tc.getDataManager().getReleveDeathModel(), request, response);
-                //searchInModel( tc, tc.getDataManager().getReleveMiscModel(), request, response);
-                searchInModel( tc, tc.getDataManager().getDataModel(), request, response);
+                searchInModel( tc, resquestPattern, response);
             }
         }
     }
 
 
-    private void searchInModel(ReleveTopComponent tc, RecordModel model, SearchRequest request, SearchResponse response ) {
+    private void searchInModel(ReleveTopComponent tc, String resquestPattern, SearchResponse response ) {
+        RecordModel model = tc.getDataManager().getDataModel();
         for (int indexRecord=0; indexRecord < model.getRowCount(); indexRecord++) {
             Record record = model.getRecord(indexRecord);
-
-            for (FieldType fieldType : fieldTypes) {
-                Field field = record.getField(fieldType);
-                if (field != null && !field.isEmpty() ) {
-                    if (field.toString().toLowerCase().contains(request.getText().toLowerCase())) {
-                        String resultDisplay;
-
-                        switch (fieldType) {
-                            case indiFirstName:
-                            case indiLastName:
-                                resultDisplay = record.getIndiLastName().toString()+ " " + record.getIndiFirstName().toString();
-                                break;
-                            case indiMarriedFirstName:
-                            case indiMarriedLastName:
-                                resultDisplay = record.getIndiMarriedLastName().toString()+ " " + record.getIndiMarriedFirstName().toString();
-                                break;
-                            case indiFatherFirstName:
-                            case indiFatherLastName:
-                                resultDisplay = record.getIndiFatherLastName().toString()+ " " + record.getIndiFatherFirstName().toString();
-                                break;
-                            case indiMotherFirstName:
-                            case indiMotherLastName:
-                                resultDisplay = record.getIndiMotherLastName().toString()+ " " + record.getIndiMotherFirstName().toString();
-                                break;
-                            case wifeFirstName:
-                            case wifeLastName:
-                                resultDisplay = record.getWifeLastName().toString()+ " " + record.getWifeFirstName().toString();
-                                break;
-                            case wifeMarriedFirstName:
-                            case wifeMarriedLastName:
-                                resultDisplay = record.getWifeMarriedLastName().toString()+ " " + record.getWifeMarriedFirstName().toString();
-                                break;
-                            case wifeFatherFirstName:
-                            case wifeFatherLastName:
-                                resultDisplay = record.getWifeFatherLastName().toString()+ " " + record.getWifeFatherFirstName().toString();
-                                break;
-                            case wifeMotherFirstName:
-                            case wifeMotherLastName:
-                                resultDisplay = record.getWifeMotherLastName().toString()+ " " + record.getWifeMotherFirstName().toString();
-                                break;
-                            case witness1FirstName:
-                            case witness1LastName:
-                                resultDisplay = record.getWitness1LastName().toString()+ " " + record.getWitness1FirstName().toString();
-                                break;
-                            case witness2FirstName:
-                            case witness2LastName:
-                                resultDisplay = record.getWitness2LastName().toString()+ " " + record.getWitness2FirstName().toString();
-                                break;
-                            case witness3FirstName:
-                            case witness3LastName:
-                                resultDisplay = record.getWitness3LastName().toString()+ " " + record.getWitness3FirstName().toString();
-                                break;
-                            case witness4FirstName:
-                            case witness4LastName:
-                                resultDisplay = record.getWitness4LastName().toString()+ " " + record.getWitness4FirstName().toString();
-                                break;
-                            case generalComment:
-                                String text = field.toString();
-                                int index1 = text.toLowerCase().indexOf(request.getText().toLowerCase());
-                                int index2 = text.indexOf(" ",index1);
-                                int index3 = 0;
-                                if ( index2 != -1) {
-                                    index3 = text.indexOf(" ",index2);
-                                    if ( index3 == -1) {
-                                        index3 = text.length() -1;
-                                    }
-                                } else {
-                                    index3 = text.length() -1;
-                                }
-                                resultDisplay = text.substring(index1, index3)  + " ...";
-                                break;
-                            default:
-                                resultDisplay = field.toString();
-                                break;
-                        }
-
-                        if (!response.addResult(createAction(tc, record,fieldType), tc.getDataManager().getCityName() + " " + resultDisplay + ", relevé du " + record.getEventDateString())) {
+            
+            for (int i =0 ; i < lastNameFieldTypes.length ; i++) {
+                Field lastName  = record.getField(lastNameFieldTypes[i]);
+                Field firstName = record.getField(firstNameFieldTypes[i]);             
+                if (lastName != null && firstName != null ) {
+                    String resultDisplay = lastName.toString() + " " + firstName.toString();
+                                               
+                    if (resultDisplay.toLowerCase().matches(".*" + resquestPattern + ".*") ) {
+                        if (!response.addResult(createAction(tc, record, lastNameFieldTypes[i]), tc.getDataManager().getCityName() + " " + resultDisplay + " , " + EditorBeanGroup.getGroup(record.getType(), lastNameFieldTypes[i]).getTitle() + " , " + record.getEventDateString() )) {
                             return;
                         }
                     }
@@ -145,6 +88,7 @@ public class ReleveQuickSearch implements SearchProvider {
             @Override
             public void run() {
                 //System.out.println("Found record "+ record.getIndiFirstName().toString());
+                tc.requestVisible();
                 tc.showToFront();
                 tc.selectField(record, fieldType);
             }
