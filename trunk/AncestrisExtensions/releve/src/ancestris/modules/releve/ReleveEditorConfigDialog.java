@@ -300,15 +300,14 @@ public class ReleveEditorConfigDialog extends javax.swing.JFrame {
             "Visible",
         };
 
-        final Class columnClass[] = {String.class, Boolean.class};
+        final Class<?> columnClass[] = {String.class, Boolean.class};
 
         HashMap<Integer,ConfigRow> rowList= new HashMap<Integer,ConfigRow>();
 
         ConfigModel(RecordType recordType) {
             // je recupere la liste des valeurs existantes
             int row =0;
-            for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(recordType).iterator(); groupIter.hasNext(); ) {
-                EditorBeanGroup group = groupIter.next();
+            for (EditorBeanGroup group : EditorBeanGroup.getGroups(recordType)) {
                 rowList.put(row++, new ConfigRow(group));
                 for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext(); ) {
                     rowList.put(row++, new ConfigRow(group, fieldIter.next() ));
