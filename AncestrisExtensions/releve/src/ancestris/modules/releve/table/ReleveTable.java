@@ -5,6 +5,7 @@ import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.GedcomLink;
 import ancestris.modules.releve.model.Record;
+import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.util.swing.HeadlessLabel;
@@ -134,8 +135,8 @@ public class ReleveTable extends JTable {
                     GedcomLink gedcomLink = (GedcomLink) getModel().getValueAt(convertRowIndexToModel(row), -1);
                     if (gedcomLink != null) {
                         Property property = gedcomLink.getProperty();
-
-                        if (property != null) {
+                        Entity entity = gedcomLink.getEntity();
+                        if (entity != null) {
                             if (e.getClickCount() == 2) {
                                 ViewWrapperManager.setRootAllTreeview(property);
                             } else {
