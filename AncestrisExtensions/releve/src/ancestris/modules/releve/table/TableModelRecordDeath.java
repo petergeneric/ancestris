@@ -20,7 +20,7 @@ public class TableModelRecordDeath extends TableModelRecordAbstract {
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Place") ,
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Picture")
     };
-    final Class columnClass[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, String.class, String.class, FieldPicture.class};
+    final Class<?> columnClass[] = {Integer.class, String.class, FieldSex.class, FieldDate.class, String.class, String.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor
