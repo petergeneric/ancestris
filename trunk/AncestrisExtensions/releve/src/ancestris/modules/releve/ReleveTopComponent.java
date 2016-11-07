@@ -775,7 +775,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             }
         }
         int choice = JOptionPane.showConfirmDialog(this,
-                NbBundle.getMessage(ReleveTopComponent.class, "message.saveFile", fileName),
+                String.format(NbBundle.getMessage(ReleveTopComponent.class, "message.saveFile"), fileName),
                 title,
                 JOptionPane.YES_NO_CANCEL_OPTION,
                 JOptionPane.QUESTION_MESSAGE
@@ -1369,6 +1369,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
     }
 
+    /**
+     * inverse la visibilite de la vionneuse d'image dans l'editeur standalone
+     * (transmets la commande a l'editeur standalone)
+     */
+    @Override
+    public void toggleBrowserVisible() {
+        if ( standaloneEditor != null) {
+            standaloneEditor.toggleBrowserVisible();
+        }
+    }
+
+    
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

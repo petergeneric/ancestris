@@ -5,6 +5,7 @@ import ancestris.modules.releve.RelevePanel;
 import ancestris.modules.releve.imageBrowser.BrowserOptionsPanel;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Record;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.Toolkit;
@@ -30,8 +31,8 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
     private boolean browserVisible = false;
     private boolean editorVisible = false;
-    private Rectangle standaloneEditorBounds = new Rectangle();
-    private int editorWidth ;
+    //private int editorWidth ;
+    private int browserWidth ;
 
 
     /**
@@ -60,31 +61,48 @@ public class StandaloneEditor extends javax.swing.JFrame {
 
         // je configure la taille de la fenetre
         browserVisible = BrowserOptionsPanel.getImageBrowserVisible();
-        editorWidth = Integer.parseInt(NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorWidth", "300"));
+        int editorWidth = Integer.parseInt(NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorWidth", "300"));
+        browserWidth = Integer.parseInt(NbPreferences.forModule(StandaloneEditor.class).get("StandaloneBrowserWidth", "600"));
         String size = NbPreferences.forModule(StandaloneEditor.class).get("StandaloneEditorSize", "300,450,0,0");
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         String[] dimensions = size.split(",");
         if ( dimensions.length >= 4 ) {
             int width = Integer.parseInt(dimensions[0]);
+            if ( width > screen.width ) {
+                width = screen.width -1;
+            }
+            if (width < 300) {
+                width = 300;
+            }
             int height = Integer.parseInt(dimensions[1]);
-            int x = Integer.parseInt(dimensions[2]);
+            if ( height > screen.height ) {
+                height = screen.height -1;
+            } 
+            if ( height < 450) {
+                height = 450;
+            }
+            int x = Integer.parseInt(dimensions[2]) - width ;
+            if ( x + width > screen.width) {
+                x = screen.width - width;
+            } 
+            if (x < 0 ) {
+                x = (screen.width - width) /2;
+            }
             int y = Integer.parseInt(dimensions[3]);
-            if ( width < 100 ) {
-                width = 100;
+            if ( y + height >  screen.height ) {
+                y = screen.height - height;
             }
-            if ( height < 100 ) {
-                height = 100;
+            if ( height < 0 ) {
+                height = (screen.height -height) / 2 ;
             }
-            if ( x < 10 || x > screen.width -10) {
-                x = (screen.width / 2) - (width / 2);
-            }
-            if ( y < 10 || y > screen.height -10) {
-                y = (screen.height / 2) - (height / 2);
-            }
-            standaloneEditorBounds.setBounds(x, y, width, height);
+            this.setBounds(x, y, width, height);
+            this.validate();
         } else {
-            standaloneEditorBounds.setBounds(screen.width / 2 -100, screen.height / 2- 100, 300, 450);
+            this.setBounds(screen.width / 2 -100, screen.height / 2 - 100, 300, 450);
+            this.validate();
         }
+        jSplitPane1.getRightComponent().setSize(editorWidth, jSplitPane1.getRightComponent().getHeight());
+        jSplitPane1.getLeftComponent().setSize(browserWidth, jSplitPane1.getLeftComponent().getHeight());
 
         // j'applique la taille de la fenetre avant de dimensionner jSplitPane1
         setBounds();
@@ -156,24 +174,16 @@ public class StandaloneEditor extends javax.swing.JFrame {
             setExtendedState(JFrame.NORMAL);
         }
         // j'enregistre la taille dans les preferences
-        String size;
-        if (browserVisible) {
-            editorWidth = jSplitPane1.getWidth() - jSplitPane1.getDividerLocation() - jSplitPane1.getDividerSize();
-            size = String.valueOf(this.getWidth()) + ","
-                    + String.valueOf(this.getHeight()) + ","
-                    + String.valueOf(this.getLocation().x) + ","
-                    + String.valueOf(this.getLocation().y);
-
-        } else {
-            editorWidth = this.getWidth() - jSplitPane1.getDividerSize();
-            size = String.valueOf(standaloneEditorBounds.width) + ","
-                    + String.valueOf(this.getHeight()) + ","
-                    + String.valueOf(this.getLocation().x - standaloneEditorBounds.width + editorWidth) + ","
-                    + String.valueOf(this.getLocation().y);
-        }
+        int editorWidth = jSplitPane1.getRightComponent().getWidth();
+        browserWidth = jSplitPane1.getLeftComponent().getWidth();
+        String size = String.valueOf(this.getWidth()) + ","
+                + String.valueOf(this.getHeight()) + ","
+                + String.valueOf(this.getX() + this.getWidth()) + "," 
+                + String.valueOf(this.getY());
 
         NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorSize", size);
         NbPreferences.forModule(StandaloneEditor.class).put("StandaloneEditorWidth", String.valueOf(editorWidth));
+        NbPreferences.forModule(StandaloneEditor.class).put("StandaloneBrowserWidth", String.valueOf(browserWidth));
 
         browserPanel1.componentClosed();
         
@@ -267,30 +277,41 @@ public class StandaloneEditor extends javax.swing.JFrame {
         browserVisible = visible;
         setBounds();
     }
-
-    private void setBounds() {
-        if( browserVisible) {
-            // j'affiche le browser d'image
-            browserPanel1.setVisible(true);
-            setBounds(standaloneEditorBounds);
-            validate();
-            // je dimensionne le panneau droit de jSplitPane1
-            if (jSplitPane1.getWidth()  > editorWidth ) {
-                jSplitPane1.setDividerLocation(jSplitPane1.getWidth() - editorWidth - jSplitPane1.getDividerSize() );
-            }
-        } else {
-            // je masque le browser
-            browserPanel1.setVisible(false);
-            int x = standaloneEditorBounds.x + (standaloneEditorBounds.width - editorWidth );
-            int y = standaloneEditorBounds.y;
-            int width = editorWidth + jSplitPane1.getDividerSize();
-            int height = standaloneEditorBounds.height;
-            setBounds(x,y, width, height);
-            validate();
-        }
+    
+    public void toggleBrowserVisible() {
+        // j'inverse la visbilité de la visionneuse d'image
+        browserVisible = ! browserVisible ;
+        setBounds();
     }
 
+    private void setBounds() {
+        //if( browserVisible) {
+        if( browserVisible) {
+            int dividerSize = 5;
+            int leftx =this.getX() + this.getWidth();
+            int externalBorderWidth = 2;
+            int width = jSplitPane1.getRightComponent().getWidth() + browserWidth + dividerSize + externalBorderWidth ;
+            int x = leftx - width;
+            // j'affiche le browser d'image
+            jSplitPane1.getLeftComponent().setVisible(true);
+            jSplitPane1.setDividerSize(dividerSize);
+            setBounds(x, this.getY(), width, this.getHeight());
+        } else {
+            browserWidth = jSplitPane1.getLeftComponent().getWidth();
+            int leftx =this.getX() + this.getWidth();
+            int editorWidth = jSplitPane1.getRightComponent().getWidth();
+            int externalBorderWidth = this.getWidth() - this.getContentPane().getWidth() + 2;
+            int width = editorWidth + jSplitPane1.getDividerSize() + externalBorderWidth;
+            int x = leftx - width;
+            // je masque le browser
+            jSplitPane1.getLeftComponent().setVisible(false);
+            jSplitPane1.setDividerSize(0);
+            jSplitPane1.getRightComponent().setSize(editorWidth, jSplitPane1.getRightComponent().getHeight());
+            setBounds(x, this.getY(), width, this.getHeight());
+        }
+    }
     
+   
 
     /** This method is called from within the constructor to
      * initialize the form.

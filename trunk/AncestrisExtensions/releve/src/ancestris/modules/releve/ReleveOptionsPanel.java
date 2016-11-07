@@ -38,14 +38,16 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
 
         // je charge les sources
         Collection< ? extends ReleveTopComponent> tcList = AncestrisPlugin.lookupAll(ReleveTopComponent.class);
-
+        
         if ( tcList.size() > 0 ) {
             // je recupere le premier  ReleveTopComponent           
             ReleveTopComponent currentTc = tcList.iterator().next();
             mergeOptionPanel.initData(null, currentTc.getCurrentFile());
+        } else {
+            mergeOptionPanel.initData(null, null);
         }
         
-        browserOptionsPanel1.loadPreferences();
+        browserOptionsPanel.loadPreferences();
 
     }
 
@@ -79,7 +81,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         }
 
         mergeOptionPanel.savePreferences();
-        browserOptionsPanel1.savePreferences();
+        browserOptionsPanel.savePreferences();
 
     }
     
@@ -109,16 +111,20 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonOccupationCompletion = new javax.swing.JButton();
         jButtonConfigEditor = new javax.swing.JButton();
         jLabelFiller = new javax.swing.JLabel();
+        browserOptionsPanel = new ancestris.modules.releve.imageBrowser.BrowserOptionsPanel();
         mergeOptionPanel = new ancestris.modules.releve.dnd.MergeOptionPanel();
-        browserOptionsPanel1 = new ancestris.modules.releve.imageBrowser.BrowserOptionsPanel();
-        fillerPanelVertical = new javax.swing.JPanel();
+        jLabelFiller1 = new javax.swing.JLabel();
 
         setForeground(new java.awt.Color(200, 45, 45));
         setFocusTraversalPolicyProvider(true);
         setLayout(new java.awt.BorderLayout());
 
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(415, 1000));
+
         jPanel2.setForeground(new java.awt.Color(200, 45, 45));
         jPanel2.setFocusTraversalPolicyProvider(true);
+        jPanel2.setMinimumSize(new java.awt.Dimension(400, 1200));
+        jPanel2.setPreferredSize(new java.awt.Dimension(413, 990));
         jPanel2.setLayout(new java.awt.GridBagLayout());
 
         jPanelEditor.setBorder(javax.swing.BorderFactory.createTitledBorder(null, org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jPanelEditor.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
@@ -232,35 +238,27 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
+        gridBagConstraints.weightx = 1.0;
         jPanel2.add(jPanelEditor, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
+        jPanel2.add(browserOptionsPanel, gridBagConstraints);
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         jPanel2.add(mergeOptionPanel, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        jPanel2.add(browserOptionsPanel1, gridBagConstraints);
-
-        fillerPanelVertical.setEnabled(false);
-        fillerPanelVertical.setFocusable(false);
-        fillerPanelVertical.setRequestFocusEnabled(false);
-        fillerPanelVertical.setVerifyInputWhenFocusTarget(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
-        gridBagConstraints.gridheight = java.awt.GridBagConstraints.REMAINDER;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        jPanel2.add(fillerPanelVertical, gridBagConstraints);
-        fillerPanelVertical.getAccessibleContext().setAccessibleName(""); // NOI18N
+        jPanel2.add(jLabelFiller1, gridBagConstraints);
 
         jScrollPane1.setViewportView(jPanel2);
 
@@ -297,8 +295,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     }//GEN-LAST:event_jButtonOccupationCompletionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.releve.imageBrowser.BrowserOptionsPanel browserOptionsPanel1;
-    private javax.swing.JPanel fillerPanelVertical;
+    private ancestris.modules.releve.imageBrowser.BrowserOptionsPanel browserOptionsPanel;
     private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;
     private javax.swing.JButton jButtonLastNameCompletion;
@@ -311,6 +308,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JCheckBox jCheckBoxGedcomCompletion;
     private javax.swing.JCheckBox jCheckBoxNewValueControl;
     private javax.swing.JLabel jLabelFiller;
+    private javax.swing.JLabel jLabelFiller1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanelEditor;
     private javax.swing.JPanel jPanelExludeCompletion;
