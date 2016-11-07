@@ -79,7 +79,8 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonPrevious.setVisible(false);
         jTextFielRecordNo.setVisible(false);
         jButtonNext.setVisible(false);
-
+        jButtonBrowser.setVisible(false);
+        
         jButtonDelete.setEnabled(false);
 
         // je crée les raccourcis pour créer les nouveaux relevés
@@ -375,11 +376,14 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonFile.setVisible(false);
         jButtonPrevious.setVisible(true);
         jButtonNext.setVisible(true);
+        jButtonBrowser.setVisible(true);
+        jButtonStandalone.setVisible(false);
         jTextFielRecordNo.setVisible(true);
         standaloneMode = true;
 
         // je masque la table
         tablePanel.setVisible(false);
+        jSplitPane1.setDividerSize(0);
     }
  
 
@@ -406,6 +410,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         jButtonPrevious = new javax.swing.JButton();
         jTextFielRecordNo = new javax.swing.JTextField();
         jButtonNext = new javax.swing.JButton();
+        jButtonBrowser = new javax.swing.JButton();
         jButtonStandalone = new javax.swing.JButton();
         releveEditor = new ancestris.modules.releve.editor.ReleveEditor();
 
@@ -497,6 +502,16 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         });
         editorBar.add(jButtonNext);
 
+        jButtonBrowser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Camera.png"))); // NOI18N
+        jButtonBrowser.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonBrowser.toolTipText")); // NOI18N
+        jButtonBrowser.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonBrowser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonBrowserActionPerformed(evt);
+            }
+        });
+        editorBar.add(jButtonBrowser);
+
         jButtonStandalone.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/editor.png"))); // NOI18N
         jButtonStandalone.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonStandalone.toolTipText")); // NOI18N
         jButtonStandalone.setMargin(new java.awt.Insets(2, 4, 2, 4));
@@ -582,10 +597,18 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         }
 }//GEN-LAST:event_jButtonStandaloneActionPerformed
 
+    private void jButtonBrowserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowserActionPerformed
+        if ( standaloneMode == true ) {
+            // j'inverse la vibilite de la visionneuse d'image 
+            menuCommandProvider.toggleBrowserVisible();
+        } 
+    }//GEN-LAST:event_jButtonBrowserActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel editorBar;
     private javax.swing.JPanel editorPanel;
+    private javax.swing.JButton jButtonBrowser;
     private javax.swing.JButton jButtonConfig;
     private javax.swing.JButton jButtonDelete;
     private javax.swing.JButton jButtonFile;
@@ -713,6 +736,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         } 
     }
 
+    @Override
     public void swapRecordNext() {
         dataManager.swapRecordNext(dataManager.getRecord(currentRecordIndex));
         releveTable.selectRecord(currentRecordIndex+1);        
