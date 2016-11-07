@@ -116,12 +116,16 @@ public class BrowserPanel extends javax.swing.JPanel {
                 return name.endsWith(".jpg") || name.endsWith(".jpeg") || name.endsWith(".png") || name.endsWith(".gif");
             }
         });
-        String[] fileNames = new String[files.length];
-        for (int i = 0; i < files.length; i++) {
-            fileNames[i] = files[i].getName();
+        if( files != null ) {
+            String[] fileNames = new String[files.length];
+            for (int i = 0; i < files.length; i++) {
+                fileNames[i] = files[i].getName();
+            }
+            Arrays.sort(fileNames, String.CASE_INSENSITIVE_ORDER);
+            listFiles.setListData(fileNames);
+        } else {
+            System.err.println("BrowserPanel.populateImageList folder.listFiles=null for  folder="+folder.getAbsolutePath());            
         }
-        Arrays.sort(fileNames, String.CASE_INSENSITIVE_ORDER);
-        listFiles.setListData(fileNames);
     }
 
     private void showImage(String fileName, boolean forceRefesh) {
@@ -201,7 +205,7 @@ public class BrowserPanel extends javax.swing.JPanel {
             }
         }
         // j'extrait le numéro
-        int pageNum = parsePage(page);
+        int pageNum = parsePageInFreeComment(page);
 
         DirectoryCityFilter cityFilter = new DirectoryCityFilter(city);
         DirectoryCoteFilter coteFilter = new DirectoryCoteFilter(cote);
@@ -473,11 +477,11 @@ public class BrowserPanel extends javax.swing.JPanel {
                         name = name.substring(0, dotIndex);
                     }
 
-                    int page = parsePage(name);
+                    int page = parsePageInFileName(name);
                     if (page != pageNumber) {
                         int lastSeparatorPos = name.lastIndexOf('-');
                         if (lastSeparatorPos != -1) {
-                            page = parsePage(name.substring(0, lastSeparatorPos));
+                            page = parsePageInFileName(name.substring(0, lastSeparatorPos));
                         }
                     }
                     if (page != pageNumber) {
@@ -485,7 +489,7 @@ public class BrowserPanel extends javax.swing.JPanel {
                         if (firstSeparatorPos != -1) {
                             int secondSeparatorPos = name.indexOf('-',firstSeparatorPos+1);
                             if (secondSeparatorPos != -1) {
-                                page = parsePage(name.substring(firstSeparatorPos+1, secondSeparatorPos));
+                                page = parsePageInFileName(name.substring(firstSeparatorPos+1, secondSeparatorPos));
                             }
                         }
                     }
@@ -501,7 +505,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         }
     }
 
-    static private int parsePage(String freeComment) {
+    static private int parsePageInFreeComment(String freeComment) {
         int i;
         int page = -1;
         // Je recherche  le dernier chiffre en partant de la droite
@@ -512,6 +516,24 @@ public class BrowserPanel extends javax.swing.JPanel {
         if (i < freeComment.length()) {
             try {
                 page = new Integer(freeComment.substring(i, freeComment.length())).intValue();
+            } catch (NumberFormatException ex) {
+                page = -1;
+            }
+        }
+        return page;
+    }
+    
+    static private int parsePageInFileName(String name) {
+        int i;
+        int page = -1;
+        // Je recherche  le dernier chiffre en partant de la droite
+        for (i = name.length() - 1; i >= 0 && name.charAt(i) >= '0' && name.charAt(i) <= '9'; i--) {
+        }
+        i++;
+        // je cree le format pour préserver les zeros à gauche
+        if (i < name.length()) {
+            try {
+                page = new Integer(name.substring(i, name.length())).intValue();
             } catch (NumberFormatException ex) {
                 page = -1;
             }
