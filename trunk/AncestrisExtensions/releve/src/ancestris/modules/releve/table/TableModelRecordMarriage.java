@@ -20,7 +20,7 @@ public class TableModelRecordMarriage extends TableModelRecordAbstract {
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Wife"),
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Picture")
     };
-    final Class columnType[] = {Integer.class, FieldDate.class, String.class, String.class, FieldPicture.class};
+    final Class<?> columnType[] = {Integer.class, FieldDate.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor

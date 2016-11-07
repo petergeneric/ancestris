@@ -23,7 +23,7 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Participant2"),
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Picture")
     };
-    final Class columnType[] = {Integer.class, PropertyDate.class, String.class, String.class, String.class, FieldPicture.class};
+    final Class<?> columnType[] = {Integer.class, PropertyDate.class, String.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor
