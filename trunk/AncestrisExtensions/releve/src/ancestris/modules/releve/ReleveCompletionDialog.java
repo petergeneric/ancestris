@@ -334,11 +334,10 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         ArrayList<String> valueList = new ArrayList<String>();
         String itemColumnTitle;
         String includedColumnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.inludeColumnTitle");
-
+        final Class<?> columnClass[]= {Boolean.class, String.class};
+        
         public void setColumnTitle(String columnName) {
-
             this.itemColumnTitle = columnName;
-
         }
 
         public void add(String value, boolean include) {
@@ -351,7 +350,6 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
             includeList.remove(row);
         }
 
-        final Class columnClass[] = {Boolean.class, String.class};
         
         @Override
         public int getColumnCount() {
