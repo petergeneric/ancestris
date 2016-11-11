@@ -124,6 +124,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             return;
         }
 
+        // Adjust context
+        newContext = adjustContext(newContext);
+        
         // Redisplay and Quit if same entity, different context, and if editor already exists
         if (this.context != null && !newContext.equals(this.context) &&  newContext.getEntity().equals(this.context.getEntity()) && editor != null) {
             this.context = newContext;
@@ -151,11 +154,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             confirmPanel.setChanged(false);
         }
         
-        // Adjust context
-        newContext = adjustContext(newContext);
-        
         // Reset editor if not suitable for new context
         if (editor != null && (!editor.getContext().getEntity().getTag().equals(newContext.getEntity().getTag()))) {
+            editor.getExplorerHelper().setPopupAllowed(false);
             editor.removeChangeListener(confirmPanel);
             editor = null;
         }
@@ -228,6 +229,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         panel.add(editorContainer, BorderLayout.CENTER);        
         panel.add(confirmPanel, BorderLayout.PAGE_END);        
         setPanel(panel);
+        editor.getExplorerHelper().setPopupAllowed(true);
         
         return true;
     }

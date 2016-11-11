@@ -356,6 +356,10 @@ public class SourceWrapper {
     }
 
     
+    public Property getHostingProperty() {
+        return this.hostingProperty;
+    }
+
     
     
     private void resetMediaSet() {
