@@ -61,13 +61,13 @@ import org.openide.util.NbBundle;
     "# {0} - Gedcom",
     "report.runon.gedcom=Run report on Gedcom ''{0}''",
 })
-public class ReportPlugin{
+public class ReportPlugin {
 
     private final static Resources RESOURCES = Resources.get(ReportPlugin.class);
     private final static int MAX_HISTORY = 5;
     private boolean showReportPickerOnOpen = true;
     //XXX: maybe we could put this value in a more gloally scope
-    private static final int POSITION = 2000;
+    public static final int POSITION = 2000;
 
     public ReportPlugin() {
         AncestrisPlugin.register(this);
@@ -207,7 +207,7 @@ public static class EntitiesReportSubMenu extends SubMenuAction {
             addActions(getReportActions(entities, ctx.getGedcom()));
         } else if (entities.size() == 1) {
             Entity entity = entities.iterator().next();
-            setText(report_runon(Gedcom.getName(entity.getTag(), false), entity.getId()));
+            setText(report_runon("", entity.toString(true)));
             setImage(entity.getImage());
             setImage(ReportViewFactory.IMG);
             addActions(getReportActions(entity, entity.getGedcom()));
