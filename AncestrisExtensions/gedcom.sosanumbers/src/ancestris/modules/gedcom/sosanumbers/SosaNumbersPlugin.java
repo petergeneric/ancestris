@@ -23,9 +23,9 @@ import org.openide.util.lookup.ServiceProvider;
  * @author daniel
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-public class SosaNumbersPlugin extends AncestrisPlugin implements GedcomFileListener {
+public class SosaNumbersPlugin extends AncestrisPlugin implements Constants, GedcomFileListener {
 
-    SosaNumbers sosaNumbers = null;
+    private SosaNumbersGenerator sosaNumbers = null; // fixme : one generator per gedcom : use a map
 
     @Override
     public void commitRequested(Context context) {
@@ -33,22 +33,20 @@ public class SosaNumbersPlugin extends AncestrisPlugin implements GedcomFileList
 
     @Override
     public void gedcomClosed(Gedcom gedcom) {
-        if (sosaNumbers != null) {
-//        gedcom.removeGedcomListener(sosaNumbers);
-        }
+        sosaNumbers = null;
     }
 
     @Override
     public void gedcomOpened(Gedcom gedcom) {
-        String selectedEntityID = gedcom.getRegistry().get("INDI.decujus.id", "");
+        String selectedEntityID = gedcom.getRegistry().get(DECUJUSID, "");
         Indi indiDeCujus = null;
         if (!selectedEntityID.isEmpty()) {
             indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
         }
-        if (indiDeCujus != null) {
-            sosaNumbers = new SosaNumbers();
-            sosaNumbers.generateSosaNbs(gedcom, indiDeCujus);
-//          gedcom.addGedcomListener(sosaNumbers);
+        Boolean saved = gedcom.getRegistry().get(SAVE, true);
+        if (indiDeCujus != null && !saved) {
+            sosaNumbers = new SosaNumbersGenerator();
+            sosaNumbers.run(gedcom, indiDeCujus);
         }
     }
 }

@@ -13,12 +13,8 @@ package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.util.swing.DialogManager;
-import ancestris.util.swing.SelectEntityPanel;
 import genj.gedcom.Context;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.util.Registry;
 import java.awt.event.ActionEvent;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -26,7 +22,6 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
-import static ancestris.modules.gedcom.sosanumbers.Bundle.*;
 
 @ActionID(id = "ancestris.modules.gedcom.sosanumbers.GenerateSosaAction", category = "Tools")
 @ActionRegistration(
@@ -34,8 +29,7 @@ import static ancestris.modules.gedcom.sosanumbers.Bundle.*;
         iconInMenu = true,
         lazy = false)
 @ActionReference(path = "Menu/Tools/Gedcom", name = "GenerateSosaAction", position = 300)
-@NbBundle.Messages("ok.label=Generate SOSA Numbering")
-public final class GenerateSosaAction extends AbstractAncestrisContextAction {
+public final class GenerateSosaAction extends AbstractAncestrisContextAction implements Constants {
 
     public GenerateSosaAction() {
         super();
@@ -49,50 +43,39 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction {
         super.contextChanged();
     }
 
-    Gedcom myGedcom = null;
-
+    /**
+     * Performs action from menu
+     * @param event 
+     */
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
-        Context contextToOpen = getContext();
-
-        if (contextToOpen != null) {
-            myGedcom = contextToOpen.getGedcom();
-            Registry registry = myGedcom.getRegistry();
-
-            SelectEntityPanel selectEntityPanel = new SelectEntityPanel(myGedcom, Gedcom.INDI);
-
-            String selectedEntityID = registry.get("INDI.decujus.id", "");
-            if (!selectedEntityID.isEmpty()) {
-                Entity selectedEntity = myGedcom.getEntity(selectedEntityID);
-                if (selectedEntity != null) {
-                    selectEntityPanel.setSelection(selectedEntity);
-                }
-            }
-
-            String clearChoice = NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.clear");
-            String okText = ok_label();
-            Object choice = DialogManager.create(
-                    NbBundle.getMessage(this.getClass(), "GenerateSosaAction.AskDeCujus"),
-                    selectEntityPanel)
-                    .setMessageType(DialogManager.QUESTION_MESSAGE)
-                    .setOptions(new Object[]{okText, DialogManager.CANCEL_OPTION})
-                    .setAdditionalOptions(new Object[]{clearChoice})
-                    .show();
-
-            if (choice != DialogManager.CANCEL_OPTION) {
-                Indi indiDeCujus = null;
-                if (choice == okText) {
-                    indiDeCujus = (Indi) selectEntityPanel.getSelection();
-                }
-                // else null means clear sosa
-                new SosaNumbers().generateSosaNbs(myGedcom, indiDeCujus);
-                if (indiDeCujus == null) {
-                    registry.remove("INDI.decujus.id");
-                } else {
-                    registry.put("INDI.decujus.id", indiDeCujus.getId());
-                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.done", indiDeCujus.getName()), NotifyDescriptor.INFORMATION_MESSAGE));
-                }
-            }
+        runSosaAction(getContext());
+    }
+    
+    public static boolean runSosaAction(Context context) {
+        // Return if no context
+        if (context == null) {
+            return false;
         }
+        
+        // Ask user to choose numbering preferences
+        SosaPanel sosaPanel = new SosaPanel(context);
+        Object choice = DialogManager.create(NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.AskDeCujus"), sosaPanel)
+                .setMessageType(DialogManager.PLAIN_MESSAGE)
+                .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .show();
+
+        // Return if cancelled
+        if (choice == DialogManager.CANCEL_OPTION) {
+            return false;
+        }
+        
+        // Perform selected action
+        Indi indiDeCujus = null;
+        indiDeCujus = (Indi) sosaPanel.getSelection();
+        sosaPanel.savePreferences();
+        int changes = new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus);
+        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sosaPanel.getResultMessage(changes), NotifyDescriptor.INFORMATION_MESSAGE));
+        return true;
     }
 }
