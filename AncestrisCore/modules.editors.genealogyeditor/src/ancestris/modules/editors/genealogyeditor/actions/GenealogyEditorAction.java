@@ -42,7 +42,8 @@ public class GenealogyEditorAction extends AncestrisEditor {
                 || property instanceof Media
                 || property instanceof Source
                 || property instanceof Submitter
-                || property instanceof Repository);
+                || property instanceof Repository
+                || property != null);
     }
 
     @Override
