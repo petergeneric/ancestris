@@ -86,6 +86,9 @@ public class PropertyNode extends AbstractNode {
 
         return myActions.toArray(new Action[myActions.size()]);
     }
+    
+    
+    
     private static class PropertyChildren extends Children.Keys{
         private Context context;
 

@@ -40,24 +40,26 @@ public abstract class Editor extends JPanel {
     protected List<Action> actions = new ArrayList<Action>();
     private String title = null;
     private ExplorerHelper helper;
-
+ 
     /**
      * Accessor - current
+     * @return 
      */
     public abstract ViewContext getContext();
 
     public abstract Component getEditorComponent();
 
     public abstract Entity getEditedEntity();
-
+    
     //FIXME: we should specify what explorerHelper is in detail and this method too
-    public ExplorerHelper getExplorerHelper(){
+    public ExplorerHelper getExplorerHelper() {
         if (helper == null)
             helper = new ExplorerHelper(getEditorComponent());
         return helper;
     }
 
     public void setContext(Context context) {
+        getExplorerHelper();
         if (context == null) {
             return;
         }
