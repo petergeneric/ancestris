@@ -50,6 +50,11 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
         GedcomHistory gedcomHistory = gedcomHistoryMap.get(context.getGedcom());
 
         if (gedcomHistory != null && gedcomHistory.getHistoryList().isEmpty() == false) {
+            int size = gedcomHistory.getHistoryList().size();
+            int maxSize = 10000;
+            if (size > maxSize) { // truncate to last maxSize changes
+                gedcomHistory.getHistoryList().subList(0, size-maxSize).clear();
+            }
             log.log(Level.INFO, "saving history File {0}", historyFile.getAbsoluteFile());
             try {
                 // create JAXB context and instantiate marshaller
@@ -102,7 +107,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
                     Unmarshaller um = context.createUnmarshaller();
                     GedcomHistory gedcomHistory;
                     try {
-                        gedcomHistory = (GedcomHistory) um.unmarshal(new FileReader(historyFile));
+                        gedcomHistory = (GedcomHistory) um.unmarshal(new FileReader(historyFile));  // This could take a very long time if cache is big !
                         gedcomHistoryMap.put(gedcom, gedcomHistory);
                         gedcom.addGedcomListener(gedcomHistoryMap.get(gedcom));
                     } catch (FileNotFoundException ex) {
