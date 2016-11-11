@@ -156,6 +156,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         if (editor != null) {
             editor.removeChangeListener(confirmPanel);
             editor.setContext(new Context());
+            editor.getExplorerHelper().setPopupAllowed(false);
             editor = null;
         }
 
@@ -166,7 +167,8 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
                 editor.setContext(old);
             }
             editorContainer.setViewportView(editor);
-            titleLabel.setText(editor.getTitle());
+            titleLabel.setText("  " + editor.getTitle());
+            editor.getExplorerHelper().setPopupAllowed(true);
             editor.addChangeListener(confirmPanel);
         }
 

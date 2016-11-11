@@ -268,7 +268,7 @@ public final class IndividualEditor extends EntityEditor {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(SOSALabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(SOSATextField, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(SOSATextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(individualIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -768,7 +768,16 @@ public final class IndividualEditor extends EntityEditor {
             /*
              * SOSA number if exists
              */
-            Property SOSANumber = mIndividual.getProperty("_SOSA", true);
+            String tag = "";
+            if (mIndividual.getProperty("_SOSADABOVILLE") != null) {
+                tag = "_SOSADABOVILLE";
+            } else if (mIndividual.getProperty("_SOSA") != null) {
+                tag = "_SOSA";
+            } else if (mIndividual.getProperty("_DABOVILLE") != null) {
+                tag = "_DABOVILLE";
+            }
+            Property SOSANumber = mIndividual.getProperty(tag, true);
+            
             if (SOSANumber != null) {
                 SOSALabel.setVisible(true);
                 SOSATextField.setVisible(true);
