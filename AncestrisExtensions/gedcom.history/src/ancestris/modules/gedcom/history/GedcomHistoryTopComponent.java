@@ -18,11 +18,13 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.core.pluginservice.PluginInterface;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.event.ChangeEvent;
@@ -61,7 +63,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                 return;
             }
 
-            String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.getSelectedRow(), GedcomHistoryTableModel.ENTITY_ID);
+            String currentId = (String) historyTableModel.getValueAt(gedcomHistoryTable.convertRowIndexToModel(gedcomHistoryTable.getSelectedRow()), GedcomHistoryTableModel.ENTITY_ID);
 
             if (currentId != null && getGedcom() != null) {
                 Entity entity = getGedcom().getEntity(currentId);
@@ -73,7 +75,15 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     }
 
     public GedcomHistoryTopComponent() {
+
         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+        if (context == null) {
+            List<Context> gedcontexts = GedcomDirectory.getDefault().getContexts();
+            if (gedcontexts.isEmpty()) {
+                return;
+            }
+            context = gedcontexts.get(0);
+        }
         if (context != null) {
             String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
             for (PluginInterface pluginInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
