@@ -53,7 +53,8 @@ public class EditorAction extends AncestrisEditor {
                 || property instanceof Media
                 || property instanceof Source
                 || property instanceof Repository
-                || property instanceof Submitter);
+                || property instanceof Submitter
+                || property != null);
     }
 
     @Override

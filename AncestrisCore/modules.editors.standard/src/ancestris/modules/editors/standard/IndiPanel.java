@@ -60,6 +60,7 @@ import genj.gedcom.PropertyName;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
+import genj.gedcom.TagPath;
 import genj.util.ChangeSupport;
 import genj.util.Registry;
 import genj.util.Validator;
@@ -152,7 +153,9 @@ public class IndiPanel extends Editor implements DocumentListener {
     private DefaultMutableTreeNode familyTop = null;
     private Registry registry = null;
 
-    private String SOSA_TAG = "_SOSA";                                                              // FIXME : use existing parameter
+    private String SOSA_TAG = "_SOSA";
+    private String SOSADABOVILLE_TAG = "_SOSADABOVILLE";
+    private String DABOVILLE_TAG = "_DABOVILLE";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
     
     private static Map<String, EventUsage> eventUsages = null;
@@ -204,7 +207,7 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Creates new form IndiPanel
      */
     public IndiPanel() {
-
+        
         // Fixed variables
         try {
             this.PHOTO_MALE = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_male.png"));
@@ -2115,9 +2118,9 @@ public class IndiPanel extends Editor implements DocumentListener {
 
     @Override
     public Component getEditorComponent() {
-        return this;
+        return this; 
     }
-
+    
     @Override
     public ViewContext getContext() {
         Property prop = getCurrentEvent().eventProperty;
@@ -2213,7 +2216,7 @@ public class IndiPanel extends Editor implements DocumentListener {
      * - if context is an event, select if
      * @param context 
      */
-    private void selectPropertyContext(Context context) {
+     private void selectPropertyContext(Context context) {
         // Select event selected when last saved (it if not necessarily a property in case it is being created for instance)
         if (!savedEventTagDateDesc.equals("-1") && eventSet != null) {
             selectEvent(savedEventTagDateDesc);                     savedEventTagDateDesc = "-1";
@@ -2227,18 +2230,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Else select property if any (coming from fire Selection)
         Property propertyToDisplay = context.getProperty();
         if (propertyToDisplay != null && eventSet != null) {
-            Property ent = propertyToDisplay.getEntity();
-            while (propertyToDisplay != ent) {
+            Property loopProp = propertyToDisplay;
+            while (loopProp != null) {
                 for (EventWrapper event : eventSet) {
-                    if (event.eventProperty.equals(propertyToDisplay)) {
+                    if (event.eventProperty.equals(loopProp)) {
                         int index = eventSet.indexOf(event);
                         if (index != -1) {
                             selectEvent(getRowFromIndex(index));
+                            scrollToProperty(event, propertyToDisplay);
                             return;
                         }
                     }
                 } // end for
-                propertyToDisplay = propertyToDisplay.getParent();
+                loopProp = loopProp.getParent();
             }
         }
 
@@ -2281,6 +2285,83 @@ public class IndiPanel extends Editor implements DocumentListener {
         return -1;
     }
     
+    
+    private void scrollToProperty(EventWrapper event, Property property) {
+        Property parent = property.getParent();
+        if (parent == null) {
+            return;
+        }
+        TagPath tagPathRoot = TagPath.get(event.eventProperty);
+        TagPath tagPath = TagPath.get(property);
+        if (tagPathRoot.length() > (tagPath.length()-1)) {
+            return;
+        }
+        boolean isSource = tagPath.get(tagPathRoot.length()).equals("SOUR");
+        
+        // If media in individual panel
+        if (!isSource && tagPath.contains("OBJE")) {
+            for (MediaWrapper mw : event.eventMediaSet) {
+                if (belongsTo(mw.getHostingProperty(), property)) {
+                    event.eventMediaIndex = event.eventMediaSet.indexOf(mw);
+                    displayEventMedia(event);
+                    return;
+                }
+            }
+            return;
+        } 
+        
+        // If note in note panel
+        if (!isSource && tagPath.contains("NOTE")) {
+            for (NoteWrapper nw : event.eventNoteSet) {
+                if (belongsTo(nw.getHostingProperty(), property)) {
+                    event.eventNoteIndex = event.eventNoteSet.indexOf(nw);
+                    displayEventNote(event);
+                    return;
+                }
+            }
+            return;
+        } 
+        
+        // If source in source panel
+        if (isSource && !tagPath.contains("OBJE")) {
+            for (SourceWrapper sw : event.eventSourceSet) {
+                if (belongsTo(sw.getHostingProperty(), property)) {
+                    event.eventSourceIndex = event.eventSourceSet.indexOf(sw);
+                    displayEventSource(event);
+                    return;
+                }
+            }
+            return;
+        } 
+        
+        // If media in source panel
+        if (isSource && tagPath.contains("OBJE")) {
+            for (SourceWrapper sw : event.eventSourceSet) {
+                if (belongsTo(sw.getHostingProperty(), parent)) {
+                    event.eventSourceIndex = event.eventSourceSet.indexOf(sw);
+                    for (MediaWrapper mw : sw.sourceMediaSet) {
+                        if (belongsTo(mw.getHostingProperty(), property)) {
+                            sw.sourceMediaIndex = sw.sourceMediaSet.indexOf(mw);
+                        }
+                    }
+                    displayEventSource(event);
+                    return;
+                }
+            }
+            return;
+        } 
+        
+    }
+    
+    private boolean belongsTo(Property host, Property child) {
+        while (child != null) {
+            if (child == host) {
+                return true;
+            }
+            child = child.getParent();
+        }
+        return false;
+    }
     
     @Override
     public void commit() throws GedcomException {
@@ -2340,7 +2421,13 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
-        str = indi.getPropertyDisplayValue(SOSA_TAG); // TODO : prévoir sosa daboville en référence utilisateur
+        if (indi.getProperty(SOSADABOVILLE_TAG) != null) {
+            str = indi.getPropertyDisplayValue(SOSADABOVILLE_TAG);
+        } else if (indi.getProperty(SOSA_TAG) != null) {
+            str = indi.getPropertyDisplayValue(SOSA_TAG);
+        } else if (indi.getProperty(DABOVILLE_TAG) != null) {
+            str = indi.getPropertyDisplayValue(DABOVILLE_TAG);
+        } 
         if (str == null || str.isEmpty()) {
             str = NO_SOSA;
         }
@@ -4094,6 +4181,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             triggerChange();
         }
     }
+
 
 
 
