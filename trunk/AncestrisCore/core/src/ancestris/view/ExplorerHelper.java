@@ -68,29 +68,28 @@ public class ExplorerHelper {
      * code>true</code> to enable
      */
     public void setPopupAllowed(boolean value) {
-        if (popupListener == null && value) {
-            // on
+        if (popupListener == null) {
             popupListener = new PopupAdapter();
-            addPopupListener(popupListener);
-            return;
         }
-        if (popupListener != null && !value) {
+        if (value) {
+            // on
+            addPopupListener(popupListener);
+        } else {
             // off
             removePopupListener(popupListener);
             popupListener = null;
         }
     }
 
-    public void addPopupListener(MouseListener popupListener) {
+    public void addPopupListener(MouseListener pl) {
         if (manager == null) {
             manager = lookupExplorerManager(source);
         }
-
-        source.addMouseListener(popupListener);
+        source.addMouseListener(pl);
     }
 
-    public void removePopupListener(MouseListener popupListener) {
-        source.removeMouseListener(popupListener);
+    public void removePopupListener(MouseListener pl) {
+        source.removeMouseListener(pl);
     }
 
     private ExplorerManager lookupExplorerManager(Component source) {
@@ -98,49 +97,53 @@ public class ExplorerHelper {
         return newManager;
     }
 
-    private void createPopup(Point p, JPopupMenu popup) {
-        if (popup.getSubElements().length > 0) {
-            popup.show(source, p.x, p.y);
+    protected void createPopup(Component clickedComponent, Point p, Node[] selNodes) {
+        if (!isPopupAllowed()) {
+            return;
         }
-    }
+        
+        // Our list of actions
+        List<Action> actions = new ArrayList<Action>();
 
-    void createPopup(Component source, Point p) {
-        if (isPopupAllowed()) {
-            Node[] selNodes = manager.getSelectedNodes();
-            // gets actions from first ActionProvider in parent hierarchy from source
-            List<AncestrisActionProvider> providers = AncestrisActionProvider.Lookup.lookupAll(source);
+        // Get actions from ActionProviders in parent hierarchy from source
+        List<AncestrisActionProvider> providers = AncestrisActionProvider.Lookup.lookupAll(clickedComponent);
+        for (AncestrisActionProvider provider : providers) {
+            actions.addAll(provider.getActions(true, selNodes));
+            actions.add(null); // add separator
+        }
+        
+        // Get actions from selected context
+        if (selNodes.length > 0) {
+            actions.addAll(Arrays.asList(NodeOp.findActions(selNodes)));
+        }
 
-            List<Action> actions = new ArrayList<Action>();
-            for (AncestrisActionProvider provider : providers) {
-                actions.addAll(provider.getActions(true, selNodes));
-                actions.add(null);
-            }
-            if (selNodes.length > 0) {
-                actions.addAll(Arrays.asList(NodeOp.findActions(selNodes)));
-            }
-
-            List<Action> aactions = new ArrayList<Action>();
-            for (AncestrisActionProvider aap : Lookup.getDefault().lookupAll(AncestrisActionProvider.class)) {
-                aactions.addAll(aap.getActions(false, selNodes));
-            }
-            actions.addAll(aactions);
-            if (actions.size() > 0) {
-                String title = getTitleFromNodes(selNodes);
-                if (title != null) {
-                    Action menuTitle;
-                    if (title.length()>32){
-                        menuTitle =  CommonActions.createSeparatorAction(title.substring(0, 28)+"...");
-                        menuTitle.putValue(Action.SHORT_DESCRIPTION, title);
-                    } else {
-                        menuTitle =  CommonActions.createSeparatorAction(title);
-                    }
-                    
-                    
-                    actions.add(0, menuTitle);
-                    actions.add(1, null);
+        // Get actions from any action providers in lookups
+        List<Action> aactions = new ArrayList<Action>();
+        for (AncestrisActionProvider aap : Lookup.getDefault().lookupAll(AncestrisActionProvider.class)) {
+            aactions.addAll(aap.getActions(false, selNodes));
+        }
+        actions.addAll(aactions);
+        
+        // If actions exist and title is not null, insert title at the top and display popup
+        if (actions.size() > 0) {
+            String title = getTitleFromNodes(selNodes);
+            if (title != null) {
+                Action menuTitle;
+                if (title.length() > 40) {
+                    menuTitle = CommonActions.createSeparatorAction(title.substring(0, 36) + "...");
+                    menuTitle.putValue(Action.SHORT_DESCRIPTION, title);
+                } else {
+                    menuTitle = CommonActions.createSeparatorAction(title);
                 }
-                JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), source);
-                createPopup(p, popup);
+
+                actions.add(0, menuTitle);
+                actions.add(1, null);  // add separator
+            }
+
+            // Builds actions with currently selected context (regardless of nodes)
+            JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), clickedComponent);
+            if (popup.getSubElements().length > 0) {
+                popup.show(source, p.x, p.y);
             }
         }
     }
@@ -154,7 +157,6 @@ public class ExplorerHelper {
             if (!result.isEmpty()) {
                 result = prop.getPropertyName() + ": " + result;
             }
-
             if (result.isEmpty() && prop instanceof Entity) {
                 result = ((Entity) prop).toString(false);
             }
@@ -170,16 +172,12 @@ public class ExplorerHelper {
      */
     private class PopupAdapter extends MouseUtils.PopupMouseAdapter {
 
-        PopupAdapter() {
-        }
-
+        @Override
         protected void showPopup(MouseEvent e) {
-            // TODO: select correc property
+            Component c = e.getComponent();
+            Node[] selNodes = manager.getSelectedNodes();
             Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), source);
-            if (isPopupAllowed()) {
-                createPopup(e.getComponent(), p);
-//                e.consume(); //XXX:?
-            }
+            createPopup(e.getComponent(), p, selNodes);
         }
     }
 }

@@ -12,7 +12,6 @@
 package ancestris.core.actions;
 
 import java.awt.event.ActionEvent;
-import java.text.MessageFormat;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
@@ -70,7 +69,7 @@ public class CommonActions {
 
         public JMenuItem getPopupPresenter() {
 //            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
-            JMenuItem item = new TitleMenuItem(new StringBuilder("<html><b>").append(title).append("</b></html>").toString());
+            JMenuItem item = new TitleMenuItem(new StringBuilder("<html><b>&nbsp;&nbsp;").append(title).append("</b></html>").toString());
             String tt = (String) getValue(SHORT_DESCRIPTION);
             if (tt!=null){
                 //setToolTipText("<html><p width=\"500\">" +value+"</p></html>");
