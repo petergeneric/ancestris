@@ -33,19 +33,19 @@ public class ReportToolBox extends Report {
      * option - Tool to run
      */
     private final static int TOOL_GENE_ID = 0,
-            TOOL_GENE_SOSA = 1,
-            TOOL_TREE_TOP = 2,
-            TOOL_REMOVE_TAG = 3,
-            TOOL_MNG_PLACES = 4,
-            TOOL_MNG_ASSO = 5,
-            TOOL_GENE_NAME = 6,
-            TOOL_GENE_AGES = 7;
+//            TOOL_GENE_SOSA = 1,
+            TOOL_TREE_TOP = 1,
+            TOOL_REMOVE_TAG = 2,
+            TOOL_MNG_PLACES = 3,
+            TOOL_MNG_ASSO = 4,
+            TOOL_GENE_NAME = 5,
+            TOOL_GENE_AGES = 6;
 
     public int toolToRun = TOOL_GENE_ID;
 
     public String toolToRuns[] = {
         translate("geneIds"),
-        translate("geneSosaNb"),
+//        translate("geneSosaNb"),
         translate("geneTreeTop"),
         translate("geneRemoveTag"),
         translate("geneMngPlaces"),
@@ -107,13 +107,13 @@ public class ReportToolBox extends Report {
                 }
                 ret = toolSettingIDs(gedcom, settings);
                 break;
-            case TOOL_GENE_SOSA:
-                settings = new SettingSosas();
-                if (!getOptionsFromUser(title, settings)) {
-                    return;
-                }
-                ret = toolGeneSosaNbs(gedcom, settings, indiDeCujus, toolToRun);
-                break;
+//            case TOOL_GENE_SOSA:
+//                settings = new SettingSosas();
+//                if (!getOptionsFromUser(title, settings)) {
+//                    return;
+//                }
+//                ret = toolGeneSosaNbs(gedcom, settings, indiDeCujus, toolToRun);
+//                break;
             case TOOL_TREE_TOP:
                 settings = new SettingTreeTops();
                 if (!getOptionsFromUser(title, settings)) {
@@ -278,18 +278,18 @@ public class ReportToolBox extends Report {
         String tagStr;
         SettingSosas settings1 = new SettingSosas();
         SettingTreeTops settings2 = new SettingTreeTops();
-        if (action == TOOL_GENE_SOSA) {
-            settings1 = (SettingSosas) object;
-            int pad = 1;
-            if (settings1.paddingSize > 0 && settings1.paddingSize < 11) {
-                pad = settings1.paddingSize;
-            }
-            formatNbrs = new DecimalFormat("000000000000".substring(0, pad));
-            tagStr = settings1.sosaTag;
-        } else {
+//        if (action == TOOL_GENE_SOSA) {
+//            settings1 = (SettingSosas) object;
+//            int pad = 1;
+//            if (settings1.paddingSize > 0 && settings1.paddingSize < 11) {
+//                pad = settings1.paddingSize;
+//            }
+//            formatNbrs = new DecimalFormat("000000000000".substring(0, pad));
+//            tagStr = settings1.sosaTag;
+//        } else {
             settings2 = (SettingTreeTops) object;
             tagStr = settings2.treeTopTag;
-        }
+//        }
 
         // get de-cujus (sosa 1) 
         if (indiDeCujus == null) {
@@ -319,111 +319,111 @@ public class ReportToolBox extends Report {
 
         // Put de-cujus first in list and update its sosa tag
         sosaList.add(new Pair(indiDeCujus.getId(), 1));
-        if (action == TOOL_GENE_SOSA) {
-            // Perform unit of work
-            final DecimalFormat format = formatNbrs;
-            final String tag = tagStr;
-            final Indi indiFirst = indiDeCujus;
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        indiFirst.addProperty(tag, format.format(1), setPropertyPosition(indiFirst));
-                    }
-                }); // end of doUnitOfWork
-            } catch (GedcomException e) {
-                log.write(e.getMessage());
-            }
-        }
+//        if (action == TOOL_GENE_SOSA) {
+//            // Perform unit of work
+//            final DecimalFormat format = formatNbrs;
+//            final String tag = tagStr;
+//            final Indi indiFirst = indiDeCujus;
+//            try {
+//                gedcom.doUnitOfWork(new UnitOfWork() {
+//                    public void perform(Gedcom gedcom) throws GedcomException {
+//                        indiFirst.addProperty(tag, format.format(1), setPropertyPosition(indiFirst));
+//                    }
+//                }); // end of doUnitOfWork
+//            } catch (GedcomException e) {
+//                log.write(e.getMessage());
+//            }
+//        }
         if ((action == TOOL_TREE_TOP) && (settings2.DisplayIndi)) {
             String line = "-----------------------------------------------------------";
             log.write(translate("DisplayIndi"));
             log.write(line.substring(0, translate("DisplayIndi").length()));
         }
 
-    // Iterate on the list to go up the tree. 
+        // Iterate on the list to go up the tree. 
         // Update sosa tag according to action required
         // Store both parents in list
-        try {
+//        try {
             for (ListIterator<Pair> listIter = sosaList.listIterator(); listIter.hasNext();) {
                 pair = listIter.next();
                 indiID = pair.ID;
                 sosaCounter = pair.sosa;
                 indi = (Indi) gedcom.getEntity(indiID);
 
-                if (action == TOOL_GENE_SOSA && !settings1.daboville) {
-                    // Get older siblings
-                    for (Iterator siblings = Arrays.asList(indi.getOlderSiblings()).iterator(); siblings.hasNext();) {
-                        indiOther = (Indi) siblings.next();
-                        indiOther.addProperty(tagStr, formatNbrs.format(sosaCounter) + settings1.olderSign, setPropertyPosition(indiOther));
-                        sosaOSiblings++;
-                        log.write(indiOther.toString() + " -> " + formatNbrs.format(sosaCounter) + settings1.olderSign, false);
-                    }
-                    // Get younger siblings
-                    for (Iterator siblings = Arrays.asList(indi.getYoungerSiblings()).iterator(); siblings.hasNext();) {
-                        indiOther = (Indi) siblings.next();
-                        indiOther.addProperty(tagStr, formatNbrs.format(sosaCounter) + settings1.youngerSign, setPropertyPosition(indiOther));
-                        sosaYSiblings++;
-                        log.write(indiOther.toString() + " -> " + formatNbrs.format(sosaCounter) + settings1.youngerSign, false);
-                    }
-                }
+//                if (action == TOOL_GENE_SOSA && !settings1.daboville) {
+//                    // Get older siblings
+//                    for (Iterator siblings = Arrays.asList(indi.getOlderSiblings()).iterator(); siblings.hasNext();) {
+//                        indiOther = (Indi) siblings.next();
+//                        indiOther.addProperty(tagStr, formatNbrs.format(sosaCounter) + settings1.olderSign, setPropertyPosition(indiOther));
+//                        sosaOSiblings++;
+//                        log.write(indiOther.toString() + " -> " + formatNbrs.format(sosaCounter) + settings1.olderSign, false);
+//                    }
+//                    // Get younger siblings
+//                    for (Iterator siblings = Arrays.asList(indi.getYoungerSiblings()).iterator(); siblings.hasNext();) {
+//                        indiOther = (Indi) siblings.next();
+//                        indiOther.addProperty(tagStr, formatNbrs.format(sosaCounter) + settings1.youngerSign, setPropertyPosition(indiOther));
+//                        sosaYSiblings++;
+//                        log.write(indiOther.toString() + " -> " + formatNbrs.format(sosaCounter) + settings1.youngerSign, false);
+//                    }
+//                }
 
                 // Get father and mother
                 famc = indi.getFamilyWhereBiologicalChild();
                 if (famc != null) {
                     indiOther = famc.getWife();
                     if (indiOther != null) {
-                        if (action == TOOL_GENE_SOSA) {
-                            indiOther.addProperty(tagStr, formatNbrs.format(2 * sosaCounter + 1), setPropertyPosition(indiOther));
-                            log.write(indiOther.toString() + " -> " + formatNbrs.format(2 * sosaCounter + 1), false);
-                        }
+//                        if (action == TOOL_GENE_SOSA) {
+//                            indiOther.addProperty(tagStr, formatNbrs.format(2 * sosaCounter + 1), setPropertyPosition(indiOther));
+//                            log.write(indiOther.toString() + " -> " + formatNbrs.format(2 * sosaCounter + 1), false);
+//                        }
                         listIter.add(new Pair(indiOther.getId(), 2 * sosaCounter + 1));
                         listIter.previous();
                         sosaMothers++;
                     }
                     indiOther = famc.getHusband();
                     if (indiOther != null) {
-                        if (action == TOOL_GENE_SOSA) {
-                            indiOther.addProperty(tagStr, formatNbrs.format(2 * sosaCounter), setPropertyPosition(indiOther));
-                            if (settings1.daboville) {
-                                sosaDabo += toolGeneDabo(indiOther, tagStr, formatNbrs.format(sosaCounter));
-                            }
-                            log.write(indiOther.toString() + " -> " + formatNbrs.format(2 * sosaCounter), false);
-                        }
+//                        if (action == TOOL_GENE_SOSA) {
+//                            indiOther.addProperty(tagStr, formatNbrs.format(2 * sosaCounter), setPropertyPosition(indiOther));
+//                            if (settings1.daboville) {
+//                                sosaDabo += toolGeneDabo(indiOther, tagStr, formatNbrs.format(sosaCounter));
+//                            }
+//                            log.write(indiOther.toString() + " -> " + formatNbrs.format(2 * sosaCounter), false);
+//                        }
                         listIter.add(new Pair(indiOther.getId(), 2 * sosaCounter));
                         listIter.previous();
                         sosaFathers++;
                     }
                 } else {
-                    if (action == TOOL_TREE_TOP) {
+                    if (action == TOOL_TREE_TOP && indi.getProperty(tagStr) == null) {
                         indi.addProperty(tagStr, settings2.treeTopValue);
                         treeTops++;
                         log.write(indi.toString(), settings2.DisplayIndi);
                     }
                 }
             }
-        } catch (GedcomException e) {
-            log.write(e.getMessage());
-        }
+//        } catch (GedcomException e) {
+//            log.write(e.getMessage());
+//        }
 
         // Stops updating Gedcom  
         formatNbrs = new DecimalFormat("000000");
-        if (action == TOOL_GENE_SOSA) {
-            log.write(" ");
-            log.write(translate("CreatedDC") + " " + formatNbrs.format(1));
-            log.write(translate("CreatedF") + " " + formatNbrs.format(sosaFathers));
-            log.write(translate("CreatedM") + " " + formatNbrs.format(sosaMothers));
-            log.write("-------------------------------------------------------");
-            log.write(translate("CreatedT") + " " + formatNbrs.format(sosaFathers + sosaMothers + 1));
-            if (settings1.daboville) {
-                log.write(translate("CreatedD") + " " + formatNbrs.format(sosaDabo));
-            } else {
-                log.write(translate("CreatedO") + " " + formatNbrs.format(sosaOSiblings));
-                log.write(translate("CreatedY") + " " + formatNbrs.format(sosaYSiblings));
-            }
-            log.write("=======================================================");
-            log.write(translate("CreatedG") + " " + formatNbrs.format(sosaFathers + sosaMothers + sosaDabo + sosaOSiblings + sosaYSiblings + 1));
-            log.write(" ");
-        }
+//        if (action == TOOL_GENE_SOSA) {
+//            log.write(" ");
+//            log.write(translate("CreatedDC") + " " + formatNbrs.format(1));
+//            log.write(translate("CreatedF") + " " + formatNbrs.format(sosaFathers));
+//            log.write(translate("CreatedM") + " " + formatNbrs.format(sosaMothers));
+//            log.write("-------------------------------------------------------");
+//            log.write(translate("CreatedT") + " " + formatNbrs.format(sosaFathers + sosaMothers + 1));
+//            if (settings1.daboville) {
+//                log.write(translate("CreatedD") + " " + formatNbrs.format(sosaDabo));
+//            } else {
+//                log.write(translate("CreatedO") + " " + formatNbrs.format(sosaOSiblings));
+//                log.write(translate("CreatedY") + " " + formatNbrs.format(sosaYSiblings));
+//            }
+//            log.write("=======================================================");
+//            log.write(translate("CreatedG") + " " + formatNbrs.format(sosaFathers + sosaMothers + sosaDabo + sosaOSiblings + sosaYSiblings + 1));
+//            log.write(" ");
+//        }
 
         if (action == TOOL_TREE_TOP) {
             log.write(" ");
@@ -1576,65 +1576,65 @@ public class ReportToolBox extends Report {
 //      return Workbench.getInstance().saveGedcom(new Context(gedcomX));
     }
 
-    /**
-     * Generates the d'Aboville numbering from given individual prefixed with
-     * sosa number from where it originates
-     */
-    private int toolGeneDabo(Indi indiHead, String tagStr, String sosaHead) {
-
-        int sosaDabo = 0;
-        List daboList = new ArrayList();
-        daboList.add(new Pair2(indiHead.getId(), "1"));
-        Pair2 pair = new Pair2("", "");
-        String indiID = "";
-        Indi indi;
-    // for each pair in the list:
-        //   - get Id and number
-        //   - get individual corresponding to the id
-        //   - set daboCounter at the pair value 
-        //   - get the families of the individual
-        //   - if more than one family, suffix is a, b, c, etc else ""
-        //   - for each family, get the kids
-        //      - for each kid of the family, if already tags as sosa, skip, otherwise
-        //         - assign him sosa nb made like:  sosaHead + "-" + counter where counter is daboCounter + suffix + kidnb
-        //         - add him to the list with this counter
-        try {
-            for (ListIterator listIter = daboList.listIterator(); listIter.hasNext();) {
-                pair = (Pair2) listIter.next();
-                indiID = pair.ID;
-                indi = (Indi) indiHead.getGedcom().getEntity(indiID);
-                String daboCounter = pair.dabo;
-                Fam[] families = indi.getFamiliesWhereSpouse();
-                if (families == null || families.length == 0) {
-                    continue;
-                }
-                Character suffix = 'a';
-                for (int f = 0; f < families.length; f++) {
-                    Fam family = families[f];
-                    Indi[] kids = family.getChildren();
-                    if (kids == null || kids.length == 0) {
-                        continue;
-                    }
-                    for (int k = 0; k < kids.length; k++) {
-                        Indi kid = kids[k];
-                        if (kid.getProperty("_SOSA") != null) {
-                            continue;
-                        }
-                        String counter = daboCounter + (families.length > 1 ? suffix.toString() : "") + (k + 1);
-                        kid.addProperty(tagStr, sosaHead + "-" + counter, setPropertyPosition(kid));
-                        listIter.add(new Pair2(kid.getId(), counter));
-                        listIter.previous();
-                        sosaDabo++;
-                    }
-                    suffix++;
-                }
-            }
-        } catch (GedcomException e) {
-            log.write(e.getMessage());
-        }
-
-        return sosaDabo;
-    }
+//    /**
+//     * Generates the d'Aboville numbering from given individual prefixed with
+//     * sosa number from where it originates
+//     */
+//    private int toolGeneDabo(Indi indiHead, String tagStr, String sosaHead) {
+//
+//        int sosaDabo = 0;
+//        List daboList = new ArrayList();
+//        daboList.add(new Pair2(indiHead.getId(), "1"));
+//        Pair2 pair = new Pair2("", "");
+//        String indiID = "";
+//        Indi indi;
+//    // for each pair in the list:
+//        //   - get Id and number
+//        //   - get individual corresponding to the id
+//        //   - set daboCounter at the pair value 
+//        //   - get the families of the individual
+//        //   - if more than one family, suffix is a, b, c, etc else ""
+//        //   - for each family, get the kids
+//        //      - for each kid of the family, if already tags as sosa, skip, otherwise
+//        //         - assign him sosa nb made like:  sosaHead + "-" + counter where counter is daboCounter + suffix + kidnb
+//        //         - add him to the list with this counter
+//        try {
+//            for (ListIterator listIter = daboList.listIterator(); listIter.hasNext();) {
+//                pair = (Pair2) listIter.next();
+//                indiID = pair.ID;
+//                indi = (Indi) indiHead.getGedcom().getEntity(indiID);
+//                String daboCounter = pair.dabo;
+//                Fam[] families = indi.getFamiliesWhereSpouse();
+//                if (families == null || families.length == 0) {
+//                    continue;
+//                }
+//                Character suffix = 'a';
+//                for (int f = 0; f < families.length; f++) {
+//                    Fam family = families[f];
+//                    Indi[] kids = family.getChildren();
+//                    if (kids == null || kids.length == 0) {
+//                        continue;
+//                    }
+//                    for (int k = 0; k < kids.length; k++) {
+//                        Indi kid = kids[k];
+//                        if (kid.getProperty("_SOSA") != null) {
+//                            continue;
+//                        }
+//                        String counter = daboCounter + (families.length > 1 ? suffix.toString() : "") + (k + 1);
+//                        kid.addProperty(tagStr, sosaHead + "-" + counter, setPropertyPosition(kid));
+//                        listIter.add(new Pair2(kid.getId(), counter));
+//                        listIter.previous();
+//                        sosaDabo++;
+//                    }
+//                    suffix++;
+//                }
+//            }
+//        } catch (GedcomException e) {
+//            log.write(e.getMessage());
+//        }
+//
+//        return sosaDabo;
+//    }
 
     /**
      * Check if birth date is precise
