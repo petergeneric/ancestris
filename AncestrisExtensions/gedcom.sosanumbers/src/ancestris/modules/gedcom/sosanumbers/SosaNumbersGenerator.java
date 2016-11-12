@@ -97,7 +97,7 @@ public class SosaNumbersGenerator implements Constants {
         } else 
             
         // Otherwise, if sosadabo or sosa, go "up" the tree by first erasing and then, if mode is generate, generating numbering. Flag set to guessed along the way if save is false
-        if (numbering == NUMBERING_SOSADABOVILLE || numbering == NUMBERING_SOSA) {
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE || numbering == NUMBERING_SOSA) {
             Runnable change = new Runnable() {
                 @Override
                 public void run() {
@@ -112,7 +112,7 @@ public class SosaNumbersGenerator implements Constants {
             Runnable change = new Runnable() {
                 @Override
                 public void run() {
-                    numberDown(indiDeCujus, BigInteger.ZERO, null);
+                    numberDown(indiDeCujus, BigInteger.ZERO);
                 }
             };
             commit(change);
@@ -153,8 +153,8 @@ public class SosaNumbersGenerator implements Constants {
                 if (husband != null) {
                     updateIndi(husband, sosa, listIter, sosaList, null);
                     // Sosa d'Aboville generation from this sosa
-                    if (numbering == NUMBERING_SOSADABOVILLE) {
-                        numberDown(husband, sosa, sosaList);
+                    if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
+                        numberDown(husband, sosa);
                     }
 
                 }
@@ -166,14 +166,14 @@ public class SosaNumbersGenerator implements Constants {
      * @param indiDeCujus
      * @param sosaValue
      */
-    private void numberDown(Indi indiFrom, BigInteger sosaValue, List<Pair> sosaList) {
+    private void numberDown(Indi indiFrom, BigInteger sosaValue) {
         final List<Pair> dabovilleList = new ArrayList<Pair>();
         Pair pair;
         String daboCounter;
 
         // Iterate on the list to go down the tree.
         ListIterator<Pair> listIter = null;
-        if (numbering == NUMBERING_DABOVILLE) {
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
             listIter = dabovilleList.listIterator();
             updateIndi(indiFrom, sosaValue, listIter, dabovilleList, "1");
         } else {
