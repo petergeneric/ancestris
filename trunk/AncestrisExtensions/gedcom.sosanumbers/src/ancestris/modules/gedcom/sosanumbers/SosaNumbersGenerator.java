@@ -1,20 +1,14 @@
 /*
  * Ancestris - http://www.ancestris.org
  *
- * Copyright 2012 Ancestris
+ * Copyright Ancestris
  *
- * Author: Dominique Baron (lemovice-at-ancestris-dot-org).
+ * Author: Frederic Lapeyre (frederic-at-ancestris-dot-org). 2006-2016
+ * Author: Dominique Baron (lemovice-at-ancestris-dot-org). 2012
  *
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- */
-/**
- * Extract from GenJ - Report - ReportToolBox
- *
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
- * @version 1.0
- *
  */
 package ancestris.modules.gedcom.sosanumbers;
 
@@ -137,6 +131,10 @@ public class SosaNumbersGenerator implements Constants {
 
         // Iterate on the list to go up the tree.
         updateIndi(indiDeCujus, sosaCounter, listIter, sosaList, null);
+        // Sosa d'Aboville generation from this sosa
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
+            numberDown(indiDeCujus, sosaCounter);
+        }
         while (listIter.hasNext()) {
             pair = listIter.next();
             sosaCounter = new BigInteger(pair.value);
