@@ -39,7 +39,7 @@ public class EntityHistory {
             this.entityTag = entity.getTag();
             this.entityId = entity.getId();
             this.property = property.getTag();
-            this.propertyPath = property.getPath(true).toString();
+            this.propertyPath = property.getPath(true).toString();  
             this.newValue = NewValue;
             this.oldValue = oldValue;
     }

@@ -18,9 +18,7 @@
 package ancestris.modules.gedcom.history;
 
 import ancestris.modules.gedcom.utilities.EntityTag2Name;
-import ancestris.modules.gedcom.utilities.PropertyTag2Name;
 import genj.gedcom.Gedcom;
-import genj.gedcom.TagPath;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -93,20 +91,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                 case ACTION:
                     return NbBundle.getMessage(this.getClass(), "HistoryTableModel.Action." + entityHistory.getAction());
                 case PROPERTY:
-                    String propertySeparator = NbBundle.getMessage(this.getClass(), "HistoryTableModel.propertySeparator");
-                    String propertyPath = "";
-                    String[] splitPath = entityHistory.getPropertyPath().split(TagPath.SEPARATOR_STRING);
-
-                    // skip entity tag
-                    for (int i = 1; i < splitPath.length; i++) {
-                        String pathElt = splitPath[i].indexOf('#') == -1 ? splitPath[i] : splitPath[i].substring(0, splitPath[i].indexOf('#'));
-                        if (pathElt.startsWith("_")) {
-                            propertyPath += (i == 1?"":propertySeparator) + pathElt;
-                        } else {
-                            propertyPath += (i == 1?"":propertySeparator) + PropertyTag2Name.getTagName(pathElt);
-                        }
-                    }
-                    return propertyPath;
+                    return entityHistory.getPropertyPath();
                 case OLD_VALUE:
                     return entityHistory.getOldValue();
                 case NEW_VALUE:
