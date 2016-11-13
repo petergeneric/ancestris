@@ -52,7 +52,7 @@ public class GedcomUtilities {
     };
 
     public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType) {
-        LOG.log(Level.INFO, "deleting_tag {0}", tagToRemove);
+        LOG.log(Level.FINE, "deleting_tag {0}", tagToRemove);
 
         Collection<? extends Entity> entities;
         int iCounter = 0;
@@ -81,7 +81,7 @@ public class GedcomUtilities {
             }
         }
 
-        LOG.log(Level.INFO, "DeletedNb {0}", iCounter);
+        LOG.log(Level.FINE, "DeletedNb {0}", iCounter);
     }
 
     private static List<Property> getPropertiesRecursively(Property parent, String tag) {
@@ -105,7 +105,7 @@ public class GedcomUtilities {
      * the property list to be included in the dest entity
      */
     public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> properties) {
-        LOG.log(Level.INFO, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
+        LOG.log(Level.FINE, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
 
         for (Property rightProperty : properties) {
             try {
