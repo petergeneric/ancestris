@@ -46,7 +46,7 @@ public class SosaNumbersPlugin extends AncestrisPlugin implements Constants, Ged
         Boolean saved = gedcom.getRegistry().get(SAVE, true);
         if (indiDeCujus != null && !saved) {
             sosaNumbers = new SosaNumbersGenerator();
-            sosaNumbers.run(gedcom, indiDeCujus);
+            sosaNumbers.run(gedcom, indiDeCujus, null);
         }
     }
 }
