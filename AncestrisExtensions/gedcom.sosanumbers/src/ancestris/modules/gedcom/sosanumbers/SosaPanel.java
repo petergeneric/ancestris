@@ -13,6 +13,8 @@ package ancestris.modules.gedcom.sosanumbers;
 
 import ancestris.util.swing.SelectEntityPanel;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.util.Registry;
@@ -39,7 +41,25 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
      * Creates new form SosaPanel
      */
     public SosaPanel(Context context) {
+        
+        // Check context
         this.gedcom = context.getGedcom();
+        selectedIndividual = null;
+        Entity entity = context.getEntity();
+        if (entity instanceof Indi) {
+            selectedIndividual = (Indi) entity;
+        } else if (entity instanceof Fam) {
+            Fam fam = (Fam) entity;
+            Indi husb = fam.getHusband();
+            Indi wife = fam.getWife();
+            if (husb != null) {
+                selectedIndividual = husb;
+            } else if (wife != null) {
+                selectedIndividual = wife;
+            }
+        }
+        
+        // Set panel
         registry = gedcom.getRegistry();
         this.setPreferredSize(new Dimension(registry.get(winWidth, Math.max(this.getPreferredSize().width, 500)), registry.get(winHeight, Math.max(this.getPreferredSize().height, 450))));
 
@@ -61,15 +81,11 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         dabovilleRadioButton.setSelected(n == NUMBERING_DABOVILLE);
         allNumberingRadioButton.setSelected(n == NUMBERING_ALL);
         int s = registry.get(SELECTION, 1);
-        selectedIndividualRadioButton.setSelected(s == 1);
-        currentDecujusRadioButton.setSelected(s == 2);
-        otherIndividualRadioButton.setSelected(s == 3);
-        allIndividualRadioButton.setSelected(s == 4);
         saveCheckBox.setSelected(registry.get(SAVE, true));
         
         // Update selected button labels based on context
-        selectedIndividual = (Indi) context.getEntity();
-        selectedIndividualRadioButton.setText(NbBundle.getMessage(SosaPanel.class, "SosaPanel.selectedIndividualRadioButton.text", selectedIndividual.toString(true)));
+        selectedIndividualRadioButton.setVisible(selectedIndividual != null);
+        selectedIndividualRadioButton.setText(NbBundle.getMessage(SosaPanel.class, "SosaPanel.selectedIndividualRadioButton.text", (selectedIndividual != null) ? selectedIndividual.toString(true) : ""));
         String decujusID = registry.get(DECUJUSID, "");
         if (!decujusID.isEmpty()) {
             decujusIndividual = (Indi) gedcom.getEntity(decujusID);
@@ -78,12 +94,26 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 currentDecujusRadioButton.setEnabled(true);
                 selectEntityPanel.setSelection(decujusIndividual);
             }
+            if (s == 1 && selectedIndividual == null) {
+                s = 2;
+            }
         } else {
             currentDecujusRadioButton.setText(NbBundle.getMessage(SosaPanel.class, "SosaPanel.currentDecujusRadioButton.text", ""));
             currentDecujusRadioButton.setVisible(false);
-            selectEntityPanel.setSelection(selectedIndividual);
+            if (selectedIndividual != null) {
+                selectEntityPanel.setSelection(selectedIndividual); 
+                s = 1;
+            } else {
+                s = 3;
+            }
         }
         
+        // Preselect choice
+        selectedIndividualRadioButton.setSelected(s == 1);
+        currentDecujusRadioButton.setSelected(s == 2);
+        otherIndividualRadioButton.setSelected(s == 3);
+        allIndividualRadioButton.setSelected(s == 4);
+
         // Update display of panel based on mode
         setDisplay();
         
