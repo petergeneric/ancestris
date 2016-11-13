@@ -16,8 +16,6 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Indi;
 import java.awt.event.ActionEvent;
-import org.openide.DialogDisplayer;
-import org.openide.NotifyDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
@@ -74,8 +72,7 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
         Indi indiDeCujus = null;
         indiDeCujus = (Indi) sosaPanel.getSelection();
         sosaPanel.savePreferences();
-        int changes = new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus);
-        DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(sosaPanel.getResultMessage(changes), NotifyDescriptor.INFORMATION_MESSAGE));
+        new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus, sosaPanel.getResultMessage());
         return true;
     }
 }

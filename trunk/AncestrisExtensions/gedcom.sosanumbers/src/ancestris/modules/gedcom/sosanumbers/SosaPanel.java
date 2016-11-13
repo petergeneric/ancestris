@@ -76,6 +76,9 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         
         // Init buttons selection to memorised values
         int n = registry.get(NUMBERING, NUMBERING_SOSADABOVILLE);
+        if (mode == MODE_GENERATE && n == 4) {
+            n = 1;
+        }
         sosadabovilleRadioButton.setSelected(n == NUMBERING_SOSADABOVILLE);
         sosaRadioButton.setSelected(n == NUMBERING_SOSA);
         dabovilleRadioButton.setSelected(n == NUMBERING_DABOVILLE);
@@ -406,7 +409,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         }
     }
 
-    public String getResultMessage(int changes) {
+    public String getResultMessage() {
         Indi indi = getSelection();
         String numbering = "";
         if (sosadabovilleRadioButton.isSelected()) {
@@ -421,7 +424,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         String msg = "";
         if (mode == MODE_GENERATE) {
             if (indi != null) {
-                msg = NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.generateDone", numbering, indi.getName(), changes);
+                msg = NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.generateDone", numbering, indi.getName());
             }
         } else {
             if (indi != null) {
