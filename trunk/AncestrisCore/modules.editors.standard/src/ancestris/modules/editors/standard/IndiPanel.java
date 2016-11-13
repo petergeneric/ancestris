@@ -4355,7 +4355,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-            if (value != null) {
+            if (value != null && (value instanceof String)) {
                 String text = (String) value;
                 try {
                     Double d = new DecimalFormat("#").parse(text).doubleValue();
