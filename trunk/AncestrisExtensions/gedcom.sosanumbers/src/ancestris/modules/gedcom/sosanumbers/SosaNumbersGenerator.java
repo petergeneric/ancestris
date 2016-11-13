@@ -121,7 +121,7 @@ public class SosaNumbersGenerator implements Constants {
             }
         });
         
-        RequestProcessor.Task mainTask = RequestProcessor.getDefault().create(new Runnable() {
+        final Runnable fullTask = new Runnable() {
             @Override
             public void run() {
                 ph.start(gedcom.getIndis().size() * 3);
@@ -131,8 +131,21 @@ public class SosaNumbersGenerator implements Constants {
                 String msg = "<html>" + message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", changedIndis.size()) + "</html>";
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
             }
+        };
+
+        RequestProcessor.Task threadTask = RequestProcessor.getDefault().create(new Runnable() {
+            @Override
+            public void run() {
+                fullTask.run();
+            }
         });
-        mainTask.schedule(0);
+        
+        // If expected number of changes smaller than 2000, run in same thread, otherwise, run in separate thread
+        if (false) {
+            threadTask.schedule(0);
+        } else {
+            fullTask.run();
+        }
         
     }
 
