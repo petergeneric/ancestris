@@ -15,6 +15,9 @@ package ancestris.modules.gedcom.sosanumbers;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import genj.gedcom.*;
 import genj.util.Registry;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Toolkit;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -26,6 +29,9 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.ProgressMonitor;
 import javax.swing.SwingWorker;
 import org.openide.DialogDisplayer;
@@ -110,16 +116,36 @@ public class SosaNumbersGenerator implements Constants {
         
         // Calculates number of expected changes 
         // -------------------------------------
-        runBlank = true;
-        changedIndis.clear();
-        maxCounter = 0;
-        task.run();
-        runBlank = false;
-        if (maxCounter == 0) {
-            maxCounter = changedIndis.size();
-        }
-        changedIndis.clear();
-        stoppedCounter = 0;
+        JProgressBar progressBar = new JProgressBar(0, 100);
+        progressBar.setValue(0);
+        progressBar.setStringPainted(false);
+        progressBar.setIndeterminate(true);
+        final JOptionPane optionPane = new JOptionPane(progressBar, JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+        final JDialog dialog = new JDialog((Frame)null, NbBundle.getMessage(getClass(), "SosaNumbersGenerator.calc"), true);
+        dialog.setContentPane(optionPane);
+        dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        dialog.setLocation((screenSize.width - optionPane.getPreferredSize().width) / 2, (screenSize.height - optionPane.getPreferredSize().height) / 2);
+        dialog.pack();      
+        fullTask = new Task(null, 100) {
+            @Override
+            public Void doInBackground() {
+                runBlank = true;
+                changedIndis.clear();
+                maxCounter = 0;
+                task.run();
+                runBlank = false;
+                if (maxCounter == 0) {
+                    maxCounter = changedIndis.size();
+                }
+                changedIndis.clear();
+                stoppedCounter = 0;
+                dialog.dispose();
+                return null;
+            }
+        };
+        fullTask.execute();
+        dialog.setVisible(true);
         
         // Run main task while displaying progress bar
         // -------------------------------------------
@@ -137,7 +163,7 @@ public class SosaNumbersGenerator implements Constants {
                 }
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
                 System.gc();
-            return null;
+                return null;
             }
         };
         fullTask.execute();
@@ -530,26 +556,25 @@ public class SosaNumbersGenerator implements Constants {
     
     private class Task extends SwingWorker<Void, Void> {
         
-        private ProgressMonitor progressMonitor;
-        private int maxProgress = 0;
+        private ProgressMonitor pm;
+        private int maxp = 0;
         
         
         public Task(ProgressMonitor progressMonitor, int maxProgress) {
-            this.progressMonitor = progressMonitor;
-            this.maxProgress = maxProgress;
+            pm = progressMonitor;
+            maxp = maxProgress;
         }
         
         @Override
         public Void doInBackground() {
-            int progress = 0;
-            setProgress(0);
-            setProgress(progress);
             return null;
         }
  
         @Override
         public void done() {
-            progressMonitor.setProgress(maxProgress);
+            if (pm != null) {
+                pm.setProgress(maxp);
+            }
         }
     }
     
