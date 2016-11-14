@@ -76,9 +76,6 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         
         // Init buttons selection to memorised values
         int n = registry.get(NUMBERING, NUMBERING_SOSADABOVILLE);
-        if (mode == MODE_GENERATE && n == 4) {
-            n = 1;
-        }
         sosadabovilleRadioButton.setSelected(n == NUMBERING_SOSADABOVILLE);
         sosaRadioButton.setSelected(n == NUMBERING_SOSA);
         dabovilleRadioButton.setSelected(n == NUMBERING_DABOVILLE);
@@ -130,6 +127,9 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         allNumberingRadioButton.setVisible(mode == MODE_ERASE);
         selectIndiPanel.setVisible(otherIndividualRadioButton.isSelected());
         allIndividualRadioButton.setVisible(mode == MODE_ERASE);
+        if (mode == MODE_GENERATE && allNumberingRadioButton.isSelected()) {
+            sosadabovilleRadioButton.setSelected(true);
+        }
     }
 
     /**

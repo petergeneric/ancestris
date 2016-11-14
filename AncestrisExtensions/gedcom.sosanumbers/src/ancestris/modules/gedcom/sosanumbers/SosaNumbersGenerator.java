@@ -26,14 +26,12 @@ import java.util.ListIterator;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
+import javax.swing.ProgressMonitor;
+import javax.swing.SwingWorker;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
-import org.openide.util.RequestProcessor;
 
 /**
  *
@@ -50,9 +48,14 @@ public class SosaNumbersGenerator implements Constants {
     private boolean save = true;
     private Set<Indi> changedIndis = null; // no duplicates
     
+    private boolean runBlank = false;
+    private int maxCounter = 0;
+    private int stoppedCounter = 0;
+    
+    private ProgressMonitor progressMonitor = null;
+    private Task fullTask = null;
     private Runnable task = null;
-    private ProgressHandle ph = null;
-    private int progressCounter = 0;
+    
 
     public void run(final Gedcom gedcom, final Indi indiDeCujus, final String message) {
         
@@ -75,23 +78,15 @@ public class SosaNumbersGenerator implements Constants {
         save = registry.get(SAVE, true);
         
 
-        // Does the processing:
-        // --------------------
+        // Prepare the the processing:
+        // ---------------------------
         
         // Clean existing numbering if mode is erase and no decujus 
         if (mode == MODE_ERASE && indiDeCujus == null) {
             task = new Runnable() {
                 @Override
                 public void run() {
-                    if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
-                        GedcomUtilities.deleteTags(gedcom, SOSADABOVILLE_TAG, GedcomUtilities.ENT_INDI);
-                    }
-                    if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA) {
-                        GedcomUtilities.deleteTags(gedcom, SOSA_TAG, GedcomUtilities.ENT_INDI);
-                    }
-                    if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
-                        GedcomUtilities.deleteTags(gedcom, DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
-                    }
+                    eraseAll();
                 }
             };
         } else if (indiDeCujus == null) {
@@ -113,47 +108,92 @@ public class SosaNumbersGenerator implements Constants {
             };
         }
         
-        // Display progress bar
-        ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(getClass(), "SosaNumbersGenerator.task"), new Cancellable() {
-            @Override
-            public boolean cancel() {
-                return false;
-            }
-        });
+        // Calculates number of expected changes 
+        // -------------------------------------
+        runBlank = true;
+        changedIndis.clear();
+        maxCounter = 0;
+        task.run();
+        runBlank = false;
+        if (maxCounter == 0) {
+            maxCounter = changedIndis.size();
+        }
+        changedIndis.clear();
+        stoppedCounter = 0;
         
-        final Runnable fullTask = new Runnable() {
+        // Run main task while displaying progress bar
+        // -------------------------------------------
+        progressMonitor = new ProgressMonitor(null, NbBundle.getMessage(getClass(), "SosaNumbersGenerator.task"), "", 0, maxCounter);
+        progressMonitor.setProgress(0);
+        fullTask = new Task(progressMonitor, maxCounter) {
             @Override
-            public void run() {
-                ph.start(gedcom.getIndis().size() * 3);
+            public Void doInBackground() {
                 commit(task);
-                System.gc();
-                ph.finish();
-                String msg = "<html>" + message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", changedIndis.size()) + "</html>";
+                String msg = "<html>";
+                if (stoppedCounter == 0) {
+                    msg +=  message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                } else {
+                    msg +=  NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>"; 
+                }
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
+                System.gc();
+            return null;
             }
         };
-
-        RequestProcessor.Task threadTask = RequestProcessor.getDefault().create(new Runnable() {
-            @Override
-            public void run() {
-                fullTask.run();
-            }
-        });
+        fullTask.execute();
         
-        // If expected number of changes smaller than 2000, run in same thread, otherwise, run in separate thread
-        if (false) {
-            threadTask.schedule(0);
-        } else {
-            fullTask.run();
-        }
-        
+        // done
     }
 
+
+    public boolean setProgress(int progress) {
+        if (progress % 10 != 0 && progress != maxCounter) {
+            return true;
+        }
+        String message = String.format(NbBundle.getMessage(getClass(), "SosaNumbersGenerator.progress", "%d"), progress);
+        progressMonitor.setNote(message);
+        progressMonitor.setProgress(progress);
+        if (progressMonitor.isCanceled() || fullTask.isDone()) {
+            if (progressMonitor.isCanceled()) {
+                //fullTask.cancel(true);
+                stoppedCounter = progress;
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    private void eraseAll() {
+        int counter = 0;
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
+            counter += gedcom.getPropertyCount(SOSADABOVILLE_TAG);
+            if (!runBlank) {
+                GedcomUtilities.deleteTags(gedcom, SOSADABOVILLE_TAG, GedcomUtilities.ENT_INDI);
+                if (!setProgress(counter)) return;
+            }
+        }
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA) {
+            counter += gedcom.getPropertyCount(SOSA_TAG);
+            if (!runBlank) {
+                GedcomUtilities.deleteTags(gedcom, SOSA_TAG, GedcomUtilities.ENT_INDI);
+                if (!setProgress(counter)) return;
+            }
+        }
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
+            counter += gedcom.getPropertyCount(DABOVILLE_TAG);
+            if (!runBlank) {
+                GedcomUtilities.deleteTags(gedcom, DABOVILLE_TAG, GedcomUtilities.ENT_INDI);
+                if (!setProgress(counter)) return;
+            }
+        }
+        maxCounter = counter;
+    }
+    
     /**
      * @param indiDeCujus
      * @param sosaValue
      */
-    private void numberUp() {
+    private boolean numberUp() {
 
         final List<Pair> sosaList = new ArrayList<Pair>();   // list used to store and iterate up the tree
         Pair pair;
@@ -178,27 +218,34 @@ public class SosaNumbersGenerator implements Constants {
                 husband = famc.getHusband();
                 BigInteger sosa = sosaCounter.shiftLeft(1);
                 if (husband != null) {
-                    updateIndi(husband, sosa, listIter, sosaList, null);
+                    if (!updateIndi(husband, sosa, listIter, sosaList, null)) {
+                        return false;
+                    }
                     // Sosa d'Aboville generation from this sosa
                     if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
-                        numberDown(husband, sosa);
+                        if (!numberDown(husband, sosa)) {
+                           return false; 
+                        }
                     }
 
                 }
                 wife = famc.getWife();
                 sosa = sosaCounter.shiftLeft(1).add(BigInteger.ONE);
                 if (wife != null) {
-                    updateIndi(wife, sosa, listIter, sosaList, null);
+                    if (!updateIndi(wife, sosa, listIter, sosaList, null)) {
+                        return false;
+                    }
                 }
             }
         }
+        return true;
     }
     
     /**
      * @param indiDeCujus
      * @param sosaValue
      */
-    private void numberDown(Indi indiFrom, BigInteger sosaValue) {
+    private boolean numberDown(Indi indiFrom, BigInteger sosaValue) {
         final List<Pair> dabovilleList = new ArrayList<Pair>();
         Pair pair;
         String daboCounter;
@@ -232,14 +279,18 @@ public class SosaNumbersGenerator implements Constants {
                             continue;
                         }
                         if (changedIndis.contains(child)) {
-                            // we have already already sosadaboville-tagged this person. Skip if sosa greater than already tagged value
+                            // We have already already sosadaboville-tagged this person. Skip if sosa greater than already tagged value
                             String sosa = child.getPropertyDisplayValue(SOSADABOVILLE_TAG);
-                            int k = sosa.indexOf("-");
-                            if (k != -1) {
-                                sosa = sosa.substring(0, k);
-                                BigInteger childSosaValue = new BigInteger(sosa);
-                                if (sosaValue.compareTo(childSosaValue) > 0) {
+                            if (!sosa.isEmpty()) {
+                                int k = sosa.indexOf("-");
+                                if (k == -1) { // sosa child
                                     continue;
+                                } else { //daboville child
+                                    sosa = sosa.substring(0, k);
+                                    BigInteger childSosaValue = new BigInteger(sosa);
+                                    if (sosaValue.compareTo(childSosaValue) > 0) {
+                                        continue;
+                                    }
                                 }
                             }
                         }
@@ -247,28 +298,33 @@ public class SosaNumbersGenerator implements Constants {
                     String counter = daboCounter + (families.length > 1 ? suffix.toString() : "");
                     counter += counter.length() > 0 ? ".":"";
                     counter += childOrder;
-                    updateIndi(child, sosaValue, listIter, dabovilleList, counter);
+                    if (!updateIndi(child, sosaValue, listIter, dabovilleList, counter)) {
+                        return false;
+                    }
                 }
                 suffix++;
             }
         }
+        return true;
     }
 
     
-    private void updateIndi(Indi indi, BigInteger sosaNumber, ListIterator<Pair> listIter, List<Pair> list, String daboValue) {
+    private boolean updateIndi(Indi indi, BigInteger sosaNumber, ListIterator<Pair> listIter, List<Pair> list, String daboValue) {
             
         // Check if indi is new in the list
         boolean isNew = !contains(list, indi);
             
-        // Clean numbering all or one numbering if individual not in list yet
-        if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE)) {
-            indi.delProperties(SOSADABOVILLE_TAG);
-        }
-        if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
-            indi.delProperties(SOSA_TAG);
-        }
-        if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE)) {
-            indi.delProperties(DABOVILLE_TAG);
+        if (!runBlank) {
+            // Clean numbering all or one numbering if individual not in list yet
+            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE)) {
+                indi.delProperties(SOSADABOVILLE_TAG);
+            }
+            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
+                indi.delProperties(SOSA_TAG);
+            }
+            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE)) {
+                indi.delProperties(DABOVILLE_TAG);
+            }
         }
         
         // Update list to keep going up the tree
@@ -284,13 +340,17 @@ public class SosaNumbersGenerator implements Constants {
 
         // Quit if just erasing
         if (mode == MODE_ERASE) {
-            return;
+            return true;
         }
         
         // 3. Generate one numbering
+        changedIndis.add(indi);
+        if (runBlank) {
+            return true;
+        }
         Property prop = null;
-        String value = nbToString(sosaNumber, "", true, daboValue);
         try {
+            String value = nbToString(sosaNumber, "", true, daboValue);
             if (numbering == NUMBERING_SOSADABOVILLE) {
                 prop = indi.addProperty(SOSADABOVILLE_TAG, value, setPropertyPosition(indi, SOSADABOVILLE_TAG));
             } else if (numbering == NUMBERING_SOSA) {
@@ -298,42 +358,54 @@ public class SosaNumbersGenerator implements Constants {
             } else if (numbering == NUMBERING_DABOVILLE) {
                 prop = indi.addProperty(DABOVILLE_TAG, value, setPropertyPosition(indi, DABOVILLE_TAG));
             }
-            changedIndis.add(indi);
-            ph.progress(progressCounter++);
             LOG.log(Level.FINE, "{0} -> {1}", new Object[]{indi.toString(true), value});
-        } catch (GedcomException ex) {
+        } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
         if (prop != null) {
             prop.setGuessed(!save);
         }
+        if (!setProgress(changedIndis.size())) {
+            return false;
+        }
         
-        
+        return true;
         // done
     }
 
-    private void flagSibling(Indi[] siblings, String value, boolean isNew) {
+    private boolean flagSibling(Indi[] siblings, String value, boolean isNew) {
         
         // Flag siblings
         Iterator<Indi> listSibling = Arrays.asList(siblings).iterator();
         while (listSibling.hasNext()) {
             Indi indi = (Indi) listSibling.next();
-            // Clean if new
-            if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
-                indi.delProperties(SOSA_TAG);
+            
+            if (!runBlank) {
+                // Clean if new
+                if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
+                    indi.delProperties(SOSA_TAG);
+                }
             }
+            
             // Continue if just erasing
             if (mode == MODE_ERASE) {
                 continue;
             }
+            
+            changedIndis.add(indi);
+            if (runBlank) {
+                return true;
+            }
+            
             try {
                 indi.addProperty(SOSA_TAG, value, setPropertyPosition(indi, SOSA_TAG));
-            } catch (GedcomException ex) {
+            } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
-            changedIndis.add(indi);
             LOG.log(Level.FINE, "{0} -> {1}", new Object[]{indi.toString(true), value});
+            if (!setProgress(changedIndis.size())) return false;
         }
+        return true;
     }
 
     
@@ -439,6 +511,7 @@ public class SosaNumbersGenerator implements Constants {
         }
     }
 
+
     
     
     
@@ -454,5 +527,31 @@ public class SosaNumbersGenerator implements Constants {
         }
     }
 
+    
+    private class Task extends SwingWorker<Void, Void> {
+        
+        private ProgressMonitor progressMonitor;
+        private int maxProgress = 0;
+        
+        
+        public Task(ProgressMonitor progressMonitor, int maxProgress) {
+            this.progressMonitor = progressMonitor;
+            this.maxProgress = maxProgress;
+        }
+        
+        @Override
+        public Void doInBackground() {
+            int progress = 0;
+            setProgress(0);
+            setProgress(progress);
+            return null;
+        }
+ 
+        @Override
+        public void done() {
+            progressMonitor.setProgress(maxProgress);
+        }
+    }
+    
     
 }
