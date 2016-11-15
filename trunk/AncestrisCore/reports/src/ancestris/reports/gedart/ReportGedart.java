@@ -58,10 +58,8 @@ import ancestris.core.actions.AbstractAncestrisAction;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.util.logging.Level;
 
-import javax.swing.ImageIcon;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -96,7 +94,7 @@ public class ReportGedart extends Report {
 	private boolean isOneFile = true; // TODO: remettre public
 //	public boolean showInReportWindow = true;
 	public boolean saveReportToFile = true;
-	public int template;
+	public int iTemplate;
 	public String[] templates = GedartTemplate.getDescription(gedartTemplatesOption);
 	// private PrintWriter out;
 	private DocReport mydoc;
@@ -168,8 +166,8 @@ public class ReportGedart extends Report {
 	private File process(Entity[] indis, Entity[] fams, GedartTemplate  usetemplate) {
 		String thetemplate;
 		String extension =null;
-		if (usetemplate == null && gedartTemplatesOption.length>template)
-			usetemplate = gedartTemplatesOption[template];
+		if (usetemplate == null && gedartTemplatesOption.length>iTemplate && iTemplate>-1)
+			usetemplate = gedartTemplatesOption[iTemplate];
                 if (usetemplate == null){
                     return null;
                 }
