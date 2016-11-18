@@ -22,11 +22,13 @@ import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JDialog;
@@ -52,7 +54,7 @@ public class SosaNumbersGenerator implements Constants {
     private int numbering = NUMBERING_SOSADABOVILLE;
     private Indi indiDeCujus = null;
     private boolean save = true;
-    private Set<Indi> changedIndis = null; // no duplicates
+    private Set<Indi> changedIndis = null; // no duplicates, hashed
     
     private boolean runBlank = false;
     private int maxCounter = 0;
@@ -221,20 +223,15 @@ public class SosaNumbersGenerator implements Constants {
      */
     private boolean numberUp() {
 
-        final List<Pair> sosaList = new ArrayList<Pair>();   // list used to store and iterate up the tree
+        final List<Pair> sosaPairs = new ArrayList<Pair>();   // list used to store and iterate up the tree
         Pair pair;
         Indi wife, husband;
         BigInteger sosaCounter = BigInteger.ONE;
         Fam famc;
-        ListIterator<Pair> listIter = sosaList.listIterator();
-
-
-        // Iterate on the list to go up the tree.
-        updateIndi(indiDeCujus, sosaCounter, listIter, sosaList, null);
-        // Sosa d'Aboville generation from this sosa
-        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
-            numberDown(indiDeCujus, sosaCounter);
-        }
+        ListIterator<Pair> listIter = sosaPairs.listIterator();
+        
+        // Iterate on the list to go up the tree for the sosa part.
+        updateIndi(indiDeCujus, sosaCounter, listIter, sosaPairs, null);
         while (listIter.hasNext()) {
             pair = listIter.next();
             sosaCounter = new BigInteger(pair.value);
@@ -244,26 +241,31 @@ public class SosaNumbersGenerator implements Constants {
                 husband = famc.getHusband();
                 BigInteger sosa = sosaCounter.shiftLeft(1);
                 if (husband != null) {
-                    if (!updateIndi(husband, sosa, listIter, sosaList, null)) {
+                    if (!updateIndi(husband, sosa, listIter, sosaPairs, null)) {
                         return false;
                     }
-                    // Sosa d'Aboville generation from this sosa
-                    if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
-                        if (!numberDown(husband, sosa)) {
-                           return false; 
-                        }
-                    }
-
                 }
                 wife = famc.getWife();
                 sosa = sosaCounter.shiftLeft(1).add(BigInteger.ONE);
                 if (wife != null) {
-                    if (!updateIndi(wife, sosa, listIter, sosaList, null)) {
+                    if (!updateIndi(wife, sosa, listIter, sosaPairs, null)) {
                         return false;
                     }
                 }
             }
         }
+        
+        // Iterate on ascending sosa for the Sosa d'Aboville part
+        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
+            TreeSet<Pair> sosaSet = new TreeSet<Pair>(new SosaComparator());
+            sosaSet.addAll(sosaPairs);
+            for (Pair p : sosaSet) {
+                if (p.indi.getSex() == PropertySex.MALE && !numberDown(p.indi, new BigInteger(p.value))) {
+                    return false;
+                }
+            }
+        }
+        
         return true;
     }
     
@@ -272,18 +274,19 @@ public class SosaNumbersGenerator implements Constants {
      * @param sosaValue
      */
     private boolean numberDown(Indi indiFrom, BigInteger sosaValue) {
-        final List<Pair> dabovilleList = new ArrayList<Pair>();
+        final List<Pair> dabovillePairs = new ArrayList<Pair>();
         Pair pair;
         String daboCounter;
+        String tag = (numbering == NUMBERING_DABOVILLE) ? DABOVILLE_TAG : SOSADABOVILLE_TAG;
 
         // Iterate on the list to go down the tree.
         ListIterator<Pair> listIter = null;
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
-            listIter = dabovilleList.listIterator();
-            updateIndi(indiFrom, sosaValue, listIter, dabovilleList, "1");
+            listIter = dabovillePairs.listIterator();
+            updateIndi(indiFrom, sosaValue, listIter, dabovillePairs, "1");
         } else {
-            dabovilleList.add(new Pair(indiFrom, sosaValue == BigInteger.ZERO ? "1" : ""));
-            listIter = dabovilleList.listIterator();
+            dabovillePairs.add(new Pair(indiFrom, sosaValue == BigInteger.ZERO ? "1" : ""));
+            listIter = dabovillePairs.listIterator();
         }
         while (listIter.hasNext()) {
             pair = listIter.next();
@@ -295,36 +298,14 @@ public class SosaNumbersGenerator implements Constants {
                 int childOrder = 0;
                 for (Indi child : family.getChildren(true)) {
                     childOrder++;
-                    // Do not duplicate daboville numbers
-                    if (numbering == NUMBERING_DABOVILLE && child.getProperty(DABOVILLE_TAG) != null && contains(dabovilleList, child)) {
+                    // Do not duplicate (sosa)/daboville numbers
+                    if (child.getProperty(tag) != null && (contains(dabovillePairs, child) || changedIndis.contains(child))) {
                         continue;
-                    }
-                    // Do not duplicate sosadaboville, but overwrite if sosa lowest than current one
-                    if (numbering == NUMBERING_SOSADABOVILLE) {
-                        if (contains(dabovilleList, child)) {
-                            continue;
-                        }
-                        if (changedIndis.contains(child)) {
-                            // We have already already sosadaboville-tagged this person. Skip if sosa greater than already tagged value
-                            String sosa = child.getPropertyDisplayValue(SOSADABOVILLE_TAG);
-                            if (!sosa.isEmpty()) {
-                                int k = sosa.indexOf("-");
-                                if (k == -1) { // sosa child
-                                    continue;
-                                } else { //daboville child
-                                    sosa = sosa.substring(0, k);
-                                    BigInteger childSosaValue = new BigInteger(sosa);
-                                    if (sosaValue.compareTo(childSosaValue) > 0) {
-                                        continue;
-                                    }
-                                }
-                            }
-                        }
                     }
                     String counter = daboCounter + (families.length > 1 ? suffix.toString() : "");
                     counter += counter.length() > 0 ? ".":"";
                     counter += childOrder;
-                    if (!updateIndi(child, sosaValue, listIter, dabovilleList, counter)) {
+                    if (!updateIndi(child, sosaValue, listIter, dabovillePairs, counter)) {
                         return false;
                     }
                 }
@@ -384,7 +365,7 @@ public class SosaNumbersGenerator implements Constants {
             } else if (numbering == NUMBERING_DABOVILLE) {
                 prop = indi.addProperty(DABOVILLE_TAG, value, setPropertyPosition(indi, DABOVILLE_TAG));
             }
-            LOG.log(Level.FINE, "{0} -> {1}", new Object[]{indi.toString(true), value});
+            LOG.log(Level.INFO, "{0} -> {1}", new Object[]{indi.toString(true), value});
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -517,7 +498,6 @@ public class SosaNumbersGenerator implements Constants {
 
 
     
-    
     private void commit(final Runnable change) {
         try {
             if (gedcom.isWriteLocked()) {
@@ -534,6 +514,22 @@ public class SosaNumbersGenerator implements Constants {
         } catch (Throwable t) {
             LOG.log(Level.WARNING, "Error committing sosa generator", t);
         } finally {
+        }
+    }
+
+    
+    
+    
+    
+    
+    
+    private class SosaComparator implements Comparator<Pair> {
+
+        @Override
+        public int compare(Pair p1, Pair p2) {
+            BigInteger bi1 = new BigInteger(p1.value);
+            BigInteger bi2 = new BigInteger(p2.value);
+            return bi1.compareTo(bi2);
         }
     }
 
