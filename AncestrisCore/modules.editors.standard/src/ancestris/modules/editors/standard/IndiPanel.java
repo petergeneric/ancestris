@@ -2187,13 +2187,13 @@ public class IndiPanel extends Editor implements DocumentListener {
                 public void run() {
                     if (savedFocusedControl == null || !savedFocusedControl.isFocusable()) {
                         firstnamesText.setCaretPosition(firstnamesText.getText().length());
-                        firstnamesText.requestFocus();
+                        //firstnamesText.requestFocus();
                     } else {
                         if (savedFocusedControl instanceof JTextField) {
                             JTextField jtf = (JTextField) savedFocusedControl;
                             jtf.setCaretPosition(jtf.getText().length());
                         }
-                        savedFocusedControl.requestFocus();
+                        //savedFocusedControl.requestFocus();
                         savedFocusedControl = null;
                     }
                 }
