@@ -339,10 +339,10 @@ public class SosaNumbersGenerator implements Constants {
         listIter.previous();
 
         // Erase/Generate numbering for siblings in case of SOSA numbering
-        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA) {
-            flagSibling(indi.getOlderSiblings(), nbToString(sosaNumber, "+", true), isNew);
-            flagSibling(indi.getYoungerSiblings(), nbToString(sosaNumber, "-", true), isNew);
-        }
+//        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA) {
+//            flagSibling(indi.getOlderSiblings(), nbToString(sosaNumber, "+", true), isNew);
+//            flagSibling(indi.getYoungerSiblings(), nbToString(sosaNumber, "-", true), isNew);
+//        }
         
 
         // Quit if just erasing
