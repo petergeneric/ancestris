@@ -1,7 +1,8 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
-import ancestris.modules.releve.model.FieldPlace;
+import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -17,9 +18,9 @@ import junit.framework.TestCase;
  */
 public class MergeModelMiscMarcTest extends TestCase {
 
-     static public FieldPlace getRecordsInfoPlace() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("ville_marc,code_marc,departement_marc,region_marc,pays_marc");
+     static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("ville_marc","code_marc","departement_marc","region_marc","pays_marc");
         return recordsInfoPlace;
     }
 
@@ -74,6 +75,9 @@ public class MergeModelMiscMarcTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             
+            // Merge options
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            
             String fileName = "ville_marc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S1").getPropertyDisplayValue("TITL"));
 
@@ -108,8 +112,8 @@ public class MergeModelMiscMarcTest extends TestCase {
 
 
             assertEquals("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
-            // le lieu et commentaire ne sont pas modifiés car la date de naissance du releve n'est pas plus precise
-            assertNotSame("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            // le lieu et commentaire sont mis à jour 
+            assertSame("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             //assertEquals("Indi : Note naissance","", fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
 
             assertEquals("Indi : Profession",1, fam.getHusband().getProperties(new TagPath("INDI:OCCU")).length);
@@ -174,6 +178,9 @@ public class MergeModelMiscMarcTest extends TestCase {
     */    
      public void testAddMarcCM1() {
         try {
+            // Merge options
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            
             Gedcom gedcom = TestUtility.createGedcom();
             Fam f1 = (Fam) gedcom.getEntity("F1");
             Property marriageProperty = f1.addProperty("MARR", "");

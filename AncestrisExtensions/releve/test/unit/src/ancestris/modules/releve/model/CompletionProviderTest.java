@@ -4,6 +4,7 @@ import ancestris.modules.releve.TestUtility;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import java.util.ArrayList;
+import javax.swing.SwingUtilities;
 import junit.framework.TestCase;
 import org.openide.util.Exceptions;
 
@@ -247,10 +248,10 @@ public class CompletionProviderTest extends TestCase {
             record.setIndiFather("Sansfamille1 second", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
             record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
             completionProvider.addRecord(record);
-            
+
             // je verifie que les prénoms composés sont dans l'ordre alphabétique
             assertEquals("liste", 
-                    "[cousin, Fatherfirstname, OneFirstName, OneFirstName Second, sansfamille1, Sansfamille1 second, ThreeFirstName, TwoFirstName]",
+                    "[cousin, Fatherfirstname, Motherfirstname, OneFirstName, OneFirstName Second, sansfamille1, Sansfamille1 second, ThreeFirstName, TwoFirstName]",
                     completionProvider.getFirstNames(CompletionProvider.IncludeFilter.INCLUDED).toString() );
         } catch (Exception ex) {
             fail("GedcomException "+ ex.toString());

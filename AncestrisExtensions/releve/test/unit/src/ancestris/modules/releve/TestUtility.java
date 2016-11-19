@@ -3,6 +3,7 @@ package ancestris.modules.releve;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -47,6 +48,9 @@ public class TestUtility extends TestCase {
      */
     public static Gedcom createGedcom() throws GedcomException, MalformedURLException {
 
+        // Gedcom options
+        GedcomOptions.getInstance().setUseSpacedPlaces(false);
+        
         Gedcom gedcom;
         gedcom = new Gedcom(Origin.create("file:://test.txt"));
         gedcom.setGrammar(Grammar.V55);
@@ -129,7 +133,9 @@ public class TestUtility extends TestCase {
      * @throws GedcomException
      */
     public static Gedcom createGedcom2() throws GedcomException {
-
+        // Gedcom options
+        GedcomOptions.getInstance().setUseSpacedPlaces(false);
+        
         Gedcom gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
 

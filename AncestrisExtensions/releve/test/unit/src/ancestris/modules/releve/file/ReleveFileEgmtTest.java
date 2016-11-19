@@ -22,7 +22,7 @@ public class ReleveFileEgmtTest extends TestCase {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("");
+        dataManager.setPlace("", "", "", "", "" );
 
         RecordBirth birth = new RecordBirth();
         birth.setEventDate("11/11/2000");
@@ -121,7 +121,7 @@ public class ReleveFileEgmtTest extends TestCase {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("");
+        dataManager.setPlace("", "", "", "", "");
 
         RecordMarriage marriage = new RecordMarriage();
         marriage.setEventDate("11/01/2000");
@@ -241,11 +241,10 @@ public class ReleveFileEgmtTest extends TestCase {
     public void testSaveFileDeath() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        String place = "cityname,citycode,county,state,country";
-        
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
-
+        dataManager.setPlace("cityname","citycode","county","state","country");
+        String place = dataManager.getPlace().getValue();
+        
         RecordDeath death = new RecordDeath();
         death.setEventDate("11/11/2000");
         death.setCote("cote");
@@ -366,7 +365,7 @@ public class ReleveFileEgmtTest extends TestCase {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("");
+        dataManager.setPlace("","","","","");
 
         RecordMisc misc = new RecordMisc();
         misc.setEventDate("11/01/2000");
@@ -489,7 +488,7 @@ public class ReleveFileEgmtTest extends TestCase {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("");
+        dataManager.setPlace("","","","","");
 
         RecordMisc misc = new RecordMisc();
         misc.setEventDate("11/01/2000");
@@ -619,7 +618,7 @@ public class ReleveFileEgmtTest extends TestCase {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
-        dataManager.setPlace("");
+        dataManager.setPlace("","","","","");
 
         RecordMisc misc = new RecordMisc();
         misc.setEventDate("11/01/2000");

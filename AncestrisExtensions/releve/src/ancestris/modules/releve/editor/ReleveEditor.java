@@ -108,7 +108,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         
         // j'abonne l'editeur aux changements de lieu
         dataManager.addPlaceListener(this);
-        jLabelPlace.setText(dataManager.getPlace());
+        jLabelPlace.setText(dataManager.getPlace().getValue());
     }
 
      /**

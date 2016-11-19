@@ -129,10 +129,9 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
      * @param defaultPlace lieu par defaut des releves
      * @param forceDefaultPlace 1=remplace les lieux des releves par le lieu par défaut, 0=n'ajoute que les releves dont le lieu est le lieu par defaut
      */
-    public void addRecords(FileBuffer fileBuffer, boolean append, String defaultPlace, int forceDefaultPlace) {
+    public void addRecords(FileBuffer fileBuffer, boolean append) {
         if (!append && dataModel.getRowCount()!=0) {
             removeAll();
-            setPlace(defaultPlace);
         }
         
         dataModel.addRecords(fileBuffer.getRecords());
@@ -189,7 +188,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         
         // je restaure les donnees de completion du gedcom
         completionProvider.addGedcomCompletion(completionGedcom);
-        setPlace("");
+        //setPlace("","","","","");
         
         // raz des données de la session
         defaultCote = "";
@@ -257,9 +256,9 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         Collection<? extends Context> selected = Utilities.actionsGlobalContext().lookupAll(Context.class);
 
         Context c;
-        if (selected.isEmpty())
+        if (selected.isEmpty()) {
             c = GedcomExplorerTopComponent.getDefault().getContext();
-        else {
+        } else {
             c = Utilities.actionsGlobalContext().lookup(Context.class);
         }
         if (!firstIfNoneSelected)
@@ -338,7 +337,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
 
     // listeners devant être prevenus du changement de lieu
     private final ArrayList<PlaceListener> placeListeners = new ArrayList<PlaceListener>(1);
-    private final FieldPlace recordsInfoPlace = new FieldPlace();
+    private final RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
     
     private boolean placeChanged = false;
     
@@ -368,42 +367,48 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
                !country.equals(this.recordsInfoPlace.getCountryName())
           )
        {
-           String oldValue = recordsInfoPlace.getValue();
-           this.recordsInfoPlace.setCityName(cityName);
-           this.recordsInfoPlace.setCityCode(cityCode);
-           this.recordsInfoPlace.setCountyName(county);
-           this.recordsInfoPlace.setStateName(state);
-           this.recordsInfoPlace.setCountryName(country);
-           completionProvider.updatePlaces(recordsInfoPlace, oldValue);
+            String oldValue = recordsInfoPlace.getValue();
+            this.recordsInfoPlace.setValue(cityName, cityCode,county, state, country);
+            //TODO
+            completionProvider.updatePlaces(recordsInfoPlace, oldValue);
            
            placeChanged = true;
             // je notifie les listeners
             for(PlaceListener placeListener : placeListeners) {
-                placeListener.updatePlace(getPlace());
+                placeListener.updatePlace(getPlace().getValue());
             }
        }      
     }
 
+    
     @Override
     public void setPlace(String value) {
         String oldValue = recordsInfoPlace.getValue();
         recordsInfoPlace.setValue(value);
         placeChanged = true;
-        completionProvider.updatePlaces(recordsInfoPlace, oldValue);
+        // TODO
+        //completionProvider.updatePlaces(recordsInfoPlace, oldValue);
 
         // je notifie les listeners
         for (PlaceListener placeListener : placeListeners) {
-            placeListener.updatePlace(getPlace());
+            placeListener.updatePlace(recordsInfoPlace.getValue());
         }
     }
+    
+    
+    public void refreshPlaceListeners () {
+        for (PlaceListener placeListener : placeListeners) {
+            placeListener.updatePlace(recordsInfoPlace.getValue());
+        }
+    }
+ 
 
     /**
      * retourne le lieu au format "cityName,cityCode,countyName,stateName,countryName,"
      * @return
      */
-    @Override
-    public String getPlace() {
-        return recordsInfoPlace.getValue();
+    public RecordInfoPlace getPlace() {
+        return recordsInfoPlace;
     }
 
     @Override

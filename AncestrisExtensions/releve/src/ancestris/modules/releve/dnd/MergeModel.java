@@ -756,7 +756,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
         NbBundle.getMessage(MergeModel.class, "MergePanel.title.gedcomColumn"),
         "Identifiant"
     };
-    private Class[] columnClass = {String.class, Object.class, Boolean.class, Object.class, Entity.class};
+    private Class<?>[] columnClass = {String.class, Object.class, Boolean.class, Object.class, Entity.class};
 
     @Override
     public int getColumnCount() {

@@ -123,11 +123,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     public void testSaveFileBirthUtf8() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
         
-        String place = "cityname,citycode,county,state,country,";
-        
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
-
+        dataManager.setPlace("cityname","citycode","county","state","country");
+        String place = dataManager.getPlace().getValue();
+        
         RecordBirth birth = new RecordBirth();
         birth.setEventDate("01/01/2000");
         birth.setCote("cote");
@@ -182,11 +181,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     public void testSaveFileMarriage() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile2.txt");
         
-        String place = "cityname,citycode,county,state,country,";
-        
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
-
+        dataManager.setPlace("cityname","citycode","county","state","country");
+        String place = dataManager.getPlace().getValue();
+        
         RecordMarriage marriage = new RecordMarriage();
         marriage.setEventDate("01/01/2000");
         marriage.setCote("cote");
@@ -246,11 +244,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     public void testSaveFileDeath() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
 
-        String place = "cityname,citycode,county,state,country,";
-        
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
-
+        dataManager.setPlace("cityname","citycode","county","state","country");
+        String place = dataManager.getPlace().getValue();
+        
         RecordDeath death = new RecordDeath();
         death.setEventDate("11/11/2000");
         death.setCote("cote");
@@ -307,10 +304,10 @@ public class ReleveFileAncestrisV1Test extends TestCase {
     public void testSaveFileMisc() throws Exception {
         File file = File.createTempFile("testsaveFile", "txt");
         
-        String place = "cityname,citycode,county,state,country,";
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
-
+        dataManager.setPlace("cityname","citycode","county","state","country");
+        String place = dataManager.getPlace().getValue();
+        
         RecordMisc record = new RecordMisc();
         record.setEventDate("29/02/2012");
         record.setCote("cote");

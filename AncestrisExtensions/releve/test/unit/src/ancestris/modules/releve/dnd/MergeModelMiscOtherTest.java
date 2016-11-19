@@ -1,7 +1,8 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
-import ancestris.modules.releve.model.FieldPlace;
+import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -18,9 +19,9 @@ import junit.framework.TestCase;
  */
 public class MergeModelMiscOtherTest extends TestCase {
 
-     static public FieldPlace getRecordsInfoPlace() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("ville_misc,code_misc,departement_misc,region_misc,pays_misc");
+     static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("ville_misc","code_misc","departement_misc","region_misc","pays_misc");
         return recordsInfoPlace;
     }
 
@@ -122,6 +123,9 @@ public class MergeModelMiscOtherTest extends TestCase {
     */
     public void testAddOtherParticipant2Wife() {
         try {
+            // Merge options
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            
             Gedcom gedcom = TestUtility.createGedcom();
 
 
@@ -157,6 +161,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             //models.get(0).copyRecordToEntity();
             dialog.copyRecordToEntity();
 
+            // nouvel individu cree dans Gedcom
             Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
             assertEquals("Source event","", participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
@@ -164,13 +169,12 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:EVEN:PLAC"),""));
 
             assertEquals("participant1 : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), participant1.getBirthDate().getValue());
-            // le lieu et commentaire ne sont pas modifiés car la date de naissance du releve n'est pas plus precise
-            assertNotSame("participant1 : lieu naissance",mergeRecord.getIndi().getBirthPlace(), participant1.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            //assertEquals("Indi : Note naissance","", fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+            assertEquals("participant1 : Lieu naissance",mergeRecord.getIndi().getBirthPlace(), participant1.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("participant1 : Note naissance","Date de naissance ava 1999 déduite de l'acte 'Accord ' entre accordfirstname ACCORDLASTNAME et Motherfirstname MOTHERLASTNAME le 01/03/1999 (ville_misc, notaire_other)", participant1.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
 
             assertEquals("participant1 : Profession",1, participant1.getProperties(new TagPath("INDI:OCCU")).length);
             Property occupation = participant1.getProperties(new TagPath("INDI:OCCU"))[0];
-            assertEquals("participant1 : Profession",mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
+            assertEquals("participant1 : Profession",     mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant1 : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant1 : Lieu Profession",mergeRecord.getIndi().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
             Property link = participant1.getProperty(new TagPath("INDI:EVEN:XREF"));

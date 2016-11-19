@@ -2,6 +2,7 @@ package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import javax.swing.RowFilter;
 import javax.swing.table.AbstractTableModel;
 
@@ -29,7 +30,7 @@ public abstract class TableModelRecordAbstract extends AbstractTableModel {
         return dataManager.addRecord(record);
     }
 
-    public String getPlace() {
+    public RecordInfoPlace getPlace() {
         return dataManager.getPlace();
     }
         

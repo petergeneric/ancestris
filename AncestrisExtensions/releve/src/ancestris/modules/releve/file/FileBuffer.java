@@ -1,9 +1,9 @@
 package ancestris.modules.releve.file;
 
-import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ import java.util.List;
  * @author Michel
  */
 public class FileBuffer {
-    private FieldPlace recordsInfoPlace = new FieldPlace();
+    private RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
     private List<Record> records = new ArrayList<Record>();
     private HashMap<String, Integer> places = new HashMap<String, Integer>();
     private int birthCount =0;
@@ -56,7 +56,7 @@ public class FileBuffer {
         places.put(placeValue, count + 1);
     }
 
-     public FieldPlace getRegisterInfoPlace() {
+     public RecordInfoPlace getRegisterInfoPlace() {
         return recordsInfoPlace;
      }
 

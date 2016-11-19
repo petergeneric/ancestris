@@ -81,6 +81,13 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         }
 
         mergeOptionPanel.savePreferences();
+        
+        // je notifie les composants pour rafraichir l'affichage de la commune
+        for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
+            tc.getDataManager().refreshPlaceListeners();
+        }
+        
+        
         browserOptionsPanel.savePreferences();
 
     }

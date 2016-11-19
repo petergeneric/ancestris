@@ -1,7 +1,7 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
-import ancestris.modules.releve.model.FieldPlace;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -22,15 +22,15 @@ public class MergeModelMarriageTest extends TestCase {
         return "";
     }
 
-    static public FieldPlace getRecordsInfoPlace() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("Paris,75000,,state,country");
+    static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 
-    static public FieldPlace getRecordsInfoPlaceVilleMariage() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("ville_mariage,code_mariage,departement_mariage,region_mariage,pays_mariage");
+    static public RecordInfoPlace getRecordsInfoPlaceVilleMariage() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("ville_mariage","code_mariage","departement_mariage","region_mariage","pays_mariage");
         return recordsInfoPlace;
     }
 
