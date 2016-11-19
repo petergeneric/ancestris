@@ -372,13 +372,14 @@ public abstract class Report implements Cloneable, ResourcesProvider {
                 .setDefaultBadgeProvider()
                 .setTitle(title)
                 .setApproveText(button)
-                .setDefaultExtension(extension)
+                .setDefaultExtension((extension != null && !extension.isEmpty()) ? extension : FileChooserBuilder.getImageFilter().getExtensions()[0])
                 .setFileFilter(new FileExtensionFilter(extension))
+                .setAcceptAllFileFilterUsed(true)
                 .setFileHiding(true)
                 .setParent(owner)
                 .setDefaultDirAsReportDirectory()
                 .showSaveDialog(askForOverwrite);
-
+        
         if (file != null) {
             registry.put("file", file.getParent().toString());
         }
@@ -1057,7 +1058,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         private String extension;
 
         public FileExtensionFilter(String extension) {
-            this.extension = extension != null ? extension.toLowerCase() : "";
+            this.extension = extension != null ? extension.toLowerCase() : FileChooserBuilder.getHtmlFilter().getExtensions()[0];
         }
 
         /**
@@ -1076,7 +1077,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
         @Override
         public String getDescription() {
-            return extension.toUpperCase() + " files";
+            return extension;
         }
     }
 
