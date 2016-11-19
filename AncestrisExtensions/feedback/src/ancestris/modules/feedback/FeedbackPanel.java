@@ -68,7 +68,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
                 Image image = ancestris_logo.getImage();
                 int x = (this.getWidth() - image.getWidth(null)) / 2;
                 int y = (this.getHeight() - image.getHeight(null)) / 2;
-                g2d.drawImage(image,0, 0, 116, 116, null);
+                g2d.drawImage(image,0, 0, 128, 128, null);
                 super.paintComponent(g);
             }
         };
@@ -106,17 +106,18 @@ public class FeedbackPanel extends javax.swing.JPanel {
         jScrollPane2.setViewportView(jtaText);
 
         jPanel1.setOpaque(false);
-        jPanel1.setPreferredSize(new java.awt.Dimension(116, 116));
+        jPanel1.setPreferredSize(new java.awt.Dimension(128, 128));
+        jPanel1.setRequestFocusEnabled(false);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 116, Short.MAX_VALUE)
+            .addGap(0, 128, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 116, Short.MAX_VALUE)
+            .addGap(0, 128, Short.MAX_VALUE)
         );
 
         jLabel7.setFont(jLabel7.getFont().deriveFont(jLabel7.getFont().getSize()+4f));
@@ -157,7 +158,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
                             .addComponent(jtEmailTo)
                             .addComponent(jtEmail)
                             .addComponent(jtName, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE))
+                            .addComponent(jLabel7, javax.swing.GroupLayout.DEFAULT_SIZE, 476, Short.MAX_VALUE))
                         .addGap(8, 8, 8)))
                 .addContainerGap())
         );
@@ -187,7 +188,7 @@ public class FeedbackPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel2)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 121, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(sendLogCheckBox)
