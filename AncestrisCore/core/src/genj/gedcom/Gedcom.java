@@ -908,7 +908,6 @@ public class Gedcom implements Comparable {
      * Returns all entities
      */
     public List<Entity> getEntities() {
-        System.gc();
         return Collections.unmodifiableList(allEntities);
     }
 
@@ -916,7 +915,6 @@ public class Gedcom implements Comparable {
      * Returns entities of given type
      */
     public Collection<? extends Entity> getEntities(String tag) {
-        System.gc();
         return Collections.unmodifiableCollection(getEntityMap(tag).values());
     }
 
@@ -925,7 +923,6 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Fam> getFamilies() {
-        System.gc();
         return (Collection<Fam>) getEntities(FAM);
     }
 
@@ -934,7 +931,6 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Indi> getIndis() {
-        System.gc();
         return (Collection<Indi>) getEntities(INDI);
     }
 
@@ -943,7 +939,6 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Note> getNotes() {
-        System.gc();
         return (Collection<Note>) getEntities(NOTE);
     }
 
@@ -952,7 +947,6 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Source> getSources() {
-        System.gc();
         return (Collection<Source>) getEntities(SOUR);
     }
 
@@ -961,7 +955,6 @@ public class Gedcom implements Comparable {
      */
     @SuppressWarnings("unchecked")
     public Collection<Media> getMedias() {
-        System.gc();
         return (Collection<Media>) getEntities(OBJE);
     }
 
@@ -969,7 +962,6 @@ public class Gedcom implements Comparable {
      * Returns entities of given type sorted by given path (can be empty or null)
      */
     public Entity[] getEntities(String tag, String sortPath) {
-        System.gc();
         return getEntities(tag, sortPath != null && sortPath.length() > 0 ? new PropertyComparator(sortPath) : null);
     }
 
@@ -977,7 +969,6 @@ public class Gedcom implements Comparable {
      * Returns entities of given type sorted by comparator (can be null)
      */
     public Entity[] getEntities(String tag, Comparator<Property> comparator) {
-        System.gc();
         Collection<Entity> ents = getEntityMap(tag).values();
         Entity[] result = ents.toArray(new Entity[ents.size()]);
         // sort by comparator or entity
