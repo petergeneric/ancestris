@@ -128,7 +128,7 @@ public class PrivacyPolicyImpl extends PrivacyPolicy implements Filter {
 
     @Override
     public void openPreferences() {
-        OptionsDisplayer.getDefault().open("OptionsFormat/Privacy");
+        OptionsDisplayer.getDefault().open("OptionFormat/Privacy");
     }
 
     /**
