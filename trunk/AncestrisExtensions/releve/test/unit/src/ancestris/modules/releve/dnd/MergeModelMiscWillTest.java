@@ -1,14 +1,14 @@
 package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
-import ancestris.modules.releve.model.FieldPlace;
+import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
-import java.util.List;
 import javax.swing.JFrame;
 import junit.framework.TestCase;
 
@@ -18,9 +18,9 @@ import junit.framework.TestCase;
  */
 public class MergeModelMiscWillTest extends TestCase {
 
-     static public FieldPlace getRecordsInfoPlace() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("ville_misc,code_misc,departement_misc,region_misc,pays_misc");
+     static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("ville_misc","code_misc","departement_misc","region_misc","pays_misc");
         return recordsInfoPlace;
     }
 
@@ -30,6 +30,9 @@ public class MergeModelMiscWillTest extends TestCase {
     */
     public void testAddOther() {
         try {
+            // Merge options
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            
             Gedcom gedcom = TestUtility.createGedcom();
 
 

@@ -2,8 +2,9 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.MergeModel.MergeRow;
-import ancestris.modules.releve.model.FieldPlace;
+import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordDeath;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -17,9 +18,9 @@ import org.openide.util.Exceptions;
  */
 public class MergeModelDeathTest extends TestCase {
 
-    static public FieldPlace getRecordsInfoPlace() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("Paris,75000,,state,country");
+    static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 
@@ -155,6 +156,8 @@ public class MergeModelDeathTest extends TestCase {
     public void test_RecordDeath_Without_Occupation () {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
             // je supprime la profession et le lieu de naissance

@@ -3,8 +3,8 @@ package ancestris.modules.releve.dnd;
 import ancestris.modules.releve.dnd.TransferableRecord.TransferableData;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.table.ReleveTable;
-import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.table.TableModelRecordAbstract;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
@@ -37,7 +37,7 @@ public class RecordTransferHandle extends TransferHandler {
             Record record = model.getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
             Record clonedRecord = record.clone();
             // je complete le lieu dans le releve
-            FieldPlace recordsInfoPlace = new FieldPlace();
+            RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue(model.getPlace());
             String fileName;
             if (dataManager.getCurrentFile() != null ) {

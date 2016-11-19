@@ -280,7 +280,7 @@ public class SimilarNameDialog extends javax.swing.JFrame {
 
 
     private class SimilarTableModel extends AbstractTableModel {
-        private final Class columnClass[] = {String.class, String.class};
+        private final Class<?> columnClass[] = {String.class, String.class};
         private List<String> keys;
         private List<String> values;
         String[] columnName = { "",""};

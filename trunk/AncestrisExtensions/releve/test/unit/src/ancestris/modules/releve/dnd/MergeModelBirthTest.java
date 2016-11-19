@@ -2,8 +2,9 @@ package ancestris.modules.releve.dnd;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
-import ancestris.modules.releve.model.FieldPlace;
+import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordBirth;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -19,9 +20,9 @@ import junit.framework.TestCase;
  */
 public class MergeModelBirthTest extends TestCase {
 
-    static public FieldPlace getRecordsInfoPlace() {
-        FieldPlace recordsInfoPlace = new FieldPlace();
-        recordsInfoPlace.setValue("Paris,75000,,state,country");
+    static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
         return recordsInfoPlace;
     }
 
@@ -215,8 +216,8 @@ public class MergeModelBirthTest extends TestCase {
             List<MergeModel> models;
             
             RecordBirth record= createBirthRecord("child2");
-            FieldPlace recordsInfoPlace = new FieldPlace();
-            recordsInfoPlace.setValue("Brest,35000,,state,country");
+            RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+            recordsInfoPlace.setValue("Brest","35000","","state","country");
             String fileName = "releve brest.txt";
             String sourceTitle = "Etat civil Brest";
             MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
@@ -253,8 +254,8 @@ public class MergeModelBirthTest extends TestCase {
             List<MergeModel> models;
 
             RecordBirth record = createBirthRecord("I1");
-            FieldPlace recordsInfoPlace = new FieldPlace();
-            recordsInfoPlace.setValue("Versailles,75009,,state,country");
+            RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+            recordsInfoPlace.setValue("Versailles","75009","","state","country");
             String fileName = "BMS Paris";
             MergeOptionPanel.SourceModel.getModel().add(fileName, "BMS Paris");
             MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, fileName, record);
@@ -317,6 +318,9 @@ public class MergeModelBirthTest extends TestCase {
         try {
             RecordBirth record;
             MergeRecord mergeRecord;
+            
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
+            
 
             // cas : indiBirthPlace = ""
             record = new RecordBirth();

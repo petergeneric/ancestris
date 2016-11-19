@@ -6,6 +6,7 @@ import ancestris.modules.releve.model.FieldPlace;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -49,8 +50,8 @@ public class MergeRecord {
         participant1,
         participant2
     };
-
-    private FieldPlace recordInfoPlace = new FieldPlace();
+    
+    private RecordInfoPlace recordInfoPlace = new RecordInfoPlace();
     private final String fileName;
     private String eventSourceTitle;    
     private final Record record;
@@ -67,7 +68,7 @@ public class MergeRecord {
      * constructeur
      * @param record
      */
-    protected MergeRecord( FieldPlace recordsInfoPlace, String fileName, Record record)  {
+    protected MergeRecord( RecordInfoPlace recordsInfoPlace, String fileName, Record record)  {
         this.recordInfoPlace = recordsInfoPlace;
         if (fileName != null) {
             this.fileName = fileName;
@@ -242,7 +243,7 @@ public class MergeRecord {
     }
 
     String getEventPlace() {
-        return recordInfoPlace.toString();
+        return recordInfoPlace.getValue();        
     }
 
     String getEventPlaceCityName() {

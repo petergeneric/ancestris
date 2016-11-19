@@ -1,11 +1,9 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html lang="fr-fr">
-<head>
+<html lang="fr-fr" dir="ltr"><head>
     <title>Configuration</title>
-    <link rel="stylesheet" href="nbdocs:/ancestris/app/docs/ancestris.css">
+    <link rel="stylesheet" href="/ancestris/app/docs/ancestris.css">
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 </head>
-<body>
+<body contenteditable="true">
     <h1>Copie des relevés dans un fichier GEDCOM</h1>
     Les informations d'un relevé peuvent être copiées dans un
     arbre d'un fichier GEDCOM en utilisant la fonction
@@ -16,7 +14,7 @@
     <br>
     <br>
     <br>
-    <h1 class="">1) Afficher un exemple </h1>
+    <h1>1) Afficher un exemple </h1>
     Ouvrir le fichier Gedcom exemple et le relevé de démonstration fournis avec Ancestris<br>
     <br>
     <ul>
@@ -41,14 +39,15 @@
                     Date</span> </li>
         </ul>
     </ul>
+    <p>
+        Arbre et relevé affichés cote à cote :
+        <br>
+        <img src="images/dnd01.jpg" style="width: 680px; margin-left: 40px;" alt="">
+    </p>
     <br>
-    Arbre et relevé affichés cote à cote  
-    <img src="images/dnd01.jpg" style="width: 680px;" alt="">
     <br>
     <br>
-    <br>
-    <br>
-    <h1>2)Copier un relevé de naissance </h1>
+    <h1>2) Copier un relevé de naissance </h1>
     Exécuter un Glisser-déposer du relevé de naissance vers le mariage des parents
     dans l'arbre : <br>
     <ul>
@@ -109,7 +108,7 @@
     <br>
     <br>
     <br>
-    <h1>3)Copier un relevé de mariage  </h1>
+    <h1>3) Copier un relevé de mariage  </h1>
     Exécuter un Glisser-déposer du relevé de mariage du 16 mai 1770 de la
     table vers le mariage concerné dans l'arbre : <br>
     <br>
@@ -156,20 +155,96 @@
     <br>
     <div style="margin-left: 40px;"><img src="images/dnd08.jpg" style="width: 680px;" alt=""></div>
     <br>
+    
+    
+    <h1>4) Copier un relevé (cas général) </h1>
+    Les deux chapitres précédents décrivent la copie des cas particuliers de 
+    relevés de naissance et de mariage en déposant le relevé sur un individu ou 
+    un mariage que l'on a choisi dans l'arbre. 
     <br>
+    Plus généralement, il est possible de déposer le relevé 
+    <span style="font-weight: bold;">dans une zone vide de l'arbre.</span> 
+    Dans ce cas, le module Relevé recherche dans le fichier Gedcom les individus compatibles 
+    avec ce relevé en comparant les noms, les prénoms et les dates de naissance ou de mariage, 
+    ou décès (voir les options de recherche dans le chapitre suivant). 
     <br>
-    <h1>4)Conseils d'utilisation et limitations</h1>
-    <h2><span style="font-weight: bold;">Ajout dans l'ordre chronologique </span></h2>
+    Si plusieurs individus sont compatibles, la liste des individus est affichée
+    par ordre de pertinence et l'on peut sélectionner celui qui convient le mieux.
+    <br>
+    
+    
+    <h1>5) Configuration des options</h1>
+    <h2>Prénoms équivalents</h2>
+    <p>Quand on copie un relevé dans une zone vide de l'arbre du fichier Gedcom, 
+        le module recherche l'individu ayant un prénom et un nom équivalent phonétiquement. 
+        <br>
+        Il est possible de définir des équivalences supplémentaires en utilisant le bouton 
+        <span style="font-weight: bold;">Prénoms équivalents</span> des préférences du module 
+        <span style="font-weight: bold;">Relevé</span> et ajoutant
+        celle-ci dans la liste. <br>
+        Par exemple : Marion équivalent à Marie .
+    </p>
+    
+    <h2>Noms équivalents</h2>
+    <p>
+        Comme pour les prénoms ci-dessus , il est possible de déclarer des équivalences 
+        supplémentaires pour les noms (patronymes) en utilisant le bouton 
+        <span style="font-weight: bold;">Noms équivalents</span> des préférences du module 
+        <span style="font-weight: bold;">Relevé</span> et ajoutant
+        ceux-ci dans la liste. <br>
+        Par exemple : DOUSSAT équivalent à DOSSAT .
+    </p>
+    
+    <h2>Correspondance des informations du registre des relevés avec les juridictions du fichier Gedcom</h2>
+    <p>
+        Chaque fichier de relevé possède cinq informations générales : 
+        </p><ul>
+        <li> Commune 
+        </li><li> Code commune
+        </li><li> Département
+        </li><li> Région/Etat
+        </li><li> Pays
+        </li></ul>
+
+        Quand on copie un relevé dans l'arbre du Gedcom et si aucun 
+        lieu n'est explicitement renseigné dans le relevé, ces cinq informations sont 
+        utilisées pour renseigner le lieu (tag gedcom PLAC) en suivant l'ordre 
+        par défaut des 7 juridictions des fichiers Gedcom créés avec Ancestris 
+        (Lieudit,Commune,Code_INSEE,Code_Postal,Département,Région,Pays) 
+        de la manière suivante :
+        <span style="font-weight: bold;">,Commune, Code commune, , Département, Région/Etat, Pays</span> 
+        
+        <br><br>
+        Si l'ordre des juridictions des lieux du fichier Gedcom est différent, 
+        il possible de configurer le module relevé en utilisant l'option 
+        <span style="font-weight: bold;">Correspondance des informations du registre avec les juridictions du fichier Gedcom</span> 
+        des préférences du module <span style="font-weight: bold;">Relevé</span>.                
+    <p>
+    
+    <h2>Associer les fichiers de relevées à des sources</h2>
+    <p>
+        Quand on copie un relevé dans l'arbre du Gedcom, on peut sélectionner 
+        un source globale (tag SOUR) pour lier l'évènement à la source dans le fichier Gedcom.
+        <br>
+        Pour éviter d'avoir à sélectionner une source globale à chaque fois, 
+        il est possible de déclarer l'association d'un fichier de relevés avec 
+        une source globale en utilisant l'option 
+        <span style="font-weight: bold;">Associer les fichiers de relevées à des sources</span>
+        des préférences du module <span style="font-weight: bold;">Relevé</span>. 
+    </p>
+     
+    <br>
+    <h1>6) Conseils d'utilisation et limitations</h1>
+    <h2><span style="font-weight: bold;">Ajout dans l'ordre chronologique </span></h2><p>
     Il est préférable de copier les relevés dans l'ordre chronologique .
     Pour cela il vaut mieux utiliser l'<span style="font-weight: bold;">onglet
         "TOUS" classé par date</span>
     et ajouter les relevé du plus anciens au plus récent , plutôt que
     d'ajouter d'abord les relevés de naissance puis les mariages, puis les
-    décès. <br>
+    décès. </p>
     Cela améliore les résultats de la recherche des individus correspondant au relevés.<br>
     <br>
-    <h2><span style="font-weight: bold;">Glisser-déposer en dehors d'une
-            entité de l'arbre</span></h2>
+    <h2>Glisser-déposer en dehors d'une entité de l'arbre</h2>
     Il est possible de déposer un relevé n'importe où dans la fenêtre de l'arbre dynamique, en dehors
     d'une entité de l'arbre.<br>
     <br>
@@ -188,11 +263,11 @@
     </ul>
     <br>
     <h2>Annuler un glisser-déposer </h2>
-    Pour
-    annuler les modifications faites dans l'arbre après un Glisser-déposer
-    , cliquer n'importe où dans l'arbre et appuyer sur les<span style="font-weight: bold;"> touches CONTROL-Z.</span><br>
-    Un
-    seul CONTROL-Z suffit à supprimer tous les individus créés et toutes
+    Pour annuler les modifications faites dans l'arbre après un Glisser-déposer, 
+    cliquer n'importe où dans l'arbre et appuyer sur les 
+    <span style="font-weight: bold;"> touches CONTROL-Z.</span>
+    <br>
+    Un seul CONTROL-Z suffit à supprimer tous les individus créés et toutes
     les données qui ont été ajoutées par un Glisser-déposer.<br>
     <br>
     <h2>Règles de calcul des dates </h2>
@@ -208,5 +283,5 @@
     </ul>Ces données de base ne sont pas modifiables pour l'instant, mais elles
     le deviendront dans une version  ultérieure. <br><br><br><br>
     <br>
-</body>
-</html>
+
+</body></html>

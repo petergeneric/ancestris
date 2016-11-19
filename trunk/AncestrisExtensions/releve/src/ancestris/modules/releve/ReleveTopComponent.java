@@ -1,6 +1,5 @@
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.imageBrowser.ImageViewActionProvider;
 import ancestris.modules.releve.file.FileManager;
 import ancestris.modules.releve.file.ReleveFileExport;
 import ancestris.modules.releve.file.ReleveFileDialog;
@@ -83,7 +82,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     
     private StandaloneEditor standaloneEditor;
     private File currentFile = null;
-    private ImageViewActionProvider ImageViewActionProvider;
     
     public ReleveTopComponent() {
         super();
@@ -118,6 +116,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemImportClipboard.addActionListener(popupMouseHandler);
         menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/ImportFile16.png")));
         //popup.add(menuItemImportClipboard);
+        
         
         // statistics, demo, help
         popup.addSeparator();
@@ -204,7 +203,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                                 }
                                 dataManager.setPlace(defaultPlace);
                                 // Je copie les données dans les modeles
-                                dataManager.addRecords(fileBuffer, false, defaultPlace, 1 );
+                                dataManager.addRecords(fileBuffer, false );
                             } catch (Exception ex) {
                                 Exceptions.printStackTrace(ex);
                             }
@@ -236,8 +235,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } 
         }       
 
-        ImageViewActionProvider = new ImageViewActionProvider();
-        
         // j'active le DnD pour les Treeview
         ViewWrapperManager.addTreeViewListener();  
         
@@ -300,9 +297,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         
         // j'arrete le listener des vues
         ViewWrapperManager.removeTreeViewListener();
-        
-        // je désactive l'action
-        ImageViewActionProvider = null;
         
         //
         AncestrisPlugin.unregister(this);
@@ -420,6 +414,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
     }
 
+//    public void convertJuridictions() {
+//        JuridictionConvertDialog.show(WindowManager.getDefault().getMainWindow(), dataManager, "title");
+//    }
+
     public void showStatistics() {
         ReleveStatistic.showStatistics(dataManager);
     }
@@ -430,6 +428,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         ResultDialog.show(null, this, modelCheck, errorBuffer, currentFile);
     }
     
+    @Override
     public void setGedcomLinkSelected(boolean selected) {
         panelBirth.setGedcomLinkSelected(selected);
         panelMarriage.setGedcomLinkSelected(selected);
@@ -591,7 +590,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 // je traite les releves qui ont un lieu different du lieu par defaut
                 List<String> places = fileBuffer.getPlaces();
                 //places.addAll(newCompletionProvider.getPlaces());
-                String defaultPlace = dataManager.getPlace();
+                String defaultPlace = dataManager.getPlace().getValue();
                 if (append == false ) {
                     defaultPlace = "";
                 }
@@ -654,7 +653,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 if (defaultPlace != null && forceDefaultPlace != -1) {
                     dataManager.setPlace(defaultPlace);
                     // Je copie les données dans les modeles
-                    dataManager.addRecords(fileBuffer, append, defaultPlace, forceDefaultPlace );
+                    dataManager.addRecords(fileBuffer, append );
 
                     // je selectionne le premier releve dans chaque table, s'il n'y a
                     // pas de releve deja selectionne
@@ -1220,7 +1219,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             try {
                 InputStream is = getClass().getResourceAsStream("/ancestris/modules/releve/file/bourbons.txt");
                 fileBuffer = ReleveFileAncestrisV2.loadFile(is);
-                dataManager.addRecords(fileBuffer, false, fileBuffer.getPlaces().get(0), 1);
+                dataManager.addRecords(fileBuffer, false);
                 dataManager.setPlace(fileBuffer.getPlaces().get(0));
                 setCurrentFile(null);
                 dataManager.resetDirty();

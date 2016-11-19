@@ -107,10 +107,8 @@ public class ReleveFileNimegueTest extends TestCase {
     public void testSaveFileBirth() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
-        String place = "cityname,citycode,county,state,country";
-        
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordBirth record = new RecordBirth();
         record.setEventDate("11/11/2000");
@@ -226,11 +224,9 @@ public class ReleveFileNimegueTest extends TestCase {
      */
     public void testSaveFileMarriage() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-
-        String place = "cityname,citycode,county,state,country";
         
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordMarriage record = new RecordMarriage();
         record.setEventDate("29/02/2012");
@@ -349,11 +345,9 @@ public class ReleveFileNimegueTest extends TestCase {
      */
     public void testSaveFileDeath() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-
-        String place = "cityname,citycode,county,state,country";
         
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordDeath record = new RecordDeath();
         record.setEventDate("11/11/2000");
@@ -468,11 +462,9 @@ public class ReleveFileNimegueTest extends TestCase {
      */
     public void testSaveFileMisc() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-
-        String place = "cityname,citycode,county,state,country";
         
         DataManager dataManager = new DataManager();
-        dataManager.setPlace(place);
+        dataManager.setPlace("cityname","citycode","county","state","country");
 
         RecordMisc record = new RecordMisc();
         record.setEventDate("29/02/2012");
