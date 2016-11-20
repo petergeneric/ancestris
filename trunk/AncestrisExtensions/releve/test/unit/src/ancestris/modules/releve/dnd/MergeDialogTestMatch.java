@@ -1,12 +1,12 @@
 package ancestris.modules.releve.dnd;
 
 import genj.gedcom.time.Delta;
-import genj.gedcom.time.PointInTime;
 import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -18,6 +18,7 @@ public class MergeDialogTestMatch extends TestCase {
     /**
      * test match age
      */
+    @Test
     public void testMatchAge() {
         Pattern pattern = Pattern.compile("^([0-9\\p{javaWhitespace}]{0,4})a ([0-9\\p{javaWhitespace}]{0,2})m ([0-9\\p{javaWhitespace}]{0,2})j?$");
         String age;
@@ -67,6 +68,7 @@ public class MergeDialogTestMatch extends TestCase {
     /**
      * test match age
      */
+    @Test
     public void testDelta() {
         Delta delta = new Delta(0,0,0);
 
@@ -83,6 +85,7 @@ public class MergeDialogTestMatch extends TestCase {
     /**
      * test splitCSV
      */
+    @Test
     public void testFindSources1() {
         Pattern pattern = Pattern.compile("BMS ([\\S\\-]+) (\\d+)");
         String sourceTitle = "BMS city-namée 1720" ;
@@ -100,6 +103,7 @@ public class MergeDialogTestMatch extends TestCase {
     /**
      * test match string
      */
+    @Test
     public void testFindSources2() {
         Pattern pattern = Pattern.compile("(?:BMS|Etat\\scivil) ([\\S\\-]+) (\\d+)\\-?(\\d+)?");
         String sourceTitle = "BMS city-namée 1720-1792" ;
@@ -139,6 +143,7 @@ public class MergeDialogTestMatch extends TestCase {
     /**
      * test match string
      */
+    @Test
     public void testFindSources3() {
         Pattern pattern = Pattern.compile("(\\d+)(?:\\s++)(\\D+)(?:\\s++)(?:BMS|Etat\\scivil)");
         String sourceTitle ;
@@ -178,6 +183,7 @@ public class MergeDialogTestMatch extends TestCase {
     /**
      * test match string
      */
+    @Test
     public void testFindSources4() {
         String sourceTitle ;
         MatchResult match;
@@ -221,6 +227,7 @@ public class MergeDialogTestMatch extends TestCase {
      /**
      * test match string
      */
+    @Test
     public void testFindSources5() {
         String sourceTitle ;
         boolean match;

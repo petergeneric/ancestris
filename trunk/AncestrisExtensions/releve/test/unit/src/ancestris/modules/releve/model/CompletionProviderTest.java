@@ -2,10 +2,9 @@ package ancestris.modules.releve.model;
 
 import ancestris.modules.releve.TestUtility;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomException;
 import java.util.ArrayList;
-import javax.swing.SwingUtilities;
 import junit.framework.TestCase;
+import org.junit.Test;
 import org.openide.util.Exceptions;
 
 /**
@@ -22,6 +21,7 @@ public class CompletionProviderTest extends TestCase {
     /**
      * test ajout d'une naissance
      */
+    @Test
     public void testAddBirthRecord() {
         try {
             RecordBirth record = new RecordBirth();
@@ -61,6 +61,7 @@ public class CompletionProviderTest extends TestCase {
     /**
      * test ajout d'une naissance
      */
+    @Test
     public void testAddMiscRecord() {
         try {
             RecordMisc record1 = new RecordMisc();
@@ -167,6 +168,7 @@ public class CompletionProviderTest extends TestCase {
     /**
      * Test of addGedcomCompletion method, of class CompletionProvider.
      */
+    @Test
     public void testAddGedcom() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -185,6 +187,7 @@ public class CompletionProviderTest extends TestCase {
     /**
      * test exlusion de prenom et de nom
      */
+    @Test
     public void testExludeFirstName() {
         try {
             RecordBirth record = new RecordBirth();
@@ -234,6 +237,7 @@ public class CompletionProviderTest extends TestCase {
     /**
      * Test of addGedcomCompletion method, of class CompletionProvider.
      */
+    @Test
     public void testSortFirstName() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();

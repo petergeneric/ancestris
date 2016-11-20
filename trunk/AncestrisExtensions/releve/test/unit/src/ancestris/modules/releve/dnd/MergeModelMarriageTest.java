@@ -11,6 +11,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -61,6 +62,7 @@ public class MergeModelMarriageTest extends TestCase {
     /**
      * 
      */
+    @Test
     public void testAddMarriage() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -152,6 +154,7 @@ public class MergeModelMarriageTest extends TestCase {
     /**
      * testSaveDataComment
      */
+    @Test
     public void testUpdateMariageAndFatherBirthDate() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -226,6 +229,7 @@ public class MergeModelMarriageTest extends TestCase {
     /**
      * test l'ajout de l'epouse dans un mariage deja existant
      */
+    @Test
     public void testUpdateMarriageWithoutWife() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -290,7 +294,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Indi : Note Profession",126, occupation.getValue(new TagPath("OCCU:NOTE"),"").length());
 
             assertEquals("Wife : Nom",mergeRecord.getWife().getLastName(), fam.getWife().getLastName());
-            assertEquals("Wife : Prénom",mergeRecord.getWife().getFirstName().toString(), fam.getWife().getFirstName().toString());
+            assertEquals("Wife : Prénom",mergeRecord.getWife().getFirstName(), fam.getWife().getFirstName().toString());
             assertEquals("Wife : Date naissance",mergeRecord.getWife().getBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
             assertEquals("Wife : lieu naissance",mergeRecord.getWife().getBirthPlace(), fam.getWife().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             assertEquals("Wife : Note naissance",141, fam.getWife().getValue(new TagPath("INDI:BIRT:NOTE"), "").length());
@@ -313,6 +317,7 @@ public class MergeModelMarriageTest extends TestCase {
     /**
      * modification de la date de deces du pere
      */
+    @Test
     public void testUpdateMariageAndFatherDeathDate() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();

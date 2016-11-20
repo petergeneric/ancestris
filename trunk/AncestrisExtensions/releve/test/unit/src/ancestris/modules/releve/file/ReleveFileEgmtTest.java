@@ -8,6 +8,8 @@ import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import java.io.File;
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -18,7 +20,8 @@ public class ReleveFileEgmtTest extends TestCase {
      /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
-    public void testSaveFileBirth() throws Exception {
+    @Test
+    public void testSaveFileBirth() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -41,8 +44,15 @@ public class ReleveFileEgmtTest extends TestCase {
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.birth, file, false);
         assertEquals("verify save error", sb.length(), 0);
 
-        FileBuffer fb = ReleveFileEgmt.loadFile(file);
-        assertEquals("load result", "", fb.getError().toString());
+        FileBuffer fb;
+        try {
+            fb = ReleveFileEgmt.loadFile(file);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+            return;
+        }
+        assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getBirthCount());
         RecordBirth birth2 = (RecordBirth) fb.getRecords().get(0);
 
@@ -117,7 +127,8 @@ public class ReleveFileEgmtTest extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
-    public void testSaveFileMarriage() throws Exception {
+    @Test
+    public void testSaveFileMarriage() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -145,8 +156,16 @@ public class ReleveFileEgmtTest extends TestCase {
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.marriage, file, false);
         assertEquals("verify save error", 0, sb.length());
 
-        FileBuffer fb = ReleveFileEgmt.loadFile(file);
-        assertEquals("load result", "", fb.getError().toString());
+        FileBuffer fb;
+        try {
+            fb = ReleveFileEgmt.loadFile(file);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+            return;
+        }
+        
+        assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getMarriageCount());
         RecordMarriage marriage2 = (RecordMarriage) fb.getRecords().get(0);
 
@@ -238,7 +257,8 @@ public class ReleveFileEgmtTest extends TestCase {
     /**
      * Test de l'enregistrement d'un deces
      */
-    public void testSaveFileDeath() throws Exception {
+    @Test
+    public void testSaveFileDeath() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -263,7 +283,14 @@ public class ReleveFileEgmtTest extends TestCase {
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.death, file, false);
         assertEquals("verify save error", "", sb.toString());
 
-        FileBuffer fb = ReleveFileEgmt.loadFile(file);
+        FileBuffer fb;
+        try {
+            fb = ReleveFileEgmt.loadFile(file);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+            return;
+        }
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getDeathCount());
         RecordDeath death2 = (RecordDeath) fb.getRecords().get(0);
@@ -361,7 +388,8 @@ public class ReleveFileEgmtTest extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
-    public void testSaveFileMarriageContract() throws Exception {
+    @Test
+    public void testSaveFileMarriageContract() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -392,7 +420,14 @@ public class ReleveFileEgmtTest extends TestCase {
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
-        FileBuffer fb = ReleveFileEgmt.loadFile(file);
+        FileBuffer fb;
+        try {
+            fb = ReleveFileEgmt.loadFile(file);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+            return;
+        }
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc misc2 = (RecordMisc) fb.getRecords().get(0);
@@ -484,7 +519,8 @@ public class ReleveFileEgmtTest extends TestCase {
 /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
-    public void testSaveFileTestament() throws Exception {
+    @Test
+    public void testSaveFileTestament() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -515,7 +551,15 @@ public class ReleveFileEgmtTest extends TestCase {
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
-        FileBuffer fb = ReleveFileEgmt.loadFile(file);
+        FileBuffer fb;
+        try {
+            fb = ReleveFileEgmt.loadFile(file);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+            return;
+        }
+        
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc misc2 = (RecordMisc) fb.getRecords().get(0);
@@ -614,7 +658,8 @@ public class ReleveFileEgmtTest extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
-    public void testSaveFileMisc() throws Exception {
+    @Test
+    public void testSaveFileMisc() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -645,7 +690,15 @@ public class ReleveFileEgmtTest extends TestCase {
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 
-        FileBuffer fb = ReleveFileEgmt.loadFile(file);
+        FileBuffer fb;
+        try {
+            fb = ReleveFileEgmt.loadFile(file);
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+            return;
+        }
+        
         assertEquals("load result", "", fb.getError().toString());
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc misc2 = (RecordMisc) fb.getRecords().get(0);
@@ -738,7 +791,8 @@ public class ReleveFileEgmtTest extends TestCase {
     }
 
 
-     public void testFormatAgeToField() throws Exception {
+    @Test
+    public void testFormatAgeToField() {
 
          assertEquals("formatAgeToField 76", "76y", ReleveFileEgmt.formatAgeToField("76"));
          assertEquals("formatAgeToField 76", "76y", ReleveFileEgmt.formatAgeToField("76 ans"));

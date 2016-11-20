@@ -11,6 +11,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import javax.swing.JFrame;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -28,6 +29,7 @@ public class MergeModelMiscWillTest extends TestCase {
     /**
      *
     */
+    @Test
     public void testAddOther() {
         try {
             // Merge options
