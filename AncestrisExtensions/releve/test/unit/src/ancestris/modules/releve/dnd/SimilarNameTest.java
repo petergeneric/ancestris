@@ -2,6 +2,7 @@ package ancestris.modules.releve.dnd;
 
 import java.util.HashMap;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -13,6 +14,7 @@ public class SimilarNameTest extends TestCase {
         super(testName);
     }
 
+    @Test
     public void testsaveloadSimilarFirstName() {
         HashMap<String,String> hashmap = new HashMap<String,String>();
 

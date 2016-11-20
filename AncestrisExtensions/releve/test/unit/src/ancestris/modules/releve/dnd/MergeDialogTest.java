@@ -9,6 +9,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import javax.swing.JFrame;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -19,6 +20,7 @@ public class MergeDialogTest extends TestCase {
     /**
      * testMergeRecordBirth avec source existante
      */
+    @Test
     public void testMergeRecordMarriage() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -37,6 +39,7 @@ public class MergeDialogTest extends TestCase {
    /**
      * testMergeRecordBirth avec source existante
      */
+    @Test
     public void testMergeRecordBirth() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -70,6 +73,7 @@ public class MergeDialogTest extends TestCase {
     /**
      * testMergeRecordBirth avec nouvel individu
      */
+    @Test
     public void testMergeRecordBirthIndiNull() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -103,6 +107,7 @@ public class MergeDialogTest extends TestCase {
     /**
      * testMergeRecordBirth avec nouvel individu
      */
+    @Test
     public void testMergeRecordDeathIndiNull() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();

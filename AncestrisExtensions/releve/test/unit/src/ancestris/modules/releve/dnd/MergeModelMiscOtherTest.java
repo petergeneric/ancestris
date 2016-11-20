@@ -12,6 +12,7 @@ import genj.gedcom.TagPath;
 import java.util.List;
 import javax.swing.JFrame;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -121,6 +122,7 @@ public class MergeModelMiscOtherTest extends TestCase {
     /**
      *
     */
+    @Test
     public void testAddOtherParticipant2Wife() {
         try {
             // Merge options

@@ -4,12 +4,14 @@ import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -21,6 +23,7 @@ public class MergeQueryTest extends TestCase {
     /**
      * test_isCompatible
      */
+    @Test
     public void test_isCompatible() {
         try {
             PropertyDate recordDate = new PropertyDate();
@@ -40,6 +43,7 @@ public class MergeQueryTest extends TestCase {
     /**
      * testIsRecordBeforeThanDate
      */
+    @Test
     public void testIsRecordBeforeThanDate() {
         try {
             PropertyDate recordDate = new PropertyDate();
@@ -109,7 +113,7 @@ public class MergeQueryTest extends TestCase {
 
 
 
-        } catch (Exception ex) {
+        } catch (GedcomException ex) {
             fail(ex.getMessage());
         }
     }
@@ -117,6 +121,7 @@ public class MergeQueryTest extends TestCase {
     /**
      * testFindParentsFamily
      */
+    @Test
     public void testIsRecordAfterThanDate() {
         try {
             PropertyDate recordDate = new PropertyDate();
@@ -146,6 +151,7 @@ public class MergeQueryTest extends TestCase {
     /**
      * testFindParentsFamily
      */
+    @Test
     public void testFindSameChild() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -181,6 +187,7 @@ public class MergeQueryTest extends TestCase {
    /**
      * testFindParentsFamily
      */
+    @Test
     public void testFindParentsFamily() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -271,6 +278,7 @@ public class MergeQueryTest extends TestCase {
     /**
      * testfindSameIndi
      */
+    @Test
     public void testfindSameIndi() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -333,6 +341,7 @@ public class MergeQueryTest extends TestCase {
     /**
      * testfindSameIndi
      */
+    @Test
     public void testGetMostAccurateDate() {
         try {
             PropertyDate recordDate = new PropertyDate();
@@ -407,6 +416,7 @@ public class MergeQueryTest extends TestCase {
         }
     }
 
+    @Test
     public void testIsSameLastName() {
 
         assertFalse(MergeQuery.isSameLastName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
@@ -416,6 +426,7 @@ public class MergeQueryTest extends TestCase {
 
     }
  
+    @Test
     public void testIsFirstLastName() {
 
         assertTrue(MergeQuery.isSameFirstName("Marianne", "Marianne, Pétronille"));

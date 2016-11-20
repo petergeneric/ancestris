@@ -3,6 +3,7 @@ import ancestris.modules.releve.TestUtility;
 import genj.gedcom.Gedcom;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -17,6 +18,7 @@ public class DataManagerTest extends TestCase {
         /**
      * Test of removeGedcomCompletion method, of class CompletionProvider.
      */
+    @Test
     public void testAddGedcom() {
        try {
             DataManager dataManager = new DataManager();

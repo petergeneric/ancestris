@@ -6,8 +6,12 @@ import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.PDFFormat;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import junit.framework.TestCase;
+import org.junit.Test;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -19,7 +23,8 @@ public class ReleveFilePdfTest extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
-    public void testSaveFileMisc() throws Exception {
+    @Test
+    public void testSaveFileMisc() {
         File file = new File(System.getProperty("user.home") + File.separator + "testpdf.PDF");
 
         DataManager dataManager = new DataManager();
@@ -62,11 +67,10 @@ public class ReleveFilePdfTest extends TestCase {
     private final static String FORMAT_EMPHASIS = "font-weight=italic";
     private final static String FORMAT_STRONG = "font-weight=bold";
 
-    public void testPDF() throws Exception {
+    @Test
+    public void testPDF() {
 
-        File file = new File("C:\\Users\\Michel\\Desktop\\aaa.PDF");
-        // try to create output stream
-        FileOutputStream out = new FileOutputStream(file);
+        File file = new File(System.getProperty("user.home") + File.separator + "testpdfdocformat.PDF");
         Format format = new PDFFormat();
         Document doc = new Document("Mon Titre");
 
@@ -89,8 +93,13 @@ public class ReleveFilePdfTest extends TestCase {
         doc.addText("texte 4", "font-size=8pt");
         doc.nextParagraph();
         doc.nextParagraph();
-        // continue
-        format.format(doc, file);
+        try {
+            // continue
+            format.format(doc, file);
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());            
+        }
 
         file.delete();
 

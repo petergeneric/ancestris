@@ -10,6 +10,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Test;
 import org.openide.util.Exceptions;
 
 /**
@@ -62,6 +63,7 @@ public class MergeModelDeathTest extends TestCase {
     /**
      * test_RecordDeath_copyRecordToEntity_Date
      */
+    @Test
     public void test_RecordDeath_copyRecordToEntity_Date() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -153,6 +155,7 @@ public class MergeModelDeathTest extends TestCase {
     /**
      * test_RecordDeath_copyRecordToEntity_Date
      */
+    @Test
     public void test_RecordDeath_Without_Occupation () {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -248,6 +251,7 @@ public class MergeModelDeathTest extends TestCase {
     /**
      * test_RecordDeath_copyRecordToEntity_Comment
      */
+    @Test
     public void test_RecordDeath_copyRecordToEntity_Comment() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -297,6 +301,7 @@ public class MergeModelDeathTest extends TestCase {
     /**
      * test de la recherche de l'ex conjoint
      */
+    @Test
     public void testFindMarried() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();

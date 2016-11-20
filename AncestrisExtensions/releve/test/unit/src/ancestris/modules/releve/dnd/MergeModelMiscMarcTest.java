@@ -11,6 +11,7 @@ import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -71,6 +72,7 @@ public class MergeModelMiscMarcTest extends TestCase {
     /**
      * 
     */
+    @Test
     public void testAddMarcNewCM() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -176,7 +178,8 @@ public class MergeModelMiscMarcTest extends TestCase {
     /**
      *
     */    
-     public void testAddMarcCM1() {
+    @Test
+    public void testAddMarcCM1() {
         try {
             // Merge options
             PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);

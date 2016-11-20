@@ -13,6 +13,7 @@ import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.util.List;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -91,6 +92,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * test_RecordBirth_copyRecordToEntity_Date
      */
+    @Test
     public void test_RecordBirth_copyRecordToEntity_Date() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -129,6 +131,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * test_RecordBirth_copyRecordToEntity_Comment
      */
+    @Test
     public void test_RecordBirth_copyRecordToEntity_Comment() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -179,6 +182,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * testMergeRecordBirth avec source existante
      */
+    @Test
     public void testMergeRecordBirthSourceExistanteDejaAssociee() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -209,6 +213,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * testMergeRecordBirth avec ajout d'une source existante mais pas déjà associee à la naissance
      */
+    @Test
     public void testMergeRecordBirthSourceExistanteNonAssociee() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -246,6 +251,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * testMergeRecordBirth avec nouvelle source
      */
+    @Test
     public void testMergeRecordBirthSourceNewSource() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -280,6 +286,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * testMergeRecordBirth avec nouvelle source
      */
+    @Test
     public void testMergeRecordBirthAutreIndiExistant() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -314,6 +321,7 @@ public class MergeModelBirthTest extends TestCase {
     /**
      * testMergeRecordBirth avec nouvelle source
      */
+    @Test
     public void testMergeRecordBirthIndiBirthPlace() {
         try {
             RecordBirth record;

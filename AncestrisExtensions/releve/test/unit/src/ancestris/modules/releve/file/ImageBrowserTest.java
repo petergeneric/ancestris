@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileFilter;
 import java.io.FilenameFilter;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -14,6 +15,7 @@ public class ImageBrowserTest extends TestCase {
     /**
      * test splitCSV
      */
+    @Test
     public void testFindImage() {
 
         //File mainImageDirectory = new File( "D:\\Généalogie");
@@ -31,6 +33,7 @@ public class ImageBrowserTest extends TestCase {
 //        }
 //
 //        assertNotNull(result);
+        assertTrue("test vide", true);
 
     }
     

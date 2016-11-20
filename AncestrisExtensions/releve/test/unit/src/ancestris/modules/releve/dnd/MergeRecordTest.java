@@ -9,6 +9,7 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -19,6 +20,7 @@ public class MergeRecordTest extends TestCase {
     /**
      * test match age
      */
+    @Test
     public void test_getYear() {
         
         PointInTime pit = new PointInTime(0,5,2000);
@@ -34,6 +36,7 @@ public class MergeRecordTest extends TestCase {
     /**
      * test_getIndi().getMarriedMarriageDate
      */
+    @Test
     public void test_getIndiMarriedMarriageDate() {
         try {
             
@@ -66,6 +69,7 @@ public class MergeRecordTest extends TestCase {
     /**
      * test_getIndi().getFatherBirthDate
      */
+    @Test
     public void test_getFatherBirthDate() {
         try {
             PropertyDate birthDate;
@@ -109,6 +113,7 @@ public class MergeRecordTest extends TestCase {
     /**
      * test_getIndi().getFatherDeathDate
      */
+    @Test
     public void test_getFatherDeathDate() {
         try {
             PropertyDate deathDate;
@@ -186,6 +191,7 @@ public class MergeRecordTest extends TestCase {
     /**
      * test calculateBirthDate
      */
+    @Test
     public void test_getBirthDate() {
         try {
             PropertyDate birthDate;
@@ -253,6 +259,7 @@ public class MergeRecordTest extends TestCase {
     /**
      * test_getIndi().getParentMariageDate
      */
+    @Test
     public void test_getParentMariageDate() {
         try {
             {

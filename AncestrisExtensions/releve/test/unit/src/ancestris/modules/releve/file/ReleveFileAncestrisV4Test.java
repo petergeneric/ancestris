@@ -10,6 +10,7 @@ import ancestris.modules.releve.model.RecordMisc;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.junit.Test;
 import org.openide.util.Exceptions;
 
 /**
@@ -25,6 +26,7 @@ public class ReleveFileAncestrisV4Test extends TestCase {
     /**
      * Test of isValidFile method, of class ReleveFileAncestrisV4.
      */
+    @Test
     public void testIsValidFile() {
         File file;
         try {
@@ -66,7 +68,8 @@ public class ReleveFileAncestrisV4Test extends TestCase {
     /**
      * Test of loadFile method, of class ReleveFileAncestrisV4.
      */
-    public void testLoadFile() throws Exception {
+    @Test
+    public void testLoadFile() {
         try {
             File file ;
             String data;
@@ -122,7 +125,8 @@ public class ReleveFileAncestrisV4Test extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileAncestrisV4.
      */
-    public void testSaveFileBirthUtf8() throws Exception {
+    @Test
+    public void ttttestSaveFileBirthUtf8() {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
         
         DataManager dataManager = new DataManager();
@@ -178,7 +182,8 @@ public class ReleveFileAncestrisV4Test extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileAncestrisV4.
      */
-    public void testSaveFileMarriage() throws Exception {
+    @Test
+    public void testSaveFileMarriage() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
         
         DataManager dataManager = new DataManager();
@@ -233,7 +238,8 @@ public class ReleveFileAncestrisV4Test extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileAncestrisV4.
      */
-    public void testSaveFileDeath() throws Exception {
+    @Test
+    public void testSaveFileDeath() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();
@@ -284,7 +290,8 @@ public class ReleveFileAncestrisV4Test extends TestCase {
     /**
      * Test of saveFile method, of class ReleveFileAncestrisV4.
      */
-    public void testSaveFileMisc() throws Exception {
+    @Test
+    public void testSaveFileMisc() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
 
         DataManager dataManager = new DataManager();

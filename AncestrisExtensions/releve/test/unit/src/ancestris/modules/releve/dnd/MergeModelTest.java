@@ -10,6 +10,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.TagPath;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -20,6 +21,7 @@ public class MergeModelTest extends TestCase {
     /**
      * test copyMarriageDate
      */
+    @Test
     public void test_CopyMarriageDate() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -58,6 +60,7 @@ public class MergeModelTest extends TestCase {
     /**
      * test_copyOccupation
      */
+    @Test
     public void test_copyBirthOccupation() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();

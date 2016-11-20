@@ -58,7 +58,7 @@ import org.openide.windows.WindowManager;
 /**
  * Top component which displays something.
  */
-@RetainLocation("explorer")
+//@RetainLocation("explorer")
 // je declare la classe ServiceProvider pour que ses instances soient visibles
 //@ServiceProvider(service=ReleveTopComponent.class)
 public final class ReleveTopComponent extends TopComponent implements MenuCommandProvider {    

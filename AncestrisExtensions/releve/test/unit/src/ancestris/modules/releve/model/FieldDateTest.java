@@ -1,6 +1,7 @@
 package ancestris.modules.releve.model;
 
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -15,6 +16,7 @@ public class FieldDateTest extends TestCase {
     /**
      * Test of setValue method, of class FieldDate.
      */
+    @Test
     public void test_SetValue_Object() {
         FieldDate fieldDate = new FieldDate();
 

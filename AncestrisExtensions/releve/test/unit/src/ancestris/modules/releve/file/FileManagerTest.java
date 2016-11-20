@@ -7,6 +7,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import junit.framework.TestCase;
+import org.junit.Test;
 
 /**
  *
@@ -18,6 +19,7 @@ public class FileManagerTest extends TestCase {
     /**
      * test splitCSV
      */
+    @Test
     public void testLineSplitCSV() {
         char fieldSeparator = ';';
         String[] fields = { "aaa", "bbb;bb", "cc\"c\"", ""};
@@ -47,6 +49,7 @@ public class FileManagerTest extends TestCase {
      /**
      * test saveFile avec un repertoire de fichier inexistant
      */
+    @Test
     public void testLoadFileOneLine() {
         File file = null;
         try {
@@ -55,7 +58,7 @@ public class FileManagerTest extends TestCase {
             file = TestUtility.createFile(data);
             FileBuffer fb = FileManager.loadFile(file);
             file.delete();
-            assertEquals("Mariage minimal", "", fb.getError().toString());
+            assertEquals("Mariage minimal", "", fb.getError());
             
         } catch (Exception ex) {
             fail("IOException "+ ex.toString());
@@ -68,6 +71,7 @@ public class FileManagerTest extends TestCase {
     /**
      * test saveFile avec un repertoire de fichier inexistant
      */
+    @Test
     public void testSaveFile() {
         File saveFile = new File("xxxx/xxx.txt");
 
