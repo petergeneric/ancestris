@@ -51,8 +51,8 @@ public class GedcomUtilities {
         Gedcom.REPO
     };
 
-    public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType) {
-        LOG.log(Level.FINE, "deleting_tag {0}", tagToRemove);
+        public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType) {
+        LOG.log(Level.FINER, "deleting_tag {0}", tagToRemove);
 
         Collection<? extends Entity> entities;
         int iCounter = 0;
@@ -75,13 +75,13 @@ public class GedcomUtilities {
                         String propText = parent.getTag() + " " + tagToRemove + " '" + prop.toString() + "'";
                         parent.delProperty(prop);
                         iCounter++;
-                        LOG.log(Level.INFO, "deleting_tag {0} {1} {2}", new Object[]{entity.getTag(), entity.toString(), propText});
+                        LOG.log(Level.FINER, "deleting_tag {0} {1} {2}", new Object[]{entity.getTag(), entity.toString(), propText});
                     }
                 }
             }
         }
 
-        LOG.log(Level.FINE, "DeletedNb {0}", iCounter);
+        LOG.log(Level.FINER, "DeletedNb {0}", iCounter);
     }
 
     private static List<Property> getPropertiesRecursively(Property parent, String tag) {
@@ -105,7 +105,7 @@ public class GedcomUtilities {
      * the property list to be included in the dest entity
      */
     public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> properties) {
-        LOG.log(Level.FINE, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
+        LOG.log(Level.FINER, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
 
         for (Property rightProperty : properties) {
             try {
@@ -186,7 +186,7 @@ public class GedcomUtilities {
 
         Collection<? extends Entity> entities;
 
-        LOG.log(Level.FINE, "Searching for property {0}", type.getClass());
+        LOG.log(Level.FINER, "Searching for property {0}", type.getClass());
 
         if (entityType == ENT_ALL) {
             entities = gedcom.getEntities();
@@ -200,7 +200,7 @@ public class GedcomUtilities {
             foundProperties.addAll(searchPropertiesRecursively(entity, type));
         }
 
-        LOG.log(Level.FINE, "found  {0}", foundProperties.size());
+        LOG.log(Level.FINER, "found  {0}", foundProperties.size());
 
         return foundProperties;
     }
