@@ -12,6 +12,7 @@
 package ancestris.gedcom;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.core.pluginservice.PluginInterface;
 import ancestris.util.ProgressListener;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
@@ -36,6 +37,8 @@ import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.view.ViewContext;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -47,6 +50,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import org.apache.commons.io.FileUtils;
 import org.openide.DialogDescriptor;
@@ -342,18 +346,24 @@ public abstract class GedcomMgr {
             // Open Connection and get input stream
             Origin origin = Origin.create(input);
             final List<ViewContext> warnings = new ArrayList<ViewContext>();
+            final List<Object> bag = new ArrayList<Object>(); // stores something if header has warnings
             GedcomReader reader;
             try {
 
                 // .. prepare our reader
                 reader = (GedcomReader) Spin.off(GedcomReaderFactory.createReader(origin, (GedcomReaderContext) Spin.over(new GedcomReaderContext() {
 
+                    @Override
                     public String getPassword() {
                         return DialogManager.create(FileUtil.getFileDisplayName(input), RES.getString("cc.provide_password"), "")
                                 .show();
                     }
 
+                    @Override
                     public void handleWarning(int line, String warning, Context context) {
+                        if (line == 0 && bag.isEmpty()) {
+                            bag.add("header");
+                        }
                         warnings.add(new ViewContext(RES.getString("cc.open.warning", new Object[]{Integer.valueOf(line), warning}), context));
                     }
                 })));
@@ -374,10 +384,26 @@ public abstract class GedcomMgr {
                     return null;
                 }
                 if (!warnings.isEmpty()) {
+                    JButton updatePropertiesButton = new JButton(RES.getString("cc.open.fixWarnings"));
+                    updatePropertiesButton.addActionListener(new ActionListener(){
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            List<PluginInterface> list = (List<PluginInterface>) Lookup.getDefault().lookupAll(PluginInterface.class);
+                            for (PluginInterface pi : list) {
+                                if (pi.getPluginName().equals("modules.editors.gedcomproperties")) {
+                                    pi.launchModule(context);
+                                }
+                            }
+                        }
+                        
+                    });
+                    
+                    boolean hasHeaderWarnings = !bag.isEmpty();
                     NotifyDescriptor nd = new DialogDescriptor(
-                            new JScrollPane(new ContextListWidget(warnings)), RES.getString("cc.open.warnings", context.getGedcom().getName()),
+                            new JScrollPane(new ContextListWidget(warnings)), 
+                            RES.getString("cc.open.warnings", context.getGedcom().getName()),
                             false,
-                            new Object[]{NotifyDescriptor.CLOSED_OPTION},
+                            hasHeaderWarnings ? new Object[]{updatePropertiesButton, NotifyDescriptor.CLOSED_OPTION} : new Object[]{NotifyDescriptor.CLOSED_OPTION},
                             null,
                             DialogDescriptor.DEFAULT_ALIGN,
                             null, null);
