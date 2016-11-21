@@ -12,6 +12,7 @@
 package modules.editors.gedcomproperties;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import genj.gedcom.Context;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -20,5 +21,13 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
 public class GedcomPropertiesPlugin extends AncestrisPlugin{
+    
+    @Override
+    public boolean launchModule(Object o) {
+        InvokeGedcomPropertiesModifier module = new InvokeGedcomPropertiesModifier();
+        module.update((Context) o);
+        return true;
+    }
+    
     
 }
