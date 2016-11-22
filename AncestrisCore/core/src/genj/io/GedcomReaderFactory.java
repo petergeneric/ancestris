@@ -400,10 +400,14 @@ public class GedcomReaderFactory {
             // 1 PLAC
             // 2 FORM
             Property plac = header.getProperty("PLAC");
+            String form = "";
             if (plac != null) {
-                String form = plac.getPropertyValue("FORM");
+                form = plac.getPropertyValue("FORM");
                 gedcom.setPlaceFormat(form);
                 LOG.info("Found Place.Format " + form);
+            }
+            if (plac == null || form == null || form.isEmpty()) {
+                context.handleWarning(0, RESOURCES.getString("read.warn.badplac"), new Context(gedcom));
             }
 
             // get rid of it for now
