@@ -1967,14 +1967,14 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
         void put(MergeRow mergeRow) {
             if (mergeRow.rowType == RowType.Separator) {
-                // le separateur n'est pas inedxe dans dataMap
-                // il peut y avoir plusieurs sperateurs
+                // le separateur n'est pas indexe dans dataMap
+                // car il peut y avoir plusieurs sperateurs
                 dataList.add(mergeRow);
             } else {
                 Integer index = dataMap.get(mergeRow.rowType);
                 if (index == null) {
                     dataList.add(mergeRow);
-                    dataMap.put(mergeRow.rowType, new Integer(dataList.size() - 1));
+                    dataMap.put(mergeRow.rowType, dataList.size() - 1);
                 } else {
                     dataList.set(index, mergeRow);
                 }

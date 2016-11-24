@@ -356,7 +356,7 @@ public class MergeRecord {
         comment = appendComment(comment, "Témoin(s)",witness);
 
         comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
-        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
+        comment = appendComment(comment, "Cote",makeEventPage());
 
         return comment;
     }
@@ -389,7 +389,7 @@ public class MergeRecord {
 
         comment = appendComment(comment, "Témoin(s)", makeWitnessComment());
         comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
-        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
+        comment = appendComment(comment, "Cote",makeEventPage());
 
         return comment;
     }
@@ -417,7 +417,7 @@ public class MergeRecord {
 
         comment = appendComment(comment, "Témoin(s)", makeWitnessComment());
         comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
-        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
+        comment = appendComment(comment, "Cote",makeEventPage());
 
         return comment;
     }
@@ -464,7 +464,7 @@ public class MergeRecord {
 
         comment = appendComment(comment, "Témoin(s)", makeWitnessComment());
         comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
-        comment = appendComment(comment, "Photo",record.getFreeComment().toString());
+        comment = appendComment(comment, "Cote",makeEventPage());;
 
         return comment;
     }

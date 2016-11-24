@@ -11,7 +11,6 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
-import genj.util.Origin;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.event.WindowAdapter;
@@ -31,12 +30,11 @@ import org.openide.util.Exceptions;
 public class TestUtility extends TestCase {
 
     public static File createFile( String data ) throws IOException  {
-        FileWriter writer = null;
         File file = new File(System.getProperty("user.home") + File.separator + "ancestris.txt");
         boolean append = false;
-        writer = new FileWriter(file, append);
+        FileWriter writer = writer = new FileWriter(file, append);
         writer.write(data);            
-        writer.close();
+        writer.close();        
         return file;
 
     }
@@ -52,7 +50,7 @@ public class TestUtility extends TestCase {
         GedcomOptions.getInstance().setUseSpacedPlaces(false);
         
         Gedcom gedcom;
-        gedcom = new Gedcom(Origin.create("file:://test.txt"));
+        gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
         Property birth;
         
