@@ -126,7 +126,7 @@ public class ReleveFileAncestrisV4Test extends TestCase {
      * Test of saveFile method, of class ReleveFileAncestrisV4.
      */
     @Test
-    public void ttttestSaveFileBirthUtf8() {
+    public void testSaveFileBirthUtf8() {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
         
         DataManager dataManager = new DataManager();

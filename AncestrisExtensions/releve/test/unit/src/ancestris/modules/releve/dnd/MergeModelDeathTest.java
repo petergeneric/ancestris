@@ -94,7 +94,7 @@ public class MergeModelDeathTest extends TestCase {
                     + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n"
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
-                    + "Photo: photo",
+                    + "Cote: cote, photo",
                     indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
 
             assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
@@ -191,7 +191,7 @@ public class MergeModelDeathTest extends TestCase {
                     + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n"
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
-                    + "Photo: photo",
+                    + "Cote: cote, photo",
                     indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
 
             assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
@@ -273,7 +273,7 @@ public class MergeModelDeathTest extends TestCase {
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
-            expected +="Photo: photo";
+            expected +="Cote: cote, photo";
             assertEquals("comment1",expected, indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
 
             // je verifie que le nouveau commentaire contient la concatenation de l'ancien commentaire et du nouveau
@@ -288,7 +288,7 @@ public class MergeModelDeathTest extends TestCase {
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
-            expected +="Photo: photo\n";
+            expected +="Cote: cote, photo\n";
             expected += "oldcomment";
             assertEquals("comment2",expected, indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
         } catch (Exception ex) {
