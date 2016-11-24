@@ -252,24 +252,20 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     }
 
     //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
-    private Context getSelectedContext(boolean firstIfNoneSelected){
-        Collection<? extends Context> selected = Utilities.actionsGlobalContext().lookupAll(Context.class);
+    private Context getSelectedContext(){
 
-        Context c;
-        if (selected.isEmpty()) {
-            c = GedcomExplorerTopComponent.getDefault().getContext();
+        // je cherche le gedcom selectionné dans GedcomExplorerTopComponent
+        Context context = GedcomExplorerTopComponent.findInstance().getContext();
+        if (context!=null) {
+            return context;
         } else {
-            c = Utilities.actionsGlobalContext().lookup(Context.class);
-        }
-        if (!firstIfNoneSelected)
-            return c;
-        if (c!=null)
-            return c;
-        List<Context> contextList =  GedcomDirectory.getDefault().getContexts();
-        if ( contextList != null && contextList.size() >0) {
-            return contextList.get(0);
-        } else {
-            return null; 
+            // aucun contexte n'est sélectionné, alors je choisi le premier gedcom ouvert
+            List<Context> contextList =  GedcomDirectory.getDefault().getContexts();
+            if ( contextList != null && contextList.size() >0) {
+                return contextList.get(0);
+            } else {
+                return null; 
+            }
         }
     }
 
@@ -472,7 +468,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
 
     public void setGedcomCompletion(boolean completion) {
         if (completionGedcom == null && completion) {
-            Context context = getSelectedContext(true);
+            Context context = getSelectedContext();
             if (context != null && context.getGedcom() != null) {
                 addGedcomCompletion(context.getGedcom());
             } else {
