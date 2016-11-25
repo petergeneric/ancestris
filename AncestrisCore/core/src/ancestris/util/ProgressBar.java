@@ -52,7 +52,7 @@ public class ProgressBar implements ProgressListener {
         handle.start(100);
 
         // prepare timer
-        timer = new Timer(100, new ActionListener() {
+        timer = new Timer(10, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
