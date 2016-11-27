@@ -1356,7 +1356,7 @@ public class ReportToolBox extends Report {
      */
     static private int extractNumber(String str) {
 
-        int start = 0, end = 0;
+        int start = 0, end = str.length()-1;
         while (start <= end && !Character.isDigit(str.charAt(start))) {
             start++;
         }
