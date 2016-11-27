@@ -361,9 +361,9 @@ public class SosaNumbersGenerator implements Constants {
             try {
                 String value = nbToString(sosaNumber, "", true, daboValue);
                 if (numbering == NUMBERING_SOSADABOVILLE) {
-                    prop = indi.addProperty(SOSADABOVILLE_TAG, value, setPropertyPosition(indi, SOSADABOVILLE_TAG));
+                    prop = indi.addProperty(SOSADABOVILLE_TAG, value, getNumberPosition(indi, SOSADABOVILLE_TAG, sosaNumber));
                 } else if (numbering == NUMBERING_SOSA) {
-                    prop = indi.addProperty(SOSA_TAG, value, setPropertyPosition(indi, SOSA_TAG));
+                    prop = indi.addProperty(SOSA_TAG, value, getNumberPosition(indi, SOSA_TAG, sosaNumber));
                 } else if (numbering == NUMBERING_DABOVILLE) {
                     prop = indi.addProperty(DABOVILLE_TAG, value, setPropertyPosition(indi, DABOVILLE_TAG));
                 }
@@ -462,6 +462,41 @@ public class SosaNumbersGenerator implements Constants {
     }
 
     /**
+     * Get sosa position order by number
+     *
+     * @param prop
+     *
+     * @return
+     */
+    private int getNumberPosition(Property prop, String tag, BigInteger value) {
+        if (prop == null) {
+            return 1;
+        }
+        // Put after tag based on sosa order 
+        int rank = 0;
+        BigInteger bi = BigInteger.ZERO;
+        Property[] props = prop.getProperties(tag);
+        if (props != null && props.length != 0) {
+            for (Property p : props) {
+               bi = BigInteger.valueOf(extractNumber(p.getDisplayValue()));
+               if (bi.compareTo(value) > 0) {
+                   return prop.getPropertyPosition(p);
+               }
+            }
+            return prop.getPropertyPosition(props[props.length - 1]) + 1;
+        }
+
+        // Else after name
+        Property pName = prop.getProperty("NAME");
+        if (pName != null) {
+            return prop.getPropertyPosition(pName) + 1;
+        }
+
+        // Else first
+        return 1;
+    }
+
+    /**
      * Set Property position
      *
      * @param prop
@@ -473,7 +508,6 @@ public class SosaNumbersGenerator implements Constants {
             return 1;
         }
         // Put after last tag
-        int k = 0;
         Property[] props = prop.getProperties(tag);
         if (props != null && props.length != 0) {
             return prop.getPropertyPosition(props[props.length - 1]) + 1;
@@ -489,6 +523,26 @@ public class SosaNumbersGenerator implements Constants {
         return 1;
     }
 
+    
+    private int extractNumber(String str) {
+
+        int start = 0, end = 0;
+        while (start <= str.length() - 1 && !Character.isDigit(str.charAt(start))) {
+            start++;
+        }
+        end = start;
+        while ((end <= str.length() - 1) && Character.isDigit(str.charAt(end))) {
+            end++;
+        }
+        if (end == start) {
+            return 0;
+        } else {
+            return Integer.parseInt(str.substring(start, end));
+        }
+    }
+    
+    
+    
     /**
      *
      * @param sosa
