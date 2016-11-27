@@ -789,6 +789,7 @@ public class TimelineView extends View implements SelectionListener {
             int days = (int) Math.ceil(5F / DPC.getX() / cmPerYear * 365);
             // collect events and their text
             WordBuffer text = new WordBuffer();
+            List<String> alms = getAlmanacList();
             int cursor = Cursor.DEFAULT_CURSOR;
             try {
                 Iterator<Event> almanac = Almanac.getInstance().getEvents(when, days, getAlmanacList(), getAlmanacCategories(), getAlmanacSigLevel());
@@ -800,7 +801,15 @@ public class TimelineView extends View implements SelectionListener {
                         String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
                         text.append("<li color=\"" + hex + "\">" + event.toString() + "</li><br>");
                     }
-                    text.append("</ul></div></body></html>");
+                    text.append("</ul></div>");
+                    text.append("<div>" + resources.getString("almanac.legend"));
+                    for (String alm : alms) {
+                        Color color = colors.get(prefix+alm);
+                        String hex = "#"+Integer.toHexString(color.getRGB()).substring(2);
+                        text.append("<font color=\"" + hex + "\">" + alm + " " + "</font>");
+                    }
+                    text.append("</div>");
+                    text.append("</body></html>");
                     cursor = Cursor.TEXT_CURSOR;
                 }
             } catch (GedcomException ex) {
