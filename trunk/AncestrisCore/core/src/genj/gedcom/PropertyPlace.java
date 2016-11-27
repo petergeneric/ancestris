@@ -496,9 +496,9 @@ public class PropertyPlace extends PropertyChoiceValue {
      */
     @Override
     public String format(String format) {
-
+        Gedcom localGedcom = getGedcom();
         if (format == null) {
-            format = getGedcom() == null ? null : getGedcom().getPlaceDisplayFormat();
+            format = (localGedcom == null) ? null : localGedcom.getPlaceDisplayFormat();
         }
         if (format == null) {
             return getFirstAvailableJurisdiction();
