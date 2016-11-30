@@ -473,12 +473,11 @@ public class SosaNumbersGenerator implements Constants {
             return 1;
         }
         // Put after tag based on sosa order 
-        int rank = 0;
         BigInteger bi = BigInteger.ZERO;
         Property[] props = prop.getProperties(tag);
         if (props != null && props.length != 0) {
             for (Property p : props) {
-               bi = BigInteger.valueOf(extractNumber(p.getDisplayValue()));
+               bi = extractNumber(p.getDisplayValue());
                if (bi.compareTo(value) > 0) {
                    return prop.getPropertyPosition(p);
                }
@@ -524,7 +523,7 @@ public class SosaNumbersGenerator implements Constants {
     }
 
     
-    private int extractNumber(String str) {
+    private BigInteger extractNumber(String str) {
 
         int start = 0, end = 0;
         while (start <= str.length() - 1 && !Character.isDigit(str.charAt(start))) {
@@ -535,9 +534,9 @@ public class SosaNumbersGenerator implements Constants {
             end++;
         }
         if (end == start) {
-            return 0;
+            return BigInteger.ZERO;
         } else {
-            return Integer.parseInt(str.substring(start, end));
+            return new BigInteger(str.substring(start, end));
         }
     }
     
