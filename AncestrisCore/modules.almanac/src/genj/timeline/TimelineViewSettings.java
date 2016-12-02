@@ -243,6 +243,10 @@ public class TimelineViewSettings extends JTabbedPane {
             view.setAlmanacs(almanacPanel.getCheckedAlmanacs());
             view.setAlmanacCategories(almanacPanel.getCheckedCategories());
             view.setAlmanacSigLevel(almanacPanel.getAlmanacSigLevel());
+            
+            
+            // save registry
+            view.saveInRegistry();
         }
     }
 
