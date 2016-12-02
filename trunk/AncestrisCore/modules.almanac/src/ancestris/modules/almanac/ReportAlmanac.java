@@ -17,6 +17,9 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
+import genj.timeline.TimelineView;
+import genj.util.Registry;
+import java.util.ArrayList;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -72,7 +75,7 @@ public class ReportAlmanac extends Report {
       return;
 
     // report it
-    report(getAlmanac().getEvents(from, to, null, null, 0));
+    report(getAlmanac().getEvents(from, to, getAlmanacList(), getAlmanacCategories(), getSigLevel()));
 
   }
 
@@ -137,7 +140,7 @@ public class ReportAlmanac extends Report {
     println(translate("header", new Object[]{ gedcom, from, to}));
     println("--------------------------------------------------------");
 
-    return getAlmanac().getEvents(from, to, null, null, 0);
+    return getAlmanac().getEvents(from, to, getAlmanacList(), getAlmanacCategories(), getSigLevel());
   }
 
   /**
@@ -180,5 +183,28 @@ public class ReportAlmanac extends Report {
     almanac.waitLoaded();
     return almanac;
   }
+  
+  public List<String> getAlmanacList() {
+    List<String> result = new ArrayList<String>(Almanac.getInstance().getAlmanacs());
+    String[] ignoredNames = Registry.get(TimelineView.class).get("almanac.ignorenames", new String[0]);
+    List<String> ignoredAlmanacsList = new ArrayList<String>();
+    ignoredAlmanacsList.addAll(Arrays.asList(ignoredNames));
+    result.removeAll(ignoredAlmanacsList);
+    return result;
+  }
+
+  public List<String> getAlmanacCategories() {
+    List<String> result = new ArrayList<String>(Almanac.getInstance().getCategories());
+    String[] ignored = Registry.get(TimelineView.class).get("almanac.ignore", new String[0]);
+    List<String> ignoredAlmanacCategories = new ArrayList<String>();
+    ignoredAlmanacCategories.addAll(Arrays.asList(ignored));
+    result.removeAll(ignoredAlmanacCategories);
+    return result;
+  }
+  
+  private int getSigLevel() {
+      return Registry.get(TimelineView.class).get("almanac.siglevel", 0);
+  }
+  
 
 } //ReportAlmanac

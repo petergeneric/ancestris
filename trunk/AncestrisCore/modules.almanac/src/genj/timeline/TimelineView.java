@@ -248,6 +248,15 @@ public class TimelineView extends View implements SelectionListener {
         model.removeListener(callback);
 
         // store stuff in registry
+        saveInRegistry();
+
+        // done
+        super.removeNotify();
+    }
+    
+
+    public void saveInRegistry() {
+
         REGISTRY.put("cmperyear", (float) Math.rint(cmPerYear * 10) / 10);
         REGISTRY.put("cmbefevent", (float) cmBefEvent);
         REGISTRY.put("cmaftevent", (float) cmAftEvent);
@@ -274,9 +283,6 @@ public class TimelineView extends View implements SelectionListener {
         REGISTRY.put("almanac.siglevel", almanacSigLevel);
 
         REGISTRY.put("display.mode", mode);
-        
-        // done
-        super.removeNotify();
     }
 
     /**
