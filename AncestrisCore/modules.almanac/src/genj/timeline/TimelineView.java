@@ -75,6 +75,7 @@ import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.ToolTipManager;
+import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -128,6 +129,8 @@ public class TimelineView extends View implements SelectionListener {
     private double cmPerYear = DEF_CM_PER_YEAR,
             cmBefEvent = DEF_CM_BEF_EVENT,
             cmAftEvent = DEF_CM_AFT_EVENT;
+    /** default font height */
+    private int defaulFontHeight = 0;
     /** the centered year */
     private double centeredYear = 0;
     /** settings */
@@ -226,6 +229,9 @@ public class TimelineView extends View implements SelectionListener {
         setLayout(new BorderLayout());
         add(scrollContent, BorderLayout.CENTER);
         centeredYear = REGISTRY.get("centeryear", 0F);
+        
+        // set default font height
+        defaulFontHeight = getFontMetrics(UIManager.getDefaults().getFont("ScrollPane.font")).getHeight() + 1;
 
         // done
     }
@@ -514,7 +520,7 @@ public class TimelineView extends View implements SelectionListener {
     public void update() {
         selectionEvent = model.getEvents();
         selectionEventSerie = model.getIndis();
-        int layer = scrollContent.getVerticalScrollBar().getValue() / (getFontMetrics(getFont()).getHeight() + 1);
+        int layer = scrollContent.getVerticalScrollBar().getValue() / defaulFontHeight;
         if ((mode == INDI_MODE && !selectionEventSerie.isEmpty()) || (mode == EVENT_MODE && !selectionEvent.isEmpty())) {
             centerToSelection();
         } else {
@@ -571,10 +577,9 @@ public class TimelineView extends View implements SelectionListener {
         String maxYear = String.valueOf((int)pixel2year(hsb.getMaximum()));
         hsb.setToolTipText(resources.getString("view.scrollyear.tip", minYear, year, maxYear));
 
-        int h = getFontMetrics(getFont()).getHeight() + 1;
         JScrollBar vsb = scrollContent.getVerticalScrollBar();
-        vsb.setUnitIncrement((int) (2 * (getFontMetrics(getFont()).getHeight() + 1)));
-        String value = Integer.toString((int) vsb.getValue() / h);
+        vsb.setUnitIncrement((int) (2 * defaulFontHeight));
+        String value = Integer.toString((int) vsb.getValue() / defaulFontHeight);
         String total = Integer.toString(model.getLayersNumber(mode));
         vsb.setToolTipText(resources.getString("view.scrolllayer.tip", value, total)); 
     }
@@ -606,13 +611,12 @@ public class TimelineView extends View implements SelectionListener {
     }
 
     protected void scroll2layer(int layer) {
-        int layerHeight = getFontMetrics(getFont()).getHeight() + 1;
         int windowHeight = scrollContent.getViewport().getHeight();
-        int northBand = 2*layerHeight;
-        int southBand = windowHeight - 4*layerHeight;
+        int northBand = 2*defaulFontHeight;
+        int southBand = windowHeight - 4*defaulFontHeight;
         int minY = scrollContent.getVerticalScrollBar().getValue() + northBand;
         int maxY = minY + southBand;
-        int newY = (int) (layer * layerHeight);
+        int newY = (int) (layer * defaulFontHeight);
 
         // Determines if newY is already Visible (between min and max)
         if ((maxY < minY) || (newY > minY && newY < maxY)) {
@@ -657,7 +661,7 @@ public class TimelineView extends View implements SelectionListener {
      */
     protected Model.Event getEventAt(Point pos) {
         double year = pixel2year(pos.x);
-        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
+        int layer = pos.y / defaulFontHeight;
         return model.getEvent(year, layer);
     }
 
@@ -666,7 +670,7 @@ public class TimelineView extends View implements SelectionListener {
      */
     protected Model.EventSerie getIndiAt(Point pos) {
         double year = pixel2year(pos.x);
-        int layer = pos.y / (getFontMetrics(getFont()).getHeight() + 1);
+        int layer = pos.y / defaulFontHeight;
         return model.getEventSerie(year, layer);
     }
 
@@ -757,7 +761,7 @@ public class TimelineView extends View implements SelectionListener {
             UnitGraphics graphics = new UnitGraphics(
                     g,
                     DPC.getX() * cmPerYear,
-                    getFontMetrics(getFont()).getHeight() + 1);
+                    defaulFontHeight);
             graphics.translate(-model.min, 0);
             // let ruler do its things      
             rulerRenderer.render(graphics, model);
@@ -773,7 +777,7 @@ public class TimelineView extends View implements SelectionListener {
         public Dimension getPreferredSize() {
             return new Dimension(
                     (int) ((model.max - model.min) * DPC.getX() * cmPerYear),   // content.getPreferredSize().width,
-                    getFontMetrics(getFont()).getHeight() + 1);
+                    defaulFontHeight);
         }
 
         /**
@@ -884,7 +888,7 @@ public class TimelineView extends View implements SelectionListener {
         public Dimension getPreferredSize() {
             return new Dimension(
                     (int) ((model.max - model.min) * DPC.getX() * cmPerYear),
-                    model.getLayersNumber(mode) * (getFontMetrics(getFont()).getHeight() + 1));
+                    model.getLayersNumber(mode) * defaulFontHeight);
         }
 
         /**
@@ -928,7 +932,7 @@ public class TimelineView extends View implements SelectionListener {
             UnitGraphics graphics = new UnitGraphics(
                     g,
                     DPC.getX() * cmPerYear,
-                    getFontMetrics(getFont()).getHeight() + 1);
+                    defaulFontHeight);
             graphics.translate(-model.min, 0);
 
             // go for it     
