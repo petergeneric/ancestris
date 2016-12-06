@@ -178,7 +178,15 @@ public class ReleveTable extends JTable {
             }
         }
     }
-
+    
+    public int getSelectedRecordIndex() {
+        int selectedRow = getSelectedRow();
+        if( selectedRow != -1 ) {
+            return convertRowIndexToModel(selectedRow);
+        } else {
+            return -1;
+        }
+    }
     ///////////////////////////////////////////////////////////////////////////
     // Manager VerificationListener
     ///////////////////////////////////////////////////////////////////////////

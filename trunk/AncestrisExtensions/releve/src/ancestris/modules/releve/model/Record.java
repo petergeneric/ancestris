@@ -393,7 +393,11 @@ public abstract class Record implements Cloneable{
     public PropertyDate getEventDateProperty() {
         return eventDate.getPropertyDate();
     }
-
+    
+    public Calendar getEventDateCalendar() {
+        return eventDate.getCalendar();
+    }
+    
     public String getEventDateString() {
         return eventDate.getValue();
     }
@@ -404,6 +408,10 @@ public abstract class Record implements Cloneable{
 
     public String getEventSecondDateString() {
         return secondDate.getValue();
+    }
+
+    public Calendar getEventSecondDateCalendar() {
+        return secondDate.getCalendar();
     }
 
 //    public String getStateName() {

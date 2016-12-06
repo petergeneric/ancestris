@@ -39,6 +39,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.MissingResourceException;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.AbstractAction;
 import javax.swing.Icon;
@@ -51,7 +52,6 @@ import javax.swing.KeyStroke;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.util.*;
-import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
@@ -66,7 +66,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     private static final String FILE_DIRECTORY = "FileDirectory";
     protected Registry registry;
     private DataManager dataManager;
-    private JPopupMenu popup;
+    private final JPopupMenu popup;
     private final JMenuItem menuItemNewFile   = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.new"));
     private final JMenuItem menuItemLoadFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.open"));
     private final JMenuItem menuItemSave      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.save"));
@@ -467,7 +467,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     void showHelp() {
         String id = "Releve.about";
         Help help = Lookup.getDefault().lookup(Help.class);
-        if (help != null && help.isValidID(id, true).booleanValue()) {
+        if (help != null && help.isValidID(id, true)) {
             help.showHelp(new HelpCtx(id));
         }
     }
@@ -826,7 +826,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
 
         // keep it as new default directory
-        NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent().toString());
+        NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent());
         return file;
     }
 
@@ -892,7 +892,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             // je memorise  le répertoire du fichier
             // remarque : je memorise le répertoire du fichier avant d'enregistrer le fichier
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent().toString());
+            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent());
             // j'enregistre les données dans le fichier
             StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, file, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
 
@@ -965,11 +965,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         //odd: the Object param of getContents is not currently used
         Transferable contents = clipboard.getContents(null);
 
-        boolean hasTransferableText =
-                (contents != null)
-                && contents.isDataFlavorSupported(DataFlavor.stringFlavor);
         String inputData = "";
-        if (hasTransferableText) {
+        if (contents != null && contents.isDataFlavorSupported(DataFlavor.stringFlavor)) {
             try {
                 inputData = (String) contents.getTransferData(DataFlavor.stringFlavor);
             } catch (UnsupportedFlavorException ex) {
@@ -990,7 +987,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
         File inputFile = new File(System.getProperty("user.home") + File.separator + "clipboard.txt");
         try {
-            FileWriter writer = null;
+            FileWriter writer;
             boolean append = false;
             writer = new FileWriter(inputFile, append);
             writer.write(inputData);
@@ -998,7 +995,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
 //            setCurrentFile(null);
             loadFile(inputFile, false);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
             // j'intercepte l'exception pour fermer le fichier
             inputFile.delete();
             // TODO afficher un message d'erreur
@@ -1170,7 +1167,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         
         if (file != null) {
             // j'enregistre le répertoire du fichier
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent().toString());
+            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent());
 
             // je recupere le type de fichier choisi
             FileManager.FileFormat fileFormat = FileManager.FileFormat.FILE_TYPE_UNKNOW;
@@ -1231,7 +1228,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
                 setCurrentFile(new File(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.demoRecord")));
 
-            } catch (Exception ex) {
+            } catch (MissingResourceException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -1276,7 +1273,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     private static class FileExtensionFilter extends FileFilter {
 
-        private String extension;
+        private final String extension;
 
         public FileExtensionFilter(String extension) {
             this.extension = extension.toLowerCase();
@@ -1304,7 +1301,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     /**
      * affiche ou masque l'éditeur independant
-     * @param show
      */
     @Override
     public void showStandalone() {        
@@ -1369,7 +1365,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     }
 
     /**
-     * inverse la visibilite de la vionneuse d'image dans l'editeur standalone
+     * inverse la visibilite de la visionneuse d'image dans l'editeur standalone
      * (transmets la commande a l'editeur standalone)
      */
     @Override
