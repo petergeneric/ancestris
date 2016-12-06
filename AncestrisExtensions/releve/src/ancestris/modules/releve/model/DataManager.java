@@ -6,13 +6,10 @@ import ancestris.modules.releve.file.FileBuffer;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.gedcom.time.Calendar;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import org.openide.util.NbPreferences;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -23,31 +20,31 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     private final RecordModel   dataModel = new RecordModel();
     private final CompletionProvider completionProvider  = new CompletionProvider();
     private final GedcomLinkProvider gedcomLinkProvider = new GedcomLinkProvider();    
-    Gedcom completionGedcom;
+    Gedcom completionGedcom = null;
     File currentFile;
     
-    //options de copie
-    boolean copyCoteEnabled = true;
-    boolean copyEventDateEnabled = true;
-    boolean copyFreeCommentEnabled = true;
-    boolean copyNotaryEnabled = true;
     // options de controle
-    boolean duplicateControlEnabled = true;
-    boolean valueControlEnabled = true;
+    static boolean duplicateControlEnabled = true;
+    static boolean valueControlEnabled = true;
+    //options de copie
+    static boolean copyParishEnabled = true;
+    static boolean copyCoteEnabled = true;
+    static boolean copyEventDateEnabled = true;
+    static boolean copySecondDateEnabled = true;
+    static boolean copyFreeCommentEnabled = true;
+    static boolean copyNotaryEnabled = true;
+    // options de completion avec les données du fichier gedcom
+    static boolean gedcomCompletion = true;
     
-    // données de la session
-    private String defaultCote = "";
-    private String defaultEventDate = "";
-    private Calendar defaultEventCalendar = null;
-    private String defaultFreeComment = "";
-    private String defaultNotary = "";
-
-    // previous record
     public enum RecordType { birth, marriage, death, misc }
     public enum ModelType { birth, marriage, death, misc, all }
 
+    static {
+        loadOptions();
+    }
+    
     public DataManager () {
-        initOptions();
+        setGedcomCompletion(gedcomCompletion);
     }
 
     /**
@@ -87,24 +84,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
                 record = new RecordMisc();
                 break;
         }
-
-        if (getCopyCoteEnabled() ) {
-            record.setCote(defaultCote);
-        }
-
-        if (getCopyEventDateEnabled() ) {
-            record.setEventDate(defaultEventDate);
-            record.setEventCalendar(defaultEventCalendar);
-        }
-
-        if (getCopyFreeCommentEnabled() ) {
-            record.setFreeComment(defaultFreeComment);
-        }
-
-        if (getCopyNotaryEnabled() && record instanceof RecordMisc ) {
-            record.setNotary(defaultNotary);
-        }
-
+       
         return record;
     }
 
@@ -189,14 +169,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         // je restaure les donnees de completion du gedcom
         completionProvider.addGedcomCompletion(completionGedcom);
         //setPlace("","","","","");
-        
-        // raz des données de la session
-        defaultCote = "";
-        defaultEventDate = "";
-        defaultEventCalendar = null;
-        defaultFreeComment = "";
-        defaultNotary = "";
-        
+      
         resetDirty();
     }
 
@@ -211,111 +184,111 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     public String verifyRecord( Record record  ) {
         return dataModel.verifyRecord(record);
     }
-
+    
     ///////////////////////////////////////////////////////////////////////////
     // accesseurs aux options
     ///////////////////////////////////////////////////////////////////////////
 
-    public final void initOptions() {
+    static void loadOptions() {
+        // options de copie des données dans les nouveaux releves
         copyCoteEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyCoteEnabled", "true"));
         copyEventDateEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyEventDateEnabled", "true"));
+        copySecondDateEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopySecondDateEnabled", "true"));
         copyFreeCommentEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyFreeCommentEnabled", "true"));
         copyNotaryEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyNotaryEnabled", "true"));
+        copyParishEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("CopyParishEnabled", "true"));
+        //options de controle
         duplicateControlEnabled =  Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("DuplicateRecordControlEnabled", "true"));
         valueControlEnabled = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("ValueControlEnabled", "true"));
-        boolean completion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
-        
-        setGedcomCompletion(completion);
-        
-//        if ( completion ) {
-//            //Context context = Utilities.actionsGlobalContext().lookup(Context.class);
-//            //Context context = App.center.getSelectedContext(true);
-//            Context context = getSelectedContext(true);
-//            if (context != null && context.getGedcom() != null) {
-//                completionProvider.addGedcomCompletion(context.getGedcom());
-//            } else {
-//                // rien a faire
-//            }            
-//        } 
+        // completion avec un Gedcom
+        gedcomCompletion = Boolean.parseBoolean(NbPreferences.forModule(DataManager.class).get("GedcomCompletionEnabled", "true"));
     }
-
-    public void updateOptions( boolean copyCoteEnabled,  boolean copyEventDateEnabled,
-            boolean copyFreeCommentEnabled, boolean copyNotaryEnabled,
-            boolean duplicateControlEnabled, boolean valueControlEnabled
-            ) {
-        this.copyCoteEnabled = copyCoteEnabled;
-        this.copyEventDateEnabled = copyEventDateEnabled;
-        this.copyFreeCommentEnabled = copyFreeCommentEnabled;
-        this.copyNotaryEnabled = copyNotaryEnabled;
-        this.duplicateControlEnabled =  duplicateControlEnabled;
-        this.valueControlEnabled = valueControlEnabled;        
-    }
-
-    //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
-    private Context getSelectedContext(){
-
-        // je cherche le gedcom selectionné dans GedcomExplorerTopComponent
-        Context context = GedcomExplorerTopComponent.findInstance().getContext();
-        if (context!=null) {
-            return context;
-        } else {
-            // aucun contexte n'est sélectionné, alors je choisi le premier gedcom ouvert
-            List<Context> contextList =  GedcomDirectory.getDefault().getContexts();
-            if ( contextList != null && contextList.size() >0) {
-                return contextList.get(0);
-            } else {
-                return null; 
-            }
-        }
-    }
-
-    public boolean getDuplicateControlEnabled() {
+ 
+    static public boolean getDuplicateControlEnabled() {
         return duplicateControlEnabled;
     }
 
-    public boolean getCopyCoteEnabled() {
+    static public boolean getCopyCoteEnabled() {
         return copyCoteEnabled;
     }
 
-    public boolean getCopyEventDateEnabled() {
+    static public boolean getCopyEventDateEnabled() {
         return copyEventDateEnabled;
     }
 
-    public boolean getCopyFreeCommentEnabled() {
+    static public boolean getCopySecondDateEnabled() {
+        return copySecondDateEnabled;
+    }
+
+    static public boolean getCopyFreeCommentEnabled() {
         return copyFreeCommentEnabled;
     }
 
-    public boolean getCopyNotaryEnabled() {
+    static public boolean getCopyNotaryEnabled() {
         return copyNotaryEnabled;
     }
 
+    static public boolean getCopyParishEnabled() {
+        return copyParishEnabled;
+    }
 
-    public boolean getNewValueControlEnabled() {
+    static public boolean getNewValueControlEnabled() {
         return valueControlEnabled;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
-    // accesseurs aux données par defaut de la session
-    ///////////////////////////////////////////////////////////////////////////
-
-    public void setDefaultEventDate(String text, Calendar calendar) {
-        defaultEventDate = text;
-        defaultEventCalendar = calendar;
+    static public boolean getGecomCompletionEnabled() {
+        return gedcomCompletion;
     }
 
-    public void setDefaultFreeComment(String text) {
-        defaultFreeComment = text;
+    
+    //options de controle
+    static public void setDuplicateControlEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("DuplicateRecordControlEnabled", String.valueOf(enabled));
+        duplicateControlEnabled = enabled;
+    }
+    static public void setNewValueControlEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("ValueControlEnabled", String.valueOf(enabled));
+        valueControlEnabled= enabled;
+    }
+    
+    // completion avec un Gedcom
+    static public void setGedcomCompletionEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("GedcomCompletionEnabled", String.valueOf(enabled));
+        gedcomCompletion= enabled;
     }
 
-    public void setDefaultCote(String text) {
-        defaultCote = text;
+    // copie des champs du releve precedent 
+    static public void setCopyCoteEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("CopyCoteEnabled", String.valueOf(enabled));
+        copyCoteEnabled= enabled;
     }
 
-    public void setDefaultNotary(String text) {
-        defaultNotary = text;
+    static public void setCopyEventDateEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("CopyEventDateEnabled", String.valueOf(enabled));
+        copyEventDateEnabled= enabled;
     }
 
-    ///////////////////////////////////////////////////////////////////////////
+    static public void setCopySecondDateEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("CopySecondDateEnabled", String.valueOf(enabled));
+        copySecondDateEnabled= enabled;
+    }
+
+    static public void setCopyFreeCommentEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("CopyFreeCommentEnabled", String.valueOf(enabled));
+        copyFreeCommentEnabled= enabled;
+    }
+
+    static public void setCopyNotaryEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("CopyNotaryEnabled", String.valueOf(enabled));
+        copyNotaryEnabled= enabled;
+    }
+
+    static public void setCopyParishEnabled(boolean enabled) {
+        NbPreferences.forModule(DataManager.class).put("CopyParishEnabled", String.valueOf(enabled));
+        copyParishEnabled= enabled;
+    }
+
+   ///////////////////////////////////////////////////////////////////////////
     // accesseurs aux modeles
     ///////////////////////////////////////////////////////////////////////////
 
@@ -466,7 +439,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         // rien à faire
     }
 
-    public void setGedcomCompletion(boolean completion) {
+    public final void setGedcomCompletion(boolean completion) {
         if (completionGedcom == null && completion) {
             Context context = getSelectedContext();
             if (context != null && context.getGedcom() != null) {
@@ -476,6 +449,24 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
             }
         } else if (completionGedcom != null && !completion) {
             removeGedcomCompletion();
+        }
+    }
+    
+    //XXX: GedcomExplorer must be actionGlobalContext provider: to be rewritten
+    private Context getSelectedContext(){
+
+        // je cherche le gedcom selectionné dans GedcomExplorerTopComponent
+        Context context = GedcomExplorerTopComponent.findInstance().getContext();
+        if (context!=null) {
+            return context;
+        } else {
+            // aucun contexte n'est sélectionné, alors je choisi le premier gedcom ouvert
+            List<Context> contextList =  GedcomDirectory.getDefault().getContexts();
+            if ( contextList != null && contextList.size() >0) {
+                return contextList.get(0);
+            } else {
+                return null; 
+            }
         }
     }
 

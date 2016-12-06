@@ -14,7 +14,6 @@ import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldEventType;
 import ancestris.modules.releve.model.FieldNotary;
 import java.awt.*;
@@ -47,8 +46,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
     private RecordModel recordModel = null;
     private MenuCommandProvider menuCommandeProvider = null;
     private Bean currentFocusedBean = null;
-    private ArrayList<KeyStroke> recordKeyStrokeList = new ArrayList<KeyStroke>();
-
+    private final ArrayList<KeyStroke> recordKeyStrokeList = new ArrayList<KeyStroke>();
+    
+    private int currentRecordIndex = -1;
+    private int previousRecordIndex = -1;
+            
     public ReleveEditor() {
         initComponents();
 
@@ -253,7 +255,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         }
 
         // je copie le nom
-        if ( wifeLastNameField != null && wifeFatherLastNameField != null ) {
+        if ( wifeLastNameField != null && wifeFatherLastNameField != null && wifeFatherLastNameBean != null ) {
             // d'abord, je commite le champ en cours d'édition
             commitCurrentFocusedBean();
             
@@ -309,7 +311,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         }
         
         // je copie le nom
-        if ( eventDate != null && indiBirthDate != null ) {
+        if ( eventDate != null && indiBirthDate != null && indiBirthDateBean != null ) {
             // d'abord, je commite le champ en cours d'édition
             commitCurrentFocusedBean();
 
@@ -345,7 +347,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         }
         
         // je recupere le releve créé précédemment
-        Record previousRecord = dataManager.getDataModel().getPreviousRecord(currentFocusedBean.getRecord());
+        Record previousRecord = dataManager.getDataModel().getRecord(previousRecordIndex);
         if (previousRecord == null) {
             // j'emets un beep
             Toolkit.getDefaultToolkit().beep();
@@ -361,6 +363,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         // la nouvelle valeur dans le bean
         currentFocusedBean.replaceValue(previousField);
     }
+    
+    /**
+     * retourne l'index du releve courant affiché
+     * @return 
+     */
+    public int getCurrentRecordIndex() {
+        return currentRecordIndex;
+    }
 
     /**
      * affiche un relevé
@@ -368,6 +378,12 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      * @param record
      */
     public void selectRecord(int recordIndex) {
+        
+        if( recordIndex != currentRecordIndex) {
+            previousRecordIndex = currentRecordIndex;
+            currentRecordIndex = recordIndex;
+        }
+        
         currentFocusedBean = null;
         fieldsPanel.setVisible(false);
         fieldsPanel.setFocusTraversalPolicyProvider(true);
@@ -742,7 +758,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
 
             // je demande confirmation à l'utilisateur si c'est un nouveau nom, prénom, profession ou TypeEventTag
             String newValue = bean.getField().toString();
-            if (dataManager.getNewValueControlEnabled() && !newValue.isEmpty()) {
+            if (DataManager.getNewValueControlEnabled() && !newValue.isEmpty()) {
                 List<String> completionList = null;
                 // je determine la liste de completion qui doit etre utilisee
                 switch (fieldType) {
@@ -936,23 +952,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                 }
             }
 
-            // je memorise les valeurs
-            if (fieldType == Field.FieldType.eventDate && dataManager.getCopyEventDateEnabled() == true  ) {
-                // je copie le numero de photo dans la valeur par defaut
-                dataManager.setDefaultEventDate(bean.getField().toString(), ((FieldDate)bean.getField()).getPropertyDate().getStart().getCalendar());
-            }
-            if (fieldType == Field.FieldType.freeComment && dataManager.getCopyFreeCommentEnabled() == true  ) {
-                // je copie le numero de photo dans la valeur par defaut
-                dataManager.setDefaultFreeComment(bean.getField().toString());
-            }
-            if ( fieldType == Field.FieldType.notary  && dataManager.getCopyNotaryEnabled() == true  ) {
-                // je copie le notaire dans la valeur par defaut
-                dataManager.setDefaultNotary(bean.getField().toString());
-            }
-            if ( fieldType == Field.FieldType.cote  && dataManager.getCopyCoteEnabled() == true  ) {
-                // je copie la cote dans la valeur par defaut
-                dataManager.setDefaultCote(bean.getField().toString());
-            }
         }
     }
 
@@ -962,8 +961,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      */
     public void addLastFocusListeners(Container container) {
         Component[] components = container.getComponents();
-        for (int i = 0; i < components.length; i++) {
-            Component component = components[i];
+        for (Component component : components) {
             if ((component instanceof JTextField) || (component instanceof JFormattedTextField) || (component instanceof JComboBox) || (component instanceof JCheckBox)) {
                 component.addFocusListener(this);
             }

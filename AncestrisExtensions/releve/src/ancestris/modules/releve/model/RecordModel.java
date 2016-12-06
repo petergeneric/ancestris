@@ -15,7 +15,7 @@ public class RecordModel {
     protected ArrayList<Record> releveList = new ArrayList<Record>();
     private boolean dirty = false;
     
-    private ArrayList<RecordModelListener> recordModelListeners = new ArrayList<RecordModelListener>(1);
+    private final ArrayList<RecordModelListener> recordModelListeners = new ArrayList<RecordModelListener>(1);
 
     public RecordModel() {
     }
@@ -182,7 +182,7 @@ public class RecordModel {
     }
 
     public Record getRecord(int index) {
-        Record record = null;
+        Record record;
         try {
             record = releveList.get(index);
         } catch (IndexOutOfBoundsException e) {
@@ -198,7 +198,7 @@ public class RecordModel {
      * @return
      */
     public Record getPreviousRecord(Record record) {
-        Record previousRecord = null;
+        Record previousRecord;
         try {
             previousRecord = releveList.get(releveList.indexOf(record)-1);
         } catch (IndexOutOfBoundsException e) {
@@ -329,7 +329,7 @@ public class RecordModel {
     private static boolean undoEnabled = true;
 
     //private Object writeSemaphore = new Object();
-    private Lock lock = new Lock();
+    private final Lock lock = new Lock();
 
     
     /**
@@ -398,7 +398,7 @@ public class RecordModel {
 
             dirty = true;
             if (!undoEnabled) {
-                return;
+                //return;
             } else {
                 undos.add(run);
 
