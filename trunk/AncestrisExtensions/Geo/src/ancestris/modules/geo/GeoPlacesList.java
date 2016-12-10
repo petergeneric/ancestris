@@ -178,7 +178,7 @@ class GeoPlacesList implements GedcomListener {
 
     private void reloadPlaces(Property property) {
         List<PropertyPlace> list = property.getEntity().getProperties(PropertyPlace.class);
-        if ((property instanceof PropertyName && !list.isEmpty()) || property instanceof PropertyPlace) {
+        if (property instanceof PropertyName || !list.isEmpty()) {
             reloadPlaces();
         }
     }
