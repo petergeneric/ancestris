@@ -140,7 +140,7 @@ public class SourceCitationsTablePanel extends javax.swing.JPanel {
 
             sourceCitationEditor.set(mRoot, mSourceCitation);
 
-            if (sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
+            if ((sourceCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) && (((PropertySource) mSourceCitation).isValid())) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
 
