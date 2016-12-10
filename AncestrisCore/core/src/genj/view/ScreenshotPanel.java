@@ -16,6 +16,7 @@ import genj.renderer.RenderSelectionHintKey;
 import genj.util.Registry;
 import java.awt.Color;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -34,6 +35,8 @@ import org.openide.util.NbBundle;
  */
 public class ScreenshotPanel extends javax.swing.JPanel {
 
+    private Registry registry = null;
+
     private ImagePanel imagePanel;
     private Rectangle rVisible = null;
     private Rectangle rWhole = null;
@@ -44,8 +47,12 @@ public class ScreenshotPanel extends javax.swing.JPanel {
      * @param component
      */
     public ScreenshotPanel(JComponent component) {
+        registry = Registry.get(getClass());
+        
         initComponents();
         
+        this.setPreferredSize(new Dimension(registry.get("captureWindowWidth", this.getPreferredSize().width), registry.get("captureWindowHeight", this.getPreferredSize().height)));
+
         visibleAreaButton.setSelected(true);
         clipboardButton.setSelected(true);
         borderPanel.setVisible(false);
@@ -62,6 +69,7 @@ public class ScreenshotPanel extends javax.swing.JPanel {
         double calcSize = capX * capY * 8;  // 8 is depth of image (?)
         factor = Math.min(1d, maxSize / calcSize);
         imagePanel.setImage(Runtime.getRuntime().maxMemory() / 8, getImageFromComponent(component, factor));
+        fileTextField.setText(registry.get("captureFilename", ""));
     }
 
     /**
@@ -87,6 +95,12 @@ public class ScreenshotPanel extends javax.swing.JPanel {
         imagePanel = new ImagePanel();
         areaPanel = imagePanel;
         msgLabel = new javax.swing.JLabel();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(areaLabel, org.openide.util.NbBundle.getMessage(ScreenshotPanel.class, "ScreenshotPanel.areaLabel.text")); // NOI18N
 
@@ -292,6 +306,11 @@ public class ScreenshotPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_areaPanelMouseReleased
 
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        registry.put("captureWindowWidth", evt.getComponent().getWidth());
+        registry.put("captureWindowHeight", evt.getComponent().getHeight());
+    }//GEN-LAST:event_formComponentResized
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel areaLabel;
@@ -364,6 +383,7 @@ public class ScreenshotPanel extends javax.swing.JPanel {
     }
 
     public String getFile() {
+        registry.put("captureFilename", fileTextField.getText());
         return fileTextField.getText();
     }
 
