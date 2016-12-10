@@ -419,6 +419,7 @@ public class ScreenshotPanel extends javax.swing.JPanel {
         public void setImage(double maxXY, BufferedImage image) {
             this.maxXY = maxXY;
             this.image = image;
+            capture = new Rectangle(0, 0, 1, 1);
         }
         
         @Override
