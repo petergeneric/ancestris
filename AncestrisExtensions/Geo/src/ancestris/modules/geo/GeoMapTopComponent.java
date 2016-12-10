@@ -37,7 +37,6 @@ import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -827,7 +826,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }//GEN-LAST:event_jRadioButton4ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
-        jXMapKit1.getMainMap().calculateZoomFrom(getPositionsFromMarkers());
+        if (jXMapKit1 != null && jXMapKit1.getMainMap() != null) {
+            jXMapKit1.getMainMap().calculateZoomFrom(getPositionsFromMarkers());
+        }
     }//GEN-LAST:event_jButton5ActionPerformed
 
     private void jRadioButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRadioButton2ActionPerformed
