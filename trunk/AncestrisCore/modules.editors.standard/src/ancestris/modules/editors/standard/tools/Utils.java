@@ -583,14 +583,19 @@ public class Utils {
     /**
      * 
      * @param indi
-     * @return null if none or only one spouse, current spouse otherwise
+     * @return null if none, current spouse otherwise
      */
     public static Indi getCurrentSpouse(Indi indi, JTree familyTree) {
         
-        // Return is no spouse or only one
+        // Return is no spouse
         Fam[] fams = indi.getFamiliesWhereSpouse();
-        if (fams == null || fams.length <= 1) {
+        if (fams == null || fams.length == 0) {
             return null;
+        }
+        
+        // Return spouse if only one
+        if (fams != null && fams.length == 1) {
+            return fams[0].getOtherSpouse(indi);
         }
         
         // If nothing selected, return first spouse
