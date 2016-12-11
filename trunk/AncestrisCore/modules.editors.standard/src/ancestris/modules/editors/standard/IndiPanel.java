@@ -399,6 +399,11 @@ public class IndiPanel extends Editor implements DocumentListener {
                 mediaImagePanelMouseClicked(evt);
             }
         });
+        mediaImagePanel.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                mediaImagePanelComponentResized(evt);
+            }
+        });
 
         javax.swing.GroupLayout mediaImagePanelLayout = new javax.swing.GroupLayout(mediaImagePanel);
         mediaImagePanel.setLayout(mediaImagePanelLayout);
@@ -474,7 +479,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGroup(mediaPanelLayout.createSequentialGroup()
                 .addComponent(mediaImagePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
-                .addComponent(scrollPanePhotos, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(scrollPanePhotos, javax.swing.GroupLayout.DEFAULT_SIZE, 64, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addGroup(mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(delMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -969,7 +974,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 183, Short.MAX_VALUE))
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 198, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -1364,7 +1369,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 325, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1977,6 +1982,11 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventSourceText.setText(sourceStr);
         }
     }//GEN-LAST:event_maxSourceEventButtonActionPerformed
+
+    private void mediaImagePanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_mediaImagePanelComponentResized
+        photoPanel.revalidate();
+        photoPanel.repaint();
+    }//GEN-LAST:event_mediaImagePanelComponentResized
 
     
     private void scrollEventNotes(int notches) {
