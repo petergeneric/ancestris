@@ -7,7 +7,7 @@ package ancestris.modules.geo;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
@@ -32,7 +32,7 @@ import org.openide.windows.WindowManager;
  *
  * @author frederic
  */
-class GeoPlacesList implements GedcomListener {
+class GeoPlacesList implements GedcomMetaListener {
 
     private static final String FORCE_REFRESH_DATE = "03-05-2015";
     
@@ -44,6 +44,7 @@ class GeoPlacesList implements GedcomListener {
     private GeoNodeObject[] geoNodes;
     private final List<GeoPlacesListener> listeners = new ArrayList<GeoPlacesListener>(10);
     private boolean stopListening = false;
+    private boolean updateRequired = false;
     private PropertyPlace copiedPlace = null;
 
 
@@ -156,6 +157,25 @@ class GeoPlacesList implements GedcomListener {
         reloadPlaces(property);
     }
 
+    public void gedcomHeaderChanged(Gedcom gedcom) {
+    }
+
+    public void gedcomWriteLockAcquired(Gedcom gedcom) {
+    }
+
+    public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
+    }
+
+    public void gedcomAfterUnitOfWork(Gedcom gedcom) {
+    }
+
+    public void gedcomWriteLockReleased(Gedcom gedcom) {
+        if (updateRequired) {
+            reloadPlaces();
+        }
+    }
+    
+    
     @SuppressWarnings("unchecked")
     public void notifyListeners(String change) {
         GeoPlacesListener[] gpls = listeners.toArray(new GeoPlacesListener[listeners.size()]);
@@ -177,9 +197,9 @@ class GeoPlacesList implements GedcomListener {
     }
 
     private void reloadPlaces(Property property) {
-        List<PropertyPlace> list = property.getEntity().getProperties(PropertyPlace.class);
-        if (property instanceof PropertyName || !list.isEmpty()) {
-            reloadPlaces();
+        List<PropertyPlace> list = property.getProperties(PropertyPlace.class);
+        if (property instanceof PropertyName || property instanceof PropertyPlace || !list.isEmpty()) {
+            updateRequired = true;
         }
     }
     
@@ -187,6 +207,7 @@ class GeoPlacesList implements GedcomListener {
         if (!stopListening) {
             stopListening();
             launchPlacesSearch();
+            updateRequired = false;
         }
     }
 
@@ -269,5 +290,6 @@ class GeoPlacesList implements GedcomListener {
     PropertyPlace getCopiedPlace() {
         return this.copiedPlace;
     }
+
 
 }
