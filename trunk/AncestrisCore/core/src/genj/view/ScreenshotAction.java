@@ -21,7 +21,6 @@ package genj.view;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.util.swing.DialogManager;
 import genj.renderer.RenderSelectionHintKey;
-import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import java.awt.Graphics2D;
@@ -175,8 +174,7 @@ public class ScreenshotAction extends AbstractAncestrisAction {
             BufferedImage image = null;
             String msg = "";
             try {
-                String tempDir = Registry.get(genj.gedcom.GedcomOptions.class).get("reportDir", System.getProperty("java.io.tmpdir"));
-                image = BigBufferedImage.create(new File(tempDir), capW, capH, BufferedImage.TYPE_INT_RGB);
+                image = BigBufferedImage.create(new File(System.getProperty("java.io.tmpdir")), capW, capH, BufferedImage.TYPE_INT_RGB);
                 Graphics2D g = image.createGraphics();
                 g.setRenderingHint(RenderSelectionHintKey.KEY, false);
                 g.setClip(0, 0, capW, capH);
