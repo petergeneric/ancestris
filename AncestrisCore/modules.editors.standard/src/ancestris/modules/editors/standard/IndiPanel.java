@@ -1984,8 +1984,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_maxSourceEventButtonActionPerformed
 
     private void mediaImagePanelComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_mediaImagePanelComponentResized
-        photoPanel.revalidate();
-        photoPanel.repaint();
+        photoPanel.redraw();
     }//GEN-LAST:event_mediaImagePanelComponentResized
 
     
