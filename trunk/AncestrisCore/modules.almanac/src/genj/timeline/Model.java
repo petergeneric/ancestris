@@ -67,6 +67,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
+import org.openide.windows.WindowManager;
 
 /**
  * A model that wraps the Gedcom information in a timeline fashion
@@ -1735,7 +1736,14 @@ import org.openide.util.TaskListener;
         if (!isGedcomChanging) {
             isGedcomChanging = true;
             if (deleted instanceof PropertyDate) {
+                //System.out.println("DEBUG*********** gedcomPropertyDeleted deteled instance of propertydate : deleted="+deleted);
                 createAndLayoutAllLayers();
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        view.centerToSelection();
+                    }
+                });
             } else if (deleted instanceof PropertyName) {
                 contentEvents(property.getEntity());
                 fireDataChanged();
