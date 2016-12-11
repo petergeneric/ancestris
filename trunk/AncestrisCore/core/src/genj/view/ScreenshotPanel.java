@@ -70,7 +70,7 @@ public class ScreenshotPanel extends javax.swing.JPanel {
 
         // Init image panel with :
         // - a buffered image that is small enough to be displayed in the background panel
-        double maxSize = Runtime.getRuntime().maxMemory() / 4;
+        double maxSize = Runtime.getRuntime().maxMemory() / 8;
         double capX = rWhole.width, capY = rWhole.height;
         double calcSize = capX * capY * 8;  // 8 is depth of image (?)
         factor = Math.min(1d, maxSize / calcSize);
