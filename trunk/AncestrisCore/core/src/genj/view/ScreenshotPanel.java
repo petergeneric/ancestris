@@ -50,14 +50,20 @@ public class ScreenshotPanel extends javax.swing.JPanel {
         registry = Registry.get(getClass());
         
         initComponents();
-        
-        this.setPreferredSize(new Dimension(registry.get("captureWindowWidth", this.getPreferredSize().width), registry.get("captureWindowHeight", this.getPreferredSize().height)));
 
-        visibleAreaButton.setSelected(true);
-        clipboardButton.setSelected(true);
-        borderPanel.setVisible(false);
-        fileTextField.setEnabled(false);
-        fileSearchButton.setEnabled(false);
+        int width = Math.max(360, registry.get("captureWindowWidth", this.getPreferredSize().width));
+        int height = Math.max(370, registry.get("captureWindowHeight", this.getPreferredSize().height));
+        this.setMinimumSize(new Dimension(360, 370));
+        this.setPreferredSize(new Dimension(width, height));
+        
+        visibleAreaButton.setSelected(registry.get("captureView", true));
+        wholeAreaButton.setSelected(!visibleAreaButton.isSelected());
+        clipboardButton.setSelected(registry.get("captureTarget", true));
+        fileButton.setSelected(!clipboardButton.isSelected());
+        borderPanel.setVisible(!visibleAreaButton.isSelected());
+        fileTextField.setEnabled(!clipboardButton.isSelected());
+        fileSearchButton.setEnabled(!clipboardButton.isSelected());
+        msgLabel.setVisible(!visibleAreaButton.isSelected());
     
         rVisible = component.getVisibleRect();
         rWhole = new Rectangle(new Point(), component.getSize());
@@ -178,7 +184,7 @@ public class ScreenshotPanel extends javax.swing.JPanel {
         );
         areaPanelLayout.setVerticalGroup(
             areaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
+            .addGap(0, 186, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout borderPanelLayout = new javax.swing.GroupLayout(borderPanel);
@@ -216,13 +222,13 @@ public class ScreenshotPanel extends javax.swing.JPanel {
                             .addComponent(wholeAreaButton)
                             .addComponent(targetLabel)
                             .addComponent(clipboardButton))
-                        .addGap(0, 33, Short.MAX_VALUE)))
+                        .addGap(0, 26, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(msgLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(borderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(borderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 253, Short.MAX_VALUE))
                 .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
@@ -235,7 +241,7 @@ public class ScreenshotPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(wholeAreaButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(borderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE)
+                .addComponent(borderPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(msgLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -383,8 +389,13 @@ public class ScreenshotPanel extends javax.swing.JPanel {
     }
 
     public String getFile() {
-        registry.put("captureFilename", fileTextField.getText());
         return fileTextField.getText();
+    }
+
+    public void savePreferences() {
+        registry.put("captureFilename", fileTextField.getText());
+        registry.put("captureView", visibleAreaButton.isSelected());
+        registry.put("captureTarget", clipboardButton.isSelected());
     }
 
     public boolean isClipboard() {
