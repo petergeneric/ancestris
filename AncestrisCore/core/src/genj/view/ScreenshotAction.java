@@ -64,10 +64,9 @@ public class ScreenshotAction extends AbstractAncestrisAction {
 
         ScreenshotPanel panel = new ScreenshotPanel(component);
 
-        if (DialogManager.OK_OPTION != DialogManager.create(getTip(), panel)
-                .setOptionType(DialogManager.OK_CANCEL_OPTION)
-                .setDialogId("screenshot")
-                .show()) {
+        Object o = DialogManager.create(getTip(), panel).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
+        panel.savePreferences();
+        if (o != DialogManager.OK_OPTION) {
             return;
         }
 
