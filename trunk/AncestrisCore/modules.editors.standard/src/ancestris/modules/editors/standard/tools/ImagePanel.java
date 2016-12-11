@@ -73,6 +73,19 @@ public class ImagePanel extends javax.swing.JPanel {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
+                sourceZoom = (double) (ip.getWidth()) / (double) image.getWidth();
+                double s2 = (double) (ip.getHeight()) / (double) image.getHeight();
+                if (s2 < sourceZoom) {
+                    sourceZoom = s2;
+                }
+                if (sourceZoom > 20) {
+                    sourceZoom = 20;
+                }
+                if (sourceZoom < 0.1) {
+                    sourceZoom = 0.1;
+                }
+                x = (int) ((ip.getWidth() / 2 - (int) (image.getWidth() * sourceZoom / 2)) / sourceZoom);
+                y = (int) ((ip.getHeight() / 2 - (int) (image.getHeight() * sourceZoom / 2)) / sourceZoom);
                 ready = true;
                 repaint();
             }
@@ -85,19 +98,6 @@ public class ImagePanel extends javax.swing.JPanel {
         if (!ready) {
             return;
         }
-        sourceZoom = (double) (this.getWidth()) / (double) image.getWidth();
-        double s2 = (double) (this.getHeight()) / (double) image.getHeight();
-        if (s2 < sourceZoom) {
-            sourceZoom = s2;
-        }
-        if (sourceZoom > 20) {
-            sourceZoom = 20;
-        }
-        if (sourceZoom < 0.1) {
-            sourceZoom = 0.1;
-        }
-        x = (int) ((this.getWidth() / 2 - (int) (image.getWidth() * sourceZoom / 2)) / sourceZoom);
-        y = (int) ((this.getHeight() / 2 - (int) (image.getHeight() * sourceZoom / 2)) / sourceZoom);
         Graphics2D g2d = (Graphics2D) grphcs;
         applyRenderHints(g2d);
         g2d.scale(sourceZoom, sourceZoom);
