@@ -239,13 +239,19 @@ public class IndiCreator {
         // Get family where parent is a spouse, and if it does not exist, create it and add existing parent to it.
         Fam fam = null;
         Fam[] fams = parent.getFamiliesWhereSpouse();
-        if (fams == null || fams.length == 0) {
+        if (fams == null || fams.length == 0 || currentSpouse == null) {
             fam = (Fam) parent.getGedcom().createEntity(Gedcom.FAM);
             fam.addDefaultProperties();
-            if (parent.getSex() != PropertySex.FEMALE) {
+            if (parent.getSex() != PropertySex.FEMALE) {  // male or unknown
                 fam.setHusband(parent);
+                if (currentSpouse != null) {
+                    fam.setWife(currentSpouse);
+                }
             } else {
                 fam.setWife(parent);
+                if (currentSpouse != null) {
+                    fam.setHusband(currentSpouse);
+                }
             }
             child.addDefaultProperties();
             fam.addChild(child);
@@ -255,6 +261,7 @@ public class IndiCreator {
                 if (spouse == currentSpouse) {
                     child.addDefaultProperties();
                     f.addChild(child);
+                    return;
                 }
             }
         }

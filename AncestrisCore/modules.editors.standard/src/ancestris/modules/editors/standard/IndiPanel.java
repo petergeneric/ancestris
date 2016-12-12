@@ -3753,8 +3753,16 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
-            putSeparator = true;
             menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, currentSpouse));
+            // Now, for child only, if there was one valid spouse, create another menu item to create a child from unknown spouse without creating the spouse
+            if (relation == IndiCreator.REL_CHILD && currentSpouse != null) {
+                label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
+                label += " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_unknownSpouse");
+                menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
+                menu.add(menuItem);
+                menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, null));
+            }
+            putSeparator = true;
         }
         // attach family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
