@@ -17,7 +17,11 @@ import javax.swing.KeyStroke;
  */
 public class BeanSex extends Bean {
 
-    private MyCombobox jComboBox1;
+    public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Unknown");
+    public static String maleLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Male");
+    public static String femaleLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Female");
+
+    private final MyCombobox jComboBox1;
 
     public BeanSex() {
         setLayout(new java.awt.BorderLayout());
@@ -28,7 +32,7 @@ public class BeanSex extends Bean {
         //  UNKNOWN = 0;
         //  MALE = 1;
         //  FEMALE = 2;
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]{"Inconnu", "Masculin", "Feminin" }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]{unknownLabel, maleLabel, femaleLabel }));
         jComboBox1.addActionListener(changeSupport);
 
         add(jComboBox1, java.awt.BorderLayout.CENTER);

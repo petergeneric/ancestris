@@ -1,7 +1,5 @@
 package ancestris.modules.releve.model;
 
-import java.util.Locale;
-
 /**
  *
  * @author Michel
