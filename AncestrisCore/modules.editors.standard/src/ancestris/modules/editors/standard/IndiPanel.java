@@ -3744,18 +3744,27 @@ public class IndiPanel extends Editor implements DocumentListener {
         // create family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
             String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
-            final Indi currentSpouse;
+            final Fam currentFam;
             if (relation == IndiCreator.REL_CHILD) {
-                currentSpouse = Utils.getCurrentSpouse(indi, familyTree);
-                label += currentSpouse != null ? " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_spouse", currentSpouse) : "";
+                currentFam = Utils.getCurrentFamily(indi, familyTree);
+                if (currentFam != null) {
+                    Indi currentSpouse = currentFam.getOtherSpouse(indi);
+                    if (currentSpouse != null) {
+                        label += " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_spouse", currentSpouse);
+                    } else {
+                        label += " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_selectedSpouse");
+                    }
+                } else {
+                    label = " ";
+                }
             } else {
-                currentSpouse = null;
+                currentFam = null;
             }
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
-            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, currentSpouse));
+            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, currentFam));
             // Now, for child only, if there was one valid spouse, create another menu item to create a child from unknown spouse without creating the spouse
-            if (relation == IndiCreator.REL_CHILD && currentSpouse != null) {
+            if (relation == IndiCreator.REL_CHILD && currentFam != null) {
                 label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
                 label += " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_unknownSpouse");
                 menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);

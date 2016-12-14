@@ -48,7 +48,7 @@ public class IndiCreator {
 
     private boolean success;
     
-    public IndiCreator(final int mode, final Indi sourceIndi, final int relation, final Indi currentSpouse, final Indi target) {
+    public IndiCreator(final int mode, final Indi sourceIndi, final int relation, final Fam currentFam, final Indi target) {
         Gedcom gedcom = sourceIndi.getGedcom();
         success = false;
         
@@ -74,7 +74,7 @@ public class IndiCreator {
                             } else if (relation == REL_PARTNER) {
                                 linkPartner(sourceIndi, indiCreated);
                             } else if (relation == REL_CHILD) {
-                                linkChild(sourceIndi, indiCreated, currentSpouse);
+                                linkChild(sourceIndi, indiCreated, currentFam);
                             }
                             success = true;
                             return;
@@ -94,7 +94,7 @@ public class IndiCreator {
                             } else if (relation == REL_PARTNER) {
                                 linkPartnerToTarget(sourceIndi, target);
                             } else if (relation == REL_CHILD) {
-                                linkChildToTarget(sourceIndi, target, currentSpouse);
+                                linkChildToTarget(sourceIndi, target, currentFam);
                             }
                             success = true;
                             return;
@@ -114,7 +114,7 @@ public class IndiCreator {
                             } else if (relation == REL_PARTNER) {
                                 unlinkPartnerFromTarget(sourceIndi, target);
                             } else if (relation == REL_CHILD) {
-                                unlinkChildFromTarget(sourceIndi, target, currentSpouse);
+                                unlinkChildFromTarget(sourceIndi, target, currentFam);
                             }
                             success = true;
                             return;
@@ -235,30 +235,29 @@ public class IndiCreator {
         }
     }
     
-    private void linkChild(Indi parent, Indi child, Indi currentSpouse) throws GedcomException {
+    private void linkChild(Indi parent, Indi child, Fam currentFam) throws GedcomException {
         // Get family where parent is a spouse, and if it does not exist, create it and add existing parent to it.
         Fam fam = null;
         Fam[] fams = parent.getFamiliesWhereSpouse();
-        if (fams == null || fams.length == 0 || currentSpouse == null) {
+        if (fams == null || fams.length == 0 || currentFam == null) {
             fam = (Fam) parent.getGedcom().createEntity(Gedcom.FAM);
             fam.addDefaultProperties();
             if (parent.getSex() != PropertySex.FEMALE) {  // male or unknown
                 fam.setHusband(parent);
-                if (currentSpouse != null) {
-                    fam.setWife(currentSpouse);
+                if (currentFam != null) {
+                    fam.setWife(currentFam.getOtherSpouse(parent));
                 }
             } else {
                 fam.setWife(parent);
-                if (currentSpouse != null) {
-                    fam.setHusband(currentSpouse);
+                if (currentFam != null) {
+                    fam.setHusband(currentFam.getOtherSpouse(parent));
                 }
             }
             child.addDefaultProperties();
             fam.addChild(child);
         } else {
             for (Fam f : fams) {
-                Indi spouse = f.getOtherSpouse(parent);
-                if (spouse == currentSpouse) {
+                if (f == currentFam) {
                     child.addDefaultProperties();
                     f.addChild(child);
                     return;
@@ -344,7 +343,7 @@ public class IndiCreator {
         
     }
 
-    private void linkChildToTarget(Indi parent, Indi child, Indi currentSpouse) throws GedcomException {
+    private void linkChildToTarget(Indi parent, Indi child, Fam currentFam) throws GedcomException {
         // Get family where parent is a spouse, and if it does not exist, create it and add existing parent to it.
         Fam fam = null;
         Fam[] fams = parent.getFamiliesWhereSpouse();
@@ -359,8 +358,7 @@ public class IndiCreator {
             fam.addChild(child);
         } else {
             for (Fam f : fams) {
-                Indi spouse = f.getOtherSpouse(parent);
-                if (spouse == currentSpouse) {
+                if (f == currentFam) {
                     f.addChild(child);
                 }
             }
@@ -461,7 +459,7 @@ public class IndiCreator {
         cleanFamily(fam);
     }
 
-    private void unlinkChildFromTarget(Indi parent, Indi child, Indi currentSpouse) throws GedcomException {
+    private void unlinkChildFromTarget(Indi parent, Indi child, Fam currentFam) throws GedcomException {
 
         // Get family where child is a child and check for father
         Fam fam = child.getFamilyWhereBiologicalChild();

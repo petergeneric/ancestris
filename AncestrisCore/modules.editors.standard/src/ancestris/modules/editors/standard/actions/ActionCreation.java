@@ -18,6 +18,7 @@ import ancestris.modules.editors.standard.IndiPanel;
 import ancestris.modules.editors.standard.tools.IndiCreator;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.util.ChangeSupport;
 import java.awt.event.ActionEvent;
@@ -32,7 +33,7 @@ public class ActionCreation extends AbstractAction {
     private EditorTopComponent editorTopComponent;
     private int type;
     private Indi indi;
-    private Indi spouse;
+    private Fam fam;
     private int relation;
     private ChangeSupport changes;
     
@@ -40,15 +41,15 @@ public class ActionCreation extends AbstractAction {
         init(editorTopComponent, type, relation, null);
     }
 
-    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Indi spouse) {
-        init(editorTopComponent, type, relation, spouse);
+    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Fam fam) {
+        init(editorTopComponent, type, relation, fam);
     }
 
-    private void init(EditorTopComponent editorTopComponent, int type, int relation, Indi spouse) {
+    private void init(EditorTopComponent editorTopComponent, int type, int relation, Fam fam) {
         this.editorTopComponent = editorTopComponent;
         this.type = type;
         this.relation = relation;
-        this.spouse = spouse;
+        this.fam = fam;
         
         Entity entity = editorTopComponent.getEditor().getEditedEntity();
         if (entity instanceof Indi) {
@@ -66,7 +67,7 @@ public class ActionCreation extends AbstractAction {
         if (changes != null && changes.hasChanged()) {
             changes.fireChangeEvent(new Boolean(true));  // force changes to be saved (true) in a separate commit from the indi creation which is coming...
         }
-        IndiCreator indiCreator = new IndiCreator(type, indi, relation, spouse, null);
+        IndiCreator indiCreator = new IndiCreator(type, indi, relation, fam, null);
         editorTopComponent.setContext(new Context(indiCreator.getIndi()));
         editorTopComponent.requestActive();
     }

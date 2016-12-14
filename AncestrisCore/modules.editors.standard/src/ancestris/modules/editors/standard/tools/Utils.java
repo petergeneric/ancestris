@@ -585,7 +585,7 @@ public class Utils {
      * @param indi
      * @return null if none, current spouse otherwise
      */
-    public static Indi getCurrentSpouse(Indi indi, JTree familyTree) {
+    public static Fam getCurrentFamily(Indi indi, JTree familyTree) {
         
         // Return is no spouse
         Fam[] fams = indi.getFamiliesWhereSpouse();
@@ -595,24 +595,24 @@ public class Utils {
         
         // Return spouse if only one
         if (fams != null && fams.length == 1) {
-            return fams[0].getOtherSpouse(indi);
+            return fams[0];
         }
         
         // If nothing selected, return first spouse
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) familyTree.getLastSelectedPathComponent();
         if (selectedNode == null) {
-            return fams[0].getOtherSpouse(indi);
+            return fams[0];
         }
         
         // If spouse cannot be determined from selection, return first spouse
         NodeWrapper node = (NodeWrapper) selectedNode.getUserObject();
-        Indi spouse = node.getCurrentSpouse(indi);
-        if (spouse == null) {
-            return fams[0].getOtherSpouse(indi);
+        Fam fam = node.getCurrentFamily(indi);
+        if (fam == null) {
+            return fams[0];
         }
         
-        // Else return detected spouse
-        return spouse;
+        // Else return detected family
+        return fam;
     }
 
     
