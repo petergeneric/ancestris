@@ -92,7 +92,7 @@ public class NodeWrapper {
         this.type = type;
         this.object = o;
         this.myIndi = indi;
-        this.entity = (Fam) o; // will not be used anyway (see below)
+        this.entity = (Fam) o;
     }
 
     public Entity getEntity() {
@@ -194,12 +194,12 @@ public class NodeWrapper {
         return (type == MEUNKNOWN || type == MEMALE || type == MEFEMALE);
     }
 
-    public Indi getCurrentSpouse(Indi indi) {
+    public Fam getCurrentFamily(Indi indi) {
         if (type < SPOUSE) {
             return null;
         }
         if (type == SPOUSE) {
-            return (Indi) entity;
+            return (Fam) object;
         }
         if (type > SPOUSE) {
             Indi child = (Indi) object;
@@ -207,7 +207,7 @@ public class NodeWrapper {
             if (fam == null) {
                 return null;
             }
-            return (Indi) fam.getOtherSpouse(indi);
+            return fam;
         }
         return null;
     }
