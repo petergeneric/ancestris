@@ -1,0 +1,299 @@
+/*
+ * rave.css      08/13/2004
+ *
+ * Copyright (c) 2009 Sun Microsystems, Inc. All rights reserved.
+ * Use is subject to license terms.
+ *
+ * Changes from NetBeans ide.css:
+ * Oct. 2003
+ * Got rid of <tr> and <td> definitions.
+ * Changed table definition and added <border> tag
+ * to improve appearance of tables in web browsers.
+ * Added <th> definition to make default text alignment left.
+ * 
+ * Added <dl>, <dt>, and <dd> definitions to be used instead
+ * of formatting tables for See Also lists. For example:
+ * <dl>
+ * <dt>See Also</dt>
+ * <dd>First Linked Element of List</dd>
+ * <dd>Second Linked Element of List</dd>
+ * </dl>
+ * 
+ * Added <ul> and <ol> definitions that support blue ball
+ * and blue square graphics for bullets. Definitions
+ * account for sublists and for subslists of sublists.
+ * 
+ */
+
+
+
+/* Lists */
+
+li {margin-top: 0;
+    margin-bottom: 5;
+ }
+        
+li p{margin-top: 5;
+     margin-bottom: 0}
+
+/* Ordered lists */
+
+ul {list-style-image:url(images/blue-ball-mid.gif);
+    margin-top: 5;
+    margin-bottom: 0;
+    margin-left: 32;
+}
+
+ul li ul{list-style-image:url(images/blue-sqr-mid.gif);}
+
+ul ul{list-style-image:url(images/blue-sqr-mid.gif)}
+
+/* Numbered lists embedded in ordered lists */
+
+ul li ol{list-style-image:none;
+         list-style-type: decimal}
+
+ul li ol li ol{list-style-type: lower-alpha}
+
+ul li ol ol{list-style-type: lower-alpha}
+
+ul ol{list-style-image:none;
+      list-style-type: decimal}
+
+ul ol li ol{list-style-type: lower-alpha}
+
+ul ol ol{list-style-type: lower-alpha}
+
+/* Graphics for notes and warnings */
+ul.note {list-style-image:url(images/tip.gif);
+     margin-top: 5;
+     margin-bottom: 0;
+     margin-left: 16;
+}
+
+ul.warning {list-style-image:url(images/warn.gif);
+     margin-top: 5;
+     margin-bottom: 0;
+     margin-left: 16;
+}
+
+/* Numbered lists */
+
+ol {list-style-type: decimal;
+     margin-top: 5;
+     margin-bottom: 0;
+     margin-left: 22;
+}
+
+ol li ol{list-style-type: lower-alpha}
+
+ol ol{list-style-type: lower-alpha}
+
+/* Ordered lists embedded in Numbered lists */
+
+ol li ul {list-style-image:url(images/blue-ball-mid.gif)}
+
+ol li ul li ul {list-style-image:url(images/blue-sqr-mid.gif)}
+
+ol li ul ul {list-style-image:url(images/blue-sqr-mid.gif)}
+
+ol ul {list-style-image:url(images/blue-ball-mid.gif)}
+
+ol ul li ul {list-style-image:url(images/blue-sqr-mid.gif)}
+
+ol ul ul{list-style-image:url(images/blue-sqr-mid.gif)}
+
+dl {margin-left: 40;
+    margin-top: 10;
+    margin-bottom: 5}
+
+dt {font-size: 12px;
+    font-style: normal;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 0;
+    text-indent: 0}
+
+dd {font-size: 12px;
+    font-style: normal;
+    font-weight: normal;
+    margin-top: 2;
+    margin-left: 25}
+        
+table {
+    border-style: solid;
+    border-color: silver;
+    margin-top: 5;
+    margin-bottom: 5;
+}
+
+td {
+    border-style: solid;
+    border-color: silver;
+    padding-left: 1;
+    padding-right: 1;
+    padding-top: 1;
+    padding-bottom: 1;
+}
+
+th {
+    border-style: solid;
+    border-color: silver;
+    padding-left: 1;
+    padding-right: 1;
+    padding-top: 1;
+    padding-bottom: 1;
+}
+
+small {font-size: x-small}
+
+/* Specific style for the Help section of Ancestris - Start */
+
+/* Page */
+
+body  {
+    font-size: 12px;
+    font-family: SansSerif, Arial, Helvetica, sans-serif;
+    margin-left: 10;
+    margin-right: 10;
+    color: Black;
+    background-color: White;
+}
+
+/* Paragraphs */
+
+p  {
+    font-size: 12px;
+    margin-top: 5;
+    margin-bottom: 5;
+}
+
+p.justify  {
+    font-size: 12px;
+    margin-top: 5;
+    margin-bottom: 5;
+    text-align: justify;
+    text-justify: newspaper;
+}
+
+p.marge40  {
+    font-size: 12px;
+    margin-top: 5;
+    margin-bottom: 5;
+    margin-left: 40;
+    text-align: justify;
+    text-justify: newspaper;
+}
+
+p.warning   {
+    font-weight: bolder;
+    color: red;
+    background: white;
+    }
+
+/* Titles */
+
+h1.ancestris_help_title   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 14pt;
+    font-weight: 900;
+    text-decoration: underline;
+    }
+
+h2.ancestris_help_title   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 13pt;
+    font-weight: 700;
+    text-decoration: underline;
+    }
+
+h2.ancestris_back_section   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 12pt;
+    font-weight: 700;
+    text-align: center;
+    text-decoration: underline;
+    }
+
+h3.ancestris_help_title   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 12pt;
+    font-weight: 700;
+    text-decoration: underline;
+    }
+
+h4.ancestris_help_title   {
+    color: #000000;
+    background: #ffffff;
+    font-size: 10pt;
+    font-weight: 700;
+    font-style: italic;
+    text-decoration: underline;
+    }
+
+/*
+ * Use the h6 tag for the term in a glossary popup
+ * topic. The term being defined is the heading for
+ * the topic.
+ */
+
+h6 {
+    font-size: smaller;
+    font-weight: bold;
+    margin-top: 0;
+    margin-bottom: 10;
+}
+
+div.section1    {
+    color: #000000;
+    font-size: 9pt;
+    font-weight: 400;
+    margin-left: 10px;
+    margin-right: 5px;
+    text-align: justify;
+    }
+
+/* Specific Texts */
+
+.ancestris_stop_tip {
+    background-color:#abeee2;
+    font-size: 11px;
+    text-align: justify;
+    text-justify: newspaper;
+}
+
+.ancestris_info_image {
+    color: #24006b;
+    font-style: italic;
+    font-size: 10px;
+}
+
+.featured {
+    margin: 30px 0;
+    padding: 7px 4px;
+    border: 2px dotted #090;
+    background: #e8fcd9;
+    color: #333;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+.code_citation {
+    font-family: monospace;
+    font-size: 7pt;
+    margin: 20px 0;
+    padding: 7px 4px;
+    border: 2px dotted #090;
+    background: #e5e5e5;
+    color: #333;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+}
+
+/* Specific style for the Help section of Ancestris - End */

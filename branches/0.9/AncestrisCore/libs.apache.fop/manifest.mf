@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.libs.apache.fop
+OpenIDE-Module-Localizing-Bundle: ancestris/libs/apache/fop/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.0
+

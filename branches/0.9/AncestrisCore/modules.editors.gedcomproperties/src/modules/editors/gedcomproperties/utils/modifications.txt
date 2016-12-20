@@ -1,0 +1,194 @@
+Modifications in Version 5.5.1
+!
+Editorial corrections.
+!
+Added continuation tags to the header copyright tags (see <<HEADER>>, page 23.)
+==> NOT CONSIDERED.
+
+!
+Added email, fax, and web page addresses to the address structure (see <<ADDRESS_STRUCTURE>>, page 31.)
+==> CONSIDERED.
+=> convert _EMAIL, _FAX, _WWW to EMAIL, FAX, WWW and vice versa when it is at the same level as ADDR
+
+!
+Added a status tag to the child to family link (see <<CHILD_TO_FAMILY_LINK>>, page 31.)
+==> CONSIDERED.
+=> convert _STAT to STAT and vice versa when it is attached to a FAMC tag
+
+!
+Added a restriction notice tag to the family record to allow a source database to indicate why data may not have been supplied in the transmission. (see <<FAMILY_RECORD>>, page 24.)
+Also added a restriction notice tag to the <<EVENT_DETAIL>> structure page 32 to allow an
+event to be flagged so that it can be treated in special ways such as not to be printed on reports.
+==> CONSIDERED.
+=> convert _RESN to RESN and vice versa when it is attached to a FAM tag or event tag i.e. (same as the new RELI tag)
+
+
+FAMILY_EVENT_STRUCTURE: =
+
+  [
+  n [ ANUL | CENS | DIV | DIVF ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n [ ENGA | MARR | MARB | MARC ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n [ MARL | MARS ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  EVEN          {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  ]
+
+INDIVIDUAL_ATTRIBUTE_STRUCTURE: =
+
+  [
+  n  CAST <CASTE_NAME>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  DSCR <PHYSICAL_DESCRIPTION>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  EDUC <SCHOLASTIC_ACHIEVEMENT>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  IDNO <NATIONAL_ID_NUMBER>   {1:1}*
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  NATI <NATIONAL_OR_TRIBAL_ORIGIN>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  NCHI <COUNT_OF_CHILDREN>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  NMR <COUNT_OF_MARRIAGES>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  OCCU <OCCUPATION>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  PROP <POSSESSIONS>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  RELI <RELIGIOUS_AFFILIATION>   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  RESI           {1:1}  
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  SSN <SOCIAL_SECURITY_NUMBER>   {0:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  |
+  n  TITL <NOBILITY_TYPE_TITLE>  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+  ]
+
+INDIVIDUAL_EVENT_STRUCTURE: =
+
+  [
+  n[ BIRT | CHR ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    +1 FAMC @<XREF:FAM>@  {0:1}
+    |
+  n  [ DEAT | BURI | CREM ] [Y|<NULL>]   {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    |
+  n  ADOP [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    +1 FAMC @<XREF:FAM>@  {0:1}
+      +2 ADOP <ADOPTED_BY_WHICH_PARENT>  {0:1}
+    |
+  n  [ BAPM | BARM | BASM | BLES ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    |
+  n  [ CHRA | CONF | FCOM | ORDN ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    |
+  n  [ NATU | EMIG | IMMI ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    |
+  n  [ CENS | PROB | WILL] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    |
+  n  [ GRAD | RETI ] [Y|<NULL>]  {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    |
+  n  EVEN          {1:1}
+    +1 <<EVENT_DETAIL>>  {0:1}
+    ]
+
+
+
+
+
+!
+Added additional subordinate structure to the personal name structure (see <<PERSONAL_NAME_STRUCTURE>>, page 38.) These changes are in preparation for
+handling more varied cultures as we move into the unicode character set environment.
+==> CONSIDERED.
+=> convert _TYPE, _FONE, _ROMN to TYPE, FONE, ROMN, FONE:TYPE, ROMN:TYPE and vice versa when it is attached to a NAME tag of individual and  
+
+
+
+!
+Added subordinate map coordinates and other additional changes to the place structure (see <<PLACE_STRUCTURE>>, page 38.) These changes are in preparation for handling more
+varied cultures as we move into the unicode character set environment and to allow recording of map coordinates to places such as burial cites.
+==> CONSIDERED.
+=> convert _MAP, _LATI, _LONG, _FONE, _ROMN to MAP, LATI, LONG, FONE, ROMN and vice versa when it is attached to a PLAC tag  
+
+
+
+!
+Added a subordinate affiliated religion tag to the event detail substructure (see <<EVENT_DETAIL>>, page 32.)
+==> CONSIDERED.
+=> convert _RELI to RELI when in an event tag  
+
+
+
+!
+Added a generic FACT tag to the individual attribute structure. Previously, the generic EVEN
+tag was used. The FACT was added to give a semantic difference between generic events and
+generic facts or characteristics (see <<INDIVIDUAL_ATTRIBUTE_STRUCTURE>>, page 33.)
+==> CONSIDERED.
+=> convert _FACT to FACT when in it attached behing INDI  
+
+
+
+
+!
+Removed the option for encoding embedded multimedia objects. A file reference to a
+multimedia file and its subordinate format and media types were added to the multimedia record.
+Multiple file references can now be used to group related multimedia objects. This changed the
+multimedia link by placing the FORM tag subordinate to the FILE tag rather than at the same 7
+level. The BLOB tag was eliminated. See FILE tag and its subordinate FORM tag used in the
+<<MULTIMEDIA_RECORD>> page 26 and the <<MULTIMEDIA_LINK>> page 37.
+==> CONSIDERED.
+=> convert OBJE:FORM & OBJE:FILE(1) to OBJE:FILE(n):FORM and vice versa for OBJE link and for OBJE record
+
+
+
+
+!
+The following tags were added:
+EMAIL electronic mailing address
+FAX FAX address
+FACT A fact or characteristic.
+FONE Phonetic variation of a text.
+ROMN Romanized variation of a text.
+WWW Web Home page address.
+MAP Pertaining to maps.
+LATI value of a latitudinal coordinate pertaining to the place of an event
+LONG value of a longitudinal coordinate pertaining to the place of an event.
+==> CONSIDERED.
+
+
+
+!
+The following tag was removed:
+BLOB
+==> CONSIDERED.
+=> Turn to _BLOB and _subtags BLOB and subtags
+
+
+
+
+
+

@@ -1,0 +1,9 @@
+  <col>
+   <row><label path="OBJE"/></row>
+   <row><label path="OBJE:TITL" gedcom="5.5"/><bean path="OBJE:TITL" gedcom="5.5" wx="1"/></row>
+   <row><label path="OBJE:FORM" gedcom="5.5"/><bean path="OBJE:FORM"  gedcom="5.5" wx="1"/></row>
+   <row><bean path="OBJE:BLOB"  gedcom="5.5" wx="1" wy="1"/></row>
+   <row><label path="OBJE:FILE:TITL"  gedcom="5.5.1"/><bean path="OBJE:FILE:TITL" gedcom="5.5.1" wx="1"/></row>
+   <row><label path="OBJE:FILE:FORM" gedcom="5.5.1"/><bean path="OBJE:FILE:FORM" gedcom="5.5.1" wx="1"/></row>
+   <row><bean path="OBJE:FILE" gedcom="5.5.1" wx="1" wy="1"/></row>
+  </col>

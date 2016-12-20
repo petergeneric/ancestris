@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+arborescence de l'aide ?
+-->
+<!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
+<toc version="2.0">
+  <tocitem image="toplevelfolder" text="Your Genealogy with Ancestris" target="ancestris.app.help.title">
+    <tocitem target="ancestris.app.intro">Preliminary advice
+    </tocitem>
+    <tocitem expand="true" text="Ancestris - Contents" target="ancestris.app.about">
+        <tocitem expand="true" text="Basic Use" target="ancestris.app.discovering">
+              <tocitem expand="false" text="First settings" target="ancestris.app.basic">
+              </tocitem>
+              <tocitem text="Managing the windows" target="ancestris.app.windows" />
+              <tocitem text="Places hierarchy" target="ancestris.app.place.management" />
+              <tocitem text="Gedcom explorer" target="ancestris.app.gedcoms.manager" />
+              <tocitem expand="false" text="Plugins - Overall View" target="ancestris.app.plugins" />
+              <tocitem expand="false" text="Sources and Repositories" target="ancestris.app.repo.source.management">
+              </tocitem>
+        </tocitem>
+        <tocitem expand="true" text="Import your genealogy" target="ancestris.app.genealogy.import">
+                  <tocitem text="Render compliant your data" target="ancestris.app.conform.genealogy" />
+                  <tocitem text="Eventual problems" target="ancestris.app.import.issue" />
+        </tocitem>
+        <tocitem expand="true" text="I begin my genealogy" target="ancestris.app.new.genealogy">
+                  <tocitem text="Create your 1st individual" target="ancestris.app.new.entity" />
+                  <tocitem text="Add a spouse" target="ancestris.app.new.spouse" />
+                  <tocitem text="Create a family" target="ancestris.app.new.family" />
+                  <tocitem text="Add children" target="ancestris.app.new.child" />
+                  <tocitem text="Add ancestors" target="ancestris.app.new.parent" />
+        </tocitem>
+        <tocitem expand="true" text="The different windows" target="ancestris.app.views">
+            <tocitem text="Tree view" target="ancestris.app.view.tree" />
+            <tocitem text="The Table view" target="ancestris.app.view.table" />
+            <tocitem text="Ancestris editor" target="ancestris.app.view.editors.ancestris" />
+            <tocitem text="Gedcom editor" target="ancestris.app.view.editors.gedcom" />
+            <tocitem text="Timeline view" target="ancestris.app.view.chrono" />
+            <tocitem text="The navigator" target="ancestris.app.view.navigator" />
+            <tocitem text="Entity view" target="ancestris.app.view.entity" />
+            <tocitem text="Search engine" target="ancestris.app.view.search" />
+            <tocitem text="Lists and Reports" target="ancestris.app.view.reports" />
+            <tocitem text="Plugins available" target="ancestris.app.plugins.liste" />
+            <tocitem text="The geo view" target="ancestris.app.view.geo" />
+            <tocitem text="Places list" target="ancestris.app.juridictions.list" />
+        </tocitem>
+        <tocitem expand="true" text="Advanced use" target="ancestris.app.advanced">
+            <tocitem text="Preferences - Configuration" target="ancestris.app.options.menu1" />
+            <tocitem text="Gedcom specifications" target="ancestris.app.gedcom.standard" />
+            <tocitem text="Blueprints - Layers" target="ancestris.app.blueprints" />
+            <tocitem text="Ancestris roaming" target="ancestris.app.nomade" />
+            <tocitem text="Write your 1st plugin" target="ancestris.app.plugins.development" />
+        </tocitem>
+        <tocitem expand="true" text="How to get help" target="ancestris.app.aids">
+        </tocitem>
+    </tocitem>
+  </tocitem>
+</toc>

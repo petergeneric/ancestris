@@ -1,0 +1,18 @@
+<table>
+ <row><label path="." cols="2"/></row>
+ <row><label path=".:DATE"/><bean path=".:DATE" dir="h"/></row>
+ <row><label path=".:PLAC"/><bean path=".:PLAC" wx="1"/></row>
+ <row>
+  <col cols="2">
+  <fold key="ADDR" collapsed="1"/>
+  <table>
+   <row><bean path=".:ADDR" wx="1" cols="4"/></row>
+   <row><label path=".:ADDR:CITY"/><bean path=".:ADDR:CITY" wx="1"/>
+        <label path=".:ADDR:POST"/><bean path=".:ADDR:POST" wx="1"/></row>
+   <row><label path=".:ADDR:CTRY"/><bean path=".:ADDR:CTRY" wx="1"/>
+        <label path=".:ADDR:STAE"/><bean path=".:ADDR:STAE" wx="1"/></row>
+  </table>
+  </col>
+ </row>
+</table>
+ 

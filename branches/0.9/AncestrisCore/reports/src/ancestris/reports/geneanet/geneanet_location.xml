@@ -1,0 +1,1669 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- geneanet codes for countries, regions and subregions -->
+
+<planet>
+	<!--
+		<country  name="" code="">
+		<region name="" code="">
+		<subregion name="" code="" />
+		</region>
+		</country>
+	-->
+
+	<country name="Aruba" code="ABW" />
+	<country name="Afghanistan" code="AFG" />
+	<country name="Angola" code="AGO" />
+	<country name="Anguilla" code="AIA" />
+	<country name="Andorre" code="AND" />
+	<country name="Antilles néerlandaises" code="ANT" />
+	<country name="Emirats Arabes Unis" code="ARE" />
+	<country code="ARG" name="Argentine">
+		<region code="BAI" name="Buenos Aires" />
+		<region code="CAP"
+			name="Ciudad de Buenos Aires (Capital Federal)" />
+		<region code="CAT" name="Catamarca" />
+		<region code="CDB" name="Córdoba" />
+		<region code="CHA" name="Chaco" />
+		<region code="CHU" name="Chubut" />
+		<region code="COR" name="Corrientes" />
+		<region code="ERI" name="Entre Ríos" />
+		<region code="FOR" name="Formosa" />
+		<region code="JUJ" name="Jujuy" />
+		<region code="LPA" name="La Pampa" />
+		<region code="LRI" name="La Rioja" />
+		<region code="MEN" name="Mendoza" />
+		<region code="MIS" name="Misiones" />
+		<region code="NEU" name="Neuquén" />
+		<region code="RNE" name="Rio Negro" />
+		<region code="SAL" name="Salta" />
+		<region code="SCR" name="Santa Cruz" />
+		<region code="SDE" name="Santiago del Estero" />
+		<region code="SFE" name="Santa Fe" />
+		<region code="SJU" name="San Juan" />
+		<region code="SLU" name="San Luis" />
+		<region code="TDF" name="Tierra del Fuego" />
+		<region code="TUC" name="Tucumán" />
+	</country>
+	<country name="Arménie" code="ARM" />
+	<country name="Samoa américaines" code="ASM" />
+	<country name="Antartique" code="ATA" />
+	<country name="Terres australes et antarctiques françaises"
+		code="ATF" />
+	<country name="Antigua-et-Barbuda" code="ATG" />
+	<country name="Australie" code="AUS">
+		<region name="New South Wales" code="NSW" />
+		<region name="Northern Territory" code="NTE" />
+		<region name="Queensland" code="QUE" />
+		<region name="South Australia" code="SAU" />
+		<region name="Tasmania" code="TAS" />
+		<region name="Victoria" code="VIC" />
+		<region name="Western Australia" code="WAU" />
+	</country>
+	<country name="Belgique" code="BEL">
+		<region name="Antwerpen" code="ANT" />
+		<region name="Brabant" code="BRA" />
+		<region name="Hainaut" code="HAI" />
+		<region name="Liège" code="LIE" />
+		<region name="Limburg" code="LIM" />
+		<region name="Luxembourg" code="LUX" />
+		<region name="Namur" code="NAM" />
+		<region name="Oost Vlaanderen" code="OVL" />
+		<region name="West Vlaanderen" code="WVL" />
+	</country>
+	<country name="Bénin" code="BEN" />
+	<country name="Burkina Faso" code="BFA" />
+	<country name="Bangladesh" code="BGD" />
+	<country name="Bulgarie" code="BGR" />
+	<country name="Bahreïn" code="BHR" />
+	<country name="Bahamas" code="BHS" />
+	<country name="Bosnie-Herzégovine" code="BIH" />
+	<country name="Biélorussie" code="BLR" />
+	<country name="Belize" code="BLZ" />
+	<country name="Bermudes" code="BMU" />
+
+  <country name="Bolivie" code="BOL">
+		<region name="Beni" code="BEN" />
+		<region name="Chuquisaca" code="CHU" />
+		<region name="Cochabamba" code="COC" />
+		<region name="La Paz" code="LPA" />
+		<region name="Orduro" code="ORD" />
+		<region name="Pando" code="PAN" />
+		<region name="Potosi" code="POT" />
+		<region name="Santa Cruz" code="SCR" />
+		<region name="Tarija" code="TAR" />
+	</country>
+	
+	 <country name="Brésil" code="BRA">
+		<region name="Acre" code="ACR" />
+		<region name="Alagoas" code="ALA" />
+		<region name="Amapa" code="AMA" />
+		<region name="Amazonas" code="AMZ" />
+		<region name="Bahia" code="BAH" />
+		<region name="Ceara" code="CEA" />
+		<region name="Distrito Federal" code="DEF" />
+		<region name="Espirito Santu" code="ESA" />
+		<region name="Goias" code="GOI" />
+		<region name="Maranhao" code="MAR" />
+		<region name="Minas Gerais" code="MGE" />
+		<region name="Mato Grosso" code="MGR" />
+		<region name="Mato Grosso do Sul" code="MGS" />
+		<region name="Paraiba" code="PBA" />
+		<region name="Pernambuco" code="PER" />
+		<region name="Piaui" code="PIA" />
+		<region name="Parana" code="PNA" />
+		<region name="Para" code="PRA" />
+		<region name="Rio de Janeiro" code="RDJ" />
+		<region name="Rio Grande do Norte" code="RGN" />
+		<region name="Rio Grande do Sul" code="RGS" />
+		<region name="Rondonia" code="RON" />
+		<region name="Roraima" code="ROR" />
+		<region name="Santa Catarina" code="SCA" />
+		<region name="Sergipe" code="SER" />
+		<region name="Sau Paulo" code="SPA" />
+		<region name="Tocantins" code="TOC" />
+	</country>
+
+
+	<country name="Barbade" code="BRB" />
+	<country name="Brunei" code="BRN" />
+	<country name="Bhoutan" code="BTN" />
+	<country name="Île Bouvet" code="BVT" />
+	<country name="Botswana" code="BWA" />
+	<country name="République Centraficaine" code="CAF" />
+
+	<country name="Canada" code="CAN">
+		<region name="Alberta" code="ALB" />
+		<region name="British Columbia" code="BCO" />
+		<region name="Manitoba" code="MAN" />
+		<region name="New Brunswick" code="NBR" />
+		<region name="Newfoundland and Labrador" code="NLA" />
+		<region name="Nova Scotia" code="NSC" />
+		<region name="Nunavut" code="NUN" />
+		<region name="North West Territories" code="NWT" />
+		<region name="Ontario" code="ONT" />
+		<region name="Prince Edward Island" code="PEI" />
+		<region name="Québec" code="QUE" />
+		<region name="Saskatchewan" code="SAS" />
+		<region name="Yukon" code="YUK" />
+	</country>
+	<country name="Îles Cocos" code="CCK" />
+	<country name="Suisse" code="CHE">
+		<region name="Aargau" code="AAR" />
+		<region name="Appenzell,Ausserrhoden,Innerrhoden" code="APP" />
+		<region name="Basel,Basle" code="BAS" />
+		<region name="Bern,Berne" code="BER" />
+		<region name="Freiburg,Fribourg" code="FRB" />
+		<region name="Geneve,Geneva,Genf" code="GEN" />
+		<region name="Glarus" code="GLA" />
+		<region name="Graubunden,Grisons" code="GRA" />
+		<region name="Jura" code="JUR" />
+		<region name="Luzern,Lucerne" code="LUZ" />
+		<region name="Neuchatel,Neuenberg" code="NEU" />
+		<region name="Schaffhausen" code="SCN" />
+		<region name="Schwyz" code="SCZ" />
+		<region name="Sankt Gallen,Saint Gall" code="SGA" />
+		<region name="Solothurn" code="SOL" />
+		<region name="Thurgau" code="THU" />
+		<region name="Ticino,Tessin" code="TIC" />
+		<region name="Uri" code="URI" />
+		<region name="Valais,Wallis" code="VAL" />
+		<region name="Vaud,Waadt" code="VAU" />
+		<region name="Unterwalden,Obwalden,Nidwalden" code="WAL" />
+		<region name="Zug" code="ZUG" />
+		<region name="Zurich" code="ZUR" />
+	</country>
+	<country name="Chili" code="CHL">
+		<region name="Aconcagua" code="ACO" />
+		<region name="Aisen del General C." code="AIS" />
+		<region name="Antofagasta" code="ANT" />
+		<region name="Araucania" code="ARA" />
+		<region name="Atacama" code="ATA" />
+		<region name="Biobio" code="BIO" />
+		<region name="Coquimbo" code="COQ" />
+		<region name="Libertador General B." code="LIB" />
+		<region name="Los Lagos" code="LLA" />
+		<region name="Magallanes" code="MAG" />
+		<region name="Maule" code="MAU" />
+		<region name="Metropolitana" code="MET" />
+		<region name="Tara Paca" code="TPA" />
+	</country>
+	<country name="Chine" code="CHN" />
+	<country name="Côte d'Ivoire" code="CIV" />
+	<country name="Cameroun" code="CMR" />
+	<country name="Congo" code="COG" />
+	<country name="Îles Cook" code="COK" />
+
+	<country name="Colombie" code="COL">
+		<region name="Amazonas" code="AMA" />
+		<region name="Antioqua" code="ANT" />
+		<region name="Arauca" code="ARA" />
+		<region name="Bolivar" code="BOL" />
+		<region name="Boyaca" code="BOY" />
+		<region name="Caldas" code="CAL" />
+		<region name="Casanare" code="CAS" />
+		<region name="Cauca" code="CAU" />
+		<region name="Cezar" code="CEZ" />
+		<region name="Choco" code="CHO" />
+		<region name="Cordoga" code="COR" />
+		<region name="Cundinamarca" code="CUN" />
+		<region name="Guajira" code="GJR" />
+		<region name="Guaviare" code="GVR" />
+		<region name="Huila" code="HUI" />
+		<region name="Magdalena" code="MAG" />
+		<region name="Meta" code="MET" />
+    <region name="Narino" code="NAR" />    
+		<region name="Norte de Santander" code="NDS" />
+		<region name="Putumayo" code="PUT" />
+    <region name="Ris" code="RIS" />
+    <region name="Santander" code="SAN" /> 
+    <region name="Sucre" code="SUC" /> 
+    <region name="Tolima" code="TOL" /> 
+    <region name="Vaupes" code="VAU" /> 
+    <region name="Valle del Cauca" code="VDC" /> 
+    <region name="Vichada Guainia" code="VGU" />                                                                              		
+	</country>
+
+	<country name="Comores" code="COM" />
+	<country name="Cap-Vert" code="CPV" />
+	<country name="Costa Rica" code="CRI" />
+
+	<country name="Cuba" code="CUB">
+		<region name="Camaguey" code="CAM" />
+		<region name="Ciego de Avila" code="CDA" />
+		<region name="Cienfuegos" code="CIE" />
+		<region name="Granma" code="GRA" />
+		<region name="Guantanamo" code="GUA" />
+		<region name="Holguin" code="HOL" />
+		<region name="Isla de la Juventud" code="IDJ" />
+		<region name="La Habana" code="LHA" />
+		<region name="Las Tunas" code="LTU" />
+		<region name="Matanzas" code="MAT" />
+		<region name="Pinar del Rio" code="PDR" />
+		<region name="Santiago de Cuba" code="SDC" />
+		<region name="Sancti Spiritus" code="SSP" />
+		<region name="Villa Clara" code="VCL" />
+	</country>
+	<country name="Île Christmas" code="CXR" />
+	<country name="Iles Caïmanes" code="CYM" />
+	<country name="Île Christmas" code="CXR" />
+	<country name="Chypre" code="CYP" />
+	<country name="Tchéquie" code="CZE">
+		<region name="Jihoceski" code="JHC" />
+		<region name="Jihomoravsky" code="JHM" />
+		<region name="Praha" code="PRA" />
+		<region name="Stredocesky" code="STR" />
+		<region name="Severocesky" code="SVC" />
+		<region name="Severomoravsky" code="SVM" />
+		<region name="Vychodocesky" code="VYC" />
+		<region name="Zapadocesky" code="ZAP" />
+	</country>
+
+	<country name="Allemagne" code="DEU">
+		<region name="Bayern" code="BAY">
+			<subregion name="Niederbayern" code="BAN" />
+			<subregion name="Oberbayern" code="BAO" />
+			<subregion name="Mittelfranken" code="FRM" />
+			<subregion name="Oberfranken" code="FRO" />
+			<subregion name="Unterfranken" code="FRU" />
+			<subregion name="Oberpfalz" code="PFO" />
+			<subregion name="Schwaben" code="SCH" />
+			<subregion name="" code="" />
+		</region>
+		<region name="Berlin" code="BER">
+			<subregion name="Berlin" code="BER" />
+		</region>
+		<region name="Brandenburg" code="BRA" />
+		<region name="Bremen" code="BRE" />
+		<region name="Baden Wurttemberg" code="BWU">
+			<subregion name="Freiburg" code="FRE" />
+			<subregion name="Karlsruhe" code="KAR" />
+			<subregion name="Stuttgart" code="STU" />
+			<subregion name="Tubingen" code="TUB" />
+		</region>
+		<region name="Hamburg" code="HAM">
+			<subregion name="Hamburg" code="HAM" />
+		</region>
+		<region name="Hessen" code="HES">
+			<subregion name="Darmstadt" code="DAR" />
+			<subregion name="Giessen" code="GIE" />
+			<subregion name="Kassel" code="KAS" />
+		</region>
+		<region name="Mecklenburg Vorpommern" code="MVO">
+			<subregion name="Mecklenburg Vorpommern" code="MVO" />
+		</region>
+		<region name="Niedersachsen" code="NIE">
+			<subregion name="Braunschweig" code="BWG" />
+			<subregion name="Hannover" code="HAN" />
+			<subregion name="Luneburg" code="LUN" />
+			<subregion name="Weser Ems" code="WEM" />
+		</region>
+		<region name="Nordrhein Westfalen" code="NWE">
+			<subregion name="Arnsberg" code="ARN" />
+			<subregion name="Detmold" code="DET" />
+			<subregion name="Dusseldorf" code="DUS" />
+			<subregion name="Koln" code="KOL" />
+			<subregion name="Munster" code="MUN" />
+		</region>
+		<region name="Rheinland Pfalz" code="RPF">
+			<subregion name="Rhe" code="RHE" />
+			<subregion name="KOB" code="RPF" />
+			<subregion name="Trier" code="TRI" />
+		</region>
+		<region name="Saarland" code="SAA">
+			<subregion name="Saarland" code="SAA" />
+		</region>
+		<region name="Sachsen" code="SAC">
+			<subregion name="Chemnitz" code="CHE" />
+			<subregion name="Dresden" code="DRE" />
+			<subregion name="Leipzig" code="LEI" />
+		</region>
+		<region name="Sachsen Anhalt" code="SAN">
+			<subregion name="Dessau" code="DES" />
+			<subregion name="Halle" code="HAL" />
+			<subregion name="Magdeburg" code="MAG" />
+		</region>
+		<region name="Schleswig Holstein" code="SHO">
+			<subregion name="Schleswig Holstein" code="SHO" />
+		</region>
+		<region name="Thuringen" code="THU">
+			<subregion name="Thuringen" code="THU" />
+		</region>
+	</country>
+
+	<country name="Djibouti" code="DJI" />
+	<country name="Dominique" code="DMA" />
+
+	<country name="Danemark" code="DNK">
+		<region name="Arhus" code="ARH" />
+		<region name="Bornholm" code="BOR" />
+		<region name="Frederiksborg" code="FRE" />
+		<region name="Fyn" code="FYN" />
+		<region name="Kobenhavn" code="KOB" />
+		<region name="Nordjylland" code="NOR" />
+		<region name="Ribe" code="RIB" />
+		<region name="Ringkobing" code="RIN" />
+		<region name="Roskilde" code="ROS" />
+		<region name="Sonderjylland" code="SON" />
+		<region name="Storstrom" code="STO" />
+		<region name="Vejle" code="VEJ" />
+		<region name="Vestsjaelland" code="VES" />
+		<region name="Viborg" code="VIB" />
+	</country>
+	<country name="République Dominicaine" code="DOM" />
+	<country name="Algérie" code="DZA" />
+
+	<country name="Equateur" code="ECU">
+		<region name="Azuay" code="AZU" />
+		<region name="Bolivar" code="BOL" />
+		<region name="Canar" code="CAN" />
+		<region name="Carchi" code="CAR" />
+		<region name="Chimborazo" code="CHI" />
+		<region name="Cotopaxi" code="COT" />
+		<region name="El Oro" code="EOR" />
+		<region name="Esmeraldas" code="ESM" />
+		<region name="Guayas" code="GUA" />
+		<region name="Imbabura" code="IMB" />
+		<region name="Loja" code="LOJ" />
+		<region name="Los Rios" code="LRO" />
+		<region name="Manabi" code="MAN" />
+		<region name="Morona Santiago" code="MSA" />
+		<region name="Napo" code="NAP" />
+		<region name="Pastaza" code="PAS" />
+		<region name="Pichincha" code="PIC" />
+		<region name="Tungurahua" code="TUN" />
+		<region name="Zamora Chinchipe" code="ZCH" />
+	</country>
+
+	<country name="Egypte" code="EGY" />
+	<country name="Erythrée" code="ERI" />
+	<country name="Sahara occidental" code="ESH" />
+
+	<country name="Espagne" code="ESP">
+		<region name="Andalucia" code="AND">
+			<subregion name="Almeria" code="ALM" />
+			<subregion name="Cadiz" code="CAD" />
+			<subregion name="Cordoba" code="COR" />
+			<subregion name="Granada" code="GRA" />
+			<subregion name="Huelva" code="HVA" />
+			<subregion name="Jaen" code="JAE" />
+			<subregion name="Malaga" code="MAL" />
+			<subregion name="Sevilla" code="SEV" />
+		</region>
+		<region name="Aragon" code="ARA">
+			<subregion name="Huesca" code="HCA" />
+			<subregion name="Teruel" code="TER" />
+			<subregion name="Zaragoza" code="ZAR" />
+		</region>
+		<region name="Asturias" code="AST">
+			<subregion name="Asturias" code="AST" />
+		</region>
+		<region name="Baleares" code="BAL">
+			<subregion name="Baleares" code="BAL" />
+		</region>
+		<region name="Cataluna" code="CAT">
+			<subregion name="Barcelona" code="BAR" />
+			<subregion name="Gerona" code="GER" />
+			<subregion name="Lerida" code="LER" />
+			<subregion name="Tarragona" code="TAR" />
+		</region>
+		<region name="Castilla y Leon" code="CYL">
+			<subregion name="Avila" code="AVI" />
+			<subregion name="Burgos" code="BUR" />
+			<subregion name="Leon" code="LEO" />
+			<subregion name="Palencia" code="PAL" />
+			<subregion name="Salamanca" code="SAL" />
+			<subregion name="Segovia" code="SEG" />
+			<subregion name="Soria" code="SOR" />
+			<subregion name="Valladolid" code="VLD" />
+			<subregion name="Zamora" code="ZAM" />
+		</region>
+		<region name="Extremadura" code="EXT">
+			<subregion name="Badajoz" code="BAD" />
+			<subregion name="Caceres" code="CAC" />
+		</region>
+		<region name="Galicia" code="GAL">
+			<subregion name="La Coruna" code="LCO" />
+			<subregion name="Lugo" code="LUG" />
+			<subregion name="Orense" code="ORE" />
+			<subregion name="Pontevedra" code="PON" />
+		</region>
+		<region name="La Rioja" code="LRI">
+			<subregion name="La Rioja" code="LRI" />
+		</region>
+		<region name="Madrid" code="MAD">
+			<subregion name="Madrid" code="MAD" />
+		</region>
+		<region name="Murcia" code="MUR">
+			<subregion name="Murcia" code="MUR" />
+		</region>
+		<region name="Navarra" code="NAV">
+			<subregion name="Navarra" code="NAV" />
+		</region>
+		<region name="Pais Vasco" code="PVA">
+			<subregion name="Alava" code="ALA" />
+			<subregion name="Guipuzcoa" code="GUI" />
+			<subregion name="Vizcaya" code="VIZ" />
+		</region>
+		<region name="Valencia" code="VAL">
+			<subregion name="Alicante" code="ALI" />
+			<subregion name="Castellon" code="CAS" />
+			<subregion name="Valencia" code="VLC" />
+		</region>
+	</country>
+	<country name="Estonie" code="EST" />
+	<country name="Ethiopie" code="ETH" />
+
+	<country name="Finlande" code="FIN">
+		<region name="Åland,Ahvenanmaa" code="AAL"/>
+		<region name="Häme" code="HAM"/>
+		<region name="Keski Suomi" code="KSU"/>
+		<region name="Kuopio" code="KUO"/>
+		<region name="Kymi" code="KYM"/>
+		<region name="Lappi" code="LAP"/>
+		<region name="Mikkeli" code="MIK"/>
+		<region name="Oulu" code="OUL"/>
+		<region name="Pohjois Karjala" code="PKA"/>
+		<region name="Turku ja Pori" code="TUR"/>
+		<region name="Uusimaa" code="UUS"/>
+		<region name="Vaasa" code="VAA"/>
+	</country>
+	<country name="Fidji" code="FJI" />
+	<country name="Îles Malouines" code="FLK" />
+
+	<country name="France" code="FRA">
+		<region name="Alsace" code="ALS">
+			<subregion name="Bas Rhin" code="F67" />
+			<subregion name="Haut Rhin" code="F68" />
+		</region>
+		<region name="Aquitaine" code="AQU">
+			<subregion name="Dordogne" code="F24" />
+			<subregion name="Gironde" code="F33" />
+			<subregion name="Landes" code="F40" />
+			<subregion name="Lot et Garonne" code="F47" />
+			<subregion name="Pyrénées Atlantiques" code="F64" />
+		</region>
+		<region name="Auvergne" code="AUV">
+			<subregion name="Allier" code="F03" />
+			<subregion name="Cantal" code="F15" />
+			<subregion name="Haute Loire" code="F43" />
+			<subregion name="Puy de Dôme" code="F63" />
+		</region>
+		<region name="Bourgogne" code="BOU">
+			<subregion name="Côte d'Or" code="F21" />
+			<subregion name="Nièvre" code="F58" />
+			<subregion name="Saône et Loire" code="F71" />
+			<subregion name="Yonne" code="F89" />
+		</region>
+		<region name="Bretagne" code="BRE">
+			<subregion name="Finistère" code="F29" />
+			<subregion name="Morbihan" code="F56" />
+			<subregion name="Côtes d'Armor" code="F22" />
+		</region>
+		<region name="Centre" code="CEN">
+			<subregion name="Cher" code="F18" />
+			<subregion name="Eure et Loir" code="F28" />
+			<subregion name="Indre" code="F36" />
+			<subregion name="Indre et Loire" code="F37" />
+			<subregion name="Loir et Cher" code="F41" />
+			<subregion name="Loiret" code="F45" />
+		</region>
+		<region name="Champagne-Ardennes,Champagne" code="CHA">
+			<subregion name="Ardennes" code="F08" />
+			<subregion name="Aube" code="F10" />
+			<subregion name="Marne" code="F51" />
+			<subregion name="Haute Marne" code="F52" />
+		</region>
+		<region name="Corse" code="COR">
+			<subregion name="Corse" code="F20" />
+		</region>
+		<region name="Franche Comté" code="FCO">
+			<subregion name="Doubs" code="F25" />
+			<subregion name="Jura" code="F39" />
+			<subregion name="Haute Saône" code="F70" />
+			<subregion name="Terr. de Belfort" code="F90" />
+		</region>
+		<region name="Ile de France" code="IDF">
+			<subregion name="Paris" code="F75" />
+			<subregion name="Seine et Marne" code="F77" />
+			<subregion name="Yvelines" code="F78" />
+			<subregion name="Essonne" code="F91" />
+			<subregion name="Hauts de Seine" code="F92" />
+			<subregion name="Seine St Denis" code="F93" />
+			<subregion name="Val de Marne" code="F94" />
+			<subregion name="Val d'Oise" code="F95" />
+		</region>
+		<region name="Limousin" code="LIM">
+			<subregion name="Corrèze" code="F19" />
+			<subregion name="Creuse" code="F23" />
+			<subregion name="Haute Vienne" code="F87" />
+		</region>
+		<region name="Lorraine" code="LOR">
+			<subregion name="Meurthe et Moselle" code="F54" />
+			<subregion name="Meuse" code="F55" />
+			<subregion name="Moselle" code="F57" />
+			<subregion name="Vosges" code="F88" />
+		</region>
+		<region name="Languedoc Roussillon" code="LRO">
+			<subregion name="Aude" code="F11" />
+			<subregion name="Gard" code="F30" />
+			<subregion name="Hérault" code="F34" />
+			<subregion name="Lozère" code="F48" />
+			<subregion name="Pyrénées Orientales" code="F66" />
+		</region>
+		<region name="Midi-Pyrénées" code="MPY">
+			<subregion name="Ariège" code="F09" />
+			<subregion name="Aveyron" code="F12" />
+			<subregion name="Haute Garonne" code="F31" />
+			<subregion name="Gers" code="F32" />
+			<subregion name="Lot" code="F46" />
+			<subregion name="Hautes Pyrénées" code="F65" />
+			<subregion name="Tarn" code="F81" />
+			<subregion name="Tarn et Garonne" code="F82" />
+		</region>
+		<region name="Normandie" code="NOR">
+			<subregion name="Calvados" code="F14" />
+			<subregion name="Eure" code="F27" />
+			<subregion name="Manche" code="F50" />
+			<subregion name="Orne" code="F61" />
+			<subregion name="Seine-Maritime" code="F76" />
+		</region>
+		<region name="Nord Pas de Calais" code="NPC">
+			<subregion name="Alpes de Haute Provence" code="F04" />
+			<subregion name="Hautes Alpes" code="F05" />
+			<subregion name="Alpes Maritimes" code="F06" />
+			<subregion name="Bouches du Rhône" code="F13" />
+			<subregion name="Var" code="F83" />
+			<subregion name="Vaucluse" code="F84" />
+		</region>
+		<region name="Poitou Charentes" code="PCH">
+			<subregion name="Charente" code="F16" />
+			<subregion name="Charente Maritime" code="F17" />
+			<subregion name="Deux Sèvres" code="F79" />
+			<subregion name="Vienne" code="F86" />
+		</region>
+		<region name="Pays de Loire" code="PDL">
+			<subregion name="Loire Atlantique" code="F44" />
+			<subregion name="Maine et Loire" code="F49" />
+			<subregion name="Mayenne" code="F53" />
+			<subregion name="Sarthe" code="F72" />
+			<subregion name="Vendée" code="F85" />
+		</region>
+		<region name="Picardie" code="PIC">
+			<subregion name="Aisne" code="F02" />
+			<subregion name="Oise" code="F60" />
+			<subregion name="Somme" code="F80" />
+		</region>
+		<region name="Rhône Alpes" code="RAL">
+			<subregion name="Ain" code="F01" />
+			<subregion name="Ardèche" code="F07" />
+			<subregion name="Drôme" code="F26" />
+			<subregion name="Isère" code="F38" />
+			<subregion name="Loire" code="F42" />
+			<subregion name="Rhône" code="F69" />
+			<subregion name="Savoie" code="F73" />
+			<subregion name="Haute Savoie" code="F74" />
+		</region>
+	</country>
+	<country name="Iles Féroé" code="FRO" />
+	<country name="Micronésie" code="FSM" />
+	<country name="Gabon" code="GAB" />
+
+	<country name="United Kingdom,Royaume-Unis" code="GBR">
+		<region name="Channel Isles" code="CHI">
+			<subregion name="Alderney" code="ALD" />
+			<subregion name="Guernsey" code="GSY" />
+			<subregion name="Jersey" code="JSY" />
+			<subregion name="Sark" code="SRK" />
+		</region>
+		<region name="England" code="ENG">
+			<subregion name="Avon" code="AVN" />
+			<subregion name="Bedfordshire" code="BDF" />
+			<subregion name="Buckinghamshire" code="BKM" />
+			<subregion name="Berkshire" code="BRK" />
+			<subregion name="Cambridgeshire" code="CAM" />
+			<subregion name="Cheshire" code="CHS" />
+			<subregion name="Cleveland" code="CLV" />
+			<subregion name="Cumbria" code="CMA" />
+			<subregion name="Cornwall" code="CON" />
+			<subregion name="Derbyshire" code="DBY" />
+			<subregion name="Devon" code="DEV" />
+			<subregion name="Dorset" code="DOR" />
+			<subregion name="Durham" code="DUR" />
+			<subregion name="Essex" code="ESS" />
+			<subregion name="Gloucestershire" code="GLS" />
+			<subregion name="Hampshire" code="HAM" />
+			<subregion name="Hertfordshire" code="HRT" />
+			<subregion name="Humberside" code="HUM" />
+			<subregion name="Herefordshire and Worcester" code="HWR" />
+			<subregion name="Isle of Wight" code="IOW" />
+			<subregion name="Kent" code="KEN" />
+			<subregion name="Lancashire" code="LAN" />
+			<subregion name="Leicestershire" code="LEI" />
+			<subregion name="Lincolnshire" code="LIN" />
+			<subregion name="London" code="LND" />
+			<subregion name="Merseyside" code="MSY" />
+			<subregion name="Northumberland" code="NBL" />
+			<subregion name="Norfolk" code="NFK" />
+			<subregion name="Northamptonshire" code="NTH" />
+			<subregion name="Nottinghamshire" code="NTT" />
+			<subregion name="North Yorkshire" code="NYK" />
+			<subregion name="Oxfordshire" code="OXF" />
+			<subregion name="Shropshire" code="SAL" />
+			<subregion name="Suffolk" code="SFK" />
+			<subregion name="Somerset" code="SOM" />
+			<subregion name="Surrey" code="SRY" />
+			<subregion name="Staffordshire" code="STS" />
+			<subregion name="East Sussex" code="SXE" />
+			<subregion name="West Sussex" code="SXW" />
+			<subregion name="South Yorkshire" code="SYK" />
+			<subregion name="Tyne and Wear" code="TWR" />
+			<subregion name="Warwickshire" code="WAR" />
+			<subregion name="Wiltshire" code="WIL" />
+			<subregion name="West Midlands" code="WMD" />
+			<subregion name="West Yorkshire" code="WYK" />
+		</region>
+		<region name="Isle of Man" code="IOM">
+			<subregion name="Isle of Man" code="IOM" />
+		</region>
+		<region name="Scotland" code="SCT">
+			<subregion name="Borders" code="BOR" />
+			<subregion name="Central" code="CEN" />
+			<subregion name="Dumfries and Galloway" code="DGY" />
+			<subregion name="Fifeshire" code="FIF" />
+			<subregion name="Grampian" code="GMP" />
+			<subregion name="Highlands" code="HLD" />
+			<subregion name="Lothian" code="LTN" />
+			<subregion name="Orkney Isles" code="OKI" />
+			<subregion name="Shetland Isles" code="SHI" />
+			<subregion name="Strathclyde" code="STD" />
+			<subregion name="Tayside" code="TAY" />
+			<subregion name="Western Isles" code="WIS" />
+		</region>
+		<region name="Ulster,North Ireland" code="ULS">
+			<subregion name="Antrim" code="ANT" />
+			<subregion name="Armagh" code="ARM" />
+			<subregion name="Down" code="DOW" />
+			<subregion name="Fermanagh" code="FER" />
+			<subregion name="Londonderry" code="LDY" />
+			<subregion name="Tyrone" code="TYR" />
+		</region>
+		<region name="Wales" code="WLS">
+			<subregion name="Clwyd" code="CWD" />
+			<subregion name="Dyfed" code="DFD" />
+			<subregion name="Gwent" code="GNT" />
+			<subregion name="Gwynedd" code="GWN" />
+			<subregion name="Mid Glamorgan" code="MGM" />
+			<subregion name="Powys" code="POW" />
+			<subregion name="South Glamorgan" code="SGM" />
+			<subregion name="West Glamorgan" code="WGM" />
+		</region>
+	</country>
+
+	<country name="Georgie" code="GEO" />
+	<country name="Ghana" code="GHA" />
+	<country name="Gibraltar" code="GIB" />
+	<country name="Guinée" code="GIN" />
+	<country name="Guadeloupe" code="GLP" />
+	<country name="Gambie" code="GMB" />
+	<country name="Guinée-Bissau" code="GNB" />
+	<country name="Expert mondial" code="ONS" />
+
+	<country name="Grèce" code="GRC">
+		<region name="Nisoi Aiyaiou" code="AIY">
+			<subregion name="Dhodhekanisos" code="DHO" />
+			<subregion name="Khios" code="KHS" />
+			<subregion name="Kikladhes" code="KIK" />
+			<subregion name="Lesvos" code="LES" />
+			<subregion name="Samos" code="SAM" />
+		</region>
+		<region name="Nisoi Ionioi" code="ION">
+			<subregion name="Kefallinia" code="KEF" />
+			<subregion name="Levkas" code="LEV" />
+			<subregion name="Zakinthos" code="ZAK" />
+		</region>
+		<region name="Ipiros" code="IPI">
+			<subregion name="Arta" code="ART" />
+			<subregion name="Kerkira" code="KER" />
+			<subregion name="Preveza" code="PRE" />
+			<subregion name="Thesprotia" code="THA" />
+		</region>
+		<region name="Kriti" code="KRI">
+			<subregion name="Iraklion" code="IRA" />
+			<subregion name="Khania" code="KHA" />
+			<subregion name="Lasithi" code="LAS" />
+			<subregion name="Rethimni" code="RET" />
+		</region>
+		<region name="Makedhonia" code="MAK">
+			<subregion name="Dhrama" code="DHR" />
+			<subregion name="Florina" code="FLO" />
+			<subregion name="Grevena" code="GRE" />
+			<subregion name="Imathia" code="IMA" />
+			<subregion name="Kastoria" code="KAS" />
+			<subregion name="Kavala" code="KAV" />
+			<subregion name="Khalkidhiki" code="KHI" />
+			<subregion name="Kilkis" code="KIL" />
+			<subregion name="Kozani" code="KOZ" />
+			<subregion name="Pella" code="PEL" />
+			<subregion name="Iraklion" code="IRA" />
+			<subregion name="Pieria" code="PIE" />
+			<subregion name="Serrai" code="SER" />
+			<subregion name="Thessaloniki" code="THI" />
+		</region>
+    <region name="Mount Athos" code="MAT">
+			<subregion name="Ayion Oros" code="AYI" />
+     </region>
+    <region name="Peloponnisos" code="PEL">
+			<subregion name="Akhaia" code="AKH" />
+			<subregion name="Argolis" code="ARG" />
+			<subregion name="Arkadhia" code="ARK" />
+			<subregion name="Ilia" code="ILI" />
+			<subregion name="Korinthia" code="KOR" />
+			<subregion name="Lakonia" code="LAK" />
+      <subregion name="Messinia" code="MES" />                  			
+     </region>
+    <region name="Sterea Ellas Kei Evvoia" code="SEE">
+			<subregion name="Aitolia kai Akarnania" code="AKA" />
+			<subregion name="Attiki" code="ATT" />
+			<subregion name="Evritania" code="EVA" />
+			<subregion name="Evvoia" code="EVV" />
+			<subregion name="Fokis" code="FOK" />
+			<subregion name="Fthiotis" code="FTH" />
+			<subregion name="Piraievs" code="PIR" />
+			<subregion name="Voiotia" code="VOI" />                                    			     			
+    </region>
+      <region name="Thessalia" code="THE">
+			<subregion name="Kardhitsa" code="KAR" />
+			<subregion name="Larisa" code="LAR" />
+			<subregion name="Magnisia" code="MAG" />
+			<subregion name="Trikala" code="TRI" />                                   			     			
+    </region>
+    <region name="Thraki" code="THR">
+			<subregion name="Evros" code="EVS" />
+			<subregion name="Rodhopi" code="ROD" />
+			<subregion name="Xanthi" code="XAN" />                              			     			
+    </region>
+  </country>	
+
+	<country name="Grenade" code="GRD" />
+	<country name="Groenland" code="GRL" />
+	<country name="Guatemala" code="GTM" />
+	<country name="Guyane française" code="GUF" />
+	<country name="Guam" code="GUM" />
+	<country name="Guyana" code="GUY" />
+	<country name="Hong-Kong" code="HKG" />
+	<country name="Îles Heard et McDonald" code="HMD" />
+	<country name="Honduras" code="HND" />
+	<country name="Croatie" code="HRV" />
+	<country name="Haïti" code="HTI" />
+
+  <country name="Hongrie" code="HUN">
+    <region name="Baranya" code="BAR"/>
+    <region name="Borsod Abauj Zemplen" code="BAZ"/>
+    <region name="Bekes" code="BEK"/>
+    <region name="Bacs Kiskun" code="BKI"/>
+    <region name="Csongrad" code="CSO"/>
+    <region name="Debrecen" code="DEB"/>
+    <region name="Baranya" code="BAR"/>
+    <region name="Fejer" code="FEJ"/>
+    <region name="Gyor Moson Sopron" code="GMS"/>
+    <region name="Hajdu Bihar" code="HBI"/>
+    <region name="Heves" code="HEV"/>
+    <region name="Jasz Nagykun Szolnok" code="JNS"/>
+    <region name="Komarom Esztergom" code="KES"/>
+    <region name="Nograd" code="NOG"/>
+    <region name="Pest" code="PES"/>
+    <region name="Somogy" code="SOM"/>
+    <region name="Szabolcs Szatmar Bereg" code="SSB"/>
+    <region name="Tolna" code="TOL"/>
+    <region name="Vas" code="VAS"/>
+    <region name="Veszprem" code="VES"/>
+    <region name="Zala" code="ZAL"/>
+  </country>
+	<country name="Indonésie" code="IDN" />
+
+  <country name="Inde" code="IND">
+		<region name="Andaman and Nicobar" code="ANI"/>
+		<region name="Andhra Pradesh" code="APR"/>
+		<region name="Arunachal Pradesh" code="ARU"/>
+		<region name="Assam" code="ASS"/>
+		<region name="Bihar" code="BIH"/>
+		<region name="Chandigarh" code="CHA"/>
+		<region name="Daman and Diu" code="DDI"/>
+		<region name="Dadra and Nagar" code="DNA"/>
+		<region name="Goa" code="GOA"/>
+		<region name="Gujarat" code="GUJ"/>
+		<region name="Haryana" code="HAR"/>
+		<region name="Himachal Pradesh" code="HPR"/>
+		<region name="Jammu and Kashmir" code="JKA"/>
+		<region name="Karnataka" code="KAR"/>
+		<region name="Kerala" code="KER"/>
+		<region name="Lakshadweep" code="LAK"/>
+		<region name="Maharashtra" code="MAH"/>
+		<region name="Manipur" code="MAN"/>
+		<region name="Meghalaya" code="MEG"/>
+		<region name="Mizoram" code="MIZ"/>
+		<region name="Madhya Pradesh" code="MPR"/>
+		<region name="Nagaland" code="NAG"/>
+		<region name="Orissa" code="ORI"/>
+		<region name="Pondicherry" code="PON"/>
+		<region name="Punjab" code="PUN"/>
+		<region name="Rajasthan" code="RAJ"/>
+		<region name="Sikkim" code="SIK"/>
+		<region name="Tamil Nadu" code="TNA"/>
+		<region name="Tripura" code="TRI"/>
+		<region name="Uttar Pradesh" code="UPR"/>
+		<region name="West Bengal" code="WBE"/>
+		</country>
+
+	<country name="British Indian Ocean Territory" code="IOT" />
+
+	<country name="Irlande" code="IRL">
+		<region name="Connaught" code="CON">
+			<subregion name="Galway" code="GAL" />
+			<subregion name="Leitrim" code="LET" />
+			<subregion name="Mayo" code="MAY" />
+			<subregion name="Roscommon" code="ROS" />
+			<subregion name="Sligo" code="SLI" />
+		</region>
+		<region name="Leinster" code="LEI">
+			<subregion name="Carlow" code="CAR" />
+			<subregion name="Dublin" code="DUB" />
+			<subregion name="Kildare" code="KID" />
+			<subregion name="Kilkenny" code="KIK" />
+			<subregion name="Leix,Queens,Laois" code="LEX" />
+			<subregion name="Longford" code="LOG" />
+			<subregion name="Louth" code="LOU" />
+			<subregion name="Meath" code="MEA" />
+			<subregion name="Offaly,Kings" code="OFF" />
+			<subregion name="Westmeath" code="WEM" />
+			<subregion name="Wexford" code="WEX" />
+			<subregion name="Wicklow" code="WIC" />
+		</region>
+		<region name="Munster" code="MUN">
+			<subregion name="Clare" code="CLA" />
+			<subregion name="Cork" code="COR" />
+			<subregion name="Kerry" code="KER" />
+			<subregion name="Limerick" code="LIM" />
+			<subregion name="Tipperary" code="TIP" />
+			<subregion name="Waterford" code="WAT" />
+		</region>
+		<region name="Ulster" code="ULS">
+			<subregion name="Cavan" code="CAV" />
+			<subregion name="Donegal" code="DON" />
+			<subregion name="Monoghan" code="MOG" />
+		</region>
+	</country>
+
+	<country name="Iran" code="IRN" />
+	<country name="Irak" code="IRQ" />
+	<country name="Islande" code="ISL" />
+	<country name="Israël" code="ISR" />
+
+	<country name="Italie" code="ITA">
+		<region name="Abruzzo" code="ABR">
+			<subregion name="L'Aquila" code="AQU" />
+			<subregion name="Chieti" code="CHI" />
+			<subregion name="Pescara" code="PES" />
+			<subregion name="Teramo" code="TRM" />
+		</region>
+		<region name="Valle d'Aosta" code="AOS">
+			<subregion name="Aosta" code="AOS" />
+		</region>
+		<region name="Basilicata" code="BAS">
+			<subregion name="Matera" code="%AT" />
+			<subregion name="Potenza" code="POT" />
+		</region>
+		<region name="Calabria" code="CAL">
+			<subregion name="Cosenza" code="COS" />
+			<subregion name="Crotone" code="CRO" />
+			<subregion name="Catanzaro" code="CTZ" />
+			<subregion name="Reggio di Calabria" code="RCA" />
+			<subregion name="Vibo Valentia" code="VVA" />
+		</region>
+		<region name="Campania" code="CAM">
+			<subregion name="Avellino" code="AVE" />
+			<subregion name="Benevento" code="BEN" />
+			<subregion name="Caserta" code="CAS" />
+			<subregion name="Napoli" code="NAP" />
+			<subregion name="Salerno" code="SAL" />
+		</region>
+		<region name="Emilia Romagna" code="ERO">
+			<subregion name="Bologna" code="BLG" />
+			<subregion name="Ferrara" code="FER" />
+			<subregion name="Forli" code="FOR" />
+			<subregion name="Modena" code="MOD" />
+			<subregion name="Parma" code="PAR" />
+			<subregion name="Piacenza" code="PIA" />
+			<subregion name="Ravenna" code="RAV" />
+			<subregion name="Reggio nell'Emilia" code="REM" />
+			<subregion name="Rimini" code="RIM" />
+		</region>
+		<region name="Friuli" code="FRI">
+			<subregion name="Goriza" code="GOR" />
+			<subregion name="Pordenone" code="POR" />
+			<subregion name="Trieste" code="TRI" />
+			<subregion name="Udine" code="UDI" />
+		</region>
+		<region name="Lazio" code="LAZ">
+			<subregion name="Frosinone" code="FRO" />
+			<subregion name="Latina" code="LAT" />
+			<subregion name="Rieti" code="RIE" />
+			<subregion name="Roma" code="ROM" />
+			<subregion name="Viterbo" code="VIT" />
+		</region>
+		<region name="Liguria" code="LIG">
+			<subregion name="Genova" code="GEN" />
+			<subregion name="Imperia" code="IMP" />
+			<subregion name="Savona" code="SAV" />
+			<subregion name="La Spezia" code="SPE" />
+		</region>
+		<region name="Lombardy" code="LOM">
+			<subregion name="Bergamo" code="BER" />
+			<subregion name="Brescia" code="BRE" />
+			<subregion name="Como" code="COM" />
+			<subregion name="Cremona" code="CRE" />
+			<subregion name="Lecco" code="LEC" />
+			<subregion name="Lodi" code="LOD" />
+			<subregion name="Mantova" code="MAN" />
+			<subregion name="Milano" code="MIL" />
+			<subregion name="Pavia" code="PAV" />
+			<subregion name="Sondrio" code="SON" />
+			<subregion name="Varese" code="VAR" />
+		</region>
+		<region name="Marche" code="MAR">
+			<subregion name="Ancona" code="ANC" />
+			<subregion name="Ascoli Piceno" code="ASP" />
+			<subregion name="Macerata" code="MAC" />
+			<subregion name="Pesaro Urbino" code="PUR" />
+		</region>
+		<region name="Molise" code="MOL">
+			<subregion name="Campobasso" code="CAM" />
+			<subregion name="AIsernia" code="ISE" />
+		</region>
+		<region name="Piemonte" code="PIE">
+			<subregion name="Alessandria" code="ALE" />
+			<subregion name="Asti" code="AST" />
+			<subregion name="Biella" code="BIE" />
+			<subregion name="Cuneo" code="CUN" />
+			<subregion name="Novara" code="NOV" />
+			<subregion name="Torino" code="TOR" />
+			<subregion name="Verbano" code="VER" />
+			<subregion name="Vercelli" code="VRC" />
+		</region>
+		<region name="Puglia" code="PUG">
+			<subregion name="Bari" code="BAR" />
+			<subregion name="Brindisi" code="BRI" />
+			<subregion name="Foggia" code="FOG" />
+			<subregion name="Lecce" code="LEC" />
+			<subregion name="Taranto" code="TAR" />
+		</region>
+		<region name="Sardegna" code="SAR">
+			<subregion name="Cagliari" code="CAG" />
+			<subregion name="Carbonia Iglesias" code="CIG" />
+			<subregion name="Medio Campidano" code="MCA" />
+			<subregion name="Ogliastra" code="OGL" />
+			<subregion name="Oristano" code="ORI" />
+			<subregion name="Olbia-Tempio" code="OTE" />
+			<subregion name="Sassari" code="SAS" />
+		</region>
+		<region name="Sicilia" code="SIC">
+			<subregion name="Agrigento" code="AGR" />
+			<subregion name="Caltanissetta" code="CAL" />
+			<subregion name="Catania" code="CTN" />
+			<subregion name="Enna" code="ENN" />
+			<subregion name="Messina" code="MES" />
+			<subregion name="Palermo" code="PAL" />
+			<subregion name="Ragusa" code="RAG" />
+			<subregion name="Siracusa" code="SIR" />
+			<subregion name="Trapani" code="TRA" />
+		</region>
+		<region name="Toscana" code="TOS">
+			<subregion name="Arezzo" code="ARE" />
+			<subregion name="Firenze" code="FIR" />
+			<subregion name="Grosseto" code="GRO" />
+			<subregion name="Livorno" code="LIV" />
+			<subregion name="Lucca" code="LUC" />
+			<subregion name="Massa Carrara" code="MAS" />
+			<subregion name="Prato" code="PRA" />
+			<subregion name="Pisa" code="PSA" />
+			<subregion name="Pistoia" code="PST" />
+			<subregion name="Siena" code="SIE" />
+		</region>
+		<region name="Trentino" code="TRE">
+			<subregion name="Bolzano" code="BLZ" />
+			<subregion name="Trento" code="TRE" />
+		</region>
+		<region name="Umbria" code="UMB">
+			<subregion name="Perugia" code="PER" />
+			<subregion name="Terni" code="TRN" />
+		</region>
+		<region name="Veneto" code="VEN">
+			<subregion name="Belluno" code="BEL" />
+			<subregion name="Padova" code="PAD" />
+			<subregion name="Rovigo" code="ROV" />
+			<subregion name="Treviso" code="TRV" />
+			<subregion name="Venezia" code="VEN" />
+			<subregion name="Vicenza" code="VIC" />
+			<subregion name="Verona" code="VRN" />
+		</region>
+	</country>
+	<country name="Jamaïque" code="JAM" />
+	<country name="Jordanie" code="JOR" />
+	<country name="Japon" code="JPN">
+		<region name="Chugoku" code="CHG" />
+		<region name="Chubu" code="CHU" />
+		<region name="Hokkaido" code="HOK" />
+		<region name="Kansai" code="KAI" />
+		<region name="Kanto" code="KTO" />
+		<region name="Kyushu" code="KYU" />
+		<region name="Shikoku" code="SHI" />
+		<region name="Tohoku" code="TOH" />
+	</country>
+	<country name="Kazakhstan" code="KAZ" />
+	<country name="Kenya" code="KEN" />
+	<country name="Kirghizstan" code="KGZ" />
+	<country name="Cambodge" code="KHM" />
+	<country name="Kiribati" code="KIR" />
+	<country name="Saint-Christophe-et-Niévès" code="KNA" />
+	<country name="Koweït" code="KWT" />
+	<country name="Laos" code="LAO" />
+	<country name="Liban" code="LBN" />
+	<country name="Liberia" code="LBR" />
+	<country name="Libye" code="LBY" />
+	<country name="Sainte-Lucie" code="LCA" />
+	<country name="Liechtenstein" code="LIE" />
+	<country name="Sri Lanka" code="LKA" />
+	<country name="Lesotho" code="LSO" />
+	<country name="Lituanie" code="LTU" />
+	<country name="Luxembourg" code="LUX">
+		<region name="Diekirch" code="DIE" />
+		<region name="Grevenmacher" code="GRE" />
+		<region name="Luxembourg" code="LUX" />
+	</country>
+	<country name="Lettonie" code="LVA" />
+	<country name="Macao" code="MAC" />
+	<country name="Maroc" code="MAR">
+		<region name="Maroc Centre" code="MCE">
+			<subregion name="Azilal" code="AZI" />
+			<subregion name="Beni Mellal" code="BEM" />
+			<subregion name="Ben Slimane" code="BES" />
+			<subregion name="Boulemane" code="BOM" />
+			<subregion name="Casablanca" code="CAS" />
+			<subregion name="Khouribga" code="KHO" />
+			<subregion name="Settat" code="SET" />
+		</region>
+		<region name="Maroc Centre-Nord" code="MCN">
+			<subregion name="Fès" code="FES" />
+			<subregion name="Al Hoceïma" code="HOC" />
+			<subregion name="Séfrou" code="SEF" />
+			<subregion name="Taounate" code="TAO" />
+			<subregion name="Taza" code="TAZ" />
+		</region>
+		<region name="Maroc Centre-Sud" code="MCS">
+			<subregion name="Errachidia" code="ERR" />
+			<subregion name="Essaouira" code="ESI" />
+			<subregion name="El Hajeb" code="HAJ" />
+			<subregion name="El Jadida" code="JDI" />
+			<subregion name="Khénifra" code="KHN" />
+			<subregion name="Meknès" code="MEK" />
+		</region>
+		<region name="Maroc Est" code="MES">
+			<subregion name="Berkane" code="BER" />
+			<subregion name="Figuig" code="FIG" />
+			<subregion name="Jrada" code="JRA" />
+			<subregion name="Nador" code="NAD" />
+			<subregion name="Oujda" code="OUJ" />
+		</region>
+		<region name="Maroc Nord-Ouest" code="MNO">
+			<subregion name="Chefchaouene" code="CHE" />
+			<subregion name="Kénitra" code="KEN" />
+			<subregion name="Khemisset" code="KHE" />
+			<subregion name="Larache" code="LAR" />
+			<subregion name="Rabat-Salé" code="RBA" />
+			<subregion name="Sidi Kacem" code="SIK" />
+			<subregion name="Tétouan" code="TET" />
+			<subregion name="Tanger" code="TNG" />
+		</region>
+		<region name="Maroc Sud" code="MSU">
+			<subregion name="Agadir" code="AGD" />
+			<subregion name="Assa-Zag" code="ASZ" />
+			<subregion name="Aït Baha" code="BAH" />
+			<subregion name="Boujdour" code="BOD" />
+			<subregion name="Es Semara" code="ESM" />
+			<subregion name="Guelmim" code="GUE" />
+			<subregion name="Laâyoune" code="LAA" />
+			<subregion name="Aït Melloul" code="MEL" />
+			<subregion name="Ouarzazate" code="OUA" />
+			<subregion name="Oued ed Dahab" code="OUD" />
+			<subregion name="Taroudannt" code="TAR" />
+			<subregion name="Tata" code="TAT" />
+			<subregion name="Tiznit" code="TIZ" />
+			<subregion name="Tan-Tan" code="TNT" />
+		</region>
+		<region name="Maroc Tensift" code="MTS">
+			<subregion name="Chichaoua" code="CHI" />
+			<subregion name="Al Haouz" code="HAO" />
+			<subregion name="Kelâat Sraghna" code="KES" />
+			<subregion name="Marrakech" code="MAR" />
+			<subregion name="Safi" code="SAF" />
+		</region>
+	</country>
+	<country name="Monaco" code="MCO" />
+	<country name="Moldavie" code="MDA" />
+	<country name="Madagascar" code="MDG" />
+	<country name="Maldives" code="MDV" />
+
+	<country name="Mexique" code="MEX">
+		<region name="Aguascalientes" code="AGU" />
+		<region name="Baja California Norte" code="BCN" />
+		<region name="Baja California Sur" code="BCS" />
+		<region name="Campeche" code="CAM" />
+		<region name="Chihuahua" code="CHH" />
+		<region name="Chiapas" code="CHP" />
+		<region name="Coahuila" code="COA" />
+		<region name="Colima" code="COL" />
+		<region name="Distrito Federal" code="DFE" />
+		<region name="Durango" code="DUR" />
+		<region name="Guanajuato" code="GUA" />
+		<region name="Guerrero" code="GUE" />
+		<region name="Hidalgo" code="HID" />
+		<region name="Jalisco" code="JAL" />
+		<region name="Mexico" code="MEX" />
+		<region name="Michoacan" code="MIC" />
+		<region name="Morelos" code="MOR" />
+		<region name="Nayarit" code="NAY" />
+		<region name="Nuevo Leon" code="NLE" />
+		<region name="Oaxaca" code="OAX" />
+		<region name="Puebla" code="PUE" />
+		<region name="Quintana Roo" code="QRO" />
+		<region name="Queretaro" code="QUE" />
+		<region name="Sinaloa" code="SIN" />
+		<region name="San Luis Potosi" code="SLP" />
+		<region name="Sonora" code="SON" />
+		<region name="Tabasco" code="TAB" />
+		<region name="Tamaulipas" code="TAM" />
+		<region name="Tlaxcala" code="TLA" />
+    <region name="Vera Cruz" code="VCR" />
+		<region name="Yucatan" code="YUC" />
+		<region name="Zacatecas" code="ZAC" />
+		</country>
+
+	<country name="Marshall" code="MHL" />
+	<country name="Macédoine" code="MKD" />
+	<country name="Mali" code="MLI" />
+	<country name="Malte" code="MLT" />
+	<country name="Birmanie" code="MMR" />
+	<country name="Mongolie" code="MNG" />
+	<country name="Îles Mariannes du Nord" code="MNP" />
+	<country name="Mozambique" code="MOZ" />
+	<country name="Mauritanie" code="MRT" />
+	<country name="Montserrat" code="MSR" />
+	<country name="Martinique" code="MTQ" />
+	<country name="Maurice" code="MUS" />
+	<country name="Malawi" code="MWI" />
+
+	<country name="Malaisie" code="MYS">
+		<region name="Johor" code="JOH" />
+		<region name="Kedah" code="KDE" />
+		<region name="Kelantan" code="KEL" />
+		<region name="Kuala Lumpur" code="KLU" />
+		<region name="Melaka" code="MEL" />
+		<region name="Negeri Sembilan" code="NSE" />
+		<region name="Pahang" code="PAH" />
+		<region name="Perak" code="PEK" />
+		<region name="Penang" code="PEN" />
+		<region name="Perlis" code="PES" />
+		<region name="Sabah" code="SAB" />
+		<region name="Sarawak" code="SAR" />
+		<region name="Selangor" code="SEL" />
+	</country>
+
+	<country name="Mayotte" code="MYT" />
+	<country name="Namibie" code="NAM" />
+	<country name="Nouvelle Calédonie" code="NCL" />
+	<country name="Niger" code="NER" />
+	<country name="Île Norfolk" code="NFK" />
+	<country name="Nigeria" code="NGA" />
+	<country name="Nicaragua" code="NIC" />
+	<country name="Nioué" code="NIU" />
+
+	<country name="Pays-Bas" code="NLD">
+		<region name="Drenthe" code="DRE" />
+		<region name="Flevoland" code="FLE" />
+		<region name="Friesland" code="FRI" />
+		<region name="Gelderland" code="GEL" />
+		<region name="Groningen" code="GRO" />
+		<region name="Limburg" code="LIM" />
+		<region name="Noordbrabant" code="NBR" />
+		<region name="Noordholland" code="NHO" />
+		<region name="Overijssell" code="OVE" />
+		<region name="Utrecht" code="UTR" />
+		<region name="Zeeland" code="ZEE" />
+		<region name="Zuidholland" code="ZUI" />
+	</country>
+
+	<country name="Norvège" code="NOR">
+		<region name="Aust Agder" code="AAG" />
+		<region name="Akeshus" code="AKE" />
+		<region name="Buskerud" code="BUS" />
+		<region name="Finnmark" code="FIN" />
+		<region name="Hedmark" code="HED" />
+		<region name="Hordaland" code="HOR" />
+		<region name="More Og Romsdal" code="MOR" />
+		<region name="Nordland" code="NOR" />
+		<region name="Nord Trondelag" code="NTR" />
+		<region name="Oppland" code="OPP" />
+		<region name="Ostfold" code="OST" />
+		<region name="Rogaland" code="ROG" />
+		<region name="Sogn og Fjordane" code="SOF" />
+		<region name="Sor Trondelag" code="STR" />
+		<region name="Telemark" code="TEL" />
+		<region name="Troms" code="TRO" />
+		<region name="Vest Agder" code="VAG" />
+		<region name="Vestfold" code="VES" />
+	</country>
+
+	<country name="Népal" code="NPL" />
+	<country name="Nauru" code="NRU" />
+
+	<country name="Nouvelle Zélande" code="NZL">
+		<region name="Auckland" code="AUC" />
+		<region name="Bay of Plenty" code="BOP" />
+		<region name="Canterbury" code="CAN" />
+		<region name="Gisborne" code="GIS" />
+		<region name="Hawkes Bay" code="HBA" />
+		<region name="Marlborough" code="MAR" />
+		<region name="Manawatu Wanganui" code="MWA" />
+		<region name="Nelson" code="NEL" />
+		<region name="Nelson Malborough" code="NMA" />
+		<region name="Northland" code="NOR" />
+		<region name="Otago" code="OTA" />
+		<region name="Southland" code="SOU" />
+		<region name="Taranaki" code="TAR" />
+		<region name="Waikato" code="WAI" />
+		<region name="West Coast" code="WCO" />
+		<region name="Wellington" code="WEL" />                                                            		
+	</country>
+
+	<country name="Oman" code="OMN" />
+	<country name="Pakistan" code="PAK" />
+	<country name="Panama" code="PAN" />
+	<country name="Îles Pitcairn" code="PCN" />
+
+	<country name="Pérou" code="PER">
+	  <region name="Amazonas" code="AMA" />
+	  <region name="Ancash" code="ANC" />
+	  <region name="Apurimac" code="APU" />
+    <region name="Arequipa" code="ARE" />
+    <region name="Ayacucho" code="AYA" />
+    <region name="Cajamarca" code="CAJ" />
+    <region name="Cuzco" code="CUZ" />
+    <region name="Huacavelica" code="HCA" />
+    <region name="Huanuco" code="HCO" />
+    <region name="Ica" code="ICA" />
+    <region name="Junin" code="JUN" />
+    <region name="Lambayeque" code="LAM" />
+    <region name="Libertad" code="LIB" />
+    <region name="Lima" code="LIM" />
+    <region name="Loreto" code="LOR" />
+    <region name="Moquegua" code="MOQ" />
+    <region name="Pasco" code="PAS" />
+    <region name="Piura" code="PIU" />
+    <region name="Puno" code="PUN" />
+    <region name="San Martin" code="SMA" />                                                    
+    <region name="Tacna" code="TAC" />  
+    <region name="Tumbes" code="TUM" />                        		
+	</country>
+
+	<country name="Philippines" code="PHL" />
+	<country name="Palaos" code="PLW" />
+	<country name="Papouasie-Nouvelle-Guinée" code="PNG" />
+
+	<country name="Pologne" code="POL">
+		<region name="Dolnoslaskie" code="DOL" />
+		<region name="Kujawsko Pomorskie" code="KPO" />
+		<region name="Lubelskie" code="LBL" />
+		<region name="Lubuskie" code="LBU" />
+		<region name="Lodzkie" code="LOD" />
+		<region name="Malopolskie" code="MAL" />
+		<region name="Mazowieckie" code="MAZ" />
+		<region name="Opolskie" code="OPO" />
+		<region name="Podkarpackie" code="PDK" />
+		<region name="Podlaskie" code="PDL" />
+		<region name="Pomorskie" code="POM" />
+		<region name="Slaskie" code="SLA" />
+		<region name="Swietokrzyskie" code="SWI" />
+		<region name="Wielkopolski" code="WIE" />
+		<region name="Warminsko Mazurskie" code="WMA" />
+		<region name="Zachodnio Pomorskie" code="ZPO" />
+	</country>
+	<country name="Puerto Rico" code="PRI" />
+	<country name="Corée du Nord" code="PRK" />
+
+	<country name="Uruguay" code="URY" />
+	<country name="Portugal" code="PRT">
+		<region name="Azores" code="ACO" />
+		<region name="Aveiro" code="AVE" />
+		<region name="Beja" code="BEJ" />
+		<region name="Braganca" code="BRC" />
+		<region name="Braga" code="BRG" />
+		<region name="Castelo Branco" code="CBR" />
+		<region name="Coimbra" code="COI" />
+		<region name="Evora" code="EVO" />
+		<region name="Faro" code="FAR" />
+		<region name="Guarda" code="GUA" />
+		<region name="Leiria" code="LEI" />
+		<region name="Lisboa" code="LIS" />
+		<region name="Madeira" code="MAD" />
+		<region name="Portalegre" code="PGR" />
+		<region name="Porto" code="PTO" />
+		<region name="Santarem" code="SAN" />
+		<region name="Setubal" code="SET" />
+		<region name="Viana Do Castelo" code="VDC" />
+		<region name="Viseu" code="VIS" />
+		<region name="Vila Real" code="VRE" />
+	</country>
+
+		<country name="Paraguay" code="PRY">
+		  <region name="Amambay" code="AMA" />
+		  <region name="Alto Parana" code="APA" />
+		  <region name="Alto Paraguay" code="APY" />
+		  <region name="Boqueron" code="BOQ" />
+		  <region name="Central" code="CEN" />
+		  <region name="Chaco" code="CHA" />
+		  <region name="Concepcion" code="CON" />
+		  <region name="Cordillera" code="COR" />
+		  <region name="Caazapa" code="CPA" />
+		  <region name="Caaguazu" code="CZU" />
+		  <region name="Guaira" code="GUA" />
+		  <region name="Itapua" code="ITA" />
+		  <region name="Misiones" code="MIS" />
+		  <region name="Nueva Asuncion" code="NAS" />
+		  <region name="Neembucu" code="NEE" />
+		  <region name="Paraguari" code="PAR" />
+		  <region name="Presidente Hayes" code="PHA" />
+		  <region name="San Pedro" code="SPE" />
+		</country>
+
+
+	<country name="Polynésie Française" code="PYF" />
+	<country name="Qatar" code="QAT" />
+	<country name="Réunion" code="REU" />
+
+	<country name="Roumanie" code="ROM">
+		<region name="Alba" code="ALB" />
+		<region name="Arad" code="ARA" />
+		<region name="Arges" code="ARG" />
+		<region name="Bacau" code="BAC" />
+		<region name="Bihor" code="BIH" />
+		<region name="Bistrita Nasaud" code="BIS" />
+		<region name="Botosani" code="BOT" />
+		<region name="Brasov" code="BRA" />
+		<region name="Bucuresti" code="BUC" />
+		<region name="Buzau" code="BUZ" />
+		<region name="Calarasi" code="CAL" />
+		<region name="Cluj" code="CLU" />
+		<region name="Constanta" code="CON" />
+		<region name="Covasna" code="COV" />
+		<region name="Caras Severin" code="CSE" />
+		<region name="Dimbovita" code="DIM" />
+		<region name="Dolj" code="DOL" />
+		<region name="Galati" code="GAL" />
+		<region name="Giurgiu" code="GIU" />
+		<region name="Gorj" code="GOR" />
+		<region name="Harghita" code="HAR" />
+		<region name="Hunedoara" code="HUN" />
+		<region name="Ialomita" code="IAL" />
+		<region name="Iasi" code="IAS" />
+		<region name="Maramures" code="MAR" />
+		<region name="Mehedinti" code="MEH" />
+		<region name="Mures" code="MUR" />
+		<region name="Neamt" code="NEA" />
+		<region name="Olt" code="OLT" />
+		<region name="Prahova" code="PRA" />
+		<region name="Salaj" code="SAL" />
+		<region name="Sibiu" code="SIB" />
+		<region name="Satu Mare" code="SMA" />
+		<region name="Suceava" code="SUC" />
+		<region name="Teleorman" code="TEL" />
+		<region name="Timis" code="TIM" />
+		<region name="Tulcea" code="TUL" />
+		<region name="Vaslui" code="VAS" />
+		<region name="Vilcea" code="VIL" />
+		<region name="Vrancea" code="VRA" />
+	</country>
+
+	<country name="Russie" code="RUS" />
+	<country name="Rwanda" code="RWA" />
+	<country name="Arabie Saoudite" code="SAU" />
+	<country name="Soudan" code="SDN" />
+	<country name="Sénégal" code="SEN" />
+	<country name="Singapour" code="SGP" />
+	<country name="Géorgie du Sud et les îles Sandwich du Sud"
+		code="SGS" />
+	<country name="Sainte-Hélène" code="SHN" />
+	<country name="Iles Svalbard et Jan Mayen" code="SJM" />
+	<country name="Salomon" code="SLB" />
+	<country name="Sierra Leone" code="SLE" />
+	<country name="Salvador" code="SLV" />
+	<country name="Saint-Marin" code="SMR" />
+	<country name="Somalie" code="SOM" />
+	<country name="Saint-Pierre-et-Miquelon" code="SPM" />
+	<country name="Sao Tomé e Principe" code="STP" />
+	<country name="Suriname" code="SUR">
+		<region name="Brokopondo" code="BRO" />
+		<region name="Commewijne" code="COM" />
+		<region name="Coronie" code="COR" />
+		<region name="Marowijne" code="MAR" />
+		<region name="Nickerie" code="NIC" />
+		<region name="Para" code="PAR" />
+		<region name="Saramacca" code="SAR" />
+		<region name="Suriname" code="SUR" />
+	</country>
+
+  <country name="Slovaquie" code="SVK">
+		<region name="Bratislava" code="BRA" />
+		<region name="Stredoslovensky" code="STR" />
+		<region name="Vychodoslovensky" code="VYC" />
+		<region name="Zapadoslovensky" code="ZAP" />
+	</country>
+
+	<country name="Slovénie" code="SVN" />
+
+	<country name="Suède" code="SWE">
+		<region name="Alvsborg" code="ALV" />
+		<region name="Blekinge" code="BLE" />
+		<region name="Dalarna" code="DAL" />
+		<region name="Gavleborg" code="GAV" />
+		<region name="Goteborg Bohus" code="GBO" />
+		<region name="Gotland" code="GOT" />
+		<region name="Halland" code="HAL" />
+		<region name="Jamtland" code="JAM" />
+		<region name="Jonkoping" code="JON" />
+		<region name="Kalmar" code="KAL" />
+		<region name="Kristianstad" code="KRI" />
+		<region name="Kronoberg" code="KRO" />
+		<region name="Malmohus" code="MAL" />
+		<region name="Norrbotten" code="NOR" />
+		<region name="Orebro" code="ORE" />
+		<region name="Ostergotland" code="OST" />
+		<region name="Skaraborg" code="SKA" />
+		<region name="Sodermanland" code="SOD" />
+		<region name="Stockholm" code="STO" />
+		<region name="Uppsala" code="UPP" />
+		<region name="Varmland" code="VAR" />
+		<region name="Vasterbotten" code="VBO" />
+		<region name="Vastmanland" code="VMA" />
+		<region name="Vasternorrland" code="VNO" />
+	</country>
+
+	<country name="Swaziland" code="SWZ" />
+	<country name="Seychelles" code="SYC" />
+	<country name="Syrie" code="SYR" />
+	<country name="Îles Turques et Caïques" code="TCA" />
+	<country name="Tchad" code="TCD" />
+	<country name="Togo" code="TGO" />
+	<country name="Thaïlande" code="THA" />
+	<country name="Tadjikistan" code="TJK" />
+	<country name="Tokelau" code="TKL" />
+	<country name="Turkménistan" code="TKM" />
+	<country name="Timor oriental" code="TMP" />
+	<country name="Tonga" code="TON" />
+	<country name="Trinité-et-Tobago" code="TTO" />
+
+	<country name="Tunisie" code="TUN">
+		<region name="Ariana" code="ARI" />
+		<region name="Ben Arous" code="BAR" />
+		<region name="Beja" code="BEJ" />
+		<region name="Binzert" code="BIN" />
+		<region name="El Kef" code="EKE" />
+		<region name="Gabes" code="GAB" />
+		<region name="Gafsa" code="GAF" />
+		<region name="Jendouba" code="JEN" />
+		<region name="Kairouan" code="KAI" />
+		<region name="Kasserine" code="KAS" />
+		<region name="Kebili" code="KEB" />
+		<region name="Mahdia" code="MAH" />
+		<region name="Medenine" code="MED" />
+		<region name="Monastir" code="MON" />
+		<region name="Nabeul" code="NAB" />
+		<region name="Sidi Bouzid" code="SBO" />
+		<region name="Sfax" code="SFA" />
+		<region name="Siliana" code="SIL" />
+		<region name="Sousse" code="SOU" />
+		<region name="Tataouine" code="TAT" />
+		<region name="Tozeur" code="TOZ" />
+		<region name="Tunis" code="TUN" />
+		<region name="Zaghouan" code="ZAG" />
+	</country>
+	<country name="Turquie" code="TUR" />
+	<country name="Tuvalu" code="TUV" />
+	<country name="Taïwan" code="TWN" />
+	<country name="Tanzanie" code="TZA" />
+	<country name="Ouganda" code="UGA" />
+
+	<country name="Ukraine" code="UKR">
+		<region name="Cherkaska" code="CRK" />
+		<region name="Chernihivska" code="CRN" />
+		<region name="Dnipropetrovska" code="DNI" />
+		<region name="Donetska" code="DON" />
+		<region name="Ivano Frankivska" code="IFR" />
+		<region name="Kharkivska" code="KHA" />
+		<region name="Khersonska" code="KHE" />
+		<region name="Khmelnytska" code="KHM" />
+		<region name="Kirovohradska" code="KIR" />
+		<region name="Respublika Krym" code="KRY" />
+		<region name="Kyyivska" code="KYY" />
+		<region name="Luhanska" code="LUH" />
+		<region name="Lvivska" code="LVI" />
+		<region name="Mykolayivska" code="MYK" />
+		<region name="Odeska" code="ODE" />
+		<region name="Poltavska" code="POL" />
+		<region name="Rivnenska" code="RIV" />
+		<region name="Sumska" code="SUM" />
+		<region name="Ternopilska" code="TER" />
+		<region name="Vinnytska" code="VIN" />
+		<region name="Volynska" code="VOL" />
+		<region name="Zakarpatska" code="ZAK" />
+		<region name="Zaporizka" code="ZAP" />
+		<region name="Zhytomyrska" code="ZHY" />
+		</country>
+
+	<country name="United States Minor Outlying Islands" code="UMI" />
+	<country name="Uruguay" code="URY" />
+	<country name="Etats-Unis d'Amérique,Etats-Unis" code="USA">
+		<region name="Alabama" code="ALA" />
+		<region name="Arizona" code="ARI" />
+		<region name="Arkansas" code="ARK" />
+		<region name="Alaska" code="ASK" />
+		<region name="California" code="CAL" />
+		<region name="Colorado" code="COL" />
+		<region name="Connecticut" code="CON" />
+		<region name="Delaware" code="DEL" />
+		<region name="Florida" code="FLO" />
+		<region name="Georgia" code="GEO" />
+		<region name="Hawaii" code="HAW" />
+		<region name="Idaho" code="IDA" />
+		<region name="Illinois" code="ILL" />
+		<region name="Indiana" code="IND" />
+		<region name="Iowa" code="IOW" />
+		<region name="Kansas" code="KAN" />
+		<region name="Kentucky" code="KEN" />
+		<region name="Louisiana" code="LOU" />
+		<region name="Maine" code="MAI" />
+		<region name="Maryland" code="MAR" />
+		<region name="Massachusetts" code="MAS" />
+		<region name="Michigan" code="MIS" />
+		<region name="Minnesota" code="MIN" />
+		<region name="Montana" code="MON" />
+		<region name="Mississippi" code="MSP" />
+		<region name="Missouri" code="MSR" />
+		<region name="North Carolina" code="NCA" />
+		<region name="North Dakota" code="NDA" />
+		<region name="Nebraska" code="NEB" />
+		<region name="Nevada" code="NEV" />
+		<region name="New Hampshire" code="NHA" />
+		<region name="New Jersey" code="NJE" />
+		<region name="New Mexico" code="NME" />
+		<region name="New York" code="NYO" />
+		<region name="Ohio" code="OHI" />
+		<region name="Oklahoma" code="OKL" />
+		<region name="Oregon" code="ORE" />
+		<region name="Pennsylvania" code="PEN" />
+		<region name="Rhode Island" code="RIS" />
+		<region name="South Carolina" code="SCA" />
+		<region name="South Dakota" code="SDA" />
+		<region name="Tennessee" code="TEN" />
+		<region name="Texas" code="TEX" />
+		<region name="Utah" code="UTA" />
+		<region name="Vermont" code="VER" />
+		<region name="Virginia" code="VIR" />
+		<region name="Washington" code="WAS" />
+		<region name="Wisconsin" code="WIS" />
+		<region name="West Virginia" code="WVI" />
+		<region name="Wyoming" code="WYO" />
+	</country>
+	<country name="Ouzbékistan" code="UZB" />
+	<country name="Vatican" code="VAT" />
+	<country name="Saint-Vicent-et-les-Grenadines" code="VCT" />
+
+	<country name="Venezuela" code="VEN">
+		<region name="Amazonas" code="AMA" />
+		<region name="Anzoategui" code="ANZ" />
+		<region name="Apure" code="APU" />
+		<region name="Aragua" code="ARA" />
+		<region name="Barinas" code="BAR" />
+		<region name="Cojedes" code="COJ" />
+		<region name="Carabobo" code="CRB" />
+		<region name="Caracas" code="CRC" />
+		<region name="Delta Amacuro" code="DAM" />
+		<region name="Falcon" code="FAL" />
+		<region name="Guarico" code="GUA" />
+		<region name="Lara" code="LAR" />
+		<region name="Merida" code="MER" />
+		<region name="Miranda" code="MIR" />
+		<region name="Monagas" code="MON" />
+		<region name="Portuguesa" code="POR" />
+		<region name="Sucre" code="SUC" />
+		<region name="Tachira" code="TAC" />
+		<region name="Trujllo" code="TRU" />
+		<region name="Yaracuy" code="YAR" />
+		<region name="Zulia" code="ZUL" />
+	</country>
+	<country name="Iles Vierges (Royaume Unis)" code="VGB" />
+	<country name="Iles Vierges (USA)" code="VIR" />
+	<country name="Vietnam" code="VNM" />
+	<country name="Vanuatu" code="VUT" />
+	<country name="Wallis et Futuna" code="WUL" />
+	<country name="Samoa" code="WSM" />
+	<country name="Yemen" code="YEM" />
+	<country name="Yougoslavie" code="YUG" />
+	<country name="Afrique du Sud" code="ZAF" />
+	<country name="Zaïre" code="ZAR" />
+	<country name="Zambie" code="ZMB" />
+	<country name="Zimbabwe" code="ZWE" />
+	<country name="Guinée équatoriale (République de)" code="GET" />
+	<country name="Pays Indéterminé" code="UND" />
+
+</planet>

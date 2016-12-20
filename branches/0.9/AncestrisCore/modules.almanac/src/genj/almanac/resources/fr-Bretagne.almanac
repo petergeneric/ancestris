@@ -1,0 +1,1460 @@
+# ---------------- A L M A N A C H     B R E T O N  ------------------
+#
+# IMPORTANT :
+# Ce fichier doit être édité avec un éditeur capable d'utiliser 
+# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou 
+# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre 
+# les caractères spéciaux utilisés dans certaines langues, les lettres 
+# accentuées notamment (comme l'allemand, le français, l'espagnol, 
+# etc...)
+#
+# Le format de ce fichier est le suivant :
+#
+# Toutes les lignes vides et celles commençant par "#" sont considérées 
+# comme des commentaires et donc sont ignorées.
+#
+# On doit trouver un événement historique par ligne avec au minimum 6 
+# paramètres séparés par un point-virgule ";"
+#
+# Paramètre #1 : Date de départ de l'événement. Le format a utiliser est : 
+#                YYYYMMDD (année, mois et jour)
+#                Les formats YYYYMM et YYYY sont autorisés.
+#                (Si la date n'est pas indiquée la totalité de la ligne
+#                est ignorée)
+# Paramètre #2 : Date de fin de l'événement. Le format a utiliser est :
+#                YYYYMMDD (année, mois et jour)
+#                Les formats YYYYMM et YYYY sont autorisés.
+# Paramètre #3 : Le pays(code iso) concerné par cet événement
+#                Vous pouvez consulter cette url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algérie
+#                de : Allemagne
+#                ad : Andorre
+#                be : Belgique
+#                ca : Canada
+#                es : Espagne
+#                us : Etats-Unis d'Amérique
+#                fr : France
+#                it : Italie
+#                lu : Luxembourg
+#                no : Norvege
+#                pl : Pologne
+#                gb : Royaume uni
+#                se : Suede
+#                ch : Suisse
+# Paramètre #4 : L'importance de cet événement (un chiffre positif à 
+#                choisir entre 0 et 9), avec :
+#                0 = événement d'une importance majeure. Cet événénement 
+#                    sera toujours affiché.
+#                1 = événement moins important.
+#                2 = événement encore moins important.
+#                etc...
+# Paramètre #5 : Le type d'événement, avec :
+#                W = Guerre
+#                P = Evénement politique
+#                B = Anniversaire
+#                D = Décès
+#                X = Mariage
+#                I = Invention
+#                Y = Découverte
+#                F = Fondation
+#                E = Evénements divers
+#                R = Règnes
+#                Une liste de différents types est autorisée, ainsi WP 
+#                sera utilisé pour décrire un événement ayant une 
+#                connotation de guerre avec des conséquences politiques 
+#                importantes.
+# Paramètre #6 : Une description de l'événement dans un langage donné - 
+#                il faut utiliser un préfix avec un code ISO-639 
+#                obligatoirement, ainsi :
+#                de = Allemand
+#                en = Anglais
+#                fr = Français
+#                it = Italien
+# Paramètre #7+: De plus amples descriptions de l'événément en 
+#                différentes langues (à nouveau en les séparant par un 
+#                point-virgule ';')
+#
+# Voici un exemple pour la suppression de la capitation en 1698.
+#
+# 1698;;fr;1;P;fr=Bretagne - Suppression de la « capitation ».
+#
+#
+# Note de l'auteur : Vous êtes encouragé à rajouter des événements, 
+#                    mais il vous est demandé de ne pas en supprimer.
+#                    Attention de ne pas utiliser le point virgule (;) 
+#                    dans vos textes, car le point virgule est un 
+#                    "séparateur", comme je l'ai indiqué plus haut. 
+#                    Merci. F. Massonneau../.
+#
+#                    Contributeurs :
+#                    Voici une liste des personnes ayant contribué à 
+#                    créer, faire des ajouts, des modifications de ce 
+#                    fichier (par ordre alphabétique) :
+#                         . Serge Prigent : a créé cet almanach breton.
+#
+#                    Dernière mise à jour : 27/11/2011
+#
+#
+#==============================================================================
+#
+
+
+
+
+
+1692;;fr;;e;4;a;fr=La culture du pommier et la fabrication du cidre sont attestées dans toute la Haute-Bretagne à la fin du XVII° siècle. Installé en Normandie dès le XII° siècle l'arbre importé du Pays Basque espagnol se trouve désormais en concurrence directe avec la vigne plantée par les romains;;;;
+
+
+
+1801;;fr;;e;4;a;fr=Publication de l'essai sur la culture de la châtaigne dans le département d'Ille et Vilaine de Jean BERTIN, natif de la Fontaine, membre fondateur de la société d'Agriculture et des Arts de Rennes;;;;
+1811;;fr;;e;4;a;fr=L'Ille et Vilaine demande qu'une manufacture des tabacs soit implantée à Rennes. C'est Morlaix qui l'obtiendra;;;;
+1845;;fr;;e;4;a;fr=On débite encore à Rennes un petit vin blanc connu sous le nom de vin de Bruz;;;;
+1846;;fr;;e;4;a;fr=Les 5306 ha de la commune de Guignen se répartissent en 2157 de landes et terres incultes, 2144 de terres labourables, 650 de pâturages, 98 de bois, 58 de jardins et vergers, 28 d'étangs, 24 de propriétés bâties et 147 de voiries et divers;;;;
+
+1934;;fr;;e;4;a;fr=Baisse de la culture du sarrasin et du seigle en Bretagne. Progression de la culture du blé;;;;
+19410504;;fr;;e;4;a;fr=Pour lutter contre l'envahisseur un comité de défense contre le doryphore est créé et doté de 4 appareil de pulvérisation à dos sur Guignen;;;;
+1949;;fr;;e;4;a;fr=L'Ille et Vilaine est le premier département animalier français. On y élève principalement des porcs (1° producteur national), des vaches (Maine-Anjou, pies noires), des chevaux (postiers bretons), des moutons dans la baie du Mont Saint-Michel, des volailles et des abeilles.;;;;
+
+
+
+
+
+
+
+19670312;;fr;;e;9;c;fr=Une tempête occasionne des dégâts à la toiture et au vitraux de l'église de Guignen. Elle abat aussi le grand cêdre du Liban du jardin du Thabor à Rennes;;;;
+1976;;fr;;e;9;c;fr=La sécheresse permet de repérer d'avion les fondations de plusieurs villas gallo-romaines comme la Guyomerais à Châtillon sur seiche et la Ville Chérel à Pléchâtel;;;;
+1988112;1988215;fr;;e;4;c;fr=Sur Guignen, 231 mm d'eau par m². ;;;;
+19950119;;fr;;e;4;c;fr=Il tombe 80 litres d'eau au m² à Guignen. La Vilaine dont le débit atteint 2000 m³/seconde (2m³ en été) déborde de façon spectaculaire.;;;;
+
+
+
+1483;;fr;;e;1;m;fr=Épidémie de peste qui dévaste Rennes et ses environs.;;;;
+1624;;fr;;e;1;m;fr=Début d'une épidémie de peste dans le bassin rennais.;;;;
+
+
+1764;;fr;;e;1;m;fr=Le recteur de Guignen écrit à l'intendant de Bretagne. Une épidémie désole la paroisse sans interruption depuis plus de 18 mois. Le mal va toujours en augmentant. Au début 2 personnes sur 20 mourraient, présentement 2 sur 20 guérissent.;;;;
+
+1786;;fr;;e;1;m;fr=85805 naissances pour 103241 décès en Bretagne. Le déficit est dû à une disette et des épidémies de dysenterie, typhoïde, typhus et variole;;;;
+
+
+
+
+
+
+
+
+
+
+
+1427;;fr;;e;8;k;fr=Un séisme fait disparaître les paroisses de Bourgneuf, La Feuillette, Mauny, Saint-Louis, et Tommen sous les flots. Elles étaient proche de Roz sur Couesnon;;;;
+
+1586;;fr;;e;9;k;fr=Sous la pression des eaux de la Loire le pont nantais de Pirmil s'effondre. Il avait déjà été emporté en 1564 et le sera encore régulièrement en 1651, 1711, 1862 et 1924 avant de sauter le 12/8/1944;;;;
+
+
+1720;;fr;;e;2;k;fr=Incendie de Rennes;;;;
+173501;;fr;;e;2;k;fr=La mer envahie la paroisse côtière de Saint-Georges de Gréhaigne et provoque d'important dégâts et ruine une grande partie de la population;;;;
+
+17830209;;fr;;e;2;k;fr=Dans la nuit la Vilaine sort de son lit notamment dans la partie non canalisée et provoque des dégâts considérables dans la basse ville;;;;
+18230508;;fr;;e;2;k;fr=Un cyclone ravage le hameau de la Genais à Romazy;;;;
+
+19270217;;fr;;e;2;k;fr=Vers 23 heures 30 il y a une secousse tellurique ressentie à Rennes;;;;
+
+
+
+
+
+1297;;fr;;e;5;t;fr=À la fin du XIII° siècle Nantes compte 14000 habitants, Rennes 13000, Dinan et Vannes 5000, Fougères, Guérande, Maorlaix, Quimper et Vitré 4000;;;;
+
+
+1806;;fr;;e;5;t;fr=L'Ille et Vilaine compte 508 192 habitants (867 533 en 2006);;;;
+1834;;fr;;e;1;t;fr=Rennes compte 29408 habitants;;;;
+1880;;fr;;e;5;t;fr=L'espérance de vie des guignenais est de 33 ans et 1 mois en raison d'une forte mortalité infantile et d'un manque total d'hygiène;;;;
+
+1901;;fr;;e;5;t;fr=Guignen compte 3296 habitants;;;;
+1936;;fr;;e;5;t;fr=7 bretons sur 10 vivent à la campagne;;;;
+1968;;fr;;e;5;t;fr=Guignen compte son plus faible nombre d'habitants 1713;;;;
+2000;;fr;;e;5;t;fr=Guignen compte 2461 habitants;;;;
+2011;;fr;;e;5;t;fr=Guignen compte 3511 habitants;;;;
+
+
+
+
+
+
+
+
+17850914;;fr;;e;7;i;fr=Naissance à Nantes de Pierre Joseph COLIN. Il développera dans sa ville natale l'entreprise de conserverie familiale, en y systématisant l'emploi de la boite en fer blanc pour la conservation des sardines.;;;;
+
+1850;;fr;;e;7;i;fr=Édouard MIGNON met au point dans son restaurant de Mordelles la recette du homard à l'armoricaine;;;;
+
+19070430;;fr;;e;7;i;fr=Pose de la première pierre de la conserverie de Pouldreuzic par Jean HÉNAFF, appelé localement Yon Yan (Tonton Jean) créateur du pâté du même nom.;;;;
+1935;;fr;;e;7;i;fr=Construction à Redon d'un barrage insubmersible, le Haut Vannage, sous la direction de l’ingénieur en chef RABUT;;;;
+19661126;;fr;;e;7;i;fr=Inauguration de l'usine marémotrice de la Rance. D'une capacité de production de 550 millions de kWh par an, grâce à sa retenue d'eau de 184 millions de m³ utilisables et à ses 24 turbines de 5,75 m de diamètre, cet ouvrage de 730 m, qui fait aussi office de pont présente l'avantage de réduire la distance entre Saint-Malo et Dinard de 40 à 7 km.;;;;
+
+
+
+
+
+
+
+1628;;fr;;e;9;y;fr=À Pont-Péan le baron et la baronne de Beausoleil découvrent 'une bonne mine de plomb contenant de l'argent, du vitriol, du souffre, du zinc, du mercure, de l'arsenic'.;;;;
+
+
+
+1774;;fr;;e;9;y;fr=Découverte de la Patère de Rennes, magnifique plat romain du III° siècle qui sera offert à Louis XV.;;;;
+
+1841;1846;fr;;e;9;y;fr=Durant les travaux de canalisation de la Vilaine découverte de près de 50 000 pièces de monnaie gallo-romaine;;;;
+1904;;fr;;e;8;y;fr=En plantant un pommier Pierre Poirier découvre le trésor de pièces mérovingiennes à Bais.;;;;
+1908;;fr;;e;8;y;fr=Un important trésor celtique de 600 pièces d'or et d'argent est découvert à Pipriac.;;;;
+1953;;fr;;e;8;y;fr=Découvertes des mégalithes de Saint-Just.;;;;
+1964;;fr;;e;9;y;fr=À Viellevigne mise à jour sous une haie lors des travaux de remembrement d'un trésor de pièces d'or et d'argent probablement caché à la Révolution.;;;;
+1995;;fr;;e;8;y;fr=Découverte des traces d'un vieux foyer de quelques 465 000 ans à Plouhinec. Toutefois les plus anciennes traces humaines en Bretagne sont à Saint-Malo de Phily et remontent à 700 000 ans;;;;
+
+
+
+1008;;fr;;e;8;s;fr=Guethenoc, vicomte de Porhoët, fait construire le château fortifié auquel son fils donnera son propre nom ! C'est l'origine du château et de la ville de Josselin,;;;;
+1029;;fr;;e;8;s;fr=Les évêques de Rennes ont pris l'habitude de convoler en justes noces, se succèdent de père en fils et dotent richement leurs filles avec les revenus de l'évêché,;;;;
+1117;;fr;;e;8;s;fr=Conan III, duc de Bretagne, abolit le droit des débris, autorisant les habitants des villages côtiers à récupérer les restes des épaves. Ils n'en continueront pas moins à le faire.;;;;
+1173;;fr;;e;8;s;fr=Raoul II, comte de Fougères, entreprend la reconstruction du château de Fougères;;;;
+1444;;fr;;e;8;s;fr=Reconstruction de la tour du Chesne à Rennes. Elle fait partie des remparts encore visibles. Elle doit son nom à Jehan Duchesne, grand portier de la ville, qui l'habitait.;;;;
+1513;;fr;;e;8;s;fr=Il y a 13 nobles à Guignen.;;;;
+1609;;fr;;e;8;s;fr=Pour financer la construction du Palais du Parlement de Bretagne Henri IV autorise la levée d'une taxe sur le vin consommé à Rennes et sur le cidre bu dans tout le diocèse.;;;;
+1644;;fr;;e;8;s;fr=Une crue ayant épargné les salorges (entrepôts de sel) du port de Guipry, Jean le Marchand, sieur de Treguilly, entreprend l'édification d'une chapelle dédiée à Notre-Dame du Bon Port.;;;;
+1650;;fr;;e;8;s;fr=Création du premier atelier de faïencerie rennaise par Claude MONTIGNY originaire du Berry;;;;
+1688;;fr;;e;8;s;fr=À La Chapelle Bouëxic, percement d'une avenue (les arrivées du Château) de 100m qui doit relier le château à la route de Rennes dans le schiste sur plusieurs mètres de profondeur.;;;;
+1698;;fr;;e;8;s;fr=Subsistance de la curieuse coutume du droit de chanson de la mariée à Lohéac. 'Le mardy d'après Pasques, chaque année, la dernière mariée de la paroisse Saint-André de Lohéac et de Saint-Germain fillette d'icelle est obligée de comparoistre à la passée du cimetière de ladite église de Lohéac et là déclarer au juge, ou au greffier qu'elle doit un baiser à la seigneurie ; après quoy elle doit chanter une chanson à danser hors dudit cimetière, ce qui se fait à l'issue des vespres...;;;;
+1743;;fr;;e;8;s;fr=Interdiction de construire des maisons en bois par crainte des incendies à Nantes;;;;
+1722;;fr;;e;8;s,e;fr=Construction du château de la Molière à Saint-Senoux par Jacques Desclos de la Fonchais.;;;;
+
+1754;;fr;;e;8;s,e;fr=Le chœur de la cathédrale de Rennes s'effondre. Comme il apparaît que l'édifice n'est seulement fragile du chœur on décide de démolir l'ensemble de la nef.;;;;
+1780;;fr;;e;8;s;fr=Les unités de mesures suivantes sont en vigueur à Guignen. Lieue (4,68 km), pinte (0,99 l), le pot vaut 2 pintes et la chopine la moitié d'une pinte, jour de terrain (72,93 ares) corde de bois (3,08 stères);;;;
+1784;;fr;;e;8;s;fr=Renforcés par un régiment 200 ouvriers  s'affairent à creuser un nouveau lit devant améliorer le cours naturel de la Vilaine à la Chapelle de Brain.;;;;
+1785;;fr;;e;8;s,e;fr=M de Montmorin, gouverneur de Bretagne, s'entend avec la municipalité de Rennes pour créer une promenade publique. Ils choisissent au sud-est de la ville une butte schisteuse et inculte qui après de nombreux aménagements deviendra le Champ de Mars;;;;
+1786;;fr;;e;8;s;fr=La mine de Pont-Péan qui emploie 500 ouvriers, produit 100 tonnes de plomb et 270 kg d'argent. Elle passe pour la mine de plomb la plus riche qu'il y ait dans toute l'europe;;;;
+17890405;;fr;;e;8;s;fr=Rédaction des Cahiers de Doléances de la paroisse de Guignen.;;;;
+
+
+
+1793;;fr;;e;8;s,e;fr=La statue de Louis XV s'élevant dans la niche centrale de l'Hôtel de villede Rennes est déposée et fondue pour fabriquer des canons. L'église Saint-Sauveur devient Temple de la Raison, la porte Mordelaise devient porte Mart et convertie en prison.;;;;
+
+17990409;;fr;;e;8;s;fr=Le 20 germinal an VII aux Rues Basses le citoyen Ollivier, agent communal de Guignen, tue une louve dont il présente la tête et la peau à la mairie afin de toucher la prime prévue.;;;;
+
+1811;;fr;;e;8;s;fr=Pose de la première pierre du canal de Nantes à Brest à Port-Launay. Ce canal a été voulu par Napoléon pour briser le blocus anglais.;;;;
+18110606;;fr;;e;8;s;fr=Par décrêt le Mont-Saint-Michel devient une prison. Victor HUGO dira 'Un crapaud dans un reliquaire';;;;
+1834;;fr;;e;8;s;fr=La Bretagne est l'une des régions les moins alphabétisée de France.;;;;
+1838;;fr;;e;8;s,e;fr=Inauguration du pont de la Roche-Bernard. Il s'agit d'un pont suspendu de 200m qui enjambe la Vilaine, Il constitue une prouesse technique qui restera longtemps inégalée,;;;;
+
+1844;;fr;;e;8;s,e;fr=Démolition du pont Neuf qui enjambait l'ancien cours de la Vilaine à Rennes pour permettre l'établissement des quais du fleuve canalisé. Les fondations seront remise à jours lors de la construction de la station de métro République devant le Palais du Commerce,;;;;
+1848;;fr;;e;8;s,e;fr=Creusement du canal de dérivation de la Vilaine à l'est de Rennes. Il sera comblé en 1971 entre les avenue du Sergent Maginot et Aristide Briand.;;;;
+
+1855;;fr;;e;8;s;fr=L'arrondissement de Redon compte 12 carrières d'ardoise. À celle de Riadan en Pléchâtel les ouvriers du fond appelés fonceurs gagnent 1 Franc par jour, tandis qu'en surface les bons fendeurs qui peuvent débiter quotidiennement 500 ardoises gagnent 1,40 Franc.;;;;
+1856;;fr;;e;8;s,g;fr=À Rennes on rencontrent les métiers suivants : brocheuse, clissier, cloutier, corroyeur, encaveur, faïencier, ferblantier, fileuse, gantier, ravaudeuse, sellier, tanneur, tisserand, tonnelier, tricoteuse et amidonnier;;;;
+1857;;fr;;e;8;s;fr=La municipalité de Guignen décide d'affecter le produit de la taxe sur les chiens au soulagement des familles pauvres de la commune;;;;
+1858;;fr;;e;8;s,e;fr=Construction du viaduc ferroviaire de Corbinières surplombant la Vilaine à 30m. Il relie les deux commune de Messac et Langon. De nos jours les sept arches obliques abritent plusieurs peuplements de chauves-souries remarquables telles que le Rihinolophe et le Grand Murin.;;;;
+1863;;fr;;e;8;s,e;fr=Construction du viaduc de Morlaix, haut de 62m long de 292m. Il est construit au dessus de l'estuaire de Dossen sous la houlette des architectes Fenoux et Planchat.;;;;
+18650425;;fr;;j,e;8;s,e;fr=Arrivée du premier train en provenance de Paris à Brest.;;;;
+1866;;fr;;e;8;s;fr=Ouverture du premier casino de Dinard;;;;
+1867;;fr;;e;8;s;fr=Après 15 mois de travaux la ligne ferroviaire Vitré-Fougères est inaugurée. Le trajet dure 2 heures 28;;;;
+
+1883;;fr;;e;8;s,e;fr=Un service d'alimentation en eau potable fonctionne à Rennes.;;;;
+1884;;fr;;e;8;s;fr=L'ille et Vilaine compte 402 carrières d'extractions diverses.;;;;
+188709;;fr;;e;8;s;fr=Après Paris, Châteaulin est la seconde ville française à être éclairée à l'électricité;;;;
+1888;;fr;;e;8;s;fr=Il y a 1612 ânes en lle et Vilaine.;;;;
+1888629;;fr;;e;8;s;fr=Foire aux domestiques sur le Champ de Mars à Rennes. Garçons et filles de la campagne, désirant travailler chez les bourgeois, y offrent leurs services.;;;;
+
+1890;;fr;;e;8;s;fr=Fougères est en passe de devenir le premier centre de fabrication de chaussures de France après avoir abandonné l'industrie du chausson.;;;;
+1894;;fr;;e;7;s;fr=Les guignenais qui souhaitent obtenir le Livret de Famille crée par l'état en 1877 sont invités à le payer de leur poche car la commune se dit 'en déficit de ressources'.;;;;
+18970402;;fr;;e,j;8;s;fr=Mise en service du Train dit de 'Bains de mer' dont l'aller est prévu le samedi et le retour le lundi entre Paris et Saint-Malo;;;;
+1902;;fr;;e;7;s,e;fr=Inauguration de l'éclairage public à Rennes.;;;;
+1903;;fr;;e;8;s,e;fr=Les dernières lanternes publiques à huile de Rennes qui fonctionnaient dans le quartier du canal Saint-Martin sont supprimées.;;;;
+1904;;fr;;e;8;s,e;fr=La commune de Val d'Izé fait construire une nouvelle église et transforme l'ancienne en mairie.;;;;
+191303;;fr;;e;8;s;fr=Début de la pose des bornes kilométriques en lave de Volvic sous l'impulsion d'André Michelin.;;;;
+1917;;fr;;e;8;s;fr=Le dernier loup de Bretagne est abattu. Il est naturalisé et conservé au palais universitaire;;;;
+1918;;fr;;e;8;s;fr=L'Ille et Vilaine est le premier département consommateur de cidre avec une consommation moyenne de 547 litres par personne et par an. Dans l'arrondissement de Redon, chacun boit couramment 1 litre par repas. Les travailleurs de force en consomment 5 à 10 litres par jour.;;;;
+19201123;;fr;;e;8;s;fr=Adoption de la commune de Malincourt dévastée par la guerre afin de lui venir en aide par la commune de Guignen. Une somme de 1550 francs fut attribuée à cette commune soit 50 francs par guignenais.;;;;
+19281202;;fr;;e;7;s;fr=Création du corps de Sapeurs-Pompiers de Guignen, 21 hommes avec 1 pompe à bras;;;;
+1932;;fr;;e;9;s;fr=L'annuaire des PTT compte 60 pages pour l'Ille et Vilaine.. Guignen compte 8 abonnés;;;;
+1933;;fr;;e;8;s,e;fr=Premières projections de films à Guignen grâce au recteur qui fait l'acquisition d'un projecteur Pathé.;;;;
+1934831;;fr;;e;8;s;fr=Ouverture du magasin Prisunic sur le quai Lammennais à Rennes. Le slogan à l'ouverture était 'Rien au dessus de 10 Francs', Cet établissement fermera en 1995.;;;;
+1937;;fr;;e;8;s;fr=Le bois étant rare dans les îles bretonnes ont utilise comme combustible des bouses de vache séchées. Elles se consument lentement et dégage une odeur forte que les étrangers supportent mal.;;;;
+1947;;fr;;e;9;s;fr=Installation des usines Flaminaire à Redon qui devient ainsi la capitale du briquet;;;;
+1958;;fr;;e;8;s,e;fr=Après avoir fonctionné 14 ans sur le domaine de la Massaye, le Centre de Formation Maritime, ferme ses portes à Pont-Réan,;;;;
+1959;;fr;;e;8;s;fr=Implantation de la première usine Citroën à la Barre Thomas.;;;;
+1963;;fr;;e;8;s,e;fr=La départementale 177 est dévié à Saint-Jacques de la Lande pour éviter l'aéroport afin de ne plus traverser la piste;;;;
+
+1974;;fr;;e;8;s;fr=Achèvement de la tour Éperon immeuble de 226 appartements sur 30 niveaux et 90 mètres. C'est la seconde tour la plus haute de Rennes après les Horizons;;;;
+
+19790420;;fr;;e;7;s;fr=Arrêt du raffinage à Vern sur Seiche par la société Antar sur le pétrôle amené par oléoduc de Donges;;;;
+
+1981;;fr;;e;8;s;fr=le SMIC est fixé à 2260 Francs par mois (344,53€), le litre d'essence vaut 3,27 Francs (0,50€), le quotidien Ouest-France 1,80 Francs (0,27€) et une place de cinéma 16 Francs (2,44€);;;;
+
+1988;;fr;;e,r;8;s;fr=Fermeture de la ligne ferroviaire Ploërmel-Châteaubriant via Maure de Bretagne est fermée.;;;;
+1988;;fr;;e;8;s;fr=Le Gallo devient langue à option pour l'obtention du baccalauréat.;;;;
+19890529;;fr;;e,j;8;s;fr=Le premier TGV Atlantique entre en gare de Rennes à 23 heures 35;;;;
+1990;;fr;;e;8;s;fr=Ouverture du centre de culture scientifique, technique et industrielle, OCÉANOPOLIS DE Brest avec 500 000 visiteurs dès la première année;;;;
+1994;;fr;;e;8;s;fr=Le plan routier breton défini en 1968 est achevé. Vitré, Brest, Quimper, Nantes, Lorient et Rennes sont reliées par des voies express exemptes de péages;;;;
+1994;;fr;;e;8;s,g;fr=La commune de Pleucadeuc, statistiquement connaissant le plus grand nombre naissances multiples, organise sa première fête des jumeaux, triplés, quadruplés et plus;;;;
+1995;;fr;;e;8;s;fr=Nantes remporte la première place au palmarès des villes où il fait bon vivre.;;;;
+
+
+
+810;;fr;;e;8;e,g;fr=Le Cartulaire de Redon est rédigé par les moines du lieu à compter du IX° siècle. Il recense quelque 1000 personnages, 6000 toponymes sur 690 parchemins. C'est la première mention connue de Guignen sous le nom de Vicaria Winonna;;;;
+913;;fr;;e;8;e;fr=La roi Alain le Grand de Bretagne donne la moitié de Guipry à Bili, évêque de Vannes, lequel la cède à l'abbaye de Redon;;;;
+1141;;fr;;e;8;e;fr=Fondation de la léproserie de la Madeleine à Rennes dans le faubourg Saint-Lazare (de nos jours 161 rue de Nantes au niveau du Lycée Sainte-Geneviève);;;;
+1204;;fr;;e;8;e,g;fr=Bourg des Comptes se nomme Bourg-Con. Le terme n'a pas le sens négatif qu'il a de nos jours, il est aux antipodes de Combourg.;;;;
+1297;;fr;;e;8;e;fr=Le roi Philippe le Bel reconnaît à la Bretagne le titre de Duché-pairie;;;;
+14490610;;fr;;e;8;e;fr=Création de l'évêché de Redon par le pape Nicolas V. Les paroisses de Baulon, Avessac, Bourg des Comptes, Frégéac, Guipry, Lohéac, Massérac, Pierric, Pipriac et Pléchâtel y sont rattachés. Cette bulle ne sera jamais appliqué, c'est une bulle en l'air;;;;
+1464;;fr;;e;8;e;fr=Parution du Catholicon, premier dictionnaire trilingue breton, français et latin;;;;
+1468;;fr;;e;8;e;fr=Acquisition d'une cloche pour le beffroi de Rennes. Elle est surnommée la Grosse Françoise. Elle est citée par Rabelais dans Pantagruel. Nostradamus en prédit la perte en 1720, elle fut en effet détruite dans l'incendie qui ravagea Rennes.;;;;
+1505;;fr;;e;8;e;fr=Procès entre les héritiers de Jean De la Lande, seigneur de Vaurouault et Marguerite d'Elbiest pour l'attribution de la seigneurie de Guignen. C'est la seconde qui l'obtiendra.;;;;
+1513;;fr;;e;8;s,e;fr=La tour de l'église Toussaint à Rennes, alors sise sur l'actuel emplacement des Halles, s'écroule le jour de la Trinité.;;;;
+1518;;fr;;e;8;e;fr=Car tel est son bon plaisir François I° s'arrête en compagnie de la reine Claude à Bain;;;;
+1531;;fr;;e;8;e;fr=Richelieu fait de Brest un port militaire;;;;
+1568;;fr;;e;8;e;fr=À Saint-Malo de Phily la terre de la Driennais (ou Adriennaye) passe à Pierre GALTIER, sire de Kerfos en Guérande avant d'échoir à la famille du Bouëxic;;;;
+15680412;;fr;;e;8;e;fr=François de Vansay, par son mariage avec Claude de Châteaugiron, seigneur de la Driennais en Saint-Malo de Phily, vend sa terre à Pierre GAULTIER, seigneur de Kerfus.;;;;
+15985;;fr;;e;8;e;fr=Henri IV avec sa bonhomie coutumière, avait assurément le sens de la communication, de passage à Rennes comme on lui remets les clefs de la ville, il déclare 'Ces clefs sont belles, mais j'aime encore mieux les clefs des cœurs des habitants'. Quelques jours plus tard, à Vitré 'Ventre Saint-Gris, si je n'étais roi de France, je voudrais être bourgeois de Vitré',;;;;
+16030411;;fr;;e;8;e;fr=La vicomté de Rohan est érigée en duché. Le premier duc Henri I (1579-1638) prend pour devise 'Roi ne puis, prince ne daigne, Rohan suis.';;;;
+
+160807;;fr;;e;8;e;fr=À Bourg des Comptes Henri IV érige la châtellenie du Boschet en vicomté au profit d'Auffray de Lescouet et de ses descendants en récompense de bons et loyaux services;;;;
+1617;;fr;;e;8;e;fr=Jean de BOURNEUF, premier président du Parlement de Bretagne, obtient de Louis XIII l'autorisation de faire appel à Salomon de BROSSE, alors occupé à l'édification du palais du Luxembourg pour le reine mère Marie de Médicis. Il fera construire le palais du Parlement;;;;
+
+16250307;;fr;;e;8;e;fr=Yves Nikolazic trouve une statue de Sainte-Anne dans son champ de Boceno près d'Auray. Hors c'est précisément là que lors d'une apparition antérieure la sainte lui avait demandé de construire une église. Ce sera l'origine du plus important pélerinage de Bretagne;;;;
+
+1629;;fr;;e;8;e;fr=Rencontrant le duc de Rohan, Richelieu, qui a ordonné de faire démanteler quatre tours du château de Josselin lui annonce 'Eh bien, Monseigneur, je viens de jeter mes boules dans votre jeux de quilles !';;;;
+
+
+
+1666;;fr;;e;9;e,g;fr=Création de la ville de Lorient. En effet Denis LANGLOIS, directeur de la Compagnie des Indes Orientales, achète 15 journaux et 7 cordes (ca 7 ha) de lande rase au lieu-dit Faouëdic, auprès du Port-Louis, autrefois dénommé Blavet. Il s'agit à l'origine de créer une zone industrielle pour les chantiers de construction navale de la compagnie;;;;
+16750403;;fr;;e;7;e,s;fr=Émeute à Rennes. Celle -ci est déclenché par un alourdissement de la fiscalité jugé intolérable. 2000 personnes marchent sur le Parlement et saccage le bureau du Papier timbré. Cette révolte sera violemment réprimée par le pouvoir royal;;;;
+16750418;16750902;fr;;e;7;e;fr=Soulèvement général en Bretagne, dit "des Bonnets rouges" et "du Papier timbré".;;;;
+1678;;fr;;e;8;e;fr=Création par Louis XIV de la châtellenie de Laillé au profit de Guillaume de Marbœuf, propriétaire du manoir de la Guinemenière, qui devient château de Laillé.;;;;
+16780909;;fr;;e;8;e;fr=Création de la seigneurie de Guichen par Louis XIV en faveur de Luc du Bouëxic. Elle est formée de trois terres nobles : la Grésillonnaye, les Huguetières et la Lande, Le premier seigneur et son épouse, Marie de Bohio, habiteront au château de la Grésillonaye (détruit dans les années 1980),;;;;
+1735;;fr;;e;8;e;fr=Démantèlement de la faculté de Nantes. La faculté de droit est transférée à Rennes;;;;
+1743;;fr;;e;8;e;fr=Achèvement de l'Hôtel de ville de Rennes sous la direction de Jacques Gabriel, architecte du roi. À noter qu'il s'agit de l'actuelle mairie.;;;;
+1748;;fr;;e;8;e;fr=Judith Piquet, baronne de Lohéac, obtient du Parlement le droit de rétablir ses écussons dans l'église de Saint-Germain et d'en faire ôter ceux des seigneurs usurpateurs,;;;;
+
+1788602;;fr;;e;8;e;fr=Le parlement de Bretagne privé de son palais pour s'être opposé au pouvoir royal, se réunit en l'hôtel de Cuillé, situé sur le contour de la Motte;;;;
+
+1792304;;fr;;e;8;e,g;fr=Création du département d'Ille et Vilaine avec préfecture Rennes au grand dam de Saint-Malo qui espérait être préfecture;;;;
+
+17921029;;fr;;e;7;e;fr=La guillotine fonctionne pour la première fois à Rennes place' de la mairie pour exécuter deux royalistes.;;;;
+
+18000217;;fr;;e;8;e,g;fr=Découpage de l'Ille et Vilaine en 6 arrondissements (Fougères, Montfort, Redon, Rennes, Saint-Malo et Vitré). Guignen (2149 habitants)se trouve rattachée au canton de Guichen. Guignen était l'ancien chef-lieu d'un canton comprenant Merenel (710 habitants) et La Chapelle Bouexic (900 habitants);;;;
+1804;;fr;;e;8;e;fr=Réorganisation de l'école de droit de Rennes. Elle avait été supprimée en 1793;;;;
+18140925;;fr;;e;8;e;fr=Le maire de Guigen, Jean Esnaud et les conseillers prêtent serment d'obéissance et de fidélité au roi Louis XVIII et la cérémonie se termine par les cris de Vive le Roi et vive le repos de la France. 6 mois plus tard Napoléon revient au pouvoir;;;;
+
+1820;;fr;;e;8;e;fr=Vézin reprend son indépendance vis à vis de Rennes qui l'avait absorbée en 1813.;;;;
+18250519;;fr;;e;8;e;fr=La ville de Rennes est secouée par l'explosion des feux d'artifices dans leur salle de stockage sise au coin du boulevard de la Liberté et de la rue Lanjuinais. Il étaient prévus pour fêter le couronnement de Charles X;;;;
+1828;;fr;;e;8;e,s;fr=Édification du haut fourneau du Plessis-Bardoult à Pléchatel. Il sera alimenté par le minerai de fer provenant de Bagaron.;;;;
+
+18321106;;fr;;e;8;e;fr=La duchesse de Berry en fuite passe 16 heures à Nantes cachée derrière une plaque de cheminée. Mais lorsque ses poursuivants allument un fagot la chaleur devient insupportable et la robe de la duchesse prend feu. On retiendra que Marie Caroline dut faire pipi sur son jupon pour l'éteindre,;;;;
+1833;;fr;;e;8;e;fr=Le dictionnaire des Postes indique que les plis pour Guignen doivent être adressés au bureau de Saint-Malo, il ne s'agit pas de Saint-Malo de Phily;;;;
+1844;;fr;;e;8;e;fr=Achèvement des travaux de la cathédrale de Rennes commencée en 1797. Il s'agit du 3° édifice établi en ce lieu depuis le VI° siècle;;;;
+1854;;fr;;e;8;e;fr=Au cours de l'été les journalistes Jules Sandeau et Louis Veuillot mettent à la mode la port de pêche du Pouliguen comme station balnéaire.;;;;
+
+1858;;fr;;e;8;e;fr=Achèvement de l'actuel château des Métaieries. Il est commandé par Alfred Le Bastard de Villeuneuve à l'architecte Jacques Mellet. Il jouxte l'ancien château aujourd'hui disparu.;;;;
+1858525;;fr;;e;8;e;fr=L'archevêque de Rennes, Godefroy Brossais Saint-Marc, pose la première pierre de la nouvelle église de Pont-Réan dont l'architecte n'est autre que son frère Édouard.;;;;
+1865;;fr;;e;8;e;fr=La recette du Kouign amann, gâteau breton enrichi au beurre est élaborée par le boulanger SKORDIA de Douarnenez;;;;
+
+1868;;fr;;e,v;8;e;fr=Le paysagiste Denis Bühler qui a dessiné les parcs de la Tête d'Or à Lyon et Oberthür à Rennes, remodèle le parc du Thabor à Rennes avec les 6 hectares de l'ancien verger des moines de l'abbaye Saint-Melaine.;;;;
+
+
+1874;;fr;;e;8;e;fr=Visite officielle du maréchal Patrice de Mac-Mahon, premier président de la III° République à Rennes. À cette occasion on donnera son nom à la caserne en projet. C'est cette même caserne qui donnera son nom au lieu-dit Mac-Mahon à la suite d'une boutade relative à l'ampleur des travaux de construction qui seront menés en cet endroit, rappelant à certains ceux de la caserne,;;;;
+18750905;;fr;;e;8;e;fr=Naissance à Quintenic de Mathurin BOSCHER, futur instituteur qui sera avec son épouse Victorine CHATON d'une méthode d'apprentissage simultanée de la lecture, de l'écriture et de l'orthographe utilisée jusqu'à la fin des années 1950;;;;
+
+18790425;;fr;;e;8;e;fr=Bénédiction de la première pierre de la nouvelle église de Guignen par l'archevêque de Rennes Charles Place.;;;;
+1883;;fr;;e;8;e;fr=Grâce au canal d'Ille et Rance les péniches traversent la Bretagne de Dinan à Redon en passant par Rennes;;;;
+1884;;fr;;e;8;e;fr=L'usine à gaz du boulevard de la Tour d'Auvergne n'est plus suffisante à Rennes. La nouvelle usine construite boulevard Voltaire fonctionnera jusqu'en 1964.;;;;
+
+1893;;fr;;e;8;e;fr=Achèvement de la cathédrale de Nantes commencée en 1434.;;;;
+1896;;fr;;e;8;e;fr=Rennes est raccordé au réseau téléphonique avec 24 abonnés;;;;
+18981020;;fr;;e;8;e;fr=Inauguration de la nouvelle église de Maure construite au même endroit qu'un bâtiment du XIV° siècle, Le nouvel édifice est de style romano-bysantin et dessiné par Arthur RÉGNAULT,;;;;
+18990802;;fr;;e;8;e;fr=Première parution de l'Ouest-Éclair au prix de 5 centimes le numéro.;;;;
+
+19030417;;fr;;e;8;e;fr=Création d'une école publique de filles de 4 classes à Guignen malgré l'opposition de la municipalité qui n'y voit que des dépenses. Elle est provisoirement installée dans l'école des garçons.;;;;
+1904;;fr;;e;9;e;fr=À Pont-l'Abbé, en pleine séparation de l'église et de l'état, le maire anticlérical qui est élu porte le nom de CHRIST. Les catholiques ricanent : Les Républicains veulent faire sortir le Christ de l'école et ils le font entrer à la mairie;;;;
+
+1911;;fr;;e;8;e;fr=La 13° brigade mobile, ancêtre de la police judiciaire, est installée à Rennes par CLÉMENCEAU;;;;
+1914;;fr;;e;8;e;fr=Jean Hénaff, agriculteur de Pouldreuzic a l'idée de commercialiser un pâté de porc de sa création qui le rendra bientôt célèbre sous l'appellation de pâté Hénaff.;;;;
+19180908;;fr;;e;8;e;fr=Bain de Bretagne reçoit des États-Unis un don de 4000 francs en remerciement d'un séjour du 324° régiment américain d'artillerie lourde sur son territoire.;;;;
+1928;;fr;;e;8;e;fr=Début de la commercialisation de l'eau minérale de Plancoët, d'abord vendue sous l'appellation d'Eau de Nazareth, d'après le nom du village voisin.;;;;
+1928719;;fr;;e;8;e;fr=Maure s'affirme résolument de Bretagne;;;;
+
+1932;;fr;;e;8;e;fr=Début des aménagements de l'aéroport de Rennes à Saint-Jacques de la Lande.;;;;
+
+
+
+
+
+19430218;;fr;;e;8;e;fr=L'ancien croiseur 'Scipione Africano' de la marine italienne prend le nom de 'Guichen' comme escorteur d'escadre.;;;;
+1954;;fr;;e;8;e;fr=Vendu à un entrepreneur qui envisage d'utiliser les matériaux pour empierrer les routes le Kairn de Barnerez à Morlaix est sauvé in-extremis. Il s'agit du plus ancien édifice breton connu vieux de 7000 ans.;;;;
+19540124;;fr;;e,j;9;e;fr=Feu Follet X, drivé par Maurice Riaud de Pipriac, remporte le Prix d'Amérique à Vincennes.;;;;
+19600511;;fr;;e;9;e;fr=Lancement du paquebot France à Saint-Nazaire construits par les Chantiers de l'Atlantique. La marraine est Yvonne DE GAULLE;;;;
+1961;;fr;;e;9;e;fr=Début de l'exploitation des eaux de Bagatz. Source de profit pour la Société des eaux de Guichen puis pour Vittel, elle durera 21 ans;;;;
+19650527;;fr;;e;8;e;fr=Rennes remporte la Coupe de France en battant Sedan 3 à 1.;;;;
+
+1968;;fr;;e;9;e;fr=Afin d'entretenir ses vastes terrains de La Janaie (200 ha) la firme Citroën fait paître quelques 200 moutons dans son parc de stockage d'Ami6.;;;;
+
+
+
+
+
+
+
+1975;;fr;;e;8;e;fr=Premier forage pétroliers en mer d'Iroise sur le plateau continental enveloppant le Finistère.;;;;
+1978603;;fr;;e;8;e;fr=Après avoir été abritée 1 siècle dans le château de la Grésillonnais à Guichen, la statue du chevalier Jean de Saint-Amadour réintègre Guignen et son église.;;;;
+
+19830122;;fr;;e;9;e;fr=Inauguration des nouveaux locaux de la mairie de Guichen par Pierre Méhaignerie, président du Conseil Général, et Charles Gautier, maire.;;;;
+
+
+
+
+
+
+
+1974;;fr;;e;7;e;fr=Attentat contre le relais de télévision de Roc'h Trédudon haut de 178m;;;;
+
+
+
+
+
+
+
+
+1994;;fr;;e,f;9;e;fr=La gare de triage de Rennes cesse ses activités au profit de celle de Saint-Pierre des Corps.;;;;
+19940204;;fr;;e;9;e;fr=Incendie du Parlement de Bretagne. Les dégâts seront considérables. Les travaux de sauvetage resteront comme un modèle du genre.;;;;
+20000101;;fr;;e;9;e;fr=Création de Rennes Métropole une association de 36 communes pour 365000 habitants;;;;
+
+
+
+
+13650412;;fr;;e;5;w;fr=Traité de fin de la guerre de succession de Bretagne entre les familles de Blois et de Montfort à Guérande. Le duché est accordé à Jean de Monfort qui devient ainsi Jean IV de Bretagne;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1763;;fr;;e;4;w;fr=Belle-Île, qui avait été prise 2 ans plutôt par le lord maréchal HOGSON, est échangée contre Minorque lors du traité de Paris.;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+451;;fr;;e;9;v;fr=L'Armorique subit le passage répété et dévastateur des Frisons, Goths et des Saxons;;;;
+753;;fr;;e;9;v;fr=Pépin le Bref s'empare de Vannes. C'est la Bretagne complète qu'il ambitionnait de conquérir mais là il tomba sur un os,;;;;
+786;;fr;;e;9;v;fr=Charlemagne ambitionne l'annexion de la Bretagne 'nation insolente et perfide, toujours rebelle et dénuée de bon sentiments'. Il Charge le sénéchal Audulf de la conquérir. Il devra se contenter de n'établir qu'une zone militaire à la frontière appelée Marches de Bretagne du Couesnon à la Loire. Il en confie la gestion à son neveu Hruodlandus (Roland) qui mourra à Roncevaux après avoir brisé son épée Durandal.;;;;
+841;;fr;;e;9;v;fr=Le territoire de Bain est confisqué par Nominoë, premier roi de Bretagne;;;;
+854;;fr;;e;9;v;fr=L'abbaye de Redon est épargnée par les pillards normands qui remontent la Vilaine;;;;
+
+913;;fr;;e;9;v;fr=L'abbaye de Landevennec est dévastée par les Normand;;;;
+937;;fr;;e;9;v;fr=Aidé de Alain BARBETORTE le comte de Rennes Judicaël BÉRANGER chasse les normands de leur camp retranché de Trans où ils constituaient une menace pour Rennes et la Bretagne;;;;
+1047;;fr;;e;9;v;fr=En réponse aux menées bretonne destinée à semer la zizanie dans le duché voisin le puissant duc de Normandie, Guillaume le BÂTARD, dit le Conquérant, fait savoir sans détour que cela commence à bien faire;;;;
+1166;;fr;;e;9;v;fr=Raoul II, baron de Fougères, est défait par Henri II, roi d'Angleterre. Ce dernier fait démolir le château du Châtelier et raser le donjon du château de Fougères;;;;
+
+1197;;fr;;e;9;v;fr=Mise en déroute de Richard 1° Cœur de Lion, roi d'Angleterre, à Carhaix. Il avait traitreusement enlevé la duchesse Constance de Bretagne dont le conseiller et défenseur était le baron Guillaume de Lohéac;;;;
+1203;;fr;;e;7;v;fr=Jean sans terre, roi d'Angleterre, fait brûler la cathédrale de Dol-de-Bretagne non sans en avoir volé les reliques;;;;
+1214;;fr;;e,o;7;v;fr=Trente-quatre familles bretonnes sont présentes à la bataille de Bouvines dont Armand d'Aubigné, Bernard de Bain, Hérard de Brain, Alain de Châteaugiron, Jean de Dol, Geffroy de Fougères, Guillaume de la Guerche, Pierre de Lohéac, Rodolphe de Montfort, Josselin de Rohan, Olivier de Tinténiac et André de Vitré;;;;
+124808;;fr;;e;7;v;fr=À Goven Hervé de BELOCZAC (BLOSSAC) décide de suivre Saint-Louis à l'occasion de la VII° croisade;;;;
+1302;;fr;;e;7;v;fr=La haute-Bretagne convoitée par les anglo-normands et les français se dote de châteaux-forts disposés en 2 lignes Châteaubriant, La Guerche, Vitré, Châtillon en Vendelais, Saint-Aubin du Cormier, Fougères, Châteaugiron, Fougeray, Le Frétaye, Montfort sur Meu, Montauban, Bécherel, Montmuran, Hédé, Combourg et Landal;;;;
+1337;;fr;;e;7;v;fr=Bertrand DUGUESCLIN triomphe par sa bravoure et son courage lors d'un tournoi organisé place des Lices à Rennes;;;;
+1351;;fr;;e;7;v;fr=Guillaume de LA LANDE seigneur du Vaurouault, époux de Jeanne de Guignen, se place au côté de Jean de BEAUMANOIR pour défier les anglais lors du combat des Trentes (en fait ils sont 62) entre Josselin et Ploërmel. Leur victoire passe pour un des premiers faits de la guerre de 100 ans;;;;
+1356;;fr;;e;7;v;fr=Duguesclin avec 15 hommes déguisés en bucherons venus livrer du bois reprend Fougeray ades mains des anglais.;;;;
+1356;;fr;;e;7;v;fr=Siège de Rennes. Guillaume de Penhoët, capitaine de la ville, fait entrer 4000 porcs dans la ville par ruse. En tirant une truie par les oreilles il les attire et fait entrer alors qu'ils paissaient dans le Pré Raoul (aujourd'hui quai d'Ille et Rance) où les anglais les avaient mis. C'est ce qui s'appelle jouer un tour de cochon.;;;;
+1357;;fr;;e;7;v;fr=Rennes est assiégée depuis 6 mois par les anglais quand leur capitaine le duc de LANCASTRE a l'idée de percer un tunnel sous les remparts pour entrer dans la ville. Le projet échouera les rennais ayant entendu sous leurs pieds les travaux de sape. Ils construisent eux aussi un tunnel pour aller à la rencontre de celui des anglais qu'ils font s'effondrer.;;;;
+13640929;;fr;;e;7;v;fr=La bataille que se livrent, aux marais de Kerzo, près d'Auray, les partisans des familles de Blois et de Montfort, met fin à la guerre de succession de Bretagne. Jean de MONTFORT y vainc Charles de BLOIS et gagne de la sorte la couronne ducale;;;;
+1373;;fr;;e;7;v;fr=Duguesclin libère Concarneau de 30 ans d'occupation anglaise;;;;
+1491;;fr;;e;7;v;fr=Charles VIII, roi de France, s'empare du château de Lohéac puis va assièger Rennes défendue par 85 arquebusiers, 43 artilleurs et 115 canons;;;;
+14950706;;fr;;e;7;v;fr=Au soir de la bataille de Fornoue Jean de Sain-Amadour, seigneur de Guignen, est armée chevalier par le roi Charles VIII;;;;
+1505;;fr;;e;7;v;fr=Anne de Bretagne fait une tournée triomphale du duché. Elle est accompagnée d'un chancelier et du vicomte de Rohan elle est partout reçue dans la liesse, tandis qu'à Blois son époux, Louis XII, s'impatiente un peu de la durée du voyage;;;;
+15890421;;fr;;e;7;v;fr=Pillage du château fortifié de France en Guignen. Son seigneur Georges de France avait été mis à l'index par arrêt du Parlement de Bretagne à Rennes, Le château ne sera pas restauré avant 1990;;;;
+17490522;;fr;;e;7;v;fr=Pris de possession de la cure par Hervé Louis du FRESNE des Saudrais comme recteur, selon l'usage il offre une paire d'éperons dorés au seigneur du lieu.;;;;
+1780;;fr;;e;7;v;fr=L'amiral comte de Guichen Luc Urbain du BOUEXIC est vainqueur de l'escadre anglaise de l'amiral RODNEY lors du combat naval de la Doùminique;;;;
+
+17900527;;fr;;e;7;v;fr=200 révolutionnaires saccage le château de la Grésillonnais à Guichen, chef-lieu de la seigneurie de Guichen. Joseph Marie de TALHOUET de BOISORHRANT se réfugie à Guignen aux métaieries;;;;
+
+
+19400620;;fr;;e;7;v;fr=L'armée d'occupation allemande arrive à Guignen. La Kommandatur est dans le presbytère et des bureaux dans la maison des institutrices. Les écoles sont réquisitionnées pour la troupe.;;;;
+19410315;;fr;;e;7;v;fr=L'opération Savanna se déroule à minuit près d'Elven. C'est le premier parachutage par la France Libre sur le territoire occupé.;;;;
+1943;;fr;;e;7;v;fr=Une américaine, la comtesse de MAUDUIT, parvient à héberger 80 résistants dans son château de Bourblan à Plourivo;;;;
+19430308;;fr;;e;7;v;fr=Bombardement de la gare de Rennes, les quartier du Champ de Mars, du Foyer Rennais et Saint-Hélier sont touchés durement;;;;
+19440728;;fr;;e;7;v;fr=Rafle de 20 guignenais, pris en otage et déportés en représailles de l'attaque d'une voiture allemandes près du village  des Réhallières. 8 d'entre-eux ne reviendront pas. Une stèle rappelle cet événement depuis le 2/5/2004;;;;
+19490424;;fr;;e;7;v;fr=La commune de Bruz reçoit la Croix de Guerre avec étoile de vermeil;;;;
+
+
+
+
+939;;fr;;e,p;7;f;fr=Les Bretons repoussent les Normands à Trans. Ils perdent dans la bataille le Cotentin, l'Avranchin ainsi les pays de Craon et de Mayenne;;;;
+
+
+
+
+
+
+
+17841031;;fr;;e;7;f;fr=Présenté à Louis XVI par la commission intermédiaire pour la navigation intérieure de la province un rapport établi le tracé du futur canal d'Ille et Rance;;;;
+
+
+
+
+
+
+
+
+
+
+1805;;fr;;e;8;f;fr=Début de la numérotation des habitations dans les rues des villes bretonnes. À Guignen il faudra attendre 1986.;;;;
+
+
+1824;;fr;;e;7;f;fr=Début des travaux du canal de Nantes à Brest sur un tracé défini dès 1769;;;;
+1825;;fr;;e;7;f;fr=Création du haras national de Lamballe, avec une capacité de 400 chevaux c'est le second de France;;;;
+1827;;fr;;e;9;f;fr=Fondation de la première école d'agriculture destinée à recevoir les élèves des 5 départements bretons par les moines de l'abbaye de Melleraye (44);;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1964;;fr;;e;9;f;fr=Création du Comité de Promotion Touristiques des Canaux Bretons;;;;
+
+196809;;fr;;e;7;f;fr=Mise en activité du Centre d'Électronique de l'Armement voulu par le Général de Gaulle entre en activité à Bruz;;;;
+
+
+
+
+
+
+
+
+
+
+
+19970106;;fr;;e;7;f;fr=Début des travaux du métro de Rennes;;;;
+
+
+
+
+867;;fr;;e;7;p;fr=Salomon, roi de Bretagne, dépêche son gendre, Pascweten, en ambassade auprès du roi de France, Charles le Chauve, à Compiègne. Il obtiendra le comté du Cotentin, la Bretagne s'étend donc sur une ligne aproximative Nantes, Angers, Laval et Saint-Lô;;;;
+1087;;fr;;e;7;p;fr=Premiers États Généraux de Bretagne réunis par Alain IV FERGENT, dernier duc bretonnant;;;;
+1213127;;fr;;e;7;p;fr=Le duc de Bretagne Pierre de Dreux, dit Mauclerc, prète hommage lige au roi de France Philippe Auguste;;;;
+1397;;fr;;e;7;p;fr=Jean IV, duc de Bretagne, est obligé de verser 120 000 francs or au roi Édouard III d'Angleterre pour récupérer la ville de Brest;;;;
+14330512;;fr;;e;7;p;fr=Rennes reçoit une organisation municipale dont le chef est le procureur des bourgeois Jean GUINOT;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+16550111;;fr;;e;7;p;fr=Prise de possession du palais rennais par le Parlement de Bretagne;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17640605;;fr;;e;8;p;fr=La Chalotais, Procureur Général du Parlement de Rennes, dresse un réquisitoire contre le Duc d'Aiguillon gouverneur de Bretagne.;;;;
+17640716;;fr;;e;4;p;fr=Rupture entre le Duc d'Aiguillon, gouverneur de Bretagne et le Parlement de Rennes. C'est le début de la Guerre Parlementaire qui amènera la fin de l'Ancien Régime.;;;;
+17650520;;fr;;e;9;p;fr=En conflit avec le pouvoir royal sur la création de nouveaux impôts, le Parlement de Bretagne, à l'exception de 12 de ses membres, donne sa démission.;;;;
+
+17700606;;fr;;e;6;p;fr=Le duc d'Aiguillon, gouverneur de Bretagne qui avait rompu avec le Parlement de Rennes, obtient l'appui de la Comtesse du Barry (nouvelle maîtresse de Louis XV) contre les parlementaires bretons.;;;;
+
+
+
+
+
+
+
+
+
+
+
+1776;;fr;;e;8;p;fr=Benjamin FRANKLIN débarque au port de Saint-Goustan, aujourd'hui Auray, pour négocier une alliance avec la France au nom des jeunes États-Unis d'Amérique;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+843;;fr;;e;5;g;fr=Première mention connue de Guignen dans le Cartulaire de Redon sous l'appellation Vicaria Winnona.;;;;
+1008;;fr;;e;5;g;fr=Laillé est connu sous le nom de Centena de Laliacense (paroisse de Laillé);;;;
+1108;;fr;;e;5;g,s;fr=La paroisse de Guignen est mentionnée sous le nom de Guinnon. La paroisse était beaucoup plus grande que de nos jours puisqu'elle s'étendait jusqu'à la Vilaine;;;;
+1250;;fr;;e;5;g,e;fr=Saint-Jacques de la Lande se nomme encore Saint-Jacques de la Forêt. Elle ne prendra son toponyme actuel qu'au XVII° siècle quand la lande remplacera la forêt;;;;
+1324;;fr;;e;5;g,f;fr=Fondation de l'agglomération de Dinard avec la création du prieuré fondé par Olivier et Geffroy de Montfort;;;;
+
+
+
+
+
+1598;;fr;;e;5;g,e;fr=Vern sur Seiche devient terre d'accueil pour les protestants fuyant la répression pendant les guerres de religions.;;;;
+
+
+
+
+1778;;fr;;e;5;g,s;fr=Le nom de la paroisse de Mernel est encore écrit Mesrenel;;;;
+
+1790;;fr;;e;5;g,e;fr=Création de communes : Saint-Ganton aux dépend de Pipriac, Treffendel à ceux de Plélan, Le Verger à ceux de Talensac, Muel à ceux de Gaël, Mondevert aux dépend de Erbré, Saint-Péran à ceux de Paimpont, Trimer à ceux de Tinténiac et Les Brulais à ceux de Comblessac entre autres;;;;
+
+
+
+
+
+
+
+1797;;fr;;e;5;g;fr=Les communes d'Andouillé et Neuville s'unissent pour former Andouillé-Neuville. Ses habitants se nomment les Andolléens;;;;
+1803;;fr;;e;5;g,e;fr=Rattachement de la commune de Fougeray à l'Ille et Vilaine en tout et pour tout au détriment du diocèse de Nantes;;;;
+
+1813;;fr;;e;5;g,e;fr=Absorption de Vézin par Rennes. La commune renaîtra en 1820;;;;
+1815;;fr;;e;5;g,e;fr=Montfort la Montagne, jadis Montfort la Cane, devient Montfort sur Meu;;;;
+
+1820;;fr;;e;5;g;fr=La commune de Baillé, absorbée par celle de Saint-Marc le Blanc est rétablie;;;;
+18260416;;fr;;e;5;g;fr=La commune de Tiercent est rétablie après avoir été absorbée par celle de Saint-Marc le Blanc en 1792;;;;
+18290429;;fr;;e;5;g,e;fr=Absorption de Bonaban par la Gouesnière;;;;
+18360511;;fr;;e;5;g;fr=L'ancienne paroisse de Saint-Méloir des Bois se détache de Québriac pour rejoindre Tinténiac;;;;
+1838929;;fr;;e;5;g;fr=Création de la commune de Crevin à partir de la commune de Poligné.;;;;
+1841;;fr;;e;5;g;fr=Rattachement de la commune de Saint-Germain à celle de Lohéac. La première ne jouxtait la commune de Guignen que par un point situé au bord de la RD 69 au sud ouest de la Métaierie de la Fonchais (Fonchais Logis) matérialisée par un 'chêne fourchu';;;;
+18450604;;fr;;e;5;g,e;fr=Rattachement de Saint-Germain à Lohéac;;;;
+1872;;fr;;e;5;g,e;fr=Création de la commune de Bovel au détriment de Maure;;;;
+
+1878408;;fr;;e;5;g;fr=Détachement de la commune de Teillay d'Ercée en Lamée.;;;;
+1887;;fr;;e;5;g;fr=Création de la commune de Broualan à partir de celle de La Boussac;;;;
+1894;;fr;;e;5;g,e;fr=Bain devient Bain de Bretagne;;;;
+1920;;fr;;e;5;g;fr=À la demande des services postaux afin d'éviter des confusions plusieurs communes ajoutent des précisions à leur nom. La Bosse, Chartres, Parthenay et Le Theil deviennent de Bretagne. Piré et Vern deviennent sur Seiche;;;;
+19210423;;fr;;e;5;g;fr=Cesson devient Cesson-Sévigné à l'instigation de Henri BOURDE de la ROGERIE, archiviste du département;;;;
+19241204;;fr;;e;5;e,g;fr=Dol devient Dol de Bretagne.;;;;
+1924810;;fr;;e,g;5;g,e;fr=Chasné devient Chasné sur Illet afin d'éviter la confusion avec Chancé.;;;;
+1926;;fr;;e;5;g;fr=Saint-Malon devient Saint-Malon sur Melle et Saint-Onen devient Saint-Onen la Chapelle;;;;
+19361105;;fr;;e;5;g;fr=Création de la commune de Petit-Fougeray au dépend de Chanteloup;;;;
+193904;;fr;;e;5;g,e;fr=Bruc devient Bruc sur Aff;;;;
+193904;;fr;;e;5;g,e;fr=Saint-Briac devient Saint-Briac sur Mer;;;;
+195306;;fr;;e;5;g,e;fr=Le Tronchet est détaché de Plerguer et devient commune;;;;
+19530318;;fr;;e;5;g,e;fr=Fougères annexe une partie des communes de Beaucé de Laignelet et de Lécousse;;;;
+1956;;fr;;e;5;g;fr=Création de la commune de Carhaix-Plouguer par fusion des deux communes;;;;
+
+19650301;;fr;;e;5;g,e;fr=Moigné est rattachée au Rheu;;;;
+19671026;;fr;;e;5;g;fr=Saint-Malo absorbe Paramé et Saint-Servan.;;;;
+19730322;;fr;;e;5;g,e;fr=Annexion de Broons sur Vilaine et de Saint-Melaine par Châteaubourg.;;;;
+
+
+1984;;fr;;e;5;g,e;fr=Thorigné sur Vilaine et Fouillard s'assemble et forme Thorigné-Fouillard;;;;
+1986;;fr;;e;5;g;fr=Création de la commune de Pont-Péan au dépend de Saint-Erblon;;;;
+1990308;;fr;;e;5;g;fr=Les Côtes du Nord deviennent Côtes d'Armor;;;;
+19930101;;fr;;e;5;g,e;fr=Fusion de Châtillon sur Seiche et Noyal sur Seiche pour former la commune de Noyal-Châtillon sur Seiche;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1488;;fr;;e;5;u;fr=La future duchesse Anne a 11 ans lorsque la cour ducale s'établit et séjourne un temps à Redon;;;;
+
+
+
+
+
+
+1631;;fr;;e;9;u;fr=Richelieu est nommé gouverneur de Bretagne;;;;
+
+170211;;fr;;e,r;9;u;fr=Louis XIV exile à Redon Monseigneur Hervé, évêque de Gap, pour son goût prononcé pour les femmes. Il sera de nouveau exilé à Saint-Michel en l'Herm en Vendée.;;;;
+1714;;fr;;e;9;u;fr=Julienne le Viel fonde à Guignen une école de filles confiée aux hospitalières de Saint-Thomas de Villeneuve.;;;;
+1734;;fr;;e;9;u;fr=Charles de Rohan devient seigneur de Guignen de part son mariage avec Anne Marie de la Tour, fille du duc de Bouillon et d'Anne Marie Christine de Simiane vicomtesse de Guignen.;;;;
+1737;;fr;;e;9;u;fr=Le duc de Penthièvre, Louis Jean Marie de Bourbon, petit-fils de Louis XIV, est nommé gouverneur de Bretagne. Il occupera cette fonction jusqu'à la Révolution. Il ne résidera jamais en Bretagne n'y venant que deux fois;;;;
+1754;;fr;;e;5;u;fr=Armand Louis de Vignerot du Plessis de Richelieu, duc d'Aiguillon, est nommé commandant en chef et gouverneur de Bretagne. Il modernisera le réseau routier, on lui doit entre autre la création du Grand Chemin de Redon à Rennes ancêtre de la RD 177.;;;;
+17890502;;fr;;e;9;u;fr=Michel Gérard appelé le père Gérard, un laboureur de Montgermont, élu du Tiers-État de Rennes se fait remarquer lors du défilé d'ouverture des États-Généraux à Versailles. N'ayant pas voulu vêtir le costume officiel il a mis un point d'honneur à conserver son habit de paysan et ses gros souliers. Il est acclamé sur tout le parcours. Étonné Louis XVI lui lance 'Bonjour mon bonhomme !';;;;
+1800506;;fr;;e;9;u;fr=Nomination de René Le BASTARD de VILLENEUVE maire de la commune de Guignen par Nicolas BORIE, premier préfet d'Ille et Vilaine. Auparavant le canton était administré par trois agents élus (1 par commune);;;;
+1804;;fr;;e;5;u;fr=Âgé de 30 ans Robert Surcouf, appelé familièrement 'Gros Robert' par les malouins, met fin à sa carrière de corsaire. À cette occasion il est fait chevalier de la Légion d'Honneur et Baron d'Empire par Napoléon.;;;;
+
+1814;;fr;;e;5;u;fr=Le duc d'Angoulême, neveu du roi Louis XVIII et fils du futur Charles X, fait une halte à Châteaubourg.;;;;
+1830;;fr;;e;9;u;fr=Suite à l'accession au trône de Louis Philippe d'ORLÉANS, le maire légitimiste Charles LE BASTARD de VILLENEUVE demeurant au château des Rues Basses donne sa démission. Il sera remplacé par Joseph BELLAMI notaire à la maison des Piliers;;;;
+1848;;fr;;e;9;u;fr=Le maire de Guignen, Anne Marie Pierre Boutin est élu conseiller général.;;;;
+
+1870;;fr;;e;9;u;fr=Charles de GAULLE, écrivain celtisant connu sous le pseudonyme de Barz Bro C'hall (barde de France) et grand oncle du futur général, dépose une pétition en faveur de l'enseignement du Breton;;;;
+1873;;fr;;e;5;u;fr=Inscription au tableau des avocats de Rennes de Pierre Waldack-Rousseau, futur député d'Ille et Vilaine et promoteur de la loi sur les associations.;;;;
+1875;;fr;;e;8;u;fr=Monseigneur Godefroy Brossays Saint-Marc, qui a passé une partie de sa jeunesse à Bourg des Comptes au château du Boschet, était premier archevêque de Rennes, par la volonté de Pie IX il en devient aussi le premier cardinal.;;;;
+1888;;fr;;e;9;u;fr=Rennais de naissance le général Boulanger, au cours d'une soirée, à une jeune femme qui s'exclame 'Comme vous avez de belles mains, général !' répond en toutes simplicité 'Ah, Madame, si vous voyiez mes pieds !';;;;
+1893;;fr;;e;8;u;fr=Henriette Rosine Bernard, alias Sarah Bernhart, achète le bastion de Basse Hiot dans la partie ouest de Belle-Île.;;;;
+18990909;;fr;;e;5;u;fr=Fin du second procès du Capitaine Dreyfus devant le conseil de guerre à Rennes dans la salle des fêtes de l'actuel lycée Émile Zola.;;;;
+
+19230525;;fr;;e;5;u;fr=Pierre Quémeneur, conseiller général du Finistère, et Guillaume Seznec quittent Rennes pour aller vendre une voiture à Paris. C'est le début de l'affaire Seznec. Guillaume Seznec purgera 20 ans de bagne à Cayenne pour un crime sans cadavre, sans témoin, sans preuves et sans aveux.;;;;
+19290518;;fr;;e;9;u;fr=Élection de Victor Meslin, notaire à Guignen, comme maire. Il a pour adjoint Julien Gobin et Joseph Cheminel. La nouvelle municipalité vote aussitôt un emprunt pour l'électrification du bourg.;;;;
+19300108;;fr;;e;9;u;fr=Jean MOULIN est nommé au poste de sous-préfet de Châteaulin. Il y restera 3 ans;;;;
+1948;;fr;;e;8;u;fr=Simon Berryer, alias le fantaisiste Sim, qui s'est marié à Rennes habite rue de la Chalotais puis rue Saint-Sauveur. Il est projectionniste au cinéma Le Royal, batteur, clown, comédien, chanteur, imitateur, chansonnier puis représentant en machines à coudre. Il partira pour Paris en 1952;;;;
+1968;;fr;;e;9;u;fr=Maryse Burgot entre à l'école maternelle de Bazouges la Pérouse, sa commune natale. Est-ce là qu'elle acquiert l'impeccable diction qui lui est utile aujourd'hui, dans ses reportage pour France 2 dont elle est correspondante à Londres !;;;;
+
+
+
+
+
+
+
+
+
+17541110;;fr;;e;9;j;fr=Inauguration de la statue de Louis XV dans la niche centrale de l'Hôtel de Ville en présence du duc d'Aiguillon. Elle est l'œuvre de LEMOYNE. Fondue à la révolution sa maquette est visible au musée des Beaux-Arts;;;;
+1880;;fr;;e;9;j;fr=Les rochers de Tresby à Pont-Réan sont peints par Henri SAINTIN;;;;
+1934;;fr;;e;9;j;fr=Installation de la chaire de l'église de Saint-Just. C'est un chef-d'œuvre de l'art celtique réalisé par l'école des Seiz Breur (6 frères);;;;
+
+
+
+
+
+
+1711;;fr;;e;9;n;fr=François COUPERIN inaugure l'orgue que Robert CLIQUOT a construit pour la chapelle de Versailles. Cet orgue est celui que l'on peut voir et entendre dans l'église saint-Martin de Rennes;;;;
+1866;1870;fr;;e;9;n;fr=Gabriel FAURÉ, compositeur, est nommé organiste à l'église Saint-Sauveur de Rennes;;;;
+1905;;fr;;e;9;n;fr=Invité par Judith GAUTIER dans sa villa du Pré aux Herbes à Dinard, Claude DEBUSSY y passe l'été. C'est la qu'il entreprend la composition de son poème symphonique La Mer;;;;
+
+
+1118;;fr;;e;9;l;fr=L'écrivain et poète MARBODE n'a pas de mots assez durs pour peindre les habitants 'Le ville des Redons, que désertent les bons, est pleine de fripons […] Oh ! Que voir je voudrais, ce qu'on ne vit jamais : un honnête Rennais […]';;;;
+182809;182810;fr;;e;9;l;fr=Honoré de BALZAC séjournant à Fougères afin de se documenter pour écrire son roman Les Chouans juge les habitants de ces campagnes plus pauvres de combinaisons intellectuelles que ne le sont les Mohicans et les Peaux-Rouges de l'Amérique !;;;;
+18450716;;fr;;e;9;l;fr=Naissance de Édouard Joachim CORBIÈRE alias Tristan au manoir de Coatcongar en Ploujean près de Morlaix. Il sera considéré comme l'un des poètes bretons les plus talentueux. Paul VERLAINE lui consacrera une étude des Poètes Maudits;;;;
+19050202;;fr;;e;9;1;fr=Première apparition de Bécassine dans la Semaine de Suzette. En fait elle s'appelait Annaïck LABORNEZ, employée de maison d'origine bretonne (native de Clocher les Bécasses) et fut imaginée par CAUMERY et dessiné par Joseph Porphyre PINCHON;;;;
+1908;1908422;fr;;e;9;l;fr=Henriette avec Sabine, fille jumelle de la Comtesse de Ségur (née ROSTOPCHINE) et suivant son exemple avait écrit 5 romans pour la jeunesse. Mariée à Armand Félix FRESNEAU, plusieurs fois député d'Ille et Vilaine et sénateur du Morbihan, elle décède à Bourg des Comptes où elle est inhumé à coté de son époux.;;;;
+1910621;;fr;;e;9;l;fr=La romancière Colette achète la villa Roz-Ven près de la plage de la Touesse à Saint-Coulomb. C'est là qu'elle écrira 'Le blé en herbe'.;;;;
+
+1927;1928;fr;;e;9;l;fr=Le lycée Saint-Sauveur de Redon compte parmi ses élèves internes le futur écrivain Jean Hervé BAZIN qui y obtient son baccalauréat avec mention bien;;;;
+
+
+1623;;fr;;e;9;z;fr=La troupe de Molière séjourne à Rennes;;;;
+
+
+
+
+1908;;fr;;e;9;z;fr=Ouverture de l'Omnia-Pathé la première salle rennaise de cinématographe au 2 place du Calvaire dans une chapelle désaffectée du XVII° siècle, Au nombre des 800 places plusieurs sont situées derrière des piliers, Qu'importe on y applaudit de trépidants films muets comme 'L'Assassinat du Duc de Guise' ou 'Le Luthier de Crémone' où triomphe Rosine BERNARd alias Sarah BERNHART,;;;;
+19090406;;fr;;e;9;z;fr=Les tournées BARET présentent 'Claudine à Paris' au théatre de Rennes, avec lauteur et Colette dans le rôle titre;;;;
+
+
+
+
+1047;;fr;;e;9;b;fr=Naissance de Robert d'ARBRISSEL à Arbrissel. Il sera archiprêtre, docteur en théologie et prédicateur de croisade. Il fondera l'abbaye bénédictine de Fontevrault (49);;;;
+1374121;;fr;;e;9;b;fr=Naissance de Jeanne de LAVAL à Tinténiac. Elle sera la seconde épouse de Duguesclin;;;;
+
+1415;;fr;;e;8;b;fr=Naissance à Pipriac de Jean BRULELON ou Johannès BRITO ou Jean LE BRETON ou Jean BERTOEN ou Jean BRITO. Il sera l'un des pionniers de l'imprimerie en Europe;;;;
+1435;;fr;;e;2;b;fr=Naissance de François II, dernier duc régnant de Bretagne, à Clisson. C'est le père d'Anne de Bretagne;;;;
+14770129;;fr;;e;6;b;fr=Naissance d'Anne de Bretagne fille de Marguerite de Foix et de François II, à Nantes;;;;
+
+1510;;fr;;e;9;b;fr=Anne de Bretagne, épouse de Louis XII, donne naissance à Renée. Celle-ci sera duchesse de Chartres et de Montargis puis par son mariage avec Hercule II d'Este fils de Lucrèce BORGIA deviendra aussi duchesse de Ferrare;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+1648312;;fr;;e;8;b;fr=Naissance de Charles fils de la marquise de Sévigné au château des Rochers à Vitré;;;;
+1664;;fr;;e;9;b;fr=Naissance du sculpteur Martin MORILLON à Saint-Germain (Lohéac). On lui doit une grande partie de la décoration intérieure de l'église de la Chapelle Bouëxic;;;;
+16730131;;fr;;e;8;b;fr=Naissance de Louis Marie GRIGNON de MONTFORT à Monfort. Il sera missionnaire et créateurs de plusieurs ordres ecclésiastiques;;;;
+1673610;;fr;;e;4;b;fr=Naissance de René DUGAY-TROUIN, futur corsaire qui s'illustrera pendant les guerres de Louis XIV;;;;
+
+
+
+
+1712;;fr;;e;8;b;fr=Naissance de Luc Urbain de BOUËXIC, comte de Guignen, à Fougères. La commune de Guichen donnera son nom à l’ancienne rue de la Poste et celui de Galatée à sa salle multifonctions, La Galatée étant le bâtiment sur lequel il s'est illustré au cours de la guerre de succession d'Autriche;;;;
+1718120;;fr;;e;9;b;fr=Naissance à Quimperlé d'un enfant mâle auquel les parents donnent les prénoms d'Élie-Catherine. Il sera professeur et critique littéraire. Il serait oublié de nos jours s'il n'avait été adversaire de Voltaire qui le ridiculisa 'L'autre jour au fond d'un vallon, un serpent mordit Jean (sic) Fréron. Que pensez-vous qu'il arriva ? C'est le serpent qui creva.';;;;
+
+17470326;;fr;;e;9;b;fr=Naissance à Rennes de Félix BIGOT de PRÉAMENEU qui participera activement à la rédaction du Code Civil. Il sera avocat au Parlement, président de l'Assemblée Législative en 1792, conseiller d'État sous le consulat, ministre comte d'empire et membre de l'Académie Française;;;;
+1753;;fr;;e;8;b;fr=Naissance à Rennes de Jean Denis LANJUINAIS futur juriste et homme politique député de Rennes aux États-Généraux de 1789;;;;
+
+
+
+1759;;fr;;e;8;b;fr=Naissance de Jean Louis Journée, à la Chapelle Bouëxic. Il sera jurisconsulte et conseiller à la cours de Rennes;;;;
+
+
+17660522;;fr;;e;9;b;fr=Naissance de Jacques de CORBIÈRES à Cornuz les Trois Maries (Corps-Nuds). Futur comte ce fils de meunier sera avocat avant d'avoir une brillante carrière politique (Commissaire du Directoire, député d'Ille et Vilaine, président du conseil général, ministre). Il dissoudra la Garde Nationale de Paris avant d'être nommé pair de France;;;;
+17670406;;fr;;e;9;b;fr=Naissance à Rennes d'Alexandre PINAUX-DUVAL. Il sera académicien et auteur de la comédie 'Les Héritiers' qui mettra à la mode l'expression 'Du bruit dans Landerneau';;;;
+
+
+17721217;;fr;;e;1;b;fr=Naissance à Saint-Malo de François BROUSSAIS futur médecin auteur de la théorie de la médecine physiologique;;;;
+1773;;fr;;e;5;b;fr=Naissance à saint-Malo de Robert SURCOUF, célèbre corsaire;;;;
+1774;;fr;;e;8;b;fr=Naissance à Lorient de Céleste BUISSON de la VIGNE. Elle épousera CHÂTEAUBRIAND en 1792;;;;
+17750101;;fr;;e;8;b;fr=Naissance à Palis à belle-Île en mer d'Auguste Julien BIGARRÉ futur général et baron d'Empire. Il sera aide de camp de Joseph BONAPARTE, roi de Naples, puis commandant d'Ille et Vilaine et député;;;;
+17840826;;fr;;b;8;b;fr=Naissance à Rennes d'Auguste Marie GICQUEL des TOUCHES, futur marin connu pour avoir sauvé les 15 survivants du radeau de la Méduse en 1916;;;;
+
+17921025;;fr;;e;8;b;fr=Naissance à Cancale de Jeanne JUGAN qui sera à l'origine de la congrégation des Petites Sœurs des Pauvres;;;;
+
+1798106;;fr;;e;8;b;fr=Naissance de Marie Amélie Thomasse DELAUNAY à Lorient. Elle sera plus connue dans le monde du théatre et de la galanterie sous le nom de Marie DORVAL. Elle sera la maîtresse d'Alfred de Vigny et d'Alexandre DUMAS père;;;;
+
+18060410;;fr;;e;9;b;fr=Naissance de Julienne GAUVAIN à Fougères. Elle sera plus connue sous le nom de Juliette DROUET comme actrice et plus encore comme égérie de Victor HUGO. 13000 lettres reçues de Victor HUGO sont acquises par la ville de Fougères.;;;;
+
+
+
+1814;;fr;;e;5;b;fr=Naissance à Lorient de François Simon Jules SUISSE. Il est plus connu sous le nom de Jules SIMON et sera l'un des présidents du conseil de la III° République;;;;
+18150312;;fr;;e;4;b;fr=Naissance au Palais à Belle-Île en mer de Louis Jules TROCHU futur général responsable de la défense de Paris en 1870 dont Victor Hugo dira: 'TROCHU, participe passé du verbe trop choir';;;;
+18210606;;fr;;e;9;b;fr=Naissance de François Marie LUZEL à Plouaret. D'abord enseignant il s'attachera à collecter les contes et chants de Bretagne;;;;
+1823;;fr;;e;4;b;fr=Naissance d'Ernest RENAN à Tréguier;;;;
+1834;;fr;;e;9;b;fr=Naissance à Bain de Bretagne d'Adolphe ORAIN, folkloriste, écrivain attaché aux contes et traditions locales;;;;
+1835;;fr;;e;8;b;fr=Naissance à Bain de Gustave REGNAULT, futur chirurgien de renom, pionnier de l'ovariotomie et vulgarisateur de la césarienne;;;;
+18370429;;fr;;e;8;b;fr=Naissance à Rennes à la Caliorne, paroisse Saint-Hélier, Georges Ernest Jean Marie BOULANGER. Il sera général, homme politique et ministre de la guerre. Au faîte de son immense popularité, plébiscité par les français qui l'incitent à tenter un coup d'état en marchant sur l'Élysée le soir du 27/1/1889, alors que tout paraît possible monté sur son cheval noir nommé Tunis il refuse l'obstacle et laisse passer sa chance.;;;;
+
+18430206;;fr;;e;8;b;fr=Naissance à Matignon de Paul SÉBILLOT, futur ethnologue et folkloriste breton;;;;
+
+
+
+
+18760621;;fr;;e;9;b;fr=Naissance à Saint-Just de Louis de CHAPDELAINE, futur député et 5 fois ministre de la Marine Marchande;;;;
+1877;;fr;;e;9;b;fr=Naissance à Rennes de Jules ISAAC, futur professeur d'histoire. Il créera avec Guillaume MALET la collection de livre scolaire Malet-Isaac;;;;
+
+
+18850217;;fr;;e;6;b;fr=Naissance de Berthe FAQUET à Lambézellec (rattaché depuis à Brest). Elle est plus connue sous le nom de Berthe SYLVA et ses interprétations, entre autres, des Roses Blanches et On n'a pas tous les jours vingt ans;;;;
+18850323;;fr;;e;7;b;fr=Naissance à Lorient de Yves LE PRIEUR, inventeur du scaphandre autonome;;;;
+
+
+1889;;fr;;e;8;b;fr=Naissance de Marie Louise LE MANAC'H à Belle-Isle en Terre dans un pauvre moulin. Elle épousera d'abord avec éclectisme un fort des halles, puis le prince Antoine d'Orléans et enfin un riche chimiste anglais qui fera d'elle Lady MOND, Son immense fortune lui permettra de faire édifier un château à la place du moulin de ses parents ;;;;;
+1891325;;fr;;e;8;b;fr=A Fougères naissance de Marcel GUÉHÉNNO. Il sera connu sous le prénom de Jean. Fils d'un cordonnier il quittera l'école à 14 ans pour fabriquer des galoches. Continuant seul à étudier il décrochera son BAC et deviendra professeur, journaliste, écrivain puis inspecteur général de l'éducation nationale avant d'être admis à l'Académie Française;;;;
+18940930;;fr;;e;8;b;fr=Naissance à Rennes de Francis RUELLAN, géographe qui déterminera le site de construction de Brasilia la nouvelle capitale du Brésil;;;;
+18950415;;fr;;e;9;b;fr=Naissance à Loudéac de Jeanne MALIVEL, décoratrice et animatrice du groupe Seiz Breur. La chairre de l'église de Saint-Just est due à cette école;;;;
+19040806;;fr;;e;7;b;fr=Naissance à Vannes de Gilbert RENAULT, futur historien, résistant et Compagnon de la Libération plus connu sous le pseudonyme de Colonel RÉMY.;;;;
+19050514;;fr;;e;7;b;fr=Naissance de Jean Guénolé DANIÉLOU, fils député maire de Locronan, Docteur en Théologie, cardinal et académicien. Il décédera dans des conditions scabreuses;;;;
+19060426;;fr;;e;9;b;fr=Naissance de Xavier de LANGLAIS à Sarzeau (56). Il sera écrivain en breton, sous le pseudonyme de Langleiz, Peintre, graveur, professeur à l'École des Beaux-Arts. C'est lui qui réalisera les fresques de l'église de la Richardais;;;;
+19061020;;fr;;e;9;b;fr=Naissance à Rennes de M BRUN, le lyonnais de la Trilogie de Marcel PAGNOL, alias Robert VATTIER;;;;
+19070114;;fr;;e;9;b;fr=Naissance à Saint-Brieuc de Albert MAHUZIER. Il sera explorateur et parcourera le monde avec sa femme et ses neuf enfants. Il donnera quelques 6000 conférences, réalisera 30 films et rédigera 19 ouvrages de souvenirs;;;;
+19150218;;fr;;e;7;b;fr=Naissance à Lesneven d'Auguste Le Breton, roi du verlan et de l'argot parisien. ''Il voit luire pour la première fois le beau blond''.;;;;
+19150527;;fr;;e;9;b;fr=Naissance à Pipriac d'André Leblois, écrivain, professeur agrégé de lettres, auteur de nombreuses études critiques et de romans dont Anna de Trégoarn en 1959.;;;;
+
+19250312;;fr;;e;6;b;fr=Naissance de Louis Bobet, dit Louison, chez ses parents boulangers 3 rue de Montfort à Saint-Méen le Grand. Il gagnera 3 fois de suite le tour de France en 1953, 1954 et 1955.;;;;
+1928503;;fr;;e;7;b;fr=Naissance de l'acteur Julien Guiomar, à Morlaix.;;;;
+
+19390403;;fr;;e;9;b,j;fr=Naissance du peintre Jean Yves Blécon à Maure de Bretagne.;;;;
+1944;;fr;;e;8;b;fr=Naissance à Morlaix de Dominique Lavanant qui sera professeur d'anglais avant de devenir actrice.;;;;
+
+19470126;;fr;;e;9;b;fr=Naissance à Saint-Brieuc de Patrick MAURIN, fils d'un chef d'orchestre et d'une chanteuse d'opérette. Il sera connu sous le pseudonyme de Patrick DEWAERE;;;;
+
+19500522;;fr;;e;9;b;fr=Naissance à Lorient d'Irène LE POHON connue sous le pseudonyme d'Irène FRAIN en littérature;;;;
+19541114;;fr;;e;6;b;fr=Naissance à Yffiniac de Bernard Hinault. Il gagnera 5 fois le Tour de France sous le surnom affectueux du Blaireau.;;;;
+1956;;fr;;e;9;b;fr=Naissance à la Guerche de Bretagne d'Alain PASSARD un des plus célèbres et talentueux cuisiniers de France;;;;
+1967;;fr;;e;9;b;fr=Naissance à Rennes de Nina BOURAOUI, fille d'un algérien et d'une bretonne. Elle sera auteure entre autres de La voyeuse interdite, L'âge blessé et Le bal des murènes;;;;
+
+
+1234;;fr;;e;9;d;fr=Mort à Poitiers de Guillaume PINCHON, évêque de Saint-Brieuc, persécuté par Philippe Auguste et son représentant en Bretagne Pierre de DREUX. Il sera canonisé 14 ans plus tard par le pape Grégoire IX ce qui en fait le premier saint officiel du duché;;;;
+13410430;;fr;;e;9;d;fr=Décès du duc Jean II demeuré sans enfants. La guerre de succession de Bretagne commence entre son demi-frère Jean de Montfort-l'Amaury et sa nièce Jeanne de Penthièvre. C'est le premier qui l'emportera sous le nom de Jean IV;;;;
+1477;;fr;;e;9;d;fr=Décès de Renée du BAGATZ à Guichen. Elle avait été l'épouse de Jean DU PERRIER seigneur du Plessis-Balison, puis d'Henri de Villeblanche, seigneur de Broons gouverneur de Rennes et grand-maître de Bretagne. Elle est inhumée dans une chapelle décorée à ses armes (d'Argent au sautoir de gueules) qu'elle avait fait construire dans la cathédrale de Rennes.;;;;
+1486;;fr;;e;9;d;fr=Décès de Marguerite de Foix, épouse de François II duc de Bretagne et mère de la future duchesse Anne qui n'a que 9 ans;;;;
+15040222;;fr;;e;9;d;fr=Mort de Jean de la LANDE, seigneur de Guignen;;;;
+
+1525;;fr;;e;9;d;fr=Mort de Thomas LE ROY, natif de Messac, évêque de Dol. Ses contemporains lui reprochaient de trop bien gagner sa vie sur terre en engrangeant les bénéfices ecclésiastiques à leur dépend.;;;;
+15380706;;fr;;e;9;d;fr=Décès du chevalier Jean de SAINT-AMADOUR premier vicomte de Guignen. Il sera inhumé dans le chœur de l'ancienne église;;;;
+1540;;fr;;e;9;d;fr=Décès de Marguerite d'ELBIEST, dame de Guignen suite au procès qui suivit le décès de Jean de La LANDE en 1504, épouse de Jean de SAINT-AMADOUR, et à ce titre, première vicomtesse de Guignen;;;;
+1594;;fr;;e;9;d;fr=Mort de Pierre BRULLON à Baulon, seigneur de la Muce, président au Parlement de Bretagne, chevalier des ordres du roi et introducteur des ambassadeurs;;;;
+
+
+
+
+
+
+
+16200829;;fr;;e;8;d;fr=Décès de Raoul de le TOURNERAYE seigneur de Trébéheuc, aujourd'hui en la Chapelle Bouexic. Son cœur est enchâssé dans du plomb est est déposé sous l'un des deux autels latéraux de l'ancienne église de Guignen où il sera découvert lors de la démolition en 1879;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17050530;;fr;;e;8;d;fr=Inhumation de Louis du Bouëxic, à l'origine de la construction de l'église de la Chapelle Bouëxic, dans le chœur de celle-ci. Un pavement posé au début du XX° siècle recouvre uniformément sa sépulture et celles de ses descendants;;;;
+
+
+
+
+
+
+
+
+
+1760;;fr;;e;9;d;fr=Décès de la dernière vicomtesse de Guignen, Charlotte de ROHAN-SOUBISE princesse de Condé par son mariage avec Louis Joseph de BOURBON;;;;
+
+
+
+
+
+1778121;;fr;;e;9;d;fr=Décès de Judith Piquet (98 ans) au château des Champs en Guipry, baronne de Lohéac et comtesse de Maure, veuve du marquis de Piré, Jean de Ronyvinen. Le prêtre la qualifie de 'mère des pauvres' tant elle était connue pour sa charité, soignant les malades en son château comme dans un hôpital.;;;;
+
+
+
+
+
+
+
+
+
+17940809;;fr;;e;8;d;fr=Mort du courrier de Rennes tué par les Chouans à Pipriac;;;;
+
+
+
+1818513;;fr;;e,j;2;d;fr=Mort du dernier vicomte de Guignen, Il s'agit de Louis Joseph de Bourbon (8° du nom), prince de Condé. Il est décédé à Chantilly. Il était né le 9/8/1736 à Paris;;;;
+
+
+
+
+
+
+
+187402;;fr;;e,j;4;d;fr=Inhumation de la comtesse de Ségur (Sophie Rostopchine,) à Pluneret, Morbihan,  (décédée à Paris le 9 février).;;;;
+
+
+
+
+
+
+
+
+
+
+1987;;fr;;e;8;d;fr=Mort de Pierre COLLET à 94 ans, dernier survivant des soldats de la commune de Guignen de la guerre 14/18;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#
+#
+#
+#
+#
+#=================================== END OF FILE ==============================
+

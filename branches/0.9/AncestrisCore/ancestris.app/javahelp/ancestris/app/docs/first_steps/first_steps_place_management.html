@@ -1,0 +1,312 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <title></title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" href="../ancestris.css">
+</head>
+<body>
+  <center>
+  <h2 class="ancestris_help_title">Mannaging places</h2>
+  </center>
+  <br>
+  <p>Resumo<br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_1">Sorting jurisdictions</a><br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_2">Inputing jusrisdictions</a><br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_3">Register the order of jurisdictions in your Gedcom file</a><br>
+    - <a href="first_steps_place_management.html#first_steps_place_management_4">Globally change formuling of jurisditions</a><br>
+  </p>
+  <br>
+  <p class="justify">
+    This is an important chapter. A close reading 
+    will avoid having to, some day, repeat all your work. 
+    Adopting a universal and uniform jurisdictions order, 
+    compliant with the Gedcom standart, is indispensable for  
+    ease your exchanges and make the geolocation of the 
+    events more accurate.
+  </p>
+  <br>
+  <br>
+  <center>
+  <b>CAUTTION&nbsp;: before any modifications, make 
+  a backup of your Gedcom file.
+  </b>
+  </center>
+  <br>
+  <a name="first_steps_place_management_1"></a>
+  <h3 class="ancestris_help_title">Sorting the jurisdictions</h3>
+  <p class="justify">
+    To create a place, you should classify the different 
+    jurisdictions in growing order of importance, separating  
+    each level with a comma. If a level is empty,  
+    keep the comma.<br>
+  </p>
+  <p class="marge40">
+    <i><u>Advise from Ancestris</u>:&nbsp;unlike certain  
+    practices, don't leave blank spaces between jurisdictions.</i><br>
+  </p>
+    Seven levels of jurisdiction are possible:<br>
+    <center><i>Hamlet,City,,ZIP_Code,County,State,Country</i></center>
+  <p class="justify">
+    It's not mandatory to have them all but you should 
+    <b>respect the hierarchy of this order</b>.
+  </p>
+  <table border="1" width="100%" class="ancestris_stop_tip">
+    <tr>
+      <td>
+        <table border="0" width="100%">
+          <tr>
+            <td width="15%">
+              <center><img src="../images/idea.png" width="60" height="64"></center>
+            </td>
+            <td>
+              <p class="justify">
+                Although Ancestris allows to input the <b>ZIP 
+                code</b>, it is preferable to use the
+                <b>INSEE code</b>. As a matter of fact, a ZIP code can
+                group more cities while the INSEE code
+                (geographic codding system
+                created in 1943), is unic for each city (only valid in France).
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <a name="first_steps_place_management_2"></a>
+  <h3 class="ancestris_help_title">Inputing jurisdictions</h3>
+  <p class="justify">
+    If you chose ''Distinguish for editing the  
+    jurisdictions for places'' (cf <a href="../first_steps/first_steps_basic_ancestris.html"> 
+    First Settings</a>) you don't need the following explanations, since you will be 
+    inputing jurisdictions level by level.<br>
+    For those who didn't choose this option, the easiest way to 
+    explain is an example:<br>
+    For an event happened in the hamlet of 
+    "Mézin", at Allanche (INSEE code 15160), 
+    Cantal department, Auvergne, France. You should 
+    input:
+  </p>
+  <center>
+  <img src="../images/screenshots/screenshots_first_steps_place_management_saisie_lieux.png" alt="Jurisdictions input screen." width="480" height="50">
+  </center>
+  <ul>
+    <li><i>Don't write anything after the word France.</i></li>
+    <li><i>If hamlet is unknown, just put a comma at the begining  
+    of the line.</i></li>
+    <li><i>For an event to which only the city  
+    is known, write: ,Allanche,,,,  (1 leading comma and 
+    4 trailling commas).</i></li>
+  </ul>
+  <br>
+  <center>
+  It's simple, to remember: ''From the smalest to the greates and each term is 
+  comma separated''.
+  </center>
+  <br>
+  <b>Auto-complete field</b><br>
+  <p class="justify">
+    Depending on the data you inputed, you will see a list that offers
+    the <u>already known places</u> starting with the same characters, 
+    for you to choose from. → A left click over the suggested line,
+    click on <b>OK</b> to validate and that's it.<br>
+    If you selected
+    "<a href="../advanced/advanced_menu_options_1.html">Preferences</a> -
+    Distinguish jurisdictions...", this function is also present,
+    but line by line.<br>
+  </p>
+  <br>
+  <table border="1" width="100%">
+    <tr>
+      <td>
+        <font size="-1">
+        <center>
+        <img src="../images/warn.gif" width="18" height="17"> <b>Do not 
+        confuse registering to the Gedcom file 
+        with displaying on the views.</b>
+        </center>
+        <br>
+        <u>Register in the Gedcom file</u>, it is here you  
+        should respect the standart organization of the  
+        jurisdictions.<br>
+        <u>Displaying places in views</u>, it is the way 
+        you will see the jurisdictions in views  
+        (for example, choose to just see hamlet and  
+        country on tree view - cf 
+        <a href="../advanced/advanced_menu_options_1.html">Preferences</a>).
+        </font>
+      </td>
+    </tr>
+  </table>
+  <br>
+  <a name="first_steps_place_management_3"></a>
+  <h3 class="ancestris_help_title">Register jurisdctions order in the Gedcom file</h3>
+  <p class="justify">
+    It is important that this places hierarchy (or jurisdictions 
+    order) is described in the header of your Gedcom  
+    file. It's the internal rule, established by the Gedcom file  
+    that allows Ancestris e the other  
+    users to reed the jurisdictions. This record 
+    determines the format of all your "PLAC" tags.<br>
+    <u>This register should be made imediately whe creating  
+    a genealogy or right after importing a  
+    genealogy created with another programa</u> 
+    (many do not respect the standart).
+  </p>
+  <ul>
+    <li>1st solution:
+      <ul>
+        <li>Open Gedcom editor. Select a PLAC line   
+        (anyone)<br>
+        - left click (to highlight) and then right click 
+        to open the context menu.<br>
+        - click on  ''Set hierarchy  
+        for place-values''<br>
+        <img src="../images/screenshots/screenshots_first_steps_place_management_ordonnancement_des_juridictions.png" alt="Order of jurisdictions on the Gedcom file." width="480" height="240"><br>
+        Use the input line to control, modify or 
+        input the different jurisdictions you have 
+        defined for all you genealogy.<br> 
+        To validate your choice: click on "Proceed 
+        and Set hierarchy for place-values locais".<br> 
+        Done! You should consider backing up your work.<br>
+        </li>
+      </ul>
+    </li>
+    <br>
+    <li>2nd solution:
+      <ul>
+        <li>Open your Gedcom file with a text editor. 
+        For Linux, use Gedit, or Nedit or Jedit. For Windows, 
+        use Notepad (never Word). For MacOs, use TextEdit.<br>
+        </li>
+        <pre>
+        0 HEAD
+        1 SOUR ANCESTRIS
+        2 VERS 0.5.0.1291
+        2 NAME Ancestris
+        2 CORP Ancestris Team
+        3 ADDR http://www.ancestris.org
+        1 DEST ANY
+        1 DATE 21 MAR 2011      &lt;---- the date will be diferent
+        2 TIME 18:44:12         &lt;---- the time will be diferent
+        1 SUBM @B1@             &lt;---- you might not have this line
+        1 FILE john.ged         &lt;---- here is where your file name will be
+        1 GEDC
+        2 VERS 5.5
+        2 FORM Lineage-Linked
+        1 CHAR UTF-8
+        1 LANG English
+        </pre>
+        <p class="justify">
+          It will suffice to add, right after the line
+          ''1 LANG English'', the following two lines:
+        </p>
+        <pre>
+        1 PLAC
+        2 FORM Hamlet,City,,Zip_Code,County,State,Country
+        </pre>
+        <b>Save</b> your work, and that's it, job done!
+        <p class="justify">
+          <img src="../images/warn.gif" width="18" height="17"> If you
+          already have hundreds of places on your
+          file, the simple fact of adding these two lines to the header
+          of the Gedcom file, doesn't change anything in these already
+          registered places. The only alternate solution would be
+          go through all of them one by one.
+        </p>
+      </ul>
+    </li>
+    <br>
+    <li>
+    <b>uanother solution</b> to generate the order 
+    of the jurisdictions (if you hesitate in doing it  
+    with the text editor) is to go to "View/Lists  
+    and reports/Tool Box/5&nbsp;- Manage PLAC Tags".
+    </li>
+    <table border="1" width="100%" class="ancestris_stop_tip">
+      <tr>
+        <td>
+          <table border="0" width="100%">
+            <tr>
+              <td width="15%">
+                <center><img src="../images/idea.png" width="60" height="64"></center>
+              </td>
+              <td>
+                <p class="justify">
+                  Places format, as well as your display preferences 
+                  for your Gedcom file can equally
+                  be modified from the plugin
+                  "List of Places".
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </ul>
+  <br>
+  <a name="first_steps_place_management_4"></a>
+  <h3 class="ancestris_help_title">Global change of the formulation of jurisdictions</h3>
+  <p class="justify">
+    You notice, after finishing, that you have 
+    a typo on a place. Another possibility, 
+    the same location was entered twice  
+    in different ways.<br>
+    With just a few clicks you can change every place involved:
+    <ul>
+      <ul>
+        <li> select one of the PLAC lines you want to change (1)</li>
+        <li>make the changes in the input area (2)<i>- 
+        here we supressed the "s" -</i>, this will show  
+        a checkbox at the end of the line (3)</li> 
+        <li>check this box and then "Yes" in the confirmation  
+        window (4)</li>
+        <li>All that is left to do is click <b>OK</b> at the bottom  
+        area of the editor to validate the changes.</li>
+        <br>
+        <img src="../images/screenshots/screenshots_first_steps_place_management_global_change.png" alt="Global change in jurisdictions formulation screenshot." width="480" height="200">
+        <br>
+        This process is identical from any  
+        of the two editors.<br>
+      </ul>
+    </ul>
+  </p>
+  <!-- Debut des boutons Precedent - Suivant -->
+  <br>
+  <br>
+  <table border="0" width="100%">
+    <tr>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+                <font size="-1"><a href="../first_steps/first_steps_fenetrage.html">Previous&nbsp;page</a></font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+      <td width="80%">
+        &nbsp;
+      </td>
+      <td width="10%">
+        <table border="0" width="100%">
+          <tr>
+            <td bgcolor="#e8fcd9">
+              <p align="center">
+                <font size="-1"><a href="../first_steps/first_steps_gedcoms_manager.html">Next&nbsp;page</a></font>
+              </p>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+  </table>
+  <!-- Fin des boutons Precedent - Suivant -->
+  <!-- English help files - updated on 08/16/2014 -->
+</body>
+</html>

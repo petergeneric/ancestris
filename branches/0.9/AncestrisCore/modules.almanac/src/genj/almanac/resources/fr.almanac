@@ -1,0 +1,1568 @@
+#=======================================================================
+#                    File for french events fr.almanac
+#=======================================================================
+#
+#
+# Copyright (C) 2009 - 2011 Francois Massonneau <support@ancestris.org>
+#                           Ancestris Team
+#
+# Permission is granted to copy, distribute and/or modify this document
+# under the terms of the GNU Free Documentation License, Version 1.2
+# or any later version published by the Free Software Foundation;
+# with no Invariant Sections, no Front-Cover Texts, and no Back-Cover
+# Texts.
+#
+# --------------------------- E N G L I S H    S E C T I O N  ---------------------
+#
+# IMPORTANT :
+# This file must be edited using a UTF-8 capable editor, as Notepad for 
+# Windows, or Jedit for Linux. This is to make sure that there is no 
+# loss of special characters used in different languages (german, french,
+# spanish, etc...)
+#
+# The format of this file is as follows:
+#
+# All blank lines and those beginning with "#" are considered as comments
+# and thus ignored.
+#
+# One historic event per line with (minimum) 6 parameters separated by ";"
+#
+# Parameter #1 : Start Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+#                (The whole line is ignored if this date is omitted)
+# Parameter #2 : End Date. The format to use is : YYYYMMDD (year, month and day)
+#                YYYYMM and YYYY are allowed.      
+# Parameter #3 : Country (iso code) concerning that event
+#                Please check this url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algeria
+#                ad : Andorra
+#                be : Belgium
+#                ca : Canada
+#                fr : France
+#                de : Germany
+#                it : Italy
+#                lu : Luxembourg
+#                no : Norway
+#                pl : Poland
+#                es : Spain
+#                se : Sweden
+#                ch : Switzerland
+#                gb : United Kingdom
+#                us : United States
+# Parameter #4 : State
+#                Please check this url :
+#                
+# Parameter #5 : Region
+#                Please check this url :
+#                
+# Parameter #6 : Importance of this event (a positive integer value, between
+#                0 to 9), with :
+#                0 = major important event. This event will be displayed, always.
+#                1 = important event.
+#                2 = less important event.
+#                etc...
+# Parameter #7 : Type, with :
+#                W = War
+#                P = Political event
+#                B = Birthday
+#                D = Death
+#                X = Wedding
+#                I = Invention
+#                Y = Discovery
+#                F = Founding
+#                E = Misc. Events
+#                R = Reigns
+#                A list of types is allowed, e.g. WP describes an event
+#                in the context of a war with political proportions.
+# Parameter #8 : The event description in a specific language - a prefix
+#                of a valid ISO-639 language code is required:
+#                de = German
+#                en = English
+#                fr = French
+#                it = Italian
+# Parameter #9+: More event descriptions in different languages (again
+#                separated by ';')
+#
+# Here's an example for Bruxelles rising.
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+# --------------------------- F R E N C H    S E C T I O N  ----------------------------
+#
+# IMPORTANT :
+# Ce fichier doit être édité avec un éditeur capable d'utiliser 
+# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou 
+# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre 
+# les caractères spéciaux utilisés dans certaines langues, les lettres  
+# accentuées notamment (comme l'allemand, le français, l'espagnol, etc..)
+#
+# Le format de ce fichier est le suivant :
+#
+# Toutes les lignes vides et celles commençant par "#" sont considérées 
+# comme des commentaires et donc sont ignorées.
+#
+# On doit trouver un événement historique par ligne avec au minimum 6 
+# paramètres séparés par un point-virgule ";"
+#
+# Paramètre #1 : Date de départ de l'événement. Le format a utiliser est : 
+#                YYYYMMDD (année, mois et jour)
+#                Les formats YYYYMM et YYYY sont autorisés.
+#                (Si la date n'est pas indiquée la totalité de la ligne 
+#                est ignorée)
+# Paramètre #2 : Date de fin de l'événement. Le format a utiliser est :
+#                YYYYMMDD (année, mois et jour)
+#                Les formats YYYYMM et YYYY sont autorisés.
+# Paramètre #3 : Le pays(code iso) concerné par cet événement
+#                Vous pouvez consulter cette url :
+#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                dz : Algérie
+#                de : Allemagne
+#                ad : Andorre
+#                be : Belgique
+#                ca : Canada
+#                es : Espagne
+#                us : Etats-Unis d'Amérique
+#                fr : France
+#                it : Italie
+#                lu : Luxembourg
+#                no : Norvege
+#                pl : Pologne
+#                gb : Royaume uni
+#                se : Suede
+#                ch : Suisse
+# Parameter #4 : Etat
+#                
+# Parameter #5 : Region
+#                
+# Paramètre #6 : L'importance de cet événement (un chiffre positif à 
+#                choisir entre 
+#                0 et 9), avec :
+#                0 = événement d'une importance majeure. Cet événénement 
+#                    sera toujours affiché.
+#                1 = événement moins important.
+#                2 = événement encore moins important.
+#                etc...
+# Paramètre #7 : Le type d'événement, avec :
+#                W = Guerre
+#                P = Evénement politique
+#                B = Anniversaire
+#                D = Décès
+#                X = Mariage
+#                I = Invention
+#                Y = Découverte
+#                F = Fondation
+#                E = Evénements divers
+#                R = Règnes et présidences
+#                G = Evénéments d'intérêt généalogique	
+#                Une liste de différents types est autorisée, ainsi WP 
+#                sera utilisé pour décrire un événement ayant une 
+#                connotation de guerre avec des conséquences politiques 
+#                importantes.
+# Paramètre #8 : Une description de l'événement dans un langage donné - 
+#                il faut utiliser un préfix avec un code ISO-639 
+#                obligatoirement, ainsi :
+#                de = Allemand
+#                en = Anglais
+#                fr = Français
+#                it = Italien
+# Paramètre #9+: De plus amples descriptions de l'événément en différentes 
+#                langues (à nouveau en les séparant par un point-virgule ';')
+#
+# Voici un exemple pour l'entrée du Duc de Guise entrant dans Paris le 9 mai 1588
+#
+# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
+#
+#
+# Note de l'auteur : J'ai volontairement fait débuter les événements vers 1600 et 
+#                    j'ai arrêté de les indiquer dans les années 1930.
+#                    Je pense qu'il est difficile dans la majorité des cas de 
+#                    faire remonter sa généalogie avant 1600, et aprés 1930
+#                    les événements sont mieux connus. Cette liste d'informations
+#                    ne se veut pas exhaustive, et c'est volontaire. Elle n'a 
+#                    pour but que de vous aider à mieux comprendre les phases 
+#                    de la vie de vos ancêtres (ex: pourquoi beaucoup de morts 
+#                    à telle période ? Peut-être une épidémie, etc...).
+#                    
+#                    Vous êtes encouragé à rajouter des événements, mais il 
+#                    vous est demandé de ne pas en supprimer.
+#                    Attention de ne pas utiliser le point virgule (;) dans 
+#                    vos textes, car le point virgule est un "séparateur", 
+#                    comme je l'ai indiqué plus haut. Merci. F. Massonneau../.
+#
+#                    Contributeurs :
+#                    Voici une liste des personnes ayant contribué à des ajouts 
+#                    modifications de ce fichier :
+#                         . Lionel (lio-sand) : Tous les règnes des Rois 
+#                           de France.
+#                         . Dominique (dacore) : Ajout pour les années 
+#                           1600 à 1700.
+#                         . Christian Bouy : A fourni beaucoup de données 
+#                           pour les années postérieures à 1945.
+#                         . Joëlle Lussiau : A mis en forme les données de 
+#                           Christian dans l'almanac et les a classées.
+#                         . Philippe Deville : A fourni les événements 
+#                           spécifiques à la généalogie.
+#
+#                    Dernière mise à jour : 28/11/2011
+#
+#
+#==============================================================================
+#
+#
+1110;;fr;;;4;a;fr=Le sarrasin est ramené d'orient par les croisés. On appellera cette plante aussi, improprement, blé noir (bié na);;;;
+1636;;fr;;;4;a;fr=L'évêque de Rennes, Pierre CORNULIER, possède dans son jardin de son manoir de Saint-Armel en Bruz, 15 variétés de poiriers. On peut penser que parmi celles-ci figure la variété Bon Chrétien, obtenue dès le XV° siècle;;;;
+1649;1652;fr;;;3;a,h,g;fr=Mauvaise récolte de grains. Disettes et épidémies. La population rurale diminue.;;;;
+
+1692;1695;fr;;b,k;3;a;fr=Mauvaises récoltes dans le Bordelais. Les négociants girondins font appel aux vins de Languedoc pour remplir leurs engagements commerciaux.;;;;
+1692;1700;fr;;;4;a;fr=Série de vendanges tardives dans le nord de la France.;;;;
+1741;;fr;;;4;a;fr=La pomme de terre encore appelée truffe ou cartoufle est cultivée avec succès par le sieur BLANCHET à Pléchâtel;;;;
+
+
+
+
+1864;;fr;;;3;a;fr=Début de l'invasion du puceron phylloxera vastatrix qui va détruire l'ensemble du vignoble européen. Le remède sera trouvé 10 ans plus tard en greffant les cépages indigènes sur des plans de vigne américaines résistantes. Les vignobles de piètres qualités comme en Picardie, Normandie et Bretagne ne seront pas replantés. À guignen cet abandon est ressenti comme un pince-cœur mais aussi comme un bienfait pour l'estomac.;;;;
+
+
+
+
+
+1603;;fr;;u;3;a,c;fr=Gelées d’oliviers en Provence. Le Rhône est gelé.;;;;
+1687;1703;fr;;;3;c;fr=Pessimum du Petit âge glaciaire : Hivers très rigoureux, printemps et étés froids. Le petit âge glaciaire correspond à un léger refroidissement climatique de l'ordre de moins de 1°C. Cette diminution peut paraître faible, mais elle est suffisante pour provoquer des hivers rigoureux et ralentir les activités humaines notamment la production agricole, vendanges tardives, en particulier au XVIIe siècle. Des archives historiques ou commerciales, des peintures de l'époque témoignent d'hivers rudes et enneigés. En Savoie, on organise même des processions dans l'espoir de conjurer l'avancée des glaces. ;;;;
+17160122;;fr;;;3;c;fr=Le 22 janvier, -20°. En Savoie la neige avait 20 pieds d'épaisseur : il en était de même en Alsace. Février - Glacial dans l'est de la France. Neiges abondantes dans l'est et le nord de la France, inondations dans l'Ouest.;;;;
+17501205;;fr;;u;4;c,k;fr=Le Var est sorti de son lit, suite aux pluies diluviennes s’étant abattues aux alentours de Nice. Les campagnes voisines sont inondées, plusieurs bâtiments entraînées et beaucoup d’arbres déracinés.;;;;
+178311;178403;fr;;;3;c,a;fr=Hiver exceptionnel qui détruit les semis de blé.;;;;
+
+
+
+
+
+
+
+
+
+1651;1652;fr;;;1;m;fr=La Peste frappe la France (1.000.000 de morts). Mazarin a été accusé de l'avoir introduite.;;;;
+1720;;fr;;u;1;m;fr=Peste de Marseille. 85.000 morts en Provence.;;;;
+
+1776;;fr;;;1;m;fr=La société royale de médecine recense pas moins de 128 sortes de fièvres différentes, capable de s'abattre sur le pauvre monde. On y trouve entre autres les fièvres bilieuse, catarrhale, charbonneuse, exacerbante, inflammatoire, intermittente, maligne, militaire, putride, quarte, rémittente.;;;;
+
+183203;183204;fr;;j;1;m;fr=Épidémie de choléra à Paris. Plus de 18.500 morts.;;;;
+191810;;fr;;;1;m;fr=Épidémie de grippe espagnole. Plus de 400.000 morts en France.;;;;
+
+
+1692;;fr;;c;2;h;fr=Disette en Auvergne.;;;;
+169211;;fr;;j;2;h,e;fr=Désordres et famine dans la capitale.;;;;
+1693;1694;fr;;;2;h,a;fr=Grande famine. Un hiver très rigoureux en 1692, suivi en 1693 d'une récolte très médiocre, causée par un printemps et un été trop pluvieux. Une flambée des prix des céréales et une sous-alimentation favorisa les épidémies comme le typhus, jusqu'en 1694. La France (20 millions d’habitants), eut 1 300 000 morts de plus que la mortalité normale. Autant que durant la Première Guerre mondiale, mais pour une population deux fois moindre. C'est la grande purge des miséreux que la cherté du pain jette sur les chemins pour y mendier et qui meurent au hasard de leur errance.;;;;
+1725;;fr;;p,q;2;h;fr=Famine en Normandie, on vit d'herbe des champs.;;;;
+
+
+
+
+1527;;fr;;r;9;k;fr=Une violente tempête de plusieurs jours ensevelit le petit village d'Escoublac sous le sable accumulé dans l'estuaire de la Loire;;;;
+
+16580301;;fr;;j;2;k;fr=Une grave crue de la Seine, notamment à Paris, où le pont Marie est emporté.;;;;
+16600621;;fr;;b,k;2;k;fr=Dans la nuit un tremblement de terre est ressenti dans la région comprise entre Bordeaux et Bayonne. les secousses seront ensuite ressenti es dans la région de Pau et surtout en Bigorre où les dommages sont conséquents et nombreux.;;;;
+
+
+17500524;;fr;;k;2;k;fr=Un tremblement de terre se fait sentir en Guyenne, aux alentours des villes de Toulouse, Narbonne et Montpellier.;;;;
+
+
+19240109;;fr;;;2;k;fr=D'importants dégâts sont faits par un raz de marée qui balaye tout l'ouest de la France;;;;
+
+19991226;19991228;fr;;;2;k;fr=Les tempêtes Lothar et Martin traversent la France provoquant de nombreux dégâts Des vents de plus de 216 Km/h ont été enregistrés au sommet de la tour Eiffel.;;;;
+20090124;;fr;;b,n;2;k;fr=La tempête Klaus, la plus destructrice en France depuis les tempêtes de 1999, elle a principalement touché le sud-ouest de la France.;;;;
+20100228;;fr;;r;2;k;fr=La tempête Xynthia provoque de gros dégâts et fait plusieurs morts en Vendée et dans les départements limitrophes.;;;;
+
+
+
+1700;;fr;;;1;t;fr=Population française: 22,5 millions. Paris compte 500 000 habitants. Lyon (100 000), Marseille (75 000), Rouen (60 000) et Lille (55 000) dépassent 50 000 habitants. 22 villes dépassent 20 000 habitants. 17% de la population vit dans des villes de plus de 2 000 habitants. ;;;;
+1800;;fr;;;1;t;fr=Population française estimée à 27 millions d'habitants. En 1821, un quart de la population vit dans les villes.;;;;
+
+
+
+1900;;fr;;;1;t;fr=Population française estimée à 38 millions d'habitants. En 1911, 45% résident en ville.;;;;
+
+
+
+
+
+
+
+
+1577;;fr;;p;7;i;fr=Première tentative de création de polders en baie du Mont Saint-Michel. C'est un échec;;;;
+16360608;;fr;;;7;i;fr=René Descartes fonde la géométrie analytique et publie son livre le Discours de la Méthode en français.;;;;
+1730;;fr;;;7;i;fr=Invention de la sauce béchamel par Antioüs BÉCHAMEIL, marquis de Nointel intendant royal des impôts (selon le romancier rennais Paul FÉVAL);;;;
+1777;;fr;;;7;i,b;fr=Naissance à Vieillevigne de Stanislas BAUDRY. Surnommé 'Baudry pompe à feu' il a su exploité avec adresse l'eau chaude. Il est un des premiers en Bretagne à utiliser la machine à vapeur dans sa minoterie de Nantes. Il eut l'idée d'exploiter la vapeur résiduelle pour créer à proximité un établissement de bains chauds. Il organisera un service régulier d'omnibus pour desservir son établissement. Il exportera son principe de transport à Paris devenant ainsi un ancêtre de la RATP.;;;;
+17831021;;fr;;j;7;i,e;fr=Premier vol habité en montgolfière par Pilâtre de Rozier et le Marquis d'Arlandes, au-dessus de Paris.;;;;
+
+1817;;fr;;;7;i,b;fr=Naissance de Jean Marie LE BRIS à Concarneau. Futur inventeur il réussira sur une plage du Finistère la première mondiale de faire décoller un court instant un engin plus lourd que l'air tiré par un cheval au galop;;;;
+
+1907;;fr;;;7;i;fr=Clémence PRAUD met au point son savoureux 'Beurre blanc nantais' à Saint-Julien de Concelles. Il s'agit d'une sauce qui accompagne les poissons;;;;
+
+
+
+19720404;;fr;;;7;i;fr=Début des essais du turbotrain expérimental TGV 001 sur la ligne d'Alsace.;;;;
+19740305;;fr;;;7;i;fr=Le Premier ministre Pierre Messmer annonce le lancement de la construction d’une première ligne à grande vitesse entre Paris et Lyon, la LGV Sud-Est, équipé du TGV d'Alstom. Le projet concurrent d'aérotrain entre Cergy et La Défense est pour sa part rejeté par l'État le 17 juillet.;;;;
+
+
+14921010;;us;;;4;y;fr=Christophe Colomb découvre les Amériques.;;;;
+1535;;ca;;qc;4;y;fr=Parti de Saint-Malo pour chercher de l'or, Jacques CARTIER découvre fortuitement l'embouchure du Saint-Laurent qu'il prend d'abord pour un fleuve d'Asie. Comme les Hurons prononcent souvent le mot Canada, qui signifie pour eux village, il donne ce nom au pays dont il prend possession au non du roi François I;;;;
+16130111;;fr;;i;9;y;fr=Découverte non loin de Romans dans le bas dauphiné de theutobocus, géant cimbre (peuple germanique).;;;;
+
+1720;;gb;;;9;y;fr=Guillaume DELISLE donne son nom aux îles Malouines pour le rôle joué par les navigateurs malouins dans la cartographie de l'endroit situé à 480 km au large de l'Argentine. Elles sont dénommées aussi îles Falkland);;;;
+17640712;;fr;;;9;y;fr=Charles Messier découvre la première nébuleuse de l'histoire, et l'inscrit au n° 27 de son catalogue (M27 ou Dumbbell).;;;;
+1769;;fr;;;4;y;fr=L'Académie de Besançon ouvre un concours pour un nouvel aliment végétal. Le lauréat sera Antoine Augustin Parmentier (1737-1813) avec la pomme de terre.;;;;
+
+1776;;fr;;r;9;y;fr=Début des fouilles de l'importante cité gallo-romaine de Noviodunum capitale des Diablintes, aujourd'hui Jublains;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1722;;fr;;j;8;s,e;fr=Construction de l'hôtel du comte d'Évreux qui s'élève au milieu des prés. Il deviendra plus tard le palais de l'Élysée;;;;
+
+
+
+
+
+
+1792810;;fr;;;4;s,e;fr=Monsieur et Madame sont remplacés par Citoyen et Citoyenne.;;;;
+1793;;fr;;;4;s,e;fr=Le tutoiement devient obligatoire.;;;;
+179306;;fr;;;8;s;fr=La Révolution qui avait supprimé le Carême rétablit cependant un Carême patriotique de six semaines dans le but simple de faire baisser le prix des denrées.;;;;
+
+17981124;1917;fr;;;7;s;fr=Le 4 frimaire an VII considérant qu'il n'y a rien qui se proportionne mieux aux fortunes que le nombre des portes et fenêtres le Directoire à l'idée de créer un impôt sur ces ouvertures, Il restera en vigueur jusqu'en 1917.;;;;
+
+1810;;fr;;;8;s;fr=La Régie des droits réunis obtient l'exclusivité de l'achat des feuilles de tabac. Essentiellement destinée à être prisée la plante est couramment cultivée en Ille et Vilaine;;;;
+
+
+
+
+1840;;fr;;j;8;s;fr=Début de la construction de la première gare Montparnasse à Paris. Elle est la tête des lignes ferroviaires à construire de la Compagnie de l'Ouest;;;;
+
+
+1850;;fr;;;8;s;fr=La plume métallique remplace progressivement la plume d'oie pour l'écriture;;;;
+
+
+
+
+
+18650425;;fr;;j,e;8;s,e;fr=Arrivée du premier train en provenance de Paris à Brest.;;;;
+
+
+1867;;fr;;;9;s;fr=L'impératrice Eugénie exhibe des bijoux en aluminium lors de l'exposition universelle afin de promouvoir le métal nouveau.;;;;
+
+
+
+
+
+1889;;fr;;j;7;s,e;fr=La première liste officielle des abonnés au téléphone est éditée pour 6425 abonné de la région parisienne;;;;
+
+
+18970402;;fr;;e,j;8;s;fr=Mise en service du Train dit de 'Bains de mer' dont l'aller est prévu le samedi et le retour le lundi entre Paris et Saint-Malo;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+19700107;;fr;;;8;s,p;fr=Loi instituant le SMIC à la place du SMIG.;;;;
+
+19750117;;fr;;;7;s,p;fr=Vote de la ''loi Veil'' autorisant l'avortement, sous certaines conditions.;;;;
+
+198012;;fr;;;8;s;fr=Le pays compte à la fin de l'année plus de 1,5 million de chômeurs. La dette publique de la France est de 20,8 % du PIB.;;;;
+
+1984;;fr;;;8;s;fr=Testé depuis 1982 en Ille et Vilaine le minitel est proposé au niveau national;;;;
+1988;;fr;;e,r;8;s;fr=Fermeture de la ligne ferroviaire Ploërmel-Châteaubriant via Maure de Bretagne est fermée.;;;;
+
+19890529;;fr;;e,j;8;s;fr=Le premier TGV Atlantique entre en gare de Rennes à 23 heures 35;;;;
+
+
+
+
+
+
+656;657;fr;;;8;e;fr=Clovis II, Il est le premier roi à préférer au cheval, la voiture attelée à quatre bœufs De là vient sûrement l'image des " Rois fainéants ", allongés dans des chars à bœufs ;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+16071027;;fr;;;8;e;fr=Passage de la Comète de Halley. En 1705 Edmond Halley prédit, en utilisant les lois nouvellement formulées de la mécanique céleste de Newton, que la comète vue en 1531, 1607, et en 1682 retournerait en 1758 (ce qui fut, malheureusement, après sa mort). La comète est en effet retournée comme prévu et plus tard elle fut nommé en son honneur. La comète de Halley reviendra à l'intérieur du système solaire en l'an 2061;;;;
+
+
+16180307;;fr;;j;8;e;fr=Incendie du Palais de Justice de Paris. Longtemps demeure des rois de France, l'actuelle Conciergerie.;;;;
+
+16270512;;fr;;;8;e;fr=Duel entre le comte de Montmorency-Bouteville et le Baron de Beuvron.;;;;
+
+16390616;;fr;;p,q;9;e,p;fr=Révolte des va-nu-pieds en Normandie contre la gabelle.;;;;
+16430421;;fr;;j;9;e;fr=Baptême du Dauphin Louis, à Saint Germain.;;;;
+16480827;;fr;;j;9;e,p;fr=Journée des Barricades. Faisant suite à l'arrestation de Pierre Broussel (conseiller au parlement de Paris), le 26 août, la population de Paris se révolte. La régente décide de libérer Broussel.;;;;
+
+
+
+
+
+
+
+
+16860623;;fr;;;8;e;fr=Débarquement de trois ambassadeurs du roi de Siam, invité par Louis XIV, débarquent en grande pompe à Brest. L'une des principales artères de la ville prendra le nom de rue de Siam pour commémorer cet événement.;;;;
+
+17911129;;fr;;;8;e;fr=Décrêt contre les prêtres réfractaires refusant de prêter serment à la Constitution civile du clergé. C'est le cas de Pierre François PARIS recteur de Guignen que le maire Pierre René LEBASTARD de VILLENEUVE parvient à sauver. Vivement secoué par ces événements le recteur perd la raison;;;;
+
+17920819;17920824;fr;;r;8;e,p;fr=Soulèvement du Bocage bressuirais. La révolte éclata trop tôt mais aurait dû alerter les autorités sur les risques que leur politique anticatholique faisait courir au pays.;;;;
+
+17931005;;fr;;;8;e,g;fr=La Convention Nationale abolit "l'ère vulgaire" et institue le nouveau calendrier républicain.;;;;
+
+
+
+18160606;;fr;;;8;e;fr=Naufrage de la Méduse (frégate française) au large des côtes de Mauritanie. Il y eut 160 morts dont 137 personnes abandonnées sur un radeau de fortune. Objet du tableau de Géricault : Le Radeau de La Méduse.;;;;
+
+
+
+18311121;18311122;fr;;v;4;s;fr=Révolte des canuts (ouvriers de la soie) à Lyon (les patrons refusent d'établir un salaire minimal). 40.000 ouvriers en arme, 20.000 soldats. On comptera 171 civils tués, 170 soldats tués, et 600 arrestations.;;;;
+
+
+
+
+18550515;18551115;fr;;j;7;e,s;fr=Première Exposition Universelle à Paris, ''Exposition universelle des produits de l'agriculture, de l'industrie et des beaux-arts'', en réplique à celle de Londres de 1851.;;;;
+
+
+
+18670401;18671030;fr;;j;7;e,s;fr=Deuxième Exposition Universelle de Paris, '' Exposition universelle d'Art et d'industrie''.;;;;
+1868;;fr;;e,v;8;e;fr=Le paysagiste Denis Bühler qui a dessiné les parcs de la Tête d'Or à Lyon et Oberthür à Rennes, remodèle le parc du Thabor à Rennes avec les 6 hectares de l'ancien verger des moines de l'abbaye Saint-Melaine.;;;;
+18710122;;fr;;j;4;e,p;fr=Émeutes à Paris.;;;;
+1873;;fr;;r;8;e;fr=Léon Gambetta séjourne à La Baule.;;;;
+
+
+18780520;18781110;fr;;j;7;e,s;fr=Troisième Exposition Universelle à Paris, ''Exposition des nouvelles technologies''. ;;;;
+
+
+
+18890505;18891031;fr;;j;7;e;fr=Exposition Universelle ''Commémoration du centenaire de la révolution française'' (pour cette raison politique, elle fut boudée très officiellement par toutes les monarchies européennes).  L’architecture métallique avec le Palais des Machines et la tour Eiffel  fut le caractère prédominant de cette exposition.;;;;
+
+
+
+
+19000405;19001112;fr;;j;7;e,s;fr=Exposition universelle et internationale de Paris. Bilan d'un siècle.;;;;
+
+
+19070608;;fr;;j;8;e,s;fr=L’exposition coloniale. Cinq villages sont reconstitués au bois de Vincennes (Indochine, Madagascar, Congo, Soudan, Tunisie, Maroc, les grandes possession de l'empire français). Des indigénes avaient été amenés pour parfaire l'animation (des locaux à qui on avait proposé un contrat et un salaire pour venir en France habiter ces villages sensés montrer ''comment l'on vit là-bas'').;;;;
+
+
+
+
+
+19310506;;fr;;j;8;e,s;fr=L’Exposition coloniale internationale de Vincennes, inaugurée par le président Gaston Doumergue et le Maréchal Lyautey. En six mois, trente-trois millions quatre-cent quatre-vingt-dix mille visiteurs.;;;;
+
+19320212;;fr;;;7;e;fr=Arrivée à Pékin de la Croisière Jaune.;;;;
+19350505;;fr;;r;8;e;fr=Voyage inaugural du paquebot Normandie, 313 mètres de long pour 2000 passagers. Il a été construit à Saint-Nazaire.;;;;
+1937;;fr;;;9;e;fr=La Gendarmerie nationale abandonne le cheval pour la bicyclette;;;;
+19370525;19371125;fr;;j;8;e,s;fr=Exposition internationale des arts et techniques dans la vie moderne.;;;;
+1938;;fr;;r;8;e;fr=Comblement de deux bras de la Loire à Nantes afin d'améliorer la circulation urbaine. Ipso-facto l'île Feydeau accède au titre d'île honoraire.;;;;
+
+
+19540124;;fr;;e,j;9;e;fr=Feu Follet X, drivé par Maurice Riaud de Pipriac, remporte le Prix d'Amérique à Vincennes.;;;;
+
+
+
+1965069;;fr;;;8;e;fr=Michel Jazy bat le record du miles (1609 m) en 3 minutes 53 secondes et 6 dixièmes au stade de Courtemanche à Rennes.;;;;
+
+196805;;fr;;;8;e,s,p;fr=Événements de mai 68.;;;;
+19690721;;fr;;;8;e;fr=Premiers pas sur la lune.;;;;
+196912;;fr;;j;8;e,s;fr=Inauguration de la première ligne de RER (Nation-Boissy Saint-Léger).;;;;
+196912;;fr;;;8;e,p;fr=Abandon par la France de la filière graphite-gaz pour la filière nucléaire.;;;;
+19700702;;fr;;;8;e;fr=Déclaration de Georges Pompidou à propos de l'ORTF: « l'information doit être libre...indépendante...et impartiale ». Il rappelle aux journalistes de l’ORTF que leur parole « engage la France ».;;;;
+19710623;;fr;;;8;e;fr=Les six pays membres de la Communauté économique européenne (Allemagne, Belgique, Pays-Bas, Italie, France, Luxembourg) acceptent l'adhésion du Royaume-Uni.;;;;
+19730825;;fr;;n,k;8;e;fr=Manifestations d'écologistes, d'antimilitaristes et de régionalistes pour s'opposer à l'extension du terrain militaire du Larzac.;;;;
+
+
+198103;;fr;;;8;e;fr=Sortie du ZX81, premier ordinateur personnel.;;;;
+
+19721128;;fr;;;8;e;fr=Suite au refus de la grâce présidentielle, exécution de Roger Bontems.;;;;
+19721031;;fr;;;8;e,s;fr=Création de la troisième chaîne de télévision.;;;;
+19731017;;fr;;;8;e;fr=Premier choc pétrolier causé par la décision des pays de l'OPEP d'augmenter considérablement le prix du pétrole brut et de frapper d'embargo les alliés d'Israël suite au déclenchement de la guerre du Kippour. La France, non concernée par l'embargo, se rend compte de sa dépendance énergétique.;;;;
+19730425;;fr;;j;8;e,s;fr=Inauguration du périphérique parisien.;;;;
+19731204;;fr;;;8;e;fr=Un journaliste du Canard enchaîné découvre des agents des renseignements généraux déguisés en plombiers en train de placer des micros dans leurs nouveaux locaux.;;;;
+19731222;;fr;;;8;e;fr=Les pays arabes diminuent de 25 % les exportations de pétrole et augmentent le prix du baril de 17 %. Le prix du baril brut de pétrole passe de 5,092 $ à 11,651 $. La facture française passera de 17 à 123 milliards de francs.;;;;
+19740308;;fr;;j;8;e;fr=Inauguration de l'aéroport Roissy-Charles de Gaulle.;;;;
+
+19760328;;fr;;;9;e;fr=Remise en place de l'heure d'été abandonnée en 1940. On avance les montres d'une heure. On est en avance de deux heures sur le soleil;;;;
+19760415;;fr;;;8;e,p;fr=La construction du supergénérateur nucléaire nommé Superphénix est décidée.;;;;
+19771006;;fr;;;8;e,p;fr=Adoption de la loi informatique et libertés contre l'utilisation abusive des fichiers nominatifs informatiques.;;;;
+19780616;;fr;;;8;e,p;fr=Sommet économique du G7 à Bonn (Giulio Andreotti, Takeo Fukuda, Jimmy Carter, Helmut Schmidt et Valéry Giscard d'Estaing).;;;;
+19791010;;fr;;;8;e,p;fr=Début de l'affaire des diamants. Le Canard enchaîné, journal satirique, accuse le président de la République d'avoir reçu en cadeaux, lors de visites officielles de Bokassa 1er, Empereur déchu de Centre Afrique, des diamants pour une valeur estimée à un million de francs. La défense maladroite du président va accréditer ces informations et aura une influence négative sur sa campagne de réélection.;;;;
+19791030;;fr;;;8;e,p;fr=Le ministre du travail Robert Boulin, accusé par des lettres anonymes publiées par Le Canard enchaîné, d'avoir acquis une garrigue, de manière illégale, est retrouvé mort dans un étang de la forêt de Rambouillet. L'enquête n'a toujours pas permis d'aboutir à des conclusions définitives.;;;;
+198603;;fr;;;8;e;fr=Passage à proximité de la terre de la comète de Halley. Elle est connue depuis -467 et revient tous les 76 ans;;;;
+1991;;fr;;;8;e,i;fr=Début des téléphones portables (GSM).;;;;
+1994;;fr;;e,f;9;e;fr=La gare de triage de Rennes cesse ses activités au profit de celle de Saint-Pierre des Corps.;;;;
+
+
+
+
+
+1337;;fr;;;5;w;fr=Début de la guerre de Cent ans. Elle durera 116 ans;;;;
+
+1589;;fr;;;4;w;fr=Avec les guerres de la Ligue commence le démembrement du château de France;;;;
+15980413;;fr;;;1;w;fr=Henri IV signe l’Édit de Nantes. Ce texte marque la fin des guerres de religion après une série de huit conflits depuis 1562. C'est le symbole de l'instauration d'une tolérance entre les confessions catholique (majoritaire) et protestante.;;;;
+16010117;;fr;;v;4;w,p;fr=Traité de Lyon. Annexion par la France de La Bresse (de l'Ain) et du Bugey qui faisaient partie des États de Savoie.;;;;
+16110430;;fr;;;5;w;fr=Traité de Fontainebleau avec l'Espagne. Louis XIII épousera Anne d'Autriche et Élisabeth de France épousera le Prince des Asturies.;;;;
+16160503;;fr;;t;5;w;fr=Paix de Loudun entre le Roi et les princes.;;;;
+16190504;;fr;;;5;w;fr=Traité d'Angoulême entre Louis XIII et Marie de Médicis.;;;;
+16200807;;fr;;r;4;w,p;fr=Bataille des Ponts-de-Cé (Maine-et-Loire). Les partisans de la reine mère Marie de Médicis sont défaits par les troupes royales (partisans de Louis XIII). Bataille connue sous le nom des "Drôleries des Ponts-de-Cé" car les troupes de Marie de Médicis se présentent sans commandement sur le champ de bataille. L'armée royale n'eut plus qu'à disperser ses fantassins dans une "drôlerie" générale.;;;;
+16200810;;fr;;;5;w;fr=Paix d'Angers entre Louis XIII et la Reine Mère.;;;;
+16201108;;fr;;;4;w,p;fr=Bataille de la Montagne Blanche (près de Prague). C'est l'une des premières et des plus importantes de la guerre de Trente Ans.;;;;
+16210425;;fr;;;4;w,p;fr=Traité de Madrid dans lequel l'Espagne s'engage à restituer la Valteline (Alpes) aux Grisons (objet de conflit entre l'Espagne, Venise, les Grisons et la France).;;;;
+16220511;;fr;;t;5;w,p;fr=Prise de Royan par les troupes du Roi.;;;;
+16221019;;fr;;k;4;w;fr=Traité de Montpellier avec les protestants. Confirmation de l’Édit de Nantes (les protestants conservent la Rochelle et Montauban).;;;;
+16260205;;fr;;;5;w;fr=Une nouvelle paix est signée à Paris avec les protestants qui sont amnistiés mais qui doivent démolir leurs forts.;;;;
+16260502;;fr;;;5;w;fr=Traité de Monçon avec l'Espagne qui reconnaît à la France l'usage exclusif des passages de la Valteline.;;;;
+1627;1628;fr;;t;4;w,p;fr=Nouvelle guerre contre les huguenots. Sièges et prise de la Rochelle.;;;;
+16270721;;fr;;t;4;w,p;fr=Les anglais débarquent à l’Île de Ré. Ils se veulent les protecteurs des huguenots mais ils tenteront en vain de s'emparer de Fort Saint Martin.;;;;
+16280312;;fr;;t;5;w,p;fr=Richelieu tente, mais sans succès, un coup de force contre la porte Maubec de La Rochelle.;;;;
+16281028;;fr;;t;5;w;fr=La Rochelle capitule, douze notables vont s'agenouiller devant le Roi Louis XIII et lui demandent leur pardon.;;;;
+16281101;;fr;;t;5;w;fr=Entrée du Roi Louis XIII dans La Rochelle.;;;;
+16290306;;fr;;v;5;w,p;fr=Victoire du Pas de Suse (Savoie) contre les Piémontais et les Espagnols.;;;;
+16290419;;fr;;;5;w;fr=Ligue entre la France, la Savoie, le Pape et Mantoue contre les Habsbourg.;;;;
+16290527;;fr;;v;4;w,p;fr=Prise de Privas par Louis XIII (cité huguenote du Vivarais).;;;;
+16290628;;fr;;;4;w;fr=Édit de grâce d'Alès. Les protestants peuvent pratiquer leur religion en toute liberté mais n'ont plus le droit de tenir d'assemblée politique. De plus, ils perdent leurs places de sûreté.;;;;
+16300103;;fr;;;5;w;fr=Louis XIII et son frère, Gaston d'Orléans se réconcilient.;;;;
+16300323;;fr;;v;4;w,p;fr=Richelieu prend d'assaut Pignerol (savoyard) (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
+16300517;;fr;;v;4;w;fr=Louis XIII prend Chambéry puis conquiert la Savoie (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
+16300706;;fr;;v;4;w,p;fr=Traité secret de Turin (négociation : Mazarin). La Savoie donna Pignerol à la France contre Albe (mantouane) que Louis XIII paya 494.000 écus à Nevers  (Épisode de la Guerre de la Succession de Mantoue (1629-1632).;;;;
+16310123;;fr;;;5;w;fr=Traité de Bärwald avec le Roi de Suède.;;;;
+16310331;;fr;;;5;w;fr=Traité d'alliance avec le duc de Savoie.;;;;
+16330905;;fr;;;5;w,p;fr=Alliance de Francfort avec la Suède.;;;;
+16350208;;fr;;;5;w;fr=Traité de Paris avec la Hollande.;;;;
+16350428;;fr;;;5;w;fr=Traité de Compiègne avec la Suède.;;;;
+16350519;;fr;;;4;w;fr=Louis XIII déclare la guerre à l'Espagne (et donc à Philippe IV, frère de sa femme). C'est la guerre de Trente Ans, une suite de conflits armés qui ont déchiré l'Europe de 1618 à 1648. Elle se déroula principalement dans les territoires d'Europe centrale dépendant du Saint Empire romain germanique, mais impliqua la plupart des puissances continentales. Ses origines sont multiples, même si la principale est l'opposition religieuse et politique entre catholiques et protestants. Les traités qui suivirent la guerre de Trente Ans redessinèrent la carte de l'Europe en instaurant un nouvel équilibre des forces.).;;;;
+16350711;;fr;;;5;w;fr=Traité de Saint-Germain avec Bernard de Saxe-Weimar à qui la France confie la défense de l'Alsace.;;;;
+16351026;;fr;;;5;w;fr=Traité de Rivoli avec les ducs de Savoie, de Parme, de Modème et de Mantoue.;;;;
+16360815;;fr;;s;4;w;fr=Les espagnols prennent Corbie dans la Somme.;;;;
+16380315;;fr;;;5;w;fr=Traité de Hambourg avec la Suède contre l'Autriche.;;;;
+16400809;;fr;;o;4;w;fr=Prise d'Arras tenue par les espagnols, dont le siège avec débuté en juin.;;;;
+16401216;;fr;;;5;w;fr=Traité d'alliance entre la France et les Catalans révoltés contre Philippe IV d'Espagne.;;;;
+16420313;;fr;;;5;w;fr=Traité entre l'Espagne et Cinq-Mars allié au duc de Bouillon et soutenu par Gaston d'Orléans.;;;;
+16420929;;fr;;k;4;w;fr=Capitulation espagnole à Perpignan.;;;;
+16430519;;fr;;g;4;w,p;fr=Bataille de Rocroi (Ardennes). Suite au décès de Richelieu et le décès imminent de Louis XIII,le gouverneur espagnol en Hollande décide d'envahir la France. Il sera arrête dans sa progression à Rocroi par le duc d'Enghien (le futur grand Condé). ;;;;
+16481024;;fr;;m,a;4;w,p;fr=Traité de Westphalie. La France reçoit les Trois-Evéchés (Metz, Toul et Verdun), l'Alsace (sauf quelques villes comme Strasbourg) et Pignerol (Italie).;;;;
+16490208;;fr;;j;5;w;fr=Condé assiège Paris avec 12 000 hommes.;;;;
+16501005;;fr;;b;5;w,p;fr=Capitulation de Bordeaux assiégée par les troupes royales.;;;;
+16501215;;fr;;g;5;w,p;fr=Défaite de Turenne à Rethel contre l'armée royale. Celui-ci marchait vers Paris pour libérer les princes.;;;;
+16560716;;fr;;o;5;w,p;fr=Turenne est vaincu par Condé à Valenciennes.;;;;
+16590508;;fr;;;5;w,p;fr=Armistice avec l'Espagne. Fin d'un conflit datant de 1618 (guerre de trente ans) qui enflamma toute l'Europe et qui en 1635 opposa l'Espagne et la France sur la frontière Roussillonnaise;;;;
+16591107;;fr;;k,o,m;5;w,p;fr=Traité des Pyrénées. La France reçoit le Roussillon, la Cerdagne, l'Artois, le Duché de Bar ainsi que quelques places.;;;;
+16670626;;fr;;o;4;w,p;fr=Louis XIV prend Tournai. La ville est alors rattachée à la France jusqu'en 1709 par le traité d'Aix la Chapelle;;;;
+16680502;;fr;;i,o;4;w,p;fr=Traité d'Aix la Chapelle. L’Espagne récupère la Franche-Comté et la France obtient des villes des Pays-Bas, dont Tournai, Lille, Douai etc..;;;;
+16720406;;fr;;;5;w;fr=Début de la Guerre de Hollande.;;;;
+16770317;;fr;;o;4;w;fr=Louis XIV décide de prendre d'assaut, avec ses troupes, Valenciennes pour assurer ses frontières,.;;;;
+16770419;;fr;;o;4;w;fr=Louis XIV, qui veut assurer à jamais le repos de ses frontières, décide de prendre d'assaut avec ses troupes, Cambrai et Saint-Omer.;;;;
+16780810;16780917;fr;;o;5;w;fr=Traité de Nimègue entre la France, l’Espagne et les Provinces-Unies mettant fin à la guerre de Hollande. L’Espagne doit céder la Franche-Comté et échanger les enclaves du nord contre 12 villes dont Saint-Omer, Cambrai, Valenciennes et Maubeuge qui ferment les voies d’invasions de la France par le nord. ;;;;
+16790629;;fr;;;5;w,p;fr=Traité de Saint-Germain. La paix est signée entre la France, la Suède et le Brandebourg. La Suède récupère la Poméranie.;;;;
+16890116;;fr;;;5;w;fr=La France déclare la guerre à l’Espagne.;;;;
+16890517;;fr;;;5;w;fr=Guillaume III d'Orange déclare la guerre à la France suite à un incident naval. En décembre, la « Grande Alliance » contre la France rassemble l’Empire, les Provinces-Unies, l’Espagne, la Savoie et l’Angleterre.;;;;
+16930527;;fr;;;5;w,p;fr=Bataille de Lagos. La flotte Française (commandé par Tourville) intercepte au large de Lagos (côte portugaise), un convoi de navires marchands composé de plusieurs nations du fait de l'état de guerre (guerre de la Ligue d’Augsbourg) et escorté par la marine anglaise. L'attaque du convoi aura un grand retentissement, elle entraînera un désastre financier et une série de faillites à Londres. ;;;;
+16980719;;fr;;;5;w;fr=Traité d'amitié entre la France et la Suède.;;;;
+17070425;;fr;;;5;w,p;fr=Bataille d'Almanza dans le royaume de Valence (Espagne) où l'armée des alliés (Anglais,Portugais et Hollandais) fût défaite par celle des deux couronnes (Espagne et France). Cette bataille rendit son trône à Philippe V d'Espagne .;;;;
+17560501;;fr;;;5;w;fr=La France s'allie avec l'Autriche. C'est le traité de Jouy-en-Josas. Pour la première fois depuis 1498 la France s'allie avec la maison de Habsbourg.;;;;
+17580707;;fr;;;5;w;fr=L'armée Franco-Canadienne, placée sous le commandement du marquis de Montcalm et du Chevalier de Levis, remporte une victoire sur l'armée Anglo-américaine aux ordres du général Anglais Abercombry devant le Fort Ticonderoga, .;;;;
+17630210;;fr;;;4;w,p;fr=Signature du traité de Paris mettant fin à la guerre de Sept Ans. L’Angleterre est devenu la puissance coloniale majeure. La France perd toutes ses positions en Inde hormis les comptoirs.;;;;
+
+17650215;;fr;;;5;w,p;fr=Signature du traité d'Hubertsbourg entre la France, la Prusse, l'Autriche et les Princes Allemands.;;;;
+17920420;;fr;;;5;w,p;fr=Déclaration de guerre au roi de Bohême et de Hongrie (c'est à dire François II, neveu de Marie-Antoinette et fils de l'Empereur Léopold, mort le 1er mars).;;;;
+17930310;;fr;;r;4;w;fr=Début des guerres de Vendée (plusieurs révoltes lors du recensement pour la levée en masse des 300.000 hommes, notamment dans le Choletais et à Challans). Les guerres de Vendée et de la Chouannerie feront plus de 600.000 morts.;;;;
+17930311;;fr;;r;4;w;fr=Guerre de Vendée - Prise de Machecoul.;;;;
+17930313;;fr;;r;4;w;fr=Guerre de Vendée - Prise de Chemillé par Cathelineau (rejoint le lendemain par Stofflet).;;;;
+17930314;;fr;;r;4;w;fr=Guerre de Vendée - Prise de Cholet et de la Roche-sur-Yon par les Vendéens, ralliement de Charrette.;;;;
+17930315;;fr;;r;4;w;fr=Guerre de Vendée - Prise de la Roche Bernard et de Clisson.;;;;
+17930311;;fr;;r;4;w;fr=Guerre de Vendée - Conquête de Noirmoutier.;;;;
+179401;179407;fr;;r;4;w;fr=Guerre de Vendée - Passées de 5 à 12 les colonnes républicaines (colonnes infernales), pratiquent la terre brûlée et exécutent environ 160.000 civils.;;;;
+17960126;179604;fr;;r;4;w;fr=La ''deuxième guerre de Vendée''. Stofflet reprend les armes, il sera pris à Chemillé, puis exécuté ainsi que Charette qui n'avait jamais vraiment déposé les armes. Après la paix de La Jaunaie (17 février 1795), Charette va à son quartier général de Belleville, et dirige de nouvelles guérillas. Stofflet, brouillé avec lui, observe la paix qu'il a signée avec Hoche à Saint Florent le 17 mai 1795. Mais les agents du Capitaine d'Artois le contacteront à l'occasion du débarquement de Quiberon, et il se réconcilie avec Charette en septembre 1795.;;;;
+18041021;;fr;;;5;w;fr=Défaite de Trafalgar.;;;;
+18051202;;fr;;;5;w;fr=Victoire d'Austerlitz.;;;;
+18071027;;fr;;;4;w,p;fr=Traité de Fontainebleau. Le Portugal est partagé entre la France et l'Espagne.;;;;
+18001001;;fr;;;4;w;fr=Traité de Saint-Ildefonse : l'Espagne rend la Louisiane à la France en échange de Parme.;;;;
+18150618;;fr;;;5;w;fr=Napoléon qui avait attaqué en Belgique le 16 juin subit la défaite de Waterloo.;;;;
+18480222;18490224;fr;;j;4;w;fr=Un défilé de protestation, décidé par Louis Blanc et Ledru-Rollin, dégénère en insurrection. Louis-Philippe abdique, les émeutiers envahissent la Chambre, molestent la régente, et nomment un gouvernement provisoire. Un 2ème gouvernement se forme à l’Hôtel de ville, et à 20 heures le même jour, les deux gouvernements fusionnent et Lamartine proclame la République.;;;;
+18600324;;fr;;u,v;4;w,p;fr=Traité de Turin. La France reçoit la Savoie et le Comté de Nice.;;;;
+18700920;;fr;;;5;w,p;fr=Échec de la tentative de paix à Ferrières entre Jules Favre et Bismarck.;;;;
+18701104;;fr;;;5;w,p;fr=Échec de la tentative de paix à Versailles entre Thiers et Bismarck.;;;;
+18710226;;fr;;;5;w,p;fr=Adolphe Thiers nouvellement élu chef du Pouvoir exécutif, signe avec Bismarck les préliminaires de la Paix.;;;;
+18710403;;fr;;j;4;w,p;fr=Les Fédérés attaquent vers Versailles, mais sont arrêtes par le canon du Mont Valérien.;;;;
+18710404;;fr;;j;4;w,p;fr=Les Versaillais attaquent Neuilly, prennent Courbevoie et Châtillon.;;;;
+18710521;;fr;;j;4;w,p;fr=Les Versaillais entrent dans Paris par le bastion du Point du Jour.;;;;
+18710522;18710528;fr;;j;4;w,p;fr=C'est la "Semaine Sanglante". Paris est conquis rue par rue. La dernière barricade tombe le 28 mai Rue Ramponeau.;;;;
+19140802;;fr;;;4;s;fr=Le tocsin est sonné pour annoncer la mobilisation générale pour une guerre contre l'Allemagne, la revanche de la guerre de 1870. On estimait qu'elle ne durerait pas plus de 3 mois, elle durera 4 ans,;;;;
+19140803;;fr;;;4;w;fr=L’Allemagne déclare la guerre à la France.;;;;
+1917;;fr;;;4;w;fr=La voiture restaurant N° 2419D de la Compagnie des Wagons-lits est retirée de la ligne Paris-Rennes-Brest pour servir de quartier général au maréchal FOCH. C'est à son bord que sera signé l'armistice du 11/11/1918 dans la clairière de Rethondes près de Compiègne (60);;;;
+19181111;;fr;;;4;w;fr=La Guerre 14-18 prend fin. L’armistice de Rethondes est signé entre 5h20 et 5h30 du matin. Cessez-le-feu à 11h. (la France fut le pays le plus touché, sur 100 hommes actifs, 10,5 furent tués ou disparus).;;;;
+19190628;;fr;;;5;w;fr=Signature du Traité de Versailles.;;;;
+1966;;fr;;;5;w;fr=Retrait de la France du commandement militaire intégré de l'OTAN et expulsion des bases américaines du territoire.;;;;
+200904;;fr;;;5;w;fr=La France fait son retour dans le commandement intégré de l'OTAN.;;;;
+
+
+
+
+
+
+
+8690525;;fr;;;9;v;fr=Bretons et normands se font face à Avessac quand le roi de Bretagne, SALOMON, à la bonne idée de négocier le retrait de l'ennemi contre 500 vaches;;;;
+
+
+
+
+1173;;fr;;f;7;v;fr=Le roi d'Angleterre Henri II Plantagenet prend La Guerche;;;;
+
+
+1214;;fr;;e,o;7;v;fr=Trente-quatre familles bretonnes sont présentes à la bataille de Bouvines dont Armand d'Aubigné, Bernard de Bain, Hérard de Brain, Alain de Châteaugiron, Jean de Dol, Geffroy de Fougères, Guillaume de la Guerche, Pierre de Lohéac, Rodolphe de Montfort, Josselin de Rohan, Olivier de Tinténiac et André de Vitré;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+17810106;;fr;;;7;v;fr=La bataille de Jersey est la dernière tentative en date de la France pour s'emparer des Îles Anglo-Normandes;;;;
+
+17950216;;fr;;;7;v;fr=Les troupes des Républicains écrasent celle des Royalistes venues de Jerzey à Erquy;;;;
+1804;;fr;;p;7;v;fr=Guy de Thouars, régent du duché de Bretagne allié de Philippe Auguste, dévaste l'abbaye du Mont Saint-Michel;;;;
+
+
+
+
+
+
+19780519;;fr;;;7;v;fr=Le président envoie des troupes parachutistes à Kolwezi au Zaïre, afin de libérer les occidentaux pris en otage par des rebelles au gouvernement zaïrois.;;;;
+
+
+
+939;;fr;;e,p;7;f;fr=Les Bretons repoussent les Normands à Trans. Ils perdent dans la bataille le Cotentin, l'Avranchin ainsi les pays de Craon et de Mayenne;;;;
+1204;;fr;;;7;f,g;fr=Rattachement de la Normandie à la France;;;;
+1602;;fr;;j;7;f,s;fr=Fondation à Paris de l'hôpital de la Charité par Marie de Médicis.;;;;
+16080708;;fr;;;7;f;fr=Fondation de Québec par le Français Samuel Champlain.;;;;
+1615;;fr;;j;5;f;fr=Marie de Médicis fait commencer la construction du palais du Luxembourg.;;;;
+1627;;fr;;j;5;f;fr=Louis XIII commence la construction de Versailles, voulant avoir une résidence hygiènique.;;;;
+16350125;;fr;;;7;f;fr=Fondation de l'Académie Française.;;;;
+16400331;;fr;;;7;f;fr=Création d'une monnaie, le Louis d'or.;;;;
+
+17330311;;fr;;;6;f,s;fr=Gratuité des secours contre l'incendie;;;;
+1793;;fr;;;5;f,g;fr=Tous les mariages doivent avoir lieu à la maison commune (mairie);;;;
+1793;;fr;;;5;f,g,s;fr=Création du divorce;;;;
+17950407;;fr;;;5;f;fr=Mises en place du système des Poids et Mesures actuels. Inutile de dire que les boisseaux, toises, lieues, aunes, brasses, onces, arpents, liards, cordes, feuilletes et autres journaux cohabiteront encore quelques temps, de nos jours encore.;;;;
+17991213;;fr;;;7;f;fr=Constitution de l'An VIII : 3 Consuls : Bonaparte, Cambacérès, Lebrun.;;;;
+17991226;;fr;;;7;f;fr=Création du Conseil d’État.;;;;
+18000213;;fr;;;7;f;fr=Création de la Banque de France.;;;;
+18010519;;fr;;;7;f;fr=Création de la Légion d'Honneur.;;;;
+18030327;;fr;;;7;f;fr=Création du Franc Germinal à l'effigie de Bonaparte.;;;;
+18040226;;fr;;;9;f;fr=Napoléon décide de construire l'Arc de Triomphe.;;;;
+
+18070915;;fr;;;8;f;fr=Création du cadastre parcellaire par Napoléon I°. Les travaux d'édification dureront jusqu'en 1850.;;;;
+1808317;;fr;;;5;f,s;fr=Décret impérial qui assigne aux instituteurs d'apprendre à lire, écrire et compter aux élèves;;;;
+
+
+
+18420611;;fr;;;5;f;fr=Création du réseau des Chemins de Fer.;;;;
+18480226;;fr;;;9;f;fr=Création des Ateliers Nationaux.;;;;
+1848423;;fr;;;5;f,s;fr=Première élection au suffrage universel. Elle est réservé aux homme des plus de 20 ans qui doivent se rendre au chef lieu de canton.;;;;
+18480623;;fr;;;9;f;fr=Suppression des Ateliers Nationaux jugés trop coûteux.;;;;
+18521205;;fr;;;7;f;fr=Proclamation de l'Empire à Guignen. Louis Napoléon BONAPARTE est empereur sous le titre de Napoléon III. Le maire Anne BOUTIN demande aux habitants au sortir de la messe de crier avec lui 'Vive l'Empereur' ce que ces républicains de la veille font sans sourciller.;;;;
+18530620;;fr;;;7;f;fr=Circulaire prescrivant un bornage kilométrique uniforme des routes réalisé en pierre dure ou en bois de chêne traité au sulfate de cuivre.;;;;
+18621118;;fr;;;7;f;fr=Début du percement de l'isthme de Suez.;;;;
+1866;;fr;;;7;f;fr=Organisation du Certificat d'Études;;;;
+18670410;;fr;;;7;f;fr=Les communes de plus de 500 habitants doivent avoir et entretenir une école publique de filles.;;;;
+18691117;;fr;;;7;f;fr=Inauguration du Canal de Suez.;;;;
+1877318;;fr;;;5;f,g;fr=Création du livret de famille;;;;
+18790131;;fr;;;5;f,s;fr=Le 14 juillet devient fête nationale, et la Marseillaise, hymne national.;;;;
+18810616;;fr;;;5;f;fr=Création du Brevet Élémentaire;;;;
+18810616;;fr;;;5;f,s;fr=Vote des Lois scolaires (gratuité et caractère obligatoire de l'enseignement primaire, création des écoles normales d'instituteurs).;;;;
+18810729;;fr;;;5;f,s;fr=Liberté de réunion et de la Presse.;;;;
+18820328;;fr;;;5;f,s;fr=Laïcité de l'enseignement.;;;;
+18840322;;fr;;;5;f,s;fr=Liberté syndicale.;;;;
+18840727;;fr;;;5;f,g,s;fr=Rétablissement du divorce.;;;;
+19130810;;fr;;;6;f,s,g;fr=Le service militaire est fixé à 3 ans.;;;;
+19160430;;fr;;;9;f;fr=Date limite d'envoi de la première déclaration de revenus;;;;
+19161021;;fr;;;9;f;fr=Décret autorisant les militaires à couper leur moustache obligatoire jusqu'à cette date;;;;
+1926;;fr;;;9;f;fr=Première édition du Guide Vert Michelin (À l'époque il est rouge). Il est consacré à la Bretagne;;;;
+19270412;;fr;;;9;f;fr=Instauration de la priorité à droite sur le réseau routier français;;;;
+19331107;;fr;;;9;f,e;fr=Loterie Nationale: 1er tirage.;;;;
+19350426;;fr;;;9;f,e;fr=Première émission de la télévision nationale, une conférence de la comédienne Béatrice BRETTY.;;;;
+19360611;;fr;;;8;f,e;fr=Loi sur les congés payés (15 jours). Contre toute attente c'est le début du déclin passager de la station de Dinard délaissée par les touristes fortunés au profit de la Cote d'Azur.;;;;
+19440421;;fr;;;5;f,s;fr=Le droit de vote est accordé aux femmes en France par le Comité français de la Libération nationale, confirmé par l’ordonnance du 5 octobre sous le Gouvernement provisoire de la République française, mais il n'est utilisé que le 29 avril 1945 pour les élections municipales, puis en octobre pour les élections à l’Assemblée constituante. ;;;;
+19530307;;fr;;;7;f;fr=Décret d'organisation du corps des sapeurs-pompiers.;;;;
+1956;;fr;;;7;f;fr=Création de la Carte National d'Identité;;;;
+19570303;;fr;;;8;f;fr=La Loire Inférieure devient Loire Atlantique;;;;
+19600101;;fr;;;6;f,s;fr=Passage au Nouveau Franc.;;;;
+19621005;;fr;;;5;f,p,s;fr=Élection du président de la République au suffrage universel direct.;;;;
+
+1965;;fr;;;7;f;fr=La messe en français est officiellement autorisée;;;;
+
+1969;;fr;;;8;f,s;fr=Mixité de l'école communale.;;;;
+19700702;;fr;;;7;f;fr=Fusion des trois constructeurs aéronautiques publics français (Sud-Aviation, Nord-Aviation et SEREB) pour former la Société nationale industrielle aérospatiale (SNIAS ou « Aérospatiale »). Celle-ci s'associe la même année avec l'allemand Deutsche Airbus pour créer le consortium (sous forme de GIE) Airbus.;;;;
+19720423;;fr;;;7;f;fr=Référendum pour la ratification du traité d'adhésion aux Communautés européennes du Danemark, de l'Irlande, de la Norvège et du Royaume-Uni (Oui: 68,3 % . Abstentions: 40 %).;;;;
+19720424;;fr;;;7;f;fr=Création du Serpent monétaire européen.;;;;
+197301;;fr;;;7;f;fr=La CEE devient l’Europe des 9 (Allemagne, Belgique, Danemark, Pays-Bas, Irlande, Italie, France, Luxembourg, Royaume-Uni). Le peuple norvégien rejette par référendum cette adhésion.;;;;
+19730315;;fr;;;7;f;fr=Création du Service central de la sûreté des installations nucléaires (SCSIN). Mise en service à Marcoule de Phénix, première centrale française à neutrons rapides.;;;;
+19740628;;fr;;;7;f,s,g;fr=Vote de la loi fixant la majorité civile à 18 ans.;;;;
+19760429;;fr;;;7;f;fr=Fondation de la COGEMA (Compagnie Générale des Matières Nucléaires) et de l'Institut de protection et de sûreté nucléaire (IPSN).;;;;
+19770627;;fr;;;7;f,g;fr=Le territoire français des Afars et des Issars accède à l'indépendance.;;;;
+19781205;;fr;;;7;f,p;fr=Accord sur le Système monétaire européen (SME) qui établit un système de taux de change stable et ajustable entre les pays membres de la Communauté économique européenne.;;;;
+19790313;;fr;;;7;f;fr=Création de l'ECU, l'unité de compte européenne.;;;;
+
+20020101;;fr;;;7;f,e;fr=Passage à la monnaie unique (Euro).;;;;
+
+
+
+
+
+
+
+
+
+1588509;;fr;;;5;p;fr=Le Duc de Guise entre dans Paris.;;;;
+1603903;;fr;;;5;p;fr=Édit de Rouen. Henri IV autorise les jésuites à se réinstaller dans le royaume.;;;;
+16051219;;fr;;;2;p;fr=Attentat d’un fou, Jacques des Isles, contre le roi Henri IV.;;;;
+160908;;fr;;;7;p,s;fr=Sully lève de nouveaux impôts impopulaires pour financer la guerre..;;;;
+16100527;;fr;;;8;p;fr=Supplice de Ravaillac qui a assassiné Henri IV.;;;;
+16100712;;fr;;;7;p;fr=Concini entre au Conseil des Finances.;;;;
+16101017;;fr;;g;6;p,e;fr=Sacre de Louis XIII à Reims.;;;;
+16100126;;fr;;;7;p;fr=Démission de Sully.;;;;
+16110126;;fr;;;3;p;fr=En désaccord avec la politique de Marie de Médicis, Sully démissionne de sa charge de surintendant des Finances. C'est Concini qui devient après son départ l'homme le plus influent du royaume.;;;;
+16131119;;fr;;;8;p;fr=Concini devient maréchal de France.;;;;
+16140515;;fr;;;7;p;fr=Traité de Sainte-Menehould. Suite à la révolte de la noblesse en avril (Condé, Longueville, Mayenne, Vendôme, etc...) la régente leurs promet  la convocation des états généraux et les couvre d'or.;;;;
+16141002;;fr;;;7;p;fr=Le Parlement proclame la majorité du Roi.;;;;
+16141027;16150223;fr;;;7;p;fr=Convocation des états généraux. ;;;;
+16160901;;fr;;;7;p;fr=Arrestation de Condé au Louvre.;;;;
+16161125;;fr;;;7;p;fr=Richelieu est nommé secrétaire d’État aux Affaires Étrangères.;;;;
+16190222;;fr;;;8;p;fr=Marie de Médicis s'enfuit de Blois.;;;;
+16191020;;fr;;;7;p;fr=Libération de Condé.;;;;
+16201014;;fr;;b;9;p;fr=Louis XIII entre dans Pau.;;;;
+16210427;;fr;;;8;p;fr=Le Roi Louis XIII annonce qu'il ne veut pas révoquer l’Édit de Nantes. Luynes est nommé connétable.;;;;
+16210625;;fr;;;8;p;fr=Capitulation protestante à Saint Jean d'Angély. Louis XIII avait repris sa lutte en mai contre les protestants.;;;;
+16220905;;fr;;;6;p;fr=Richelieu est nommé Cardinal, grâce à la réconciliation de Marie de Médicis avec le roi.;;;;
+16240429;;fr;;;7;p;fr=Richelieu entre au Conseil du Roi.;;;;
+16240813;;fr;;;4;p;fr=Richelieu fait arrêter La Vieuville (qui présidait le Conseil du Roi) et devient chef du Conseil. Programme : éliminer le protestantisme français, mettre au pas la haute noblesse, lutter contre les Habsbourg d'Espagne et d'Autriche.;;;;
+16260206;;fr;;;7;p;fr=Édit du Roi Louis XIII contre les duels.;;;;
+16301110;;fr;;;8;p;fr=Journée des Dupes. Marie de Médicis obtient de Louis XIII, malade, le renvoi de Richelieu, mais Louis XIII change d'avis et exile Marie de Médicis à Compiègne.;;;;
+16310130;;fr;;;8;p;fr=Gaston d'Orléans quitte le Royaume.;;;;
+16310719;;fr;;;8;p;fr=Marie de Médicis, bannie de la cour, s'enfuit à Bruxelles, où elle vécut dans un état voisin de la misère.;;;;
+16320611;;fr;;k;8;p;fr=Gaston d'Orléans rentre en France, obtient l'aide d'Henri, 4ème Duc de Montmorency et avec 3.000 cavaliers allemands, ils veulent prendre le Languedoc. Ils seront battus à Castelnaudary le 1er septembre 1632 par Schomberg (Montmorency sera exécute le 27 octobre 1632).;;;;
+16321106;;fr;;;8;p;fr=Gaston d'Orléans après sa défaite de Castelnaudary s'enfuit à Bruxelles.;;;;
+16330225;;fr;;;8;p;fr=Arrestation de Chateauneuf, garde des Sceaux qui a conspiré contre Richelieu.;;;;
+16330925;;fr;;m ;8;p;fr=Entrée de Louis XIII à Nancy. Charles IV de Lorraine est dépossédé de ses États.;;;;
+16371210;;fr;;;9;p;fr=Exil du père Caussin, confesseur du roi Louis XIII, qui blâmait la politique de Richelieu.;;;;
+16380210;;fr;;;8;p;fr=Vœu de Louis XIII consacrant la France à Dieu.;;;;
+16410221;;fr;;;8;p;fr=Édit limitant le droit de remontrance du parlement.;;;;
+16420613;;fr;;k;8;p;fr=Arrestation de Cinq-Mars qui est incarcéré dans la citadelle de Montpellier.;;;;
+16421205;;fr;;;5;p;fr=Mazarin entre au Conseil du Roi (Louis XIII).;;;;
+16430420;;fr;;;7;p;fr=Déclaration du roi sur la future Régence qui est confiée à un conseil de sept membres.;;;;
+16430518;;fr;;;5;p;fr=Lit de justice où le parlement casse le testament de Louis XIII. La régente Anne d'Autriche, reçoit l'autorité suprême jusqu'à la majorité de son fils.;;;;
+16440915;;fr;;;5;p;fr=Début du pontificat d'Innocent X, Giovanni Battista Pamphiij (italien). Il est élu contre la volonté de Mazarin.;;;;
+16450907;;fr;;;8;p;fr=Lit de justice ordonnant au parlement l'enregistrement des édits.;;;;
+16460922;;fr;;j;8;p,s;fr=Édit du tarif, fixant une taxe sur les marchandises entrant dans Paris.;;;;
+16461226;;fr;;;9;p;fr=A la mort de son père, le duc d'Enghien devient prince de Condé.;;;;
+16480115;;fr;;;9;p;fr=Lors du lit de justice, Omer Talon, avocat général au parlement de Paris, condamne la politique menée par la monarchie.;;;;
+16480430;;fr;;;9;p;fr=Déclaration de renouvellement de la paulette (taxe annuelle payée par les magistrats et qui leur garantit la propriété de leur charge).;;;;
+16480616;;fr;;;7;p;fr=Réunion de la "Chambre de Saint-Louis" qui élabore 27 articles (diminution des tailles, contrôle des dépenses de l’État, suppression des collecteurs d'impôts, etc...).;;;;
+16480731;;fr;;;7;p;fr=Déclaration royale approuvant certains des 27 articles élaborés lors de la réunion de la "Chambre de Saint-Louis", le 16 juin dernier.;;;;
+16481022;;fr;;;8;p;fr=Signature par Anne d'Autriche de la déclaration royale qui reconnaît les articles de la Chambre de Saint Louis.;;;;
+16490818;;fr;;j;5;p;fr=Entrée triomphale du roi à Paris. La cour regagne le Palais-Royal. Condé, déçu de ne pas avoir la place de Mazarin rejoint la Fronde des Princes.;;;;
+16500118;;fr;;;8;p;fr=Arrestation de Condé, Longueville et Conti sur ordre du roi.;;;;
+16510207;;fr;;;6;p;fr=Fuite de Mazarin hors de Paris.;;;;
+16510213;;fr;;;6;p;fr=Libération des princes et exil de Mazarin.;;;;
+16510907;;fr;;;5;p;fr=Louis XIV est déclaré majeur.;;;;
+16521021;;fr;;;1;p;fr=Louis XIV et Anne d'Autriche rentrent dans Paris pacifié. Escorté d'une véritable armée. Le roi s'installe au Louvre. Trois jours après Louis XIV fait défense au Parlement de s'occuper des affaires générales de l'Etat.;;;;
+16521113;;fr;;;5;p;fr=Condé et Conti sont déclarés par le roi coupable de lèse-majesté.;;;;
+16530203;;fr;;;7;p;fr=Retour de Mazarin à Paris.;;;;
+16530710;;fr;;;7;p;fr=Enregistrement de la bulle pontificale Augustinus, condamnant le jansénisme.;;;;
+16540607;;fr;;g;4;p,e;fr=Sacre de Louis XIV à Reims.;;;;
+
+16551103;;fr;;;5;p;fr=La France conclût une entente commerciale avec l'Angleterre.;;;;
+16570526;;fr;;;7;p;fr=Louis XIV, roi de France, brigue la couronne d'empereur du Saint-Empire romain germanique, en faisant officiellement acte de candidature, mais c'est le candidat germanique - Léopold de Habsbourg - qui sera élu, après avoir accepté de signer les conditions définies par les électeurs, le 18 juillet 1658.;;;;
+16600127;;fr;;;5;p;fr=Soumission de Condé devant le roi Louis XIV. Condé reçoit l'absolution de ses fautes et récupère ses biens et ses titres.;;;;
+16600826;;fr;;j;6;p,e;fr=Entrée solennelle de Louis XIV et Marie-Thérèse d'Autriche à Paris.;;;;
+16610817;;fr;;;8;p;fr=Fouquet reçoit fastueusement Louis XIV au Château de Vaux le Vicomte.;;;;
+16610905;;fr;;r;8;p;fr=Louis XIV fait arrêter Fouquet à Nantes par d'Artagnan.;;;;
+16621027;;fr;;o;8;p;fr=Rachat de Dunkerque aux Anglais.;;;;
+16630728;;fr;;u;8;p;fr=Le parlement d’Aix-en-Provence décide l’annexion d'Avignon et du Comtat au royaume de France en représailles de l’incident du 20 août 1662.;;;;
+16641230;;fr;;;8;p;fr=Le surintendant Fouquet est condamné pour abus, malversations, et lèse-majesté, au bannissement et à la confiscation de ses biens. Louis XIV transforme le bannissement en prison perpétuelle. Fouquet sera interné à la forteresse de Pignerol, où il mourra.;;;;
+16670620;;fr;;;5;p;fr=Début du pontificat de Clément XI, Giulio Rospigliosi (italien).;;;;
+16690307;;fr;;;4;p;fr=Jean-Baptiste Colbert devient secrétaire d'État de la Marine. Réorganisation de la marine française, qui comprend seulement 600 vaisseaux.;;;;
+16740927;;fr;;;7;p,s;fr=Le roi se réserve le monopole de la vente du tabac.;;;;
+16760921;;fr;;;5;p;fr=Début du pontificat d'Innocent XI, Benedetto Odescalchi (italien).;;;;
+16820409;;fr;;;4;p;fr=Cavelier de la Salle prend possession de la Louisiane au nom de la France.;;;;
+16820506;;fr;;j;5;p,e;fr=Louis XIV s’installe à Versailles.;;;;
+16851018;;fr;;;3;p,w,e;fr=Révocation de l’Édit de Nantes par le Roi Louis XIV en son château de Fontainebleau. Cet édit avait été signé par son grand-père, le Roi Henri IV le 30 avril 1598 à Nantes. Ce texte marquait la fin des guerres de religion, et visait à "l'établissement d'une bonne paix et tranquille repos" selon les termes du Roi lui-même. C'était la première fois qu'était officialisée dans un même État, la coexistence de protestants et de catholiques. Louis XIV se voulait le champion du catholicisme. Avec cette révocation (Édit de Fontainebleau), le Roi supprime ce qui reste de tolérance religieuse héritée de Henri IV.;;;;
+16880802;;fr;;u;6;p;fr=Avignon et le Comtat sont réunis au royaume de France.;;;;
+16910712;;fr;;;6;p;fr=Début du pontificat d'Innocent XII, Antonio Pignatelli (italien). Pape dévot et charitable, il réconciliera le Vatican avec Louis XIV et l’Église de France.;;;;
+17000917;;fr;;u;9;p;fr=Marie-Louise Gabrielle de Savoie, nièce de Louis XIV, en route pour l' Espagne, où elle doit épouser Philippe V, petit-fils du Roi-soleil, s'arrête une journée à Sospel, près de Nice.;;;;
+17001123;;fr;;;5;p;fr=Début du pontificat de Clément XI, Gianfrancesco Albani (italien).;;;;
+17150902;;fr;;;4;p;fr=Le testament de Louis XIV organisant la régence pour son arrière petit fils, Louis XV (5 ans) est lu en public. Philippe d'Orléans s'impose en face de son rival, le duc du Maine (fils légitimé de Louis XIV), le 12 septembre suivant, le Parlement casse le testament et confie la régence à Philippe d'Orléans, en échange, il retrouve le droit de remontrance. Philippe d'Orléans de 1715 à 1718 va gouverner au moyen de conseils délibératifs.;;;;
+17231203;;fr;;;5;p;fr=Le Duc de Bourbon (Louis Henri de Condé) devient 1er ministre à la mort du Régent (Philippe d'Orléans), sa maîtresse, la Marquise de Prie, gouverne en son nom : elle confie les finances à Joseph Pâris-Duverney, banquier partisan des dévaluations monétaires.;;;;
+17260611;;fr;;;5;p;fr=Disgrâce de Bourbon (exil de Pâris-Duverney et de Madame de Prie).;;;;
+17260615;;fr;;;5;p;fr=L’abbé Fleury à l'age de 73 ans, entre au Conseil. Il sera nommé Cardinal le 20 août suivant, présidera le Conseil d'office. Il va réussir à stabiliser le cours des monnaies.;;;;
+17370220;;fr;;;9;p;fr=Disgrâce de Chauvelin. Le maréchal de Belle-Isle devient le chef du parti anti-autriche.;;;;
+17511223;;fr;;;6;p;fr=Louis XV cède au Clergé qui  avait refusé, en 1750, de payer les 1.500.000 livres, contribution réclamée par Machault d'Arnouville au titre de l'impôt dit du vingtième (impôt sur tous les biens, même nobles).;;;;
+17570105;;fr;;;9;p;fr=Louis XV est blessé par Robert-François Damiens d'un coup de couteau à la poitrine. L'auteur de cette tentative d'assassinat sera écartelé le 28 mars suivant. Louis XV profitera de ce fait et prétextant d'avoir perdu l'affection de ses sujets, renverra ses deux ministres réformateurs, à savoir Machault d'Arnouville et d'Argenson.;;;;
+17581003;;fr;;;5;p;fr=Choiseul remplace Bernis aux Affaires Étrangères. Il sera premier ministre de fait, avec trois autres portefeuilles : les Postes le 28-06-1760, la Guerre le 27-01-1761 et la Marine le 13-10-1761.;;;;
+17610816;;fr;;;5;p;fr=Pacte de famille entre les Bourbons (France, Espagne, Naples, Parme). Cela réalise les vues de Louis XIV sur la succession d'Espagne (chaque État devient solidaire des trois autres).;;;;
+17620308;;fr;;n;9;p;fr=L'affaire Calas. Jean Calas, commerçant protestant de Toulouse, est déclaré coupable de la mort de son fils aîné qui se disposait à abjurer. Il est condamné à la torture et au supplice de la roue. Il sera exécuté le 9 mars. Son épouse sera acquittée. Jean Calas sera réhabilité le 9 mars 1765 à la suite d'une campagne de Voltaire, son fils s'était en réalité suicidé.;;;;
+17620401;;fr;;;7;p;fr=Le Parlement de Paris ferme les collèges des jésuites. En août on fermera la Communauté de Jésus au motif qu'elle est perverse, pernicieuse, séditieuse, attentatoire, etc... Les raisons réelles sont une alliance entre jansénistes (dévots, mais gallicans) et philosophes (irréligieux) contre les jésuites anti-gallicans, anti-jansénistes ("ultramontains").;;;;
+
+
+
+176803;176804;fr;;;9;p;fr=Début de la liaison de Louis XV avec Jeanne Bécu (future Comtesse du Barry).;;;;
+
+17701102;;fr;;;5;p;fr=Après avoir durant les mois de juillet et d'août 1770 sévît contre les parlementaires provinciaux, Louis XV supprime le pouvoir politique des parlements (l'édit est rédigé par le chancelier Maupeou le 23 octobre).;;;;
+17701123;;fr;;;8;p;fr=Disgrâce de Choiseul qui veut déclarer la guerre à l'Angleterre à propos de l'incident anglo-espagnol des Îles Malouines.;;;;
+17710103;;fr;;;7;p;fr=Ministère Maupeou (triumvirat), avec l'abbé Terray, contrôleur général des Finances, et le Duc d'Aiguillon, ministre des Affaires Étrangères.;;;;
+17710120;;fr;;;7;p;fr=Dispersion du Parlement de Paris.;;;;
+17710223;;fr;;;7;p;fr=Nomination d'un nouveau Parlement, dont les membres ne sont plus propriétaires de leur charge.;;;;
+17740512;;fr;;;8;p;fr=Exil de Madame du Barry.;;;;
+17740831;;fr;;;7;p;fr=Disgrâce de Maupeou, il est remplacé par Jean Phélypeaux de Maurepas, de la famille des Pontchartrain (Louis XVI avait choisi Jean-Baptiste Machault d'Arnouville, mais sa tante, Madame Adélaïde, l'a obligé à le changer), l'Abbé Terray est remplacé par Turgot, intendant de Limoges, et le duc d'Aiguillon, est remplacé par Vergennes, ambassadeur de Suède.;;;;
+17741112;;fr;;;5;p;fr=Annulation de la réforme judiciaire de Maupeou (en 1771), et rappel du Parlement de Paris (une des causes principales de la chute de la Monarchie).;;;;
+17741209;;fr;;;6;p;fr=Le Parlement adresse des remontrances au roi Louis XVI qui les accepte.;;;;
+17750721;;fr;;;8;p;fr=Malesherbes entre au gouvernement en tant que Ministre de la Maison du Roi.;;;;
+17750821;;fr;;;8;p;fr=Le Comte de Saint Germain devient Ministre de la Guerre.;;;;
+
+17760512;;fr;;;7;p;fr=Turgot, qui avait remplacé la corvée par une taxe additionnelle frappant les privilégiés, est disgracié sur intervention du Parlement. Malesherbes démissionne.;;;;
+17760811;;fr;;;7;p,s;fr=Clugny rétablit la corvée.;;;;
+17761022;;fr;;;7;p;fr=Necker remplace Clugny.;;;;
+17770629;;fr;;;7;p;fr=Necker, contrôleur des Finances, lance un emprunt de 600 millions de livres.;;;;
+1778;;fr;;f;7;p;fr=Necker établit un mémoire secret au Roi : il faut créer, en pays d'élection, des assemblées régionales élues pour diminuer les pouvoirs des parlementaires (un premier essai aura lieu dans le Berry).;;;;
+17800227;;fr;;;7;p;fr=Constitution d'une ligue des Neutres qui reconnaît la liberté de navigation (avec l'appui de Vergennes et malgré l'hostilité anglaise).;;;;
+17810420;;fr;;;6;p;fr=Le Comte de Provence communique aux parlementaires le mémoire secret de Necker sur les assemblées provinciales. Necker doit faire face à une offensive du Président d'Aligre.;;;;
+17810519;;fr;;;7;p;fr=Suite à l'affaire du mémoire secret Necker, contrôleur des Finances est renvoyé. Calonne le remplace.;;;;
+1785;1786;fr;;;6;p;fr=Affaire du collier de la Reine. La Comtesse Jeanne de La Motte-Valois (1756-1791) persuade le cardinal de Rohan (1734-1803) qui voulait s'attirer les faveurs de la Reine Marie-Antoinette d'acheter à crédit un collier de 1.600.000 livres que Marie-Antoinette lui remboursera secrètement. Il remet le collier à un pseudo officier de Marie-Antoinette qui revend les diamants au détail. Les bijoutiers lui réclament la somme, mais comme il est insolvable, ils adressent la facture à la reine. Un procès a lieu devant le parlement de Paris. Jeanne de la Motte-Valois est condamnée à être fustigée de verges, marquée au fer et détenue à perpétuité à la Salpêtrière (elle s'en évade en 1787, et décédera à Londres en 1791). Le cardinal de Rohan acquitté est exilé par le roi. Cagliostro est acquitté, et Marie-Antoinette est déconsidérée.;;;;
+17870222;17870525;fr;;;6;p;fr=Réunion de l'Assemblée des Notables, réclamant l'enregistrement des réformes de Calonne par le Parlement.;;;;
+17870408;;fr;;;7;p;fr=Calonne est disgracié. Il est remplacé par Loménie de Brienne.;;;;
+17870806;;fr;;;7;p;fr=Le Roi fait enregistrer par lit de Justice la ''Subvention territoriale'' qui impose terres nobles et privilégiés. En juin le Parlement l'avait rejetée.;;;;
+17870814;;fr;;j;7;p;fr=Le Parlement qui a mis Calonne en accusation, est exilé à Troyes. Il s'en suit des émeutes à Paris.;;;;
+17870919;;fr;;;7;p;fr=Le Parlement est rappelé à Paris. Il fait une rentrée triomphale.;;;;
+17871119;;fr;;;7;p;fr=Louis XVI impose au Parlement, au cours d'une séance royale, d'enregistrer un nouvel emprunt de 420 millions de livres. Le duc d'Orléans prend publiquement parti contre Louis XVI.;;;;
+17880429;;fr;;;6;p;fr=Le Parlement réclame le partage des pouvoirs politiques entre le Roi, le Parlement et les États Généraux.;;;;
+17880705;;fr;;;6;p;fr=Le Roi annonce la convocation des États Généraux, sans précision de date.;;;;
+17890505;;fr;;;6;p;fr=Ouverture des États Généraux.;;;;
+17890617;;fr;;;3;p;fr=Le Tiers État se proclame Assemblée Nationale.;;;;
+17890620;;fr;;;1;p;fr=Le Serment du Jeu de Paume (le Tiers État jure de ne pas se séparer avant d'avoir pu donner une Constitution au Royaume).;;;;
+17890709;17911001;fr;;;1;p;fr=L’assemblée Nationale devient Constituante. Cette période pourrait être qualifiée de Monarchie non absolue.;;;;
+17890712;;fr;;j;6;p;fr=Des manifestations ont lieu à Paris. Les électeurs parisiens s'emparent de l'Hôtel de Ville et y installent le comité permanent de la Commune, qui décide de prendre les gardes français comme force armée. Necker est renvoyé. Il retrouvera sa fonction après la prise de la Bastille pour apaiser les révolutionnaires.;;;;
+17890714;;fr;;;0;p,w;fr=Prise de la Bastille.;;;;
+17890716;;fr;;j;3;p;fr=Création de la première Commune de Paris.;;;;
+17890720;17890806;fr;;s,r;2;p,v;fr=Grande Peur dans les campagnes, plusieurs centaines de châteaux pillés, notamment en Maine et Picardie.;;;;
+17890804;;fr;;;0;p;fr=Nuit du 4 Août, abolition des privilèges.;;;;
+17890826;;fr;;;0;p,f;fr=Déclaration des Droits de l'Homme et du Citoyen.;;;;
+17900115;;fr;;;4;p,f;fr=Division de la France en 83 départements.;;;;
+17900213;;fr;;;6;p;fr=Suppression des ordres religieux.;;;;
+17900315;;fr;;;6;p;fr=Suppression des droits seigneuriaux personnels.;;;;
+17900521;;fr;;j;4;p;fr=Création de la deuxième Commune de Paris (48 Sections remplaçant les 60 districts).;;;;
+17900712;;fr;;;3;p;fr=Constitution Civile du Clergé.;;;;
+17900904;;fr;;;6;p;fr=Necker démissionne s'estimant incapable de maintenir l'ordre dans la rue (les gardes nationaux, membres des Sections en armes, y font la loi).;;;;
+17901126;;fr;;;4;p;fr=L'assemblée vote la Loi du Serment, obligeant les prêtres ayant un ministère à jurer la Constitution. Cette loi sera acceptée par Louis XVI le 26 décembre suivant.;;;;
+17910126;;fr;;r;4;p;fr=Mise en application de la Loi du Serment. La majorité des prêtres la refusent, notamment en Vendée (75%). Les "réfractaires" sont, en principe, révoqués et remplacés par des "jureurs" (mais ces derniers sont en nombre insuffisant).;;;;
+17910310;;fr;;;6;p;fr=Le Pape Pie VI condamne la Constitution Civile du clergé.;;;;
+17910531;;fr;;;6;p,s;fr=La torture est abolie, la guillotine adoptée.;;;;
+17910620;17910625;fr;;m ;1;p,e;fr=Fuite de Varennes. Le Roi, la Reine, leurs enfants et Fersen (amant de la Reine), s'enfuient vers la Lorraine, pour rejoindre les garnisons royalistes de Nancy. Cette fuite avait été combinée par Mercy d'Argenteau, ambassadeur d'Autriche, et exécutée par l'amant de la Reine, le Comte suédois Axel de Fersen.;;;;
+17910717;;fr;;j;1;p;fr=Massacre du Champ de Mars, La Fayette et Bailly, maire de Paris, font tirer sur des pétitionnaires, demandant le remplacement de Louis XVI (pétition rédigée par Danton).;;;;
+17910914;;fr;;u;8;p;fr=Avignon est annexé (Carpentras reste fidèle au pape et la guerre éclate entre les deux villes).;;;;
+17910914;;fr;;;5;p;fr=Louis XVI prête serment à la Constitution. Il est reconnu roi héréditaire.;;;;
+17910930;;fr;;;6;p;fr=Séparation de l'assemblée législative. Aucun de ses membres ne peut être un ancien constituant (les principaux orateurs de la Constituante deviennent orateurs des Clubs : Jacobins, Feuillants, Cordeliers).;;;;
+17911001;;fr;;;5;p;fr=Réunion des 745 députés de l'Assemblée législative : droite 160, centre 449, gauche 136. Cette période est le début de la Monarchie constitutionnelle entre le 01/10/1791 et le 10/08/1792.;;;;
+17911125;;fr;;;5;p;fr=Création du Comité de surveillance (futur Comité de sûreté générale).;;;;
+17911129;;fr;;;8;p;fr=Loi dite "du 1er Veto" contre les prêtres réfractaires (ils pourront être éloignés de leur commune en cas de troubles). Non sanctionnée par Louis XVI, elle est malgré tout envoyée par la Législative dans les départements et appliquée localement. Les clubs mènent campagne contre le droit de veto.;;;;
+17920101;;fr;;;8;p;fr=Décret d'accusation contre les princes émigrés.;;;;
+17920209;;fr;;;8;p;fr=Les biens des émigrés sont déclarés biens nationaux.;;;;
+17920425;;fr;;j;8;p,e;fr=Première guillotine place de Grève.;;;;
+17920527;;fr;;;8;p;fr=Loi du 2ème Veto. (ou décret Guadet) contre les prêtres réfractaires (ils pourront être déportés hors du royaume sur plainte de 20 citoyens actifs). Louis XVI met son veto, mais le décret est appliqué malgré tout dans 53 départements sur 83.;;;;
+17920608;;fr;;j;8;p;fr=Décret du ministre de la guerre, Servan, ordonnant la formation d'un camp de 20.000 hommes près de Paris.;;;;
+17920609;17920611;fr;;;8;p;fr=Pétition des Huit Mille. Tentative d'utiliser contre la gauche l'intervention des pétitionnaires (8.000 gardes nationaux parisiens, modérés, viennent protester contre le camp de 20.000 "brigands") : s'appuyant sur eux, Louis XVI, qui a mis son veto, renvoie Servan.;;;;
+17920620;;fr;;j;2;p;fr=Les Tuileries sont envahies par les Sections, qui protestent contre le veto royal (contre la loi du 2ème veto ou décret Guadet). La famille royale est molestée, le futur conventionnel Louis Legendre coiffe Louis XVI d'un bonnet rouge.;;;;
+17920707;;fr;;;9;p;fr=Baiser Lamourette à l'Assemblée législative. Après un discours d'Adrien Lamourette (évêque constitutionnel, guillotiné le 11 janvier 1794), les députés se réconcilient et s'embrassent. Leur réconciliation ne durera que une journée.;;;;
+17920711;;fr;;;6;p;fr=Décret proclamant la patrie en danger.;;;;
+17920801;;fr;;;7;p;fr=Publication à Paris du "manifeste de Brunswick. Maladroit, il provoque la colère des sectionnaires parisiens.;;;;
+17920810;;fr;;j;3;p;fr=Danton, substitut du procureur de la commune légale de Paris, et agissant comme chef d'une commune insurrectionnelle de Paris (le maire, Pétion, demeurant caché), fait prendre d'assaut les Tuileries par la section du Faubourg Saint Antoine. Les Palais est défendu par 1.100 suisses, 2.000 gardes nationaux (en partie gagnés aux Républicains), 900 gendarmes en artillerie (peu sûrs), et 150 gentilshommes volontaires (sur 2.000 convoqués). Pour désorganiser la défense, Danton convoque le commandant (marquis de Mandat) à l'Hôtel de Ville et le fait exécuter. L'assaut commence à 9h. Louis XVI donne immédiatement l'ordre aux Suisses de cesser le feu et de regagner leurs casernes (Courbevoie). En chemin , ils sont massacrés par les Républicains. Louis XVI est suspendu, puis enfermé au Temple avec sa famille.;;;;
+17920810;;fr;;;6;p;fr=Les 180 sectionnaires au pouvoir à l'Hôtel de Ville, depuis la veille, introduisent 108 membres supplémentaires (6 par sections) dont Robespierre, Hébert, Fouquier-Tinville. C'est le début de la Dictature de la Commune du 10/08/1792 au 21/09/1792.;;;;
+17920811;;fr;;;6;p;fr=La Législative remet les pouvoirs à un Conseil exécutif provisoire de 7 membres : Danton, à la fois substitut de la Commune et ministre de la Justice, y exerce tous les pouvoirs.;;;;
+17920816;;fr;;;6;p;fr=La commune érigée en assemblée souveraine, crée 6 comités exécutifs, dont le comité de surveillance (où Marat entrera le 2 septembre suivant) qui a des pouvoirs dictatoriaux. Il envoie des commissaires en province pour contacter les comités locaux.;;;;
+17920817;;fr;;j;6;p,e;fr=Création du Tribunal Criminel (Président : Robespierre, qui démissionne aussitôt), pour juger les crimes commis le 10 août dernier. La guillotine est dressée Place du Carrousel.;;;;
+17920820;;fr;;;8;p;fr=La Fayette quitte la France avec son état-major.;;;;
+17920826;;fr;;;8;p;fr=Bannissement des réfractaires.;;;;
+17920829;;fr;;;6;p;fr=Le Tribunal Criminel décrète perquisitions nocturnes à domicile et arrestations des suspects (il y aura environ 12.000 emprisonnements).;;;;
+17920830;;fr;;;8;p;fr=La Législative décrète la suppression de la commune, mais, menacée d'une insurrection par le procureur Manuel, elle retire son décret.;;;;
+17920831;;fr;;j;6;p,s;fr=La commune organise sur le Champ-de-Mars des levées de volontaires pour défendre Verdun (assiégé depuis le 29 août).;;;;
+17920902;17920906;fr;;j;4;p,v;fr=Les Massacres de Septembre, 50 % des tueurs sont des "volontaires" (soit parisiens, soit provinciaux, notamment marseillais), 50 % des "sectionnaires" (petite bourgeoisie parisienne). 3 raisons essentielles : 1) Les orléanistes veulent créer un effet de terreur, et ils choisissent de tuer des prisonniers. 2) Les ennemis de l’Église veulent l'extermination des prêtres non jureurs. 3) Les boutiquiers ou artisans croient à l'arrivée des prussiens, et ils veulent éliminer les pillards éventuels.;;;;
+17920921;;fr;;;3;p;fr=Fin de la Législative, entrée en fonction de la Convention. C'est ce qu'on a appelé la Convention Girondine - la 1er république va démarrer le lendemain. 200 Girondins (droite), 140 Montagnards (gauche (il y a une extrême gauche formée du triumvirat Claude Basire, François Chabot, et Antoine Merlin de Thionville)), 160 Centristes qui se rallieront aux Montagnards. Sur 749 Conventionnels, on compte 15 cultivateurs et un ouvrier. Dès la première séance, la proposition "la Royauté est abolie en France" est votée à l'unanimité.;;;;
+17921120;;fr;;;5;p;fr=Découverte de l'armoire de fer où Louis XVI gardait des papiers compromettants - correspondance avec Mirabeau, La Fayette, Talon, Dumouriez, etc....;;;;
+17921202;;fr;;;5;p;fr=Dissolution de la "commune des Sections". Pétion est remplacé par le girondin Chambon à la tête d'une "commune provisoire", formée de 12 commissaires (4ème commune).;;;;
+17921211;;fr;;;4;p;fr=Procès de Louis XVI, il prend comme avocats : François Tronchet, Guillaume de Malesherbes, et Romain de Sèze.;;;;
+17930117;;fr;;;4;p;fr=Louis XVI est condamné à mort : 3 questions avaient été posées, 2 le 15 janvier : Louis Capet, ci-devant Roi des Français, est-il coupable de conspiration contre la liberté et d'attentat contre la sûreté de l’État ? Le jugement sera-t-il soumis à la ratification du peuple réuni dans les assemblées primaires ? Une question le 16 janvier : Peine ? (La mort a été votée à une majorité de 5 voix (en réalité 13 votes pour la mort étaient nuls).;;;;
+17930128;;fr;;;8;p;fr=Le Dauphin est proclamé roi (Louis XVII) par les émigrés (Comte de Provence, régent. Comte d'Artois, lieutenant général du Roi).;;;;
+17930406;;fr;;;6;p;fr=Établissement du Comité de Salut Public.;;;;
+17930531;17940402;fr;;;6;p;fr=Convention montagnarde.;;;;
+17930531;;fr;;;8;p;fr=Mise en accusation des brissotins (girondins). 30 députés (dont Brissot, Vergniaud, Pétion, Barbaroux, Lanjuinais) et 2 ministres (Lebrun et Clavières). 21 seront guillotinés le 31 octobre. 9 évadés dont Buzot, Barbaroux, Pétion, tentent de soulever la province et sont tués ou se suicident. Madame Roland sera guillotinée le 8 novembre, son mari se suicidera le 10 novembre suivant.;;;;
+17930801;;fr;;r;5;p;fr=Loi pour la répression en Vendée.;;;;
+17930801;;fr;;;7;p;fr=La Convention décide de détruire les sépultures royales à Saint Denis.;;;;
+17930917;;fr;;;6;p,s;fr=Loi des Suspects. Tous ceux qui doivent être considérés comme défavorables au régime nouveau, peuvent être arrêtés.;;;;
+17930927;;fr;;;8;p,s;fr=Loi du Maximum, fixant un prix plafond pour des produits courants autres que le grain : les hausses illicites sont punies de mort.;;;;
+17931001;;fr;;r;6;p;fr=Décret enjoignant d'exterminer les brigands de Vendée.;;;;
+17931014;;fr;;;6;p;fr=Procès de Marie-Antoinette. Avocats : Guillaume Tronson du Coudray, déporté en Guyane, et Claude Chauveau-Lagarde. Chefs d'accusation : 1) Manœuvres en faveur des ennemis extérieurs de la République, 2) Complot pour allumer la guerre civile.;;;;
+17931110;;fr;;;8;p;fr=Établissement du Culte de la Raison (ce culte n'est pas officiel, Robespierre n'y participe pas).;;;;
+17931119;;fr;;;6;p;fr=Les biens des accusés sont déclarés nationaux, même avant le procès pour empêcher les donations en vifs faites par les accusés sûrs d'être mis à mort.;;;;
+17940204;;fr;;;6;p,s;fr=L'esclavage est aboli dans les Colonies.;;;;
+17940215;;fr;;;6;p,f;fr=Adoption du pavillon de marine : bleu-blanc-rouge comme drapeau national.;;;;
+17940314;;fr;;;8;p;fr=Arrestation de 21 ultra-révolutionnaires ou hébertistes, du club des (nouveaux) Cordeliers (partisans de la Commune contre la Convention) : 19 exécutions le 24 mars dont Hébert et Cloots.;;;;
+17940402;17940727;fr;;;8;p;fr=Période appelée ''la Dictature de Robespierre''.;;;;
+17940402;;fr;;;8;p;fr=Arrestation des "dantonistes" ou "vieux Cordeliers" : Danton, Camille-Desmoulins, Hérault de Séchelles, etc... (exécutés le 4 avril).;;;;
+17940416;;fr;;j;8;p;fr=Un décret stipule qu'aucun noble ne peut habiter Paris.;;;;
+17940508;;fr;;;8;p;fr=Fête de l’Être Suprême, célébrée par Robespierre (la croyance a été décrétée le 7 mai).;;;;
+17940510;;fr;;j;8;p;fr=Nomination d'un nouveau maire de Paris (Fleuriot-Lescot), et d'une nouvelle municipalité entièrement robespierriste (la Commune perd son influence politique).;;;;
+17940522;;fr;;;8;p;fr=Attentat manqué d'Admirat Renault contre Robespierre et Collot d'Herbois.;;;;
+17940523;;fr;;;8;p;fr=Attentat manqué de Cécile Renault contre Robespierre.;;;;
+17940610;;fr;;s;4;p;fr=Loi de Prairial (22 prairial) : Elle permet d'exécuter tout accusé sans audition de témoin ou interrogatoire, sur simple preuve morale (1376 exécutions auront lieu en vertu de ce texte).;;;;
+17940727;;fr;;;3;p;fr=Attentat du 9 thermidor, anti-Robespierre. Les causes : 1) les abus de la loi de Prairial (les conventionnels ne sont eux-mêmes, même pas à l'abri), 2) le 8 thermidor, Robespierre a annoncé une nouvelle purge, menaçant notamment Tallien écroué depuis le 31 mais avec sa maîtresse, Teresa Cabarrus, Carnot, Fouché, Barras (mais il ne les nomme pas en public). Déroulement : le 9 thermidor, Robespierre, à 11 heures du matin, monte à la tribune pour désigner les épurés, les modérés avec Tallien l'empêchent de parler. Après 11 interruptions, 2 modérés , Louchet et Lozeau, demandent la mise en accusation de Robespierre, son frère, Couthon, Saint-Just, Lebas. 17h30 : les sections populaires (constituant la Commune révolutionnaire), se soulèvent en faveur de Robespierre et ses amis. Elles les libèrent et les transfèrent à l'Hôtel de Ville. 18h00 La Convention met Robespierre hors la loi (donc il peut être exécuté sans jugement). 23h les troupes d'Hanriot se dispersent à cause de la pluie, Barras occupe l'Hôtel de Ville. Robespierre a la mâchoire cassée d'un coup de pistolet, soit tiré par un gendarme, soit tentative de suicide.;;;;
+17940728;17940731;fr;;;5;p;fr=Robespierre et 103 robespierristes exécutés. C'est ce qu'on a appelé la Réaction Thermidorienne qui s'est déroulée du 28/07/1794 au 23/09/1795.;;;;
+17940821;;fr;;j;8;p,e;fr=Explosion de la poudrière de Grenelle, attribuée aux robespierristes (environ 400 morts).;;;;
+17940831;;fr;;j;8;p;fr=La Commune de Paris est remplacée par des commissions, dont le président est élu chaque mois.;;;;
+17941111;;fr;;;8;p;fr=Le Club des Jacobins est fermé. Les conventionnels jacobins forment le groupe des "crêtois" (ils siègent à la crête de la Montagne - extrême gauche).;;;;
+17950401;;fr;;j;8;p;fr=Journée de Germinal. Émeute jacobine fomentée par les crêtois. La foule envahit la Convention. Seuls les crêtois restent en séance, mais la salle est évacuée par la troupe, aidée des muscadins (sectionnaires royalistes). 20 crêtois sont arrêtés : Barrère, Vadier, Billaud-Varenne, Collot d'Herbois sont condamnés à la déportation en Guyane.;;;;
+17950520;17950522;fr;;j;8;p;fr=Deuxième émeute jacobine. Journée de Prairial : la foule s'empare de l'assemblée nationale le 20, met à mort le conventionnel Féraud, nomme Président le crêtois Soubrany, et une commission crêtoise qui amnistie les déportés de germinal (c'est cependant trop tard, ils ont embarqué à Oléron), le retour à la taxation, etc... Les soldats de Menou et Murat, appelés par Tallien, rétablissent l'ordre. 12 députés crêtois sont arrêtés.;;;;
+17950531;;fr;;;5;p;fr=Suppression du Tribunal Révolutionnaire (Fouquier-Tinville et 15 juges ont été guillotinés).;;;;
+17950923;17991109;fr;;;4;p;fr=Proclamation de la nouvelle Constitution, c'est le Directoire.;;;;
+17951005;;fr;;j;7;p;fr=Le 13 Vendémiaire les Sections royalistes et modérées de Paris se soulèvent. Dispersées au canon, devant l'église Saint-Roch, par Bonaparte, adjoint de Barras, Commandant des Forces de l'intérieur.;;;;
+17951026;;fr;;;7;p;fr=Fin de la Convention.;;;;
+17951104;;fr;;;7;p;fr=Le "Directoire exécutif" (formé le 1er novembre), s'installe au Luxembourg.;;;;
+17951221;;fr;;;7;p;fr=Échange de Madame Royale, fille de Louis XVI, contre le ministre Beurnonville et 4 Commissaires livrés à l'Autriche par Dumouriez. (Notamment Bancal des Issarts, et Armand Camus).;;;;
+17970917;;fr;;;4;p,g;fr=Premier jour des jours complémentaires, ou sans-culottides, de l'an V. Les dits jours sont fériés et consacrés à des fêtes publiques dédiés à la Vertu, au Génie, au Travail, à l'Opinion et aux Récompenses. Les années bissextiles un sixième jours se rajoute consacré à la Révolution;;;;
+18010717;;fr;;;6;p,s;fr=Concordat entre Bonaparte et le Pape Pie VII : le catholicisme est reconnu comme la religion de la majorité des Français.;;;;
+18020125;;fr;;;6;p;fr=Bonaparte est élu Président de la République Italienne.;;;;
+18020508;;fr;;;6;p;fr=Bonaparte est élu 1er Consul pour 10 années supplémentaires.;;;;
+18020729;;fr;;;6;p;fr=Bonaparte est élu consul à vie.;;;;
+18030513;;fr;;;6;p,g;fr=La Louisiane est vendue aux USA.;;;;
+18040518;;fr;;;6;p;fr=Le Sénat proclame l'Empire par sénatus-consulte.;;;;
+18041202;;fr;;j;2;p,e;fr=Napoléon, désormais appelé Napoléon 1er, est sacré empereur par le Pape Pie VII à Notre-Dame de Paris.;;;;
+18140402;;fr;;;4;p;fr=Le Sénat proclame la déchéance de Napoléon.;;;;
+18140404;;fr;;;6;p;fr=Gouvernement provisoire du Comte d'Artois (futur Charles X), lieutenant général du roy.;;;;
+18140406;;fr;;;4;p;fr=Le Sénat-Conservateur adopte un projet de constitution dans laquelle, en son article 2, " le Peuple français appelle librement au trône de France Louis-Stanislas-Xavier de France, frère du dernier Roi.... ". ;;;;
+18140411;;fr;;;4;p;fr=Traité de Fontainebleau ( acte d'abdication de Napoléon). Le traité fut signé à Paris le 11 et fut apporté le lendemain à Fontainebleau par Caulaincourt. Napoléon ne le ratifia que le 13 avril au matin, après avoir tenté de s’empoisonner la nuit précédente.;;;;
+18140412;;fr;;o;6;p,e;fr=Louis XVIII débarque à Calais.;;;;
+18150226;;fr;;u;6;p;fr=Napoléon quitte l'île d'Elbe. Débarquement à Golfe-Juan le 1er mars.;;;;
+18150320;;fr;;;4;p;fr=Pendant que  Napoléon entre dans Paris par la barrière d’Italie, Louis XVIII s’enfuit par la barrière de Clichy. Le roi s’exilera à Gand. C'est le début de la période des ''Cent-Jours''.;;;;
+18150623;;fr;;;4;p;fr=Deuxième abdication de Napoléon à Paris. (C'est la 2ème restauration avec Louis XVIII qui commence 22/06/1815-07/08/1830);;;;
+18150708;;fr;;j;4;p;fr=Louis XVIII entre dans Paris.;;;;
+18150715;;fr;;u;6;p;fr=Napoléon s'embarque à l’Île d'Aix.;;;;
+18300728;18300730;fr;;j;4;p,s,v;fr=Insurrection à Paris ("les 3 glorieuses''). Réapparaissent le drapeau bleu, blanc, rouge et la devise'' Liberté Égalité Fraternité''. Alexandre Dumas participe à la première attaque sur l’Hôtel de Ville. On compte plus d’un millier de victimes (ouvriers, étudiants, gamins des faubourgs) ''tombés sous la mitraille des soldats et des gendarmes'' et 5000 blessés. Il en restera l’abolition de la censure et la liberté de la presse, le catholicisme n’est plus religion d’Etat, l’initiative des lois est reconnue également à la Chambre et le cens (fortune) pour avoir le droit de voter est nettement abaissé.;;;;
+18300802;;fr;;;6;p;fr=Charles X abdique en faveur de son frère le Duc d’Angoulême (Louis XIX), qui abdique aussitôt en faveur de son neveu le Duc de Bordeaux (Henri V) qui abdique lui-même en faveur du Duc d'Orléans (Louis-Philippe) (Début de la Monarchie de juillet).;;;;
+18300809;;fr;;;6;p;fr=Le Duc d'Orléans (Louis Philippe) prête serment et est nommé "Roi des Français". C'est la Monarchie de Juillet.;;;;
+18400806;;fr;;o;6;p;fr=Coup d'état manqué de Boulogne. Complot de Louis Napoléon qui débarque avec 56 hommes (dont plusieurs agents secrets orléanistes) et 475.000 F. Les officiers orléanistes de la garnison empêchent le ralliement des troupes, les conjurés essayent de se rembarquer, mais ils ont un tué, un noyé, plusieurs blessés. Louis-Napoléon est capturé, il sera enfermé au fort de Ham.;;;;
+18420909;;fr;;;8;p;fr=Prise de possession de Tahiti.;;;;
+18460525;;fr;;;6;p;fr=Louis-Napoléon s'évade du Fort de Ham.;;;;
+18480224;;fr;;;2;p;fr=Louis-Philippe, démoralisé depuis la mort de son fils le Duc d'Orléans et qui doit faire face à l'insurrection parisienne, abdique en faveur de son petit fils le Comte de Paris (10 ans). la Duchesse d'Orléans est régente.;;;;
+18480226;;fr;;;8;p;fr=Louis-Philippe, qui s'était réfugié à Dreux, part pour l'Angleterre.;;;;
+18480504;;fr;;;6;p;fr=Assemblée constituante élue au suffrage universel.;;;;
+18480526;;fr;;;6;p;fr=Installation de l'Assemblée Législative.;;;;
+18511221;18511222;fr;;;6;p;fr=Louis-Napoléon est élu pour 10 ans par un plébiscite au suffrage universel (oui: 7.439.216; non: 646.737).;;;;
+18520114;;fr;;;6;p;fr=Nouvelle Constitution.;;;;
+18530701;;fr;;j;8;p;fr=Le Baron Haussmann devient Préfet de la Seine.;;;;
+18700727;;fr;;;5;p;fr=Eugénie épouse de Napoléon III est nommée Régente pendant que son mari est à la guerre.;;;;
+18700830;;fr;;;4;p;fr=Napoléon III est fait prisonnier à Sedan par les Allemands. Il sera libéré le 19 mars 1871 et s'établira à Camden Place (Chislehurst, à 20 km de Londres).;;;;
+18700904;;fr;;;2;p;fr=C'est la fin du Second Empire, et le début de la IIIème République. Jules Favre, Gambetta, Jules Ferry (avec le Général Trochu, gouverneur de Paris), renversent la Régente et proclament la République. ;;;;
+18700909;;fr;;f;4;p;fr=Pour organiser la défense du pays, que le prévisible siège de Paris risquait de compromettre, une délégation gouvernementale (dirigée par Crémieux) sera envoyée à Tours.;;;;
+18701007;;fr;;j,s;4;p,e;fr=Gambetta quitte Paris en ballon, et atterrit à Montdidier (Somme), il gagne Tours en train, il devient ministre de l'Intérieur et de la Guerre. ;;;;
+18701103;;fr;;b;6;p;fr=Les parisiens plébiscitent le gouvernement "de la Défense Nationale". Le Gouvernement Gambetta se replie à Bordeaux.;;;;
+18710212;;fr;;b;6;p;fr=Réunion à Bordeaux de l'Assemblée Nationale, Thiers est élu "chef du pouvoir exécutif".;;;;
+18710301;;fr;;j;6;p,v;fr=Occupation symbolique des quartiers ouest de Paris par les Prussiens. La Garde Nationale de Paris va le 3 mars s'organiser en fédérations, et les gardes nationaux vont s'appelés les "fédérés".;;;;
+18710318;;fr;;j;6;p,v;fr=Soulèvement à Paris (c'est le début de ce qui va s'appeler "la Commune").;;;;
+18710326;;fr;;j;4;p;fr=Élection d'un Conseil Municipal qui prend le nom de "Commune".;;;;
+18790130;;fr;;;2;p;fr=Mac-Mahon démissionne, pour protester contre le départ du Général Jean-Louis Borel, ministre de la Guerre, exclu du gouvernement par Dufaure le 13 janvier 1879.;;;;
+18871202;;fr;;;1;p;fr=Sénat et Chambre votent la démission de Jules Grévy, qui se soumet.;;;;
+18920311;;fr;;j;6;p;fr=Début des attentats anarchistes à Paris (les causes sont : 1- Le souvenir de la Commune de Paris (la militante révolutionnaire Louise Michel, rentrée de Nouvelle Calédonie en 1880 est la théoricienne des anarchistes français), 2- Hostilité envers les partis organisés de gauche (marxistes) qui veulent créer un État socialiste. 3- Haine et mépris pour la bourgeoisie affairiste au pouvoir depuis 1877).;;;;
+18950115;;fr;;;1;p;fr=Jean-Casimir Périer, Président de la République, démissionne brusquement, se plaignant de ne pas être informé de la situation politique par ses ministres.;;;;
+18980207;;fr;;;6;p,e;fr=Procès d’Émile Zola.;;;;
+1906;;fr;;;6;p;fr=Réalisation des inventaires des biens du clergé suite à la loi de séparation de l'Église et de l'État. Cela se fera malgré des résistances comme à Grand-Fougeray, Pipriac et Pléchâtel. À Guignen il n'y aura pas de problèmes. Lorsque le Pape condamne cette loi Monseigneur DUCHESNE, natif de Saint-Servan, estime qu'il s'agit d'une maladresse et observe : Le Souverain Pontife manœuvre la barque de Saint-Pierre avec une gaffe.;;;;
+19200921;;fr;;;1;p;fr=Paul Deschanel, Président de la République, quitte l’Élysée en raison de son état de santé (chute du train présidentiel  le 24 mai 1920, prés de Montargis).;;;;
+19240611;;fr;;;2;p;fr=Alexandre Millerand, Président de la République, en butte à l'hostilité maçonnique, démissionne.;;;;
+19580529;;fr;;;5;p;fr=Charles de Gaulle est nommé président du Conseil par René Coty, pour résoudre la crise de la guerre d'Algérie.;;;;
+19690626;;fr;;;5;p;fr=Chaban-Delmas présente son programme « la nouvelle société » basé sur l'élargissement des libertés publiques, la participation dans les entreprises, l'accroissement des pouvoirs régionaux et le développement de la solidarité.;;;;
+19690808;;fr;;;5;p,s;fr=Dévaluation du franc de 12,5 %.;;;;
+19690916;;fr;;;5;p,f;fr=Discours de politique générale de Jacques Chaban-Delmas. Il souhaite une compétition véritable entre les deux chaînes de télévision de l'ORTF. Cela se traduira par la création de deux unités autonomes d’information puis par deux directions distinctes.;;;;
+196912;;fr;;;5;p;fr=Loi sur l'actionnariat ouvrier chez Renault.;;;;
+19730403;;fr;;;5;p,f;fr=Georges Pompidou propose une réforme constitutionnelle pour ramener le mandat présidentiel à cinq ans.;;;;
+19730531;;fr;;;5;p;fr=Le président Pompidou rencontre le président des États-Unis Richard Nixon à Reykjavik (Islande).;;;;
+19740119;;fr;;;5;p;fr=La France sort du système Serpent monétaire européen.;;;;
+19740703;;fr;;;5;p;fr=Fin de la politique d'incitation à l'immigration en France.;;;;
+19760314;;fr;;;5;p;fr=Le Franc sort du serpent monétaire européen.;;;;
+19760825;;fr;;;5;p;fr=Démission de Jacques Chirac.;;;;
+19780319;;fr;;;5;p;fr=La majorité de droite (RPR-UDF) remporte les élections législatives.;;;;
+20090622;;fr;;;5;p;fr=Nicolas Sarkozy est le premier président depuis Louis-Napoléon Bonaparte à s'exprimer devant le Congrès de Versailles.;;;;
+2011;;fr;;;5;p;fr=Nicolas Sarkozy prend la présidence du G8 et du G20.;;;;
+
+
+
+
+
+
+
+
+15390825;;fr;;;1;g;fr=Rendue par François 1er, l' "Ordonnance de Villers-Cotterêts'' instituait l'obligation de tenir des registres de baptêmes (article 51) et de décès (dans certains cas) et d'employer la langue française (article 111). Autrefois appelée "Guillemine" ou "Guihelmine" du nom de son rédacteur Guillaume Poyet.;;;;
+15640704;;fr;;;1;g,f;fr=Charles IX fixe le début de l'année, différents selon les contrées, au 1 janvier dans tout le royaume avec effet rétroactif au 1/1/1564;;;;
+157905;;fr;;;1;g,e;fr=Promulguée par Henri III, l' ''Ordonnance de Blois'' imposait pour les mariages: la célébration à l'église (catholique), l'obligation d'enregistrer les mariages, avec publication de bans, et la citation de 4 témoins. Afin surtout d'éviter les mariages clandestins. ;;;;
+15821004;;fr;;u,v;1;g;fr=Passage du calendrier Julien au calendrier Grégorien. Nice et la Savoie :  le  4 octobre est suivi par le 15 octobre 1582.;;;;
+15821209;;fr;;;1;g;fr=Passage du calendrier Julien au calendrier Grégorien. Pour la plus grande partie du territoire, le 9 décembre 1582 est  suivi par le 20 décembre 1582.;;;;
+
+166704;;fr;;;1;g;fr=Le "Code Louis" ou ''Ordonnance de St Germain-en-Laye'' réglait la tenue des registres d’État Civil. ;;;;
+16820205;;fr;;a;1;g;fr=Passage du calendrier Julien au calendrier Grégorien. En Alsace, le 5 février 1682 est suivi par le 16 février 1682.;;;;
+16830809;;fr;;;1;g,e;fr=Arrêt du Conseil d’État signé par Colbert, ordonnant de remettre aux greffes des bailliages et sénéchaussées les registres d’État Civil tenus et détenus par les "Protestants", qui de ce fait devaient se convertir s'ils voulaient avoir un "état civil".;;;;
+17600216;;fr;;m ;1;g;fr=Passage du calendrier Julien au calendrier Grégorien. En Lorraine, le 16 février 1760 est suivi par le 28 février 1760.;;;;
+
+17871129;;fr;;;1;g,e;fr=L' ''Édit de Versailles'' dit de "tolérance" rétablit pour les Protestants le droit d'avoir leur état civil sans devoir se convertir au catholicisme.;;;;
+
+17920920;;fr;;;1;g,e;fr=Décret qui détermine le mode de ''constater l'état-civil des citoyens": la tenue des registres est retirée aux autorités religieuses. C'est un officier public qui enregistrera les naissances, mariages et décès. Les cérémonies religieuses passent après les formalités civiles. Les tables décennales sont prévues.;;;;
+17920922;;fr;;;1;p,g;fr=Jour choisi comme le premier jour de la République;;;;
+17920922;;fr;;;1;g,s;fr=Point de départ du calendrier républicain. C'est la 1ère République qui va se dérouler du 22/09/1792 au 31/05/1793.La Convention Nationale décrète "Tous les actes publics sont désormais datés à partir de l'an I de la République".;;;;
+17921127;;fr;;v;5;g,p;fr=La Savoie est annexée (département du Mont-Blanc).;;;;
+17931107;;fr;;r;5;g;fr=La Vendée est renommée Vengé.;;;;
+17951001;;fr;;a;5;g,p;fr=Incorporation au territoire national de la rive gauche du Rhin.;;;;
+1796;;fr;;;5;g,p;fr=La France compte 9 nouveaux départements (Dyle, Escaut, Forêts, Jemmapes, Lys, Meuse inférieure, Deux-Nèthes, Ourthe, Sambre et Meuse);;;;
+
+
+18050909;;fr;;;1;g,s;fr=Le 22 fructidor an XIII, Napoléon signe le senatus-consulte rétablissant l'usage du calendrier grégorien à compter du 1er janvier 1806.;;;;
+
+
+1816;;fr;;;5;g;fr=Achèvement de la carte de CASSINI ordonnée par Louis XV. C'est la première des cartes topographiques de France. À l'échelle d'une ligne pour 100 toises (environ 1:86400) elle comprend 180 feuillets. Le feuillet 129 contenant Guignen mentionne entre autres la Bartizon, le Bois Rian, Brehia, Couemur, Frequemar, la Mussolais (Massolias), la Sultière  (Cheurtière), Therel, Treguer, la Ville (Tréel), un Val Grasset sis entre les Seillons et le Bignon (pas encore Rehannais);;;;
+
+
+
+
+
+
+
+
+18770318;;fr;;;1;g;fr=Circulaire créant le livret de Famille, suite à une période d'expérimentation, elle-même consécutive aux problèmes causés par l'incendie en 1871 détruisant les 2 exemplaires des registres de Paris. Ce livret permit de fixer l'orthographe des patronymes.;;;;
+
+
+
+
+
+
+1924810;;fr;;e,g;5;g,e;fr=Chasné devient Chasné sur Illet afin d'éviter la confusion avec Chancé.;;;;
+
+
+
+
+
+
+
+1961;;fr;;p;5;g;fr=La Chapelle Moche devient la Chapelle d'Andaine;;;;
+
+
+
+19760429;;fr;;;1;g,s;fr=Décret donnant droit au regroupement familial des immigrés.;;;;
+19750711;;fr;;;1;g,s;fr=Institution du divorce par consentement mutuel.;;;;
+
+
+
+
+
+
+
+
+448;457;fr;;;1;r;fr=Mérovée, Roi des Francs Saliens.;;;;
+457;481;fr;;;1;r;fr=Childéric Ier, Roi des Francs Saliens.;;;;
+481;511;fr;;;1;r;fr=Clovis Ier, Roi des Francs Saliens puis Roi des Francs.;;;;
+511;524;fr;;;1;r;fr=Clodomir, Roi des Francs (Roi d'Orléans).;;;;
+511;534;fr;;;1;r;fr=Thierry Ier, Roi des Francs (Roi de Reims).;;;;
+511;558;fr;;;1;r;fr=Childebert Ier, Roi des Francs (Roi de Paris).;;;;
+511;558;fr;;;1;r;fr=Clotaire Ier, Roi de Soissons.;;;;
+524;558;fr;;;1;r;fr=Clotaire Ier, Roi d'Orléans.;;;;
+534;548;fr;;;1;r;fr=Théodebert Ier, Roi des Francs (Roi de Reims).;;;;
+548;555;fr;;;1;r;fr=Théodebald, Roi des Francs (Roi de Reims).;;;;
+555;558;fr;;;1;r;fr=Clotaire Ier, Roi de Reims.;;;;
+558;561;fr;;;1;r;fr=Clotaire Ier, Roi des Francs.;;;;
+561;567;fr;;;1;r;fr=Caribert Ier, Roi des Francs (Roi de Paris).;;;;
+561;575;fr;;;1;r;fr=Sigebert Ier, Roi des Francs (Roi de Reims).;;;;
+561;584;fr;;;1;r;fr=Chilpéric Ier, Roi de Soissons (royaume de Neustrie).;;;;
+561;592;fr;;;1;r;fr=Gontran, Roi de Burgondie.;;;;
+567;584;fr;;;1;r;fr=Chilpéric Ier, Roi des Francs (Roi de Paris).;;;;
+575;596;fr;;;1;r;fr=Childebert II, Roi d'Austrasie.;;;;
+584;592;fr;;;1;r;fr=Gontran, Roi des Francs (Roi de Paris).;;;;
+584;613;fr;;;1;r;fr=Clotaire II, Roi de Neustrie.;;;;
+592;596;fr;;;1;r;fr=Childebert II, Roi de Burgondie et de Paris.;;;;
+595;612;fr;;;1;r;fr=Thibert II, Roi d'Austrasie.;;;;
+595;613;fr;;;1;r;fr=Thierry II, royaume de Bourgogne.;;;;
+595;613;fr;;;1;r;fr=Clotaire II, Roi de Paris.;;;;
+613;613;fr;;;1;r;fr=Sigebert II, Roi d'Austrasie.;;;;
+613;629;fr;;;1;r;fr=Clotaire II, Roi des Francs.;;;;
+623;632;fr;;;1;r;fr=Dagobert Ier, Roi d'Austrasie.;;;;
+629;632;fr;;;1;r;fr=Caribert II, Roi d'Aquitaine.;;;;
+629;639;fr;;;1;r;fr=Dagobert Ier, Roi des Francs (moins l'Aquitaine).;;;;
+632;639;fr;;;1;r;fr=Dagobert Ier, Roi des Francs.;;;;
+639;656;fr;;;1;r;fr=Sigebert III, Roi d'Austrasie.;;;;
+639;657;fr;;;1;r;fr=Clovis II le Fainéant, Roi de Neustrie et de Burgondie.;;;;
+656;662;fr;;;1;r;fr=Childebert III l'Adopté, Roi d'Austrasie.;;;;
+657;673;fr;;;1;r;fr=Clotaire III, Roi de Neustrie et de Burgondie.;;;;
+662;673;fr;;;1;r;fr=Childéric II, Roi d'Austrasie.;;;;
+673;675;fr;;;1;r;fr=Childéric II, Roi des Francs.;;;;
+673;673;fr;;;1;r;fr=Thierry III, Roi de Neustrie.;;;;
+675;676;fr;;;1;r;fr=Clovis III, Roi d'Austrasie.;;;;
+675;679;fr;;;1;r;fr=Thierry III, Roi de Neustrie.;;;;
+676;679;fr;;;1;r;fr=Dagobert II, Roi d'Austrasie.;;;;
+679;691;fr;;;1;r;fr=Thierry III, Roi des Francs.;;;;
+691;695;fr;;;1;r;fr=Clovis IV, Roi des Francs.;;;;
+695;711;fr;;;1;r;fr=Childebert IV, Roi des Francs.;;;;
+711;715;fr;;;1;r;fr=Dagobert III, Roi des Francs.;;;;
+715;719;fr;;;1;r;fr=Chilpéric II, Roi de Neustrie et de Burgondie.;;;;
+719;721;fr;;;1;r;fr=Chilpéric II, Roi des Francs.;;;;
+721;737;fr;;;1;r;fr=Thierry IV, Roi des Francs.;;;;
+737;741;fr;;;1;r;fr=Charles Martel, Maire du palais.;;;;
+741;743;fr;;;1;r;fr=Pépin le Bref, Maire du palais.;;;;
+743;751;fr;;;1;r;fr=Childéric III, Roi des Francs.;;;;
+
+751;7680924;fr;;;1;r;fr=Pépin Ier le Bref.;;;;
+7680924;8140128;fr;;;1;r;fr=Charlemagne (Charles Ier le Grand);;;;
+8140128;8400620;fr;;;1;r;fr=Louis Ier le Pieux ou le Débonnaire;;;;
+8400623;8771006;fr;;;1;r;fr=Charles II le Chauve;;;;
+8771006;8790410;fr;;;1;r;fr=Louis II le Bègue;;;;
+8790410;8820805;fr;;;1;r;fr=Louis III;;;;
+8820805;8841206;fr;;;1;r;fr=Carloman;;;;
+8841206;8880113;fr;;;1;r;fr=Charles le Gros;;;;
+8880113;8980620;fr;;;1;r;fr=Eudes Ier;;;;
+8980620;9220630;fr;;;1;r;fr=Charles III le Simple;;;;
+9220630;9230615;fr;;;1;r;fr=Robert Ier;;;;
+9230615;9360115;fr;;;1;r;fr=Raoul Ier;;;;
+9360115;9540910;fr;;;1;r;fr=Louis IV d'Outremer;;;;
+9540910;9860302;fr;;;1;r;fr=Lothaire;;;;
+9860302;9870601;fr;;;1;r;fr=Louis V le Fainéant;;;;
+
+9870601;9961024;fr;;;1;r;fr=Hugues Capet;;;;
+9961024;10310720;fr;;;1;r;fr=Robert II le Pieux;;;;
+10310720;10600804;fr;;;1;r;fr=Henri Ier;;;;
+10600804;11080729;fr;;;1;r;fr=Philippe Ier;;;;
+11080729;11370801;fr;;;1;r;fr=Louis VI le Gros;;;;
+11370801;11800918;fr;;;1;r;fr=Louis VII le Jeune;;;;
+11800918;12230714;fr;;;1;r;fr=Philippe II Auguste;;;;
+12230714;12261108;fr;;;1;r;fr=Louis VIII le Lion;;;;
+12261108;12700825;fr;;;1;r;fr=Louis IX St Louis;;;;
+12700825;12851005;fr;;;1;r;fr=Philippe III le Hardi;;;;
+12851005;13141129;fr;;;1;r;fr=Philippe IV le Bel;;;;
+13141129;13160605;fr;;;1;r;fr=Louis X le Hutin;;;;
+13160605;13161120;fr;;;1;r;fr=Jean Ier le Posthume;;;;
+13161120;13220103;fr;;;1;r;fr=Philippe V le Long;;;;
+13220103;13280201;fr;;;1;r;fr=Charles IV le Bel;;;;
+
+13280201;13500822;fr;;;1;r;fr=Philippe VI;;;;
+13500822;13640408;fr;;;1;r;fr=Jean II le Bon;;;;
+13640408;13800916;fr;;;1;r;fr=Charles V le Sage;;;;
+13800916;14221021;fr;;;1;r;fr=Charles VI le Fol;;;;
+14221021;14610722;fr;;;1;r;fr=Charles VII le Victorieux;;;;
+14610722;14830830;fr;;;1;r;fr=Louis XI l'universel Aragne;;;;
+14830830;14980407;fr;;;1;r;fr=Charles VIII l'Affable;;;;
+14980407;15150101;fr;;;1;r;fr=Louis XII le Père du peuple;;;;
+15150101;15470331;fr;;;1;r;fr=François Ier le roi chevalier;;;;
+15470331;15590710;fr;;;1;r;fr=Henri II;;;;
+15590710;15601205;fr;;;1;r;fr=François II;;;;
+15601205;15740530;fr;;;1;r;fr=Charles IX;;;;
+15740530;15890802;fr;;;1;r;fr=Henri III;;;;
+
+15890802;16100514;fr;;;1;r;fr=Henri IV le Grand;;;;
+16100514;16430514;fr;;;1;r;fr=Louis XIII le Juste, nouveau Roi de France. Lors de l'assassinat de Henri IV, le dauphin devient Roi de France, il a neuf ans, et sa mère, Marie de Médicis, assure alors la Régence.;;;;
+16430514;17150901;fr;;;1;r;fr=Louis XIV le Roi Soleil;;;;
+17150901;17740510;fr;;;1;r;fr=Louis XV le Bien-Aimé ou le Bien-Haï;;;;
+17740510;17920922;fr;;;1;r;fr=Louis XVI le Roi Martyr;;;;
+
+17920922;17991009;fr;;;1;r;fr=Ière République. La république démocratique.;;;;
+17991009;18040518;fr;;;1;r;fr=Ière République. La république consulaire de Napoléon Bonaparte.;;;;
+
+18040518;18140406;fr;;;1;r;fr=Napoléon Ier, Premier Empire;;;;
+
+18140406;18240916;fr;;;1;r;fr=Louis XVIII;;;;
+18240916;18300729;fr;;;1;r;fr=Charles X;;;;
+18300729;18480224;fr;;;1;r;fr=Louis-Philippe Ier. Il n'est pas sacré roi de France mais intronisé roi des Français. C'est la '' Monarchie de juillet " (9/08/1830-24/02/1848).;;;;
+
+18480224;18521202;fr;;;1;r;fr=Seconde République Louis-Napoléon Bonaparte est élu 1er président de la République par 5.434.226 voix contre Cavaignac (1.448.007 voix), Ledrut-Rollin (370.719 voix), Raspail (36.329 voix), Lamartine (17.910 voix), et Changarnier (4.790 voix).;;;;
+18521202;18700904;fr;;;1;r;fr=Second Empire. Louis-Napoléon Bonaparte, sous le nom de Napoléon III.;;;;
+
+18700904;19400710;fr;;;1;r;fr=IIIe République;;;;
+18700904;18710217;fr;;;1;r;fr=Louis-Jules Trochu président du gouvernement de la Défense nationale.;;;;
+18710818;18730524;fr;;;1;r;fr=Adolphe Thiers, Président de la République.;;;;
+18730524;18790130;fr;;;1;r;fr=Le Maréchal de Mac-Mahon, Président de la République.;;;;
+18790130;18851228;fr;;;1;r;fr=Jules Grévy, Président de la République.;;;;
+18851228;18871203;fr;;;1;r;fr=Jules Grévy , Président de la République (2ème mandat).;;;;
+18871203;18940627;fr;;;1;r;fr=Sadi Carnot, Président de la République.;;;;
+18940627;18950117;fr;;;1;r;fr=Jean-Casimir Périer, Président de la République.;;;;
+18950117;18990216;fr;;;1;r;fr=Félix Faure, Président de la République.;;;;
+18990218;19060218;fr;;;1;r;fr=Émile Loubet, Président de la République.;;;;
+19060218;19130218;fr;;;1;r;fr=Armand Fallières, Président de la République.;;;;
+19130218;19200218;fr;;;1;r;fr=Raymond Poincaré, Président de la République.;;;;
+19200218;19200921;fr;;;1;r;fr=Paul Deschanel, Président de la République.;;;;
+19200923;19240611;fr;;;1;r;fr=Alexandre Millerand , Président de la République.;;;;
+19240613;19310613;fr;;;1;r;fr=Gaston Doumergue, Président de la République.;;;;
+19310613;19320507;fr;;;1;r;fr=Paul Doumer, Président de la République.;;;;
+19320510;19400711;fr;;;1;r;fr=Albert Lebrun, Président de la République.;;;;
+19400710;19440603;fr;;;1;r;fr=Gouvernement de Vichy. C'est le régime politique de Philippe Pétain qui assura le gouvernement de la France.;;;;
+19440603;19581005;fr;;;1;r;fr=IVe République;;;;
+19440603;19460120;fr;;;1;r;fr=Charles de Gaulle, président du Gouvernement provisoire de la République française (GPRF).;;;;
+19460120;19460624;fr;;;1;r;fr=Félix Gouin (04/10/1884 - 25/10/1977) président du Gouvernement provisoire.;;;;
+19460624;19461216;fr;;;1;r;fr=Georges Bidault (05/10/1899 - 26/01/1983) président du Gouvernement provisoire.;;;;
+19461216;19470116;fr;;;1;r;fr=Léon Blum (04/04/1872 - 30/03/1950) président du Gouvernement provisoire.;;;;
+19470116;19540116;fr;;;1;r;fr=Vincent Auriol (27/08/1884 - 01/01/1966) Premier président de la Quatrième République, son mandat est marqué par la guerre d'Indochine. Il ne se représente pas à l'issue de son septennat.;;;;
+19540116;19590108;fr;;;1;r;fr=René Coty (20/03/1882 - 22/11/1962) Son mandat est marqué par la guerre d'Algérie. Il fait appel au général de Gaulle pour résoudre la crise de mai 1958. Après la promulgation de la Cinquième République, il démissionne au bout de cinq ans de présidence.;;;;
+19581005;;fr;;;1;r;fr=Ve République;;;;
+19590108;19690428;fr;;;1;r;fr=Charles de Gaulle (22/11/1890 - 09/11/1970) élu président de la République en décembre 1958 par un collège électoral, il prend ses fonctions le mois suivant.;;;;
+19690428;19690620;fr;;;1;r;fr=Alain Poher (17/04/1909 - 09/12/1996) en tant que président du Sénat, exerce l'intérim de la présidence de la République, suite à la démission de Charles de Gaulle.;;;;
+19690620;19740402;fr;;;1;r;fr=Georges Pompidou (05/07/1911 – 02/04/1974). Premier ministre de Charles de Gaulle de 1962 à 1968, il est élu facilement président face au président du Sénat Alain Poher. Il donne une nouvelle dynamique à la construction européenne. Au niveau national engage une politique de modernisation de l'économie et d'industrialisation.;;;;
+19740402;;fr;;;1;r;fr=Le président du Sénat, Alain Poher, assure l'intérim de la présidence de la République.;;;;
+19740519;19810521;fr;;;1;r;fr=Valéry Giscard d'Estaing (02/02/1926), élu à l'âge de 48 ans.;;;;
+19810521;19950517;fr;;;1;r;fr=François Mitterrand (26/10/1916 – 08/01/1996), premier président de gauche de la Cinquième République, premier président socialiste (PS) de l'Histoire. Premier président de la République élu deux fois au suffrage universel. Il est à l'origine d'un certain nombre de réformes (abolition de la peine de mort, cinquième semaine de congés payés).;;;;
+19950517;20070516;fr;;;1;r;fr=Jacques Chirac (29/11/1932). Il organise un référendum qui ramènera le mandat présidentiel de sept à cinq ans. Il s'oppose à la guerre en Irak. Il renonce à se représenter en 2007, prend sa retraite politique et devient membre de droit du Conseil constitutionnel.;;;;
+20070516;;fr;;;1;r;fr=Nicolas Sarkozy (28/01/1955) élu président de la république.;;;;
+
+
+
+15041118;;fr;;;5;u;fr=Anne de Bretagne est sacrée reine de France pour la seconde fois de part son mariage avec Louis XII;;;;
+15170510;;fr;;;5;u;fr=Claude, Duchesse de Bretagne, fille de Louis XII et Anne de Bretagne, devient reine de France en épousant François 1° à Saint-Denis;;;;
+15240725;;fr;;f;5;u;fr=Mort à Blois de la reine Claude fille de Louis XII et d'Anne de Bretagne, épouse de François I. Malgré son jeune âge , 24 ans, elle a eu le temps de donné naissance à 7 enfants et son nom à un prunier d'orient acclimaté à Blois.;;;;
+15590630;;fr;;j;5;u;fr=Lors d'un tournoi à Paris, Gabriel de Montgomery, seigneur de la Varye en Bourgbarré, blesse mortellement le roi Henri II.;;;;
+1615;;fr;;p;9;u;fr=Henri II de Lorraine est un enfant d'un an qui n'en est pas moins nommé abbé commendataire du Mont Saint-Michel;;;;
+16260205;;fr;;;9;u,b;fr=Naissance de Marie de RABUTIN-CHANTAL (Mme de Sévigné). Sa grand-mère Jeanne de CHANTAL sera canonisé. Le patronyme CHANTAL deviendra un prénom. Bretonne par alliance, cette parisienne mal mariée, déclarera lorsque son mari volage est porté au tombeau qu'elle saura au moins où il passe ses nuits.;;;;
+
+1661;;fr;;;9;u;fr=Sur ordre de Louis XIV d'ARTAGNAN arrête le super-intendant Nicolas FOUQUET soupçonné de malversations. Ce dernier finira ses jours en exil au fort de Pignerol dans le Piémont;;;;
+170211;;fr;;e,r;9;u;fr=Louis XIV exile à Redon Monseigneur Hervé, évêque de Gap, pour son goût prononcé pour les femmes. Il sera de nouveau exilé à Saint-Michel en l'Herm en Vendée.;;;;
+
+
+
+
+
+
+
+18040309;;fr;;;5;u;fr=Georges Cadoudal, héros de l'insurrection bretonne qui projetait d'enlever Bonaparte et de restaurer les Bourbons est arrêté à Paris. Il sera guillotiné 3 mois plus tard.;;;;
+
+
+
+1851;;fr;;;9;u;fr=Angélique DUCHEMIN, originaire de Dinan et engagée dans l'armée, est la première femme décorée de la Légion d'Honneur;;;;
+
+
+
+
+
+
+1918;;fr;;;9;u;fr=Alors qu'il pilotait son avion au-dessus des lignes allemandes, le lieutenant Francis Porteu de la Morandière, de Louvigné de Bais, sort vivant d'une chute de 4000m sans parachute.;;;;
+
+
+
+
+
+19690620;19720705;fr;;;5;u;fr=Gouvernement Jacques Chaban-Delmas.;;;;
+19720707;19740527;fr;;;5;u;fr=Gouvernement Pierre Messmer.;;;;
+19740716;;fr;;;5;u;fr=La journaliste Françoise Giroud devient la première secrétaire d'État à la condition féminine.;;;;
+19760827;19810512;fr;;;5;u;fr=Gouvernement Barre.;;;;
+19790610;;fr;;;6;u,p;fr=Premières élections au suffrage universel au Parlement Européen. Simone Veil en devient la première présidente.;;;;
+
+
+
+1640;;fr;;;9;j;fr=Nicolas Poussin est rappelé de Rome et reçoit de Louis XIII le titre de premier peintre du Roi. Louis XIII et Richelieu lui demandent de superviser les travaux du Louvre.;;;;
+
+
+
+19691215;;fr;;;9;j;fr=Passionné par la culture et l'art, Georges Pompidou annonce la création d'un centre d'art contemporain à Paris (aujourd'hui, centre Georges-Pompidou).;;;;
+19770131;;fr;; j;9;j,f;fr=Inauguration du centre Georges-Pompidou à Paris.;;;;
+19110821;;fr;;;9;j,e;fr=La Joconde est volée.;;;;
+19130331;;fr;;;9;j;fr=La Joconde qui avait été volée, revient à Paris.;;;;
+
+
+
+
+
+
+
+
+
+
+
+
+
+1921;;fr;;;9;l;fr=Rafaël SABATINI, le Dumas italien, publie Scaramouche son roman historique sur fond de Révolution Française. Il y mentionne à plusieurs reprises Guignen;;;;
+
+
+
+
+16370107;;fr;;;9;z;fr=Première représentation du Cid de Corneille au théâtre du Marais à Paris.;;;;
+16440101;;fr;;;9;z;fr=Ouverture, dans le jeu de paume des Mestayers, de l'Illustre Théâtre de Madeleine Béjart et Jean-Baptiste Poquelin dit Molière, protégés du duc d'Orléans.;;;;
+16600604;;fr;;;9;z;fr=Première représentation du Misanthrope de Molière.;;;;
+16801021;;fr;;;9;z,f;fr=Fondation de la Comédie Française.;;;;
+
+
+1951;;fr;;;9;z;fr=Philippe NOIRET commence sa carrière au centre Dramatique de l'Ouest en jouant des rôles de Molière à Rennes;;;;
+
+
+
+
+
+1404;;fr;;r;8;b;fr=Naissance à Machecoul de Gilles de Laval, baron de Retz, futur maréchal de France, compagnon de Jeanne d'Arc. Sa vie privé peu édifiante passe pour être à l'origine du conte de Barbe-Bleue;;;;
+
+
+
+14921010;;fr;;f;6;b;fr=Naissance à Moulins lès Tours du dauphin Charles Orland qui mourra en bas âge comme les trois autres enfants qu'Anne de Bretagne donnera à Charles VIII;;;;
+
+1518228;;fr;;f;2;b;fr=Naissance à Amboise de François fils aîné de François 1° et de Claude, petit-fils d'Anne de Bretagne, il sera le dernier duc couronné de Bretagne sous le nom de François III;;;;
+15531214;;fr;;b;0;b;fr=Naissance d'Henri IV à Pau, fils d'Antoine de Bourbon et de Jeanne d'Albret, il fût Roi de France de 1589 à 1610.;;;;
+16010927;;fr;;j;0;b;fr=Naissance du futur Louis XIII, à Fontainebleau. Fils d'Henri IV et de Marie de Médicis.;;;;
+16040104;;fr;;i;9;b;fr=Naissance à Besançon (Doubs) du dramaturge Jean Mairet.;;;;
+16060606;;fr;;q;4;b;fr=Naissance à Rouen (Seine-Maritime) de Pierre Corneille, dramaturge français.;;;;
+16230619;;fr;;c;4;b;fr=Naissance à Clermont-Ferrand (Puy-de-Dôme) de Blaise Pascal mathématicien, philosophe et écrivain français. Inventeur de la machine à calculer.;;;;
+16321128;;it;;;4;b;fr=Naissance de Jean-Baptiste Lully, musicien français d'origine italienne.;;;;
+16351124;;fr;;t;1;b;fr=Naissance de Madame de Maintenon (Françoise d'Aubigné), maîtresse, puis épouse secrète de Louis XIV (le mariage eu lieu entre 1683 et 1686). Petite fille du poète Agrippa d'Aubigné, fille d'un huguenot emprisonné pour intelligence avec l'Angleterre (née à la prison de Niort). Enfance à la Martinique, elle revient en France en 1647, orpheline, ruinée, mise chez les Ursulines. Elle épouse un paralytique, l'auteur comique Paul Scarron qui décède en 1660.;;;;
+16380905;;fr;;j;0;b;fr=Naissance du Dauphin, futur Louis XIV à Saint Germain en Laye;;;;
+16390116;;fr;;g;5;b;fr=Naissance à Sainte-Menehoud (Marne) de Dom Pierre Pérignon, moine Bénédictin et élaborateur du Champagne.;;;;
+16450817;;fr;;j;4;b;fr=Naissance à Paris de Jean de La Bruyère, moraliste français.;;;;
+16470822;;fr;;f;4;b;fr=Naissance à Chitenay (Loir-et-Cher) de Denis Papin. Il est connu pour ses travaux sur la machine à vapeur.;;;;
+
+
+
+
+16850321;;de;;;4;b;fr=Naissance de Jean-Sébastien Bach à Eisenach (Allemagne).;;;;
+16941121;;fr;;j;4;b;fr=Naissance à Paris de l'écrivain et philosophe François Marie Arouet, dit Voltaire.;;;;
+17070108;1712;fr;;j;9;b;fr=Naissance à Versailles du fils du duc de Bourgogne et de la dauphine Marie Adélaïde de Savoie, arrière petit-fils de Louis XIV, prénommé Louis et titré duc de Bretagne, tout comme un précédent enfant du couple décédé 2 ans plus tôt. Il ne vivra que 5 ans et c'est le troisième fils Louis né en 1710, titré duc d'Anjou, qui sera Louis XV;;;;
+17100215;;fr;;j;0;b;fr=Naissance du futur Louis XV, à Versailles.;;;;
+
+
+17290904;;fr;;j;0;b;fr=Naissance à Versailles du Dauphin Louis-Ferninand de France, Dauphin du Viennois. Il se mariera en 1744 avec Marie-Thérèse d'Espagne qui décédera en couches. En 1747, il épousera Marie-Josèphe de Saxe. Ils auront plusieurs enfants (dont  Louis Joseph Xavier, duc de Bourgogne (13-09-1751/22-03-1761), et Xavier Marie Joseph, duc d'Aquitaine (08-09-1753/22-02-1754). En 1754 nait leur 3ème fils, Louis Auguste de France qui succèdera au Dauphin du Viennois (décédé le 20/12/1765), sous le nom de Louis XVI.;;;;
+
+
+17540823;;fr;;j;0;b;fr=Naissance du futur Louis XVI, à Versailles.;;;;
+17571009;;fr;;j;0;b;fr=Naissance à Versailles de Charles X, futur Roi de France.;;;;
+17580506;;fr;;o;0;b;fr=Naissance à Arras de Maximilien de Robespierre.;;;;
+
+17591026;;fr;;g;0;b;fr=Naissance à Arcis-sur-Aube de Georges Jacques Danton.;;;;
+17600510;;fr;;i;4;b;fr=Naissance  à Lons-le-saunier de Rouget de Lisle, auteur des paroles et de la musique du Chant de guerre pour l'armée du Rhin, composé à Strasbourg dans la nuit du 24 au 25 avril 1792, et devenu l'hymne national français sous le nom de la Marseillaise.;;;;
+
+
+17690815;;fr;;h;0;b;fr=Naissance de Louis Napoléon Bonaparte à Ajaccio (Corse).;;;;
+1770;;fr;;;8;b;fr=Naissance de Pierre CAMBRONNE à Saint-Sébastien sur Loire. Il sera général sous Napoléon I° et n'aura qu'un mot à dire pour passer à la postérité.;;;;
+
+
+
+
+17840826;;fr;;b;8;b;fr=Naissance à Rennes d'Auguste Marie GICQUEL des TOUCHES, futur marin connu pour avoir sauvé les 15 survivants du radeau de la Méduse en 1916;;;;
+17850327;;fr;;j;0;b;fr=Naissance du futur Louis XVII à Versailles. Deuxième fils de Louis XVI.;;;;
+
+17970415;;fr;;u;0;b;fr=Naissance de Adolphe Thiers (futur Président sous la III ème République), à Marseille.;;;;
+
+1805;;fr;;r;9;b;fr=Naissance, à Nantes, de Lucien VIDIE inventeur du baromètre métallique ou anéroïde toujours utilisé de nos jours.;;;;
+
+18070815;;fr;;i;0;b;fr=Naissance de Jules Grévy (futur Président sous la III ème République), à Mont sous Vaudrey.;;;;
+18080420;;fr;;j;0;b;fr=Naissance du futur Napoléon III. Son père , Louis (roi de Hollande), doutant de sa paternité rompt avec sa femme, Hortense de Beauharnais. ;;;;
+18080613;;fr;;d;1;b;fr=Naissance de Mac-Mahon (futur Président sous la IIIème République), à Sully (Saône et Loire) .;;;;
+
+
+
+
+
+
+
+18370811;;fr;;l;0;b;fr=Naissance de Sadi Carnot (futur Président de la République sous la IIIème République) à Limoges.;;;;
+
+18461202;;fr;;;8;b;fr=Naissance de Pierre WALDECK-ROUSSEAU à Nantes. Il sera avocat, député d'Ille et Vilaine et père de la loi sur les associations;;;;
+18560316;;fr;;j;0;b;fr=Naissance de Louis-Napoléon, Prince Impérial (nom envisagé : roi d'Alger), seul enfant de Napoléon III et de son épouse, l'impératrice Eugénie. Après la naissance de son fils, Eugénie fit chambre à part et laissa à son mari toute liberté dans ses liaisons féminines.;;;;
+1862;;fr;;r;1;b;fr=Naissance à Nantes d'Aristide BRIAND qui sera 23 fois ministre et 11 fois président du conseil;;;;
+1871;;fr;;;9;b;fr=Naissance à Redon de Arthur BERNÈDE. On lui devra les romans Belphégor et Judex;;;;
+
+
+18770325;;fr;;;9;b;fr=Naissance d'Alphonse Chateaubriant à Rennes. Il se verra attribué le prix Goncourt 1911 pour son roman Monsieur de Lourdines;;;;
+1881;;fr;;;9;b;fr=René Thépohile Marie Hyacynthe LAENNEC voit le jour à Quimper. Il sera médecin et l'inventeur de l'auscultation et du stéthoscope;;;;
+
+
+18861112;;fr;;;8;b;fr=Naissance de Yves DURAND de parents commerçants à Argentré du Plessis. Sa voix de baryton enthousiasmera le public sous le pseudonyme d'Yves NOËL. Il chantera notamment la Marseillaise place de l'Opéra le 11/11/1918 devant 100 000 personnes;;;;
+18871224;;fr;;;9;b;fr=Naissance de Louis JOUVEY à Crozon. Il sera connu sous le nom de Louis JOUVET;;;;
+
+
+
+
+
+
+
+
+
+
+
+1918318;;fr;;r;8;b;fr=Naissance à Saint-Nazaire de Georges Bellec, l'un des chanteurs des Frères Jacques avec son frère André.;;;;
+
+
+1931605;;fr;;;9;b;fr=Naissance à Ponchâteau de Jacques DEMY à qui l'on doit Les Parapluies de Cherbourg et Les Demoiselles de Rochefort;;;;
+
+
+1944;;fr;;c;7;b;fr=Naissance à Riom d'Alan Cochevelou, futur Alan Styvell, qualifié parfois de barde breton.;;;;
+
+19470724;;fr;;;9;b;fr=Naissance à Hillion de Marie Noëlle et confiée à l'assistance publique. Elle sera plus connue sous le pseudonyme de Minou DROUET. À la Guerche de Bretagne où elle passe son enfance elle écrit des poêmes qui connaissent un succès retentissant. Jean COCTEAU est catégorique  'Tous les enfants sont des poêtes, sauf Minou DROUET'.;;;;
+
+
+
+
+
+
+
+
+
+
+
+15140109;;fr;;f;4;d;fr=Mort d'Anne de Bretagne à Blois. Elle était atteinte de longue date de la gravelle (calculs urinaires). Son corps est inhumé à Saint-Denis et son cœur est déposé à Nantes;;;;
+
+
+
+
+16020729;;fr;;j;7;d;fr=Exécution du duc de Biron, maréchal de France. Il fut un favori d'Henri IV.;;;;
+16031213;;fr;;j;8;d;fr=Décès à Paris du mathématicien François Viète à l'âge de 63 ans. Initiateur des symboles alphabétiques en algèbre.;;;;
+16040213;;fr;;m ;6;d;fr=Décès à Nancy (Meurthe-et-Moselle) de Catherine de Bourbon, sœur de Henri IV.;;;;
+16100514;;fr;;j;0;d;fr=Décès d'Henri IV à Paris tué par Ravaillac.;;;;
+16131022;;fr;;q;8;d;fr=Décès à Rouen (Seine-Maritime) du poète satirique Mathurin Régnier à l'âge de 40 ans.;;;;
+16170424;;fr;;j;1;d;fr=Sur ordre de Louis XIII, Concini est assassiné en arrivant au Louvre.;;;;
+16170708;;fr;;j;8;d;fr=Exécution de Leonora Galigaï, femme de Concini et confidente de Marie de Médicis.;;;;
+
+16210128;;fr;;;1;d;fr=Décès du pape Paul V de son vrai nom Camillo Borghese (italien);;;;
+16211215;;fr;;b;2;d;fr=Décès du Duc de Luynes, à Longueville près d'Agen.;;;;
+16270622;;fr;;j;5;d;fr=Exécution en place de Grève des comtes de Montmorency-Bouteville et des Chapelles sur ordre de Richelieu.;;;;
+16340818;;fr;;;5;d;fr=Supplice par le feu d'Urbain Grandier, prêtre à Loudun accusé de sorcellerie. Cette exécution, provoquée par Richelieu, suscita une vive émotion dans tout le Royaume.;;;;
+16411222;;fr;;j;1;d;fr=Décès de Sully, à Villebon.;;;;
+16420108;;it;;;4;d;fr=Décès de Galilée. Partisan de Copernic, Galilée enseigne notamment la théorie selon laquelle la Terre se trouve au centre de 9 sphères concentriques portant les planètes et les étoiles. Il critique ouvertement l'enseignement d'Aristote. Il est convoqué au Saint Office où va s'ouvrir son procès. Les audiences débutent en avril 1632. Galilée est accusé d’avoir enfreint l’interdiction de 1616 de défendre les théories de Copernic. Il est jugé coupable en juin, doit abjurer ses erreurs et est assigné à résidence. Il s’installe alors dans sa maison de la banlieue de Florence et y séjourne jusqu’à sa mort le 8 janvier 1642. Galilée ne sera réhabilité qu’en 1757 avec le retrait de l’interdiction de 1616.;;;;
+16420713;;fr;;;1;d;fr=Décès de Marie de Médicis à Cologne.;;;;
+16420912;;fr;;v;5;d;fr=Exécution à Lyon de Cinq-Mars et de Thou.;;;;
+16421204;;fr;;j;1;d,p;fr=Décès de Richelieu à Paris. Louis XIII appelle Mazarin au conseil.;;;;
+16430514;;fr;;j;0;d;fr=Décès de Louis XIII (dit Louis le Juste) d'une péritonite, à Saint Germain en Laye.;;;;
+1645;;fr;;p;9;u;fr=Mort d'Antoinette de Bretagne, vicomtesse de Guignen lègue la seigneurie à sa fille Anne d'Escoubleau;;;;
+16600202;;fr;;j;2;d;fr=Décès de "Monsieur" (Gaston d'Orléans, oncle du Roi). Le "petit Monsieur" (Philippe, frère du Roi) devient Duc d'Orléans.;;;;
+16610308;;fr;;j;1;d,p;fr=Décès de Mazarin à Vincennes (il lègue tous ses biens à Louis XIV, et il signe sur son lit de mort une ordonnance mettant hors la loi le cardinal de Retz, chef de la Fronde).;;;;
+16651119;;fr;;;4;d;fr=Décès à Rome de Nicolas Poussin à l'âge de 71 ans. Peintre classique français.;;;;
+16660120;;fr;;j;1;d;fr=Décès de la Reine Anne d'Autriche à l'âge de 65 ans, Mère de Louis XIV.;;;;
+16700629;;fr;;j;1;d,p;fr=Henriette d'Angleterre, duchesse d'Orléans (sœur du roi Charles II), meurt subitement, sans doute d'une péritonite, mais des contemporains ont cru à un empoisonnement (coupables présumés : l'entourage du chevalier de Lorraine, mignon de "Monsieur", mari d'Henriette). Louis XIV n'a pas admis la thèse du poison.;;;;
+16710424;;fr;;j;4;d;fr=Suicide de François Vatel, grand cuisinier, au cours d'un dîner à Chantilly (Oise), chez le prince de Condé, qui recevait Louis XIV. Attendant la marée, et ne la voyant pas arriver, il s'est cru déshonoré et s'est transpercé le cœur avec une épée. Quelques minutes après sa mort, la marée arrivait… ;;;;
+16730217;;fr;;j;4;d,z;fr=Décès de Molière à l'âge de 51 ans, après une représentation du "Malade imaginaire".;;;;
+16810628;;fr;;;4;d;fr=Décès de Angélique de Fontanges (20 ans), maîtresse de Louis XIV (43 ans). Madame de Montespan (disgraciée) fut soupçonnée d'empoisonnement (thèse écartée aujourd'hui).;;;;
+16830730;;fr;;j;1;d;fr=Décès de Marie-Thérèse d'Autriche épouse de Louis XIV.;;;;
+16830906;;fr;;j;1;d;fr=Décès de Colbert, à Paris.;;;;
+16840930;;fr;;j;4;d;fr=Décès à Paris du tragédien Pierre Corneille, oublié du public. Mais sa réputation est bien établie.;;;;
+16900212;;fr;;j;4;d;fr=Décès à Paris de Charles Le Brun à l'âge de 71 ans. Premier peintre du roi Louis XIV. Il s'est surtout illustré dans la décoration du château de Versailles et de la galerie des Glaces.;;;;
+16950413;;fr;;j;4;d;fr=Décès à Paris de Jean de la Fontaine à l'âge de 74 ans. Il venait de publier son douzième livre de fables.;;;;
+16960417;;fr;;v;4;d;fr=Décès à Grignan (Drôme) de la marquise de Sévigné à l'âge de 70 ans.;;;;
+16990421;;fr;;j;4;d;fr=Décès à Paris de Jean Racine à l'âge de 60 ans.;;;;
+17031119;;fr;;j;4;d;fr=Décès du "Masque de Fer". Prisonnier non identifié, surveillé par le même officier (M. de Saint-Mars) dans 3 lieux de détention successifs : Pignerol (1679-1687), île Sainte-Marguerite de Lérins (1687-1698), Bastille (1698-1703). Enterré au cimetière Saint-Paul sous le nom de "Marchiali". Toutes les hypothèses ont été avancées sur sa véritable identité.;;;;
+
+17150718;;fr;;j;0;d,p,e;fr=Décès de Louis XIV à Versailles.;;;;
+17210718;;fr;;j;4;d;fr=Décès à Nogent-sur-Marne (94) de Antoine Watteau.;;;;
+17231202;;fr;;j;1;d;fr=Le Régent (Philippe d'Orléans) meurt à Versailles.;;;;
+17320219;;fr;;j;6;d;fr=Décès à Paris de l’ébéniste André Boulle "menuisier du roi", depuis 1672 il est l'auteur des aménagements intérieurs de Versailles.;;;;
+17430129;;fr;;;3;d;fr=Décès du cardinal Fleury. Aumônier de Louis XIV et précepteur du futur Louis XV.;;;;
+17550526;;fr;;v;4;d;fr=Exécution par strangulation à Valence de Louis Mandrin, chef des faux sauniers et des contrebandiers opérant en Dauphiné et Savoie. Mandrin était devenu populaire car il attaquait les fermes générales et greniers à sel, mais en respectant grosso modo les propriétés privées.;;;;
+17580503;;it;;;1;d;fr=Décès de Benoît XIV, Pape.;;;;
+17590414;;gb;;;4;d;fr=Décès de Georg Friedrich Haendel ou Händel (George Frideric Handel en anglais, comme il l'écrivait lui-même1), compositeur allemand, naturalisé britannique.;;;;
+17590914;;fr;;;7;d;fr=Décès au Québec de Louis-Joseph de Montcalm, général français.;;;;
+
+17640417;;fr;;j;1;d;fr=Décès à Versailles de Madame de Pompadour, favorite de Louis XV.;;;;
+17640912;;fr;;j;4;d;fr=Décès de Jean-Philippe Rameau, compositeur français, à Paris.;;;;
+17660223;;fr;;m ;8;d;fr=Décès accidentel de Stanislas Leszczyñska (père de Marie Leszczyñska, femme de Louis XV), tombé dans sa cheminée, à Lunéville.;;;;
+17660701;;fr;;j;7;d;fr=Exécution du chevalier Lefebvre de La Barre (né en 1745), accusé de blasphèmes, de chansons infâmes, de profanation et de ne pas s'être découvert lors d'une procession de la Fête-Dieu. Il avait été condamné le 28 février à avoir la langue coupée, la tête tranchée et le corps réduit en cendres. Voltaire avait pris sa défense.;;;;
+17740510;;fr;;j;0;d;fr=Décès de Louis XV à Versailles de la petite vérole, dans l'indifférence totale.;;;;
+
+17780530;;fr;;j;4;d;fr=Décès à Paris de Voltaire à l'âge de 83 ans. Deux mois après une représentation triomphale de sa tragédie Irène, au cours de laquelle son buste, sur scène, fut couronné de lauriers.;;;;
+17780702;;fr;;j;4;d;fr=Décès à Ermenonville (Oise) de Jean-Jacques Rousseau. Il meurt en solitaire dans un pavillon proche du château.;;;;
+17890514;;fr;;j;1;d;fr=Décès à Meudon (92) du Dauphin Louis, fils de Louis XVI.;;;;
+17910402;;fr;;j;1;d,p,e;fr=Décès de Mirabeau.;;;;
+17930121;;fr;;j;0;d,p,e;fr=Louis XVI est exécute place de la Révolution (l'actuelle place de la Concorde) par Sanson, il veut parler au peuple mais les tambours de la Garde Nationale (commandés par Santerre) couvrent sa voix. Il est enterré cimetière de la Madeleine.;;;;
+17930714;;fr;;j;1;d,e;fr=Marat est assassiné dans son bain par Charlotte Corday (née en 1768 et guillotinée le 17 juillet 1793).;;;;
+17931016;;fr;;j;0;d,e;fr=Marie-Antoinette est exécutée à 12h 15. Elle sera ensevelie à côté de Louis XVI.;;;;
+17931106;;fr;;j;1;d,e;fr=Exécution de Philippe-Égalité (duc d'Orléans).;;;;
+17940510;;fr;;j;1;d,e;fr=Madame Élisabeth, sœur de Louis XVI est exécutée.;;;;
+
+17950608;;fr;;j;0;d;fr=Décès au Temple (version officielle) de Louis XVII et enterré le 10 au cimetière Sainte-Marguerite. De nombreux historiens soutiennent la thèse qu'il s'est en réalité évadé du Temple.;;;;
+17960329;;fr;;r;3;d;fr=Le Général Charette est fussillé à Nantes.;;;;
+1803317;;fr;;;8;d,a;fr=Mort de Jean Bertin, conseiller de préfecture, membre associé de l'Académie de législation de Paris, député au corps législatif, promoteur de la culture de la châtaigne en Ille et Vilaine. Il était de Guignen.;;;;
+1818513;;fr;;e,j;2;d;fr=Mort du dernier vicomte de Guignen, Il s'agit de Louis Joseph de Bourbon (8° du nom), prince de Condé. Il est décédé à Chantilly. Il était né le 9/8/1736 à Paris;;;;
+18210505;;fr;;;0;d;fr=Napoléon meurt à Sainte Hélène. Il sera enterré  avec les honneurs militaires dans la vallée "du géranium". Le 12 mai 1850 la chambre vote le retour des cendres. Le 15 octobre 1850, son corps est exhumé à Sainte Hélène, et ramené sur la Belle Poule par le Prince de Joinville (fils du roi Louis-Philippe). Il sera enseveli aux Invalides le 15 décembre 1850.;;;;
+18240916;;fr;;j;0;d;fr=Louis XVIII meurt (hydropique, les deux jambes gangrenées) sans descendance.;;;;
+1826;;fr;;;8;d;fr=Décès de René Théophile Hyacynthe LAËNNEC, inventeur du stéthoscope et promoteur de l'auscultation, au manoir de Kerlouarnec en Ploaré à l'âge de 45 ans. Il a été victime de la phtisie ou tuberculose que ses travaux ont précisément amené à mieux connaître;;;;
+18361106;;fr;;;0;d;fr=Charles X meurt à Gorizia (Italie).;;;;
+18380517;;fr;;j;1;d;fr=Décès de Talleyrand (Charles-Maurice de Talleyrand-Périgord).;;;;
+18420713;;fr;;j;1;d;fr=Décès accidentel, près de la place des Ternes, du Duc d'Orléans, fils de Louis-Philippe, il se brise les reins en sautant d'un cabriolet dont le cheval s'était emballé.;;;;
+18500926;;fr;;;2;d;fr=Décès de Louis-Philippe à Claremont (Royaume-Uni), où il s'était réfugié après son abdication.;;;;
+187402;;fr;;e,j;4;d;fr=Inhumation de la comtesse de Ségur (Sophie Rostopchine,) à Pluneret, Morbihan,  (décédée à Paris le 9 février).;;;;
+18770903;;fr;;j;0;d;fr=Décès de Adolphe Thiers (ancien Président de la République).;;;;
+18910909;;fr;;i;0;d;fr=Décès de Jules Grévy (ancien Président de la République) à Mont-sous-Vaudrey (Jura).;;;;
+18931017;;fr;;f;0;d;fr=Décès du Maréchal de Mac-Mahon (ancien Président de la République) à Montcresson (Loiret).;;;;
+18940624;;fr;;v;0;d,p,e;fr=Assassinat de Sadi Carnot à Lyon (Président de la République) par Caserio (attentat anarchiste).;;;;
+18990216;;fr;;j;0;d,p,e;fr=Félix Faure meurt à l’Élisée au cours d'une aventure galante avec Marguerite Steinheil, née Japy, future héroïne du drame de l'impasse Ronsin en 1908.;;;;
+19140731;;fr;;j;0;d,p,e;fr=Jean Jaurès est assassiné au Café du Croissant, par Raoul Villain.;;;;
+19320506;;fr;;j;0;d,p,e;fr=Paul Doumer, Président de la République, est assassiné  par un émigré russe (sans doute fou) Paul Gorguloff, lors de l'inauguration d'une grande exposition consacrée aux écrivains de la Grande guerre.;;;;
+19701109;;fr;;m ;0;d;fr=Décès du général de Gaulle à Colombey-les-Deux-Églises. Pompidou s'adresse aux français et commence son discours magistralement : « Le général de Gaulle est mort. La France est veuve. » Cérémonie à Notre-Dame de Paris en présence de nombreux chefs d'État.;;;;
+19740402;;fr;;j;0;d,p,e;fr=Georges Pompidou meurt de la maladie de Waldenström, deux ans avant la fin de son mandat.;;;;
+19800202;;fr;;j;2;d,e;fr=L'ancien ministre Joseph Fontanet est assassiné. Le meurtre reste non élucidé.;;;;
+
+
+
+1362;;fr;;;1;x;fr=Guillaume de France épouse Jeanne de Lohéac;;;;
+1408;;fr;;;8;x;fr=À Baulon Jean de Rougé, seigneur de Derval, qui marié à sa sœur Jeanne à Armal, sire de Châteaugiron, lui offre à cette occasion le domaine et la seigneurie de la Musse.;;;;
+15140508;;fr;;;0;x;fr=Claude de France, fille aînée de Louis XII et d'Anne de Bretagne, épouse son cousin le comte d'Angoulême, futur François Ier.;;;;
+16001216;;fr;;v;0;x;fr=Mariage de Henri IV et de Marie de Médicis, à Lyon. Cette union permet un rapprochement avec l'Italie.;;;;
+16121018;;fr;;;0;x;fr=Fiançailles de Louis XIII avec Anne d'Autriche.;;;;
+16151128;;fr;;b;0;x;fr=Mariage à Bordeaux de Louis XIII et de Anne d'Autriche (13 ans), fille du Roi d'Espagne.;;;;
+16250511;;fr;;;1;x;fr=Mariage de Charles Ier d'Angleterre et de Henriette de France, sœur du Roi Louis XIII.;;;;
+16260806;;fr;;;1;x;fr=Mariage de Gaston d'Orléans (frère du Roi Louis XIII) avec Marie de Bourbon, duchesse de Montpensier.;;;;
+16320103;;fr;;;1;x;fr=Mariage secret de Gaston d'Orléans avec Marguerite de Lorraine.;;;;
+16440804;;fr;;j;8;x;fr=Par son mariage avec Henri de Sévigné, à Paris à 2 heures du matin comme le voulait la mode de l'époque, Marie de Rabutin Chantal devient marquise de Sévigné. Dans la corbeille de mariage l'époux apporte la propriété des Rochers proche de Vitré et la misérable terre de Sévigné au village de Cesson;;;;
+16600609;;fr;;;0;x;fr=Mariage de Louis XIV et de Marie Thérèse d'Autriche à Saint-Jean de Luz.;;;;
+16711121;;fr;;;1;x;fr=Monsieur, frère du roi, épouse la princesse Palatine, chroniqueuse du règne.;;;;
+16971207;;fr;;;1;x;fr=Noces de Marie-Adélaïde de Savoie et du duc de Bourgogne, petit-fils aîné de Louis XIV. Ils eurent trois enfants : Louis de France (25 juin 1704 † 13 avril 1705), duc de Bretagne, Louis de France (8 janvier 1707 † 8 mars 1712), duc de Bretagne puis dauphin de France, Louis de France (15 février 1710 † 10 mai 1774), duc d'Anjou, futur Louis XV.;;;;
+17250905;;fr;;;0;x;fr=Mariage de Louis XV et de Marie Leszczyñska (qui a 7 ans de plus), fille de l'ex Roi de Pologne. L'infante d'Espagne est trop jeune : Louis XV ne pourrait l'épouser avant d'avoir 23 ans (et s'il mourait sans enfants, le trône irait au duc d'Orléans, fils du Régent, ennemi des Condé).;;;;
+17700513;;fr;;;1;x;fr=Le Dauphin Louis (futur Louis XVI) épouse l'archiduchesse Marie-Antoinette d'Autriche. C'est l'aboutissement de la politique de Bernis, soutenue à Paris par le Comte Mercy d'Argenteau, ambassadeur d'Autriche depuis 1766.;;;;
+17960309;;fr;;;0;x;fr=Mariage religieux entre Bonaparte et Joséphine Tascher de la Pagerie (de Beauharnais) - le mariage civil a eu lieu le 2 décembre 1804.;;;;
+18091130;;fr;;;1;x;fr=Napoléon répudie Joséphine de Beauharnais, sa femme, pour stérilité.;;;;
+18091216;;fr;;;1;x;fr=Annulation du mariage civil entre Napoléon et Joséphine de Beauharnais par sénatus-consulte.;;;;
+18100402;;fr;;;0;x;fr=Mariage de Napoléon et de Marie Louise d'Autriche.;;;;
+18530129;;fr;;;0;x;fr=Mariage de Napoléon III avec Eugénie de Montijo.;;;;
+
+#
+#
+#
+#
+#=================================== END OF FILE ==============================
