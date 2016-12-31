@@ -243,15 +243,16 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     /**
      * Cette fonction est appelée par le système avant la fermeture du composant.
      * Si des modifications des données n'ont pas été sauvegardées elle demande
-     * à l'utilisateur s'il veut les sauvegarder.
+     * à l'utilisateur s'il veut les sauvegarder ou s'il veut abandonner la fermeture
+     * du composant
      * @return false si l'utilisateur veut interrompre la fermeture
      */
     @Override
     public boolean canClose() {
         boolean result = true;
         if(dataManager.isDirty()) {
-            // je demande s'il faut sauvegarder les données
-            // result = false si l'action doit être abandonnée
+            // je demande s'il faut sauvegarder les données ou s'il veut abandonner
+            // la fermeture du composant
             result = askSaveData();
         }
 
