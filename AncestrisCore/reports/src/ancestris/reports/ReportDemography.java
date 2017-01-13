@@ -26,12 +26,15 @@ import java.util.Iterator;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import org.openide.util.lookup.ServiceProvider;
+
 /** 
  *
  * Ancestris - http://www.ancestris.org
  *
  * A report showing age distribution for males/females. 
  */
+@ServiceProvider(service=Report.class)
 public class ReportDemography extends Report {
 
   /** The maximum age stored in the series. */
