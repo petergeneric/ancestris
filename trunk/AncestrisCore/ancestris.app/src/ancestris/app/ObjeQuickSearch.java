@@ -32,7 +32,7 @@ public class ObjeQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Media media : context.getGedcom().getMedias()) {
-                    String rep = Utilities.getPhraseBit(media.getTitle(), request.getText());
+                    String rep = Utilities.getPhraseBit(media.getId() + ":" + media.getTitle(), request.getText());
                     if (rep == null) {
                         continue;
                     }
