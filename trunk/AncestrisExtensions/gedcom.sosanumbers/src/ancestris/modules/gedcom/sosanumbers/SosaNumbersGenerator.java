@@ -142,7 +142,7 @@ public class SosaNumbersGenerator implements Constants {
         };
         fullTask.execute();
         dialog.setVisible(true);
-
+        
         // Run main task while displaying progress bar
         // -------------------------------------------
         progressMonitor = new ProgressMonitor(null, title, "", 0, maxCounter);
