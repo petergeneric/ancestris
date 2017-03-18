@@ -1266,6 +1266,7 @@ import org.openide.windows.WindowManager;
         layer = new LinkedList<EventSerie>();
         indiLayers.add(layer);
         layer.add(new EventSerie(null));
+        view.setRootTitle(rootIndi.toString(true));
     }
         
     

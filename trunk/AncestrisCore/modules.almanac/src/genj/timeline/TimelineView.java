@@ -74,6 +74,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -147,6 +148,7 @@ public class TimelineView extends View implements SelectionListener {
     public int mode = INDI_MODE;
     private CenterToSelectionAction ctsButton;
     private CenterTreeToIndividual cttiButton;
+    private JLabel rootTitle;
 
     /**
      * Constructor
@@ -498,12 +500,21 @@ public class TimelineView extends View implements SelectionListener {
         toolbar.add(cttiButton);
         toolbar.addSeparator();
         toolbar.add(new ScreenshotAction(content));
-        toolbar.add(new JLabel(" "), "growx, pushx, center");
+        rootTitle = new JLabel();
+        rootTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        toolbar.add(rootTitle, "growx, pushx, center");
+        rootTitle.setText("");
         toolbar.addSeparator();
         toolbar.add(new Settings());
-
     }
 
+    public void setRootTitle(String title) {
+        if (rootTitle != null && title != null) {
+            rootTitle.setText("<html><b>" + resources.getString("root.name") + " " + title + "</b></html");
+        }
+    }
+    
+    
     /**
      * callback - context event
      */
