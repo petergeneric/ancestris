@@ -754,126 +754,131 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
     }
 
-    void setFilterAscendants(boolean selected) {
+    public void setFilterAscendants(boolean selected) {
         geoFilter.ascendants = selected;
         applyFilters();        
     }
 
-    void setFilterCousins(boolean selected) {
+    public void setFilterCousins(boolean selected) {
         geoFilter.cousins = selected;
         applyFilters();
     }
 
-    void setFilterAncestors(boolean selected) {
+    public void setFilterAncestors(boolean selected) {
         geoFilter.otherAncestors = selected;
         applyFilters();
     }
 
-    void setFilterSelectedIndi(boolean selected) {
+    public void setFilterSelectedIndi(boolean selected) {
         geoFilter.selectedIndividual = selected;
         applyFilters();
     }
 
-    void setFilterSelectedSearch(boolean selected) {
+    public void setFilterSelectedSearch(boolean selected) {
         geoFilter.selectedSearch = selected;
         applyFilters();
     }
 
-    void setFilterMales(boolean selected) {
+    public void setFilterMales(boolean selected) {
         geoFilter.males = selected;
         applyFilters();
     }
 
-    void setFilterRootIndi() {
-        geoFilter.askRootIndi();
-        applyFilters();
+    public String setFilterRootIndi() {
+        genj.gedcom.Indi indi = geoFilter.askRootIndi();
+        applyFilters();  
+        return indi.toString(true);
     }
 
-    void setFilterFemales(boolean selected) {
+    public void setFilterFemales(boolean selected) {
         geoFilter.females = selected;
         applyFilters();
     }
 
-    void setFilterYearStart(String text) {
+    public void setFilterYearStart(String text) {
         geoFilter.yearStart = text;
         applyFilters();
     }
 
-    void setFilterYearEnd(String text) {
+    public void setFilterYearEnd(String text) {
         geoFilter.yearEnd = text;
         applyFilters();
     }
 
-    void setFilterBirths(boolean selected) {
+    public void setFilterBirths(boolean selected) {
         geoFilter.births = selected;
         applyFilters();
     }
 
-    void setFilterMarriages(boolean selected) {
+    public void setFilterMarriages(boolean selected) {
         geoFilter.marriages = selected;
         applyFilters();
     }
 
-    void setFilterDeaths(boolean selected) {
+    public void setFilterDeaths(boolean selected) {
         geoFilter.deaths = selected;
         applyFilters();
     }
 
-    void setFilterEvents(boolean selected) {
+    public void setFilterEvents(boolean selected) {
         geoFilter.otherEvents = selected;
         applyFilters();
     }
 
-    boolean getFilterAscendants() {
+    public boolean getFilterAscendants() {
         return geoFilter.ascendants;
     }
 
-    boolean getFilterCousins() {
+    public boolean getFilterCousins() {
         return geoFilter.cousins;
     }
 
-    boolean getFilterAncestors() {
+    public boolean getFilterAncestors() {
         return geoFilter.otherAncestors;
     }
 
-    boolean getFilterSelectedIndi() {
+    public boolean getFilterSelectedIndi() {
         return geoFilter.selectedIndividual;
     }
 
-    boolean getFilterSearch() {
+    public boolean getFilterSearch() {
         return geoFilter.selectedSearch;
     }
 
-    boolean getFilterMales() {
+    public boolean getFilterMales() {
         return geoFilter.males;
     }
 
-    boolean getFilterFemales() {
+    public boolean getFilterFemales() {
         return geoFilter.females;
     }
 
-    String getFilterYearStart() {
+    public String getFilterYearStart() {
         return geoFilter.yearStart;
     }
 
-    String getFilterYearEnd() {
+    public String getFilterYearEnd() {
         return geoFilter.yearEnd;
     }
 
-    boolean getFilterBirths() {
+    public boolean getFilterBirths() {
         return geoFilter.births;
     }
 
-    boolean getFilterMarriages() {
+    public boolean getFilterMarriages() {
         return geoFilter.marriages;
     }
 
-    boolean getFilterDeaths() {
+    public boolean getFilterDeaths() {
         return geoFilter.deaths;
     }
 
-    boolean getFilterEvents() {
+    public boolean getFilterEvents() {
         return geoFilter.otherEvents;
+    }
+
+    public String getFilerRootIndi() {
+        return geoFilter.getRootIndi(getGedcom()).toString(true);
     }
 
     
