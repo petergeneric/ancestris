@@ -240,35 +240,40 @@ public class GeoFilter {
      * @param gedcom
      * @return
      */
-    private Indi getRootIndi(Gedcom gedcom) {
-        if (decujusIndi != null) {
-            return decujusIndi;
-        }
-        if (gedcom == null) {
-            return null;
+    public Indi getRootIndi(Gedcom localGedcom) {
+        if (localGedcom == null) {
+            localGedcom = this.gedcom;
         }
         // Get all individuals and stop when sosa 1 is found
-        Collection <Indi>entities = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
+        Collection <Indi>entities = (Collection <Indi>) localGedcom.getEntities(Gedcom.INDI);
         Property[] props = null;
-        int sosaNb = 0;
         String sosaStr = "";
         for (Iterator <Indi>it = entities.iterator(); it.hasNext();) {
             Indi indi = it.next();
             props = indi.getProperties("_SOSA");
-            if (props == null) {
-                continue;
+            if (props != null) {
+                for (int i = 0; i < props.length; i++) {
+                    Property prop = props[i];
+                    sosaStr = prop.toString();
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
+                        return indi;
+                    }
+                }
             }
-            for (int i = 0; i < props.length; i++) {
-                Property prop = props[i];
-                sosaStr = prop.toString();
-                if (getNb(sosaStr) == 1) {
-                    return indi;
+            props = indi.getProperties("_SOSADABOVILLE");
+            if (props != null) {
+                for (int i = 0; i < props.length; i++) {
+                    Property prop = props[i];
+                    sosaStr = prop.toString();
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
+                        return indi;
+                    }
                 }
             }
         }
 
         // If we are here, no sosa was found, take first element
-        return entities.iterator().next();
+        return getSelectedIndi();
     }
 
     /**
