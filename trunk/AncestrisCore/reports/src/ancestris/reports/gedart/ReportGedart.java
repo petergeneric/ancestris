@@ -14,33 +14,40 @@ package ancestris.reports.gedart;
  */
 /**
  * TODO Daniel: inclure dans la liste les sources, repo, ... fictifs pour faire
- * un tri TODO Daniel: classer les colonnes au choix, avec plusieurs cle TODO
- * Daniel: limiter aux evenements/general/tous TODO Daniel: differencier les
- * todos sur evt des todo globaux TODO Daniel: ligne blanche entre la fin des
- * taches, et le resume TODO Daniel: pouvoir lancer le rapport sur une lignée
- * (asc ou desc) TODO Daniel: dans le cas asc ou desc trier par generation/sosa
- * TODO Daniel: choisir d'inclure ou non les todo TODO Daniel: pouvoir sortir le
- * rapport dans une autre langue TODO Daniel: Format de la fiche de travail:
- * l'adoption, la naturalisation,l'emigration, l'immigration Plus une NOTE
- * generale au niveau de la naissance, au niveau du decès au niveau d'un
- * evenement quelconque, ça fait une sorte de champ memo. Ceci bien sur ne vaut
- * qu epour la fiche de travail la date du diplome, et la date de la retraite
- * (evenement : Graduate, et Retired) liste type "checkboxes" de pouvoir cocher
- * ce qu'on voulait comme 'events", dans une fiche de travail, ou bien un champ
- * texte pour rentrer les EVEN (PATH)
+ * un tri 
+ * TODO Daniel: classer les colonnes au choix, avec plusieurs cle 
+ * TODO Daniel: limiter aux evenements/general/tous 
+ * TODO Daniel: differencier les todos sur evt des todo globaux 
+ * TODO Daniel: ligne blanche entre la fin des taches, et le resume 
+ * TODO Daniel: pouvoir lancer le rapport sur une lignée (asc ou desc) 
+ * TODO Daniel: dans le cas asc ou desc trier par generation/sosa
+ * TODO Daniel: choisir d'inclure ou non les todo 
+ * TODO Daniel: pouvoir sortir le rapport dans une autre langue 
+ * TODO Daniel: Format de la fiche de travail: l'adoption, la naturalisation,
+ * l'emigration, l'immigration Plus une NOTE generale au niveau de la naissance, 
+ * au niveau du decès au niveau d'un evenement quelconque, ça fait une sorte de 
+ * champ memo. Ceci bien sur ne vaut que pour la fiche de travail la date du 
+ * diplome, et la date de la retraite (evenement : Graduate, et Retired) liste 
+ * type "checkboxes" de pouvoir cocher ce qu'on voulait comme 'events", dans 
+ * une fiche de travail, ou bien un champ texte pour rentrer les EVEN (PATH)
  */
 /**
- * TODO: pouvoir selectionner les proprietes. par exemple "EVEN:TYPE=CONF": voir
- * la selection des todo sous forme de note TODO:	formatter les note (par
- * exemple mettre un lien cliquable TODO:	inclure le rapport de controle de
- * validite TODO: inclure les generation au dessus et en dessous (parents,
- * gdparents, fratrie, enfants TODO: recuperer l'evt lors d'une asso TODO:
- * recuperer CHAN:DATE TODO:	mettre une arbo des templates TODO:	faire un plugin
- * ancestris pour gerer des rapports type gedart TODO:	Aspect multilangue TODO:
- * voir getOptionsFromUser TODO:	ajouter une methode pour trier: comme public
- * Entity[] getEntities(String tag, Comparator comparator) dans Gedcom TODO:
- * ajouter des methodes 'getancestors getdescendants dans reportIndi TODO:
- * Ajouter un fichier de properties pour pouvoir demander des options
+ * TODO: pouvoir selectionner les proprietes. 
+ * par exemple "EVEN:TYPE=CONF": voir la selection des todo sous forme de note 
+ * TODO: formatter les note (par exemple mettre un lien cliquable 
+ * TODO: inclure le rapport de controle de validite 
+ * TODO: inclure les generation au dessus et en dessous (parents, gdparents, 
+ * fratrie, enfants 
+ * TODO: recuperer l'evt lors d'une asso 
+ * TODO: recuperer CHAN:DATE 
+ * TODO: mettre une arbo des templates 
+ * TODO: faire un plugin ancestris pour gerer des rapports type gedart 
+ * TODO: Aspect multilangue 
+ * TODO: voir getOptionsFromUser 
+ * TODO: ajouter une methode pour trier: comme public Entity[] getEntities
+ * (String tag, Comparator comparator) dans Gedcom 
+ * TODO: ajouter des methodes 'getancestors getdescendants dans reportIndi 
+ * TODO: Ajouter un fichier de properties pour pouvoir demander des options
  *
  */
 import ancestris.core.actions.AbstractAncestrisAction;
@@ -57,7 +64,7 @@ import java.util.logging.Level;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
- * GenJ - Report
+ * Ancestris - Report
  *
  * @author Daniel ANDRE <daniel.andre@free.fr>
  * @version 1.0
@@ -74,26 +81,29 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Report.class)
 public class ReportGedart extends Report {
 
-    private GedartTemplates gedartTemplates = null;
-    private GedartTemplate[] gedartTemplatesOption = null;
     private String todoTag = "NOTE"; // TODO: remettre public
     private String todoStart = "TODO:"; // TODO: remettre public
-    public boolean includeIndi = true;
-    public boolean includeFam = true;
-    public boolean includeTOC = false;
-    public boolean includeIndex = false;
     private boolean outputSummary = false; // TODO: remettre public
-    public boolean showID = true;
     private boolean isTodo = false; // TODO: remettre public
-    public boolean includeBlankCells = false;
     private boolean isOneFile = true; // TODO: remettre public
-//	public boolean showInReportWindow = true;
-    public boolean saveReportToFile = true;
-    private int iTemplate = 0;
-    public String[] templates = null;
-    // private PrintWriter out;
     private DocReport mydoc;
     private Gedcom theGedcom;
+//	public boolean showInReportWindow = true;
+    // private PrintWriter out;
+
+    public boolean saveReportToFile = true;
+    public boolean includeFam = true;
+    public boolean includeIndi = true;
+    public boolean includeBlankCells = false;
+    public boolean includeTOC = false;
+    public boolean includeIndex = false;
+    public boolean showID = true;
+
+    private GedartTemplates gedartTemplates = new GedartTemplates();
+    private GedartTemplate[] gedartTemplatesOption = gedartTemplates.toArray();
+    public int templateModel = 0;
+    public String templateModels[] = GedartTemplate.getDescription(gedartTemplatesOption);
+        
 
     /**
      * The report's entry point
@@ -162,13 +172,10 @@ public class ReportGedart extends Report {
      * @param fams
      */
     private File process(Entity[] indis, Entity[] fams, GedartTemplate usetemplate) {
-        gedartTemplates = new GedartTemplates();
-        gedartTemplatesOption = gedartTemplates.toArray();
-        templates = GedartTemplate.getDescription(gedartTemplatesOption);
         String thetemplate;
         String extension = null;
-        if (usetemplate == null && gedartTemplatesOption.length > iTemplate) {
-            usetemplate = gedartTemplatesOption[iTemplate];
+        if (usetemplate == null && gedartTemplatesOption.length > templateModel) {
+            usetemplate = gedartTemplatesOption[templateModel];
         }
         if (usetemplate == null) {
             return null;
