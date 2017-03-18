@@ -490,6 +490,7 @@ public class TimelineView extends View implements SelectionListener {
         ctsButton = new CenterToSelectionAction();
         cttiButton = new CenterTreeToIndividual();
 
+        toolbar.setFloatable(false);
         toolbar.add(sliderCmPerYear);
         toolbar.addSeparator();
         toolbar.add(new ToggleModeAction());
