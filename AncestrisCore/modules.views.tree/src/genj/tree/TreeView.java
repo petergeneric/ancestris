@@ -734,7 +734,7 @@ public class TreeView extends View implements Filter {
     }
 
     private void setRootTitle(String title) {
-        rootTitle.setText("<html><b>" + title + "</b></html");
+        rootTitle.setText("<html><b>" + RESOURCES.getString("root.name") + " " + title + "</b></html");
 
     }
 
@@ -794,7 +794,7 @@ public class TreeView extends View implements Filter {
         if (root == null || root instanceof Indi || root instanceof Fam) {
             model.setRoot(root);
             show(root, true);
-            String title = root == null ? "" : root.toString(false);
+            String title = root == null ? "" : root.toString(true);
             setRootTitle(title);
         }
 
@@ -1431,8 +1431,8 @@ public class TreeView extends View implements Filter {
                 e = c.getEntity();
             if (e == null)
                 e = TreeView.this.getRoot();
-            setTip(RESOURCES.getString("root.context",e==null?"":e.toString(false)));
-            setText(RESOURCES.getString("root.context",e==null?"":e.toString(false)));
+            setTip(RESOURCES.getString("root.context",e==null?"":e.toString(true)));
+            setText(RESOURCES.getString("root.context",e==null?"":e.toString(true)));
             setImage(Images.imgView);
         }
 
@@ -1447,8 +1447,8 @@ public class TreeView extends View implements Filter {
                 }
             }
             if (entity != null){
-                setTip(RESOURCES.getString("root.context",entity==null?"":entity.toString(false)));
-                setText(RESOURCES.getString("root.context",entity==null?"":entity.toString(false)));
+                setTip(RESOURCES.getString("root.context",entity==null?"":entity.toString(true)));
+                setText(RESOURCES.getString("root.context",entity==null?"":entity.toString(true)));
             }
             super.contextChanged();
         }
@@ -1707,8 +1707,8 @@ public class TreeView extends View implements Filter {
                 e = c.getEntity();
             if (e == null)
                 e = TreeView.this.getRoot();
-            setTip(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(false)));
-            setText(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(false)));
+            setTip(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(true)));
+            setText(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(true)));
             setImage(Images.imgGotoRoot);
         }
 
@@ -1723,8 +1723,8 @@ public class TreeView extends View implements Filter {
                 }
             }
             if (entity != null){
-                setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
-                setText(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
+                setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true)));
+                setText(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true)));
             }
             super.contextChanged();
         }
