@@ -3743,7 +3743,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // create family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
-            String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
+                String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
             final Fam currentFam;
             if (relation == IndiCreator.REL_CHILD) {
                 currentFam = Utils.getCurrentFamily(indi, familyTree);
@@ -3758,7 +3758,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     label = " ";
                 }
             } else {
-                currentFam = null;
+                currentFam = Utils.getCurrentFamily(indi, familyTree);
             }
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
