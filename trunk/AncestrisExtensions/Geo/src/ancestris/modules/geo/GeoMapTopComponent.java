@@ -591,7 +591,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
             hoverPanel.setVisible(false); 
             markers = gpl.getPlaces();
-            geoFilter.calculatesIndividuals(getGedcom(), true); // refresh lists from gedcom changes
             applyFilters();
         }
     }
@@ -604,7 +603,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         geoPoints.clear();
         boolean filterIsOn = false;
         if (markers != null) {
-            geoFilter.calculatesIndividuals(getGedcom(), false); // refresh lists from selections being made in the editor or the list, not from gedcom changes
+            geoFilter.calculatesIndividuals(getGedcom());
             for (int i = 0; i < markers.length; i++) {
                 GeoNodeObject geoNodeObject = markers[i];
                 if (geoFilter.complies(geoNodeObject)) {
@@ -620,7 +619,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             if (geoPoints.size() < markers.length) {
                 String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
-                msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + geoFilter.decujusIndi.toString();
+                msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + geoFilter.rootIndi.toString();
                 StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             }
         }
@@ -801,6 +800,18 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return indi.toString(true);
     }
 
+    public String setFilterDeCujusIndi() {
+        genj.gedcom.Indi indi = geoFilter.getDeCujusIndi();
+        if (indi == null) {
+            indi = geoFilter.getRootIndi();
+        }
+        if (indi != null) {
+            geoFilter.rootIndi = indi;
+        }
+        applyFilters();  
+        return indi != null ? indi.toString(true) : "";
+    }
+
     public void setFilterFemales(boolean selected) {
         geoFilter.females = selected;
         applyFilters();
@@ -889,7 +900,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public String getFilerRootIndi() {
-        return geoFilter.getRootIndi(getGedcom()).toString(true);
+        return geoFilter.getRootIndi().toString(true);
     }
 
     

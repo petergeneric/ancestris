@@ -46,7 +46,7 @@ public class GeoFilter {
     public boolean marriages = false;
     public boolean deaths = false;
     public boolean otherEvents = false;
-    public Indi decujusIndi = null;
+    public Indi rootIndi = null;
     private List<Indi> ancestorsList = null;
     private List<Indi> cousinsList = null;
     private List<Indi> othersAncestorsList = null;
@@ -55,18 +55,20 @@ public class GeoFilter {
 
     public void setGedcom(Gedcom gedcom) {
         this.gedcom = gedcom;
-        calculatesIndividuals(gedcom, true);
+        calculatesIndividuals(gedcom);
     }
 
-    public void calculatesIndividuals(Gedcom gedcom, boolean gedcomToo) {
-        decujusIndi = getRootIndi(gedcom);
-        if (decujusIndi != null && gedcomToo) {
-            ancestorsList = getAncestors(decujusIndi);
+    public void calculatesIndividuals(Gedcom gedcom) {
+        selectedIndi = getSelectedIndi();
+        if (rootIndi == null) {
+            rootIndi = selectedIndi;
+        }
+        if (rootIndi != null) {
+            ancestorsList = getAncestors(rootIndi);
             cousinsList = getCousins(ancestorsList);
             othersAncestorsList = getOtherAncestorsList(ancestorsList, cousinsList);
         }
         searchedIndis = getSearchedIndis();
-        selectedIndi = getSelectedIndi();
     }
 
     public boolean complies(GeoNodeObject node) {
@@ -228,19 +230,20 @@ public class GeoFilter {
         return eventsMinDate != +99999 && eventsMinDate <= getNb(yearEnd);
     }
 
+    public Indi getRootIndi() {
+        return rootIndi;
+    }
+    
     /**
      * Get root indi in two ways:
      * - first look for _SOSA=1
-     * - if not found, ask user for an individual
+     * - if not found, return null
      * @param gedcom
      * @return
      */
-    public Indi getRootIndi(Gedcom localGedcom) {
-        if (localGedcom == null) {
-            localGedcom = this.gedcom;
-        }
+    public Indi getDeCujusIndi() {
         // Get all individuals and stop when sosa 1 is found
-        Collection <Indi>entities = (Collection <Indi>) localGedcom.getEntities(Gedcom.INDI);
+        Collection <Indi>entities = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
         Property[] props = null;
         String sosaStr = "";
         for (Iterator <Indi>it = entities.iterator(); it.hasNext();) {
@@ -249,7 +252,7 @@ public class GeoFilter {
             if (props != null) {
                 for (int i = 0; i < props.length; i++) {
                     Property prop = props[i];
-                    sosaStr = prop.toString();
+                    sosaStr = prop.getDisplayValue();
                     if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
                         return indi;
                     }
@@ -259,16 +262,18 @@ public class GeoFilter {
             if (props != null) {
                 for (int i = 0; i < props.length; i++) {
                     Property prop = props[i];
-                    sosaStr = prop.toString();
-                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
+                    sosaStr = prop.getDisplayValue();
+                    if (sosaStr.startsWith("1")) {
+                        String str = "";
+                    }
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2))) {
                         return indi;
                     }
                 }
             }
         }
 
-        // If we are here, no sosa was found, take first element
-        return getSelectedIndi();
+        return null;
     }
 
     /**
@@ -277,26 +282,26 @@ public class GeoFilter {
      * @return
      */
     public Indi askRootIndi() {
-        Indi rootSosa = null;
+        Indi chosenIndi = null;
         Entity[] ents = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
         JComboBox <Entity>jlist = new JComboBox<Entity>(ents);
 
         // set selected item to current decujus
-        if (decujusIndi != null) {
-            jlist.setSelectedItem(decujusIndi);
+        if (rootIndi != null) {
+            jlist.setSelectedItem(rootIndi);
         }
 
         // ask user
         NotifyDescriptor d = new NotifyDescriptor.Confirmation(jlist, NbBundle.getMessage(GeoMapTopComponent.class, "sosa.input.title"), NotifyDescriptor.OK_CANCEL_OPTION);
         if (DialogDisplayer.getDefault().notify(d) == NotifyDescriptor.OK_OPTION) {
-            rootSosa = (Indi) ents[jlist.getSelectedIndex()];
+            chosenIndi = (Indi) ents[jlist.getSelectedIndex()];
         } else {
-            rootSosa = decujusIndi != null ? decujusIndi : (Indi) ents[0];
+            chosenIndi = rootIndi != null ? rootIndi : (Indi) ents[0];
         }
 
         // Recalculates
-        if (rootSosa != null) {
-            ancestorsList = getAncestors(rootSosa);
+        if (chosenIndi != null) {
+            ancestorsList = getAncestors(chosenIndi);
             cousinsList = getCousins(ancestorsList);
             othersAncestorsList = getOtherAncestorsList(ancestorsList, cousinsList);
         } else {
@@ -304,12 +309,8 @@ public class GeoFilter {
             cousinsList.clear();
             othersAncestorsList = getOtherAncestorsList(ancestorsList, cousinsList);
         }
-        decujusIndi = rootSosa;
-//        printList("ancestor", ancestorsList);
-//        printList("cousins", cousinsList);
-//        printList("othersAncestorsList", othersAncestorsList);
-//        printList("searchedIndis", searchedIndis);
-        return rootSosa;
+        rootIndi = chosenIndi;
+        return chosenIndi;
     }
 
     /**
@@ -344,15 +345,15 @@ public class GeoFilter {
 
     /**
      * Get list of ancestors from the root indi
-     * @param decujusIndi
+     * @param rootIndi
      * @return
      */
-    private List<Indi> getAncestors(Indi decujusIndi) {
-        if (decujusIndi == null) {
+    private List<Indi> getAncestors(Indi rootIndi) {
+        if (rootIndi == null) {
             return null;
         }
         List<Indi> indis = new ArrayList<Indi>();
-        indis.add(decujusIndi);
+        indis.add(rootIndi);
         HashSet<Indi> tempList = new HashSet<Indi>();
         for (ListIterator<Indi> it = indis.listIterator(); it.hasNext();) {
             Indi indi = it.next();
