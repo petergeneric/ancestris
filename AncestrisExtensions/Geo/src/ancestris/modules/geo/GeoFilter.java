@@ -34,6 +34,7 @@ public class GeoFilter {
     private Gedcom gedcom;
     public String location = "";
     public boolean ascendants = false;
+    public boolean descendants = false;
     public boolean cousins = false;
     public boolean otherAncestors = false;
     public boolean selectedIndividual = false;
@@ -47,11 +48,14 @@ public class GeoFilter {
     public boolean deaths = false;
     public boolean otherEvents = false;
     public Indi rootIndi = null;
-    private List<Indi> ancestorsList = null;
-    private List<Indi> cousinsList = null;
-    private List<Indi> othersAncestorsList = null;
-    private List<Indi> searchedIndis = null;
+    private HashSet<Indi> ancestorsList = null;
+    private HashSet<Indi> descendantsList = null;
+    private HashSet<Indi> cousinsList = null;
+    private HashSet<Indi> othersList = null;
+    private HashSet<Indi> searchedIndis = null;
     private Indi selectedIndi = null;
+    
+    private boolean isBusy = false;
 
     public void setGedcom(Gedcom gedcom) {
         this.gedcom = gedcom;
@@ -59,16 +63,22 @@ public class GeoFilter {
     }
 
     public void calculatesIndividuals(Gedcom gedcom) {
+        if (isBusy) {
+            return;
+        }
+        isBusy = true;
         selectedIndi = getSelectedIndi();
         if (rootIndi == null) {
             rootIndi = selectedIndi;
         }
         if (rootIndi != null) {
             ancestorsList = getAncestors(rootIndi);
-            cousinsList = getCousins(ancestorsList);
-            othersAncestorsList = getOtherAncestorsList(ancestorsList, cousinsList);
+            descendantsList = getDescendants(rootIndi);
+            cousinsList = getCousins();
+            othersList = getOthersList();
         }
         searchedIndis = getSearchedIndis();
+        isBusy = false;
     }
 
     public boolean complies(GeoNodeObject node) {
@@ -86,8 +96,8 @@ public class GeoFilter {
         List<Indi> indis = node.getIndis();
 
         // Reject node if does not match ancestor relation
-        if (ascendants || cousins || otherAncestors) {
-            if (!((ascendants && exists(indis, ancestorsList)) || (cousins && exists(indis, cousinsList)) || (otherAncestors && exists(indis, othersAncestorsList)))) {
+        if (ascendants || descendants || cousins || otherAncestors) {
+            if (!((ascendants && exists(indis, ancestorsList)) || (descendants && exists(indis, descendantsList)) || (cousins && exists(indis, cousinsList)) || (otherAncestors && exists(indis, othersList)))) {
                 return false;
             }
         }
@@ -129,14 +139,13 @@ public class GeoFilter {
                 return false;
             }
         }
-
         return true;
     }
 
     /**
      * Filters per se
      */
-    private boolean exists(List<Indi> indis, List<Indi> personsList) {
+    private boolean exists(List<Indi> indis, HashSet<Indi> personsList) {
         if (indis == null || personsList == null) {
             return true;
         }
@@ -299,17 +308,6 @@ public class GeoFilter {
             chosenIndi = rootIndi != null ? rootIndi : (Indi) ents[0];
         }
 
-        // Recalculates
-        if (chosenIndi != null) {
-            ancestorsList = getAncestors(chosenIndi);
-            cousinsList = getCousins(ancestorsList);
-            othersAncestorsList = getOtherAncestorsList(ancestorsList, cousinsList);
-        } else {
-            ancestorsList.clear();
-            cousinsList.clear();
-            othersAncestorsList = getOtherAncestorsList(ancestorsList, cousinsList);
-        }
-        rootIndi = chosenIndi;
         return chosenIndi;
     }
 
@@ -348,16 +346,18 @@ public class GeoFilter {
      * @param rootIndi
      * @return
      */
-    private List<Indi> getAncestors(Indi rootIndi) {
+    private HashSet<Indi> getAncestors(Indi rootIndi) {
         if (rootIndi == null) {
             return null;
         }
+
+        HashSet<Indi> retList = new HashSet<Indi>();
+
         List<Indi> indis = new ArrayList<Indi>();
         indis.add(rootIndi);
-        HashSet<Indi> tempList = new HashSet<Indi>();
         for (ListIterator<Indi> it = indis.listIterator(); it.hasNext();) {
             Indi indi = it.next();
-            if (tempList.contains(indi)) {
+            if (retList.contains(indi)) {
                 continue;
             }
             // grab father and mother
@@ -374,9 +374,40 @@ public class GeoFilter {
                     it.previous();
                 }
             }
-            tempList.add(indi);
+            retList.add(indi);
         }
-        return indis;
+        return retList;
+    }
+
+    /**
+     * Get list of descendants from the root indi
+     * @param rootIndi
+     * @return
+     */
+    private HashSet<Indi> getDescendants(Indi rootIndi) {
+        if (rootIndi == null) {
+            return null;
+        }
+
+        HashSet<Indi> retList = new HashSet<Indi>();
+
+        List<Indi> indis = new ArrayList<Indi>();
+        indis.add(rootIndi);
+        for (ListIterator<Indi> it = indis.listIterator(); it.hasNext();) {
+            Indi indi = it.next();
+            if (retList.contains(indi)) {
+                continue;
+            }
+            // grab kids
+            Indi[] children = indi.getChildren();
+            for (int i = 0; i < children.length; i++) {
+                Indi kid = children[i];
+                it.add(kid);
+                it.previous();
+            }
+            retList.add(indi);
+        }
+        return retList;
     }
 
     /**
@@ -384,46 +415,39 @@ public class GeoFilter {
      * @param ancestorsList
      * @return
      */
-    private List<Indi> getCousins(List<Indi> ancestorsList) {
-        if (ancestorsList == null || gedcom == null) {
+    private HashSet<Indi> getCousins() {
+        if (ancestorsList == null || descendantsList == null || gedcom == null) {
             return null;
         }
         
-        Collection<Indi> indis = (Collection<Indi>) gedcom.getEntities(Gedcom.INDI);
-        HashSet<Indi> otherIndis = new HashSet<Indi>();
+        HashSet<Indi> retList = new HashSet<Indi>();
 
-        // get all non ancestors
-        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            if (!ancestorsList.contains(indi)) {
-                otherIndis.add(indi);
-            }
-        }
+        HashSet<Indi> excludedIndis = new HashSet<Indi>();
 
-        // Get cousins now by flaging all non ancestors that are descendants of ancestors
-        List<Indi> cousinsList = new ArrayList<Indi>();
-        for (Iterator <Indi>it = ancestorsList.iterator(); it.hasNext();) {
-            Indi ancestor = it.next();
-            HashSet<Indi> descendants = new HashSet<Indi>();
-            getDescendants(ancestor, otherIndis, descendants);
-            cousinsList.addAll(descendants);
-            otherIndis.removeAll(descendants);
+        // get all non ancestors and non descendants
+        excludedIndis.addAll(ancestorsList);
+        excludedIndis.addAll(descendantsList);
+
+        // Get cousins now by flaging all non ancestors nor descendants of root that are descendants of an ancestor of root
+        for (Indi ancestor : ancestorsList) {
+            HashSet<Indi> descendantslst = new HashSet<Indi>();
+            getDescendants(ancestor, excludedIndis, descendantslst); // get descendants of ancestor that are not to be excluded
+            retList.addAll(descendantslst);
+            excludedIndis.addAll(retList);
         }
-        return cousinsList;
+        return retList;
     }
 
-    private void getDescendants(Indi ancestor, HashSet<Indi> inSet, HashSet<Indi> descendants) {
+    private void getDescendants(Indi ancestor, HashSet<Indi> excludedSet, HashSet<Indi> descendants) {
         Indi[] children = ancestor.getChildren();
         for (int i = 0; i < children.length; i++) {
             Indi indi = children[i];
-            if (!inSet.contains(indi)) {
+            if (excludedSet.contains(indi)) {
                 continue;
             }
             descendants.add(indi);
-            inSet.remove(indi);
-            getDescendants(indi, inSet, descendants);
+            getDescendants(indi, excludedSet, descendants);
         }
-        return;
     }
 
     /**
@@ -432,34 +456,32 @@ public class GeoFilter {
      * @param cousinsList
      * @return
      */
-    private List<Indi> getOtherAncestorsList(List<Indi> ancestorsList, List<Indi> cousinsList) {
-        if (ancestorsList == null && cousinsList == null || gedcom == null) {
+    private HashSet<Indi> getOthersList() {
+        if (ancestorsList == null && descendantsList == null && cousinsList == null || gedcom == null) {
             return null;
         }
-        Collection <Indi>indis = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
-        List<Indi> otherIndisList = new ArrayList<Indi>();
 
-        // get all non ancestors
-        for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            if (ancestorsList != null && !ancestorsList.contains(indi) && cousinsList != null && !cousinsList.contains(indi)) {
-                otherIndisList.add(indi);
-            }
-        }
-        return otherIndisList;
+        HashSet<Indi> retList = new HashSet<Indi>();
+
+        HashSet<Indi> indis = new HashSet<Indi>((Collection <Indi>) gedcom.getEntities(Gedcom.INDI));
+        indis.removeAll(ancestorsList);
+        indis.removeAll(descendantsList);
+        indis.removeAll(cousinsList);
+        retList.addAll(indis);
+        return retList;
     }
 
     /**
      * Get all individuals who are somewhere in the search dialog result
      * @return
      */
-    private List<Indi> getSearchedIndis() {
+    private HashSet<Indi> getSearchedIndis() {
         // XXX/ getSearchedIndis is call BEFORE init in some cases.
         // this shouldn't appear and will certainely need some refactor later
         if (gedcom == null) {
             return null;
         }
-        List<Indi> indis = new ArrayList<Indi>();
+        HashSet<Indi> retList = new HashSet<Indi>();
         
         for (SearchResults selectionResults : Lookup.getDefault().lookupAll(SearchResults.class)) {
             for (SearchResults instance : selectionResults.getInstances()) {
@@ -474,19 +496,19 @@ public class GeoFilter {
                             prop = prop.getEntity();
                         }
                         if (prop instanceof Indi) {
-                            indis.add((Indi) prop);
+                            retList.add((Indi) prop);
                         } else if (prop instanceof Fam) {
                             Indi indi = ((Fam) prop).getHusband();
                             if (indi != null) {
-                                indis.add(indi);
+                                retList.add(indi);
                             }
                             indi = ((Fam) prop).getWife();
                             if (indi != null) {
-                                indis.add(indi);
+                                retList.add(indi);
                             }
                         }
                     }
-                    return indis;
+                    return retList;
                 }
             }
             break;
@@ -498,7 +520,7 @@ public class GeoFilter {
      * Get currently selected individual in the editor view
      * @return
      */
-    private Indi getSelectedIndi() {
+    public Indi getSelectedIndi() {
         if (gedcom == null) {
             return null;
         }
@@ -507,11 +529,6 @@ public class GeoFilter {
         if (context == null){
             return null;
         }
-//        Set<TopComponent> tcSet = TopComponent.getRegistry().getOpened();
-//        for (Iterator<TopComponent> it = tcSet.iterator(); it.hasNext();) {
-//            TopComponent topComponent = it.next();
-//            if (topComponent instanceof EditTopComponent && gedcom.getOrigin().getFileName().equals(topComponent.getName())) {
-//                Entity ent = ((EditTopComponent) topComponent).getContext().getEntity();
         Entity ent = context.getEntity();
         if (ent == null) return null;
                 if (ent instanceof Indi) {
@@ -526,18 +543,15 @@ public class GeoFilter {
                         return indi;
                     }
                 }
-//            }
-//        }
         return null;
     }
 
-    private void printList(String str, List<Indi> list) {
+    private void printList(String str, HashSet<Indi> list) {
         int i = 0;
         if (list == null) {
             return;
         }
-        for (Iterator<Indi> it = list.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : list) {
             i++;
             System.out.println("DEBUG - " + str + "indi(" + i + ")=" + indi);
         }
