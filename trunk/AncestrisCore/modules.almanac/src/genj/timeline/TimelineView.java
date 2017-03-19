@@ -2,7 +2,7 @@
  * Ancestris
  *
  * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
- * Copyright (C) 2016 Frederic Lapeyre <frederic@ancestris.org>
+ * Copyright (C) 2016 - 2017 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -963,10 +963,11 @@ public class TimelineView extends View implements SelectionListener {
                 return;
             }
 
-            if (!e.isShiftDown()) {
+// FL : 2017-03-19 : remove multi-selection : causes several problems in the editors and has no use anyway for the timelineview... Nice but useless at this stage.            
+//            if (!e.isShiftDown()) {
                 selectionEvent.clear();
                 selectionEventSerie.clear();
-            }
+//            }
 
             // find context click to select and tell about
             if (mode == INDI_MODE) {
