@@ -75,6 +75,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private GeoFilter geoFilter = new GeoFilter();
     //
     private boolean isBusyRecalc = false;
+    private boolean refreshFlag = false;
 
     public GeoMapTopComponent() {
         super();
@@ -425,6 +426,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private void jRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRefreshButtonActionPerformed
         jRefreshButton.setEnabled(false);
         GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch();
+        refreshFlag = true;
     }//GEN-LAST:event_jRefreshButtonActionPerformed
 
     private void jGoToListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jGoToListButtonActionPerformed
@@ -592,6 +594,17 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             hoverPanel.setVisible(false); 
             markers = gpl.getPlaces();
             applyFilters();
+        }
+        if (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM) && refreshFlag) {
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                public void run() {
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
+                            NbBundle.getMessage(getClass(), "GeoMapTopComponent.jRefreshButton.resultText"),
+                            NbBundle.getMessage(getClass(), "GeoMapTopComponent.jRefreshButton.toolTipText"),
+                            JOptionPane.INFORMATION_MESSAGE);
+                    refreshFlag = false;
+                }
+            });
         }
     }
 
