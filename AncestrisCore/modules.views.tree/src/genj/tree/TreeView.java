@@ -679,23 +679,7 @@ public class TreeView extends View implements Filter {
         // gap
         toolbar.addSeparator();
 
-        // bookmarks
-        PopupWidget pb = new PopupWidget("", BOOKMARK_ICON) {
-
-            @Override
-            public void showPopup() {
-                removeItems();
-                for (Bookmark bookmark : TreeView.this.model.getBookmarks()) {
-                    addItem(new ActionGoto(bookmark));
-                }
-                // add items now
-                super.showPopup();
-            }
-        };
-        pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
-        pb.setOpaque(false);
-        toolbar.add(pb);
-        
+        // center and rebuild root
         rootMenu = createDropDownButton(Images.imgView,null); 
         Action def = new ActionChooseRoot(rootMenu);
         rootMenu.putClientProperty(
@@ -712,9 +696,26 @@ public class TreeView extends View implements Filter {
 
         toolbar.add(gotoMenu);
         toolbar.add(rootMenu);
-        toolbar.addSeparator();
+
+        // bookmarks
+        PopupWidget pb = new PopupWidget("", BOOKMARK_ICON) {
+
+            @Override
+            public void showPopup() {
+                removeItems();
+                for (Bookmark bookmark : TreeView.this.model.getBookmarks()) {
+                    addItem(new ActionGoto(bookmark));
+                }
+                // add items now
+                super.showPopup();
+            }
+        };
+        pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
+        pb.setOpaque(false);
+        toolbar.add(pb);
 
         // settings
+        toolbar.addSeparator();
         toolbar.add(new ScreenshotAction(content));
 
         rootTitle = new JLabel();
