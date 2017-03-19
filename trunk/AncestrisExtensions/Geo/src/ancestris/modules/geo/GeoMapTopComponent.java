@@ -173,6 +173,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jSeparator3 = new javax.swing.JToolBar.Separator();
         jRefreshButton = new javax.swing.JButton();
+        jActiveFilters = new javax.swing.JLabel();
         jSettingsButton = new javax.swing.JButton();
         blankLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -322,6 +323,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         });
         jToolBar.add(jRefreshButton);
 
+        jActiveFilters.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/Filter.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jActiveFilters, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jActiveFilters.text")); // NOI18N
+        jActiveFilters.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jActiveFilters.toolTipText")); // NOI18N
+        jToolBar.add(jActiveFilters);
+
         jSettingsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/Settings.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jSettingsButton, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jSettingsButton.text")); // NOI18N
         jSettingsButton.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jSettingsButton.toolTipText")); // NOI18N
@@ -445,6 +451,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel blankLabel;
     private javax.swing.Box.Filler filler1;
+    private javax.swing.JLabel jActiveFilters;
     private javax.swing.JButton jCaptureButton;
     private javax.swing.JButton jGoToListButton;
     private javax.swing.JPanel jPanel1;
@@ -595,6 +602,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         isBusyRecalc = true;
         geoPoints.clear();
+        boolean filterIsOn = false;
         if (markers != null) {
             geoFilter.calculatesIndividuals(getGedcom(), false); // refresh lists from selections being made in the editor or the list, not from gedcom changes
             for (int i = 0; i < markers.length; i++) {
@@ -602,8 +610,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 if (geoFilter.complies(geoNodeObject)) {
                     GeoPoint wp = new GeoPoint(geoNodeObject);
                     geoPoints.add(wp);
+                } else {
+                    filterIsOn = true;
                 }
             }
+            jActiveFilters.setVisible(filterIsOn);
             displayMarkers();
             StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
             if (geoPoints.size() < markers.length) {

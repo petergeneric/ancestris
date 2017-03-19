@@ -52,15 +52,10 @@ public class GeoFilter {
     private List<Indi> othersAncestorsList = null;
     private List<Indi> searchedIndis = null;
     private Indi selectedIndi = null;
-    private boolean checking = false;
 
     public void setGedcom(Gedcom gedcom) {
         this.gedcom = gedcom;
         calculatesIndividuals(gedcom, true);
-    }
-
-    public void setChecking(boolean flag) {
-        this.checking = flag;
     }
 
     public void calculatesIndividuals(Gedcom gedcom, boolean gedcomToo) {
