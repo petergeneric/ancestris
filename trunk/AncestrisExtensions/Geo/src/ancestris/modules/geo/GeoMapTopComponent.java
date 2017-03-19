@@ -769,6 +769,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         applyFilters();        
     }
 
+    void setFilterDescendants(boolean selected) {
+        geoFilter.descendants = selected;
+        applyFilters();        
+    }
+
     public void setFilterCousins(boolean selected) {
         geoFilter.cousins = selected;
         applyFilters();
@@ -796,6 +801,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public String setFilterRootIndi() {
         genj.gedcom.Indi indi = geoFilter.askRootIndi();
+        if (indi != null) {
+            geoFilter.rootIndi = indi;
+        }
         applyFilters();  
         return indi.toString(true);
     }
@@ -810,6 +818,15 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         applyFilters();  
         return indi != null ? indi.toString(true) : "";
+    }
+
+    public String setFilterSelectedIndi() {
+        genj.gedcom.Indi indi = geoFilter.getSelectedIndi();
+        if (indi != null) {
+            geoFilter.rootIndi = indi;
+        }
+        applyFilters();  
+        return indi.toString(true);
     }
 
     public void setFilterFemales(boolean selected) {
@@ -849,6 +866,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public boolean getFilterAscendants() {
         return geoFilter.ascendants;
+    }
+
+    public boolean getFilterDescendants() {
+        return geoFilter.descendants;
     }
 
     public boolean getFilterCousins() {
@@ -902,6 +923,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public String getFilerRootIndi() {
         return geoFilter.getRootIndi().toString(true);
     }
+
+    public String getSelectedIndividual() {
+        return geoFilter.getSelectedIndi().toString(true);
+    }
+
 
     
     
