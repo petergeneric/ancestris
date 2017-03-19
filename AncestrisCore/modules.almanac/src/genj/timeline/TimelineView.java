@@ -520,8 +520,6 @@ public class TimelineView extends View implements SelectionListener {
      */
     @Override
     public void setContext(Context context) {
-        selectionEvent.clear();
-        selectionEventSerie.clear();
         if (context == null) {
             model.setGedcom(null);
         } else {
@@ -538,6 +536,10 @@ public class TimelineView extends View implements SelectionListener {
         } else {
             scroll2year(centeredYear);
             scroll2layer(layer);
+            ctsButton.setEnabled(false);
+            ctsButton.setTip(false, "");
+            cttiButton.setEnabled(false);
+            cttiButton.setTip(false, "");
         }
         setTooltipText();
         repaint();
@@ -965,14 +967,15 @@ public class TimelineView extends View implements SelectionListener {
 
 // FL : 2017-03-19 : remove multi-selection : causes several problems in the editors and has no use anyway for the timelineview... Nice but useless at this stage.            
 //            if (!e.isShiftDown()) {
-                selectionEvent.clear();
-                selectionEventSerie.clear();
+//                selectionEvent.clear();
+//                selectionEventSerie.clear();
 //            }
 
             // find context click to select and tell about
             if (mode == INDI_MODE) {
                 Model.EventSerie hit = getIndiAt(e.getPoint());
                 if (hit != null) {
+                    selectionEventSerie.clear();
                     selectionEventSerie.add(hit);
                     // tell about it
                     SelectionDispatcher.fireSelection(e, getContext());
@@ -980,6 +983,7 @@ public class TimelineView extends View implements SelectionListener {
             } else {
                 Model.Event hit = getEventAt(e.getPoint());
                 if (hit != null) {
+                    selectionEvent.clear();
                     selectionEvent.add(hit);
                     // tell about it
                     SelectionDispatcher.fireSelection(e, getContext());
