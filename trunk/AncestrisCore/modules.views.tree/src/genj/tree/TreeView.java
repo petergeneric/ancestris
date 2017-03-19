@@ -681,18 +681,20 @@ public class TreeView extends View implements Filter {
 
         // center and rebuild root
         rootMenu = createDropDownButton(Images.imgView,null); 
-        Action def = new ActionChooseRoot(rootMenu);
+        Action def1 = new ActionRootContext(rootMenu);
+        Action def2 = new ActionChooseRoot(rootMenu);
         rootMenu.putClientProperty(
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def,new ActionRootContext(rootMenu)}, Lookup.EMPTY));
-        rootMenu.setAction(def);
+                Utilities.actionsToPopup(new Action[]{def1, def2}, Lookup.EMPTY));
+        rootMenu.setAction(def1);
         
         gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
-        def = new ActionGotoRoot(gotoMenu);
+        def1 = new ActionGotoContext(gotoMenu);
+        def2 = new ActionGotoRoot(gotoMenu);
         gotoMenu.putClientProperty(
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def,new ActionGotoContext(gotoMenu)}, Lookup.EMPTY));
-        gotoMenu.setAction(def);
+                Utilities.actionsToPopup(new Action[]{def1,def2}, Lookup.EMPTY));
+        gotoMenu.setAction(def1);
 
         toolbar.add(gotoMenu);
         toolbar.add(rootMenu);
