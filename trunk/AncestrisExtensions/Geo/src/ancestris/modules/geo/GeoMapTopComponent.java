@@ -6,6 +6,7 @@ package ancestris.modules.geo;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.libs.geonames.GeonamesOptions;
+import ancestris.modules.utilities.search.SearchTopComponent;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
@@ -803,6 +804,32 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void setFilterSelectedSearch(boolean selected) {
+        if (selected && geoFilter.getSearchedIndis() == null) {
+            SearchTopComponent searchWindow = null;
+            for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+                if (tc instanceof SearchTopComponent) {
+                    SearchTopComponent gltc = (SearchTopComponent) tc;
+                    if (gltc.getGedcom() == getGedcom()) {
+                        searchWindow = gltc;
+                        break;
+                    }
+                }
+            }
+            if (searchWindow == null) {
+                searchWindow = new SearchTopComponent();
+            }
+            if (!searchWindow.isOpen) {
+                searchWindow.init(getContext());
+                searchWindow.open();
+            }
+            
+            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
+                    NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
+                    NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
+                    JOptionPane.INFORMATION_MESSAGE);
+            
+            searchWindow.requestActive();
+        }
         geoFilter.selectedSearch = selected;
         applyFilters();
     }
