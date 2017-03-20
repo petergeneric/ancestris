@@ -475,7 +475,7 @@ public class GeoFilter {
      * Get all individuals who are somewhere in the search dialog result
      * @return
      */
-    private HashSet<Indi> getSearchedIndis() {
+    public HashSet<Indi> getSearchedIndis() {
         // XXX/ getSearchedIndis is call BEFORE init in some cases.
         // this shouldn't appear and will certainely need some refactor later
         if (gedcom == null) {

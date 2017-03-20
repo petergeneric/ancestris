@@ -361,7 +361,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                             .addComponent(jWomenCheckBox))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSelectedCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jSearchedCheckBox))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jEventsLabel)
