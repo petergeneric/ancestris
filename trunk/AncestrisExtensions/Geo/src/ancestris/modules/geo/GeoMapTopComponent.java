@@ -804,7 +804,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void setFilterSelectedSearch(boolean selected) {
-        if (selected && geoFilter.getSearchedIndis() == null) {
+        System.out.println("DEBUG*********************** BEFORE THE LOOP");
+        if (selected) {
+            System.out.println("DEBUG*********************** IN THE LOOP");
             SearchTopComponent searchWindow = null;
             for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
                 if (tc instanceof SearchTopComponent) {
@@ -816,6 +818,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 }
             }
             if (searchWindow == null) {
+                if (selected) {
+                    System.out.println("DEBUG*********************** SearchWindow is null");
+                }
                 searchWindow = new SearchTopComponent();
             }
             if (!searchWindow.isOpen) {
@@ -823,6 +828,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 searchWindow.open();
             }
             
+            if (selected) {
+                System.out.println("DEBUG*********************** AVANT SHOW DIALOG");
+            }
             JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
                     NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
                     NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
