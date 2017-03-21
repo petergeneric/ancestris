@@ -174,8 +174,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jCaptureButton = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jSeparator3 = new javax.swing.JToolBar.Separator();
-        jRefreshButton = new javax.swing.JButton();
         jActiveFilters = new javax.swing.JLabel();
+        jRefreshButton = new javax.swing.JButton();
         jSettingsButton = new javax.swing.JButton();
         blankLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -312,6 +312,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jToolBar.add(filler1);
         jToolBar.add(jSeparator3);
 
+        jActiveFilters.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/Filter.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jActiveFilters, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jActiveFilters.text")); // NOI18N
+        jActiveFilters.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jActiveFilters.toolTipText")); // NOI18N
+        jToolBar.add(jActiveFilters);
+
         jRefreshButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/Refresh.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jRefreshButton, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jRefreshButton.text")); // NOI18N
         jRefreshButton.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jRefreshButton.toolTipText")); // NOI18N
@@ -324,11 +329,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
         });
         jToolBar.add(jRefreshButton);
-
-        jActiveFilters.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/Filter.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jActiveFilters, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jActiveFilters.text")); // NOI18N
-        jActiveFilters.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jActiveFilters.toolTipText")); // NOI18N
-        jToolBar.add(jActiveFilters);
 
         jSettingsButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/Settings.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jSettingsButton, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jSettingsButton.text")); // NOI18N
@@ -804,9 +804,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void setFilterSelectedSearch(boolean selected) {
-        System.out.println("DEBUG*********************** BEFORE THE LOOP");
         if (selected) {
-            System.out.println("DEBUG*********************** IN THE LOOP");
             SearchTopComponent searchWindow = null;
             for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
                 if (tc instanceof SearchTopComponent) {
@@ -818,23 +816,16 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 }
             }
             if (searchWindow == null) {
-                if (selected) {
-                    System.out.println("DEBUG*********************** SearchWindow is null");
-                }
                 searchWindow = new SearchTopComponent();
             }
             if (!searchWindow.isOpen) {
                 searchWindow.init(getContext());
                 searchWindow.open();
+                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
+                        NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
+                        NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
+                        JOptionPane.INFORMATION_MESSAGE);
             }
-            
-            if (selected) {
-                System.out.println("DEBUG*********************** AVANT SHOW DIALOG");
-            }
-            JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
-                    NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
-                    NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
-                    JOptionPane.INFORMATION_MESSAGE);
             
             searchWindow.requestActive();
         }
