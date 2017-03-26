@@ -4,6 +4,7 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.api.search.SearchCommunicator;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.modules.utilities.search.SearchTopComponent;
@@ -12,6 +13,7 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import genj.view.ScreenshotAction;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -77,6 +79,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     //
     private boolean isBusyRecalc = false;
     private boolean refreshFlag = false;
+    
+    private SearchCommunicator searchCommunicator = null;
 
     public GeoMapTopComponent() {
         super();
@@ -100,10 +104,18 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     @Override
     public void init(Context context) {
         super.init(context);
-        geoFilter.setGedcom(context.getGedcom());
         ToolTipManager.sharedInstance().setDismissDelay(10000);
         markersSize = context.getGedcom().getRegistry().get("GEO.markers.size", 10);
         markersColor = context.getGedcom().getRegistry().get("GEO.markers.color", Color.BLUE);
+        searchCommunicator = new SearchCommunicator() {
+            @Override
+            public void changedResults(Gedcom gedcom) {
+                applyFilters();
+            }
+        };
+        searchCommunicator.setGedcom(context.getGedcom());
+        geoFilter.setGedcom(context.getGedcom());
+        applyFilters();
     }
 
     @Override
@@ -125,7 +137,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         // Calculate and display markers
         jRefreshButton.setEnabled(false);
         initMarkersList();
-        applyFilters();
         return true;
     }
 
@@ -482,8 +493,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (getGedcom() != null) {
             GeoPlacesList gpl2 = GeoPlacesList.getInstance(getGedcom());
             gpl2.removeGeoPlacesListener(this);
+            geoFilter.save();
         }
-        AncestrisPlugin.register(this);
+        SearchCommunicator.unregister(searchCommunicator);
+        AncestrisPlugin.unregister(this);
     }
 
     @Override
@@ -627,13 +640,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                     filterIsOn = true;
                 }
             }
-            jActiveFilters.setVisible(filterIsOn);
             displayMarkers();
+            jActiveFilters.setVisible(filterIsOn);
             StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
             if (geoPoints.size() < markers.length) {
+                String indi = (geoFilter.rootIndi != null) ? geoFilter.rootIndi.toString(true) : "";
                 String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
-                msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + geoFilter.rootIndi.toString();
+                msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + indi;
                 StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             }
         }
@@ -825,14 +839,15 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                         NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
                         NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
                         JOptionPane.INFORMATION_MESSAGE);
+                searchWindow.requestActive();
             }
-            
-            searchWindow.requestActive();
         }
         geoFilter.selectedSearch = selected;
         applyFilters();
     }
 
+    
+    
     public void setFilterMales(boolean selected) {
         geoFilter.males = selected;
         applyFilters();
@@ -968,8 +983,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
 
-    
-    
+
     
     
     private class GeoMouseInputListener implements MouseInputListener {
