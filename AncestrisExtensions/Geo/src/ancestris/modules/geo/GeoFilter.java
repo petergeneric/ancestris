@@ -4,7 +4,7 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.api.search.SearchResults;
+import ancestris.api.search.SearchCommunicator;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -12,6 +12,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
 import genj.gedcom.*;
+import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -21,7 +22,6 @@ import java.util.ListIterator;
 import javax.swing.JComboBox;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 
@@ -31,6 +31,8 @@ import org.openide.util.Utilities;
  */
 public class GeoFilter {
 
+    private Registry registry = null;
+    
     private Gedcom gedcom;
     public String location = "";
     public boolean ascendants = false;
@@ -59,7 +61,44 @@ public class GeoFilter {
 
     public void setGedcom(Gedcom gedcom) {
         this.gedcom = gedcom;
-        calculatesIndividuals(gedcom);
+        registry = Registry.get(gedcom);
+        load();
+    }
+
+    public void load() {
+        location = registry.get("geofilter.location", "");
+        ascendants = registry.get("geofilter.ascendants", false);
+        descendants = registry.get("geofilter.descendants", false);
+        cousins = registry.get("geofilter.cousins", false);
+        otherAncestors = registry.get("geofilter.otherAncestors", false);
+        selectedIndividual = registry.get("geofilter.selectedIndividual", false);
+        selectedSearch = registry.get("geofilter.selectedSearch", false);
+        males = registry.get("geofilter.males", false);
+        females = registry.get("geofilter.females", false);
+        yearStart = registry.get("geofilter.yearStart", "");
+        yearEnd = registry.get("geofilter.yearEnd", "");
+        births = registry.get("geofilter.births", false);
+        marriages = registry.get("geofilter.marriages", false);
+        deaths = registry.get("geofilter.deaths", false);
+        otherEvents = registry.get("geofilter.otherEvents", false);
+    }
+
+    public void save() {
+        registry.put("geofilter.location", location);
+        registry.put("geofilter.ascendants", ascendants);
+        registry.put("geofilter.descendants", descendants);
+        registry.put("geofilter.cousins", cousins);
+        registry.put("geofilter.otherAncestors", otherAncestors);
+        registry.put("geofilter.selectedIndividual", selectedIndividual);
+        registry.put("geofilter.selectedSearch", selectedSearch);
+        registry.put("geofilter.males", males);
+        registry.put("geofilter.females", females);
+        registry.put("geofilter.yearStart", yearStart);
+        registry.put("geofilter.yearEnd", yearEnd);
+        registry.put("geofilter.births", births);
+        registry.put("geofilter.marriages", marriages);
+        registry.put("geofilter.deaths", deaths);
+        registry.put("geofilter.otherEvents", otherEvents);
     }
 
     public void calculatesIndividuals(Gedcom gedcom) {
@@ -240,6 +279,9 @@ public class GeoFilter {
     }
 
     public Indi getRootIndi() {
+        if (rootIndi == null) {
+            rootIndi = getSelectedIndi();
+        }
         return rootIndi;
     }
     
@@ -476,44 +518,37 @@ public class GeoFilter {
      * @return
      */
     public HashSet<Indi> getSearchedIndis() {
-        // XXX/ getSearchedIndis is call BEFORE init in some cases.
-        // this shouldn't appear and will certainely need some refactor later
         if (gedcom == null) {
             return null;
         }
         HashSet<Indi> retList = new HashSet<Indi>();
         
-        for (SearchResults selectionResults : Lookup.getDefault().lookupAll(SearchResults.class)) {
-            for (SearchResults instance : selectionResults.getInstances()) {
-                Gedcom searchGedcom = instance.getGedcom();
-                if (searchGedcom != null && searchGedcom.getName().equals(gedcom.getName())) {
-                    for (Property prop : instance.getResultProperties()) {
-                        String tag = prop.getTag();
-                        if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
-                            continue;
-                        }
-                        if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
-                            prop = prop.getEntity();
-                        }
-                        if (prop instanceof Indi) {
-                            retList.add((Indi) prop);
-                        } else if (prop instanceof Fam) {
-                            Indi indi = ((Fam) prop).getHusband();
-                            if (indi != null) {
-                                retList.add(indi);
-                            }
-                            indi = ((Fam) prop).getWife();
-                            if (indi != null) {
-                                retList.add(indi);
-                            }
-                        }
-                    }
-                    return retList;
+        List<Property> results = SearchCommunicator.getResults(gedcom);
+        if (results == null) {
+            return retList;
+        }
+        for (Property prop : results) {
+            String tag = prop.getTag();
+            if (tag.equals("ASSO") || tag.equals("CHIL") || tag.equals("FAMC") || tag.equals("FAMS") || tag.equals("HUSB") || tag.equals("WIFE")) {
+                continue;
+            }
+            if (!(prop instanceof Indi) && !(prop instanceof Fam)) {
+                prop = prop.getEntity();
+            }
+            if (prop instanceof Indi) {
+                retList.add((Indi) prop);
+            } else if (prop instanceof Fam) {
+                Indi indi = ((Fam) prop).getHusband();
+                if (indi != null) {
+                    retList.add(indi);
+                }
+                indi = ((Fam) prop).getWife();
+                if (indi != null) {
+                    retList.add(indi);
                 }
             }
-            break;
         }
-        return null;
+        return retList;
     }
 
     /**
@@ -531,18 +566,18 @@ public class GeoFilter {
         }
         Entity ent = context.getEntity();
         if (ent == null) return null;
-                if (ent instanceof Indi) {
-                    return (Indi) ent;
-                } else if (ent instanceof Fam) {
-                    Indi indi = ((Fam) ent).getHusband();
-                    if (indi != null) {
-                        return indi;
-                    }
-                    indi = ((Fam) ent).getWife();
-                    if (indi != null) {
-                        return indi;
-                    }
-                }
+        if (ent instanceof Indi) {
+            return (Indi) ent;
+        } else if (ent instanceof Fam) {
+            Indi indi = ((Fam) ent).getHusband();
+            if (indi != null) {
+                return indi;
+            }
+            indi = ((Fam) ent).getWife();
+            if (indi != null) {
+                return indi;
+            }
+        }
         return null;
     }
 
