@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Communication device used to communicate between modules for search results.
@@ -26,7 +25,6 @@ import org.openide.util.lookup.ServiceProvider;
  * 
  * @author frederic
  */
-@ServiceProvider(service=SearchCommunicator.class)
 public class SearchCommunicator {
 
     private static Set<SearchCommunicator> instances = null;
