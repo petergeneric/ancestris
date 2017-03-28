@@ -351,7 +351,9 @@ public class HoverPanel extends javax.swing.JPanel {
         for (int i = 0; i < markers.length; i++) {
             GeoNodeObject geoNodeObject = markers[i];
             if (geoNodeObject.getLatitude().equals(lat) && geoNodeObject.getLongitude().equals(lon)) {
-                list.add(geoNodeObject);
+                if (parent.getFilter().complies(geoNodeObject)) {
+                    list.add(geoNodeObject);
+                }
             }
         }
         selectedMarkers = list.toArray(new GeoNodeObject[list.size()]);
