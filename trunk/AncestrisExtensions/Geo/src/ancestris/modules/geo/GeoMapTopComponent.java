@@ -792,6 +792,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
     }
 
+    public GeoFilter getFilter() {
+        return geoFilter;
+    }
+
     public void setFilterAscendants(boolean selected) {
         geoFilter.ascendants = selected;
         applyFilters();        
