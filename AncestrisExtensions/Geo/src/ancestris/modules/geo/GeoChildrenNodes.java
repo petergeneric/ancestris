@@ -41,7 +41,7 @@ class GeoChildrenNodes extends Children.Keys<GeoNodeObject> {
         if (isPlace) {
             objs = geoPlacesList.getPlaces();
         } else if ((isEvent) && (parent != null)) {
-            objs = parent.getEvents();
+            objs = parent.getAllEvents();
         } else {
             return;
         }

@@ -442,24 +442,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }//GEN-LAST:event_jRefreshButtonActionPerformed
 
     private void jGoToListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jGoToListButtonActionPerformed
-        GeoListTopComponent theList = null;
-        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-            if (tc instanceof GeoListTopComponent) {
-                GeoListTopComponent gltc = (GeoListTopComponent) tc;
-                if (gltc.getGedcom() == getGedcom()) {
-                    theList = gltc;
-                    break;
-                }
-            }
-        }
-        if (theList == null) {
-            theList = new GeoListTopComponent();
-        }
-        if (!theList.isInitialised()) {
-            theList.init(getContext());
-            theList.open();
-        }
-        theList.requestActive();
+        GeoNodeObject gno = null;
+        showListAtLocation(gno);
     }//GEN-LAST:event_jGoToListButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -623,6 +607,15 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     private void applyFilters() {
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                applyFiltersNow();
+            }
+        });
+    }
+
+    private void applyFiltersNow() {
         if (isBusyRecalc) {
             return;
         }
@@ -633,7 +626,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             geoFilter.calculatesIndividuals(getGedcom());
             for (int i = 0; i < markers.length; i++) {
                 GeoNodeObject geoNodeObject = markers[i];
-                if (geoFilter.complies(geoNodeObject)) {
+                if (geoFilter.compliesNode(geoNodeObject)) {
                     GeoPoint wp = new GeoPoint(geoNodeObject);
                     geoPoints.add(wp);
                 } else {
@@ -984,6 +977,28 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public String getSelectedIndividual() {
         return geoFilter.getSelectedIndi().toString(true);
+    }
+
+    public void showListAtLocation(GeoNodeObject gno) {
+        GeoListTopComponent theList = null;
+        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            if (tc instanceof GeoListTopComponent) {
+                GeoListTopComponent gltc = (GeoListTopComponent) tc;
+                if (gltc.getGedcom() == getGedcom()) {
+                    theList = gltc;
+                    break;
+                }
+            }
+        }
+        if (theList == null) {
+            theList = new GeoListTopComponent();
+        }
+        if (!theList.isInitialised()) {
+            theList.init(getContext());
+            theList.open();
+        }
+        theList.requestActive();
+        theList.showLocation(gno);
     }
 
 

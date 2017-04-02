@@ -120,148 +120,99 @@ public class GeoFilter {
         isBusy = false;
     }
 
-    public boolean complies(GeoNodeObject node) {
-        // Filter on location
-        // Reject node if location not included in location's description
-        if (node.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {
+    public boolean compliesNode(GeoNodeObject node) {
+        // Reject if node is an event (we are filtering locations here, not events)
+        if (node.isEvent) {
             return false;
         }
-        if (!location.isEmpty() && !node.toString().toLowerCase().contains(location.toLowerCase())) {
-            return false;
-        }
-
-        // Filter on individuals: keep node if any individual matches criteria
-        // get individuals related to node
-        List<Indi> indis = node.getIndis();
-
-        // Reject node if does not match ancestor relation
-        if (ascendants || descendants || cousins || otherAncestors) {
-            if (!((ascendants && exists(indis, ancestorsList)) || (descendants && exists(indis, descendantsList)) || (cousins && exists(indis, cousinsList)) || (otherAncestors && exists(indis, othersList)))) {
+        
+        // Filter on location : reject node if location not included in location's description
+        if (!location.isEmpty()) { // there is a location filter
+            if (node.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {   // exclude empty locations
+                return false;
+            }
+            if (!node.toString().toLowerCase().contains(location.toLowerCase())) {  // exclude if location to search not in the location's name
                 return false;
             }
         }
-
-        // Reject node if none of indis is the selected individual in the editor
-        //TODO avoid recalculating each time
-        if (selectedSearch && !exists(indis, searchedIndis)) {
-            return false;
-        }
-
-        // Reject node if none of indis is a de-cujus other ancestors
-        //TODO avoid recalculating each time
-        if (selectedIndividual && !exists(indis, selectedIndi)) {
-            return false;
-        }
-
-        // Reject node if sex does not match
-        if (males || females) {
-            if (!((males && sexOf(indis, PropertySex.MALE)) || (females && sexOf(indis, PropertySex.FEMALE)))) {
-                return false;
+        
+        // Make sure at least an event matches a criteria
+        for (GeoNodeObject event : node.getAllEvents()) {
+            if (compliesEvent(event)) {
+                return true;
             }
         }
+        
+        return false;
+    }
 
-        // Filter on events
-        // Reject node if none of the events end dates is after yearStart
-        if (!yearStart.isEmpty() && !after(node.getEventsMaxDate(), yearStart)) {
-            return false;
-        }
-
-        // Reject node if none of the events start dates is before yearEnd
-        if (!yearEnd.isEmpty() && !before(node.getEventsMinDate(), yearEnd)) {
+    public boolean compliesEvent(GeoNodeObject event) {
+        
+        // Reject if none of the individuals match
+        for (Indi indi : event.getIndis()) {
+            if (compliesIndi(indi)) {
+                break;
+            }
             return false;
         }
 
         // Reject node if none of the events is of type required
         if (births || marriages || deaths || otherEvents) {
-            HashSet<String> tags = node.getEventTypes();
-            if (!((births && isBirth(tags)) || (marriages && isMarriage(tags)) || (deaths && isDeath(tags)) || (otherEvents && isOtherEvents(tags)))) {
+            String tag = event.getEventTag();
+            if (!((births && isBirth(tag)) || (marriages && isMarriage(tag)) || (deaths && isDeath(tag)) || (otherEvents && isOtherEvents(tag)))) {
+                return false;
+            }
+        }
+        
+        // Filter on event date and type
+        // Reject node if none of the events end dates is after yearStart
+        if (!yearStart.isEmpty() && !after(event.getEventsMaxDate(), yearStart)) {
+            return false;
+        }
+
+        // Reject node if none of the events start dates is before yearEnd
+        if (!yearEnd.isEmpty() && !before(event.getEventsMinDate(), yearEnd)) {
+            return false;
+        }
+
+        
+        return true;
+    }
+
+    public boolean compliesIndi(Indi indi) {
+        if (ascendants || descendants || cousins || otherAncestors) {
+            if (!((ascendants && ancestorsList.contains(indi)) || (descendants && descendantsList.contains(indi)) || (cousins && cousinsList.contains(indi)) || (otherAncestors && othersList.contains(indi)))) {
+                return false;
+            }
+        }
+        if (selectedSearch && !searchedIndis.contains(indi)) {
+            return false;
+        }
+        if (selectedIndividual && !selectedIndi.contains(indi)) {
+            return false;
+        }
+        if (males || females) {
+            if (!((males && indi.getSex() == PropertySex.MALE) || (females && indi.getSex() == PropertySex.FEMALE))) {
                 return false;
             }
         }
         return true;
     }
 
-    /**
-     * Filters per se
-     */
-    private boolean exists(List<Indi> indis, HashSet<Indi> personsList) {
-        if (indis == null || personsList == null) {
-            return true;
-        }
-        // returns false is non of indis is in anscestors
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            if (personsList.contains(indi)) {
-                return true;
-            }
-        }
-        return false;
+    public boolean isBirth(String tag) {
+        return ("BIRT".equals(tag) || "CHR".equals(tag));
     }
 
-    private boolean exists(List<Indi> indis, Indi selectedIndi) {
-        if (indis == null || selectedIndi == null) {
-            return true;
-        }
-        return indis.contains(selectedIndi);
+    public boolean isMarriage(String tag) {
+        return  ("MARR".equals(tag) || "ENGA".equals(tag) || "MARB".equals(tag) || "MARC".equals(tag));
     }
 
-    private boolean sexOf(List<Indi> indis, int sex) {
-        if (indis == null) {
-            return true;
-        }
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            if (indi.getSex() == sex) {
-                return true;
-            }
-        }
-        return false;
+    public boolean isDeath(String tag) {
+        return ("DEAT".equals(tag) || "BURI".equals(tag) || "CREM".equals(tag));
     }
 
-    private boolean isBirth(HashSet<String> tags) {
-        if (tags == null) {
-            return true;
-        }
-        for (Iterator<String> it = tags.iterator(); it.hasNext();) {
-            String string = it.next();
-            if (string.equals("BIRT") || string.equals("CHR")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isMarriage(HashSet<String> tags) {
-        if (tags == null) {
-            return true;
-        }
-        for (Iterator<String> it = tags.iterator(); it.hasNext();) {
-            String string = it.next();
-            if (string.equals("MARR") || string.equals("ENGA") || string.equals("MARB") || string.equals("MARC")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isDeath(HashSet<String> tags) {
-        if (tags == null) {
-            return true;
-        }
-        for (Iterator<String> it = tags.iterator(); it.hasNext();) {
-            String string = it.next();
-            if (string.equals("DEAT") || string.equals("BURI") || string.equals("CREM")) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private boolean isOtherEvents(HashSet<String> tags) {
-        if (tags == null) {
-            return true;
-        }
-        return !isBirth(tags) && !isMarriage(tags) && !isDeath(tags);
+    public boolean isOtherEvents(String tag) {
+        return !isBirth(tag) && !isMarriage(tag) && !isDeath(tag);
     }
 
     private boolean after(int eventsMaxDate, String yearStart) {
