@@ -604,6 +604,7 @@ public class SearchView extends View {
             choiceTag.setValues(oldValues);
             choiceValue.setValues(oldTags);
         }
+        notifyResults();
     }
 
     /**
