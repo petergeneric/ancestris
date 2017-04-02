@@ -155,7 +155,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
 
     }
 
-    
+
     
     /**
      * This method is called from within the constructor to initialize the form.
@@ -259,7 +259,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         }
     }
 
-    public void ShowLocation(GeoNodeObject gno) {
+    public void showLocation(GeoNodeObject gno) {
         if (mgr == null || gno == null) {
             return;
         }
