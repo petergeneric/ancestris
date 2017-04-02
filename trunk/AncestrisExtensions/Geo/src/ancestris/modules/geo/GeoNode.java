@@ -173,8 +173,8 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 if (theMap != null) {
                     theMap.requestActive();
                     theMap.setZoom(4);
-                    theMap.CenterMarker(obj);
-                    theMap.ShowMarker(obj);
+                    theMap.centerMarker(obj);
+                    theMap.showMarker(obj);
                 }
 
             } else if (actionName.equals("ACTION_FindPlace")) {

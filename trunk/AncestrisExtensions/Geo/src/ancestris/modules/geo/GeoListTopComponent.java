@@ -5,6 +5,7 @@
 package ancestris.modules.geo;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.util.EventUsage;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -12,6 +13,9 @@ import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyVetoException;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.tree.TreeSelectionModel;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
@@ -21,7 +25,6 @@ import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
-import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 
 /**
@@ -47,11 +50,18 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     //
     // Is used from the Map Top Component to set the foxus to the List TopComponent
     private boolean isInitialised = false;
+    //
+    // Used to sort events
+    private static Map<String, EventUsage> eventUsages = null;
 
     //
     // Runs the Ancestris componenet defaults
     public GeoListTopComponent() {
         super();
+        
+        // Data
+        eventUsages = new HashMap<String, EventUsage>();
+        EventUsage.init(eventUsages);
     }
 
     @Override
@@ -229,34 +239,6 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
      * @param pce
      */
     public void propertyChange(PropertyChangeEvent pce) {
-        // actually do nothing in case of simple click
-        if (true) {
-            return;
-        }
-        // TODO : how do I get here then ???
-        if (mgr != null) {
-            Node[] geonodes = mgr.getSelectedNodes();
-            if (geonodes.length > 0) {
-                // get geonode selected
-                GeoNodeObject obj = geonodes[0].getLookup().lookup(GeoNodeObject.class);
-                // get map top component where gedcom is the same
-                GeoMapTopComponent theMap = null;
-                for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-                    if (tc instanceof GeoMapTopComponent) {
-                        GeoMapTopComponent gmtc = (GeoMapTopComponent) tc;
-                        if (gmtc.getGedcom() == getGedcom()) {
-                            theMap = gmtc;
-                            break;
-                        }
-                    }
-                }
-                // display geonode on the map
-                if (theMap != null) {
-                    theMap.requestActive();
-                    theMap.ShowMarker(obj);
-                }
-            }
-        }
     }
 
     public void showLocation(GeoNodeObject gno) {
@@ -295,4 +277,28 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
             this.tree.setScrollsOnExpand(scroll);
         }
     }
+    
+    
+    /**
+     * Comparator to sort events
+     */
+    public static Comparator<GeoNodeObject> sortEvents = new Comparator<GeoNodeObject>() {
+
+        public int compare(GeoNodeObject o1, GeoNodeObject o2) {
+            if (o1 == null && o2 == null) {
+                return 0;
+            }
+            if (o1 == null) {
+                return +1;
+            }
+            if (o2 == null) {
+                return -1;
+            }
+            String s1 = eventUsages.get(o1.getEventTag()).getOrder() + o1.toDisplayString();
+            String s2 = eventUsages.get(o2.getEventTag()).getOrder() + o2.toDisplayString();
+            return s1.compareTo(s2);
+        }
+    };
+
+    
 }

@@ -12,7 +12,7 @@
 
 package ancestris.modules.editors.standard;
 
-import ancestris.modules.editors.standard.tools.EventUsage;
+import ancestris.util.EventUsage;
 import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;

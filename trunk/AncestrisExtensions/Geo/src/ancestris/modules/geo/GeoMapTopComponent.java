@@ -718,7 +718,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jXMapKit1.getMainMap().addMouseMotionListener(mia);
     }
 
-    public void ShowMarker(GeoNodeObject geoNodeObject) {
+    public void showMarker(GeoNodeObject geoNodeObject) {
         if (geoNodeObject != null && !geoNodeObject.isEvent) {
             hoverPanel.setPanel(geoNodeObject, markersColor);
             JXMapViewer map = jXMapKit1.getMainMap();
@@ -735,7 +735,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
     }
 
-    public void CenterMarker(GeoNodeObject geoNodeObject) {
+    public void centerMarker(GeoNodeObject geoNodeObject) {
         if (geoNodeObject != null) {
             jXMapKit1.getMainMap().setCenterPosition(geoNodeObject.getGeoPosition());
         }
