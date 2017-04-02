@@ -2631,7 +2631,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         List<EventWrapper> ret = new ArrayList<EventWrapper>();
         
         // Start adding the general event which will only hold general notes and sources for the individual
-        ret.add(new EventWrapper(indi, indi));
+        ret.add(new EventWrapper(indi, indi, null));
                 
         // Look for all individual events
         // - INDIVIDUAL_EVENT_STRUCTURE (birth, etc.)
@@ -2642,7 +2642,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             Property[] eventProps = indi.getProperties(tag);
             for (Property prop : eventProps) {
                 if (prop != null) {
-                    ret.add(new EventWrapper(prop, indi));
+                    ret.add(new EventWrapper(prop, indi, null));
                 }
             }
         }
@@ -2657,7 +2657,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 Property[] eventProps = fam.getProperties(tag);
                 for (Property prop : eventProps) {
                     if (prop != null) {
-                        ret.add(new EventWrapper(prop, indi));
+                        ret.add(new EventWrapper(prop, indi, fam));
                     }
                 }
             }
@@ -3920,14 +3920,14 @@ public class IndiPanel extends Editor implements DocumentListener {
                 return;
             }
             Property prop = tmpIndi.addProperty(tag, "");
-            createEvent(prop);
+            createEvent(prop, null);
         } else { // else select it
             eventIndex = index;
         }
     }
     
-    private void createEvent(Property prop) {
-        eventSet.add(new EventWrapper(prop, indi));
+    private void createEvent(Property prop, Fam fam) {
+        eventSet.add(new EventWrapper(prop, indi, fam));
         displayEventTable();
         eventIndex = eventSet.size() - 1;
         triggerChange();
@@ -3974,6 +3974,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
         // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+        boolean isFam = false;
         Gedcom tmpGedcom = new Gedcom();
         tmpGedcom.setGrammar(gedcom.getGrammar());
         Entity tmpIndi = null, tmpFam = null;
@@ -3987,13 +3988,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         prop = tmpIndi.addProperty(tag, "");
         if (!tmpIndi.getMetaProperty().allows(tag)) {
             prop = tmpFam.addProperty(tag, "");
+            isFam = true;
         }
         final Property fProp = prop;
+        final Fam currentFam = isFam ? Utils.getCurrentFamily(indi, familyTree) : null;
 
         // if tag does not exist, create it and return
         int nbEvent = getEventNb(tag);
         if (nbEvent == 0) {
-            createEvent(fProp);
+            createEvent(fProp, currentFam);
             selectEvent(getRowFromIndex(eventIndex));
             eventDescriptionText.requestFocus();
             return;
@@ -4005,7 +4008,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                createEvent(fProp);
+                createEvent(fProp, currentFam);
                 selectEvent(getRowFromIndex(eventIndex));
                 eventDescriptionText.requestFocus();
             }
@@ -4030,6 +4033,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JMenuItem menuItem = null;
         
         // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+        boolean isFam = false;
         Gedcom tmpGedcom = new Gedcom();
         tmpGedcom.setGrammar(gedcom.getGrammar());
         Entity tmpIndi = null, tmpFam = null;
@@ -4054,12 +4058,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Retrieve list in sorted order and build menu items
         for (String name : names.keySet())     {
             final Property fProp = names.get(name);
+            final Fam currentFam = (!tmpIndi.getMetaProperty().allows(fProp.getTag())) ? Utils.getCurrentFamily(indi, familyTree) : null;
             menuItem = new JMenuItem(fProp.getPropertyName(), fProp.getImage());
             menuItem.setToolTipText("<html><table width=200><tr><td>"+fProp.getPropertyInfo()+"</td></tr></table></html");
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
-                    createEvent(fProp);
+                    createEvent(fProp, currentFam);
                     selectEvent(getRowFromIndex(eventIndex));
                     eventDescriptionText.requestFocus();
                 }
