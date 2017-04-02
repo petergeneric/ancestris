@@ -10,7 +10,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package ancestris.modules.editors.standard.tools;
+package ancestris.util;
 
 import java.util.ArrayList;
 import java.util.HashMap;

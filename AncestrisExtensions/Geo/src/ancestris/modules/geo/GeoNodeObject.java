@@ -21,7 +21,6 @@ import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -429,7 +428,7 @@ public class GeoNodeObject {
     @SuppressWarnings("unchecked")
     public GeoNodeObject[] getAllEvents() {
         if (events != null) {
-            Collections.sort(events, sortEvents);
+            Collections.sort(events, GeoListTopComponent.sortEvents);
             return events.toArray(new GeoNodeObject[events.size()]);
         }
         return null;
@@ -443,7 +442,7 @@ public class GeoNodeObject {
                     list.add(event);
                 }
             }
-            Collections.sort(list, sortEvents);
+            Collections.sort(list, GeoListTopComponent.sortEvents);
             return list.toArray(new GeoNodeObject[list.size()]);
         }
         return null;
@@ -689,21 +688,6 @@ public class GeoNodeObject {
     private String dispName(String str) {
         return str == null || str.isEmpty() ? "-" : str;
     }
-    /**
-     * Comparator to sort events
-     */
-    public Comparator<GeoNodeObject> sortEvents = new Comparator<GeoNodeObject>() {
-
-        public int compare(GeoNodeObject o1, GeoNodeObject o2) {
-            if (o1 == null) {
-                return +1;
-            }
-            if (o2 == null) {
-                return -1;
-            }
-            return o1.toString().compareTo(o2.toString());
-        }
-    };
 
 
 }
