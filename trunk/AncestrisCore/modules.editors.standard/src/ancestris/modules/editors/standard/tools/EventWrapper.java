@@ -93,10 +93,10 @@ public class EventWrapper {
     public int eventSourceIndex = 0;
     
     
-    public EventWrapper(Property property, Indi indi) {
+    public EventWrapper(Property property, Indi indi, Fam fam) {
         
         this.eventProperty = property;
-        this.hostingEntity = property != null ? property.getEntity() : null;
+        this.hostingEntity = fam == null ? property.getEntity() : fam;
 
         // Create dummy indi (will be used for tmpDate et tmpPlace)
         createDummyProperty(indi.getGedcom());
@@ -554,9 +554,12 @@ public class EventWrapper {
             if (hostingEntity instanceof Indi) {
                 eventProperty = indi.addProperty(eventProperty.getTag(), "");
             } else if (hostingEntity instanceof Fam) {
-                Fam fam = createFamForIndi(indi);
-                if (fam == null) {
-                    return;
+                Fam fam = (Fam) hostingEntity;
+                if (fam.getGedcom() == null || fam.getGedcom().getOrigin() == null) { // case of tmpFam (else, fam existed already)
+                    fam = createFamForIndi(indi);
+                    if (fam == null) {
+                        return;
+                    }
                 }
                 eventProperty = fam.addProperty(eventProperty.getTag(), "");
             }
