@@ -296,6 +296,10 @@ public class EventWrapper {
         return ageAsDouble < 0;
     }
 
+    public Fam getFamilyEntity() {
+        return (hostingEntity != null && hostingEntity instanceof Fam) ? (Fam) hostingEntity : null;
+    }
+
     
     
     //

@@ -82,6 +82,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -114,6 +115,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -2820,6 +2822,27 @@ public class IndiPanel extends Editor implements DocumentListener {
                     eventPlaceText.setText("");
                 }
                 eventPlaceText.setCaretPosition(0);
+                
+                // Select corresponding spouse in family tree in case event is related to a family
+                Fam fam = event.getFamilyEntity();
+                if (fam != null) {
+                    Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
+                    while (e.hasMoreElements()) {
+                        DefaultMutableTreeNode node = e.nextElement();
+                        NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
+                        if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
+                            Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
+                            if (nodeFam == fam) {
+                                TreePath tp = new TreePath(node.getPath());
+                                familyTree.setSelectionPath(tp);
+                                familyTree.expandPath(tp);
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    familyTree.clearSelection();
+                }
             }
 
             // Media
@@ -3743,7 +3766,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // create family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
-                String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
+            String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
             final Fam currentFam;
             if (relation == IndiCreator.REL_CHILD) {
                 currentFam = Utils.getCurrentFamily(indi, familyTree);
