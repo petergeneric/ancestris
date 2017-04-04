@@ -218,10 +218,16 @@ public class IndiCreator {
         // Get family where spouse is a spouse, and if it does not exist, create it and add existing spouse to it.
         Fam fam = null;
         Fam[] fams = spouse.getFamiliesWhereSpouse();
-        if (fams == null || fams.length == 0 || currentFam == null) {
+        if (fams == null || fams.length == 0 || currentFam == null) {  // family does not exist, so create it
             fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM);
-        } else {
-            fam = currentFam;
+        } else {  // fams exists and currentFam not null, use currentFam
+            Indi husb = currentFam.getHusband();
+            Indi wife = currentFam.getWife();
+            if ((husb != null && husb.equals(spouse) && wife != null) || (wife != null && wife.equals(spouse) && husb != null)) {  // family already complete with husb and wife, create a new one
+                fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM);
+            } else {
+                fam = currentFam;
+            }
         }
         
         // Add default properties to to newly created spouse
