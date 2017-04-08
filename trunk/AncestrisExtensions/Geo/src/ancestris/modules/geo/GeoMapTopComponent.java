@@ -128,6 +128,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         hoverPanel = new HoverPanel(this);
         hoverPanel.setVisible(false);
         jXMapKit1.getMainMap().add(hoverPanel);
+        
+        // Add listener for zoom adapter
+        jXMapKit1.getMainMap().addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jXMapKit1PropertyChange(evt);
+            }
+        });
+
 
         // Set settings
         customiseFromSettings();
@@ -446,6 +454,34 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         showListAtLocation(gno);
     }//GEN-LAST:event_jGoToListButtonActionPerformed
 
+    private void jXMapKit1PropertyChange(java.beans.PropertyChangeEvent evt) {                                         
+        String pn = evt.getPropertyName();
+        if ("zoom".equals(pn)) {
+            int z = jXMapKit1.getMainMap().getZoom();
+            int s = markersSize;
+            switch (z) {
+                case 1: s = 50; break;
+                case 2: s = 49; break;
+                case 3: s = 47; break;
+                case 4: s = 45; break;
+                case 5: s = 40; break;
+                case 6: s = 35; break;
+                case 7: s = 30; break;
+                case 8: s = 20; break;
+                case 9: s = 12; break;
+                case 10: s = 8; break;
+                case 11: s = 6; break;
+                case 12: s = 5; break;
+                case 13: s = 4; break;
+                case 14: s = 3; break;
+                case 15: s = 2; break;
+            }
+            setMarkersSize(s);
+        }
+    }                                        
+
+
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel blankLabel;
     private javax.swing.Box.Filler filler1;
