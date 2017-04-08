@@ -2766,8 +2766,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTable.setRowSorter(sorter);
         List<SortKey> sortKeys = new ArrayList<SortKey>();
         sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         sorter.sort();
     }
