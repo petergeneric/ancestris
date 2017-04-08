@@ -256,6 +256,7 @@ public class IndiCreator {
             fam.addDefaultProperties();
             if (parent.getSex() != PropertySex.FEMALE) {  // male or unknown
                 fam.setHusband(parent);
+                child.setName("", parent.getLastName());
                 if (currentFam != null) {
                     fam.setWife(currentFam.getOtherSpouse(parent));
                 }
@@ -272,6 +273,10 @@ public class IndiCreator {
                 if (f == currentFam) {
                     child.addDefaultProperties();
                     f.addChild(child);
+                    Indi father = f.getHusband();
+                    if (father != null) {
+                        child.setName("", father.getLastName());
+                    }
                     return;
                 }
             }
