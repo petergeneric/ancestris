@@ -31,7 +31,9 @@ public class Installer extends ModuleInstall {
                 //    si l'utisateur accespte , canClose sauvegarde les données et retourne true
                 //     sinon cancClose retourne false . Il ne faut pas fermer l'application. 
                 canClose &= topComp.canClose();
-                break;
+                if( canClose == false) {
+                    break;
+                }
             }
         }
         return canClose;

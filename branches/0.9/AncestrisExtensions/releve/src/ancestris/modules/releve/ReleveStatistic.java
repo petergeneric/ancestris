@@ -13,11 +13,14 @@ import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.GedcomException;
 import genj.gedcom.time.PointInTime;
+import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.util.TreeMap;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -25,13 +28,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class ReleveStatistic extends javax.swing.JFrame {
 
-    private TreeMap<Integer, int[]> datas = new TreeMap<Integer, int[]>();
-    private String[] columnNames = { "Année" , "Naissances", "Mariages", "Décès", "Divers", "Tous" };
+    private final TreeMap<Integer, int[]> datas = new TreeMap<Integer, int[]>();
+    private final String[] columnNames = {
+        NbBundle.getMessage(getClass(),"ReleveStatistic.columnTitle.year"),
+        NbBundle.getMessage(getClass(),"ReleveStatistic.columnTitle.births"),
+        NbBundle.getMessage(getClass(),"ReleveStatistic.columnTitle.marriages"),
+        NbBundle.getMessage(getClass(),"ReleveStatistic.columnTitle.deaths"),
+        NbBundle.getMessage(getClass(),"ReleveStatistic.columnTitle.misc"),
+        NbBundle.getMessage(getClass(),"ReleveStatistic.columnTitle.all"),
+    };
     private static final String LINE_BREAK = "\n";
     private static final String CELL_BREAK = "\t";
 
 
-    /** Creates new form ReleveStatistic */
+    /** Creates new form ReleveStatistic
+     * @param dataManager */
     static public void  showStatistics(DataManager dataManager ) {
         ReleveStatistic statistics = new ReleveStatistic();
         statistics.setVisible(true);
@@ -42,11 +53,20 @@ public class ReleveStatistic extends javax.swing.JFrame {
     /** Creates new form ReleveStatistic */
     public ReleveStatistic() {
         initComponents();
+        
+        // je configure la position de la fenetre
+        Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screen.width - getWidth())/ 2, (screen.height -getHeight()) / 2, getWidth(), getHeight());
+        
+        ImageIcon icon = new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Releve.png"));
+        setIconImage(icon.getImage());
+        
+        setTitle(NbBundle.getMessage(getClass(), "ReleveTopComponent.menu.statistics"));
     }
 
     /**
      * Initialise le modele de données de la JTable
-     * @param model
+     * @param dataManager
      */
    public void setModel(DataManager dataManager ) {
        int[] total = new int[5];
