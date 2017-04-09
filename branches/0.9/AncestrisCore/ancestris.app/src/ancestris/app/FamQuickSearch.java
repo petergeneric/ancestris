@@ -29,8 +29,9 @@ public class FamQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Fam fam : context.getGedcom().getFamilies()) {
-                    if (Utilities.wordsMatch(fam.toString(false).toLowerCase(),request.getText().toLowerCase())) {
-                        if (!response.addResult(createAction(fam), fam.toString(false))) {
+                    String str = fam.toString(true);
+                    if (Utilities.wordsMatch(str.toLowerCase(),request.getText().toLowerCase())) {
+                        if (!response.addResult(createAction(fam), str)) {
                             return;
                         }
                     }

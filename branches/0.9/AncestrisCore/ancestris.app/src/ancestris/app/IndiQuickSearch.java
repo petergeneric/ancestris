@@ -27,8 +27,9 @@ public class IndiQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
-                    if (Utilities.wordsMatch(indi.getName().toLowerCase(),request.getText().toLowerCase())) {
-                        if (!response.addResult(createAction(indi), indi.getName())) {
+                    String str = indi.toString(true);
+                    if (Utilities.wordsMatch(str.toLowerCase(),request.getText().toLowerCase())) {
+                        if (!response.addResult(createAction(indi), str)) {
                             return;
                         }
                     }
