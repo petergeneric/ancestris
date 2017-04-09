@@ -21,7 +21,6 @@ import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -427,10 +426,24 @@ public class GeoNodeObject {
     }
 
     @SuppressWarnings("unchecked")
-    public GeoNodeObject[] getEvents() {
+    public GeoNodeObject[] getAllEvents() {
         if (events != null) {
-            Collections.sort(events, sortEvents);
+            Collections.sort(events, GeoListTopComponent.sortEvents);
             return events.toArray(new GeoNodeObject[events.size()]);
+        }
+        return null;
+    }
+
+    public GeoNodeObject[] getFilteredEvents(GeoFilter filter) {
+        List<GeoNodeObject> list = new ArrayList<GeoNodeObject>();
+        if (events != null) {
+            for (GeoNodeObject event : events) {
+                if (filter.compliesEvent(event)) {     
+                    list.add(event);
+                }
+            }
+            Collections.sort(list, GeoListTopComponent.sortEvents);
+            return list.toArray(new GeoNodeObject[list.size()]);
         }
         return null;
     }
@@ -455,52 +468,98 @@ public class GeoNodeObject {
 
     public List<Indi> getIndis() {
         List<Indi> indis = new ArrayList<Indi>();
-        // loop on events
-        GeoNodeObject[] gno = getEvents();
-        for (GeoNodeObject gno1 : gno) {
-            Property prop = gno1.property;
-            Entity ent = prop.getEntity();
-            // counts patronyms, for individuals or families
-            if (ent instanceof Indi) {
-                indis.add((Indi) ent);
-            } else if (ent instanceof Fam) {
-                Indi indi = ((Fam) ent).getHusband();
-                if (indi != null) {
-                    indis.add(indi);
-                }
-                indi = ((Fam) ent).getWife();
-                if (indi != null) {
-                    indis.add(indi);
-                }
+
+        Entity ent = property.getEntity();
+        if (ent instanceof Indi) {
+            indis.add((Indi) ent);
+        } else if (ent instanceof Fam) {
+            Indi indi = ((Fam) ent).getHusband();
+            if (indi != null) {
+                indis.add(indi);
+            }
+            indi = ((Fam) ent).getWife();
+            if (indi != null) {
+                indis.add(indi);
             }
         }
         return indis;
     }
 
-    public String[] getEventsInfo() {
 
+    public int getEventsMaxDate() {
+        int date = -99999;
+        
+        Property dateProp = property.getProperty("DATE");
+        if (dateProp != null && dateProp instanceof PropertyDate) {
+            int year = 0;
+            PropertyDate p = (PropertyDate) dateProp;
+            try {
+                if (p.isRange()) {
+                    year = p.getEnd().getPointInTime(PointInTime.GREGORIAN).getYear();
+                } else {
+                    year = p.getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
+                }
+            } catch (GedcomException ex) {
+            }
+            if (date < year) {
+                date = year;
+            }
+        }
+        return date;
+    }
+
+    public int getEventsMinDate() {
+        int date = +99999;
+
+        Property dateProp = property.getProperty("DATE");
+        if (dateProp != null && dateProp instanceof PropertyDate) {
+            int year = 0;
+            PropertyDate p = (PropertyDate) dateProp;
+            try {
+                year = p.getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
+            } catch (GedcomException ex) {
+            }
+            if (date > year) {
+                date = year;
+            }
+        }
+        return date;
+    }
+
+    public String getEventTag() {
+        return property.getTag();
+    }
+
+    
+    
+    public String[] getEventsInfo(GeoFilter filter) {
+
+        if (filter == null) {
+            return null;
+        }
+        GeoNodeObject[] eventsOfNode = getFilteredEvents(filter); 
+        if (eventsOfNode == null) {
+            return null;
+        }
+        
         String[] str = {"nb individus", "patronyme le plus fréquent", "nb events", "births", "marriages", "deaths", "other events", "date min", "date max"};
         HashSet<String> indiv = new HashSet<String>();
         SortedMap<String, Integer> pat = new TreeMap<String, Integer>();
         int dateMin = +99999;
         int dateMax = -99999;
-        GeoNodeObject[] gno = getEvents();
-        if (gno == null) {
-            return null;
-        }
         int eBirths = 0, eMarriages = 0, eDeaths = 0, eOther = 0;
 
         // loop on all events
-        for (GeoNodeObject gno1 : gno) {
-            Property prop = gno1.property;
+        for (GeoNodeObject eventOfNode : eventsOfNode) {
+            Property prop = eventOfNode.property;
             Entity ent = prop.getEntity();
             // increments events
             String tag = prop.getTag();
-            if (tag.equals("BIRT") || tag.equals("CHR")) {
+            if (filter.isBirth(tag)) {
                 eBirths++;
-            } else if (tag.equals("MARR") || tag.equals("ENGA") || tag.equals("MARB") || tag.equals("MARC")) {
+            } else if (filter.isMarriage(tag)) {
                 eMarriages++;
-            } else if (tag.equals("DEAT") || tag.equals("BURI") || tag.equals("CREM")) {
+            } else if (filter.isDeath(tag)) {
                 eDeaths++;
             } else {
                 eOther++;
@@ -518,7 +577,7 @@ public class GeoNodeObject {
                 indiv.add(ent.toString());
             } else if (ent instanceof Fam) {
                 Indi indi = ((Fam) ent).getHusband();
-                if (indi != null) {
+                if (indi != null && filter.compliesIndi(indi)) {
                     patronym = indi.getLastName();
                     Integer nb = pat.get(patronym);
                     if (nb == null) {
@@ -529,7 +588,7 @@ public class GeoNodeObject {
                     indiv.add(indi.toString());
                 }
                 indi = ((Fam) ent).getWife();
-                if (indi != null) {
+                if (indi != null && filter.compliesIndi(indi)) {
                     patronym = indi.getLastName();
                     Integer nb = pat.get(patronym);
                     if (nb == null) {
@@ -580,7 +639,7 @@ public class GeoNodeObject {
         // Build info
         str[0] = "" + indiv.size();
         str[1] = "" + patMax + " (" + max + ")";
-        str[2] = "" + events.size();
+        str[2] = "" + eventsOfNode.length;
         str[3] = "" + eBirths;
         str[4] = "" + eMarriages;
         str[5] = "" + eDeaths;
@@ -592,62 +651,6 @@ public class GeoNodeObject {
 
     void addEvent(Property parent, PropertyPlace pp) {
         events.add(new GeoNodeObject(gplOwner, parent, pp));
-    }
-
-    public HashSet<String> getEventTypes() {
-        HashSet<String> tags = new HashSet<String>();
-        GeoNodeObject[] gno = getEvents();
-        for (GeoNodeObject gno1 : gno) {
-            Property prop = gno1.property;
-            tags.add(prop.getTag());
-        }
-        return tags;
-    }
-
-    public int getEventsMinDate() {
-        int date = +99999;
-        GeoNodeObject[] gno = getEvents();
-        for (GeoNodeObject gno1 : gno) {
-            Property prop = gno1.property;
-            Property dateProp = prop.getProperty("DATE");
-            if (dateProp != null && dateProp instanceof PropertyDate) {
-                int year = 0;
-                PropertyDate p = (PropertyDate) dateProp;
-                try {
-                    year = p.getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
-                } catch (GedcomException ex) {
-                }
-                if (date > year) {
-                    date = year;
-                }
-            }
-        }
-        return date;
-    }
-
-    public int getEventsMaxDate() {
-        int date = -99999;
-        GeoNodeObject[] gno = getEvents();
-        for (GeoNodeObject gno1 : gno) {
-            Property prop = gno1.property;
-            Property dateProp = prop.getProperty("DATE");
-            if (dateProp != null && dateProp instanceof PropertyDate) {
-                int year = 0;
-                PropertyDate p = (PropertyDate) dateProp;
-                try {
-                    if (p.isRange()) {
-                        year = p.getEnd().getPointInTime(PointInTime.GREGORIAN).getYear();
-                    } else {
-                        year = p.getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
-                    }
-                } catch (GedcomException ex) {
-                }
-                if (date < year) {
-                    date = year;
-                }
-            }
-        }
-        return date;
     }
 
     public String displayToponym(Toponym topo) {
@@ -685,21 +688,6 @@ public class GeoNodeObject {
     private String dispName(String str) {
         return str == null || str.isEmpty() ? "-" : str;
     }
-    /**
-     * Comparator to sort events
-     */
-    public Comparator<GeoNodeObject> sortEvents = new Comparator<GeoNodeObject>() {
-
-        public int compare(GeoNodeObject o1, GeoNodeObject o2) {
-            if (o1 == null) {
-                return +1;
-            }
-            if (o2 == null) {
-                return -1;
-            }
-            return o1.toString().compareTo(o2.toString());
-        }
-    };
 
 
 }
