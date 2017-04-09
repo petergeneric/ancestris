@@ -12,7 +12,7 @@
 
 package ancestris.modules.editors.standard;
 
-import ancestris.modules.editors.standard.tools.EventUsage;
+import ancestris.util.EventUsage;
 import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;
@@ -82,6 +82,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -114,6 +115,7 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableRowSorter;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 import org.openide.util.Exceptions;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -2631,7 +2633,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         List<EventWrapper> ret = new ArrayList<EventWrapper>();
         
         // Start adding the general event which will only hold general notes and sources for the individual
-        ret.add(new EventWrapper(indi, indi));
+        ret.add(new EventWrapper(indi, indi, null));
                 
         // Look for all individual events
         // - INDIVIDUAL_EVENT_STRUCTURE (birth, etc.)
@@ -2642,7 +2644,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             Property[] eventProps = indi.getProperties(tag);
             for (Property prop : eventProps) {
                 if (prop != null) {
-                    ret.add(new EventWrapper(prop, indi));
+                    ret.add(new EventWrapper(prop, indi, null));
                 }
             }
         }
@@ -2657,7 +2659,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 Property[] eventProps = fam.getProperties(tag);
                 for (Property prop : eventProps) {
                     if (prop != null) {
-                        ret.add(new EventWrapper(prop, indi));
+                        ret.add(new EventWrapper(prop, indi, fam));
                     }
                 }
             }
@@ -2764,8 +2766,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTable.setRowSorter(sorter);
         List<SortKey> sortKeys = new ArrayList<SortKey>();
         sortKeys.add(new RowSorter.SortKey(2, SortOrder.ASCENDING));
-        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
+        sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         sorter.sort();
     }
@@ -2820,6 +2822,27 @@ public class IndiPanel extends Editor implements DocumentListener {
                     eventPlaceText.setText("");
                 }
                 eventPlaceText.setCaretPosition(0);
+                
+                // Select corresponding spouse in family tree in case event is related to a family
+                Fam fam = event.getFamilyEntity();
+                if (fam != null) {
+                    Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
+                    while (e.hasMoreElements()) {
+                        DefaultMutableTreeNode node = e.nextElement();
+                        NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
+                        if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
+                            Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
+                            if (nodeFam == fam) {
+                                TreePath tp = new TreePath(node.getPath());
+                                familyTree.setSelectionPath(tp);
+                                familyTree.expandPath(tp);
+                                break;
+            }
+                        }
+                    }
+                } else {
+                    familyTree.clearSelection();
+                }
             }
 
             // Media
@@ -3758,7 +3781,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     label = " ";
                 }
             } else {
-                currentFam = null;
+                currentFam = Utils.getCurrentFamily(indi, familyTree);
             }
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
@@ -3920,14 +3943,14 @@ public class IndiPanel extends Editor implements DocumentListener {
                 return;
             }
             Property prop = tmpIndi.addProperty(tag, "");
-            createEvent(prop);
+            createEvent(prop, null);
         } else { // else select it
             eventIndex = index;
         }
     }
     
-    private void createEvent(Property prop) {
-        eventSet.add(new EventWrapper(prop, indi));
+    private void createEvent(Property prop, Fam fam) {
+        eventSet.add(new EventWrapper(prop, indi, fam));
         displayEventTable();
         eventIndex = eventSet.size() - 1;
         triggerChange();
@@ -3974,6 +3997,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void showPopupEventMenu(JButton button, final String tag, String createLabel, String displayNextLabel) {
 
         // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+        boolean isFam = false;
         Gedcom tmpGedcom = new Gedcom();
         tmpGedcom.setGrammar(gedcom.getGrammar());
         Entity tmpIndi = null, tmpFam = null;
@@ -3987,13 +4011,15 @@ public class IndiPanel extends Editor implements DocumentListener {
         prop = tmpIndi.addProperty(tag, "");
         if (!tmpIndi.getMetaProperty().allows(tag)) {
             prop = tmpFam.addProperty(tag, "");
+            isFam = true;
         }
         final Property fProp = prop;
+        final Fam currentFam = isFam ? Utils.getCurrentFamily(indi, familyTree) : null;
 
         // if tag does not exist, create it and return
         int nbEvent = getEventNb(tag);
         if (nbEvent == 0) {
-            createEvent(fProp);
+            createEvent(fProp, currentFam);
             selectEvent(getRowFromIndex(eventIndex));
             eventDescriptionText.requestFocus();
             return;
@@ -4005,7 +4031,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent ae) {
-                createEvent(fProp);
+                createEvent(fProp, currentFam);
                 selectEvent(getRowFromIndex(eventIndex));
                 eventDescriptionText.requestFocus();
             }
@@ -4030,6 +4056,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         JMenuItem menuItem = null;
         
         // Need to use properties attached to a gedcom, with same grammar, in order to be able to display icons
+        boolean isFam = false;
         Gedcom tmpGedcom = new Gedcom();
         tmpGedcom.setGrammar(gedcom.getGrammar());
         Entity tmpIndi = null, tmpFam = null;
@@ -4054,12 +4081,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Retrieve list in sorted order and build menu items
         for (String name : names.keySet())     {
             final Property fProp = names.get(name);
+            final Fam currentFam = (!tmpIndi.getMetaProperty().allows(fProp.getTag())) ? Utils.getCurrentFamily(indi, familyTree) : null;
             menuItem = new JMenuItem(fProp.getPropertyName(), fProp.getImage());
             menuItem.setToolTipText("<html><table width=200><tr><td>"+fProp.getPropertyInfo()+"</td></tr></table></html");
             menu.add(menuItem);
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
-                    createEvent(fProp);
+                    createEvent(fProp, currentFam);
                     selectEvent(getRowFromIndex(eventIndex));
                     eventDescriptionText.requestFocus();
                 }

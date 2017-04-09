@@ -446,6 +446,10 @@ public class ReportNarrative extends Report {
 //              addUtterance("abbrev.born", date); // phrase w gender, later case
 //            }
           }
+          String placeB = getPlaceString(indi.getProperty("BIRT"), null);
+          if (placeB.length() > 0) {
+            doc.addText(" "+placeB);
+          }
 
           // (child of X and Y)
           Indi father = indi.getBiologicalFather(), mother = indi.getBiologicalMother();
@@ -499,7 +503,13 @@ public class ReportNarrative extends Report {
             }
             doc.addText(" ");
             if (fams.length > 1) doc.addText("(" + (i+1) + ") ");
-            if (marriage != null) doc.addText(getDateString(marriage));
+            if (marriage != null) {
+                doc.addText(getDateString(marriage));
+                String placeM = getPlaceString(fam.getProperty("MARR"), null);
+                if (placeM.length() > 0) {
+                    doc.addText(" " + placeM);
+                }
+            }
             Property age = (indi.getSex() == PropertySex.MALE)
               ? fam.getProperty(new TagPath("FAM:HUSB:AGE"))
               : fam.getProperty(new TagPath("FAM:WIFE:AGE"));
@@ -519,6 +529,8 @@ public class ReportNarrative extends Report {
             }
             // A MARR event can also have an AGE prop under HUSB and WIFE
           }
+          
+          
           date = getDateString(indi.getDeathDate());
           if (date.length() > 0) {
             doc.addText(", ");
@@ -527,6 +539,10 @@ public class ReportNarrative extends Report {
             } else {
               addUtterance("abbrev.died", date);
             }
+              String placeD = getPlaceString(indi.getProperty("DEAT"), null);
+              if (placeD.length() > 0) {
+                  doc.addText(" " + placeD);
+              }
           }
           // Would be nice to include either recorded or computed age.
 //        if (age != null) {

@@ -11,7 +11,7 @@
  */
 package genj.search;
 
-import ancestris.api.search.SearchResults;
+import ancestris.api.search.SearchCommunicator;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.view.SelectionDispatcher;
@@ -43,10 +43,8 @@ import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 import javax.swing.AbstractListModel;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.BorderFactory.createLineBorder;
@@ -62,7 +60,6 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.openide.util.NbBundle;
-import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 import spin.Spin;
 
@@ -70,8 +67,7 @@ import spin.Spin;
  *
  * @author frederic
  */
-@ServiceProvider(service = SearchResults.class)
-public class SearchView extends View implements SearchResults {
+public class SearchView extends View {
 
     
     /** default values */
@@ -103,10 +99,6 @@ public class SearchView extends View implements SearchResults {
     /** registry */
     private final static Registry REGISTRY = Registry.get(SearchView.class);
     
-    /** instances */
-    public static Set<SearchResults> instances = null;
-    
-    
     /** current context */
     private Context context = new Context();
     
@@ -135,22 +127,14 @@ public class SearchView extends View implements SearchResults {
     private WorkerMulti worker1;
     private WorkerTag worker2;
 
+    private SearchCommunicator searchCommunicator = null;
     
-    @Override
-    public Set<SearchResults> getInstances() {
-        return instances;
-    }
 
     
     /**
      * Constructor
      */
     public SearchView() {
-        
-        if (instances == null) {
-            instances = new HashSet<SearchResults>();
-        }
-        instances.add(this);
         
         // prepare an action listener connecting to click
         ActionListener aclick = new ActionListener() {
@@ -198,6 +182,7 @@ public class SearchView extends View implements SearchResults {
             public void more(List<Hit> hits) {
                 results1.add(hits);
                 labelCount1.setText("" + results1.getSize());
+                notifyResults();
             }
 
             @Override
@@ -214,6 +199,7 @@ public class SearchView extends View implements SearchResults {
                 actionStop.setEnabled(false);
                 actionStart.setEnabled(context.getGedcom() != null);
             }
+
         }));
 
         worker2 = new WorkerTag((WorkerListener) Spin.over(new WorkerListener() {
@@ -222,6 +208,7 @@ public class SearchView extends View implements SearchResults {
             public void more(List<Hit> hits) {
                 results2.add(hits);
                 labelCount2.setText("" + results2.getSize());
+                notifyResults();
             }
 
             @Override
@@ -312,6 +299,7 @@ public class SearchView extends View implements SearchResults {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
+                notifyResults();
                 choiceLastname.requestFocusInWindow();
             }
         });
@@ -512,8 +500,7 @@ public class SearchView extends View implements SearchResults {
     @Override
     public void closing() {
         super.closing();
-        instances.remove(this);
-        
+        SearchCommunicator.unregister(searchCommunicator);
     }
 
 
@@ -578,8 +565,18 @@ public class SearchView extends View implements SearchResults {
         }
         getSelectedResults().clear();
         labelCount1.setText("");
+        notifyResults();
     }
 
+    private void notifyResults() {
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                searchCommunicator.fireNewResults();
+            }
+        });
+    }
+    
     public void clearHistory() {
         if (DialogManager.YES_OPTION != DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ConfirmClear"), NbBundle.getMessage(getClass(), "MSG_ConfirmClear"))
                 .setMessageType(DialogManager.YES_NO_OPTION)
@@ -607,6 +604,7 @@ public class SearchView extends View implements SearchResults {
             choiceTag.setValues(oldValues);
             choiceValue.setValues(oldTags);
         }
+        notifyResults();
     }
 
     /**
@@ -655,6 +653,19 @@ public class SearchView extends View implements SearchResults {
             actionStart.setEnabled(true);
         }
 
+        if (searchCommunicator == null) {
+            searchCommunicator = new SearchCommunicator() {
+                @Override
+                public List<Property> getResults() {
+                    List<Property> props = new ArrayList<Property>();
+                    for (Hit hit : getSelectedResults().hits) {
+                        props.add(hit.getProperty());
+    }
+                    return props;
+                }
+            };
+        }
+        searchCommunicator.setGedcom(context.getGedcom());
     }
 
     /**
@@ -731,21 +742,6 @@ public class SearchView extends View implements SearchResults {
         return result;
     }
 
-    @Override
-    public List<Property> getResultProperties() {
-        List<Property> props = new ArrayList<Property>();
-        for (Hit hit : getSelectedResults().hits) {
-            props.add(hit.getProperty());
-        }
-        return props;
-    }
-
-    @Override
-    public Gedcom getGedcom() {
-        return context == null ? null : context.getGedcom();
-    }
-
-    
     private Worker getSelectedWorker() {
         Worker worker = null;
         if (jTabbedPane1.getSelectedComponent() == tabMulti) {
