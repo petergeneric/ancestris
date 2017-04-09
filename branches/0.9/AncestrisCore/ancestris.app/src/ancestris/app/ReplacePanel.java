@@ -913,10 +913,10 @@ public class ReplacePanel extends javax.swing.JPanel {
      */
     private List<Property> getSelection() {
         return SearchCommunicator.getResults(gedcom);
-                }
-        
+    }
     
     
+
     private void next() {
         resultsCurrent++;
         if (resultsCurrent > resultsTotal) {
@@ -1043,6 +1043,7 @@ public class ReplacePanel extends javax.swing.JPanel {
                             property.getPath().getName() + ":" + property.getPath().toString()));
         }
     }
+
     
     
     
@@ -1066,7 +1067,6 @@ public class ReplacePanel extends javax.swing.JPanel {
 
     
     
-
     private class FilterPopupListener implements PopupMenuListener {
 
         public FilterPopupListener() {
