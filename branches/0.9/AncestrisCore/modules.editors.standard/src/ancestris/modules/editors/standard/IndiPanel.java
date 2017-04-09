@@ -2837,7 +2837,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 familyTree.setSelectionPath(tp);
                                 familyTree.expandPath(tp);
                                 break;
-            }
+                            }
                         }
                     }
                 } else {

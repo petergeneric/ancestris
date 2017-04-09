@@ -126,10 +126,10 @@ public class SearchView extends View {
             actionSettings = new ActionSettings();
     private WorkerMulti worker1;
     private WorkerTag worker2;
-
+    
     private SearchCommunicator searchCommunicator = null;
     
-
+    
     
     /**
      * Constructor
@@ -660,7 +660,7 @@ public class SearchView extends View {
                     List<Property> props = new ArrayList<Property>();
                     for (Hit hit : getSelectedResults().hits) {
                         props.add(hit.getProperty());
-    }
+                    }
                     return props;
                 }
             };
@@ -773,7 +773,7 @@ public class SearchView extends View {
         case_sensitive = settingsPanel.getCaseSensitive();
     }
 
-    
+
     
     
     /**
