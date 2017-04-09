@@ -21,7 +21,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
         <h2 class="ancestris_help_title">FeedBack Mode d'emploi</h2>
     </center>
         <h2>Mode d'emploi:</h2>
-        <a name="_Configuration_"></a>
         <h3>Commencer par le réglage de FeedBack</h3>
         <h3>C'est Outils /Préférences /Extensions /FeedBack</h3>
         <p>FeedBack sert à envoyer un mail, d'où les renseignements à fournir.</p>
@@ -38,7 +37,9 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                     &nbsp;
                 </td>
             </tr>
-        </table><br>
+        </table>
+        <br>
+        <a name="_SMTP_"></a>
         <p><b>Serveur de mail sortant (SMTP)</b> [et les lignes suivantes] est indispensable pour envoyer le mail.</p>
         <table border="0" width="100%">
             <tr>
@@ -46,7 +47,6 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                     <img  alt="Menu des préférences du plugin SMTP"   src="./images/feedback_3b.jpg">
                 </td>
                 <td width="30%">
-                     
                     Le SMTP est lié à votre connection internet.<br> 
                     Ce sont les mêmes informations que dans votre logiciel de courriel.
                 </td>
@@ -54,11 +54,22 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                     &nbsp;
                 </td>
             </tr>
-            </table><br>
-        
+            </table>
+            <br>
             <p>
-                Si vous ne les connaissez pas, un petit appel à Google(ou autre) avec <i>smtp orange</i> donne l'information.<br>
-                Avec "smtp orange" j'ai obtenu le tableau de tous les serveurs smtp et leurs paramètres.</p>
+                Si vous ne les connaissez pas, un petit appel à Google (ou autre) 
+                avec <i>smtp le_nom_de_votre_FAI</i> donne l'information.<br>
+                Avec "smtp orange" j'ai obtenu le tableau de tous les serveurs 
+                smtp et leurs paramètres.<br>
+                Quelques exemples :<br>
+                - Pour Free : Serveur de mail sortant : smtp.free.fr - Chiffrement : 
+                (x) pas de chiffrement - Port SMTP : 25<br>
+                - Pour Proximus.be : Serveur de mail sortant : relay.proximus.be - 
+                Chiffrement : (x) pas de chiffrement - Port SMTP : 25<br>
+                <u>P.S.</u>: N'hésitez pas à nous donner les vôtres pour qu'on les 
+                rajoute ici et ainsi qu'on aide ceux qui en ont besoin. Merci 
+                pour eux.
+                </p>
         <table border="0" width="100%">
             <tr>
                 <td width="30%">        
@@ -92,7 +103,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                     <img  alt="Renseigner FeedBack"   src="./images/feedback_2a.jpg">
                 </td> 
                 <td width="30%">
-                     Les trois premières lignes sont prêtes.<br>
+                    Les trois premières lignes sont prêtes.<br>
                 </td> 
                 <td width="30%">&nbsp;</td>
             </tr>
@@ -101,7 +112,8 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                 <td width="30%">
                     <img  alt="Renseigner FeedBack"   src="./images/feedback_2b.jpg">
                 </td> 
-                <td width="30%">À la quatrième : <b>Sujet</b>, indiquer le contenu du message.
+                <td width="30%">
+                    À la quatrième : <b>Sujet</b>, indiquer le contenu du message.
                 </td> 
                 <td width="30%">&nbsp;</td>
             </tr>
@@ -109,15 +121,21 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
             <tr>
                 <td width="30%">
                     <img  alt="Renseigner FeedBack"   src="./images/feedback_2c.jpg"><br>
-                    À partir de <b>Commentaire </b>: l'expression est libre, s'il manque de la place, il va s'en créer automatiquement.<br>
                 </td> 
-                <td width="30%">     À la cinquième : <b>Message</b>, il est possible de supprimer ce qui est préécrit, mais il vaut mieux laisser
+                <td width="30%">
+                     À la cinquième : <b>Message</b>, il est possible de supprimer ce qui est préécrit, mais il vaut mieux laisser
                      les trois lignes techniques concernant les versions d'Ancestris, votre système et Java.<br>
-                     
-                     </td> 
-                <td width="30%">&nbsp;</td>
+                </td> 
+                <td width="30%">
+                &nbsp;
+                </td>
             </tr>
-            <tr><td>&nbsp;</td><td>&nbsp;</td><td>&nbsp;</td></tr>
+            <tr>
+            <td>                    À partir de <b>Commentaire </b>: l'expression est libre, s'il manque de la place, il va s'en créer automatiquement.<br>
+&nbsp;</td>
+            <td>&nbsp;</td>
+            <td>&nbsp;</td>
+            </tr>
             <tr>
                 <td width="30%">
                     Après la fenêtre message il y a une case à cocher et un bouton. La gestion dépend du contenu du message, est-il technique ou pas.<br>
@@ -132,14 +150,13 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
                      Si le message concerne une difficulté technique concernant Ancestris, 
                      il <u>faut cocher</u> : <b>Envoyer les données de configuration</b> 
                      et les enregistrer en utilisant le bouton <b>[Save configuration data]</b>.<br> 
-                     
                  </td>                     
             </tr>   
         </table>
         <h3> Quitter FeedBack en envoyant le message par [Envoyer].</h3>
         <p>
             Normalement le courriel est parti et un message vous en informe. 
-            Si au contraire vous avez un message d'échec, reprendre la procédure <a href="./feedback-about.html#_Configuration_">ici</a>, 
+            Si au contraire vous avez un message d'échec, reprendre la procédure <a href="./feedback-about.html#_SMTP_">ici</a>, 
             l'erreur vient probablement du réglage du smtp.<br><br>
             <i>Comme le support d'Ancestris est très réactif, vous devriez recevoir rapidement une réponse.</i>
         </p>
