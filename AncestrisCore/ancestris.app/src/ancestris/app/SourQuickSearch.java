@@ -32,11 +32,10 @@ public class SourQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Source source : context.getGedcom().getSources()) {
-                    String rep = Utilities.getPhraseBit(source.getTitle() + " : " + source.getText(), request.getText());
+                    String rep = Utilities.getPhraseBit(source.getTitle() + " : " + source.getText() + " (" + source.getId() + ")", request.getText());
                     if (rep == null) {
                         continue;
                     }
-                    rep += " (" + source.getId() + ")";
                     if (!response.addResult(createAction(source), rep)) {
                         return;
                     }

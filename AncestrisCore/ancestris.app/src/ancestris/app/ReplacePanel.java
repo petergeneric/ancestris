@@ -11,7 +11,7 @@
  */
 package ancestris.app;
 
-import ancestris.api.search.SearchResults;
+import ancestris.api.search.SearchCommunicator;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -54,7 +54,6 @@ import javax.swing.text.JTextComponent;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
-import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 /**
@@ -912,25 +911,12 @@ public class ReplacePanel extends javax.swing.JPanel {
      * Get result properties of all Search TopComponent found
      * @return
      */
-    private Set<Property> getSelection() {
-        Set<Property> ret = new HashSet<Property>();
-        
-        for (SearchResults selectionResults : Lookup.getDefault().lookupAll(SearchResults.class)) {
-            for (SearchResults instance : selectionResults.getInstances()) {
-                Gedcom searchGedcom = instance.getGedcom();
-                if (searchGedcom != null && searchGedcom.getName().equals(gedcom.getName())) {
-                    ret.addAll(instance.getResultProperties());
+    private List<Property> getSelection() {
+        return SearchCommunicator.getResults(gedcom);
                 }
-            }
-            break;
-        }
         
-        return ret;
-    }
     
     
-    
-
     private void next() {
         resultsCurrent++;
         if (resultsCurrent > resultsTotal) {

@@ -33,11 +33,10 @@ public class NoteQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Note note : context.getGedcom().getNotes()) {
-                    String rep = Utilities.getPhraseBit(note.getDisplayValue(), request.getText());
+                    String rep = Utilities.getPhraseBit(note.getDisplayValue() + " (" + note.getId() + ")", request.getText());
                     if (rep == null) {
                         continue;
                     }
-                    rep += " (" + note.getId() + ")";
                     if (!response.addResult(createAction(note), rep)) {
                         return;
                     }
