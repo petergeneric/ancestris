@@ -679,6 +679,26 @@ public class TreeView extends View implements Filter {
         // gap
         toolbar.addSeparator();
 
+        // center and rebuild root
+        rootMenu = createDropDownButton(Images.imgView,null); 
+        Action def1 = new ActionRootContext(rootMenu);
+        Action def2 = new ActionChooseRoot(rootMenu);
+        rootMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{def1, def2}, Lookup.EMPTY));
+        rootMenu.setAction(def1);
+        
+        gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
+        def1 = new ActionGotoContext(gotoMenu);
+        def2 = new ActionGotoRoot(gotoMenu);
+        gotoMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{def1,def2}, Lookup.EMPTY));
+        gotoMenu.setAction(def1);
+
+        toolbar.add(gotoMenu);
+        toolbar.add(rootMenu);
+
         // bookmarks
         PopupWidget pb = new PopupWidget("", BOOKMARK_ICON) {
 
@@ -695,26 +715,9 @@ public class TreeView extends View implements Filter {
         pb.setToolTipText(RESOURCES.getString("bookmark.tip"));
         pb.setOpaque(false);
         toolbar.add(pb);
-        
-        rootMenu = createDropDownButton(Images.imgView,null); 
-        Action def = new ActionChooseRoot(rootMenu);
-        rootMenu.putClientProperty(
-                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def,new ActionRootContext(rootMenu)}, Lookup.EMPTY));
-        rootMenu.setAction(def);
-        
-        gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
-        def = new ActionGotoRoot(gotoMenu);
-        gotoMenu.putClientProperty(
-                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def,new ActionGotoContext(gotoMenu)}, Lookup.EMPTY));
-        gotoMenu.setAction(def);
-
-        toolbar.add(gotoMenu);
-        toolbar.add(rootMenu);
-        toolbar.addSeparator();
 
         // settings
+        toolbar.addSeparator();
         toolbar.add(new ScreenshotAction(content));
 
         rootTitle = new JLabel();
@@ -734,7 +737,7 @@ public class TreeView extends View implements Filter {
     }
 
     private void setRootTitle(String title) {
-        rootTitle.setText("<html><b>" + title + "</b></html");
+        rootTitle.setText("<html><b>" + RESOURCES.getString("root.name") + " " + title + "</b></html");
 
     }
 
@@ -794,7 +797,7 @@ public class TreeView extends View implements Filter {
         if (root == null || root instanceof Indi || root instanceof Fam) {
             model.setRoot(root);
             show(root, true);
-            String title = root == null ? "" : root.toString(false);
+            String title = root == null ? "" : root.toString(true);
             setRootTitle(title);
         }
 
@@ -1431,8 +1434,8 @@ public class TreeView extends View implements Filter {
                 e = c.getEntity();
             if (e == null)
                 e = TreeView.this.getRoot();
-            setTip(RESOURCES.getString("root.context",e==null?"":e.toString(false)));
-            setText(RESOURCES.getString("root.context",e==null?"":e.toString(false)));
+            setTip(RESOURCES.getString("root.context",e==null?"":e.toString(true)));
+            setText(RESOURCES.getString("root.context",e==null?"":e.toString(true)));
             setImage(Images.imgView);
         }
 
@@ -1447,8 +1450,8 @@ public class TreeView extends View implements Filter {
                 }
             }
             if (entity != null){
-                setTip(RESOURCES.getString("root.context",entity==null?"":entity.toString(false)));
-                setText(RESOURCES.getString("root.context",entity==null?"":entity.toString(false)));
+                setTip(RESOURCES.getString("root.context",entity==null?"":entity.toString(true)));
+                setText(RESOURCES.getString("root.context",entity==null?"":entity.toString(true)));
             }
             super.contextChanged();
         }
@@ -1707,8 +1710,8 @@ public class TreeView extends View implements Filter {
                 e = c.getEntity();
             if (e == null)
                 e = TreeView.this.getRoot();
-            setTip(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(false)));
-            setText(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(false)));
+            setTip(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(true)));
+            setText(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(true)));
             setImage(Images.imgGotoRoot);
         }
 
@@ -1723,8 +1726,8 @@ public class TreeView extends View implements Filter {
                 }
             }
             if (entity != null){
-                setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
-                setText(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(false)));
+                setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true)));
+                setText(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true)));
             }
             super.contextChanged();
         }

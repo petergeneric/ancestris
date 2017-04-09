@@ -2,7 +2,7 @@
  * Ancestris
  *
  * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
- * Copyright (C) 2016 Frederic Lapeyre <frederic@ancestris.org>
+ * Copyright (C) 2016 - 2017 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -74,6 +74,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
@@ -147,6 +148,7 @@ public class TimelineView extends View implements SelectionListener {
     public int mode = INDI_MODE;
     private CenterToSelectionAction ctsButton;
     private CenterTreeToIndividual cttiButton;
+    private JLabel rootTitle;
 
     /**
      * Constructor
@@ -490,6 +492,7 @@ public class TimelineView extends View implements SelectionListener {
         ctsButton = new CenterToSelectionAction();
         cttiButton = new CenterTreeToIndividual();
 
+        toolbar.setFloatable(false);
         toolbar.add(sliderCmPerYear);
         toolbar.addSeparator();
         toolbar.add(new ToggleModeAction());
@@ -497,19 +500,26 @@ public class TimelineView extends View implements SelectionListener {
         toolbar.add(cttiButton);
         toolbar.addSeparator();
         toolbar.add(new ScreenshotAction(content));
-        toolbar.add(new JLabel(" "), "growx, pushx, center");
+        rootTitle = new JLabel();
+        rootTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        toolbar.add(rootTitle, "growx, pushx, center");
+        rootTitle.setText("");
         toolbar.addSeparator();
         toolbar.add(new Settings());
-
     }
 
+    public void setRootTitle(String title) {
+        if (rootTitle != null && title != null) {
+            rootTitle.setText("<html><b>" + resources.getString("root.name") + " " + title + "</b></html");
+        }
+    }
+    
+    
     /**
      * callback - context event
      */
     @Override
     public void setContext(Context context) {
-        selectionEvent.clear();
-        selectionEventSerie.clear();
         if (context == null) {
             model.setGedcom(null);
         } else {
@@ -526,6 +536,10 @@ public class TimelineView extends View implements SelectionListener {
         } else {
             scroll2year(centeredYear);
             scroll2layer(layer);
+            ctsButton.setEnabled(false);
+            ctsButton.setTip(false, "");
+            cttiButton.setEnabled(false);
+            cttiButton.setTip(false, "");
         }
         setTooltipText();
         repaint();
@@ -951,15 +965,17 @@ public class TimelineView extends View implements SelectionListener {
                 return;
             }
 
-            if (!e.isShiftDown()) {
-                selectionEvent.clear();
-                selectionEventSerie.clear();
-            }
+// FL : 2017-03-19 : remove multi-selection : causes several problems in the editors and has no use anyway for the timelineview... Nice but useless at this stage.            
+//            if (!e.isShiftDown()) {
+//                selectionEvent.clear();
+//                selectionEventSerie.clear();
+//            }
 
             // find context click to select and tell about
             if (mode == INDI_MODE) {
                 Model.EventSerie hit = getIndiAt(e.getPoint());
                 if (hit != null) {
+                    selectionEventSerie.clear();
                     selectionEventSerie.add(hit);
                     // tell about it
                     SelectionDispatcher.fireSelection(e, getContext());
@@ -967,6 +983,7 @@ public class TimelineView extends View implements SelectionListener {
             } else {
                 Model.Event hit = getEventAt(e.getPoint());
                 if (hit != null) {
+                    selectionEvent.clear();
                     selectionEvent.add(hit);
                     // tell about it
                     SelectionDispatcher.fireSelection(e, getContext());

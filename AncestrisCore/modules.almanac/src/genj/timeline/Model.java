@@ -1266,6 +1266,7 @@ import org.openide.windows.WindowManager;
         layer = new LinkedList<EventSerie>();
         indiLayers.add(layer);
         layer.add(new EventSerie(null));
+        view.setRootTitle(rootIndi.toString(true));
     }
         
     
@@ -1706,18 +1707,28 @@ import org.openide.windows.WindowManager;
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
         if (!isGedcomChanging) {
-            isGedcomChanging = true;
-            createAndLayoutAllLayers();
-            isGedcomChanging = false;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    isGedcomChanging = true;
+                    createAndLayoutAllLayers();
+                    isGedcomChanging = false;
+                }
+            });
         }
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
         if (!isGedcomChanging) {
-            isGedcomChanging = true;
-            createAndLayoutAllLayers();
-            isGedcomChanging = false;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    isGedcomChanging = true;
+                    createAndLayoutAllLayers();
+                    isGedcomChanging = false;
+                }
+            });
         }
     }
 
@@ -1736,11 +1747,10 @@ import org.openide.windows.WindowManager;
         if (!isGedcomChanging) {
             isGedcomChanging = true;
             if (deleted instanceof PropertyDate) {
-                //System.out.println("DEBUG*********** gedcomPropertyDeleted deteled instance of propertydate : deleted="+deleted);
-                createAndLayoutAllLayers();
                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                     @Override
                     public void run() {
+                        createAndLayoutAllLayers();
                         view.centerToSelection();
                     }
                 });

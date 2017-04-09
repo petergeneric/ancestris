@@ -71,7 +71,7 @@ public class AssoWrapper {
         
         Indi associatedIndi = (Indi) assoProperty.getEntity();
         Property eventProp = assoProperty.getTargetParent();
-        EventWrapper event = new EventWrapper(eventProp, associatedIndi);
+        EventWrapper event = new EventWrapper(eventProp, associatedIndi, null);
         setValues(associatedIndi, assoProperty, event);
         
     }

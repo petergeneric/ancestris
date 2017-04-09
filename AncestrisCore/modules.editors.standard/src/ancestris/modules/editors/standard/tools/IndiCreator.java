@@ -72,7 +72,7 @@ public class IndiCreator {
                             } else if (relation == REL_SISTER) {
                                 linkSibling(sourceIndi, indiCreated, false);
                             } else if (relation == REL_PARTNER) {
-                                linkPartner(sourceIndi, indiCreated);
+                                linkPartner(sourceIndi, indiCreated, currentFam);
                             } else if (relation == REL_CHILD) {
                                 linkChild(sourceIndi, indiCreated, currentFam);
                             }
@@ -214,12 +214,24 @@ public class IndiCreator {
         fam.addChild(newSibling);
     }
     
-    private void linkPartner(Indi spouse, Indi otherSpouse) throws GedcomException {
-        // Create new family where spouse and otherSpouse are husband and wife, or vice-versa
-        Fam fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM);
-        fam.addDefaultProperties();
+    private void linkPartner(Indi spouse, Indi otherSpouse, Fam currentFam) throws GedcomException {
+        // Get family where spouse is a spouse, and if it does not exist, create it and add existing spouse to it.
+        Fam fam = null;
+        Fam[] fams = spouse.getFamiliesWhereSpouse();
+        if (fams == null || fams.length == 0 || currentFam == null) {  // family does not exist, so create it
+            fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM);
+        } else {  // fams exists and currentFam not null, use currentFam
+            Indi husb = currentFam.getHusband();
+            Indi wife = currentFam.getWife();
+            if ((husb != null && husb.equals(spouse) && wife != null) || (wife != null && wife.equals(spouse) && husb != null)) {  // family already complete with husb and wife, create a new one
+                fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM);
+            } else {
+                fam = currentFam;
+            }
+        }
         
         // Add default properties to to newly created spouse
+        fam.addDefaultProperties();
         otherSpouse.addDefaultProperties();
         
         // Attach both spouses to family
@@ -244,6 +256,7 @@ public class IndiCreator {
             fam.addDefaultProperties();
             if (parent.getSex() != PropertySex.FEMALE) {  // male or unknown
                 fam.setHusband(parent);
+                child.setName("", parent.getLastName());
                 if (currentFam != null) {
                     fam.setWife(currentFam.getOtherSpouse(parent));
                 }
@@ -260,6 +273,10 @@ public class IndiCreator {
                 if (f == currentFam) {
                     child.addDefaultProperties();
                     f.addChild(child);
+                    Indi father = f.getHusband();
+                    if (father != null) {
+                        child.setName("", father.getLastName());
+                    }
                     return;
                 }
             }
