@@ -299,7 +299,7 @@ public class EventWrapper {
     public Fam getFamilyEntity() {
         return (hostingEntity != null && hostingEntity instanceof Fam) ? (Fam) hostingEntity : null;
     }
-    
+
     
     
     //
@@ -561,9 +561,9 @@ public class EventWrapper {
                 Fam fam = (Fam) hostingEntity;
                 if (fam.getGedcom() == null || fam.getGedcom().getOrigin() == null) { // case of tmpFam (else, fam existed already)
                     fam = createFamForIndi(indi);
-                if (fam == null) {
-                    return;
-                }
+                    if (fam == null) {
+                        return;
+                    }
                 }
                 eventProperty = fam.addProperty(eventProperty.getTag(), "");
             }
