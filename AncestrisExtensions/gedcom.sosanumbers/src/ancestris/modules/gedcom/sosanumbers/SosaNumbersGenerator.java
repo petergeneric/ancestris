@@ -21,10 +21,8 @@ import java.awt.Toolkit;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
@@ -144,7 +142,7 @@ public class SosaNumbersGenerator implements Constants {
         };
         fullTask.execute();
         dialog.setVisible(true);
-
+        
         // Run main task while displaying progress bar
         // -------------------------------------------
         progressMonitor = new ProgressMonitor(null, title, "", 0, maxCounter);
@@ -268,7 +266,6 @@ public class SosaNumbersGenerator implements Constants {
         final List<Pair> dabovillePairs = new ArrayList<Pair>();
         Pair pair;
         String daboCounter;
-        String tag = (numbering == NUMBERING_DABOVILLE) ? DABOVILLE_TAG : SOSADABOVILLE_TAG;
 
         // Iterate on the list to go down the tree.
         ListIterator<Pair> listIter = null;
@@ -334,29 +331,27 @@ public class SosaNumbersGenerator implements Constants {
         }
 
         // Update list to keep going up the tree
-        listIter.add(new Pair(indi, daboValue == null ? nbToString(sosaNumber) : daboValue));
-        listIter.previous();
-
-        // Erase/Generate numbering for siblings in case of SOSA numbering
-//        if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA) {
-//            flagSibling(indi.getOlderSiblings(), nbToString(sosaNumber, "+", true), isNew);
-//            flagSibling(indi.getYoungerSiblings(), nbToString(sosaNumber, "-", true), isNew);
-//        }
-        
-        // 3. Generate one numbering
-        changedIndis.add(indi);
-        if (mode != MODE_ERASE) {
-            maxCounter++;
-        } else {
-            maxCounter += nbErased;
+        if (isNew) {
+            listIter.add(new Pair(indi, daboValue == null ? nbToString(sosaNumber) : daboValue));
+            listIter.previous();
         }
-        if (runBlank) {
-            return true;
+
+        // 3. Generate one numbering
+        if (isNew) {
+            changedIndis.add(indi);
+            if (mode != MODE_ERASE) {
+                maxCounter++;
+            } else {
+                maxCounter += nbErased;
+            }
+            if (runBlank) {
+                return true;
+            }
         }
         
         
         // Quit if just erasing
-        if (mode != MODE_ERASE) {
+        if ((isNew) && mode != MODE_ERASE) {
             Property prop = null;
             try {
                 String value = nbToString(sosaNumber, "", true, daboValue);
@@ -376,7 +371,7 @@ public class SosaNumbersGenerator implements Constants {
             }
         }
         
-        if (!setProgress(maxCounter)) {
+        if ((isNew) && !setProgress(maxCounter)) {
             return false;
         }
 
@@ -409,44 +404,6 @@ public class SosaNumbersGenerator implements Constants {
                         }
                     }
                 }
-            }
-        }
-        return true;
-    }
-
-    private boolean flagSibling(Indi[] siblings, String value, boolean isNew) {
-
-        // Flag siblings
-        Iterator<Indi> listSibling = Arrays.asList(siblings).iterator();
-        while (listSibling.hasNext()) {
-            Indi indi = (Indi) listSibling.next();
-
-            if (!runBlank) {
-                // Clean if new
-                if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
-                    indi.delProperties(SOSA_TAG);
-                }
-            }
-
-            // Continue if just erasing
-            if (mode == MODE_ERASE) {
-                continue;
-            }
-
-            changedIndis.add(indi);
-            maxCounter++;
-            if (runBlank) {
-                return true;
-            }
-
-            try {
-                indi.addProperty(SOSA_TAG, value, setPropertyPosition(indi, SOSA_TAG));
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            LOG.log(Level.FINER, "{0} -> {1}", new Object[]{indi.toString(true), value});
-            if (!setProgress(maxCounter)) {
-                return false;
             }
         }
         return true;
