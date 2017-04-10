@@ -3966,16 +3966,19 @@ public class IndiPanel extends Editor implements DocumentListener {
     }
 
     private int getNextEvent(String tag) {
-        int index = eventIndex + 1;
-        if (index == eventSet.size()) {
-            index = 0;
+        
+        int row = eventTable.getSelectedRow() + 1;
+        if (row >= eventTable.getRowCount()) {
+            row = 0;
         }
-        for (int i = index; i < eventSet.size(); i++) {
+        for (int r = row; r < eventTable.getRowCount(); r++) {
+            int i = eventTable.convertRowIndexToModel(r);
             if (eventSet.get(i).eventProperty.getTag().equals(tag)) {
                 return i;
             }
         }
-        for (int i = 0; i < index; i++) {
+        for (int r = 0; r < row; r++) {
+            int i = eventTable.convertRowIndexToModel(r);
             if (eventSet.get(i).eventProperty.getTag().equals(tag)) {
                 return i;
             }
