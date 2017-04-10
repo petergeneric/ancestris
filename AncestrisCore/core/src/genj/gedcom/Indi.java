@@ -353,6 +353,10 @@ public class Indi extends Entity {
      * Returns the families in which this individual is a spouse
      */
     public Fam[] getFamiliesWhereSpouse() {
+        return getFamiliesWhereSpouse(true);
+    }
+    
+    public Fam[] getFamiliesWhereSpouse(boolean sorted) {
         ArrayList<Fam> result = new ArrayList<Fam>(getNoOfProperties());
         for (int i = 0, j = getNoOfProperties(); i < j; i++) {
             Property prop = getProperty(i);
@@ -360,7 +364,11 @@ public class Indi extends Entity {
                 result.add(((PropertyFamilySpouse) prop).getFamily());
             }
         }
-        return Fam.toFamArray(result);
+        Fam[] fams = Fam.toFamArray(result);
+        if (sorted) {
+            Arrays.sort(fams, new PropertyComparator("FAM:MARR:DATE"));
+        }
+        return fams;
     }
 
     /**

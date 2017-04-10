@@ -2593,7 +2593,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else {
             familyTop.add(meNode);
         }
-        Fam[] fams = indi.getFamiliesWhereSpouse();
+        Fam[] fams = indi.getFamiliesWhereSpouse(true);
         for (Fam fam : fams) {
             DefaultMutableTreeNode famNode = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.SPOUSE, fam, indi));
             meNode.add(famNode);
