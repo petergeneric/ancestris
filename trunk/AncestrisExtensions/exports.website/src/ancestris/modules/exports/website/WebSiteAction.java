@@ -27,7 +27,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_WebSiteAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Multimedia", name = "CommonAncestorOpenAction", position = 200)
+@ActionReference(path = "Menu/Tools/Multimedia", name = "WebSiteOpenAction", position = 200)
 public final class WebSiteAction extends AbstractAncestrisContextAction {
 
     public WebSiteAction() {
