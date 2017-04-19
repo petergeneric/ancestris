@@ -7,6 +7,7 @@ package ancestris.modules.flashlist;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
+import ancestris.util.swing.DialogManager;
 import genj.fo.Document;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -17,7 +18,6 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import java.util.ArrayList;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -27,9 +27,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.prefs.Preferences;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 //
 // Flash lists are structured lists with locations and individual lastnames
@@ -100,18 +98,19 @@ import org.openide.util.NbPreferences;
 //
 //
 /**
- * GenJ - Report
- * @author Nils Meier <nils@meiers.net>
  * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
  * @version 2.2
  */
 @SuppressWarnings("unchecked")
 public class ReportFlashList extends Report {
 
-    Preferences modulePreferences = NbPreferences.forModule(ReportFlashList.class);
+    private static final Logger LOG = Logger.getLogger("ReportFlashList");
+    
     private final static TagPath CITY = new TagPath(".:ADDR:CITY");
-    //private final static TagPath STAE = new TagPath(".:STAE");
-    //private final static TagPath CTRY = new TagPath(".:CTRY");
+    //private final static TagPath STAE = new TagPath(".:ADDR:STAE");
+    //private final static TagPath CTRY = new TagPath(".:ADDR:CTRY");
+
+    // formatting
     private final static String FORMAT_LNORMAL = "font-weight=normal,text-align=left";
     private final static String FORMAT_CNORMAL = "font-weight=normal,text-align=center";
     private final static String FORMAT_RNORMAL = "font-weight=normal,text-align=right";
@@ -120,49 +119,35 @@ public class ReportFlashList extends Report {
     private final static String FORMAT_RSTRONG = "font-weight=bold,text-align=right";
     private final static String FORMAT_CBACKGROUND = "background-color=#ffffcc,font-weight=bold,text-align=center";
     private final static String FORMAT_RBACKGROUND = "background-color=#ffffcc,font-weight=bold,text-align=right";
-    /** option - Whether to use a TOC or not */
-    public boolean weAddaTOC = true;
+
+    /** options panel */
+    FlashListPanel flashListOptions = null;
+    
     /** option - Position of the legend if any */
     private final static int LEGEND_NO = 0;
     private final static int LEGEND_TOP = 1;
     private final static int LEGEND_BOT = 2;
-    public int displayLegend = modulePreferences.getInt("displayLegendComboBox", 0);
-    /** option - Filter on selection keys */
-    public String FilterKey1 = modulePreferences.get("filterKey1TextField", "*");
-    public String FilterKey2 = modulePreferences.get("filterKey2TextField", "*");
-    public String FilterKey3 = modulePreferences.get("filterKey3TextField", "*");
-    /** option - Formatting options for repeating headers and keys */
-    public boolean repeatHeader = modulePreferences.getBoolean("repeatHeaderCheckBox", false);
-    public boolean repeatKeys = modulePreferences.getBoolean("repeatKeysCheckBox", false);
-    /** option - display zeros as '0' (true) or '-' (false) */
-    public boolean displayZeros = modulePreferences.getBoolean("displayZerosCheckBox", false);
-    /** option - Thresholds to highlight important lines */
-    public int nbEvents = modulePreferences.getInt("nbEventsFormattedTextField", 3);    // highlight if more than 3 events per row
-    public int yearSpan = modulePreferences.getInt("yearSpanFormattedTextField", 50);   // highlight if events span over 50 years
-    public int minSosa = modulePreferences.getInt("minSosaFormattedTextField", 1);      // highlight if line is a sosa above limit
-    /** option - Increments when processing file to let user know how we are going */
-    public int counterIncrement = modulePreferences.getInt("counterIncrementComboBox", 0);
-    /** option by prompting - Key structure */
+
+    /** option - Key structure */
+    private boolean existPLACTag = true;       // Will be false if no PLAC tag found in header
+    private final static int LOC12_SURN_LOC34 = 0;
+    private final static int LOC12_LOC34_SURN = 1;
+    private final static int SURN_LOC12_LOC34 = 2;
+    private int recordKey = LOC12_SURN_LOC34;  // Will indicate sorting structure
     private int posLoc1 = 0;
     private int posLoc2 = 2;
     private int posLoc3 = 4;
-    private boolean existPLACTag = true;  // Will be false if no PLAC tag found in header
-    private final static int LOC12_SURN_LOC3 = 0;
-    private final static int LOC12_LOC3_SURN = 1;
-    private final static int SURN_LOC12_LOC3 = 2;
-    private final static int SURN_LOC1_LOC23 = 3;
-    private final static int LOC1_LOC23_SURN = 4;
-    private final static int LOC1_SURN_LOC23 = 5;
-    private int recordKey = LOC12_SURN_LOC3;  // Will indicate sorting structure
-    private String recordKeyText = "";        // Text for the legend
-    private static final Logger LOG = Logger.getLogger("ReportFlashList");
+    private int posLoc4 = 4;
+    
+    /** Filter on selection keys */
+    public String filterKey1 = "";
+    public String filterKey2 = "";
+    public String filterKey3 = "";
 
     /**
      * the report's entry point Our main logic
      */
     public Document start(Gedcom gedcom, String documentName) {
-        Collection <Indi>indis = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
-        Indi indiDeCujus = null;
 
         //Get location and lastname options based on PLAC tag in gedcom and user input
         // Updates values of recordKey, posLoc1, posLoc2, posLoc3, existPLACTag
@@ -170,38 +155,36 @@ public class ReportFlashList extends Report {
             return null;
         }
 
-        // get de-cujus (sosa 1) if entry point is generic
-        if (indiDeCujus == null) {
-            String msg = NbBundle.getMessage(this.getClass(), "ReportFlashList.AskDeCujus");
-            indiDeCujus = (Indi) getEntityFromUser(msg, gedcom, Gedcom.INDI);
-            if (indiDeCujus == null) {
-                return null;
-            }
-        }
+        // Memorise options for quick access in analysis
+        boolean repeatKeys = flashListOptions.getRepeatKeys();
+        boolean displayZeros = flashListOptions.getDisplayZeros();
+        existPLACTag = flashListOptions.existPlaceTag();
+        recordKey = flashListOptions.getRecordKey();
+        posLoc1 = flashListOptions.getPosLoc(1);
+        posLoc2 = flashListOptions.getPosLoc(2);
+        posLoc3 = flashListOptions.getPosLoc(3);
+        posLoc4 = flashListOptions.getPosLoc(4);
+        int nbEvents = flashListOptions.getNbEvents();
+        int yearSpan = flashListOptions.getYearSpan();
+        int minSosa = flashListOptions.getMinSosa();
+        filterKey1 =  flashListOptions.getFilter1();
+        filterKey2 = flashListOptions.getFilter2();
+        filterKey3 = flashListOptions.getFilter3();
 
         // prepare our index
+        Collection <Indi>indis = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
         Map <String, Object>primary = new TreeMap<String, Object>();
-        int countIndiv = 0;
-        counterIncrement = (int) Math.pow(10, counterIncrement);
         LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.StartingAnalysis"));
         for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
-            analyze(it.next(), primary, indiDeCujus);
-            if (counterIncrement > 1) {
-                countIndiv++;
-                if ((int) Math.floor(countIndiv / counterIncrement) * counterIncrement == countIndiv) {
-                    // io.getOut().println(String.valueOf(countIndiv));
-                }
-            }
+            analyze(it.next(), primary, flashListOptions.getRootIndi());
         }
-        if (counterIncrement > 1) {
-            LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.NowWriting"));
-        }
+        LOG.log(Level.INFO, NbBundle.getMessage(this.getClass(), "ReportFlashList.NowWriting"));
 
         // write main file out
         Document doc = new Document(documentName);
 
         // Display toc
-        if (weAddaTOC) {
+        if (flashListOptions.getTOC()) {
             doc.addTOC();
             if (primary.size() > 10) {
                 doc.nextPage();
@@ -209,11 +192,12 @@ public class ReportFlashList extends Report {
         }
 
         // Display legend on top
-        if (displayLegend == LEGEND_TOP) {
+        if (flashListOptions.getDisplayLegend() == LEGEND_TOP) {
             displayLegend(doc);
         }
 
         // Display one header if will not repeat them
+        boolean repeatHeader = flashListOptions.getRepeatHeader();
         if (!repeatHeader) {
             displayHeader(doc, null, true);
             doc.endTable();
@@ -226,7 +210,7 @@ public class ReportFlashList extends Report {
             String p = ps.next();
 
             // primary key (by default Cntry/State)
-            // secod parameter is a meaningful anchor for easier external referencing to this flash list
+            // second parameter is a meaningful anchor for easier external referencing to this flash list
             doc.startSection(p, p.replaceAll(" ", "%").replaceAll("/", "%").replaceAll(",", "%"));
             displayHeader(doc, p, repeatHeader);
             String secondaryKey = "";
@@ -284,7 +268,7 @@ public class ReportFlashList extends Report {
         }
 
         // Display legend on top
-        if (displayLegend == LEGEND_BOT) {
+        if (flashListOptions.getDisplayLegend() == LEGEND_BOT) {
             displayLegend(doc);
         }
 
@@ -299,114 +283,21 @@ public class ReportFlashList extends Report {
      * Get location and sorting structure options from user
      */
     private boolean getFlashOptions(Gedcom gedcom) {
-        // Get address format and ask user for sorting structure
-        // Updates values of recordKey, posLoc1, posLoc2, posLoc3, existPLACTag
-        if (gedcom.getPlaceFormat().equals("")) {
-            // no tag PLAC found
-            String[] choices = {NbBundle.getMessage(this.getClass(), "ReportFlashList.SurnLoc"), NbBundle.getMessage(this.getClass(), "ReportFlashList.LocSurn")};
-            String getSurnLoc = modulePreferences.get("SurnLoc", "");
-            if (getSurnLoc.isEmpty()) {
-                recordKeyText = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey"), choices, choices[0]);
-            } else {
-                recordKeyText = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey"), choices, getSurnLoc);
-            }
-            existPLACTag = false;
-            if (recordKeyText == null) {
-                return false;
-            }
-            modulePreferences.put("SurnLoc", recordKeyText);
+        
+        // Get options from user
+        flashListOptions = new FlashListPanel(gedcom);
+        Object choice = DialogManager.create(NbBundle.getMessage(getClass(), "FlashListPanel.title"), flashListOptions)
+                .setMessageType(DialogManager.PLAIN_MESSAGE)
+                .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .show();
 
-            if (recordKeyText.compareTo(NbBundle.getMessage(this.getClass(), "ReportFlashList.LocSurn")) == 0) {
-                recordKey = LOC1_SURN_LOC23;
-            } else {
-                recordKey = SURN_LOC1_LOC23;
-            }
-        } else {  // tag PLAC found
-            String recordKeys[] = {
-                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"),
-                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname"),
-                NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"),
-                NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"),
-                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + " -> " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname"),
-                NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1") + " -> " + NbBundle.getMessage(this.getClass(), "ReportFlashList.surname") + " > " + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2") + "/" + NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3")
-            };
-            String getSurnLoc = modulePreferences.get("SurnLoc", "");
-            if (getSurnLoc.isEmpty()) {
-                recordKeyText = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey"), recordKeys, recordKeys[0]);
-            } else {
-                recordKeyText = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey"), recordKeys, getSurnLoc);
-            }
-            if (recordKeyText == null) {
-                return false;
-            }
-
-            modulePreferences.put("SurnLoc", recordKeyText);
-            List <String>table = Arrays.asList(recordKeys);
-            recordKey = table.indexOf(recordKeyText);
-
-            List <String>tag = Arrays.asList(gedcom.getPlaceFormat().split("\\,")); // original tag
-            ArrayList <String>choices = new ArrayList<String>(Arrays.asList(gedcom.getPlaceFormat().split("\\,"))); // list used for selection only
-
-            recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc1"), "XXX");
-
-            String getRecordKey1 = modulePreferences.get("recordKey1", "");
-            String selection1;
-            if (getRecordKey1.isEmpty()) {
-                selection1 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey1") + " " + recordKeyText, choices.toArray(), choices.get(0));
-            } else {
-                selection1 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey1") + " " + recordKeyText, choices.toArray(), getRecordKey1);
-            }
-            if (selection1 == null) {
-                return false;
-            }
-
-            choices.remove(choices.indexOf(selection1));
-            modulePreferences.put("recordKey1", selection1);
-            recordKeyText = recordKeyText.replaceAll("XXX", selection1);
-            recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc2"), "XXX");
-
-            String getRecordKey2 = modulePreferences.get("recordKey2", "");
-            String selection2;
-            if (getRecordKey2.isEmpty()) {
-                selection2 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey2") + " " + recordKeyText, choices.toArray(), choices.get(0));
-            } else {
-                selection2 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey2") + " " + recordKeyText, choices.toArray(), getRecordKey2);
-
-            }
-            if (selection2 == null) {
-                return false;
-            }
-            choices.remove(choices.indexOf(selection2));
-            modulePreferences.put("recordKey2", selection2);
-            recordKeyText = recordKeyText.replaceAll("XXX", selection2);
-            recordKeyText = recordKeyText.replaceAll(NbBundle.getMessage(this.getClass(), "ReportFlashList.loc3"), "XXX");
-
-            String getRecordKey3 = modulePreferences.get("recordKey3", "");
-            String selection3;
-            if (getRecordKey2.isEmpty()) {
-                selection3 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey3") + " " + recordKeyText, choices.toArray(), choices.get(0));
-            } else {
-                selection3 = (String) getValueFromUser(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey3") + " " + recordKeyText, choices.toArray(), getRecordKey3);
-
-            }
-            if (selection3 == null) {
-                return false;
-            }
-                choices.remove(choices.indexOf(selection3));
-            
-            recordKeyText = recordKeyText.replaceAll("XXX", selection3);
-            modulePreferences.put("recordKey3", selection3);
-
-            int[] list = {
-                tag.indexOf(selection1),
-                tag.indexOf(selection2),
-                tag.indexOf(selection3)
-            };
-            posLoc1 = list[0];
-            posLoc2 = list[1];
-            posLoc3 = list[2];
-            existPLACTag = true;
+        // Return if cancelled
+        if (choice == DialogManager.CANCEL_OPTION) {
+            return false;
+        } else {
+            flashListOptions.store();
         }
+        
         return true;
         // done
     }
@@ -426,10 +317,6 @@ public class ReportFlashList extends Report {
         doc.addText(" ");
         doc.nextParagraph();
         doc.startSection(NbBundle.getMessage(this.getClass(), "ReportFlashList.legendText"), "legend");
-        doc.addText(" ");
-        doc.nextParagraph();
-        doc.addText(NbBundle.getMessage(this.getClass(), "ReportFlashList.recordKey") + " " + recordKeyText);
-        doc.nextParagraph();
         doc.addText(" ");
         doc.nextParagraph();
         doc.addText(NbBundle.getMessage(this.getClass(), "ReportFlashList.legendS"));
@@ -599,12 +486,14 @@ public class ReportFlashList extends Report {
             // otherwise use "" for loc3/loc2
             String loc2 = "";
             String loc3 = "";
+            String loc4 = "";
             if (existPLACTag) {
                 loc2 = "-";
                 loc3 = "-";
+                loc4 = "-";
             }
             // keep it
-            keep(loc1, loc2, loc3, name, start, end, primary, prop, isSosa);
+            keep(loc1, loc2, loc3, loc4, name, start, end, primary, prop, isSosa);
             // next city
         }
         // done
@@ -628,10 +517,12 @@ public class ReportFlashList extends Report {
             String loc1 = "";
             String loc2 = "";
             String loc3 = "";
+            String loc4 = "";
             if (existPLACTag) {
                 loc1 = place.getJurisdiction(posLoc1);
                 loc2 = place.getJurisdiction(posLoc2);
                 loc3 = place.getJurisdiction(posLoc3);
+                loc4 = place.getJurisdiction(posLoc4);
                 if (loc1 != null) {
                     loc1 = loc1.trim();
                 }
@@ -640,6 +531,9 @@ public class ReportFlashList extends Report {
                 }
                 if (loc3 != null) {
                     loc3 = loc3.trim();
+                }
+                if (loc4 != null) {
+                    loc4 = loc4.trim();
                 }
                 if ((loc1 == null) || (loc1.length() == 0)) {
                     loc1 = "-";
@@ -650,8 +544,11 @@ public class ReportFlashList extends Report {
                 if ((loc3 == null) || (loc3.length() == 0)) {
                     loc3 = "-";
                 }
+                if ((loc4 == null) || (loc4.length() == 0)) {
+                    loc4 = "-";
+                }
                 // consider non-empty places only
-                if ((loc1 == "-") && (loc2 == "-") && (loc3 == "-")) {
+                if ((loc1 == "-") && (loc2 == "-") && (loc3 == "-") && (loc4 == "-")) {
                     continue;
                 }
             } else {
@@ -663,7 +560,7 @@ public class ReportFlashList extends Report {
                 }
             }
             // keep it
-            keep(loc1, loc2, loc3, name, start, end, primary, prop, isSosa);
+            keep(loc1, loc2, loc3, loc4, name, start, end, primary, prop, isSosa);
             // next place
         }
         // done
@@ -680,53 +577,38 @@ public class ReportFlashList extends Report {
         // done
     }
 
-    private void keep(String loc1, String loc2, String loc3, String name, int start, int end, Map <String, Object>primary, Property prop, boolean isSosa) {
+    private void keep(String loc1, String loc2, String loc3, String loc4, String name, int start, int end, Map <String, Object>primary, Property prop, boolean isSosa) {
 
         // calculate primary and secondary key
         String ps, ss, ts;
         switch (recordKey) {
-            case LOC12_SURN_LOC3:
-                ps = loc1 + "/" + loc2;
+            case LOC12_SURN_LOC34:
+                ps = loc1 + (loc2.isEmpty() ? "" : "/" + loc2);
                 ss = name;
-                ts = loc3;
+                ts = loc3 + (loc4.isEmpty() ? "" : "/" + loc4);
                 break;
-            case LOC12_LOC3_SURN:
-                ps = loc1 + "/" + loc2;
-                ss = loc3;
+            case LOC12_LOC34_SURN:
+                ps = loc1 + (loc2.isEmpty() ? "" : "/" + loc2);
+                ss = loc3 + (loc4.isEmpty() ? "" : "/" + loc4);
                 ts = name;
                 break;
-            case SURN_LOC12_LOC3:
+            case SURN_LOC12_LOC34:
                 ps = name;
-                ss = loc1 + "/" + loc2;
-                ts = loc3;
-                break;
-            case SURN_LOC1_LOC23:
-                ps = name;
-                ss = loc1;
-                ts = loc2 + "/" + loc3;
-                break;
-            case LOC1_LOC23_SURN:
-                ps = loc1;
-                ss = loc2 + "/" + loc3;
-                ts = name;
-                break;
-            case LOC1_SURN_LOC23:
-                ps = loc1;
-                ss = name;
-                ts = loc2 + "/" + loc3;
+                ss = loc1 + (loc2.isEmpty() ? "" : "/" + loc2);
+                ts = loc3 + (loc4.isEmpty() ? "" : "/" + loc4);
                 break;
             default:
                 throw new IllegalArgumentException("no such report type");
         }
 
         // apply filters (if there is a filter and it does not match, return)
-        if ((FilterKey1.trim().compareTo("*") != 0) && (ps.toUpperCase().indexOf(FilterKey1.toUpperCase()) == -1)) {
+        if ((!filterKey1.trim().isEmpty()) && (!ps.toUpperCase().contains(filterKey1.toUpperCase()))) {
             return;
         }
-        if ((FilterKey2.trim().compareTo("*") != 0) && (ss.toUpperCase().indexOf(FilterKey2.toUpperCase()) == -1)) {
+        if ((!filterKey2.trim().isEmpty()) && (!ss.toUpperCase().contains(filterKey2.toUpperCase()))) {
             return;
         }
-        if ((FilterKey3.trim().compareTo("*") != 0) && (ts.toUpperCase().indexOf(FilterKey3.toUpperCase()) == -1)) {
+        if ((!filterKey3.trim().isEmpty()) && (!ts.toUpperCase().contains(filterKey3.toUpperCase()))) {
             return;
         }
 
