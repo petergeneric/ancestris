@@ -3762,14 +3762,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
 
         putSeparator = false;
-        
+        final Fam currentFam = Utils.getCurrentFamily(indi, familyTree);
         
         // create family members
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
             String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
-            final Fam currentFam;
+            
             if (relation == IndiCreator.REL_CHILD) {
-                currentFam = Utils.getCurrentFamily(indi, familyTree);
                 if (currentFam != null) {
                     Indi currentSpouse = currentFam.getOtherSpouse(indi);
                     if (currentSpouse != null) {
@@ -3778,10 +3777,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                         label += " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_selectedSpouse");
                     }
                 } else {
-                    label = " ";
+                    label += " ";
                 }
-            } else {
-                currentFam = Utils.getCurrentFamily(indi, familyTree);
             }
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
@@ -3831,7 +3828,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                             if (changes.hasChanged()) {
                                 changes.fireChangeEvent(new Boolean(true));
                             }
-                            IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
+                            IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, currentFam, indiToAttach);
                             getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
                         }
                     }
