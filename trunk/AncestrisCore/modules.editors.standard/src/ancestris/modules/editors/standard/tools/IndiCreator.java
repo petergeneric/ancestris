@@ -12,6 +12,8 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import ancestris.modules.editors.standard.IndiPanel;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -21,7 +23,9 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFamilySpouse;
 import genj.gedcom.PropertySex;
 import genj.gedcom.UnitOfWork;
+import javax.swing.JButton;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -92,7 +96,7 @@ public class IndiCreator {
                             } else if (relation == REL_SISTER) {
                                 linkSiblingToTarget(sourceIndi, target);
                             } else if (relation == REL_PARTNER) {
-                                linkPartnerToTarget(sourceIndi, target);
+                                linkPartnerToTarget(sourceIndi, target, currentFam);
                             } else if (relation == REL_CHILD) {
                                 linkChildToTarget(sourceIndi, target, currentFam);
                             }
@@ -293,29 +297,28 @@ public class IndiCreator {
 
     
     private void linkParentToTarget(Indi child, Indi parent, boolean isFather) throws GedcomException {
-        // If parent is already in a spouse family, use first one available 
-        // (if user wanted another one, user should have attached the child from 
-        // the parent where it is possible to choose spouse)
-        Fam[] fams = parent.getFamiliesWhereSpouse();
-        if (fams != null && fams.length > 0) {
-            Fam fam = fams[0];
-            fam.addChild(child);
-            return;
-        } 
+
+        //
+        // Child and parent exist : the link has to be a family.
+        // Both the parent or the child could already be in a family :
+        // - The parent can be in several families
+        // - The child can be in several families (theoretically, but only one should exist)
+        // Do we take one of these families or do we create a new one ?
+        // If we use an existing family, adding a child to it is ok. But adding a parent is only possible if it does not already exist (child has already a father for instance).
+        // Conclusion:
+        // 1. Collect all available families, from parent and child
+        // 2. Ask user to choose one of them or a new one (panel)
+        // 3. Family is selected, parent is added to fam, or else child is added to parent's family
+        //
         
-        // Otherwise if child does not have already a family, create it
-        Fam fam = child.getFamilyWhereBiologicalChild();
-        if (fam == null) {
-            fam = (Fam) parent.getGedcom().createEntity(Gedcom.FAM);
-            fam.addDefaultProperties();
-            fam.addChild(child);
-        }
-        
-        // Use child's family to set/reset parent
-        if (isFather) {
-            fam.setHusband(parent);
-        } else {
-            fam.setWife(parent);
+        JButton okButton = new JButton(NbBundle.getMessage(IndiPanel.class, "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(IndiPanel.class, "Button_Cancel"));
+        Object[] options = new Object[] { okButton, cancelButton };
+        FamChooser famChooser = new FamChooser(parent, child, isFather, okButton);
+        if (!famChooser.existChoices() || 
+            okButton == DialogManager.create(NbBundle.getMessage(FamChooser.class, "FamChooser.TITL_ChooseFamTitle", child.toString(true)), famChooser)
+                    .setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show()) {
+            famChooser.updateGedcom();
         }
         
     }    
@@ -343,13 +346,34 @@ public class IndiCreator {
         
     }
     
-    private void linkPartnerToTarget(Indi spouse, Indi otherSpouse) throws GedcomException {
+    private void linkPartnerToTarget(Indi spouse, Indi otherSpouse, Fam currentFam) throws GedcomException {
+
+        boolean isHusband = spouse.getSex() != PropertySex.FEMALE;
+        
+        // If currentFam is not null, try to use it
+        if (currentFam != null) {
+            if (isHusband) {
+                Indi wife = currentFam.getWife();
+                if (wife == null) {
+                    currentFam.addDefaultProperties();
+                    currentFam.setWife(otherSpouse);
+                    return;
+                }
+            } else {
+                Indi husb = currentFam.getHusband();
+                if (husb == null) {
+                    currentFam.addDefaultProperties();
+                    currentFam.setHusband(otherSpouse);
+                    return;
+                }
+            }
+        }
+        
         // Create new family where spouse and otherSpouse are husband and wife, or vice-versa
         Fam fam = (Fam) spouse.getGedcom().createEntity(Gedcom.FAM);
         fam.addDefaultProperties();
         
         // Attach both spouses to family
-        boolean isHusband = spouse.getSex() != PropertySex.FEMALE;
         if (isHusband) {
             fam.setHusband(spouse);
             fam.setWife(otherSpouse);
@@ -424,7 +448,7 @@ public class IndiCreator {
         }
         
         // If no individual is attached to the family, destroy it
-        cleanFamily(fam);
+        cleanFamily(fam, null, child);
         
     }    
 
@@ -448,7 +472,7 @@ public class IndiCreator {
         otherSibling.delProperty(prop);
         
         // If no individual is attached to the family, destroy it
-        cleanFamily(fam1);
+        cleanFamily(fam1, null, existingSibling);
         
     }
     
@@ -473,7 +497,7 @@ public class IndiCreator {
         }
         
         // If no individual is attached to the family, destroy it
-        cleanFamily(fam);
+        cleanFamily(fam, spouse, null);
     }
 
     private void unlinkChildFromTarget(Indi parent, Indi child, Fam currentFam) throws GedcomException {
@@ -486,23 +510,37 @@ public class IndiCreator {
         }
 
         // If no individual is attached to the family, destroy it
-        cleanFamily(fam);
+        cleanFamily(fam, parent, null);
         
     }
 
     
-    private void cleanFamily(Fam fam) {
-        
+    private void cleanFamily(Fam fam, Indi parent, Indi child) {
+
         if (fam == null) {
             return;
         }
+        
+        boolean destroy = false;
         
         // Destroy family if no people attached to it
         Indi husband = fam.getHusband();
         Indi wife = fam.getWife();
         Indi[] children = fam.getChildren();
+        int nbProps = fam.getNoOfProperties(); // equals 2 when only one indi (child, husb or wife) and CHAN is left.
         
-        if (husband == null && wife == null && (children == null || children.length == 0)) {
+        // Destroy family if parent is not null and husband or wife is parent, no child, no other properties
+        if (parent != null && (husband == parent || wife == parent) && (husband == null || wife == null) && (children == null || children.length == 0)) { // && (nbProps == 2)) {
+            destroy = true;
+        }
+        
+        // Destroy family if child is not null and only one child is chil, no parents, no other properties
+        if (child != null && child.isDescendantOf(fam) && husband == null && wife == null) { // && (nbProps == 2)) {
+            destroy = true;
+        }
+
+        // Destroy
+        if (destroy) {
             Gedcom gedcom = fam.getGedcom();
             gedcom.deleteEntity(fam);
         }

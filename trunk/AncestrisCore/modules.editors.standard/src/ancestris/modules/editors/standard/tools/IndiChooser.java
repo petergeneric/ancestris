@@ -15,6 +15,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -138,6 +139,11 @@ public class IndiChooser extends javax.swing.JPanel implements DocumentListener 
         org.openide.awt.Mnemonics.setLocalizedText(ListLabel, org.openide.util.NbBundle.getMessage(IndiChooser.class, "IndiChooser.ListLabel.text")); // NOI18N
 
         indisList.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        indisList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                indisListMouseClicked(evt);
+            }
+        });
         indisList.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 indisListValueChanged(evt);
@@ -298,6 +304,12 @@ public class IndiChooser extends javax.swing.JPanel implements DocumentListener 
         updateList();
     }//GEN-LAST:event_likelyCheckBoxActionPerformed
 
+    private void indisListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_indisListMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1 && evt.getClickCount() == 2 && okButton.isEnabled()) {
+            okButton.doClick();
+        }
+    }//GEN-LAST:event_indisListMouseClicked
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel ListLabel;
@@ -338,6 +350,9 @@ public class IndiChooser extends javax.swing.JPanel implements DocumentListener 
         boolean likely = true;
         List<Indi> tmpList = new ArrayList<Indi>();
         for (Indi i : indis) {
+            if (i == sourceIndi) {
+                continue;
+            }
             if (i.toString().toLowerCase().contains(textFilter.getText().toLowerCase())) {
                 boolean isSexOK =  i.getSex() == PropertySex.MALE && maleCheckBox.isSelected()
                                 || i.getSex() == PropertySex.FEMALE && femaleCheckBox.isSelected()
