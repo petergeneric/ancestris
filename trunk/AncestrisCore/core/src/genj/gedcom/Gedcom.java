@@ -1646,7 +1646,7 @@ public class Gedcom implements Comparable {
     public int compareTo(Object other) {
         //FIXME:       throw new UnsupportedOperationException("comparaison de deux ged a enlever");
         Gedcom that = (Gedcom) other;
-        if (that == null) {
+        if (that == null || that.getName() == null) {
             return 1;
         }
         if (getName() == null) {
