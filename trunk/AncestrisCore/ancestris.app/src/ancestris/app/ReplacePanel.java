@@ -373,12 +373,12 @@ public class ReplacePanel extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(resultEntityLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(resultEntity)
+                                        .addComponent(resultEntity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGap(18, 18, 18)
                                         .addComponent(resultPropertyLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(resultProperty)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(352, 352, 352))))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(previousButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -813,8 +813,8 @@ public class ReplacePanel extends javax.swing.JPanel {
         Property prop = results.get(resultsCurrent);
         resultEntity.setIcon(prop.getEntity().getImage());
         String str = prop.getEntity().toString(true);
-        if (str.length()>40) {
-            str = str.substring(0, 40) + "...";
+        if (str.length()>80) {
+            str = str.substring(0, 80) + "...";
         }
         resultEntity.setText(str);
         resultProperty.setIcon(prop.getImage());
