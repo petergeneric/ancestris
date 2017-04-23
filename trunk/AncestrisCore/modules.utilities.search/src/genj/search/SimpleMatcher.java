@@ -19,6 +19,7 @@
  */
 package genj.search;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -47,21 +48,21 @@ public class SimpleMatcher extends Matcher {
    */
   protected void match(String input, List<Match> result) {
     
-    input = input.toLowerCase();
+    String removedAccents = Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();  
     
     ArrayList<Match> matches = new ArrayList<Match>(words.length);
     
     // search for matches
     for (int i=0;i<words.length;i++) {
 
-      int start = input.indexOf(words[i]);
+      int start = removedAccents.indexOf(words[i]);
       if (start<0) 
         return;
       
       while (start>=0) {
         int end = start + words[i].length();
         matches.add(new Match(start, end-start));
-        start = input.indexOf(words[i], start+1);
+        start = removedAccents.indexOf(words[i], start+1);
       }
     }
     

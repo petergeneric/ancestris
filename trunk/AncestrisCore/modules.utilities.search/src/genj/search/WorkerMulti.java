@@ -25,6 +25,7 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
+import java.text.Normalizer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,9 +149,6 @@ public class WorkerMulti extends Worker {
     }
     
     private boolean isMatch(Indi indi) {
-//        if (indi.getId().equals("I1242")) {
-//            String str= "";
-//        }
         return (isCommonString(indi.getLastNames(), lastnameText)
                 && isCommonString(indi.getFirstNames(), firstnameText)
                 && isCommonDate(indi.getBirthDate(), birthDateBean)
@@ -172,7 +170,9 @@ public class WorkerMulti extends Worker {
                     return true;
                 }
             } else {
-                if (name.toLowerCase().contains(nameText.toLowerCase())) {
+                String str1 = Normalizer.normalize(name, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                String str2 = Normalizer.normalize(nameText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+                if (str1.contains(str2)) {
                     return true;
                 }
             }

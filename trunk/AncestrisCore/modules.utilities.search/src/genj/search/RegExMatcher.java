@@ -19,6 +19,7 @@
  */
 package genj.search;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -54,7 +55,8 @@ public class RegExMatcher extends Matcher {
    */
   protected void match(String input, List<Match> result) {
     // try to match anything
-    java.util.regex.Matcher m = compiled.matcher(input);
+    String removedAccents = Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+    java.util.regex.Matcher m = compiled.matcher(removedAccents);
     while (true) {
       if (!m.find()) return;
       result.add(new Match(m.start(), m.end()-m.start()));
