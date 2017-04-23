@@ -21,6 +21,7 @@ import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
 import javax.swing.JOptionPane;
+import javax.swing.UIManager;
 
 /**
  * By default, menu appears as:
@@ -57,6 +58,8 @@ public class MacMenu {
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");   // has no effect
             System.setProperty("dock:name", "Ancestris");   // has no effect
+            
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             
             // Create an instance of the Mac Application class
             Application macApplication = Application.getApplication();
