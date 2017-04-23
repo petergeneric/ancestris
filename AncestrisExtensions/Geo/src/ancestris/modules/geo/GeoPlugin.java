@@ -6,13 +6,26 @@
 package ancestris.modules.geo;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomFileListener;
+import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author daniel
+ * @author frederic
  */
-@ServiceProvider(service=ancestris.core.pluginservice.PluginInterface.class)
-public class GeoPlugin extends AncestrisPlugin{
+@ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
+public class GeoPlugin extends AncestrisPlugin implements GedcomFileListener {
+
+    public void commitRequested(Context context) {
+    }
+
+    public void gedcomClosed(Gedcom gedcom) {
+        GeoPlacesList.remove(gedcom);
+    }
+
+    public void gedcomOpened(Gedcom gedcom) {
+    }
 
 }

@@ -4,6 +4,7 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -40,6 +41,7 @@ class GeoPlacesList implements GedcomMetaListener {
     public static String TYPEOFCHANGE_COORDINATES = "coord";
     public static String TYPEOFCHANGE_NAME = "name";
     private static SortedMap<Gedcom, GeoPlacesList> instances;
+
     private final Gedcom gedcom;
     private GeoNodeObject[] geoNodes;
     private final List<GeoPlacesListener> listeners = new ArrayList<GeoPlacesListener>(10);
@@ -51,6 +53,7 @@ class GeoPlacesList implements GedcomMetaListener {
     public GeoPlacesList(Gedcom gedcom) {
         this.gedcom = gedcom;
         this.geoNodes = null;
+        AncestrisPlugin.register(new GeoPlugin());
     }
 
     public static synchronized GeoPlacesList getInstance(Gedcom gedcom) {
@@ -69,6 +72,17 @@ class GeoPlacesList implements GedcomMetaListener {
         return gpl;
     }
 
+    public static void remove(Gedcom gedcom) {
+        if (gedcom == null || instances == null) {
+            return;
+        }
+        GeoPlacesList gpl = instances.get(gedcom);
+        if (gpl == null) {
+            return;
+        }
+        instances.remove(gedcom);
+    }
+    
     public Gedcom getGedcom() {
         return gedcom;
     }
@@ -290,6 +304,5 @@ class GeoPlacesList implements GedcomMetaListener {
     PropertyPlace getCopiedPlace() {
         return this.copiedPlace;
     }
-
 
 }
