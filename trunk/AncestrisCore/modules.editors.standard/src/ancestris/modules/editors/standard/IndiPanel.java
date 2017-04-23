@@ -3688,6 +3688,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void showPopupFamilyMenu(JButton button, final int relation, Indi familyMember, Indi[] familyMembers) {
         
+        ImageIcon displaIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/editindi.png"));
         ImageIcon createIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_create.png"));
         ImageIcon attachIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_attach.png"));
         ImageIcon detachIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_detach.png"));
@@ -3706,7 +3707,29 @@ public class IndiPanel extends Editor implements DocumentListener {
         // - (save and ) detach <family member> : only if <family member> exists, with sub-menu if several exist
         
         // create father or mother 
+        if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember != null) {
+            String label = NbBundle.getMessage(getClass(), "DisplaIndi_" + IndiCreator.RELATIONS[relation], familyMember.getName());
+            menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), displaIcon);
+            menu.add(menuItem);
+            putSeparator = true;
+            final Indi fThisIndi = indi;
+            final Indi fFamilyIndi = familyMember;
+            menuItem.addActionListener(new ActionListener() {
+                public void actionPerformed(ActionEvent ae) {
+                    if (fThisIndi != null) {
+                        if (changes.hasChanged()) {
+                            changes.fireChangeEvent(new Boolean(true));
+                        }
+                    }
+                    SelectionDispatcher.fireSelection(new Context(fFamilyIndi));   // fireselection because we are navigating to another entity
+                }
+
+            });
+        }
         if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember == null) {
+            if (putSeparator) {
+                menu.addSeparator();
+            }
             String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
@@ -3776,7 +3799,27 @@ public class IndiPanel extends Editor implements DocumentListener {
         final Fam currentFam = Utils.getCurrentFamily(indi, familyTree);
         
         // create family members
+        if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER && familyMembers != null && familyMembers.length != 0) {
+            for (Indi i : familyMembers) {
+                String label = NbBundle.getMessage(getClass(), "DisplaIndi_" + IndiCreator.RELATIONS[relation], i.getName());
+                menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), displaIcon);
+                menu.add(menuItem);
+                putSeparator = true;
+                final Indi fIndi = i;
+                menuItem.addActionListener(new ActionListener() {
+                    public void actionPerformed(ActionEvent ae) {
+                        if (changes.hasChanged()) {
+                            changes.fireChangeEvent(new Boolean(true));
+                        }
+                        SelectionDispatcher.fireSelection(new Context(fIndi));   // fireselection because we are navigating to another entity
+                    }
+                });
+            }
+        }
         if (relation != IndiCreator.REL_FATHER && relation != IndiCreator.REL_MOTHER) {
+            if (putSeparator) {
+                menu.addSeparator();
+            }
             String label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
             
             if (relation == IndiCreator.REL_CHILD) {
