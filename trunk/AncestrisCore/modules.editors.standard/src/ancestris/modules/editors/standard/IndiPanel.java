@@ -1906,7 +1906,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_scrollMediaSourceMouseWheelMoved
 
     private void mediaImagePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_mediaImagePanelMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1) {
+        if (evt.getButton() == MouseEvent.BUTTON1 && !((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
             EventWrapper event = getCurrentEvent();
             if (event == null) {
                 return;
@@ -1915,11 +1915,16 @@ public class IndiPanel extends Editor implements DocumentListener {
                 displayEventMedia(event);
                 textAreaPhotos.requestFocus();
             }
+        } else if (evt.getButton() == MouseEvent.BUTTON1 && ((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
+            photoPanel.cropAndSave();
+            EventWrapper event = getCurrentEvent();
+            event.eventMediaSet.get(event.eventMediaIndex).setFile(photoPanel.getFile());
+            triggerChange();
         }
     }//GEN-LAST:event_mediaImagePanelMouseClicked
 
     private void sourceImagePanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceImagePanelMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1) {
+        if (evt.getButton() == MouseEvent.BUTTON1 && !((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
             EventWrapper event = getCurrentEvent();
             if (event == null) {
                 return;
@@ -1928,6 +1933,11 @@ public class IndiPanel extends Editor implements DocumentListener {
                 displayEventSource(event);
                 mediaSourceText.requestFocus();
             }
+        } else if (evt.getButton() == MouseEvent.BUTTON1 && ((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
+            imagePanel.cropAndSave();
+            EventWrapper event = getCurrentEvent();
+            event.setSourceFile(imagePanel.getFile());
+            triggerChange();
         }
     }//GEN-LAST:event_sourceImagePanelMouseClicked
 
@@ -4236,6 +4246,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             triggerChange();
         }
     }
+
 
 
 
