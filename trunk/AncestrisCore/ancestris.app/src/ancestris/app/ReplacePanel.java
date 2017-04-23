@@ -28,6 +28,7 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -781,7 +782,9 @@ public class ReplacePanel extends javax.swing.JPanel {
                         if (!category.isSelected() || !category.contains(tag)) {
                             continue;
                         }
-                        Matcher m = match(property.getDisplayValue(), toBeFound);
+                        String str1 = Normalizer.normalize(property.getDisplayValue(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                        String str2 = Normalizer.normalize(toBeFound, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                        Matcher m = match(str1, str2);
                         if (m != null && m.find() && (!selectionCheckBox.isSelected() || selection.contains(property) || selection.contains(property.getEntity()))) {
                             results.add(property);
                             break;
@@ -823,13 +826,13 @@ public class ReplacePanel extends javax.swing.JPanel {
         
         // Display document
         // 1. get elements
-        String text = prop.getDisplayValue();
-        String toBeFound = comboFindText.getText();
+        String text = Normalizer.normalize(prop.getDisplayValue(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
+        String toBeFound = Normalizer.normalize(comboFindText.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
         
         // 2. include text
         StyledDocument doc = new DefaultStyledDocument();
         try {
-            doc.insertString(0, text, null);
+            doc.insertString(0, prop.getDisplayValue(), null);
         } catch (BadLocationException ex) {
             //Exceptions.printStackTrace(ex);
             displayNullResults();
