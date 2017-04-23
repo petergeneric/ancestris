@@ -13,6 +13,9 @@ package ancestris.modules.editors.standard.tools;
 
 import ancestris.modules.editors.standard.IndiPanel;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
+import ancestris.util.swing.DialogManager;
+import genj.renderer.RenderSelectionHintKey;
+import genj.view.BigBufferedImage;
 import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -22,6 +25,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import javax.imageio.ImageIO;
+import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
 /**
@@ -33,7 +38,8 @@ public class ImagePanel extends javax.swing.JPanel {
     private IndiPanel callingPanel = null;
     private BufferedImage IMG_DEFAULT = null;
     
-    private int default_width = 197, default_height = 140;
+    private static int default_width = 197, default_height = 140;
+    private static String CROPPED = "-cropped";
     private BufferedImage image = null;
     private File file = null;
     
@@ -160,7 +166,7 @@ public class ImagePanel extends javax.swing.JPanel {
 
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON1) {
-            //nothing
+            //nothing, let indiPanel manage that click
         } else if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && file != null && file.exists()) {
             try {
                 Desktop.getDesktop().open(file);
@@ -221,6 +227,40 @@ public class ImagePanel extends javax.swing.JPanel {
 
     public BufferedImage getImage() {
         return image;
+    }
+
+    public void cropAndSave() {
+        try {
+            System.gc();  // clean memory
+            int w = this.getWidth();
+            int h = this.getHeight();
+            BufferedImage subImage = BigBufferedImage.create(new File(System.getProperty("java.io.tmpdir")), w, h, BufferedImage.TYPE_INT_RGB);
+            Graphics2D g = subImage.createGraphics();
+            g.setRenderingHint(RenderSelectionHintKey.KEY, false);
+            g.setClip(0, 0, w, h);
+            this.paint(g);
+            g.dispose();
+
+            // Define new filename
+            String ext = null;
+            String s = file.getName();
+            int i = s.lastIndexOf('.');
+            if (i > 0 && i < s.length() - 1) {
+                ext = s.substring(i + 1).toLowerCase();
+            }
+            String c = s.contains(CROPPED) ? "i" : CROPPED;  // only add "x" after the first cropped copy
+            String filepath = file.getParentFile().getAbsolutePath() + File.separator + s.substring(0, i) + c + "." + ext;
+            
+            // Save new file
+            file = new File(filepath);
+            ImageIO.write(subImage, ext, file); 
+            setMedia(file, subImage);
+            DialogManager.create(NbBundle.getMessage(ImagePanel.class, "TITL_CroppedSuccessfully"), 
+                    NbBundle.getMessage(ImagePanel.class, "MSG_CroppedSuccessfully", file.getName())).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+            
+        } catch (Exception e) {
+            DialogManager.create(NbBundle.getMessage(ImagePanel.class, "TITL_CannotSaveCopy"), e.getLocalizedMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
+        }
     }
 
 }
