@@ -13,6 +13,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyNote;
+import java.text.Normalizer;
 import java.util.Collection;
 import java.util.List;
 import org.netbeans.spi.quicksearch.SearchProvider;
@@ -31,9 +32,11 @@ public class NoteQuickSearch implements SearchProvider {
      */
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized (this) {
+            String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Note note : context.getGedcom().getNotes()) {
-                    String rep = Utilities.getPhraseBit(note.getDisplayValue() + " (" + note.getId() + ")", request.getText());
+                    String str1 = Normalizer.normalize(note.getDisplayValue(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String rep = Utilities.getPhraseBit(str1 + " (" + note.getId() + ")", str2);
                     if (rep == null) {
                         continue;
                     }
@@ -54,7 +57,8 @@ public class NoteQuickSearch implements SearchProvider {
                             if (text.isEmpty()) {
                                 continue;
                             }
-                            String rep = Utilities.getPhraseBit(text, request.getText());
+                            String str1 = Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                            String rep = Utilities.getPhraseBit(str1, str2);
                             if (rep == null) {
                                 continue;
                             }

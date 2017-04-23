@@ -11,6 +11,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import ancestris.util.Utilities;
 import ancestris.view.SelectionDispatcher;
+import java.text.Normalizer;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
@@ -29,9 +30,10 @@ public class FamQuickSearch implements SearchProvider {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Fam fam : context.getGedcom().getFamilies()) {
-                    String str = fam.toString(true);
-                    if (Utilities.wordsMatch(str.toLowerCase(),request.getText().toLowerCase())) {
-                        if (!response.addResult(createAction(fam), str)) {
+                    String str1 = Normalizer.normalize(fam.toString(true), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
+                        if (!response.addResult(createAction(fam), str1)) {
                             return;
                         }
                     }

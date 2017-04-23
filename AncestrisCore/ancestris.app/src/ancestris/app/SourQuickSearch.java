@@ -13,6 +13,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyNote;
 import genj.gedcom.Source;
+import java.text.Normalizer;
 import java.util.Collection;
 import java.util.List;
 import org.netbeans.spi.quicksearch.SearchProvider;
@@ -28,11 +29,14 @@ public class SourQuickSearch implements SearchProvider {
      * @param request Search request object that contains information what to search for
      * @param response Search response object that stores search results. Note that it's important to react to return value of SearchResponse.addResult(...) method and stop computation if false value is returned.
      */
+    @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized (this) {
+            String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Source source : context.getGedcom().getSources()) {
-                    String rep = Utilities.getPhraseBit(source.getTitle() + " : " + source.getText() + " (" + source.getId() + ")", request.getText());
+                    String str1 = Normalizer.normalize(source.getTitle(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String rep = Utilities.getPhraseBit(str1 + " : " + source.getText() + " (" + source.getId() + ")", str2);
                     if (rep == null) {
                         continue;
                     }
@@ -53,7 +57,8 @@ public class SourQuickSearch implements SearchProvider {
                             if (text.isEmpty()) {
                                 continue;
                             }
-                            String rep = Utilities.getPhraseBit(text, request.getText());
+                            String str1 = Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                            String rep = Utilities.getPhraseBit(str1, str2);
                             if (rep == null) {
                                 continue;
                             }

@@ -10,6 +10,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Indi;
 import ancestris.util.Utilities;
 import ancestris.view.SelectionDispatcher;
+import java.text.Normalizer;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
 import org.netbeans.spi.quicksearch.SearchResponse;
@@ -23,13 +24,15 @@ public class IndiQuickSearch implements SearchProvider {
      * @param request Search request object that contains information what to search for
      * @param response Search response object that stores search results. Note that it's important to react to return value of SearchResponse.addResult(...) method and stop computation if false value is returned.
      */
+    @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
-                    String str = indi.toString(true);
-                    if (Utilities.wordsMatch(str.toLowerCase(),request.getText().toLowerCase())) {
-                        if (!response.addResult(createAction(indi), str)) {
+                    String str1 = Normalizer.normalize(indi.toString(true), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
+                        if (!response.addResult(createAction(indi), str1)) {
                             return;
                         }
                     }
@@ -42,6 +45,7 @@ public class IndiQuickSearch implements SearchProvider {
     private Runnable createAction(final Entity entity) {
         return new Runnable() {
 
+            @Override
             public void run() {
                 SelectionDispatcher.fireSelection(new Context(entity));
             }
