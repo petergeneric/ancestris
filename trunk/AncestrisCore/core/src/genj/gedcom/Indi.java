@@ -19,6 +19,7 @@
  */
 package genj.gedcom;
 
+import ancestris.core.TextOptions;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.ImageIcon;
@@ -661,7 +662,7 @@ public class Indi extends Entity {
      */
     @Override
     protected String getToStringPrefix(boolean showIds) {
-        return getName();
+        return getName() + " (" + TextOptions.getInstance().getBirthSymbol() + getBirthAsString() + " " + TextOptions.getInstance().getDeathSymbol() + getDeathAsString() + ")";
     }
 
     /**
