@@ -54,6 +54,8 @@ public class MacMenu {
         
     public void setup() {
         try {
+            LOG.info("Setting Up Mac menu...");
+            
             // Set some mac-specific properties
             System.setProperty("apple.laf.useScreenMenuBar", "true");
             System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");   // has no effect
