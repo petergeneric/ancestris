@@ -24,18 +24,23 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import org.openide.awt.ActionID;
+import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
+import org.openide.awt.ActionRegistration;
+import org.openide.util.NbBundle;
 import org.openide.util.actions.Presenter;
 
 public final class ActionHistory implements Presenter.Toolbar {
 
-    private static HistoryCombo history;
+    private static HistoryCombo historyCombo;
 
     @Override
     public java.awt.Component getToolbarPresenter() {
-        if (history == null) {
-            history = new HistoryCombo();
+        if (historyCombo == null) {
+            historyCombo = new HistoryCombo();
         }
-        return history;
+        return historyCombo;
     }
 
     private static class HistoryCombo extends JPanel {
@@ -51,7 +56,7 @@ public final class ActionHistory implements Presenter.Toolbar {
         /**
          * Constructor
          */
-        HistoryCombo() {
+        public HistoryCombo() {
             setLayout(new java.awt.GridBagLayout());
             add(back);
             add(forward);
@@ -69,11 +74,13 @@ public final class ActionHistory implements Presenter.Toolbar {
         }
 
         private void update() {
-            forward.setEnabled(index < history.size() - 1);
-            forward.setTip(getEntityText(index + 1));
+            boolean enable = index < history.size() - 1;
+            forward.setEnabled(enable);
+            forward.setTip(enable ? NbBundle.getMessage(ActionNew.class,"CTL_ActionHistoryForward", getEntityText(index + 1)) : "");
 
-            back.setEnabled(index > 0);
-            back.setTip(getEntityText(index - 1));
+            enable = index > 0;
+            back.setEnabled(enable);
+            back.setTip(enable ? NbBundle.getMessage(ActionNew.class,"CTL_ActionHistoryBack", getEntityText(index - 1)) : "");
 
             pick.setEnabled(history.size() > 1);
         }
@@ -85,6 +92,24 @@ public final class ActionHistory implements Presenter.Toolbar {
             } catch (Exception e) {
             }
             return null;
+        }
+        
+        public void gotoPrevious() {
+            if (index < 1) {
+                return;
+            }
+            index--;
+            update();
+            fireSelection(history.get(index));
+        }
+
+        public void gotoNext() {
+            if (index == history.size() - 1) {
+                return;
+            }
+            index++;
+            update();
+            fireSelection(history.get(index));
         }
 
         /** back */
@@ -128,40 +153,39 @@ public final class ActionHistory implements Presenter.Toolbar {
         }
 
         /** back */
-        private class Back extends AbstractAncestrisAction {
+        @ActionID(category = "Edit", id = "ancestris.app.ActionHistory.Back")
+        @ActionRegistration(displayName = "#CTL_ActionHistoryBack", lazy = false)
+        @ActionReferences(value = {
+        @ActionReference(path = "Actions/Edit", position = 10),
+        @ActionReference(path = "Shortcuts", name= "A-LEFT")
+        })
+        public static class Back extends AbstractAncestrisAction {
 
             public Back() {
                 setImage(new ImageIcon(ActionHistory.class.getResource("Back.png")));
-                //FIXME: should be installed with @ActionReference
-//                install(HistoryCombo.this, "alt LEFT");
             }
 
+            @Override
             public void actionPerformed(ActionEvent evt) {
-                if (index < 1) {
-                    return;
-                }
-                index--;
-                update();
-                fireSelection(history.get(index));
+                historyCombo.gotoPrevious();
             }
         }
 
         /** forward */
-        private class Forward extends AbstractAncestrisAction {
+        @ActionID(category = "Edit", id = "ancestris.app.ActionHistory.Forward")
+        @ActionRegistration(displayName = "#CTL_ActionHistoryForward", lazy = false)
+        @ActionReferences(value = { 
+        @ActionReference(path = "Actions/Edit", position = 10),
+        @ActionReference(path = "Shortcuts", name= "A-RIGHT")
+        })
+        public static class Forward extends AbstractAncestrisAction {
 
             public Forward() {
-                //FIXME: should be installed with @ActionReference
-//                install(HistoryCombo.this, "alt RIGHT");
                 setImage(new ImageIcon(ActionHistory.class.getResource("Forward.png")));
             }
 
             public void actionPerformed(ActionEvent evt) {
-                if (index == history.size() - 1) {
-                    return;
-                }
-                index++;
-                update();
-                fireSelection(history.get(index));
+                historyCombo.gotoNext();
             }
         }
 
