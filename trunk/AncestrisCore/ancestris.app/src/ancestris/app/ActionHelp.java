@@ -24,7 +24,7 @@ public final class ActionHelp extends AbstractAncestrisAction {
     /** run */
     @Override
   public void actionPerformed(ActionEvent e) {
-        String id = "ancestris.app.about";
+        String id = "ancestris.app.help";
         Help help = Lookup.getDefault().lookup(Help.class);
         if (help != null && help.isValidID(id, true).booleanValue()) {
             help.showHelp(new HelpCtx(id));

@@ -21,7 +21,7 @@ import org.openide.util.NbBundle;
     /** constructor */
     public ActionOnlineHelp() {
       setText(NbBundle.getMessage(this.getClass(), "CTL_ActionOnlineHelp"));
-      setImage(Images.imgHelp);
+      setImage(Images.imgOnlineHelp);
     }
     /** run */
     @Override

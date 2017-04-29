@@ -27,7 +27,7 @@
     <folder name="Actions">
         <folder name="Edit">
             <file name="ancestris-app-ActionHistory.instance">
-                <attr name="iconBase" stringvalue="ancestris/app/Forward.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Forward.png"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionHistory"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
@@ -53,12 +53,12 @@
                 <attr name="displayName" bundlevalue="org.openide.actions.Bundle#Paste"/>
             </file>
             <file name="org-netbeans-modules-quicksearch-QuickSearchAction.instance">
-                <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
+                <attr name="iconBase" stringvalue="ancestris/view/images/Find.png"/>  
             </file>
             <file name="org-openide-actions-FindAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionFind"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Find.png"/>  
+                <attr name="iconBase" stringvalue="ancestris/view/images/Find.png"/>  
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionFind"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
@@ -67,7 +67,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionReplace"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionReplace"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Replace.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Replace.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -77,7 +77,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionNew"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionNew"/>
-                <attr name="iconBase" stringvalue="ancestris/app/New.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/New.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -87,22 +87,27 @@
                 <attr name="selectionType" stringvalue="ANY"/>
                 <attr name="injectable" stringvalue="ancestris.app.ActionOpenDefault"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionOpenDefault"/>
-                <attr name="iconBase" stringvalue="ancestris/app/OpenDefault.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/OpenDefault.png"/>
             </file>
             <file name="ancestris-app-ActionOpen.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionOpen"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionOpen"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Open.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Open.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="ancestris-app-ActionClose.instance">
+                <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionClose"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionClose"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Close.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
+                <attr name="noIconInMenu" boolvalue="false"/>
             </file>
              <!--<file name="ancestris-app-ActionSave.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionSave"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Save.png"/>
             </file>-->
             <file name="ancestris-app-ActionSaveAs.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionSaveAs"/>
@@ -111,7 +116,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="org.netbeans.modules.print.resources.Bundle"/>
                 <attr name="delegate" newvalue="org.netbeans.modules.print.action.PrintAction"/>
                 <attr name="displayName" bundlevalue="org.netbeans.modules.print.action.Bundle#TLT_Print_Action"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Print.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Print.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -121,7 +126,7 @@
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="delegate" newvalue="org.netbeans.modules.options.OptionsWindowAction"/>  <!-- the name of the options menuitem (FL) -->
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#OptionsCategory_Title_AncestrisPreference"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Options.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Options.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
@@ -130,7 +135,7 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="delegate" newvalue="ancestris.app.ActionSaveLayout"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_SaveLayout"/>
-                <attr name="iconBase" stringvalue="ancestris/app/ActionSaveLayout.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/SaveLayout.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
@@ -147,31 +152,33 @@
             <!-- Override the registered action with the new one. This will be
                  used by code that calls SystemAction.get(...), e.g. the AppleMenu module -->
             <file name="ancestris-app-ActionHelp.instance">
-                <attr name="delegate" newvalue="ancestris.app.ActionHelp"/>
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
+                <attr name="delegate" newvalue="ancestris.app.ActionHelp"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionHelp"/>
-                <attr name="iconBase" stringvalue="ancestris/app/ActionHelp.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Help.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="ancestris-app-ActionOnlineHelp.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionOnlineHelp"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/OnlineHelp.png"/>
             </file>
             <file name="ancestris-app-ActionAPropos.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionAPropos"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionAPropos"/>
-                <attr name="iconBase" stringvalue="ancestris/app/ActionAPropos.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/About.png"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
         </folder>
         <folder name="System">
             <file name="org-openide-actions-SaveAction.instance">
-                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Save.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.instance">
                 <attr name="displayName" bundlevalue="ancestris.welcome.resources.Bundle#LBL_InstallPlugins"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Extension.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Extension.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.instance">
@@ -561,7 +568,7 @@
             </file>-->
             <file name="org-openide-actions-SaveAction.shadow">
                 <attr name="originalFile" stringvalue="Actions/System/org-openide-actions-SaveAction.instance"/>
-                <attr name="iconBase" stringvalue="ancestris/app/Save.png"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/Save.png"/>
                 <attr name="position" intvalue="100"/>
             </file>
             <file name="org-openide-actions-SaveAllAction.shadow_hidden"/>

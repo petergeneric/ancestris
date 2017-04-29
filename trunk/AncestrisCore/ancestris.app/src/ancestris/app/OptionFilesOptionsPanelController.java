@@ -13,7 +13,7 @@ import org.openide.util.Lookup;
 
 @OptionsPanelController.TopLevelRegistration(
         categoryName = "#OptionsCategory_Name_OptionFiles",
-        iconBase = "ancestris/app/OptionFiles.png",
+        iconBase = "ancestris/view/images/OptionFiles.png",
         id = "OptionFiles",
         keywords = "#OptionsCategory_Keywords_OptionFiles",
         keywordsCategory = "OptionFiles",
