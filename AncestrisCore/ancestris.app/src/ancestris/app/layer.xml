@@ -251,11 +251,6 @@
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
-            <file name="ancestris-app-ActionOnlineHelp.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
-                <attr name="position" intvalue="-50"/>
-            </file>
-
             <file name="SeparatorFeedBack.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="40"/>
@@ -264,9 +259,13 @@
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="49"/>
             </file>
+            <file name="ancestris-app-ActionOnlineHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
+                <attr name="position" intvalue="50"/>
+            </file>
             <file name="ancestris-app-ActionAPropos.shadow">
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionAPropos.instance"/>
-                <attr name="position" intvalue="50"/>
+                <attr name="position" intvalue="55"/>
             </file>
             <file name="org-netbeans-core-actions-AboutAction.instance_hidden"/>
             <file name="org-netbeans-core-actions-AboutAction.shadow_hidden"/>
