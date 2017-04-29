@@ -33,7 +33,7 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
         getPanel().store();
         App.setLogLevel(getPanel().getLogLevel());
         ActionOpenDefault action = Lookup.getDefault().lookup(ActionOpenDefault.class);
-        action.getName();
+        action.putValue("Name", action.getName());
         //changed = false;
     }
 
