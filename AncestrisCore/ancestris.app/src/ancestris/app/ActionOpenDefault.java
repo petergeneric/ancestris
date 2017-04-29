@@ -70,7 +70,7 @@ public final class ActionOpenDefault extends CookieAction {//implements Openable
 
     @Override
     protected String iconResource() {
-        return "ancestris/app/OpenDefault.png";
+        return "ancestris/view/images/OpenDefault.png";
     }
 
     @Override
