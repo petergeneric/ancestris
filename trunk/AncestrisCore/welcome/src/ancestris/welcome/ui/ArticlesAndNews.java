@@ -44,11 +44,9 @@
 
 package ancestris.welcome.ui;
 
-import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.prefs.Preferences;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -57,7 +55,6 @@ import ancestris.welcome.content.CombinationRSSFeed;
 import ancestris.welcome.content.RSSFeed;
 import ancestris.welcome.content.RSSFeedReaderPanel;
 import ancestris.welcome.content.WebLink;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -67,7 +64,7 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
 
     private RSSFeed feed;
 
-    private static final int MAX_ARTICLES_COUNT = 5;
+    private static final int MAX_ARTICLES_COUNT = 10;
 
     public ArticlesAndNews() {
         super( "ArticlesAndNews", true ); // NOI18N
