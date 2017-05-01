@@ -24,6 +24,7 @@ public interface Constants {
 
     final public String ACTION = "sosaPanelAction";
     final public String NUMBERING = "sosaPanelNumbering";
+    final public String ALLSOSA = "sosaPanelAllSosa";
     final public String SELECTION = "sosaPanelSelectedIndi";
     final public String SAVE = "sosaPanelSave";
     final public String DECUJUSID = "sosaPanelDecujus.id";
