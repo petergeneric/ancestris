@@ -58,8 +58,10 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     // Runs the Ancestris componenet defaults
     public GeoListTopComponent() {
         super();
-        
-        // Data
+        initEventUsages();
+    }
+
+    private static void initEventUsages() {
         eventUsages = new HashMap<String, EventUsage>();
         EventUsage.init(eventUsages);
     }
@@ -293,6 +295,9 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
             }
             if (o2 == null) {
                 return -1;
+            }
+            if (eventUsages == null) {
+                initEventUsages();
             }
             String s1 = eventUsages.get(o1.getEventTag()).getOrder() + o1.toDisplayString();
             String s2 = eventUsages.get(o2.getEventTag()).getOrder() + o2.toDisplayString();

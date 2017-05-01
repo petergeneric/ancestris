@@ -54,6 +54,8 @@ autostore = false)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener {
 
+    private genj.util.Registry registry = null;
+    
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "ancestris/modules/geo/geo.png";
     private static final String PREFERRED_ID = "GeoMapTopComponent";
@@ -73,6 +75,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private boolean displayMiniMap = true;
     private boolean displayMarkers = true;
     private int markersSize = 10;
+    private boolean resizeWithZoom = true;
     private Color markersColor;
     private boolean useNames = false;
     private GeoFilter geoFilter = new GeoFilter();
@@ -105,8 +108,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void init(Context context) {
         super.init(context);
         ToolTipManager.sharedInstance().setDismissDelay(10000);
-        markersSize = context.getGedcom().getRegistry().get("GEO.markers.size", 10);
-        markersColor = context.getGedcom().getRegistry().get("GEO.markers.color", Color.BLUE);
+        if (registry == null) {
+            registry = context.getGedcom().getRegistry();
+        }
+        markersSize = registry.get("GEO.markers.size", 10);
+        markersColor = registry.get("GEO.markers.color", Color.BLUE);
+        resizeWithZoom = registry.get("GEO.markers.resizeWithZoom", true);
         searchCommunicator = new SearchCommunicator() {
             @Override
             public void changedResults(Gedcom gedcom) {
@@ -122,6 +129,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
+        if (registry == null) {
+            registry = getGedcom().getRegistry();
+        }
+        loadSettings();
         jXMapKit1.setDataProviderCreditShown(true);
         jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
         jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
@@ -409,12 +420,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private void jToggleOverviewButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleOverviewButtonActionPerformed
         displayMiniMap = jToggleOverviewButton.isSelected();
         jXMapKit1.setMiniMapVisible(displayMiniMap);
+        saveSettings();
     }//GEN-LAST:event_jToggleOverviewButtonActionPerformed
 
     private void jToggleSliderButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleSliderButtonActionPerformed
         displayZoom = jToggleSliderButton.isSelected();
         jXMapKit1.setZoomSliderVisible(displayZoom);
         jXMapKit1.setZoomButtonsVisible(displayZoom);
+        saveSettings();
     }//GEN-LAST:event_jToggleSliderButtonActionPerformed
 
     private void jViewAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jViewAllButtonActionPerformed
@@ -426,16 +439,19 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private void jToggleMarkersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleMarkersButtonActionPerformed
         displayMarkers = jToggleMarkersButton.isSelected();
         jSwapMarkersButton.setEnabled(displayMarkers);
+        saveSettings();
         displayMarkers();
     }//GEN-LAST:event_jToggleMarkersButtonActionPerformed
 
     private void jSwapMarkersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSwapMarkersButtonActionPerformed
         useNames = jSwapMarkersButton.isSelected();
+        saveSettings();
         displayMarkers();
     }//GEN-LAST:event_jSwapMarkersButtonActionPerformed
 
     private void jPlaceFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jPlaceFilterActionPerformed
         geoFilter.location = jPlaceFilter.getText();
+        geoFilter.save();
         applyFilters();
     }//GEN-LAST:event_jPlaceFilterActionPerformed
 
@@ -456,27 +472,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     private void jXMapKit1PropertyChange(java.beans.PropertyChangeEvent evt) {                                         
         String pn = evt.getPropertyName();
-        if ("zoom".equals(pn)) {
-            int z = jXMapKit1.getMainMap().getZoom();
-            int s = markersSize;
-            switch (z) {
-                case 1: s = 50; break;
-                case 2: s = 49; break;
-                case 3: s = 47; break;
-                case 4: s = 45; break;
-                case 5: s = 40; break;
-                case 6: s = 35; break;
-                case 7: s = 30; break;
-                case 8: s = 20; break;
-                case 9: s = 12; break;
-                case 10: s = 8; break;
-                case 11: s = 6; break;
-                case 12: s = 5; break;
-                case 13: s = 4; break;
-                case 14: s = 3; break;
-                case 15: s = 2; break;
-            }
-            setMarkersSize(s);
+        if ("zoom".equals(pn) && resizeWithZoom) {
+            resizeWithZoom();
+        }
+        if ("zoom".equals(pn) || "center".equals(pn)) {
+            saveSettings();
         }
     }                                        
 
@@ -521,79 +521,44 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public void writeProperties(java.util.Properties p) {
-        // better to version settings since initial version as advocated at
-        // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
-        if (getGedcom() != null) {
-            p.setProperty("gedcom", getGedcom().getOrigin().toString());
-        }
-        if (jXMapKit1 == null) {
-            return;
-        }
-        p.setProperty("mapCenterLat", String.valueOf(jXMapKit1.getCenterPosition().getLatitude()));
-        p.setProperty("mapCenterLon", String.valueOf(jXMapKit1.getCenterPosition().getLongitude()));
-        p.setProperty("mapZoom", String.valueOf(jXMapKit1.getZoomSlider().getValue()));
-        p.setProperty("mapToDisplay", String.valueOf(mapToDisplay));
-        p.setProperty("displayZoom", Boolean.toString(displayZoom));
-        p.setProperty("displayMiniMap", Boolean.toString(displayMiniMap));
-        p.setProperty("displayMarkers", Boolean.toString(displayMarkers));
-        p.setProperty("markersColor", String.valueOf(markersColor.getRGB()));
-        p.setProperty("markersSize", String.valueOf(markersSize));
-        p.setProperty("useNames", Boolean.toString(useNames));
-        p.setProperty("geoFilter.location", geoFilter.location);
-        p.setProperty("geoFilter.ascendants", Boolean.toString(geoFilter.ascendants));
-        p.setProperty("geoFilter.cousins", Boolean.toString(geoFilter.cousins));
-        p.setProperty("geoFilter.otherAncestors", Boolean.toString(geoFilter.otherAncestors));
-        p.setProperty("geoFilter.selectedIndividual", Boolean.toString(geoFilter.selectedIndividual));
-        p.setProperty("geoFilter.selectedSearch", Boolean.toString(geoFilter.selectedSearch));
-        p.setProperty("geoFilter.males", Boolean.toString(geoFilter.males));
-        p.setProperty("geoFilter.females", Boolean.toString(geoFilter.females));
-        p.setProperty("geoFilter.yearStart", geoFilter.yearStart);
-        p.setProperty("geoFilter.yearEnd", geoFilter.yearEnd);
-        p.setProperty("geoFilter.births", Boolean.toString(geoFilter.births));
-        p.setProperty("geoFilter.marriages", Boolean.toString(geoFilter.marriages));
-        p.setProperty("geoFilter.deaths", Boolean.toString(geoFilter.deaths));
-        p.setProperty("geoFilter.otherEvents", Boolean.toString(geoFilter.otherEvents));
     }
 
     @Override
     public void readProperties(java.util.Properties p) {
-        String version = p.getProperty("version");
-        final String gedName = p.getProperty("gedcom");
-        mapCenterLat = Double.valueOf(p.getProperty("mapCenterLat", "47"));
-        mapCenterLon = Double.valueOf(p.getProperty("mapCenterLon", "3"));
-        mapZoom = Integer.valueOf(p.getProperty("mapZoom", "11"));
-        mapToDisplay = Integer.valueOf(p.getProperty("mapToDisplay", "0"));
-        displayZoom = Boolean.valueOf(p.getProperty("displayZoom", "true"));
-        displayMiniMap = Boolean.valueOf(p.getProperty("displayMiniMap", "true"));
-        displayMarkers = Boolean.valueOf(p.getProperty("displayMarkers", "true"));
-        markersColor = new Color((int) (Integer.valueOf(p.getProperty("markersColor", "-16776961"))));
-        markersSize = Integer.valueOf(p.getProperty("markersSize", "10"));
-        useNames = Boolean.valueOf(p.getProperty("useNames", "false"));
-        geoFilter.location = p.getProperty("geoFilter.location", "");
-        geoFilter.ascendants = Boolean.valueOf(p.getProperty("geoFilter.ascendants", "true"));
-        geoFilter.cousins = Boolean.valueOf(p.getProperty("geoFilter.cousins", "true"));
-        geoFilter.otherAncestors = Boolean.valueOf(p.getProperty("geoFilter.otherAncestors", "true"));
-        geoFilter.selectedIndividual = Boolean.valueOf(p.getProperty("geoFilter.selectedIndividual", "true"));
-        geoFilter.selectedSearch = Boolean.valueOf(p.getProperty("geoFilter.selectedSearch", "true"));
-        geoFilter.males = Boolean.valueOf(p.getProperty("geoFilter.males", "true"));
-        geoFilter.females = Boolean.valueOf(p.getProperty("geoFilter.females", "true"));
-        geoFilter.yearStart = p.getProperty("geoFilter.yearStart", "");
-        geoFilter.yearEnd = p.getProperty("geoFilter.yearEnd", "");
-        geoFilter.births = Boolean.valueOf(p.getProperty("geoFilter.births", "true"));
-        geoFilter.marriages = Boolean.valueOf(p.getProperty("geoFilter.marriages", "true"));
-        geoFilter.deaths = Boolean.valueOf(p.getProperty("geoFilter.deaths", "true"));
-        geoFilter.otherEvents = Boolean.valueOf(p.getProperty("geoFilter.otherEvents", "true"));
-        // start
-        if (gedName == null) {
-            return;
-        }
-        waitStartup(gedName);
     }
 
     @Override
     protected String preferredID() {
         return PREFERRED_ID;
+    }
+
+    public void loadSettings() {
+        mapCenterLat = Double.valueOf(registry.get("mapCenterLat", "47"));
+        mapCenterLon = Double.valueOf(registry.get("mapCenterLon", "3"));
+        mapZoom = Integer.valueOf(registry.get("mapZoom", "11"));
+        mapToDisplay = Integer.valueOf(registry.get("mapToDisplay", "0"));
+        displayZoom = Boolean.valueOf(registry.get("displayZoom", "true"));
+        displayMiniMap = Boolean.valueOf(registry.get("displayMiniMap", "true"));
+        displayMarkers = Boolean.valueOf(registry.get("displayMarkers", "true"));
+        useNames = Boolean.valueOf(registry.get("useNames", "false"));
+    }
+
+    public void saveSettings() {
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            public void run() {
+                if (jXMapKit1 == null || registry == null) {
+                    return;
+                }
+                registry.put("mapCenterLat", String.valueOf(jXMapKit1.getCenterPosition().getLatitude()));
+                registry.put("mapCenterLon", String.valueOf(jXMapKit1.getCenterPosition().getLongitude()));
+                registry.put("mapZoom", String.valueOf(jXMapKit1.getZoomSlider().getValue()));
+                registry.put("mapToDisplay", String.valueOf(mapToDisplay));
+                registry.put("displayZoom", Boolean.toString(displayZoom));
+                registry.put("displayMiniMap", Boolean.toString(displayMiniMap));
+                registry.put("displayMarkers", Boolean.toString(displayMarkers));
+                registry.put("useNames", Boolean.toString(useNames));
+            }
+        });
     }
 
     public void getHelp() {
@@ -794,7 +759,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 NbBundle.getMessage(getClass(), "TITL_Setting"), sp)
                 .setOptionType(DialogManager.OK_ONLY_OPTION)
                 .show();
-        
+        sp.saveDates();
+        geoFilter.save();
     }
 
     public Color getMarkersColor() {
@@ -804,7 +770,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void setMarkersColor(Color c) {
         markersColor = c;
         if (c != null) {
-            getGedcom().getRegistry().put("GEO.markers.color", c);
+            registry.put("GEO.markers.color", c);
             displayMarkers();
         }
     }
@@ -816,11 +782,49 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void setMarkersSize(int s) {
         markersSize = s;
         if (s>1 && s <= markersSizeMax) {
-            getGedcom().getRegistry().put("GEO.markers.size", markersSize);
+            registry.put("GEO.markers.size", markersSize);
             displayMarkers();
         }
     }
 
+    public boolean getResizeWithZoom() {
+        return resizeWithZoom;
+    }
+
+    public void setResizeWithZoom(boolean selected) {
+        resizeWithZoom = selected;
+        registry.put("GEO.markers.resizeWithZoom", resizeWithZoom);
+        if (resizeWithZoom) {
+            resizeWithZoom();
+        }
+    }
+
+    
+    public void resizeWithZoom() {
+        int z = jXMapKit1.getMainMap().getZoom();
+        int s = markersSize;
+        switch (z) {
+            case 1: s = 50; break;
+            case 2: s = 49; break;
+            case 3: s = 47; break;
+            case 4: s = 45; break;
+            case 5: s = 40; break;
+            case 6: s = 35; break;
+            case 7: s = 30; break;
+            case 8: s = 20; break;
+            case 9: s = 12; break;
+            case 10: s = 8; break;
+            case 11: s = 6; break;
+            case 12: s = 5; break;
+            case 13: s = 4; break;
+            case 14: s = 3; break;
+            case 15: s = 2; break;
+        }
+        setMarkersSize(s);
+    }
+
+
+    
     public GeoFilter getFilter() {
         return geoFilter;
     }

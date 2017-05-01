@@ -61,44 +61,44 @@ public class GeoFilter {
 
     public void setGedcom(Gedcom gedcom) {
         this.gedcom = gedcom;
-        registry = Registry.get(gedcom);
+        registry = gedcom.getRegistry();
         load();
     }
 
     public void load() {
-        location = registry.get("geofilter.location", "");
-        ascendants = registry.get("geofilter.ascendants", false);
-        descendants = registry.get("geofilter.descendants", false);
-        cousins = registry.get("geofilter.cousins", false);
-        otherAncestors = registry.get("geofilter.otherAncestors", false);
-        selectedIndividual = registry.get("geofilter.selectedIndividual", false);
-        selectedSearch = registry.get("geofilter.selectedSearch", false);
-        males = registry.get("geofilter.males", false);
-        females = registry.get("geofilter.females", false);
-        yearStart = registry.get("geofilter.yearStart", "");
-        yearEnd = registry.get("geofilter.yearEnd", "");
-        births = registry.get("geofilter.births", false);
-        marriages = registry.get("geofilter.marriages", false);
-        deaths = registry.get("geofilter.deaths", false);
-        otherEvents = registry.get("geofilter.otherEvents", false);
+        location = registry.get("GEO.geofilter.location", "");
+        ascendants = registry.get("GEO.geofilter.ascendants", false);
+        descendants = registry.get("GEO.geofilter.descendants", false);
+        cousins = registry.get("GEO.geofilter.cousins", false);
+        otherAncestors = registry.get("GEO.geofilter.otherAncestors", false);
+        selectedIndividual = registry.get("GEO.geofilter.selectedIndividual", false);
+        selectedSearch = registry.get("GEO.geofilter.selectedSearch", false);
+        males = registry.get("GEO.geofilter.males", false);
+        females = registry.get("GEO.geofilter.females", false);
+        yearStart = registry.get("GEO.geofilter.yearStart", "");
+        yearEnd = registry.get("GEO.geofilter.yearEnd", "");
+        births = registry.get("GEO.geofilter.births", false);
+        marriages = registry.get("GEO.geofilter.marriages", false);
+        deaths = registry.get("GEO.geofilter.deaths", false);
+        otherEvents = registry.get("GEO.geofilter.otherEvents", false);
     }
 
     public void save() {
-        registry.put("geofilter.location", location);
-        registry.put("geofilter.ascendants", ascendants);
-        registry.put("geofilter.descendants", descendants);
-        registry.put("geofilter.cousins", cousins);
-        registry.put("geofilter.otherAncestors", otherAncestors);
-        registry.put("geofilter.selectedIndividual", selectedIndividual);
-        registry.put("geofilter.selectedSearch", selectedSearch);
-        registry.put("geofilter.males", males);
-        registry.put("geofilter.females", females);
-        registry.put("geofilter.yearStart", yearStart);
-        registry.put("geofilter.yearEnd", yearEnd);
-        registry.put("geofilter.births", births);
-        registry.put("geofilter.marriages", marriages);
-        registry.put("geofilter.deaths", deaths);
-        registry.put("geofilter.otherEvents", otherEvents);
+        registry.put("GEO.geofilter.location", location);
+        registry.put("GEO.geofilter.ascendants", ascendants);
+        registry.put("GEO.geofilter.descendants", descendants);
+        registry.put("GEO.geofilter.cousins", cousins);
+        registry.put("GEO.geofilter.otherAncestors", otherAncestors);
+        registry.put("GEO.geofilter.selectedIndividual", selectedIndividual);
+        registry.put("GEO.geofilter.selectedSearch", selectedSearch);
+        registry.put("GEO.geofilter.males", males);
+        registry.put("GEO.geofilter.females", females);
+        registry.put("GEO.geofilter.yearStart", yearStart);
+        registry.put("GEO.geofilter.yearEnd", yearEnd);
+        registry.put("GEO.geofilter.births", births);
+        registry.put("GEO.geofilter.marriages", marriages);
+        registry.put("GEO.geofilter.deaths", deaths);
+        registry.put("GEO.geofilter.otherEvents", otherEvents);
     }
 
     public void calculatesIndividuals(Gedcom gedcom) {

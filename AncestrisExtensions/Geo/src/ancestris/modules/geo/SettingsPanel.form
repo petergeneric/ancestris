@@ -508,6 +508,8 @@
                                   <Component id="jSizeLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="jSizeSpinner" min="-2" pref="52" max="-2" attributes="0"/>
+                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <Component id="jResizeWithZoom" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Component id="jColorChooser" alignment="0" min="-2" max="-2" attributes="0"/>
                           </Group>
@@ -522,6 +524,7 @@
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="jSizeSpinner" alignment="3" pref="28" max="32767" attributes="0"/>
                               <Component id="jSizeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="jResizeWithZoom" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="jColorChooser" min="-2" max="-2" attributes="0"/>
@@ -553,6 +556,19 @@
                   <AuxValues>
                     <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(new SpinnerNumberModel(10, 0, markersSizeMax, 1))"/>
                   </AuxValues>
+                </Component>
+                <Component class="javax.swing.JCheckBox" name="jResizeWithZoom">
+                  <Properties>
+                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="ancestris/modules/geo/Bundle.properties" key="SettingsPanel.jResizeWithZoom.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="ancestris/modules/geo/Bundle.properties" key="SettingsPanel.jResizeWithZoom.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                    </Property>
+                  </Properties>
+                  <Events>
+                    <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jResizeWithZoomActionPerformed"/>
+                  </Events>
                 </Component>
                 <Component class="javax.swing.JColorChooser" name="jColorChooser">
                 </Component>

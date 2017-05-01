@@ -37,6 +37,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jColorChooser.setPreviewPanel(new JPanel());
         jColorChooser.setColor(gmtc.getMarkersColor());
         jSizeSpinner.setValue(gmtc.getMarkersSize());
+        jResizeWithZoom.setSelected(gmtc.getResizeWithZoom());
         
         csm = jColorChooser.getSelectionModel();
         csm.addChangeListener(this);
@@ -101,6 +102,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jPanel1 = new javax.swing.JPanel();
         jSizeLabel = new javax.swing.JLabel();
         jSizeSpinner = new javax.swing.JSpinner(new SpinnerNumberModel(10, 0, markersSizeMax, 1));
+        jResizeWithZoom = new javax.swing.JCheckBox();
         jColorChooser = new javax.swing.JColorChooser();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -394,6 +396,14 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
             }
         });
 
+        org.openide.awt.Mnemonics.setLocalizedText(jResizeWithZoom, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jResizeWithZoom.text")); // NOI18N
+        jResizeWithZoom.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jResizeWithZoom.toolTipText")); // NOI18N
+        jResizeWithZoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jResizeWithZoomActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -405,7 +415,9 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                         .addGap(14, 14, 14)
                         .addComponent(jSizeLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jSizeSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jResizeWithZoom))
                     .addComponent(jColorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(0, 0, 0))
         );
@@ -415,7 +427,8 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jSizeSpinner, javax.swing.GroupLayout.DEFAULT_SIZE, 28, Short.MAX_VALUE)
-                    .addComponent(jSizeLabel))
+                    .addComponent(jSizeLabel)
+                    .addComponent(jResizeWithZoom))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jColorChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26))
@@ -513,6 +526,13 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         rootIndividual.setText(gmtc.setFilterSelectedIndi());
     }//GEN-LAST:event_jChooseSelectedButtonActionPerformed
 
+    private void jResizeWithZoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jResizeWithZoomActionPerformed
+        gmtc.setResizeWithZoom(jResizeWithZoom.isSelected());
+        if (!jResizeWithZoom.isSelected()) {
+            gmtc.setMarkersSize((int) Integer.valueOf(jSizeSpinner.getValue().toString()));
+        }
+    }//GEN-LAST:event_jResizeWithZoomActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jAncestorCheckBox;
@@ -534,6 +554,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private javax.swing.JCheckBox jOthersCheckBox;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JCheckBox jResizeWithZoom;
     private javax.swing.JLabel jRoolIndiLabel;
     private javax.swing.JLabel jRootLabel;
     private javax.swing.JScrollPane jScrollPane1;
@@ -552,4 +573,10 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     public void stateChanged(ChangeEvent e) {
         gmtc.setMarkersColor(jColorChooser.getColor());
     }
+
+    public void saveDates() {
+        gmtc.setFilterYearStart(jFromTextField.getText());
+        gmtc.setFilterYearEnd(jToTextField.getText());
+    }
+
 }
