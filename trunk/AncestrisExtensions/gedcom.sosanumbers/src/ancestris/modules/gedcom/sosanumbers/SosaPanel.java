@@ -80,6 +80,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         sosaRadioButton.setSelected(n == NUMBERING_SOSA);
         dabovilleRadioButton.setSelected(n == NUMBERING_DABOVILLE);
         allNumberingRadioButton.setSelected(n == NUMBERING_ALL);
+        allSosaCheckBox.setSelected(registry.get(ALLSOSA, false));
         int s = registry.get(SELECTION, 1);
         saveCheckBox.setSelected(registry.get(SAVE, true));
         
@@ -125,6 +126,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         individualLabel.setText(NbBundle.getMessage(SosaPanel.class, mode == MODE_GENERATE ? "SosaPanel.individualLabel.text" : "SosaPanel.individualLabel.text2"));
         saveCheckBox.setText(NbBundle.getMessage(SosaPanel.class, mode == MODE_GENERATE ? "SosaPanel.saveCheckBox.text" : "SosaPanel.saveCheckBox.text2"));
         allNumberingRadioButton.setVisible(mode == MODE_ERASE);
+        allSosaCheckBox.setVisible(mode == MODE_GENERATE);
         selectIndiPanel.setVisible(otherIndividualRadioButton.isSelected());
         allIndividualRadioButton.setVisible(mode == MODE_ERASE);
         if (mode == MODE_GENERATE && allNumberingRadioButton.isSelected()) {
@@ -152,6 +154,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         sosaRadioButton = new javax.swing.JRadioButton();
         dabovilleRadioButton = new javax.swing.JRadioButton();
         allNumberingRadioButton = new javax.swing.JRadioButton();
+        allSosaCheckBox = new javax.swing.JCheckBox();
         individualLabel = new javax.swing.JLabel();
         selectedIndividualRadioButton = new javax.swing.JRadioButton();
         currentDecujusRadioButton = new javax.swing.JRadioButton();
@@ -203,6 +206,9 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         numberingButtonGroup.add(allNumberingRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(allNumberingRadioButton, org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.allNumberingRadioButton.text")); // NOI18N
         allNumberingRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.allNumberingRadioButton.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(allSosaCheckBox, org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.allSosaCheckBox.text")); // NOI18N
+        allSosaCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.allSosaCheckBox.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(individualLabel, org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.individualLabel.text")); // NOI18N
 
@@ -266,6 +272,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(selectIndiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(otherIndividualRadioButton)
@@ -278,12 +285,10 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                                     .addComponent(sosaRadioButton)
                                     .addComponent(dabovilleRadioButton)
                                     .addComponent(allNumberingRadioButton)
-                                    .addComponent(currentDecujusRadioButton))
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(allIndividualRadioButton)
-                                .addGap(0, 0, Short.MAX_VALUE))
-                            .addComponent(selectIndiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                    .addComponent(currentDecujusRadioButton)
+                                    .addComponent(allIndividualRadioButton)
+                                    .addComponent(allSosaCheckBox))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(actionLabel)
@@ -312,6 +317,8 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addComponent(dabovilleRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(allNumberingRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(allSosaCheckBox)
                 .addGap(18, 18, 18)
                 .addComponent(individualLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -326,7 +333,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addComponent(allIndividualRadioButton)
                 .addGap(18, 18, 18)
                 .addComponent(saveCheckBox)
-                .addContainerGap(81, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -367,6 +374,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
     private javax.swing.JLabel actionLabel;
     private javax.swing.JRadioButton allIndividualRadioButton;
     private javax.swing.JRadioButton allNumberingRadioButton;
+    private javax.swing.JCheckBox allSosaCheckBox;
     private javax.swing.JRadioButton currentDecujusRadioButton;
     private javax.swing.JRadioButton dabovilleRadioButton;
     private javax.swing.JRadioButton eraseRadioButton;
@@ -400,6 +408,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         registry.put(NUMBERING, n);
         int s = selectedIndividualRadioButton.isSelected() ? 1 : (currentDecujusRadioButton.isSelected() ? 2 : (otherIndividualRadioButton.isSelected() ? 3 : 4));
         registry.put(SELECTION, s);
+        registry.put(ALLSOSA, allSosaCheckBox.isSelected());
         registry.put(SAVE, saveCheckBox.isSelected());
 
         if (mode == MODE_GENERATE) {

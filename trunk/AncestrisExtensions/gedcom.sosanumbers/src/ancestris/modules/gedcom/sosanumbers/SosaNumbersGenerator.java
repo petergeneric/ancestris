@@ -50,6 +50,7 @@ public class SosaNumbersGenerator implements Constants {
     private Registry registry = null;
     private int mode = MODE_GENERATE;
     private int numbering = NUMBERING_SOSADABOVILLE;
+    private boolean allSosa = false;
     private Indi indiDeCujus = null;
     private boolean save = true;
     private Set<Indi> changedIndis = null; // no duplicates, hashed
@@ -75,6 +76,7 @@ public class SosaNumbersGenerator implements Constants {
 
         // Number : sosa, dabo, sosa_dabo, all
         numbering = registry.get(NUMBERING, NUMBERING_SOSADABOVILLE);
+        allSosa = registry.get(ALLSOSA, false);
 
         // Individual : decujus or all
         this.indiDeCujus = indiDeCujus;
@@ -331,7 +333,7 @@ public class SosaNumbersGenerator implements Constants {
         }
 
         // Update list to keep going up the tree
-        if (isNew) {
+        if (isNew || allSosa) {
             listIter.add(new Pair(indi, daboValue == null ? nbToString(sosaNumber) : daboValue));
             listIter.previous();
         }
@@ -351,7 +353,7 @@ public class SosaNumbersGenerator implements Constants {
         
         
         // Quit if just erasing
-        if ((isNew) && mode != MODE_ERASE) {
+        if ((isNew || allSosa) && mode != MODE_ERASE) {
             Property prop = null;
             try {
                 String value = nbToString(sosaNumber, "", true, daboValue);
