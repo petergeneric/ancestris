@@ -108,12 +108,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void init(Context context) {
         super.init(context);
         ToolTipManager.sharedInstance().setDismissDelay(10000);
-        if (registry == null) {
-            registry = context.getGedcom().getRegistry();
-        }
-        markersSize = registry.get("GEO.markers.size", 10);
-        markersColor = registry.get("GEO.markers.color", Color.BLUE);
-        resizeWithZoom = registry.get("GEO.markers.resizeWithZoom", true);
         searchCommunicator = new SearchCommunicator() {
             @Override
             public void changedResults(Gedcom gedcom) {
@@ -121,18 +115,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
         };
         searchCommunicator.setGedcom(context.getGedcom());
-        geoFilter.setGedcom(context.getGedcom());
-        applyFilters();
     }
 
     @Override
     public boolean createPanel() {
         // TopComponent window parameters
         initComponents();
-        if (registry == null) {
-            registry = getGedcom().getRegistry();
-        }
         loadSettings();
+        geoFilter.setGedcom(getGedcom());
         jXMapKit1.setDataProviderCreditShown(true);
         jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
         jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
@@ -156,6 +146,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         // Calculate and display markers
         jRefreshButton.setEnabled(false);
         initMarkersList();
+        applyFilters();
         return true;
     }
 
@@ -533,6 +524,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void loadSettings() {
+        if (registry == null) {
+            registry = getGedcom().getRegistry();
+        }
+        markersSize = registry.get("GEO.markers.size", 10);
+        markersColor = registry.get("GEO.markers.color", Color.BLUE);
+        resizeWithZoom = registry.get("GEO.markers.resizeWithZoom", true);
         mapCenterLat = Double.valueOf(registry.get("mapCenterLat", "47"));
         mapCenterLon = Double.valueOf(registry.get("mapCenterLon", "3"));
         mapZoom = Integer.valueOf(registry.get("mapZoom", "11"));
