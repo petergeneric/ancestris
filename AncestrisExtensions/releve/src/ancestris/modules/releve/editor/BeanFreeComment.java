@@ -4,10 +4,10 @@ import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldPicture;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import java.awt.BorderLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
-import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
@@ -23,31 +23,20 @@ import javax.swing.event.ChangeListener;
 public class BeanFreeComment extends Bean {
 
     private JTextField editor = new JTextField();
-    //private CompletionProvider completionProvider;
 
     public BeanFreeComment( ) {
-        //this.completionProvider = completionProvider;
         setLayout(new java.awt.BorderLayout());
         
-        //tfield = new TextFieldWidget("");
         JSpinner spinner = new JSpinner();
         spinner.setEditor(editor);
         spinner.setModel(new PictureNameModel(editor));
-        setPreferredSize(new java.awt.Dimension(100, 20));
         add(spinner,BorderLayout.CENTER);
         editor.getDocument().addDocumentListener(changeSupport);
-        JButton jButtonSaveComment = new JButton();
-        setPreferredSize(new java.awt.Dimension(20, 20));
-
-//        add(jButtonSaveComment, BorderLayout.EAST);
-//        jButtonSaveComment.addActionListener(new java.awt.event.ActionListener() {
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                saveComment();
-//            }
-//        });
+        //setPreferredSize(new java.awt.Dimension(20, 20));
+        editor.setMargin(new Insets(0,0,0,0)); // top,left,bottom,right
         defaultFocus = spinner;
-        revalidate();
-        repaint();
+        //revalidate();
+        //repaint();
     }
 
     /**

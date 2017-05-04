@@ -43,7 +43,7 @@ public class Java2sAutoComboBox extends JComboBox<String> {
         });
         setEditor(autoTextFieldEditor);
         setPrototypeDisplayValue("AAAAAAAAAAA");
-        revalidate();
+        //revalidate();
     }
 
     /**

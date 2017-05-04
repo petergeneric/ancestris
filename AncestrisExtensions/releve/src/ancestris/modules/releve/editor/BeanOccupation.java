@@ -26,9 +26,7 @@ public class BeanOccupation extends Bean implements CompletionListener {
         cOccupation.setLocale(completionProvider.getLocale());
         cOccupation.addChangeListener(changeSupport);
         
-        // Layout the bean
         add(cOccupation, java.awt.BorderLayout.CENTER);
-
         // je fixe le focus par defaut
         defaultFocus = cOccupation;
     }
