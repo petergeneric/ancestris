@@ -15,25 +15,20 @@ import java.util.List;
  */
 public class BeanPlace extends Bean implements CompletionListener {
 
-    //private Java2sAutoTextField tfield;
     private Java2sAutoComboBox tfield;
     CompletionProvider completionProvider;
     
     public BeanPlace(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
-        //tfield = new Java2sAutoTextField(completionProvider.getPlaces());
-        tfield = new Java2sAutoComboBox(completionProvider.getPlaces(IncludeFilter.INCLUDED));
-        tfield.setMinimumSize(new Dimension(30,20));
-        tfield.setPreferredSize(new Dimension(30,20));
         completionProvider.addPlacesListener(this);
-
+        setLayout(new BorderLayout());
+        tfield = new Java2sAutoComboBox(completionProvider.getPlaces(IncludeFilter.INCLUDED));
         tfield.setStrict(false);
         tfield.setCaseSensitive(false);
         tfield.setUpperAllFirstChar(true);
         tfield.setLocale(completionProvider.getLocale());
         tfield.addChangeListener(changeSupport);
 
-        setLayout(new BorderLayout());
         add(tfield, BorderLayout.CENTER);
         defaultFocus = tfield;
     }
