@@ -109,6 +109,7 @@
    <AGE type="PropertyAge" img="Time" cardinality="0:1"/>
    <AGNC type="PropertySimpleValue" img="Phone"/>
    <CAUS type="PropertyChoiceValue" img="Cause"/>
+   <RESN hide="1" type="PropertySimpleReadOnly" img="Description" cardinality="0:1"/>  
    <NOTE super="INDI:NAME:NOTE"/>
    <SOUR super="INDI:NAME:SOUR"/>
    <OBJE super="INDI:NAME:SOUR:OBJE"/>

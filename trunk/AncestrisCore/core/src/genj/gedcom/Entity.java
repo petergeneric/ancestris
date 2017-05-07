@@ -280,9 +280,12 @@ public class Entity extends Property {
     }
 
     private void eraseProperties(Property parent) {
-        for (Property child : parent.getProperties()) {
-            eraseProperties(child);
-            parent.delProperty(child);
+        try {
+            for (Property child : parent.getProperties()) {
+                eraseProperties(child);
+                parent.delProperty(child);
+            }
+        } catch (Exception e) {
         }
     }
 
