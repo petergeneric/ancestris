@@ -240,7 +240,7 @@ public class GedcomWriter implements IGedcomWriter {
         prop = replaceProperties(header, "SOUR", "ANCESTRIS");
         prop.addProperty("VERS", Lookup.getDefault().lookup(ancestris.api.core.Version.class).getVersionString());
         prop.addProperty("NAME", "Ancestris");
-        prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).addProperty("ADDR", "http://www.ancestris.org");
+        prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).addProperty("WWW", "http://www.ancestris.org");
         replaceProperties(header, "DEST", gedcom.getDestination());
 
         // Replace HEAD:DATE

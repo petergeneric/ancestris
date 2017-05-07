@@ -31,6 +31,10 @@ public class Console implements OutputListener {
             io.select();
         }
     }
+    
+    public void show() {
+        io.select();
+    }
 
     public void println(String s) {
         try {

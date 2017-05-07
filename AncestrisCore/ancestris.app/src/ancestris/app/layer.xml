@@ -387,7 +387,7 @@
             <file name="GroupsMenuAction.shadow_hidden"/>
         </folder>
     </folder>
-    <folder name="OptionsDialog">
+        <folder name="OptionsDialog">
         <folder name="Advanced">
             <file name="org-netbeans-core-ui-options-filetypes-FileAssociationsOptionsPanelController.instance_hidden"/>
         </folder>

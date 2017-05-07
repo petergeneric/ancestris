@@ -142,7 +142,7 @@ public class PropertyName extends Property {
             return true;
         }
         // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
-        // We do not consider an space character around / (for geneatique compatibility
+        // We do not consider space character around / (for geneatique compatibility)
         // We do consider the case of char (ie SURN may be UPPER where NAME is not)
         // XXX: We should consider the case where there is no sub tags in NAME structure
         return nameTagValue.replaceAll(" */ *", "/").replaceAll(" +", " ").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
@@ -181,11 +181,7 @@ public class PropertyName extends Property {
      */
     public String getLastName(boolean displayValue) {
         if (displayValue) {
-            if (lastName.indexOf(',') < 0) {
-                return lastName;
-            } else {
-                return lastName.substring(0, lastName.indexOf(','));
-            }
+            return lastName.replaceAll(" *, *", " ");
         } else {
             return lastName;
         }
@@ -274,15 +270,18 @@ public class PropertyName extends Property {
     private String computeNameValue() {
         return computeNameValue(
                 getNamePrefix(),
-                getFirstName(true),
+                getFirstName(false),
                 getSurnamePrefix(),
-                getLastName(true),
-                suffix);
+                getLastName(false),
+                getSuffix());
 
     }
 
     private String computeNameValue(String npfx, String first, String spfx, String last, String nsfx) {
         WordBuffer wb = new WordBuffer();
+
+        first = normalizeName(first, GedcomOptions.getInstance().spaceIsSeparator());
+        last = normalizeName(last, false);
 
         if (!npfx.isEmpty()) {
             wb.append(npfx);
@@ -401,7 +400,7 @@ public class PropertyName extends Property {
 
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
-        // save overall memorey
+        // save overall memory
         first = normalizeName(first, GedcomOptions.getInstance().spaceIsSeparator());
         last = normalizeName(last, false);
         suff = suff.trim();
@@ -481,7 +480,7 @@ public class PropertyName extends Property {
     }
 
     private static String normalizeName(String namePiece, boolean spaceIsSeparator) {
-        String result = namePiece.trim().replaceAll(" *, *", ",");
+        String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
         if (spaceIsSeparator) {
             result = result.replaceAll(" +", ",");
         }
@@ -557,19 +556,11 @@ public class PropertyName extends Property {
         String s = l.substring(l.indexOf('/') + 1);
         l = l.substring(0, l.indexOf('/'));
 
-        f = f.replaceAll(",", " ");// remove commas
-        f = f.replaceAll(" +", " ");// normalize
-        // rewrite name TAG value (normalize)
-        newValue = computeNameValue("", f, "", l, s);
-
         String npfx = getPropertyValue("NPFX");
         f = stripPrefix(f, npfx);
 
         String spfx = getPropertyValue("SPFX");
         l = stripPrefix(l, spfx);
-
-        // Format GIVN Tag (' ' char replaced by ', ')
-        f = f.replaceAll(" +", ", ");// Normalize
 
         // Replace first, last and suffix by tag values if present
         if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
@@ -581,8 +572,10 @@ public class PropertyName extends Property {
         if (getProperty("NSFX") != null && !getProperty("NSFX").isGuessed()) {
             s = getPropertyValue("NSFX");
         }
-        // keep
-        setName(getPropertyValue("NPFX"), f, getPropertyValue("SPFX"), l, s, false);
+
+        // Keep
+        setName(npfx, f, spfx, l, s, false);
+        newValue = computeNameValue(npfx, f, spfx, l, s);
         nameTagValue = newValue;
 
         // done

@@ -173,8 +173,9 @@ public class PropertyReader {
 
       // set NameProperty again after children have been read
       //XXX:(try to  fix value%subtag inconstitencies) There is probably a better method
-      if (child instanceof PropertyName)
+      if (child instanceof PropertyName) {
           child.setValue(prevValue);
+      }
         
       // 20060406 now link after children are setup - this makes a difference for
       // e.g. link() in case of ASSO that looks at RELA
