@@ -11,7 +11,14 @@
 package ancestris.api.imports;
 
 import ancestris.modules.console.Console;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyName;
+import genj.gedcom.PropertyRelationship;
 import genj.gedcom.TagPath;
 import genj.io.GedcomEncodingSniffer;
 import genj.io.PropertyReader;
@@ -29,7 +36,9 @@ import java.io.OutputStreamWriter;
 import java.io.Reader;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
@@ -155,16 +164,19 @@ public abstract class Import {
             return false;
         }
         try {
-            console.println("Gedcom version = " +  GEDCOM_VERSION);
+            console.println("=============================");
+            console.println(NbBundle.getMessage(Import.class, "Import.starting"));
+            console.println(NbBundle.getMessage(Import.class, "Import.version", GEDCOM_VERSION));
             console.println("=============================");
             input = GedcomFileReader.create(fileIn);
             try {
                 while (input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
                         output.writeLine(input);
-                        console.println("Updating Header Note");
-                        console.println("=============================");
                         output.writeLine(1, "NOTE", getImportComment());
+                        console.println(NbBundle.getMessage(Import.class, "Import.header"));
+                        console.println("=============================");
+                        console.println(NbBundle.getMessage(Import.class, "Import.body"));
                         continue;
                     }
                     if (process()) {
@@ -190,11 +202,11 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
             return false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown"));
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown") + "\n" + e.getMessage());
             return false;
         }
 
-        console.println("=========== Completed =============");
+        console.println("=============================");
         return true;
     }
 
@@ -207,7 +219,7 @@ public abstract class Import {
      * @return
      */
     public boolean fixGedcom(Gedcom gedcom) {
-        return true;
+        return fixNames(gedcom);
     }
 
     protected void finalise() throws IOException {
@@ -309,8 +321,7 @@ public abstract class Import {
                 }
             }
             if (result != null){
-                console.println(line);
-                console.println("==> " + result);
+                console.println(NbBundle.getMessage(Import.class, "Import.fixYesTag", line + " ==> " + result));
             }
             return true;
         } else {
@@ -319,16 +330,18 @@ public abstract class Import {
     }
 
     public boolean processInvalidTag() throws IOException {
+        
+        String lineTag = input.getTag();
+        
         // C'est un tag perso: on ecrit telque
-        if (input.getTag().startsWith("_")) {
+        if (lineTag.startsWith("_")) {
             return false;
         }
         // le tag n'est pas valide: on le prefixe par _
         Pattern tag_valid = GEDCOM_VERSION.startsWith("5.5.1") ? tag551_valid : tag55_valid;
-        if (!tag_valid.matcher(input.getTag()).matches()) {
-            String result = output.writeLine(input.getLevel(), "_" + input.getTag(), input.getValue());
-            console.println(input.getLine());
-            console.println("==> " + result);
+        if (!tag_valid.matcher(lineTag).matches()) {
+            String result = output.writeLine(input.getLevel(), "_" + lineTag, input.getValue());
+            console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidTag", input.getLine() + " ==> " + result));
             return true;
         }
         return false;
@@ -356,6 +369,123 @@ public abstract class Import {
 
         return eolMark;
     }
+    
+    /**
+     * Makes sure that the NAME tag has the properly constructed string from the provided subtags
+     * If not, replaces NAME string and return false.
+     * @param gedcom
+     * @return 
+     */
+    public boolean fixNames(Gedcom gedcom) {
+
+        Property rawName = null;
+        PropertyName propName = null;
+        boolean hasErrors = false;
+        
+        console.println(NbBundle.getMessage(Import.class, "Import.FixNames"));
+
+        for (Indi indi : gedcom.getIndis()) {
+            rawName = indi.getProperty("NAME", false);
+            if (rawName instanceof PropertyName) {
+                propName = (PropertyName) rawName;
+            }
+            // If name is invalid, replace it
+            if (propName != null && !propName.isValid()) {
+                propName.setName( // must be the same parameters as computevalue in PropertyName
+                        propName.getNamePrefix(), 
+                        propName.getFirstName(false),  
+                        propName.getSurnamePrefix(), 
+                        propName.getLastName(false), 
+                        propName.getSuffix(), 
+                        false);
+                hasErrors = true;
+            }
+            
+        }
+        
+        console.println("=============================");
+        
+        return hasErrors;
+    }
+
+    public boolean convertAssociations(Gedcom gedcom) {
+
+        String id = "";
+        Indi indiRela = null;
+        PropertyAssociation propAsso = null;
+        String type = null;
+        Property relaProp = null;
+        String rela = null;
+        PropertyRelationship pship = null;
+        TagPath tagpath = null;
+
+        console.println(NbBundle.getMessage(Import.class, "Import.ConvertingAssos"));
+
+        List<Property> list = new ArrayList<Property>();
+        for (Entity entity : gedcom.getEntities()) {
+            getPropertiesRecursively(list, "ASSO", entity);
+        }
+        for (Property prop : list) {
+            //console.println(prop.getEntity().toString());
+            
+            // Get indi
+            id = prop.getValue().replace("@", "");
+            indiRela = (Indi) gedcom.getEntity(id);
+            if (indiRela == null) {
+                console.println(NbBundle.getMessage(Import.class, "Import.IndiNotFound", id));
+                continue;
+            }
+            
+            // Get type, rela and tagpath
+            type = prop.getEntity().getTag();
+            relaProp = prop.getProperty("RELA");
+            if (relaProp != null) {
+                rela = relaProp.getDisplayValue();
+            }
+            tagpath = prop.getParent().getPath(true);
+
+            // Create asso set
+            id = prop.getEntity().getId();
+            propAsso = (PropertyAssociation) indiRela.addProperty("ASSO", "@" + id + "@");
+            propAsso.addProperty("TYPE", type);
+            pship = (PropertyRelationship) propAsso.getProperty("RELA", false);
+            rela +=  "@" + tagpath.toString();
+            if (pship == null) {
+                propAsso.addProperty("RELA", rela);
+            } else {
+                pship.setValue(rela);
+            }
+            try {
+                propAsso.link();
+            } catch (GedcomException ex) {
+                return false;
+            }
+
+            // Delete from first asso entity
+            prop.getParent().delProperty(prop);
+        }
+        
+        console.println("=============================");
+        
+        return true;
+    }
+
+    private <T> void getPropertiesRecursively(List<T> props, String tag, Property parent) {
+        for (Property child : parent.getProperties()) {
+            if (tag.equals(child.getTag())) {
+                props.add((T) child);
+            }
+            getPropertiesRecursively(props, tag, child);
+        }
+    }
+
+    public void complete() {
+        console.println(NbBundle.getMessage(Import.class, "Import.completed"));
+        console.println("=============================");
+        console.show();
+    }
+    
+    
 
     protected static class GedcomFileReader extends PropertyReader {
 

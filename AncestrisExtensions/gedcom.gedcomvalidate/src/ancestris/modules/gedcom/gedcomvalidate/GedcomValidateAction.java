@@ -7,11 +7,15 @@ import ancestris.util.ProgressListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.view.ViewContext;
+import java.awt.Dimension;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.prefs.Preferences;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import org.netbeans.api.options.OptionsDisplayer;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -20,6 +24,7 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.windows.WindowManager;
 import spin.Spin;
 
 @ActionID(id = "ancestris.modules.gedcom.gedcomvalidate.GedcomValidateAction", category = "Tools")
@@ -46,7 +51,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
-        Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
+        final Preferences modulePreferences = NbPreferences.forModule(Gedcom.class);
 
         Context contextToOpen = getContext();
         if (contextToOpen != null) {
@@ -65,7 +70,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                 }
 
                 String title = NbBundle.getMessage(GedcomValidate.class, "name");
-                genj.fo.Document doc = new genj.fo.Document(title);
+                final genj.fo.Document doc = new genj.fo.Document(title);
                 doc.startSection(title);
 
                 if (result != null) {
@@ -90,12 +95,28 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                     doc.addText(NbBundle.getMessage(GedcomValidate.class, "noissues"));
                 }
 
-                FopDocumentView window = new FopDocumentView(
+                final FopDocumentView window = new FopDocumentView(
                         contextToOpen,
                         NbBundle.getMessage(GedcomValidate.class, "name.short"),
                         NbBundle.getMessage(GedcomValidate.class, "name"));
 
-                window.displayDocument(doc, modulePreferences);
+                final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+                final JDialog dialog = new JDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GedcomValidate.class, "doc.title"), false);
+                if (result.size() > 2000) {
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    dialog.setLocation((screenSize.width - optionPane.getPreferredSize().width) / 2, (screenSize.height - optionPane.getPreferredSize().height) / 2);
+                    dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+                    dialog.setContentPane(optionPane);
+                    dialog.pack();
+                    dialog.setVisible(true);
+                }
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        window.displayDocument(doc, modulePreferences);
+                        dialog.dispose();
+                    }
+                });
             }
         }
     }

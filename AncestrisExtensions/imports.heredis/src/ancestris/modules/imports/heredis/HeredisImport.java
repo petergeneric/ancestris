@@ -11,6 +11,14 @@
 package ancestris.modules.imports.heredis;
 
 import ancestris.api.imports.Import;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
+import genj.gedcom.Media;
+import genj.gedcom.Property;
+import genj.gedcom.PropertySource;
+import genj.gedcom.PropertyXRef;
+import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.io.IOException;
 import java.util.regex.Matcher;
@@ -45,11 +53,34 @@ public class HeredisImport extends Import {
     @Override
     protected void firstPass() {
         super.firstPass();
+        // Heredis (2017) seems to consider 5.5.1 tags as being within 5.5 (WWW, OBJE:FILE, etc.), so force gedcom version to 5.5.1
+        GEDCOM_VERSION = "5.5.1";
         firstPassRepo();
     }
 
     @Override
     protected boolean process() throws IOException {
+        // Heredis does not seem to create the DEST tag in the header, so let's add it
+        if ((input.getLevel() == 1) && (input.getTag().equals("GEDC"))) {
+            output.writeLine(1, "DEST", "ANY");
+            output.writeLine(1, "GEDC", "");
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixDestination"));
+            return true;
+        }
+        
+        // Overwrite version
+        if ((input.getLevel() == 2) && (input.getTag().equals("VERS") && (input.getValue().startsWith("5.5")))) {
+            output.writeLine(2, "VERS", GEDCOM_VERSION);
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixVersion", GEDCOM_VERSION));
+            return true;
+        }
+        
+        // Web address
+        if ((input.getLevel() == 3) && (input.getTag().equals("WEB"))) {
+            output.writeLine(3, "WWW", "http://" + input.getLine());
+            return true;
+        }
+        
         if (processAddr()) {
             return true;
         }
@@ -85,8 +116,8 @@ public class HeredisImport extends Import {
             if (hashrepo.containsKey(input.getValue())) {
                 output.writeLine(1, "REPO", "@" + typerepo
                         + hashrepo.get(input.getValue()) + "@");
-                console.println(input.getLine());
-                console.println("==> " + NbBundle.getMessage(HeredisImport.class, "corrected"));
+                String str = input.getLine();
+                console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixRepo", str.substring(0, Math.min(str.length(), 30))));
             }
             return true;
         }
@@ -126,14 +157,93 @@ public class HeredisImport extends Import {
         // C'est un tag DATE: on transforme les dates rep
         String tag = input.getTag();
         TagPath path = input.getPath();
-        if (("DATE".equalsIgnoreCase(tag) && "OBJE".equalsIgnoreCase(input.getPath().get(-2))) ||
-                ("TYPE".equalsIgnoreCase(tag) && "SOUR:TYPE".equalsIgnoreCase(path.toString())) ||
-                ("QUAY".equalsIgnoreCase(tag) && "SOUR:QUAY".equalsIgnoreCase(path.toString()))){
-            if (input.getValue()!=null){
-                String result = output.writeLine(input.getLevel(), "_"+tag, input.getValue());
-                console.println(input.getLine());
-                console.println("==> " + result);
+        if ("_FNA".equalsIgnoreCase(tag)) {  // remove this tag
+            return true;
+        }
+        if ("SOUR:DATE".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("OBJE:DATE".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("SOUR:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("RESN".equalsIgnoreCase(tag) && input.getLevel() == 3) {  // invalid tag here, replace with _RESN
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("SOUR:NOTE:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("INDI:NOTE:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with RESN on level 2
+            String result = output.writeLine(input.getLevel() - 1, tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("FAM:NOTE:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with RESN on level 2
+            String result = output.writeLine(input.getLevel() - 1, tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("SOUR:WWW".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with OBJE:FILE and FORM
+            String result = output.writeLine(input.getLevel(), "OBJE", "");
+            output.writeLine(input.getLevel()+1, "FILE", input.getValue());
+            output.writeLine(input.getLevel()+2, "FORM", "Web");
+            String str = input.getLine();
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", str.substring(0, Math.min(str.length(), 30)) + " ==> " + result));
+            return true;
+        }
+        if ("SOUR:TYPE".equalsIgnoreCase(path.toString())) {  // invalid tag here but useful information, replace with NOTE
+            String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if (path.toString().startsWith("INDI") && "HUSB".equalsIgnoreCase(tag)) {  // invalid tag here, replace with _HUSB
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if (path.toString().startsWith("INDI") && "AGE".equalsIgnoreCase(tag) && path.toString().contains("HUSB")) {  // invalid tag here, replace with _AGE
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if (path.toString().startsWith("INDI") && "WIFE".equalsIgnoreCase(tag)) {  // invalid tag here, replace with _WIFE
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if (path.toString().startsWith("INDI") && "AGE".equalsIgnoreCase(tag) && path.toString().contains("WIFE")) {  // invalid tag here, replace with _AGE
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("TIME".equals(tag) && (!path.toString().startsWith("HEAD") && !path.toString().contains("CHAN"))) {  // invalid tag here but useful information, replace with _TIME
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("AGE".equals(tag)) {  // Age tag value is missing "y" at the end
+            String value = input.getValue();
+            if (!value.contains("y") && !value.contains("m") && !value.contains("d")) {
+                String result = output.writeLine(input.getLevel(), tag, input.getValue() + "y");
+                console.println(NbBundle.getMessage(HeredisImport.class, "Import.FixAge", input.getLine() + " ==> " + result));
+                return true;
             }
+        }
+        if ("SEX".equals(tag) && ("?".equals(input.getValue()))) {  // Unknown sex should be "U", not "?"
+            String result = output.writeLine(input.getLevel(), tag, "U");
+            console.println(NbBundle.getMessage(HeredisImport.class, "Import.FixUnknownSex", input.getLine() + " ==> " + result));
             return true;
         }
         return false;
@@ -146,8 +256,7 @@ public class HeredisImport extends Import {
             String newValue = frenchCalCheck(input.getValue());
             if (newValue != null) {
                 String result = output.writeLine(input.getLevel(), input.getTag(), newValue);
-                console.println(input.getLine());
-                console.println("==> " + result);
+                console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixRepCalendar", input.getLine() + " ==> " + result));
                 return true;
 
             }
@@ -155,7 +264,7 @@ public class HeredisImport extends Import {
         return false;
     }
 
-    String frenchCalCheck(String in) {
+    private String frenchCalCheck(String in) {
         final Pattern french_cal = Pattern.compile("(@#DFRENCH R@ )(.*)");
         final Pattern date_value = Pattern.compile("(FROM|BEF|AFT|BET|INT|TO) (.*)");
         final Pattern date_range = Pattern.compile("(FROM|BEF|AFT|BET|INT|TO) (.*) (TO|AND) (.*)");
@@ -227,4 +336,102 @@ public class HeredisImport extends Import {
     protected String getImportComment() {
         return NbBundle.getMessage(HeredisImport.class, "note1", HeredisImport.class);
     }
+    
+    
+    @Override
+    public boolean fixGedcom(Gedcom gedcom) {
+        boolean ret = super.fixGedcom(gedcom);
+        ret |= processEntities(gedcom);
+        ret |= super.convertAssociations(gedcom);
+        return ret;
+    }
+
+    
+    public boolean processEntities(Gedcom gedcom) {
+
+        boolean hasErrors = false;
+        Property[] props = null;
+        Property prop = null;
+        Property host = null;
+        
+        console.println(NbBundle.getMessage(HeredisImport.class, "Import.FixMedia"));
+
+        // Keep only one RESN tag per indi
+        for (Indi indi : gedcom.getIndis()) {
+            props = indi.getProperties("RESN");
+            if (props != null && props.length > 1) {
+                for (int i = 1 ; i< props.length ; i++) {
+                    prop = props[i];
+                    prop.getParent().delProperty(prop);
+                }
+                hasErrors = true;
+            }
+        }
+
+        // Keep only one RESN tag per fam
+        for (Fam fam : gedcom.getFamilies()) {
+            props = fam.getProperties("RESN");
+            if (props != null && props.length > 1) {
+                for (int i = 1 ; i< props.length ; i++) {
+                    prop = props[i];
+                    prop.getParent().delProperty(prop);
+                }
+                hasErrors = true;
+            }
+        }
+
+        // Put FORM underneath FILE on media
+        for (Media media : gedcom.getMedias()) {
+            prop = media.getProperty("FORM");
+            if (prop != null) {
+                host = media.getProperty("FILE");
+                host.addProperty("FORM", prop.getValue());
+                prop.getParent().delProperty(prop);
+                hasErrors = true;
+            }
+            
+        }
+
+        
+        for (Source source : gedcom.getSources()) {
+            // Put QUAY in SOURCE citation rather than SOUR
+            prop = source.getProperty("QUAY");
+            if (prop != null) {
+                for (PropertyXRef xref : source.getProperties(PropertyXRef.class)) {
+                    if (xref.isValid()) {
+                        host = xref.getTarget();
+                        if (host instanceof PropertySource) {
+                            host.addProperty("QUAY", prop.getValue());
+                        }
+                    }
+                }
+                source.delProperty(prop);
+                hasErrors = true;
+            }
+            
+            // Put MAIL in REPO entity rather than SOUR, else change to "_EMAIL"
+            prop = source.getProperty("EMAIL");
+            if (prop != null) {
+                host = source.getProperty("REPO");
+                if (host != null && host instanceof PropertyXRef) {
+                    PropertyXRef repo = (PropertyXRef) host;
+                    host = repo.getTarget();
+                    if (host != null) {
+                        host.getParent().addProperty("EMAIL", prop.getValue());
+                    }
+                } else {
+                    source.addProperty("_EMAIL", prop.getValue());
+                }
+                source.delProperty(prop);
+                hasErrors = true;
+            }
+        }
+        
+        console.println("=============================");
+        
+        return hasErrors;
+    }
+
+    
+    
 }
