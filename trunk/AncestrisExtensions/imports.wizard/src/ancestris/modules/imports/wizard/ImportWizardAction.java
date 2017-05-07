@@ -5,13 +5,13 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.io.File;
 import java.text.MessageFormat;
 import javax.swing.JComponent;
-import org.openide.DialogDisplayer;
-import org.openide.WizardDescriptor;
+import org.openide.*;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
@@ -47,13 +47,24 @@ public final class ImportWizardAction extends CallableSystemAction {
             importMethod.setTabName(NbBundle.getMessage(ImportWizardAction.class, "OpenIDE-Module-Name") + " - " + importMethod.toString());
             File inputFile = importPanel.getInputFile();
             File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
+            // Import file fixing most issues
             if (importMethod.run(inputFile, outFile) == true) {
                 Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
-                if (context != null){
+                if (context != null) {
+                    // If imported correctly, fix last gedcom issues
                     Gedcom importedGedcom = context.getGedcom();
                     importedGedcom.setName(inputFile.getName());
                     importMethod.fixGedcom(importedGedcom);
+                    importMethod.complete();
+                    
+                    // Force context refresh to redisplay modified context in case it has been modified by "fixGedcom"
+                    // (by displaying another context (header) then the memorized context)
+                    Property tmpProperty = importedGedcom.getFirstEntity("HEAD");
+                    SelectionDispatcher.fireSelection(new Context(tmpProperty));
                     SelectionDispatcher.fireSelection(context);
+                    
+                    // Save as a new file
+                    GedcomDirectory.getDefault().saveAsGedcom(context);
                 }
                 outFile.delete();
             }
