@@ -128,6 +128,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextZip.getDocument().addDocumentListener(this);
         jTextCity.getDocument().addDocumentListener(this);
         jTextCountry.getDocument().addDocumentListener(this);
+        jTextEmail.getDocument().addDocumentListener(this);
+        jTextWeb.getDocument().addDocumentListener(this);
         noteText.getDocument().addDocumentListener(this);
         jTextCaln.getDocument().addDocumentListener(this);
         ((JTextComponent) jComboBoxMedia.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
@@ -201,6 +203,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextZip.setText("");
         jTextCity.setText("");
         jTextCountry.setText("");
+        jTextEmail.setText("");
+        jTextWeb.setText("");
         noteText.setText("");
         sourceListModel.removeAllElements();
         sourceListLabel.setText(NbBundle.getMessage(getClass(), "RepoChooser.sourceListLabel.text", sourceListModel.getSize()));
@@ -234,11 +238,21 @@ public class RepoChooser extends JPanel implements DocumentListener {
             jTextZip.setCaretPosition(0);
             jTextCity.setCaretPosition(0);
             jTextCountry.setCaretPosition(0);
+            jTextEmail.setCaretPosition(0);
+            jTextWeb.setCaretPosition(0);
         } else {
             jTextZip.setText("");
             jTextCity.setText("");
             jTextCountry.setText("");
         }
+
+        Property prop = repo.getProperty(gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "EMAIL" : "_EMAIL");
+        jTextEmail.setText(prop != null ? prop.getDisplayValue() : "");
+        jTextEmail.setCaretPosition(0);
+        
+        prop = repo.getProperty(gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "WWW" : "_WWW");
+        jTextWeb.setText(prop != null ? prop.getDisplayValue() : "");
+        jTextWeb.setCaretPosition(0);
         
         Property pNote = repo.getProperty("NOTE");
         noteText.setText(pNote != null ? pNote.getDisplayValue() : "");
@@ -332,6 +346,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextZip = new javax.swing.JTextField();
         jTextCity = new javax.swing.JTextField();
         jTextCountry = new javax.swing.JTextField();
+        jTextEmail = new javax.swing.JTextField();
+        jTextWeb = new javax.swing.JTextField();
         noteScrollPane = new javax.swing.JScrollPane();
         noteText = new javax.swing.JTextArea();
         sourceListLabel = new javax.swing.JLabel();
@@ -386,6 +402,12 @@ public class RepoChooser extends JPanel implements DocumentListener {
 
         jTextCountry.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextCountry.text")); // NOI18N
         jTextCountry.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextCountry.toolTipText")); // NOI18N
+
+        jTextEmail.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextEmail.text")); // NOI18N
+        jTextEmail.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextEmail.toolTipText")); // NOI18N
+
+        jTextWeb.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextWeb.text")); // NOI18N
+        jTextWeb.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextWeb.toolTipText")); // NOI18N
 
         noteScrollPane.setPreferredSize(new java.awt.Dimension(188, 93));
 
@@ -460,39 +482,43 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourceListLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(noteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelAddress)
-                            .addComponent(jLabelName))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jTextZip, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextCity, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
-                            .addComponent(jTextName)
-                            .addComponent(jTextAddress)
-                            .addComponent(jTextCountry)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabelCaln)
-                            .addComponent(jLabelMedia))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextCaln)
-                            .addComponent(jComboBoxMedia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
+                        .addGap(36, 36, 36)
                         .addComponent(jButtonSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDelete)))
+                        .addComponent(jButtonDelete))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(sourceListLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(noteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelCaln)
+                                    .addComponent(jLabelMedia))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextCaln)
+                                    .addComponent(jComboBoxMedia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelAddress)
+                                    .addComponent(jLabelName))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jTextZip, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextCity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addComponent(jTextName)
+                                    .addComponent(jTextAddress)
+                                    .addComponent(jTextCountry)
+                                    .addComponent(jTextWeb)
+                                    .addComponent(jTextEmail))))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -513,11 +539,15 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 .addGap(2, 2, 2)
                 .addComponent(jTextCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
+                .addComponent(jTextEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jTextWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(noteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(sourceListLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 129, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addGap(2, 2, 2)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelCaln)
@@ -589,7 +619,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                     .addComponent(filterLabel)
                     .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneRepo, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+                .addComponent(jScrollPaneRepo, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -604,7 +634,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 464, Short.MAX_VALUE)
+            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -729,7 +759,9 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private javax.swing.JTextField jTextCaln;
     private javax.swing.JTextField jTextCity;
     private javax.swing.JTextField jTextCountry;
+    private javax.swing.JTextField jTextEmail;
     private javax.swing.JTextField jTextName;
+    private javax.swing.JTextField jTextWeb;
     private javax.swing.JTextField jTextZip;
     private javax.swing.JScrollPane noteScrollPane;
     private javax.swing.JTextArea noteText;
@@ -911,6 +943,28 @@ public class RepoChooser extends JPanel implements DocumentListener {
         } else {
             if (!value.isEmpty()) {
                 prop.addProperty("CTRY", value);
+            }
+        }
+        
+        value = jTextEmail.getText().trim();
+        String tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "EMAIL" : "_EMAIL";
+        p = prop.getProperty(tag);
+        if (p != null) {
+            p.setValue(value);
+        } else {
+            if (!value.isEmpty()) {
+                prop.addProperty(tag, value);
+            }
+        }
+        
+        value = jTextWeb.getText().trim();
+        tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "WWW" : "_WWW";
+        p = prop.getProperty(tag);
+        if (p != null) {
+            p.setValue(value);
+        } else {
+            if (!value.isEmpty()) {
+                prop.addProperty(tag, value);
             }
         }
         
