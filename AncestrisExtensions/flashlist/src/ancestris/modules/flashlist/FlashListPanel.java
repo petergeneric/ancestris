@@ -834,6 +834,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         // Check context
         Indi selectedIndividual = null;
         Context context = null;
+        // TODO ? : use instead : Utilities.actionsGlobalContext().lookup(Context.class);
         for (AncestrisTopComponent aTC : AncestrisPlugin.lookupAll(AncestrisTopComponent.class)) {
             if (aTC.getGedcom() == gedcom) {
                 context = aTC.getContext();
