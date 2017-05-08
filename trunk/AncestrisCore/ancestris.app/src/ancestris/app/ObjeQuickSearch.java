@@ -30,8 +30,9 @@ public class ObjeQuickSearch implements SearchProvider {
      * @param response Search response object that stores search results. Note that it's important to react to return value of SearchResponse.addResult(...) method and stop computation if false value is returned.
      */
     public void evaluate(SearchRequest request, SearchResponse response) {
+        String req = request.getText().replace("(", "\\(").replace(")", "\\)");
         synchronized (this) {
-            String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+            String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Media media : context.getGedcom().getMedias()) {
                     String str1 = Normalizer.normalize(media.getTitle(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  

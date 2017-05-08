@@ -27,11 +27,12 @@ public class FamQuickSearch implements SearchProvider {
      * @param response Search response object that stores search results. Note that it's important to react to return value of SearchResponse.addResult(...) method and stop computation if false value is returned.
      */
     public void evaluate(SearchRequest request, SearchResponse response) {
+        String req = request.getText().replace("(", "\\(").replace(")", "\\)");
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Fam fam : context.getGedcom().getFamilies()) {
                     String str1 = Normalizer.normalize(fam.toString(true), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
-                    String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
                         if (!response.addResult(createAction(fam), str1)) {
                             return;
