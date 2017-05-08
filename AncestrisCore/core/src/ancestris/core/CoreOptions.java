@@ -113,4 +113,14 @@ public class CoreOptions {
     public boolean getShowHidden() {
         return appOptions.get("showHidden", false);
     }
+    
+    
+    public int getMinAutosave() {
+        return appOptions.get("minautosave", 0);
+    }
+
+    public void setMinAutosave(int min) {
+        appOptions.put("minautosave", min);
+    }
+    
 }

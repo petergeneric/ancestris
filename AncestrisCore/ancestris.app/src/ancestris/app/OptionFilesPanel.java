@@ -4,6 +4,7 @@
  */
 package ancestris.app;
 
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.util.URLUtil;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.util.AncestrisPreferences;
@@ -73,6 +74,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         jcbAlwaysOpen = new javax.swing.JCheckBox();
         jLabel4 = new javax.swing.JLabel();
         nbBackups = new javax.swing.JSpinner();
+        jLabel2 = new javax.swing.JLabel();
+        nbMinAutosave = new javax.swing.JSpinner();
 
         setPreferredSize(new java.awt.Dimension(600, 297));
 
@@ -128,6 +131,10 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
         nbBackups.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel2.text")); // NOI18N
+
+        nbMinAutosave.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -159,12 +166,14 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel13)
                                     .addComponent(jLabel14)
-                                    .addComponent(jLabel4))
+                                    .addComponent(jLabel4)
+                                    .addComponent(jLabel2))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(nbBackups)
                                     .addComponent(logLevel, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jSpinner1, javax.swing.GroupLayout.DEFAULT_SIZE, 105, Short.MAX_VALUE)
+                                    .addComponent(nbMinAutosave))))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
@@ -217,6 +226,10 @@ final class OptionFilesPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(nbBackups, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel2)
+                    .addComponent(nbMinAutosave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -243,7 +256,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
 
         jSpinner1.setValue(ancestris.app.AppOptions.getMaxLogSizeKB());
         setLogLevel(Registry.get(App.class).get("logLevel", "INFO"));
-        nbBackups.setValue((genj.io.Options.getNbBackups()));
+        nbBackups.setValue(genj.io.Options.getNbBackups());
+        nbMinAutosave.setValue(ancestris.core.CoreOptions.getInstance().getMinAutosave());
     }
 
     void store() {
@@ -265,6 +279,8 @@ final class OptionFilesPanel extends javax.swing.JPanel {
             openable.open();
         }
         genj.io.Options.setNbBackups(Integer.valueOf(nbBackups.getValue().toString()));
+        ancestris.core.CoreOptions.getInstance().setMinAutosave(Integer.valueOf(nbMinAutosave.getValue().toString()));
+        GedcomDirectory.getDefault().setAutosaveDelay();
 
 
     }
@@ -280,6 +296,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -290,6 +307,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jcbOpenNothing;
     private javax.swing.JComboBox logLevel;
     private javax.swing.JSpinner nbBackups;
+    private javax.swing.JSpinner nbMinAutosave;
     // End of variables declaration//GEN-END:variables
 
     // FIXME: we probably have to improve user interface (escape char, ...)

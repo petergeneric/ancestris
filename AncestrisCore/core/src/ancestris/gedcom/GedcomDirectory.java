@@ -31,6 +31,8 @@ import ancestris.view.SelectionDispatcher;
 import genj.gedcom.*;
 import genj.io.*;
 import genj.util.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyVetoException;
 import java.io.File;
 import java.io.IOException;
@@ -39,6 +41,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.Timer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObject;
@@ -108,6 +111,13 @@ public abstract class GedcomDirectory {
      * @return
      */
     protected abstract boolean unregisterGedcomImpl(Context context);
+
+    /**
+     * Set autosave delay
+     *
+     * @return
+     */
+    public abstract void setAutosaveDelay();
 
     /**
      * create a new gedcom file.
@@ -710,6 +720,7 @@ public abstract class GedcomDirectory {
     private static class DefaultGedcomDirectoryImpl extends GedcomDirectory {
 
         private Map<Gedcom, GedcomDataObject> gedcomsOpened = new HashMap<Gedcom, GedcomDataObject>(5);
+        private Map<Gedcom, Timer> gedcomsTimers = new HashMap<Gedcom, Timer>(5);
 
         /**
          * register gedcom file
@@ -719,6 +730,7 @@ public abstract class GedcomDirectory {
             Gedcom gedcom = gedcomObject.getContext().getGedcom();
             if (!gedcomsOpened.containsKey(gedcom)) {
                 gedcomsOpened.put(gedcom, gedcomObject);
+                setAutoSave(gedcomObject.getContext());
             }
             return true;
         }
@@ -737,6 +749,7 @@ public abstract class GedcomDirectory {
                 }
             }
             gedcomsOpened.remove(context.getGedcom());
+            removeAutoSave(context);
             return true;
         }
 
@@ -781,5 +794,52 @@ public abstract class GedcomDirectory {
             }
             return dao;
         }
+
+        public void setAutosaveDelay() {
+            for (Context context : getContexts()) {
+                setAutoSave(context);
+            }
+        }
+        
+        private void setAutoSave(Context context) {
+            
+            // Get autosave option
+            int min = ancestris.core.CoreOptions.getInstance().getMinAutosave();
+            Timer timer = gedcomsTimers.get(context.getGedcom());
+            if (timer == null && min != 0) {
+                timer = getNewTimer(min, context);
+                gedcomsTimers.put(context.getGedcom(), timer);
+                timer.start();
+            } else if (timer != null && min != 0) {
+                timer.setDelay(min * 1000 * 60);
+                timer.start();
+            } else if (timer != null && min == 0) {
+                timer.stop();
+            }
+        }
+
+        private void removeAutoSave(Context context) {
+            // Stop gedcom timer
+            Timer timer = gedcomsTimers.get(context.getGedcom());
+            if (timer != null) {
+                timer.stop();
+            }
+        }
+
+        private Timer getNewTimer(int min, final Context context) {
+            // Set a gedcom timer to call check autosave every minute
+            Timer timer = new Timer(min * 1000 * 60, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    // Save gedcom has changed, save it
+                    if (context.getGedcom().hasChanged()) {
+                        GedcomDirectory.getDefault().saveGedcom(context);
+                    }
+                }
+            });
+            timer.setRepeats(true); 
+            return timer;
+        }
+
     }
 }
