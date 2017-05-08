@@ -31,8 +31,9 @@ public class SourQuickSearch implements SearchProvider {
      */
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
+        String req = request.getText().replace("(", "\\(").replace(")", "\\)");
         synchronized (this) {
-            String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+            String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Source source : context.getGedcom().getSources()) {
                     String str1 = Normalizer.normalize(source.getTitle(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  

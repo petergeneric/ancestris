@@ -26,11 +26,12 @@ public class IndiQuickSearch implements SearchProvider {
      */
     @Override
     public void evaluate(SearchRequest request, SearchResponse response) {
+        String req = request.getText().replace("(", "\\(").replace(")", "\\)");
         synchronized (this) {
             for (Context context : GedcomDirectory.getDefault().getContexts()) {
                 for (Indi indi : context.getGedcom().getIndis()) {
                     String str1 = Normalizer.normalize(indi.toString(true), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
-                    String str2 = Normalizer.normalize(request.getText(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
+                    String str2 = Normalizer.normalize(req, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  
                     if (Utilities.wordsMatch(str1.toLowerCase(), str2.toLowerCase())) {
                         if (!response.addResult(createAction(indi), str1)) {
                             return;
