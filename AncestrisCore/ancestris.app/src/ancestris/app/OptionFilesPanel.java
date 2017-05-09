@@ -116,6 +116,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel14, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel14.text")); // NOI18N
 
         logLevel.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "OFF", "SEVERE", "WARNING", "INFO", "CONFIG", "FINE", "FINER", "FINEST", "ALL" }));
+        logLevel.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.logLevel.toolTipText")); // NOI18N
         logLevel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 logLevelActionPerformed(evt);
@@ -123,6 +124,7 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         });
 
         org.openide.awt.Mnemonics.setLocalizedText(jcbOpenNothing, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenNothing.text")); // NOI18N
+        jcbOpenNothing.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenNothing.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jcbAlwaysOpen, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbAlwaysOpen.text")); // NOI18N
         jcbAlwaysOpen.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jcbOpenOnlyEmpty.tooltip")); // NOI18N
@@ -130,10 +132,12 @@ final class OptionFilesPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel4.text")); // NOI18N
 
         nbBackups.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        nbBackups.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.nbBackups.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.jLabel2.text")); // NOI18N
 
         nbMinAutosave.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+        nbMinAutosave.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFilesPanel.class, "OptionFilesPanel.nbMinAutosave.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
