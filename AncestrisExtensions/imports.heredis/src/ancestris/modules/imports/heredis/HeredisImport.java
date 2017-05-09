@@ -385,9 +385,20 @@ public class HeredisImport extends Import {
             prop = media.getProperty("FORM");
             if (prop != null) {
                 host = media.getProperty("FILE");
-                host.addProperty("FORM", prop.getValue());
-                prop.getParent().delProperty(prop);
-                hasErrors = true;
+                if (host != null) {
+                    host.addProperty("FORM", prop.getValue());
+                    prop.getParent().delProperty(prop);
+                    hasErrors = true;
+                }
+            }
+            host = media.getProperty("FILE");
+            if (host != null) {
+                prop = host.getProperty("FORM");
+                if (prop == null) {
+                    String str = host.getValue();
+                    host.addProperty("FORM", str.substring(str.length()-3, str.length())); // it could be other possibilities, but one cannot guess right !
+                    hasErrors = true;
+                }
             }
             
         }
