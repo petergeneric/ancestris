@@ -397,7 +397,7 @@ public class HeredisImport extends Import {
                 if (prop == null) {
                     String str = host.getValue();
                     int s = Math.min(str.length(), 3);
-                    host.addProperty("FORM", str.substring(str.length()-s, str.length())); // it could be other possibilities, but one cannot guess right !
+                    host.addProperty("FORM", str.substring(str.length()-s, str.length())); // Assumes last 3 characters are the type of file.
                     hasErrors = true;
                 }
             }
