@@ -73,6 +73,17 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                 final genj.fo.Document doc = new genj.fo.Document(title);
                 doc.startSection(title);
 
+                final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+                final JDialog dialog = new JDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GedcomValidate.class, "doc.title"), false);
+                if (result != null && result.size() > 2000) {
+                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+                    dialog.setLocation((screenSize.width - optionPane.getPreferredSize().width) / 2, (screenSize.height - optionPane.getPreferredSize().height) / 2);
+                    dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
+                    dialog.setContentPane(optionPane);
+                    dialog.pack();
+                    dialog.setVisible(true);
+                }
+
                 if (result != null) {
                     Collections.sort(result);
                     doc.startTable("genj:csv=true,width=100%");
@@ -100,16 +111,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         NbBundle.getMessage(GedcomValidate.class, "name.short"),
                         NbBundle.getMessage(GedcomValidate.class, "name"));
 
-                final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
-                final JDialog dialog = new JDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GedcomValidate.class, "doc.title"), false);
-                if (result.size() > 2000) {
-                    Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                    dialog.setLocation((screenSize.width - optionPane.getPreferredSize().width) / 2, (screenSize.height - optionPane.getPreferredSize().height) / 2);
-                    dialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
-                    dialog.setContentPane(optionPane);
-                    dialog.pack();
-                    dialog.setVisible(true);
-                }
+                
                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                     @Override
                     public void run() {
