@@ -396,7 +396,8 @@ public class HeredisImport extends Import {
                 prop = host.getProperty("FORM");
                 if (prop == null) {
                     String str = host.getValue();
-                    host.addProperty("FORM", str.substring(str.length()-3, str.length())); // it could be other possibilities, but one cannot guess right !
+                    int s = Math.min(str.length(), 3);
+                    host.addProperty("FORM", str.substring(str.length()-s, str.length())); // it could be other possibilities, but one cannot guess right !
                     hasErrors = true;
                 }
             }
