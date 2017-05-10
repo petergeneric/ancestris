@@ -240,7 +240,8 @@ public class GedcomWriter implements IGedcomWriter {
         prop = replaceProperties(header, "SOUR", "ANCESTRIS");
         prop.addProperty("VERS", Lookup.getDefault().lookup(ancestris.api.core.Version.class).getVersionString());
         prop.addProperty("NAME", "Ancestris");
-        prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).addProperty("WWW", "http://www.ancestris.org");
+        String version = gedcom.getGrammar().getVersion();
+        prop.addProperty("CORP", RESOURCES.getString("header.corp", "Ancestris")).addProperty(version.contains("5.5.1") ? "WWW" : "ADDR", "http://www.ancestris.org");
         replaceProperties(header, "DEST", gedcom.getDestination());
 
         // Replace HEAD:DATE
@@ -251,7 +252,7 @@ public class GedcomWriter implements IGedcomWriter {
         replaceProperties(header, "FILE", file);
 
         prop = replaceProperties(header, "GEDC", "");
-        prop.addProperty("VERS", gedcom.getGrammar().getVersion());
+        prop.addProperty("VERS", version);
         prop.addProperty("FORM", "Lineage-Linked");
 
         replaceProperties(header, "CHAR", gedcom.getEncoding());
