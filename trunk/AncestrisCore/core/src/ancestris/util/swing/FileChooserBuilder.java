@@ -638,8 +638,11 @@ public class FileChooserBuilder {
      * Get the extension of a file.
      */
     public static String getExtension(File f) {
+        return getExtension(f.getName());
+    }
+    
+    public static String getExtension(String s) {
         String ext = null;
-        String s = f.getName();
         int i = s.lastIndexOf('.');
 
         if (i > 0 && i < s.length() - 1) {
