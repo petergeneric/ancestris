@@ -3256,6 +3256,9 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (source != null && source.sourceMediaSet != null) {
             scrollMediaSource.setValues(source.sourceMediaIndex, 1, 0, source.sourceMediaSet.size());
             scrollMediaSource.setToolTipText(getScrollMediaSourcesLabel(source));
+        } else {
+            scrollMediaSource.setValues(0, 1, 0, 0);
+            scrollMediaSource.setToolTipText("0/0");
         }
         isBusyEventSource = false;
     }

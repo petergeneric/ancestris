@@ -467,6 +467,9 @@ public class SourceWrapper {
 
     public void setMediaTitle(String title) {
         if (sourceMediaSet == null) {
+            if (title.isEmpty()) {
+                return;
+            }
             resetMediaSet();
         }
         if (sourceMediaSet.isEmpty()) {
@@ -643,11 +646,19 @@ public class SourceWrapper {
         putProperty(property, "TITL", title);
         putProperty(property, "TEXT", text);
         
+        
+        
         // Put media items 
         Property host = getDefaultHost(property); 
         putMediaItems(host); 
         
-        // Put repo, and create it if it does not exists
+        
+        
+        // Put repo if exists, and create it if it does not exists
+        if (repoName.trim().isEmpty()) {
+            return;
+        }
+        
         if (targetRepo == null) {
             try {
                 targetRepo = (Repository) property.getGedcom().createEntity(Gedcom.REPO);

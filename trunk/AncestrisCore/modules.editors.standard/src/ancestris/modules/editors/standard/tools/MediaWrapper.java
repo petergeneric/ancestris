@@ -12,6 +12,7 @@
 
 package ancestris.modules.editors.standard.tools;
 
+import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -260,22 +261,37 @@ public class MediaWrapper {
      * Writes the media tags of a Media Entity
      * 
      * 5.5:
-     *   Not supported
+     * Not supported because there is no FILE behind OBJE in 5.5
      * 
      * 5.5.1:
      * +1 FILE <MULTIMEDIA_FILE_REFN> {1:M}
+     *      +2 FORM <MULTIMEDIA_FORMAT> {1:1}
      *      +2 TITL <DESCRIPTIVE_TITLE> {0:1}
      * 
      * @param property 
      */
     private void putMediaRecord(Property property) {
+        // Put FILE
+        String extension = "";
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
         if (this.file != null) {
             ((PropertyFile) mediaFile).addFile(this.file);
+            extension= getExtension(this.file);
         }
+        
+        // Put FORM
+        Property mediaForm = mediaFile.getProperty("FORM");
+        if (mediaForm == null) {
+            mediaForm = mediaFile.addProperty("FORM", "");
+        }
+        if (mediaForm != null) {
+            mediaForm.setValue(extension);
+        }
+        
+        // Put TITL
         Property mediaTitle = mediaFile.getProperty("TITL");
         if (mediaTitle == null) {
             mediaTitle = mediaFile.addProperty("TITL", "");
@@ -288,20 +304,51 @@ public class MediaWrapper {
     /**
      * Writes the media tags of an integrated media property
      * 
-     * 5.5 and 5.5.1:
+     * 5.5
      *  +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
+     *  +1 FORM <MULTIMEDIA_FORMAT> {1:1}
+     *  +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
+     * 
+     * 5.5.1:
+     *  +1 FILE <MULTIMEDIA_FILE_REFN>   {1:M}
+     *      +2 FORM <MULTIMEDIA_FORMAT> {1:1}
      *  +1 TITL <DESCRIPTIVE_TITLE>  {0:1}
      * 
      * @param property 
      */
     private void putMediaCitation(Property property) {
+        // Put FILE
+        String extension = "";
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
         if (this.file != null) {
             ((PropertyFile) mediaFile).addFile(this.file);
+            extension= getExtension(this.file);
         }
+        
+        // Put FORM
+        String version = property.getGedcom().getGrammar().getVersion();
+        if (version.contains("5.5.1")) {
+            Property pForm = mediaFile.getProperty("FORM");
+            if (pForm == null) {
+                pForm = mediaFile.addProperty("FORM", "");
+            }
+            if (pForm != null) {
+                pForm.setValue(extension);
+            }
+        } else {
+            Property pForm = property.getProperty("FORM");
+            if (pForm == null) {
+                pForm = property.addProperty("FORM", "");
+            }
+            if (pForm != null) {
+                pForm.setValue(extension);
+            }
+        }
+        
+        // Put TITL
         Property mediaTitle = property.getProperty("TITL");
         if (mediaTitle == null) {
             mediaTitle = property.addProperty("TITL", "");
