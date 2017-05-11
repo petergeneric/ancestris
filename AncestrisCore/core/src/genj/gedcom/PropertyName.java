@@ -190,7 +190,7 @@ public class PropertyName extends Property {
             return lastName;
         }
     }
-
+    
     /**
      * @param prefixPresentation
      *
@@ -481,7 +481,7 @@ public class PropertyName extends Property {
     }
 
     private static String normalizeName(String namePiece, boolean spaceIsSeparator) {
-        String result = namePiece.trim().replaceAll(" *, *", ",");
+        String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
         if (spaceIsSeparator) {
             result = result.replaceAll(" +", ",");
         }
