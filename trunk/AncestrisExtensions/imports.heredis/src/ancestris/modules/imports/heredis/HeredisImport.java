@@ -11,6 +11,7 @@
 package ancestris.modules.imports.heredis;
 
 import ancestris.api.imports.Import;
+import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
@@ -77,7 +78,13 @@ public class HeredisImport extends Import {
         
         // Web address
         if ((input.getLevel() == 3) && (input.getTag().equals("WEB"))) {
-            output.writeLine(3, "WWW", "http://" + input.getLine());
+            output.writeLine(3, "WWW", "http://" + input.getValue());
+            return true;
+        }
+        
+        // Remove non diacritic characters from SURN
+        if ((input.getLevel() == 2) && (input.getTag().equals("SURN"))) {
+            output.writeLine(2, "SURN", input.getValue().replaceAll("\\(", ",\\(").replaceAll(",+", ", ").replaceAll(", \\Z", ""));
             return true;
         }
         
@@ -395,9 +402,7 @@ public class HeredisImport extends Import {
             if (host != null) {
                 prop = host.getProperty("FORM");
                 if (prop == null) {
-                    String str = host.getValue();
-                    int s = Math.min(str.length(), 3);
-                    host.addProperty("FORM", str.substring(str.length()-s, str.length())); // Assumes last 3 characters are the type of file.
+                    host.addProperty("FORM", getExtension(host.getValue()));
                     hasErrors = true;
                 }
             }
