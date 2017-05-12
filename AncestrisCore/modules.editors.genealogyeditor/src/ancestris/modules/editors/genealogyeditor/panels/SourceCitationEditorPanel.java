@@ -70,7 +70,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         "WILL",
         // Family Events
         "ANUL",
-        "CENS",
         "DIV",
         "DIVF",
         "ENGA",
@@ -194,6 +193,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         sourceReferencedTitleTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(sourceReferencedTitleTextArea);
 
+        referencedEventComboBox.setEditable(true);
         referencedEventComboBox.setModel(mEventsModel);
         referencedEventComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

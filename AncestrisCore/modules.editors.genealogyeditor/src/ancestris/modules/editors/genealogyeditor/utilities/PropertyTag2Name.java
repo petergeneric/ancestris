@@ -284,7 +284,7 @@ public class PropertyTag2Name {
         if (propertyTag2Name.get(propertyTag) != null) {
             return propertyTag2Name.get(propertyTag);
         } else {
-            return "U" + propertyTag;
+            return propertyTag;
         }
     }
 
@@ -292,7 +292,7 @@ public class PropertyTag2Name {
         if (propertyTag2Name.containsValue(propertyName) == true) {
             return propertyName2Tag.get(propertyName);
         } else {
-            return "UnkTag";
+            return propertyName;
         }
     }
 }
