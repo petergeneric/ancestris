@@ -24,11 +24,15 @@ import genj.gedcom.UnitOfWork;
 import genj.util.ReferenceSet;
 import genj.util.Registry;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -130,9 +134,10 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextCountry.getDocument().addDocumentListener(this);
         jTextEmail.getDocument().addDocumentListener(this);
         jTextWeb.getDocument().addDocumentListener(this);
-        noteText.getDocument().addDocumentListener(this);
+        reponoteText.getDocument().addDocumentListener(this);
         jTextCaln.getDocument().addDocumentListener(this);
         ((JTextComponent) jComboBoxMedia.getEditor().getEditorComponent()).getDocument().addDocumentListener(this);
+        noteText.getDocument().addDocumentListener(this);
     }
 
     
@@ -205,11 +210,12 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextCountry.setText("");
         jTextEmail.setText("");
         jTextWeb.setText("");
-        noteText.setText("");
+        reponoteText.setText("");
         sourceListModel.removeAllElements();
         sourceListLabel.setText(NbBundle.getMessage(getClass(), "RepoChooser.sourceListLabel.text", sourceListModel.getSize()));
         jTextCaln.setText("");
         ((JTextComponent) jComboBoxMedia.getEditor().getEditorComponent()).setText("");
+        noteText.setText("");
     }
 
     private void displayRepoDetails(Repository repo, SourceWrapper source) {
@@ -255,8 +261,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextWeb.setCaretPosition(0);
         
         Property pNote = repo.getProperty("NOTE");
-        noteText.setText(pNote != null ? pNote.getDisplayValue() : "");
-        noteText.setCaretPosition(0);
+        reponoteText.setText(pNote != null ? pNote.getDisplayValue() : "");
+        reponoteText.setCaretPosition(0);
         
         getSourceList(repo);
         sourceListLabel.setText(NbBundle.getMessage(getClass(), "RepoChooser.sourceListLabel.text", sourceListModel.getSize()));
@@ -346,10 +352,14 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextZip = new javax.swing.JTextField();
         jTextCity = new javax.swing.JTextField();
         jTextCountry = new javax.swing.JTextField();
+        jLabelMail = new javax.swing.JLabel();
         jTextEmail = new javax.swing.JTextField();
+        repoEmailLinkButton = new javax.swing.JButton();
+        jLabelWeb = new javax.swing.JLabel();
         jTextWeb = new javax.swing.JTextField();
-        noteScrollPane = new javax.swing.JScrollPane();
-        noteText = new javax.swing.JTextArea();
+        repoWebLinkButton = new javax.swing.JButton();
+        reponoteScrollPane = new javax.swing.JScrollPane();
+        reponoteText = new javax.swing.JTextArea();
         sourceListLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         sourceList = new javax.swing.JList();
@@ -357,6 +367,10 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextCaln = new javax.swing.JTextField();
         jLabelMedia = new javax.swing.JLabel();
         jComboBoxMedia = new javax.swing.JComboBox();
+        jLabelNote = new javax.swing.JLabel();
+        noteLinkButton = new javax.swing.JButton();
+        noteScrollPane = new javax.swing.JScrollPane();
+        noteText = new javax.swing.JTextArea();
         jButtonSave = new javax.swing.JButton();
         jButtonCancel = new javax.swing.JButton();
         jButtonDelete = new javax.swing.JButton();
@@ -403,21 +417,45 @@ public class RepoChooser extends JPanel implements DocumentListener {
         jTextCountry.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextCountry.text")); // NOI18N
         jTextCountry.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextCountry.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelMail, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jLabelMail.text")); // NOI18N
+
         jTextEmail.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextEmail.text")); // NOI18N
         jTextEmail.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextEmail.toolTipText")); // NOI18N
+
+        repoEmailLinkButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/mail.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(repoEmailLinkButton, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.repoEmailLinkButton.text")); // NOI18N
+        repoEmailLinkButton.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.repoEmailLinkButton.toolTipText")); // NOI18N
+        repoEmailLinkButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        repoEmailLinkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repoEmailLinkButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelWeb, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jLabelWeb.text")); // NOI18N
 
         jTextWeb.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextWeb.text")); // NOI18N
         jTextWeb.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jTextWeb.toolTipText")); // NOI18N
 
-        noteScrollPane.setPreferredSize(new java.awt.Dimension(188, 93));
+        repoWebLinkButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/web.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(repoWebLinkButton, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.repoWebLinkButton.text")); // NOI18N
+        repoWebLinkButton.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.repoWebLinkButton.toolTipText")); // NOI18N
+        repoWebLinkButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        repoWebLinkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                repoWebLinkButtonActionPerformed(evt);
+            }
+        });
 
-        noteText.setColumns(20);
-        noteText.setLineWrap(true);
-        noteText.setRows(3);
-        noteText.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.noteText.text")); // NOI18N
-        noteText.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.noteText.toolTipText")); // NOI18N
-        noteText.setWrapStyleWord(true);
-        noteScrollPane.setViewportView(noteText);
+        reponoteScrollPane.setPreferredSize(new java.awt.Dimension(188, 93));
+
+        reponoteText.setColumns(20);
+        reponoteText.setLineWrap(true);
+        reponoteText.setRows(3);
+        reponoteText.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.reponoteText.text")); // NOI18N
+        reponoteText.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.reponoteText.toolTipText")); // NOI18N
+        reponoteText.setWrapStyleWord(true);
+        reponoteScrollPane.setViewportView(reponoteText);
 
         sourceListLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         sourceListLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -449,6 +487,27 @@ public class RepoChooser extends JPanel implements DocumentListener {
 
         jComboBoxMedia.setEditable(true);
         jComboBoxMedia.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelNote, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jLabelNote.text")); // NOI18N
+
+        noteLinkButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/web.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(noteLinkButton, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.noteLinkButton.text")); // NOI18N
+        noteLinkButton.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.noteLinkButton.toolTipText")); // NOI18N
+        noteLinkButton.setPreferredSize(new java.awt.Dimension(22, 22));
+        noteLinkButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                noteLinkButtonActionPerformed(evt);
+            }
+        });
+
+        noteText.setColumns(20);
+        noteText.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        noteText.setLineWrap(true);
+        noteText.setRows(3);
+        noteText.setText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.noteText.text")); // NOI18N
+        noteText.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.noteText.toolTipText")); // NOI18N
+        noteText.setWrapStyleWord(true);
+        noteScrollPane.setViewportView(noteText);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonSave, org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonSave.text")); // NOI18N
         jButtonSave.setToolTipText(org.openide.util.NbBundle.getMessage(RepoChooser.class, "RepoChooser.jButtonSave.toolTipText")); // NOI18N
@@ -483,42 +542,55 @@ public class RepoChooser extends JPanel implements DocumentListener {
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(sourceListLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(reponoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelAddress)
+                                    .addComponent(jLabelName)
+                                    .addComponent(jLabelMail)
+                                    .addComponent(jLabelWeb))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jTextZip, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jTextCity, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE))
+                                    .addComponent(jTextName)
+                                    .addComponent(jTextAddress)
+                                    .addComponent(jTextCountry)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jTextEmail)
+                                            .addComponent(jTextWeb))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(repoEmailLinkButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(repoWebLinkButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabelCaln)
+                                    .addComponent(jLabelMedia)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addComponent(jLabelNote)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(noteLinkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextCaln)
+                                    .addComponent(jComboBoxMedia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(noteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGap(36, 36, 36)
                         .addComponent(jButtonSave)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButtonCancel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButtonDelete))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                            .addComponent(sourceListLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(noteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelCaln)
-                                    .addComponent(jLabelMedia))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jTextCaln)
-                                    .addComponent(jComboBoxMedia, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabelAddress)
-                                    .addComponent(jLabelName))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addComponent(jTextZip, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jTextCity, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(jTextName)
-                                    .addComponent(jTextAddress)
-                                    .addComponent(jTextCountry)
-                                    .addComponent(jTextWeb)
-                                    .addComponent(jTextEmail))))))
+                        .addComponent(jButtonDelete)))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
@@ -539,11 +611,15 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 .addGap(2, 2, 2)
                 .addComponent(jTextCountry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(jTextEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(repoEmailLinkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(jTextWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jTextWeb, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(repoWebLinkButton, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(noteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(reponoteScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 77, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(sourceListLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -556,12 +632,31 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabelMedia)
                     .addComponent(jComboBoxMedia, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(2, 2, 2)
+                        .addComponent(noteScrollPane))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                            .addComponent(noteLinkButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabelNote))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
                     .addComponent(jButtonSave)
                     .addComponent(jButtonDelete))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(128, 128, 128)
+                        .addComponent(jLabelMail))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(157, 157, 157)
+                        .addComponent(jLabelWeb)))
+                .addGap(445, 445, 445))
         );
 
         jSplitPane.setLeftComponent(jPanel1);
@@ -619,7 +714,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
                     .addComponent(filterLabel)
                     .addComponent(textFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPaneRepo, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
+                .addComponent(jScrollPaneRepo, javax.swing.GroupLayout.DEFAULT_SIZE, 565, Short.MAX_VALUE)
                 .addGap(0, 0, 0)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -634,7 +729,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 560, Short.MAX_VALUE)
+            .addComponent(jSplitPane, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 619, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -674,8 +769,11 @@ public class RepoChooser extends JPanel implements DocumentListener {
                     Property pMedi = pCaln.getProperty("MEDI");
                     strMedi = (pMedi != null ? pMedi.getDisplayValue() : "");
                 }
+                Property pNote = pRepo.getProperty("NOTE");
+                String strNote = (pNote != null ? pNote.getDisplayValue() : "");
                 jTextCaln.setText(strCaln);
                 jTextMedia.setText(strMedi);
+                noteText.setText(strNote);
             }
         }
         isBusy = false;
@@ -738,6 +836,18 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
     }//GEN-LAST:event_jButtonDeleteActionPerformed
 
+    private void noteLinkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_noteLinkButtonActionPerformed
+        gotoLink(noteText.getText());
+    }//GEN-LAST:event_noteLinkButtonActionPerformed
+
+    private void repoEmailLinkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repoEmailLinkButtonActionPerformed
+        openMail(jTextEmail.getText());
+    }//GEN-LAST:event_repoEmailLinkButtonActionPerformed
+
+    private void repoWebLinkButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_repoWebLinkButtonActionPerformed
+        gotoLink(jTextWeb.getText());
+    }//GEN-LAST:event_repoWebLinkButtonActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel filterLabel;
@@ -748,8 +858,11 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabelAddress;
     private javax.swing.JLabel jLabelCaln;
+    private javax.swing.JLabel jLabelMail;
     private javax.swing.JLabel jLabelMedia;
     private javax.swing.JLabel jLabelName;
+    private javax.swing.JLabel jLabelNote;
+    private javax.swing.JLabel jLabelWeb;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -763,9 +876,14 @@ public class RepoChooser extends JPanel implements DocumentListener {
     private javax.swing.JTextField jTextName;
     private javax.swing.JTextField jTextWeb;
     private javax.swing.JTextField jTextZip;
+    private javax.swing.JButton noteLinkButton;
     private javax.swing.JScrollPane noteScrollPane;
     private javax.swing.JTextArea noteText;
+    private javax.swing.JButton repoEmailLinkButton;
     private javax.swing.JList repoList;
+    private javax.swing.JButton repoWebLinkButton;
+    private javax.swing.JScrollPane reponoteScrollPane;
+    private javax.swing.JTextArea reponoteText;
     private javax.swing.JList sourceList;
     private javax.swing.JLabel sourceListLabel;
     private javax.swing.JTextField textFilter;
@@ -862,6 +980,9 @@ public class RepoChooser extends JPanel implements DocumentListener {
             jButtonCancel.setEnabled(flag);
             okButton.setEnabled(!flag && okButton.isEnabled());
             cancelButton.setEnabled(!flag);
+            repoEmailLinkButton.setEnabled(jTextEmail.getText().toLowerCase().contains("@"));
+            repoWebLinkButton.setEnabled(jTextWeb.getText().toLowerCase().contains("http://"));
+            noteLinkButton.setEnabled(noteText.getText().toLowerCase().contains("http://"));
         }
     }
 
@@ -969,7 +1090,7 @@ public class RepoChooser extends JPanel implements DocumentListener {
         }
         
         // note
-        value = noteText.getText().trim();
+        value = reponoteText.getText().trim();
         prop = repoToSave.getProperty("NOTE");
         if (prop != null) {
             prop.setValue(value);
@@ -995,13 +1116,20 @@ public class RepoChooser extends JPanel implements DocumentListener {
                 if (pCaln != null) {
                     pCaln.setValue(strCaln);
                 } else {
-                    pCaln = repo.addProperty("CALN", strCaln);
+                    pCaln = pRepo.addProperty("CALN", strCaln);
                 }
                 Property pMedi = pCaln.getProperty("MEDI");
                 if (pMedi != null) {
                     pMedi.setValue(strMedi);
                 } else {
                     pMedi = pCaln.addProperty("MEDI", strMedi);
+                }
+                String strNote = noteText.getText().trim();
+                Property pNote = pRepo.getProperty("NOTE");
+                if (pNote != null) {
+                    pNote.setValue(strNote);
+                } else {
+                    pNote = pRepo.addProperty("NOTE", strNote);
                 }
             }
         }
@@ -1021,6 +1149,28 @@ public class RepoChooser extends JPanel implements DocumentListener {
             gedcom.deleteEntity(repoToDelete);
             Repository firstEnt = (Repository) gedcom.getFirstEntity("REPO");
             refreshAll(firstEnt != null ? firstEnt : null);
+        }
+    }
+
+    private void gotoLink(String text) {
+        try {
+            String link = text.toLowerCase();
+            int i = link.indexOf("http://");
+            Desktop.getDesktop().browse(new URI(link.substring(i)));
+        } catch (IOException ex) {
+            //Exceptions.printStackTrace(ex);
+        } catch (URISyntaxException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+    }
+
+    private void openMail(String text) {
+        try {
+            Desktop.getDesktop().mail(new URI("mailto:"+text));
+        } catch (IOException ex) {
+            //Exceptions.printStackTrace(ex);
+        } catch (URISyntaxException ex) {
+            //Exceptions.printStackTrace(ex);
         }
     }
 
