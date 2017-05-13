@@ -737,6 +737,7 @@ public class TreeView extends View implements Filter {
     }
 
     private void setRootTitle(String title) {
+        title = title.replaceAll("\\)\\+", ")<br>+"); // line break for family entity after husband name to make sure it fits on 2 lines
         rootTitle.setText("<html><b>" + RESOURCES.getString("root.name") + " " + title + "</b></html");
 
     }
