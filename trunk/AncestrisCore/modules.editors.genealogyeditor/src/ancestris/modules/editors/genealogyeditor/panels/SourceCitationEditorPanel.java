@@ -8,6 +8,7 @@ import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
@@ -87,21 +88,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
      * Creates new form SourceCitationEditorPanel
      */
     public SourceCitationEditorPanel() {
-        ArrayList<String> localizedEventsList = new ArrayList<String>();
-
-        for (String tag : mEventsTags) {
-            localizedEventsList.add(PropertyTag2Name.getTagName(tag));
-        }
-
-        java.util.Collections.sort(localizedEventsList);
-
-        mEventsModel.removeAllElements();
-
-        mEventsModel.addElement("");
-
-        for (String tag : localizedEventsList) {
-            mEventsModel.addElement(tag);
-        }
         initComponents();
     }
 
@@ -574,6 +560,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         mRoot = root;
         mSourceCitation = sourceCitation;
+        
+        updateLocalizedEvents();
 
         if (sourceCitation instanceof PropertySource) {
             mReferencedSource = (Source) ((PropertySource) sourceCitation).getTargetEntity();
@@ -835,6 +823,39 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     dataQuality.setValue(Integer.toString(dataQualityComboBox.getSelectedIndex() - 1));
                 }
             }
+        }
+    }
+
+    private void updateLocalizedEvents() {
+        ArrayList<String> localizedEventsList = new ArrayList<String>();
+
+        for (String tag : mEventsTags) {
+            localizedEventsList.add(PropertyTag2Name.getTagName(tag));
+        }
+        
+        if (mRoot != null) {
+            for (Indi indi : mRoot.getGedcom().getIndis()) {
+                List<PropertySource> sources = indi.getProperties(PropertySource.class);
+                for (Property s : sources) {
+                    Property p2 = s.getProperty("EVEN");
+                    if (p2 != null) {
+                        String ref = p2.getDisplayValue();
+                        if (!localizedEventsList.contains(ref)) {
+                            localizedEventsList.add(ref);
+                        }
+                    }
+                }
+            }
+        }
+
+        java.util.Collections.sort(localizedEventsList);
+
+        mEventsModel.removeAllElements();
+
+        mEventsModel.addElement("");
+
+        for (String tag : localizedEventsList) {
+            mEventsModel.addElement(tag);
         }
     }
 }
