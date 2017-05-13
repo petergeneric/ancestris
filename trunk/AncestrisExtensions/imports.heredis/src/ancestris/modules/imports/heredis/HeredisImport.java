@@ -202,14 +202,6 @@ public class HeredisImport extends Import {
             console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
         }
-        if ("SOUR:WWW".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with OBJE:FILE and FORM
-            String result = output.writeLine(input.getLevel(), "OBJE", "");
-            output.writeLine(input.getLevel()+1, "FILE", input.getValue());
-            output.writeLine(input.getLevel()+2, "FORM", "Web");
-            String str = input.getLine();
-            console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", str.substring(0, Math.min(str.length(), 30)) + " ==> " + result));
-            return true;
-        }
         if ("SOUR:TYPE".equalsIgnoreCase(path.toString())) {  // invalid tag here but useful information, replace with NOTE
             String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
             console.println(NbBundle.getMessage(HeredisImport.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
@@ -421,6 +413,17 @@ public class HeredisImport extends Import {
                             host.addProperty("QUAY", prop.getValue());
                         }
                     }
+                }
+                source.delProperty(prop);
+                hasErrors = true;
+            }
+            
+            // Put Web site in REPO:NOTE rather than SOUR:WWW
+            prop = source.getProperty("WWW");
+            if (prop != null) {
+                host = source.getProperty("REPO");
+                if (host != null) {
+                    host.addProperty("NOTE", prop.getValue());
                 }
                 source.delProperty(prop);
                 hasErrors = true;
