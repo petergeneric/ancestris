@@ -31,7 +31,7 @@ public final class GedcomMergeResultPanel extends JPanel {
         rightGedcomSources.setText(Integer.toString(rightGedcom.getEntities(Gedcom.SOUR).size()));
 
         MergedGedcomNameLabel.setText(MergedGedcom.getName());
-        MergedGedcomDateLabel.setText(rightGedcom.getLastChange() != null ? MergedGedcom.getLastChange().getDateDisplayValue() : "");
+        MergedGedcomDateLabel.setText(MergedGedcom.getLastChange() != null ? MergedGedcom.getLastChange().getDateDisplayValue() : "");
         MergedGedcomIndividuals.setText(Integer.toString(MergedGedcom.getEntities(Gedcom.INDI).size()));
         MergedGedcomFamilies.setText(Integer.toString(MergedGedcom.getEntities(Gedcom.FAM).size()));
         MergedGedcomSubmitters.setText(Integer.toString(MergedGedcom.getEntities(Gedcom.SUBM).size()));
@@ -88,35 +88,26 @@ public final class GedcomMergeResultPanel extends JPanel {
 
         setBorder(null);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Gedcom.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(MergedGedcomNameLabel, "Set by programm"); // NOI18N
 
-        jLabel2.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Date.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(MergedGedcomDateLabel, "Set by programm");
 
-        jLabel3.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Indi.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel3.text")); // NOI18N
 
-        jLabel4.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Fam.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel4.text")); // NOI18N
 
-        jLabel5.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Submitter.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel5, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel5.text")); // NOI18N
 
-        jLabel6.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Note.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel6.text")); // NOI18N
 
-        jLabel7.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Media.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel7.text")); // NOI18N
 
-        jLabel8.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Source.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel8, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel8.text")); // NOI18N
 
-        jLabel9.setIcon(new javax.swing.ImageIcon("/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Repository.png")); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel9, org.openide.util.NbBundle.getMessage(GedcomMergeResultPanel.class, "GedcomMergeResultPanel.jLabel9.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(MergedGedcomIndividuals, "Set by programm");
@@ -227,70 +218,59 @@ public final class GedcomMergeResultPanel extends JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(MergedGedcomNameLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomDateLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomIndividuals)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomFamilies)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomSubmitters)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomNotes)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomObjects)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomSources)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(MergedGedcomRepositories))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel1)
-                            .addComponent(leftGedcomNameLabel)
-                            .addComponent(rightGedcomNameLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(leftGedcomDateLabel)
-                            .addComponent(rightGedcomDateLabel))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(leftGedcomIndividuals)
-                            .addComponent(rightGedcomIndividuals))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel4)
-                            .addComponent(leftGedcomFamilies)
-                            .addComponent(rightGedcomFamilies))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(leftGedcomSubmitters)
-                            .addComponent(rightGedcomSubmitters))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel6)
-                            .addComponent(leftGedcomNotes)
-                            .addComponent(rightGedcomNotes))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(leftGedcomObjects)
-                            .addComponent(rightGedcomObjects))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel8)
-                            .addComponent(leftGedcomSources)
-                            .addComponent(rightGedcomSources))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(leftGedcomRepositories)
-                            .addComponent(rightGedcomRepositories))))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel1)
+                    .addComponent(leftGedcomNameLabel)
+                    .addComponent(rightGedcomNameLabel)
+                    .addComponent(MergedGedcomNameLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel2)
+                    .addComponent(leftGedcomDateLabel)
+                    .addComponent(rightGedcomDateLabel)
+                    .addComponent(MergedGedcomDateLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel3)
+                    .addComponent(leftGedcomIndividuals)
+                    .addComponent(rightGedcomIndividuals)
+                    .addComponent(MergedGedcomIndividuals))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel4)
+                    .addComponent(leftGedcomFamilies)
+                    .addComponent(rightGedcomFamilies)
+                    .addComponent(MergedGedcomFamilies))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel5)
+                    .addComponent(leftGedcomSubmitters)
+                    .addComponent(rightGedcomSubmitters)
+                    .addComponent(MergedGedcomSubmitters))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel6)
+                    .addComponent(leftGedcomNotes)
+                    .addComponent(rightGedcomNotes)
+                    .addComponent(MergedGedcomNotes))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel7)
+                    .addComponent(leftGedcomObjects)
+                    .addComponent(rightGedcomObjects)
+                    .addComponent(MergedGedcomObjects))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel8)
+                    .addComponent(leftGedcomSources)
+                    .addComponent(rightGedcomSources)
+                    .addComponent(MergedGedcomSources))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabel9)
+                    .addComponent(leftGedcomRepositories)
+                    .addComponent(rightGedcomRepositories)
+                    .addComponent(MergedGedcomRepositories))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
