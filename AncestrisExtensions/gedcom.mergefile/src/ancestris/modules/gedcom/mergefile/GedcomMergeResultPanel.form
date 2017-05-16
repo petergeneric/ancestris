@@ -78,81 +78,67 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="MergedGedcomNameLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomDateLabel" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomIndividuals" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomFamilies" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomSubmitters" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomNotes" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomObjects" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomSources" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="MergedGedcomRepositories" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomIndividuals" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomIndividuals" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomFamilies" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomFamilies" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomSubmitters" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomSubmitters" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomNotes" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomNotes" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomObjects" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomObjects" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel8" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomSources" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomSources" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="leftGedcomRepositories" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="rightGedcomRepositories" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel1" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomNameLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomNameLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomNameLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel2" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomDateLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomDateLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomDateLabel" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel3" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomIndividuals" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomIndividuals" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomIndividuals" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel4" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomFamilies" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomFamilies" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomFamilies" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel5" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomSubmitters" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomSubmitters" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomSubmitters" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel6" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomNotes" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomNotes" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomNotes" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel7" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomObjects" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomObjects" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomObjects" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel8" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomSources" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomSources" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomSources" alignment="2" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="2" attributes="0">
+                  <Component id="jLabel9" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="leftGedcomRepositories" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="rightGedcomRepositories" alignment="2" min="-2" max="-2" attributes="0"/>
+                  <Component id="MergedGedcomRepositories" alignment="2" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="32767" attributes="0"/>
           </Group>
@@ -162,9 +148,6 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Gedcom.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel1.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -177,9 +160,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Date.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel2.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -192,9 +172,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Indi.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel3.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -202,9 +179,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Fam.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel4.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -212,9 +186,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel5">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Submitter.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel5.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -222,9 +193,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel6">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Note.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -232,9 +200,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Media.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel7.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -242,9 +207,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Source.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel8.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
@@ -252,9 +214,6 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
       <Properties>
-        <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="2" name="/home/lemovice/Projets/ancestris.org/AncestrisCore/core/src/genj/gedcom/images/Repository.png"/>
-        </Property>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/mergefile/Bundle.properties" key="GedcomMergeResultPanel.jLabel9.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>

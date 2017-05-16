@@ -14,20 +14,13 @@ package ancestris.modules.gedcom.mergefile;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomMgr;
-import static ancestris.modules.gedcom.mergefile.Bundle.open_mergeGedcom;
 import genj.gedcom.*;
-import genj.util.AncestrisPreferences;
 import genj.util.Origin;
-import genj.util.Registry;
 import java.awt.Dialog;
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javax.swing.JButton;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -35,22 +28,28 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.NbBundle;
+import org.openide.util.Cancellable;
+import org.openide.util.RequestProcessor;
 import org.openide.util.lookup.ServiceProvider;
+import org.openide.windows.WindowManager;
 
 /**
  *
  * @author lemovice
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-@NbBundle.Messages({
-    "open.mergeGedcom=Open result file",})
 public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
     private final static Logger LOG = Logger.getLogger(GedcomMerge.class.getName(), null);
+    private static String[] ENTITIES = {Gedcom.SUBM, Gedcom.INDI, Gedcom.FAM, Gedcom.OBJE, Gedcom.NOTE, Gedcom.SOUR, Gedcom.REPO};   // change order compared to Gedcom declaration
     private final File leftGedcomFile;
     private final File rightGedcomFile;
     private final File gedcomMergeFile;
+    private ProgressHandle progressHandle;
+    private int progressCounter = 0;
+    private Context leftGedcomContext;
+    private Context rightGedcomContext;
+    private Context mergedGedcomContext;
 
     public GedcomMerge() {
         this.leftGedcomFile = null;
@@ -66,138 +65,152 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
 
     @Override
     public void run() {
-        Map<String, Integer> entityId = new HashMap<String, Integer>();
-        Context leftGedcomContext;
-        Context rightGedcomContext;
-        Context mergedGedcomContext;
         final Gedcom leftGedcom;
         final Gedcom rightGedcom;
-        final Gedcom mergedGedcom;
-        ProgressHandle progressHandle = ProgressHandleFactory.createHandle(org.openide.util.NbBundle.getMessage(Bundle.class, "merge.progress"));
 
-        if (leftGedcomFile == null) {
+        // Quit if one gedcom file is null
+        if (leftGedcomFile == null || rightGedcomFile == null) {
             return;
         }
 
-        progressHandle.start();
-
-        // Open Gedcom
+        // Open Left Gedcom
         leftGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(leftGedcomFile));
         if (leftGedcomContext == null) {
             return;
         }
         leftGedcom = leftGedcomContext.getGedcom();
 
+        // Open Right Gedcom
         rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
         if (rightGedcomContext == null) {
             return;
         }
         rightGedcom = rightGedcomContext.getGedcom();
 
+        // Run merge task in as a progressed running task
+        progressHandle = ProgressHandleFactory.createHandle(org.openide.util.NbBundle.getMessage(getClass(), "merge.progress"), new Cancellable() {
+            @Override
+            public boolean cancel() {
+                return false;
+            }
+        });
+        RequestProcessor RP = new RequestProcessor("Merge Task"); 
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                mergeGedcom(leftGedcom, rightGedcom);
+            }};
+        RequestProcessor.Task task = RP.create(runnable); 
+        task.schedule(0);
+
+    }
+
+    private void mergeGedcom(Gedcom leftGedcom, Gedcom rightGedcom) {
+
+        final Gedcom mergedGedcom;
+        progressHandle.setInitialDelay(0);
+        progressHandle.start(30);
+        progressCounter = 0;
+        progressHandle.progress(progressCounter++);
+        
+        // Create output gedcom with header and submitter
         try {
             mergedGedcom = new Gedcom(Origin.create(gedcomMergeFile.toURI().toURL()));
-        } catch (MalformedURLException ex) {
+            Entity srcEntity = leftGedcom.getFirstEntity("HEAD");
+            // Copy left header
+            Entity destEntity = mergedGedcom.createEntity("HEAD", "");
+            copyPropertiesCluster(srcEntity, destEntity);
+            
+            // Create submitter if none in left nor right gedcom
+            Submitter submitter = (Submitter) leftGedcom.getFirstEntity("SUBM");
+            if (submitter == null) {
+                submitter = (Submitter) rightGedcom.getFirstEntity("SUBM");
+            }
+            if (submitter == null) {
+                submitter = (Submitter) mergedGedcom.createEntity(Gedcom.SUBM);
+                submitter.addDefaultProperties();
+            }
+
+            // Language and Encoding
+            mergedGedcom.setGrammar(leftGedcom.getGrammar());
+            mergedGedcom.setEncoding(leftGedcom.getEncoding());
+            mergedGedcom.setLanguage(leftGedcom.getLanguage());
+            
+        } catch (Exception ex) {
             LOG.log(Level.WARNING, "unexpected exception creating new gedcom", ex);
             return;
         }
 
-        /*
-         * Re number all entities Ids
-         */
-        for (String entityType : Gedcom.ENTITIES) {
-            int lastID = settingIDs(leftGedcom, entityType, 1);
-            settingIDs(rightGedcom, entityType, lastID);
-        }
-
-        /*
-         * remap places of entities in the rightGedcom
-         */
+        // Remap places of entities in the rightGedcom based on the leftGeddcom
         int[] placeMap = mapPlaceFormat(leftGedcom, rightGedcom);
         if (placeMap != null) {
             remapPlaces(rightGedcom.getEntities(), placeMap);
         }
-        try {
-            // Copy Entities by type without recording change
-            for (String entityType : Gedcom.ENTITIES) {
+        progressHandle.progress(progressCounter++);
 
-                Collection<? extends Entity> leftGedcomEntities = leftGedcom.getEntities(entityType);
-                for (Entity srcEntity : leftGedcomEntities) {
-                    try {
-                        Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
-                        copyPropertiesCluster(srcEntity, destEntity);
-                    } catch (GedcomException ex) {
-                        LOG.log(Level.SEVERE, null, ex);
-                    }
-                }
+        
 
-                Collection<? extends Entity> rightGedcomEntities = rightGedcom.getEntities(entityType);
-                for (Entity srcEntity : rightGedcomEntities) {
-                    try {
-                        Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
-                        copyPropertiesCluster(srcEntity, destEntity);
-                    } catch (GedcomException ex) {
-                        LOG.log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-
-            // We need to record the change date of the gedcom
-            mergedGedcom.doUnitOfWork(new UnitOfWork() {
-
-                @Override
-                public void perform(Gedcom gedcom) throws GedcomException {
-                    // Create submitter
-                    AncestrisPreferences submPref = Registry.get(genj.gedcom.GedcomOptions.class);
-
-                    Submitter submitter = (Submitter) mergedGedcom.createEntity(Gedcom.SUBM);
-                    submitter.setName(submPref.get("submName", ""));
-                    submitter.setCity(submPref.get("submCity", ""));
-                    submitter.setPhone(submPref.get("submPhone", ""));
-                    submitter.setEmail(submPref.get("submEmail", ""));
-                    submitter.setCountry(submPref.get("submCountry", ""));
-                    submitter.setWeb(submPref.get("submWeb", ""));
-
-                    // set Gedcom Header
-                    mergedGedcom.createEntity("HEAD", "");
-
-                    mergedGedcom.setSubmitter(submitter);
-
-                    String placeFormat = leftGedcom.getPlaceFormat();
-                    if (placeFormat != null) {
-                        mergedGedcom.setPlaceFormat(placeFormat);
-                    }
-
-                    Boolean[] showJuridictions = leftGedcom.getShowJuridictions();
-                    if (showJuridictions != null) {
-                        mergedGedcom.setShowJuridictions(showJuridictions);
-                    }
-
-                    String placeSortOrder = leftGedcom.getPlaceSortOrder();
-                    if (placeSortOrder != null) {
-                        mergedGedcom.setPlaceSortOrder(placeSortOrder);
-                    }
-
-                    String placeDisplayFormat = leftGedcom.getPlaceDisplayFormat();
-                    if (placeDisplayFormat != null) {
-                        mergedGedcom.setPlaceDisplayFormat(placeDisplayFormat);
-                    }
-                }
-            });
-        } catch (GedcomException ex) {
-            LOG.log(Level.SEVERE, null, ex);
+        // First loop on entities to renumber all IDs 
+        for (String entityType : ENTITIES) {
+            List<Entity> leftGedcomEntities = new ArrayList<Entity>(leftGedcom.getEntities(entityType));
+            Collections.sort(leftGedcomEntities);
+            List<Entity> rightGedcomEntities = new ArrayList<Entity>(rightGedcom.getEntities(entityType));
+            Collections.sort(rightGedcomEntities);
+            String entityIDPrefix = Gedcom.getEntityPrefix(entityType);
+            String format = String.format("%s%%0%dd", entityIDPrefix, String.valueOf(leftGedcomEntities.size()+rightGedcomEntities.size()).length());
+            
+            // Re-number IDs
+            int lastID = settingIDs(leftGedcom, leftGedcomEntities, format, 1);
+            progressHandle.progress(progressCounter++);
+            settingIDs(rightGedcom, rightGedcomEntities, format, lastID);
+            progressHandle.progress(progressCounter++);
         }
 
-        GedcomMgr.getDefault().gedcomClose(rightGedcomContext);
-        GedcomMgr.getDefault().gedcomClose(leftGedcomContext);
+            
+        // Second loop on entities to create them the in mergedGedcom (after renumbering all entities otherwise links get lossed)
+        for (String entityType : ENTITIES) {
+            
+            // Copy left Gedcom
+            List<Entity> leftGedcomEntities = new ArrayList<Entity>(leftGedcom.getEntities(entityType));
+            Collections.sort(leftGedcomEntities);
+            for (Entity srcEntity : leftGedcomEntities) {
+                try {
+                    Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
+                    copyPropertiesCluster(srcEntity, destEntity);
+                } catch (GedcomException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+            }
+            progressHandle.progress(progressCounter++);
 
+            // Copy right Gedcom
+            List<Entity> rightGedcomEntities = new ArrayList<Entity>(rightGedcom.getEntities(entityType));
+            Collections.sort(rightGedcomEntities);
+            for (Entity srcEntity : rightGedcomEntities) {
+                try {
+                    Entity destEntity = mergedGedcom.createEntity(srcEntity.getTag(), srcEntity.getId());
+                    copyPropertiesCluster(srcEntity, destEntity);
+                } catch (GedcomException ex) {
+                    LOG.log(Level.SEVERE, null, ex);
+                }
+            }
+            progressHandle.progress(progressCounter++);
+        }
+
+        
+        // Update submitter after SUBM have been copied to avoid recreating one if already exists
+        Submitter submitter = (Submitter) mergedGedcom.getFirstEntity("SUBM");
+        mergedGedcom.setSubmitter(submitter);
+        progressHandle.progress(progressCounter++);
         progressHandle.finish();
-
+        
+        
+        // Display results and ask user if s/he wants to open the resulting file
         GedcomMergeResultPanel gedcomMergeResultPanel = new GedcomMergeResultPanel(leftGedcom, rightGedcom, mergedGedcom);
-        JButton openMergeGedcomButton = new JButton(open_mergeGedcom());
-        // display merge result
+        JButton openMergeGedcomButton = new JButton(org.openide.util.NbBundle.getMessage(getClass(), "open.mergeGedcom"));
         DialogDescriptor gedcomMergeResultDescriptor = new DialogDescriptor(
                 gedcomMergeResultPanel,
-                org.openide.util.NbBundle.getMessage(Bundle.class, "merge.result.dialog"),
+                org.openide.util.NbBundle.getMessage(getClass(), "merge.result.dialog"),
                 true,
                 new Object[]{openMergeGedcomButton, NotifyDescriptor.CANCEL_OPTION},
                 DialogDescriptor.OK_OPTION,
@@ -207,102 +220,107 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         Dialog gedcomMergeResultDialog = DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor);
         gedcomMergeResultDialog.setVisible(true);
 
+        // Close gedcoms
+        GedcomMgr.getDefault().gedcomClose(rightGedcomContext);
+        GedcomMgr.getDefault().gedcomClose(leftGedcomContext);
+
+        // Open merged gedcom if user chooses to do so
         if (gedcomMergeResultDescriptor.getValue() == openMergeGedcomButton) {
-            mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
-            Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
+                    Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
 
-            // save gedcom file
-            GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+                    // save gedcom file
+                    GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
 
-            // and reopens the file
-            GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+                    // and reopens the file
+                    GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
+                }
+            });
         }
+        
+        return;
     }
-
+    
+    
+    
     /**
-     * ### 1 ### Re-Generation of Ids in Gedcom file
+     * Re-Generation of Ids in Gedcom file
      */
-    public int settingIDs(Gedcom gedcom, String entityType, int startFrom) {
+    public int settingIDs(Gedcom gedcom, Collection<? extends Entity> entities, String format, int startFrom) {
 
-        LOG.log(Level.INFO, "SettingIDs for {0} starting from {1}", new Object[]{entityType, startFrom});
-
-        Collection<? extends Entity> entities = gedcom.getEntities(entityType);
-        String entityIDPrefix = Gedcom.getEntityPrefix(entityType);
-
-        Map<Integer, Entity> IDs2Entities = new TreeMap<Integer, Entity>();
-        Map<Entity, Integer> Entities2IDs = new HashMap<Entity, Integer>();
-
-        // loop to get the list of all ids
-        Pattern intsOnly = Pattern.compile("\\d+");
-        for (Entity entity : entities) {
-            // Convert Id to Integer
-            Matcher matcher = intsOnly.matcher(entity.getId());
-            matcher.find();
-            IDs2Entities.put(Integer.parseInt(matcher.group()), entity);
+        if (entities == null || entities.isEmpty()) {
+            return startFrom;
         }
+        LOG.log(Level.FINE, "SettingIDs for {0} starting from {1}", new Object[]{entities.iterator().next().getTag(), startFrom});
 
-        // Allocate new ids
-        int iCounter = startFrom;
-
-        while (!IDs2Entities.isEmpty()) {
-            if (IDs2Entities.containsKey(iCounter) == true) {
-                // Entity is already numbered correctly
-                Entities2IDs.put(IDs2Entities.get(iCounter), iCounter);
-                IDs2Entities.remove(iCounter);
+        // Entities must be sorted on increasing IDs
+        List<Entity> sortedEntities = new ArrayList<Entity>(entities);
+        Collections.sort(sortedEntities, entities.iterator().next().getComparator());
+        
+        try {
+            // First loop to renumber entities from 1 (pack them to the smallest consecutive numbers)
+            int iCounter = 1;
+            for (Entity entity : sortedEntities) {
+                String newID = String.format(format, iCounter);
+                if (!entity.getId().equals(newID)) {
+                    LOG.log(Level.FINE, "SettingIDs for {0} old id {1} new id {2}", new Object[]{entity.getValue(), entity.getId(), newID});
+                    entity.setId(newID);
+                }
                 iCounter++;
             }
 
-            Iterator<Integer> it = IDs2Entities.keySet().iterator();
-            if (it.hasNext()) {
-                Integer id = it.next();
-                Entities2IDs.put(IDs2Entities.get(id), iCounter);
-                IDs2Entities.remove(id);
-                iCounter++;
+            // Second loop to renumber entities from startFrom (smartFrom must be greater than sortedEntities.size() to avoid duplicate IDs)
+            if (startFrom != 1) {
+                iCounter = Math.max(startFrom, sortedEntities.size()+1);
+                for (Entity entity : sortedEntities) {
+                    String newID = String.format(format, iCounter);
+                    if (!entity.getId().equals(newID)) {
+                        LOG.log(Level.FINE, "SettingIDs for {0} old id {1} new id {2}", new Object[]{entity.getValue(), entity.getId(), newID});
+                        entity.setId(newID);
+                    }
+                    iCounter++;
+                }
             }
+        } catch (GedcomException e) {
+            LOG.log(Level.SEVERE, e.getMessage());
         }
 
-        // set final ids
-        String format = String.format("%s%%0%dd", entityIDPrefix, GedcomOptions.getInstance().getEntityIdLength());
-        for (Entity entity : Entities2IDs.keySet()) {
-            String newID = String.format(format, Entities2IDs.get(entity));
-            if (newID.equals(entity.getId())) {
-                continue;
-            }
-            try {
-                LOG.log(Level.INFO, "SettingIDs for {0} old id {1} new id {2}", new Object[]{entity.getValue(), entity.getId(), newID});
-                entity.setId(newID);
-
-            } catch (GedcomException e) {
-                LOG.log(Level.SEVERE, e.getMessage());
-            }
-        }
-
-        LOG.log(Level.INFO, "First Free Id {0}", startFrom + entities.size());
+        LOG.log(Level.FINE, "First Free Id {0}", startFrom + entities.size());
 
         return startFrom + entities.size();
     }
 
+    
+    
+    
     /**
      * Copy properties beneath a property to another property (copy a cluster)
      */
-    private void copyPropertiesCluster(Property srcProperty, Property destProperty) {
+    private void copyPropertiesCluster(Property srcProperty, Property destProperty) throws GedcomException {
 
         if (srcProperty == null || destProperty == null) {
             return;
         }
 
-        Property[] srcProperties = srcProperty.getProperties();
-
-        for (Property property : srcProperties) {
-            if (property.getTag().equals("CHAN")) {
-                Property addedProperty = destProperty.addProperty(property.getTag(), property.getValue());
-                ((PropertyChange)addedProperty).setTime(((PropertyChange)property).getTime());
-            } else if (!property.getTag().equals("XREF")) { // Xref properties shall not be copy
-                Property addedProperty = destProperty.addProperty(property.getTag(), property.getValue());
-                copyPropertiesCluster(property, addedProperty);
+        // loop over children of prop recursively keeping same order of positions
+        for (int i = 0; i < srcProperty.getNoOfProperties(); i++) {
+            Property child = srcProperty.getProperty(i);
+            // CHAN property needs special copy
+            if (child.getTag().equals("CHAN")) {
+                Property addedProperty = destProperty.addProperty(child.getTag(), child.getValue());
+                ((PropertyChange) addedProperty).setTime(((PropertyChange) child).getTime());
+            } else if (!child.getTag().equals("XREF")) { // Xref properties shall not be copied
+                Property addedProperty;
+                addedProperty = destProperty.addProperty(child.getTag(), child.getValue(), i);
+                copyPropertiesCluster(child, addedProperty);
             }
         }
     }
+    
+    
 
     private int[] mapPlaceFormat(Gedcom gedcomX, Gedcom gedcomY) {
         String pf1 = gedcomX.getPlaceFormat();
