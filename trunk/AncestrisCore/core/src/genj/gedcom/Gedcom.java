@@ -383,8 +383,10 @@ public class Gedcom implements Comparable {
     // 20060101 apparently window lifecycle mgmt including removeNotify() can be called multiple times (for windows
         // owning windows for example) .. so down the line the same listener might unregister twice - we'll just ignore that
         // for now
-        listeners.remove(SafeProxy.harden(listener));
-        LOG.log(Level.FINER, "removeGedcomListener() from " + new Throwable().getStackTrace()[1] + " (now " + listeners.size() + ")");
+        if (listeners != null) {
+            listeners.remove(SafeProxy.harden(listener));
+            LOG.log(Level.FINER, "removeGedcomListener() from " + new Throwable().getStackTrace()[1] + " (now " + listeners.size() + ")");
+        }
     }
 
     /**
