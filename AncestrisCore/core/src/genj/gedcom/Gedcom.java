@@ -47,7 +47,6 @@ import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.openide.util.RequestProcessor;
 
 /**
  * The object-representation of a Gedom file
@@ -1679,17 +1678,11 @@ public class Gedcom implements Comparable {
      * Free up memory
      */
     public void eraseAll() {
-        
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                freeUpMemory();
-            }
-        };
-        new RequestProcessor("interruptible tasks", 1, true).create(runnable).schedule(0);
+        freeUpMemory();
     }
     
     private void freeUpMemory() {
+        
         // Large content :
         // LinkedList<Entity> allEntities
         try {
