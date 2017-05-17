@@ -1692,10 +1692,14 @@ public class Gedcom implements Comparable {
     private void freeUpMemory() {
         // Large content :
         // LinkedList<Entity> allEntities
-        for (Iterator<Entity> it = allEntities.iterator(); it.hasNext();) {
-            Entity entity = (Entity) it.next();
-            entity.eraseAll();
-            it.remove();
+        try {
+            for (Iterator<Entity> it = allEntities.iterator(); it.hasNext();) {
+                Entity entity = (Entity) it.next();
+                entity.eraseAll();
+                it.remove();
+            }
+        } catch (Exception ex) {
+            return;
         }
         
         // Map<String, Integer> propertyTag2valueCount  
