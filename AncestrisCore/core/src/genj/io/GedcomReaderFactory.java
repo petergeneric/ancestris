@@ -445,7 +445,7 @@ public class GedcomReaderFactory {
         }
 
         public String getTaskName() {
-            return RESOURCES.getString("reader.title", gedcom.getName());
+            return RESOURCES.getString("reader.title", gedcom != null ? gedcom.getName() : "no gedcom");
         }
 
         /**

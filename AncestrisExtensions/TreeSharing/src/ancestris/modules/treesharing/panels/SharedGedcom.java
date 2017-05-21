@@ -23,6 +23,8 @@ import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -32,6 +34,7 @@ import java.util.Set;
 import javax.swing.JInternalFrame;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
+import javax.swing.Timer;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
 
@@ -56,7 +59,9 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     private Set<MatchData> matchedIndis = null; 
     private Set<MatchData> matchedFams = null; 
     
-    private boolean busy = false;
+    private boolean busyGedcom = false;
+    private int updatesNow = 0;
+    private int updatesBefore = 0;
     
     
     /**
@@ -72,7 +77,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         ppi = new PrivacyPolicyImpl();
         popup = null;
         
-        busy = true;
+        busyGedcom = true;
         
         initComponents();
         setShared(false);
@@ -80,7 +85,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         updateStats(true);
         gedcom.addGedcomListener(this);
 
-        busy = false;
+        busyGedcom = false;
     }
 
     /**
@@ -348,8 +353,8 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         if (recalculate || nbTotalIndis == 0) {
             nbTotalIndis = gedcom.getEntities(Gedcom.INDI).size();
             nbTotalFams = gedcom.getEntities(Gedcom.FAM).size();
-            nbPublicIndis = getNbPublicEntities(Gedcom.INDI);
-            nbPublicFams = getNbPublicEntities(Gedcom.FAM);
+            nbPublicIndis = getNbPublicEntities(Gedcom.INDI);   // has to be synchronized in case two gedcoms opening at the same time (merge for instance)
+            nbPublicFams = getNbPublicEntities(Gedcom.FAM);     // has to be synchronized in case two gedcoms opening at the same time (merge for instance)
         }
         
         nbCommonIndis = countIds(matchedIndis);
@@ -514,11 +519,15 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     
     
     private int getNbPublicEntities(String tag) {
+        if (!isPrivacySet() || gedcom == null || gedcom.getName() == null) {
+            return 0;
+        }
+        
         ppi.clear();
         int ret = 0;
-        Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag);
+        Collection<Entity> entities = (Collection<Entity>) gedcom.getEntities(tag); 
         for (Entity entity : entities) {
-            ret += (isPrivacySet() && ppi.isPrivate(entity)) ? 0 : 1;
+            ret += (ppi.isPrivate(entity)) ? 0 : 1;
         }
         return ret;
     }
@@ -535,7 +544,6 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         if (entity instanceof Fam) {
             matchedFams.add(new MatchData(entity, friendGedcomEntity, matchResult));
             updateStats(false);
-            return;
         }
     }
     
@@ -567,18 +575,46 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         updateMe(property);
     }
     
+    
+    // Only run the update if not need to update have been reveived after a certain amount of time (1/10 s for instance)
     private void updateMe(Property property) {
-        if (!busy && ((property.getEntity() instanceof Indi) || (property.getEntity() instanceof Fam) && !(property instanceof PropertyChange))) { 
-            busy = true; 
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-
-                @Override
-                public void run() {
-                    updateStats(true);
-                    busy = false;
-                }
-            });
+        
+        // Another update is coming. Count it if it corresponds to an update which will change stats
+        if ((property.getEntity() instanceof Indi) || (property.getEntity() instanceof Fam) && !(property instanceof PropertyChange)) {
+            updatesNow++;
         }
+        
+        // Quit if busy
+        if (busyGedcom) {
+            return;
+        }
+        
+        // Now we're busy
+        busyGedcom = true;
+
+        // Set timer
+        Timer timer = new Timer(100, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // If no more updates have been coming in the last 1000 miliseconds, update stats...
+                if (updatesBefore == updatesNow) {
+                    ((Timer)e.getSource()).stop();
+                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                        @Override
+                        public void run() {
+                            updateStats(true);
+                            busyGedcom = false;
+                        }
+                    });
+                    return;
+                } else { // ... else wait
+                    updatesBefore = updatesNow;
+                }
+            }
+        });
+        
+        // Launch timer
+        timer.start();
     }
 
     

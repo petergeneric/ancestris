@@ -33,14 +33,12 @@ public interface ProgressListener {
   
   public class Dispatcher{
     public static void processStarted(Trackable process) {
-//        for (ProgressListener listener : AncestrisPlugin.lookupAll(ProgressListener.class)) {
         for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
             listener.processStarted(process);
         }
     }
 
     public static void processStopped(Trackable process) {
-//        for (ProgressListener listener : AncestrisPlugin.lookupAll(ProgressListener.class)) {
         for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
             listener.processStopped(process);
         }

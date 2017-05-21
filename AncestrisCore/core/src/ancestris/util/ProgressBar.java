@@ -14,6 +14,8 @@ package ancestris.util;
 import genj.util.Trackable;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Timer;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -22,59 +24,80 @@ import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
- * @author daniel
+ * @author daniel + frederic
  */
 @ServiceProvider(service=ProgressListener.class)
 public class ProgressBar implements ProgressListener {
 
-    ProgressHandle handle;
-    Trackable track;
-    /** timer */
-    private Timer timer;
+    Map<Trackable, ProcessData> map = new HashMap<Trackable, ProcessData>();   // separate processes data are necessary in case multiple trackables run at the same time
 
     public ProgressBar() {
     }
 
     @Override
     public void processStarted(Trackable process) {
-        track = process;
-        handle = ProgressHandleFactory.createHandle(process.getTaskName(), new Cancellable() {
+        final Trackable track = process;
+        
+        ProcessData data = map.get(process);
+        if (data == null) {
+            data = new ProcessData();
+            data.handle = ProgressHandleFactory.createHandle(process.getTaskName(), new Cancellable() {
 
-            @Override
-            public boolean cancel() {
-                track.cancelTrackable();
-                return true;
-            }
-        });
-
-        // we have 100 workunits
-        // at this point the task appears in status bar.
-        handle.start(100);
+                @Override
+                public boolean cancel() {
+                    track.cancelTrackable();
+                    return true;
+                }
+            });
+            map.put(process, data);
+        }
 
         // prepare timer
-        timer = new Timer(10, new ActionListener() {
+        data.timer = new Timer(10, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
+                ProcessData data = map.get(track);
+                if (data == null) {
+                    ((Timer)e.getSource()).stop();
+                    return;
+                }
                 // update progress bar
                 try {
-                    handle.progress(track.getState(), track.getProgress());
+                    data.handle.progress(track.getState(), track.getProgress());
                 } catch (IllegalArgumentException ex) {
                     // NoOp : le trackable envoie des process decroissants
-                    handle.progress(track.getState());
+                    data.handle.progress(track.getState());
                 }
             }
         });
-        timer.start();
+        // we have 100 workunits
+        // at this point the task appears in status bar.
+        data.handle.start(100);
+
+        data.timer.start();
 
     }
 
     @Override
     public void processStopped(Trackable process) {
-        timer.stop();
+        ProcessData data = map.get(process);
+        if (data == null) {
+            return;
+        }
+        data.timer.stop();
         // at this point the task is finished and removed from status bar
         // it's not realy necessary to count all the way to the limit, finish can be called earlier.
         // however it has to be called at the end of the processing.
-        handle.finish();
+        data.handle.finish();
+    }
+    
+    
+    
+    
+    
+    private class ProcessData {
+        public ProgressHandle handle;
+        public Timer timer;
     }
 }
