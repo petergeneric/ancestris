@@ -17,10 +17,12 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Media;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
+import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -395,6 +397,15 @@ public class HeredisImport extends Import {
                 prop = host.getProperty("FORM");
                 if (prop == null) {
                     host.addProperty("FORM", getExtension(host.getValue()));
+                    hasErrors = true;
+                }
+                prop = host.getProperty("TITL");
+                if (prop == null) {
+                    PropertyFile filep = (PropertyFile) host;
+                    File file = filep.getFile();
+                    String title = file != null ? file.getName() : "";
+                    int i = title.indexOf(".");
+                    host.addProperty("TITL", i == -1 ? title : title.substring(0, i));
                     hasErrors = true;
                 }
             }
