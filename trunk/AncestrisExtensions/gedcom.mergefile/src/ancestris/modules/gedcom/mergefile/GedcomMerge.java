@@ -73,14 +73,14 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             return;
         }
 
-        // Open Left Gedcom
+        // Open Left Gedcom quietly (GedcomMgr) - do not open the windows nor change the context
         leftGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(leftGedcomFile));
         if (leftGedcomContext == null) {
             return;
         }
         leftGedcom = leftGedcomContext.getGedcom();
 
-        // Open Right Gedcom
+        // Open Right Gedcom (GedcomMgr) - do not open the windows nor change the context
         rightGedcomContext = GedcomMgr.getDefault().openGedcom(FileUtil.toFileObject(rightGedcomFile));
         if (rightGedcomContext == null) {
             return;
@@ -229,13 +229,11 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                 @Override
                 public void run() {
-                    mergedGedcomContext = GedcomMgr.getDefault().setGedcom(mergedGedcom);
-                    Indi firstIndi = (Indi) mergedGedcomContext.getGedcom().getFirstEntity(Gedcom.INDI);
-
-                    // save gedcom file
+                    // Save merged gedcom file quietly (GedcomMgr)
+                    Indi firstIndi = (Indi) mergedGedcom.getFirstEntity(Gedcom.INDI);
                     GedcomMgr.getDefault().saveGedcom(new Context(firstIndi), FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
 
-                    // and reopens the file
+                    // And reopens the file officially (GedcomDirectory)
                     GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(mergedGedcom.getOrigin().getFile()));
                 }
             });
