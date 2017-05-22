@@ -245,12 +245,14 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     }
 
     public void modifyCoordinates(String lat, String lon, boolean forceReplace) {
+        updateOnGoing = true;
         if (forceReplace || gedcomLatitudeTextField.getText().isEmpty()) {
             gedcomLatitudeTextField.setText(lat);
         }
         if (forceReplace || gedcomLongitudeTextField.getText().isEmpty()) {
             gedcomLongitudeTextField.setText(lon);
         }
+        updateOnGoing = false;
     }
 
     
@@ -488,6 +490,9 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         }
 
         private void showLocation() {
+            if (updateOnGoing) {
+                return;
+            }
             try {
                 if (parentPanel != null) {
                     Double latitude = Double.parseDouble(gedcomLatitudeTextField.getText());
