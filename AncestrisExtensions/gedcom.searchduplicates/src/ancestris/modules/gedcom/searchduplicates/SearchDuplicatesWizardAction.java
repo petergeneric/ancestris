@@ -26,7 +26,7 @@ import org.openide.util.*;
         displayName = "#CTL_CheckDuplicatesAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "SearchDuplicatesWizardAction", position = 400)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "SearchDuplicatesWizardAction", position = 600)
 @NbBundle.Messages({"CTL_CheckDuplicatesAction=Search duplicates",
     "CheckDuplicates.runing=Searching duplicates"})
 public final class SearchDuplicatesWizardAction extends AbstractAncestrisContextAction {

@@ -14,7 +14,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_GedcomMergeAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "GedcomMergeWizardAction", position = 600)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "GedcomMergeWizardAction", position = 500)
 public final class GedcomMergeWizardAction extends AbstractAncestrisAction { 
 
     public GedcomMergeWizardAction() {

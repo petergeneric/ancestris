@@ -31,7 +31,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_RemoveTagAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Gedcom", name = "RemoveTagAction", position = 500)
+@ActionReference(path = "Menu/Tools/Gedcom", name = "RemoveTagAction", position = 400)
 public final class RemoveTagAction extends AbstractAncestrisContextAction {
 
     public RemoveTagAction() {
