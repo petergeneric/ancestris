@@ -130,6 +130,8 @@
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
+        </folder>
+        <folder name="Window">
             <file name="ancestris-app-SaveLayoutAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.app.Bundle"/>
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled"/>
@@ -138,8 +140,6 @@
                 <attr name="iconBase" stringvalue="ancestris/view/images/SaveLayout.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
-        </folder>
-        <folder name="Window">
             <file name="ancestris-explorer-GedcomExplorerAction.instance">
                 <attr name="component" methodvalue="ancestris.explorer.GedcomExplorerTopComponent.findInstance"/>
                 <attr name="displayName" bundlevalue="ancestris.explorer.Bundle#CTL_GedcomExplorerTopComponent"/>
@@ -299,10 +299,6 @@
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="99"/>
             </file>
-            <file name="ActionSaveLayout.shadow">
-                <attr name="originalFile" stringvalue="Actions/Tools/ancestris-app-SaveLayoutAction.instance"/>
-                <attr name="position" intvalue="150"/>
-            </file>
             <file name="org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.shadow">
                 <!--org.netbeans.modules.autoupdate.ui.actions.CheckForUpdatesAction-->
                 <attr name="originalFile" stringvalue="Actions/System/org-netbeans-modules-autoupdate-ui-actions-CheckForUpdatesAction.instance"/>
@@ -377,14 +373,21 @@
                 <attr name="originalFile" stringvalue="Actions/Window/ancestris-explorer-GedcomExplorerAction.instance"/>
                 <attr name="position" intvalue="100"/>
             </file>
-            <file name="org-netbeans-core-actions-LogAction.shadow_hidden">
-            </file>
+            <file name="org-netbeans-core-actions-LogAction.shadow_hidden"/>
             <file name="SwitchToRecentDocumentAction.shadow_hidden"/>
             <file name="Tools_hidden"/>
             <file name="Web_hidden"/>
             <file name="org-netbeans-core-windows-actions-ResetWindowsAction.shadow_hidden"/>
             <file name="org-netbeans-modules-favorites-View.shadow"/>
             <file name="GroupsMenuAction.shadow_hidden"/>
+            <file name="Separator1_1.instance">
+                <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                <attr name="position" intvalue="90000"/>
+            </file>
+            <file name="ActionSaveLayout.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-app-SaveLayoutAction.instance"/>
+                <attr name="position" intvalue="91000"/>
+            </file>
         </folder>
     </folder>
         <folder name="OptionsDialog">
