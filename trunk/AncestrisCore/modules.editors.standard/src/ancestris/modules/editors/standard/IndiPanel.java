@@ -1845,6 +1845,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             eventPlaceText.setText(event.place.getDisplayValue());
             eventPlaceText.setCaretPosition(0);
             eventPlaceText.requestFocus();
+            triggerChange();   //FL: 2017-05-24 : should be triggered by changing the field, but force change just in case (on one user, change was not triggered)
         }
     }//GEN-LAST:event_eventPlaceButtonActionPerformed
 
