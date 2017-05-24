@@ -1843,6 +1843,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         }
         if (chooseEventPlace(event)) {
             eventPlaceText.setText(event.place.getDisplayValue());
+            eventPlaceText.setCaretPosition(0);
             eventPlaceText.requestFocus();
         }
     }//GEN-LAST:event_eventPlaceButtonActionPerformed
@@ -2940,8 +2941,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         placeEditor.saveSize();
         if (o == OKButton) {
             placeEditor.copyValue(event.place);
-            eventPlaceText.setText(event.place.getDisplayValue());
-            eventPlaceText.setCaretPosition(0);
             b = true;
         }
         
