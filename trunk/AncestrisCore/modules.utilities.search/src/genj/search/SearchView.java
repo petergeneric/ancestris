@@ -14,6 +14,7 @@ package genj.search;
 import ancestris.api.search.SearchCommunicator;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -30,6 +31,7 @@ import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertyDate;
+import genj.io.Filter;
 import genj.view.Images;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -67,7 +69,7 @@ import spin.Spin;
  *
  * @author frederic
  */
-public class SearchView extends View {
+public class SearchView extends View implements Filter {
 
     
     /** default values */
@@ -607,6 +609,13 @@ public class SearchView extends View {
         notifyResults();
     }
 
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        // Used only for Filter interface
+        AncestrisPlugin.register(this);
+    }
+
     /**
      * @see javax.swing.JComponent#removeNotify()
      */
@@ -622,6 +631,7 @@ public class SearchView extends View {
         REGISTRY.put("old.values", oldValues);
         REGISTRY.put("old.tags", oldTags);
         // continue
+        AncestrisPlugin.unregister(this);
         super.removeNotify();
     }
 
@@ -771,6 +781,32 @@ public class SearchView extends View {
         settingsPanel.setSettings();
         max_hits = settingsPanel.getMaxHits();
         case_sensitive = settingsPanel.getCaseSensitive();
+    }
+
+    @Override
+    public String getFilterName() {
+        return NbBundle.getMessage(SearchView.class, "TTL_Filter", getSelectedResults().getSize(), RESOURCES.getString("title"));
+    }
+
+    @Override
+    public boolean veto(Property property) {
+        // all non-entities are fine
+        return false;
+    }
+
+    @Override
+    public boolean veto(Entity entity) {
+        for (Hit hit : getSelectedResults().hits) {
+            if (hit.getProperty() == entity) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canApplyTo(Gedcom gedcom) {
+        return (gedcom != null && gedcom.equals(context.getGedcom()));
     }
 
 
