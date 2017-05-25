@@ -950,6 +950,28 @@ import org.openide.windows.WindowManager;
         return propertyHits.isEmpty() ? entityHits : propertyHits;
     }
     
+    
+    public List<Indi> getIndisFromLayers() {
+        List<Indi> ret = new ArrayList<Indi>();
+
+        if (indiLayers == null || indiLayers.isEmpty()) {
+            return ret;
+        }
+        
+        synchronized (lock) {
+            for (List<EventSerie> indiLayer : indiLayers) {
+                Iterator it = ((List) indiLayer).iterator();
+                while (it.hasNext()) {
+                    EventSerie eventSerie = (EventSerie) it.next();
+                    ret.add(eventSerie.indi);
+                }
+            }
+            lock.notifyAll();
+        }
+        
+        return ret;
+    }
+
 
     /**
      * Free up memory
@@ -1361,7 +1383,7 @@ import org.openide.windows.WindowManager;
         return null;
     }
 
-
+    
 
 
     

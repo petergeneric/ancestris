@@ -21,6 +21,7 @@
 package genj.timeline;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.view.SelectionDispatcher;
 import genj.almanac.Almanac;
 import genj.almanac.Event;
@@ -43,6 +44,9 @@ import genj.util.swing.ViewPortAdapter;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import ancestris.swing.ToolBar;
+import genj.gedcom.Entity;
+import genj.gedcom.Indi;
+import genj.io.Filter;
 import genj.util.swing.ImageIcon;
 import genj.view.SelectionListener;
 import genj.view.View;
@@ -79,11 +83,12 @@ import javax.swing.ToolTipManager;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import org.openide.util.NbBundle;
 
 /**
  * Component for showing entities' events in a timeline view
  */
-public class TimelineView extends View implements SelectionListener {
+public class TimelineView extends View implements SelectionListener, Filter {
 
     /** the units we use */
     private final DPI DPI;
@@ -149,6 +154,8 @@ public class TimelineView extends View implements SelectionListener {
     private CenterToSelectionAction ctsButton;
     private CenterTreeToIndividual cttiButton;
     private JLabel rootTitle;
+    /** filter indis */
+    private List<Indi> filteredIndis;
 
     /**
      * Constructor
@@ -244,6 +251,8 @@ public class TimelineView extends View implements SelectionListener {
         super.addNotify();
         // connect to model
         model.addListener(callback);
+        // Used only for Filter interface
+        AncestrisPlugin.register(this);
     }
 
     /**
@@ -259,6 +268,7 @@ public class TimelineView extends View implements SelectionListener {
         saveInRegistry();
 
         // done
+        AncestrisPlugin.unregister(this);
         super.removeNotify();
     }
     
@@ -693,6 +703,34 @@ public class TimelineView extends View implements SelectionListener {
             return Collator.getInstance(getLocale());
         }
         return content.getContext().getGedcom().getCollator();
+    }
+
+    @Override
+    public String getFilterName() {
+        filteredIndis = model.getIndisFromLayers();
+        return NbBundle.getMessage(TimelineView.class, "TTL_Filter", filteredIndis.size(), resources.getString("title"));
+    }
+
+    @Override
+    public boolean veto(Property property) {
+        // all non-entities are fine
+        return false;
+    }
+
+    @Override
+    public boolean veto(Entity entity) {
+        if (filteredIndis == null) {
+            filteredIndis = model.getIndisFromLayers();
+        }
+        if (filteredIndis.contains(entity)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean canApplyTo(Gedcom gedcom) {
+        return (gedcom != null && gedcom.equals(model.getGedcom()));
     }
 
     
