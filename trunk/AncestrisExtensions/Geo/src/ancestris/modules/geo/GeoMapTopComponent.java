@@ -13,7 +13,10 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Property;
+import genj.io.Filter;
 import genj.view.ScreenshotAction;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
@@ -52,7 +55,7 @@ import org.openide.windows.WindowManager;
 autostore = false)
 @ServiceProvider(service=AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
-public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener {
+public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, Filter {
 
     private genj.util.Registry registry = null;
     
@@ -82,6 +85,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     //
     private boolean isBusyRecalc = false;
     private boolean refreshFlag = false;
+    //
+    private Set<Entity> filteredIndis;
     
     private SearchCommunicator searchCommunicator = null;
 
@@ -1036,6 +1041,45 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         theList.requestActive();
         theList.showLocation(gno);
+    }
+
+    public String getFilterName() {
+        filteredIndis = getIndisFromGeoPoints();
+        return NbBundle.getMessage(GeoMapTopComponent.class, "TTL_Filter", filteredIndis.size(), NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
+    }
+
+    public boolean veto(Property property) {
+        // all non-entities are fine
+        return false;
+    }
+
+    public boolean veto(Entity entity) {
+        if (filteredIndis == null) {
+            filteredIndis = getIndisFromGeoPoints();
+        }
+        if (filteredIndis.contains(entity)) {
+            return false;
+        }
+        return true;
+    }
+
+    public boolean canApplyTo(Gedcom gedcom) {
+        return (gedcom != null && gedcom.equals(getGedcom()));
+    }
+
+    private Set<Entity> getIndisFromGeoPoints() {
+        Set<Entity> ret = new HashSet<Entity>();
+        if (geoPoints == null || geoPoints.isEmpty()) {
+            return ret;
+        }
+        for (GeoPoint gno : geoPoints) {
+            for (GeoNodeObject event : gno.getGeoNodeObject().getFilteredEvents(geoFilter)) {
+                if (geoFilter.compliesEvent(event)) {
+                    ret.add(event.getProperty().getEntity());
+                }
+            }
+        }
+        return ret;
     }
 
 
