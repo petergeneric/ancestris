@@ -255,10 +255,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
      */
     public void foldAll() {
         // refold all levels up
-        setHideAncestorsIDs(hideAncestorsTmp);
+        if (!hideAncestorsTmp.isEmpty()) {
+            setHideAncestorsIDs(hideAncestorsTmp);
+        }
         
         // refold all levels down
-        setHideDescendantsIDs(hideDescendantsTmp);
+        if (!hideDescendantsTmp.isEmpty()) {
+            setHideDescendantsIDs(hideDescendantsTmp);
+        }
         
         update();
     }

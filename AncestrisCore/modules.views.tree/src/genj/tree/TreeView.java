@@ -138,6 +138,8 @@ public class TreeView extends View implements Filter {
     private SliderWidget sliderZoom;
     /** whether we use antialising */
     private boolean isAntialiasing = false;
+    /** folded statee */
+    private boolean isFolded = true;
     /** our colors */
     private Map<String, Color> colors = new HashMap<String, Color>();
     /** our blueprints */
@@ -678,8 +680,7 @@ public class TreeView extends View implements Filter {
 
         // toggless?
         toolbar.add(bh.create(new ActionFoldSymbols(), null, model.isFoldSymbols()));
-        toolbar.add(bh.create(new ActionUnfoldAll()));
-        toolbar.add(bh.create(new ActionFoldAll()));
+        toolbar.add(bh.create(new ActionFoldUnfoldAll()));
 
         // gap
         toolbar.addSeparator();
@@ -1383,16 +1384,16 @@ public class TreeView extends View implements Filter {
     } //ActionFolding
 
     /**
-     * Action FoldAll
+     * Action Fold All / Unfold All
      */
-    private class ActionFoldAll extends AbstractAncestrisAction {
+    private class ActionFoldUnfoldAll extends AbstractAncestrisAction {
 
         /**
          * Constructor
          */
-        private ActionFoldAll() {
-            super.setImage(Images.imgFoldAll);
-            super.setTip(RESOURCES.getString("foldall.tip"));
+        private ActionFoldUnfoldAll() {
+            super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
+            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip"));
         }
 
         /**
@@ -1400,30 +1401,14 @@ public class TreeView extends View implements Filter {
          */
         @Override
         public void actionPerformed(ActionEvent event) {
-            model.foldAll();
-            scrollToCurrent();
-        }
-    } //ActionFolding
-
-    /**
-     * Action FoldAll
-     */
-    private class ActionUnfoldAll extends AbstractAncestrisAction {
-
-        /**
-         * Constructor
-         */
-        private ActionUnfoldAll() {
-            super.setImage(Images.imgUnfoldAll);
-            super.setTip(RESOURCES.getString("unfoldall.tip"));
-        }
-
-        /**
-         * @see genj.util.swing.AbstractAncestrisAction#execute()
-         */
-        @Override
-        public void actionPerformed(ActionEvent event) {
-            model.unfoldAll();
+            if (isFolded) {
+                model.unfoldAll();
+            } else {
+                model.foldAll();
+            }
+            isFolded = !isFolded;
+            super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
+            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip"));
             scrollToCurrent();
         }
     } //ActionFolding
