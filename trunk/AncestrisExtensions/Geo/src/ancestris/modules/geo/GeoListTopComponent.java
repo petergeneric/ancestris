@@ -299,8 +299,16 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
             if (eventUsages == null) {
                 initEventUsages();
             }
-            String s1 = eventUsages.get(o1.getEventTag()).getOrder() + o1.toDisplayString();
-            String s2 = eventUsages.get(o2.getEventTag()).getOrder() + o2.toDisplayString();
+            EventUsage eu1 = eventUsages.get(o1.getEventTag());
+            EventUsage eu2 = eventUsages.get(o2.getEventTag());
+            if (eu1 == null) {
+                return +1;
+            }
+            if (eu2 == null) {
+                return -1;
+            }
+            String s1 = eu1.getOrder() + o1.toDisplayString();
+            String s2 = eu2.getOrder() + o2.toDisplayString();
             return s1.compareTo(s2);
         }
     };
