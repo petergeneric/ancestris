@@ -64,7 +64,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (data != null) {
-            if (row >= 0 && row < data.length && column >= 0 && data[0] != null && column < data[0].length) {
+            if (row >= 0 && row < data.length && column >= 0 && data[row] != null && column < data[row].length) {
                 return data[row][column];
             } else {
                 return "";
