@@ -165,12 +165,13 @@ public class Fam extends Entity {
                 CHILs.add(prop);
                 // we don't sort children if there is one or many without a proper date
                 // will have to depend on the natural order of the CHIL tags then
-                if (sorted) {
-                    Property sortby = prop.getProperty(SORT_SIBLINGS);
-                    if (sortby == null || !sortby.isValid()) {
-                        sorted = false;
-                    }
-                }
+                // FL: 2017-05-26 - let sort happen, even if some children do not have a birth date.
+//                if (sorted) {
+//                    Property sortby = prop.getProperty(SORT_SIBLINGS);
+//                    if (sortby == null || !sortby.isValid()) {
+//                        sorted = false;
+//                    }
+//                }
             }
         }
 
