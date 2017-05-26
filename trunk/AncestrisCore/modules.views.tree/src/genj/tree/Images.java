@@ -35,6 +35,8 @@ final class Images {
             imgDoFams,
             imgDontFams,
             imgFoldSymbols,
+            imgUnfoldAll,
+            imgFoldAll,
             imgGotoContext,
             imgGotoRoot;
 
@@ -56,6 +58,8 @@ final class Images {
         imgDontFams = new ImageIcon(this, "images/DontFams");
 
         imgFoldSymbols = new ImageIcon(this, "images/FoldUnfold");
+        imgUnfoldAll = new ImageIcon(this, "images/UnfoldAll");
+        imgFoldAll = new ImageIcon(this, "images/FoldAll");
     }
 
 } //Images
