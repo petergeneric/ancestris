@@ -66,6 +66,7 @@ public class TreeViewSettings extends JTabbedPane {
   private final JComboBox<OnAction> jcAction;
   private final JCheckBox cbShowPopup;
   private final JCheckBox cbTreeAutoScroll;
+  private JSpinner spingen = null;
   private AbstractAncestrisAction 
     up = new Move(-1), 
     down = new Move( 1), 
@@ -92,6 +93,7 @@ public class TreeViewSettings extends JTabbedPane {
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
          "<check gx=\"1\"/>"+
+         "<row><label/><spinner/></row>"+
          "<font gx=\"1\"/>"+
          "<row><label/><spinner/></row>"+
          "<row><label/><spinner/></row>"+
@@ -122,21 +124,22 @@ public class TreeViewSettings extends JTabbedPane {
     options.add(checkBending);
     options.add(checkAntialiasing);
     options.add(checkMarrSymbols);
+    spingen = createSpinner("maxgen",  options, 0, view.getModel().getMaxGenerations(), 99, 1);
     options.add(font);    
 
     TreeMetrics m = view.getModel().getMetrics();
-    spinners[0] = createSpinner("indiwidth",  options, 0.4, m.wIndis*0.1D, 16.0);
-    spinners[1] = createSpinner("indiheight", options, 0.4, m.hIndis*0.1D,16.0);
-    spinners[2] = createSpinner("famwidth",   options, 0.4, m.wFams*0.1D, 16.0);
-    spinners[3] = createSpinner("famheight",  options, 0.4, m.hFams*0.1D, 16.0);
-    spinners[4] = createSpinner("padding",    options, 0.4, m.pad*0.1D, 4.0);
+    spinners[0] = createSpinner("indiwidth",  options, 0.4, m.wIndis*0.1D, 16.0, 0.1D);
+    spinners[1] = createSpinner("indiheight", options, 0.4, m.hIndis*0.1D,16.0, 0.1D);
+    spinners[2] = createSpinner("famwidth",   options, 0.4, m.wFams*0.1D, 16.0, 0.1D);
+    spinners[3] = createSpinner("famheight",  options, 0.4, m.hFams*0.1D, 16.0, 0.1D);
+    spinners[4] = createSpinner("padding",    options, 0.4, m.pad*0.1D, 4.0, 0.1D);
 
     // color chooser
     colors = new ColorsWidget();
     for (String key : view.getColors().keySet()) 
       colors.addColor(key, RESOURCES.getString("color."+key), view.getColors().get(key));
     colors.addChangeListener(commit);
-    
+
     // bookmarks
     bookmarks = new Bookmarks(view.getModel().getBookmarks());
     bookmarks.addListDataListener(commit);
@@ -181,12 +184,12 @@ public class TreeViewSettings extends JTabbedPane {
   /**
    * Create a spinner
    */
-  private JSpinner createSpinner(String key, Container c, double min, double val,double max) {
+  private JSpinner createSpinner(String key, Container c, double min, double val,double max, double inc) {
     
     val = Math.min(max, Math.max(val, min));
     
-    JSpinner result = new JSpinner(new SpinnerNumberModel(val, min, max, 0.1D));
-    JSpinner.NumberEditor editor = new JSpinner.NumberEditor(result, "##0.0");
+    JSpinner result = new JSpinner(new SpinnerNumberModel(val, min, max, inc));
+    JSpinner.NumberEditor editor = new JSpinner.NumberEditor(result, inc < 1 ? "##0.0" : "0");
     result.setEditor(editor);
     result.addChangeListener(editor);
     result.setToolTipText(RESOURCES.getString("info."+key+".tip"));
@@ -291,6 +294,7 @@ public class TreeViewSettings extends JTabbedPane {
         TreeView.setShowPopup(cbShowPopup.isSelected());
       view.getModel().setBendArcs(checkBending.isSelected());
       view.setAntialiasing(checkAntialiasing.isSelected());
+      view.getModel().setMaxGenerations(((Double)spingen.getValue()).intValue());
       view.setContentFont(font.getSelectedFont());
       view.getModel().setMarrSymbols(checkMarrSymbols.isSelected());
       // metrics

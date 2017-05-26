@@ -53,9 +53,6 @@ import java.util.List;
   /** padding (n, e, s, w) */
   protected int[] padIndis, padMinusPlus; 
   
-  //FIXME: was 20 now 60 to match max # of generation in sosa numbering plugin. to be change to unlimited
-  private final static int MAX_GENERATION = 20;
-  
   /** 
    * gets an instance of a parser
    */
@@ -269,7 +266,7 @@ import java.util.List;
       Fam famc = indi.getFamilyWhereBiologicalChild();
       if (famc!=null) {
         // stop when hiding ancestors
-        if (generation>MAX_GENERATION||model.isHideAncestors(indi)) {
+        if (generation>model.getMaxGenerations()||model.isHideAncestors(indi)) {
           insertPlusMinus(indi, node, true, true);
         } else {
           // show minus
@@ -394,7 +391,7 @@ import java.util.List;
       Fam famc = indi.getFamilyWhereBiologicalChild();
       if (famc!=null) {
         // no more ancestors?
-        if (generation>MAX_GENERATION||model.isHideAncestors(indi)) {
+        if (generation>model.getMaxGenerations()||model.isHideAncestors(indi)) {
           insertPlusMinus(indi, nIndi, true, true);
         } else {
           
@@ -462,7 +459,7 @@ import java.util.List;
           // on first arc
           if (node.getArcs().isEmpty()) {
             // stop when hiding descendants
-            if (generation>MAX_GENERATION||model.isHideDescendants(indi)) {
+            if (generation>model.getMaxGenerations()||model.isHideDescendants(indi)) {
               // insert plus
               insertPlusMinus(indi, node, false, true);
               // break
@@ -691,7 +688,7 @@ import java.util.List;
         
         // on first : no descendants for indi?
         if (c==0) {
-          if (generation>MAX_GENERATION||model.isHideDescendants(indi)) {
+          if (generation>model.getMaxGenerations()||model.isHideDescendants(indi)) {
             insertPlusMinus(indi, nFam, false, true);
             break;
           }

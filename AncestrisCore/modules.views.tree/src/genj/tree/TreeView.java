@@ -205,6 +205,7 @@ public class TreeView extends View implements Filter {
         isAntialiasing = REGISTRY.get("antial", false);
         model.setHideAncestorsIDs(REGISTRY.get("hide.ancestors", new ArrayList<String>()));
         model.setHideDescendantsIDs(REGISTRY.get("hide.descendants", new ArrayList<String>()));
+        model.setMaxGenerations(REGISTRY.get("maxgenerations", 20));
 
         // setup child components
         contentRenderer = new ContentRenderer();
@@ -277,6 +278,8 @@ public class TreeView extends View implements Filter {
         REGISTRY.put("antial", isAntialiasing);
         REGISTRY.put("font", contentFont);
         REGISTRY.put("color", colors);
+        REGISTRY.put("maxgenerations", model.getMaxGenerations());
+
         // blueprints
         for (String tag : tag2blueprint.keySet()) {
             REGISTRY.put("blueprint." + tag, getBlueprint(tag).getName());
@@ -675,6 +678,8 @@ public class TreeView extends View implements Filter {
 
         // toggless?
         toolbar.add(bh.create(new ActionFoldSymbols(), null, model.isFoldSymbols()));
+        toolbar.add(bh.create(new ActionUnfoldAll()));
+        toolbar.add(bh.create(new ActionFoldAll()));
 
         // gap
         toolbar.addSeparator();
@@ -1373,6 +1378,52 @@ public class TreeView extends View implements Filter {
         @Override
         public void actionPerformed(ActionEvent event) {
             model.setFoldSymbols(!model.isFoldSymbols());
+            scrollToCurrent();
+        }
+    } //ActionFolding
+
+    /**
+     * Action FoldAll
+     */
+    private class ActionFoldAll extends AbstractAncestrisAction {
+
+        /**
+         * Constructor
+         */
+        private ActionFoldAll() {
+            super.setImage(Images.imgFoldAll);
+            super.setTip(RESOURCES.getString("foldall.tip"));
+        }
+
+        /**
+         * @see genj.util.swing.AbstractAncestrisAction#execute()
+         */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            model.foldAll();
+            scrollToCurrent();
+        }
+    } //ActionFolding
+
+    /**
+     * Action FoldAll
+     */
+    private class ActionUnfoldAll extends AbstractAncestrisAction {
+
+        /**
+         * Constructor
+         */
+        private ActionUnfoldAll() {
+            super.setImage(Images.imgUnfoldAll);
+            super.setTip(RESOURCES.getString("unfoldall.tip"));
+        }
+
+        /**
+         * @see genj.util.swing.AbstractAncestrisAction#execute()
+         */
+        @Override
+        public void actionPerformed(ActionEvent event) {
+            model.unfoldAll();
             scrollToCurrent();
         }
     } //ActionFolding

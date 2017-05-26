@@ -85,11 +85,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
   /** whether we show toggles for un/folding */
   private boolean isFoldSymbols = true;
   
+  /** max number of generations */
+  private int maxGenerations = 20;
+  
   /** individuals whose ancestors we're not interested in */
   private Set<String> hideAncestors = new HashSet<String>();
+  private Set<String> hideAncestorsTmp = new HashSet<String>();
 
   /** individuals whose descendants we're not interested in */
   private Set<String> hideDescendants = new HashSet<String>();
+  private Set<String> hideDescendantsTmp = new HashSet<String>();
   
   /** individuals' family */
   private Map<Indi,Fam> indi2fam = new HashMap<Indi, Fam>();
@@ -167,6 +172,21 @@ import java.util.concurrent.CopyOnWriteArrayList;
   }
   
   /**
+   * Accessor - get max number of generations
+   */
+  public int getMaxGenerations() {
+    return maxGenerations;
+  }
+  
+  /**
+   * Accessor - wether we're vertical
+   */
+  public void setMaxGenerations(int gen) {
+    maxGenerations = gen;
+    update();
+  }
+  
+  /**
    * Accessor - wether we bend arcs or not
    */
   public boolean isBendArcs() {
@@ -215,7 +235,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
   }
 
   /**
-   * Access - isFoldSymbols
+   * Access - setFoldSymbols
    */
   public void setFoldSymbols(boolean set) {
     if (isFoldSymbols==set) return;
@@ -229,6 +249,36 @@ import java.util.concurrent.CopyOnWriteArrayList;
   public boolean isFoldSymbols() {
     return isFoldSymbols;
   }
+
+    /**
+     * Access - FoldAll (refold)
+     */
+    public void foldAll() {
+        // refold all levels up
+        setHideAncestorsIDs(hideAncestorsTmp);
+        
+        // refold all levels down
+        setHideDescendantsIDs(hideDescendantsTmp);
+        
+        update();
+    }
+
+    /**
+     * Access - UnfoldAll
+     */
+    public void unfoldAll() {
+        // unfold all levels up
+        hideAncestorsTmp.clear();
+        hideAncestorsTmp.addAll(hideAncestors);
+        setHideAncestorsIDs(new ArrayList<String>());
+        
+        // unfold all levels down
+        hideDescendantsTmp.clear();
+        hideDescendantsTmp.addAll(hideDescendants);
+        setHideDescendantsIDs(new ArrayList<String>());
+
+        update();
+    }
 
   /**
    * Accessor - the metrics
@@ -600,6 +650,16 @@ import java.util.concurrent.CopyOnWriteArrayList;
      */
     public void run() {
       if (!set.remove(indi.getId())) set.add(indi.getId());
+      update();
+    }
+
+    public void fold() {
+      set.add(indi.getId());
+      update();
+    }
+
+    public void unfold() {
+      set.remove(indi.getId());
       update();
     }
   } //FoldUnfold
