@@ -95,7 +95,7 @@ class GeoPlacesList implements GedcomMetaListener {
      * Launch places search over the net for the list of cities of Gedcom file
      */
     @SuppressWarnings("unchecked")
-    public synchronized void launchPlacesSearch() {
+    public synchronized void launchPlacesSearch(boolean force) {
         List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
 
         // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
@@ -118,7 +118,7 @@ class GeoPlacesList implements GedcomMetaListener {
         }
 
         // search the geo objects locally and else on internet
-        new GeoInternetSearch(this, placesProps).executeSearch(gedcom);
+        new GeoInternetSearch(this, placesProps).executeSearch(gedcom, force);
     }
 
     public void setPlaces(GeoNodeObject[] result) {
@@ -220,7 +220,7 @@ class GeoPlacesList implements GedcomMetaListener {
     public void reloadPlaces() {
         if (!stopListening) {
             stopListening();
-            launchPlacesSearch();
+            launchPlacesSearch(false);
             updateRequired = false;
         }
     }
@@ -251,7 +251,7 @@ class GeoPlacesList implements GedcomMetaListener {
     }
     
     public String getPlaceKey(PropertyPlace place) {
-        return getPlaceDisplayFormat(place) + "[" + getMapString(place);
+        return getPlaceDisplayFormat(place) + "[" + getMapString(place) + "]";
     }
     
     public String getPlaceDisplayFormat(PropertyPlace place) {
@@ -277,7 +277,7 @@ class GeoPlacesList implements GedcomMetaListener {
         }
         prop = place.getLongitude(true);
         if (prop != null) {
-            ret += prop.getDisplayValue() + "]";
+            ret += prop.getDisplayValue();
         }
         return ret;
     }

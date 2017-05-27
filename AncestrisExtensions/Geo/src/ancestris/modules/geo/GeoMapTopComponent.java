@@ -165,7 +165,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         // Launch search for markers and set listener
         gpl = GeoPlacesList.getInstance(getGedcom());
         if (gpl.getPlaces() == null) {
-            gpl.launchPlacesSearch();
+            gpl.launchPlacesSearch(false);
         } else {
             geoPlacesChanged(gpl, GeoPlacesList.TYPEOFCHANGE_GEDCOM);
         }
@@ -457,7 +457,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     private void jRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRefreshButtonActionPerformed
         jRefreshButton.setEnabled(false);
-        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch();
+        GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch(true);
         refreshFlag = true;
     }//GEN-LAST:event_jRefreshButtonActionPerformed
 

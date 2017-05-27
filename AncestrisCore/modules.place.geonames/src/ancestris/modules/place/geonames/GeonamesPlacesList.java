@@ -53,14 +53,15 @@ public class GeonamesPlacesList implements SearchPlace {
 
 
                     try {
+                        String tmpStr = searchedPlace.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ");
                         logger.log(Level.FINE, "   ");
-                        logger.log(Level.FINE, "Start searching {0} ...", searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
+                        logger.log(Level.FINE, "Start searching {0} ...", tmpStr);
 
                         WebService.setUserName(GeonamesOptions.getInstance().getUserName());
                         ToponymSearchCriteria toponymSearchCriteria = new ToponymSearchCriteria();
                         toponymSearchCriteria.setStyle(Style.FULL);
                         toponymSearchCriteria.setLanguage(Locale.getDefault().toString());
-                        toponymSearchCriteria.setQ(searchedPlace.replaceAll(",", " ").replaceAll(" +", " "));
+                        toponymSearchCriteria.setQ(tmpStr);
                         logger.log(Level.FINE, "Call to WebService.search for toponym - "+ TimingUtility.getInstance().getTime());
                         toponymSearchResult = WebService.search(toponymSearchCriteria);
                         logger.log(Level.FINE, "Answer from WebService.search for toponym- "+ TimingUtility.getInstance().getTime());

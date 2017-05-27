@@ -213,10 +213,10 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     Exceptions.printStackTrace(ex);
                 }
             } else if (actionName.equals("ACTION_UpdateList")) {
-                GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
+                GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(false);
             } else if (actionName.equals("ACTION_UpdatePlaceOptions")) {
                 if (GeoPlacesList.getInstance(obj.getGedcom()).setPlaceDisplayFormat(obj.getPlace())) {
-                    GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch();
+                    GeoPlacesList.getInstance(obj.getGedcom()).launchPlacesSearch(false);
                 }
             } else if (actionName.equals("ACTION_EditEvent"+getDefaultEditorsName())) {
                 AncestrisEditor editor = AncestrisEditor.findEditor(obj.getProperty().getEntity());
