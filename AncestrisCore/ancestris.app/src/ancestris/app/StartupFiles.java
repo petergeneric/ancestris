@@ -18,6 +18,7 @@ import genj.util.Registry;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -39,6 +40,24 @@ public abstract class StartupFiles {
     //FIXME: is propertyChangeSupport necessary here?
     public static final String PROP_STARTUP_FILE_INFO = "StartupFiletInformation"; // NOI18N
     protected PropertyChangeSupport pch;
+    
+    private List<FileObject> commandLineFiles = new ArrayList<FileObject>(2);
+
+    public List<FileObject> getCommandLineFiles() {
+        return commandLineFiles;
+    }
+
+    public void setCommandLineFiles(List<File> commandLineFiles) {
+        for (File file : commandLineFiles) {
+            LOG.fine("set command files: "+file.getAbsolutePath());
+            try {
+                this.commandLineFiles.add(URLMapper.findFileObject(file.toURI().toURL()));
+            }
+            catch (MalformedURLException ex) {
+                LOG.warning(ex.getMessage());
+            }
+        }
+    }
 
     /**
      * Adds a FileObject to the files do be opened at startup time.
