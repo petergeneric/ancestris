@@ -501,7 +501,7 @@ public class PropertyPlace extends PropertyChoiceValue {
             format = (localGedcom == null) ? null : localGedcom.getPlaceDisplayFormat();
         }
         if (format == null) {
-            return getFirstAvailableJurisdiction();
+            return this.getDisplayValue().replaceAll(JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ");   //getFirstAvailableJurisdiction();
         }
 
         String f = format.trim();
