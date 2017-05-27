@@ -49,7 +49,7 @@ class GeoInternetSearch {
     }
 
     @SuppressWarnings("unchecked")
-    public synchronized void executeSearch(Gedcom gedcom) {
+    public synchronized void executeSearch(Gedcom gedcom, final boolean force) {
         // return if busy with this gedcom already
         if (isBusy) {
             if (gedcomSearchingList.contains(gedcom))  {
@@ -90,7 +90,7 @@ class GeoInternetSearch {
                         // if place not in the list, "create object" or else, add the events
                         if (obj == null) {
                             // City is not in the list : create object, find geocoordinates, add events (all done at construction)
-                            GeoNodeObject newObj = new GeoNodeObject(gplOwner, propertyPlace, true);
+                            GeoNodeObject newObj = new GeoNodeObject(gplOwner, propertyPlace, !force);
                             if (newObj.isInError) {
                                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                                     public void run() {
