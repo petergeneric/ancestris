@@ -122,6 +122,14 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                             true,
                             null);
                     placesEditorPanel.set(gedcom, propertyPlaces);
+                    if (propertyPlaces.iterator().next().getLatitude(true) == null) {
+                        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                            @Override
+                            public void run() {
+                                placesEditorPanel.runSearch();
+                            }
+                        });
+                    }
                     Dialog dialog = DialogDisplayer.getDefault().createDialog(placesEditorPanelDescriptor);
                     dialog.setVisible(true);
                     dialog.toFront();
