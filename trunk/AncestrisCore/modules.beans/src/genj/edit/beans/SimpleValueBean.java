@@ -19,11 +19,20 @@
  */
 package genj.edit.beans;
 
+import ancestris.util.swing.DialogManager;
+import static genj.edit.beans.PropertyBean.RESOURCES;
+import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
+import genj.util.GridBagHelper;
+import genj.util.swing.ImageIcon;
 import genj.util.swing.TextFieldWidget;
+import java.awt.Desktop;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import java.awt.BorderLayout;
 import java.awt.event.KeyListener;
+import java.net.URI;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 
 /**
@@ -31,6 +40,9 @@ import javax.swing.JLabel;
  * will use to change a property : UNKNOWN
  */
 public class SimpleValueBean extends PropertyBean {
+
+    private final GridBagHelper gh = new GridBagHelper(this);
+    private JButton webLink = new JButton(new ImageIcon(MetaProperty.class, "images/Web"));
 
     /** members */
     private TextFieldWidget tfield;
@@ -43,8 +55,22 @@ public class SimpleValueBean extends PropertyBean {
         tfieldRO = new JLabel(""); // for RO properties
         tfield.addChangeListener(changeSupport);
 
-        setLayout(new BorderLayout());
-        add(BorderLayout.NORTH, tfield);
+        //setLayout(new BorderLayout());
+        //add(BorderLayout.NORTH, tfield);
+        
+        // listen to selection of global and ask for confirmation
+        webLink.addActionListener(new ActionListener() {
+
+            public void actionPerformed(ActionEvent e) {
+                String link = property.getDisplayValue();
+                try {
+                    Desktop.getDesktop().browse(new URI(link));
+                } catch (Exception ex) {
+                    DialogManager.createError(RESOURCES.getString("link.error"), link).show();
+                }
+            }
+        });
+        
     }
 
     /**
@@ -56,6 +82,8 @@ public class SimpleValueBean extends PropertyBean {
             property.setValue(tfield.getText());
             // if commit, clear guessed flag
             property.setGuessed(false);
+
+            setPropertyImpl(property);
         }
     }
 
@@ -76,21 +104,29 @@ public class SimpleValueBean extends PropertyBean {
             tfield.setText("");
             tfield.setEditable(true);
             tfield.setVisible(true);
-            add(BorderLayout.NORTH, tfield);
+            gh.add(tfield, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+            //add(BorderLayout.NORTH, tfield);
         } else {
             String txt = property.getDisplayValue();
             if (property.isReadOnly()) {
                 tfieldRO.setText(txt);
                 tfieldRO.setVisible(txt.length() > 0);
                 defaultFocus = null;
-                add(BorderLayout.NORTH, tfieldRO);
+                gh.add(tfieldRO, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+                //add(BorderLayout.NORTH, tfieldRO);
             } else {
                 tfield.setText(txt);
                 tfield.setEditable(true);
                 tfield.setVisible(true);
-                add(BorderLayout.NORTH, tfield);
+                gh.add(tfield, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+                //add(BorderLayout.NORTH, tfield);
+            }
+            if (txt.startsWith("http://")) {
+                gh.add(webLink, 1, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
             }
         }
+        gh.addFiller(0, 1);
+        
         // not changed
         changeSupport.setChanged(false);
     }
