@@ -13,8 +13,11 @@ package ancestris.app;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.explorer.GedcomExplorerTopComponent;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.prefs.Preferences;
+import org.openide.filesystems.FileObject;
 import org.openide.modules.ModuleInstall;
 import org.openide.util.NbPreferences;
 import org.openide.windows.WindowManager;
@@ -45,8 +48,15 @@ public class Installer extends ModuleInstall {
 
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
+            @Override
             public void run() {
-                App.center.load(StartupFiles.getDefault().getAll());
+                LOG.fine("open files");
+                List<FileObject> filesToOpen = StartupFiles.getDefault().getCommandLineFiles();
+                LOG.log(Level.FINE, "... tries {0}", filesToOpen);
+                if (filesToOpen.isEmpty())
+                    filesToOpen = StartupFiles.getDefault().getAll();
+                App.center.load(filesToOpen);
+//                App.center.load(StartupFiles.getDefault().getAll());
                 GedcomExplorerTopComponent.getDefault().open();
             }
         });
