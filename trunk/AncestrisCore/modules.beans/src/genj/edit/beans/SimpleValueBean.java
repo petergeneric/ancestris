@@ -121,7 +121,7 @@ public class SimpleValueBean extends PropertyBean {
                 gh.add(tfield, 0, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
                 //add(BorderLayout.NORTH, tfield);
             }
-            if (txt.startsWith("http://")) {
+            if (txt.startsWith("http://") || txt.startsWith("https://")) {
                 gh.add(webLink, 1, 0, 1, 1, GridBagHelper.FILL_HORIZONTAL);
             }
         }
