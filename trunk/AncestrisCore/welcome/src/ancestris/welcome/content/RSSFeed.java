@@ -46,7 +46,6 @@ package ancestris.welcome.content;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
@@ -183,7 +182,7 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     }
     
     protected int getMaxItemCount() {
-        return 5;
+        return 10;
     }
 
     protected List<FeedItem> buildItemList() throws SAXException, ParserConfigurationException, IOException {
