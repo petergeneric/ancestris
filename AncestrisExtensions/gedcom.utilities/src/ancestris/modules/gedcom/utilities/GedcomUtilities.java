@@ -101,8 +101,10 @@ public class GedcomUtilities {
     }
 
     /*
-     * Merge 2 entities dest the final entity src the source entity properties
-     * the property list to be included in the dest entity
+     * Merge 2 entities :
+     *    - dest : the final entity 
+     *    - src : the source entity 
+     *    - properties : the property list of the source to be included in the dest entity
      */
     public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> properties) {
         LOG.log(Level.FINER, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
