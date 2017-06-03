@@ -17,7 +17,6 @@
  */
 package ancestris.modules.gedcom.history;
 
-import ancestris.modules.gedcom.utilities.EntityTag2Name;
 import genj.gedcom.Gedcom;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -85,7 +84,7 @@ class GedcomHistoryTableModel extends AbstractTableModel {
                     DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     return dateFormat.format(entityHistory.getDate().getTime());
                 case ENTITY_TAG:
-                    return EntityTag2Name.getTagName(entityHistory.getEntityTag());
+                    return Gedcom.getName(entityHistory.getEntityTag());
                 case ENTITY_ID:
                     return entityHistory.getEntityId();
                 case ACTION:
