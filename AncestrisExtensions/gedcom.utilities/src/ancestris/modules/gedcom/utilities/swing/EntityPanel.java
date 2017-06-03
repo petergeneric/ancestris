@@ -1,7 +1,7 @@
 package ancestris.modules.gedcom.utilities.swing;
 
-import ancestris.modules.gedcom.utilities.EntityTag2Name;
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public class EntityPanel extends javax.swing.JPanel {
     }
     
     public void set(Entity entity) {
-        jLabel1.setText(EntityTag2Name.getTagName(entity.getTag()));
+        jLabel1.setText(Gedcom.getName(entity.getTag()));
         if (entity.getDisplayValue().isEmpty() == true) {
             jTextField1.setVisible(false);
         } else {
