@@ -20,7 +20,6 @@ import org.openide.util.Exceptions;
 import com.apple.eawt.Application;
 import com.apple.eawt.ApplicationAdapter;
 import com.apple.eawt.ApplicationEvent;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 /**
@@ -77,10 +76,10 @@ public class MacMenu {
             macApplication.addApplicationListener(new ApplicationAdapter() {
                 @Override
                 public void handleQuit(ApplicationEvent event) {
-                    JOptionPane.showMessageDialog(null,
-                            "prefs Ancestris 1",
-                            "prefs Ancestris 2",
-                            JOptionPane.INFORMATION_MESSAGE);                
+//                    JOptionPane.showMessageDialog(null,
+//                            "prefs Ancestris 1",
+//                            "prefs Ancestris 2",
+//                            JOptionPane.INFORMATION_MESSAGE);                
                 }
                 @Override
                 public void handleAbout(ApplicationEvent event) {
