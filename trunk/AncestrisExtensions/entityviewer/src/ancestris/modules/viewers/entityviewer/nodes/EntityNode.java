@@ -1,8 +1,8 @@
 package ancestris.modules.viewers.entityviewer.nodes;
 
 import ancestris.modules.gedcom.utilities.swing.EntityTag2Icon;
-import ancestris.modules.gedcom.utilities.EntityTag2Name;
 import genj.gedcom.Entity;
+import genj.gedcom.Gedcom;
 import java.awt.Image;
 import org.openide.ErrorManager;
 import org.openide.nodes.AbstractNode;
@@ -29,7 +29,7 @@ public class EntityNode extends AbstractNode {
     public String getDisplayName() {
         Entity entity = getLookup().lookup(Entity.class);
         if (entity != null) {
-            return EntityTag2Name.getTagName(entity.getTag()) + " " + entity.getId();
+            return Gedcom.getName(entity.getTag()) + " " + entity.getId();
         } else {
             return null;
         }

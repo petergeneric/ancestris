@@ -1,6 +1,6 @@
 package ancestris.modules.gedcom.utilities.swing;
 
-import ancestris.modules.gedcom.utilities.PropertyTag2Name;
+import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 
 /**
@@ -17,7 +17,7 @@ public class PropertyPanel extends javax.swing.JPanel {
     }
     
     public void set(Property property) {
-        jLabel1.setText(PropertyTag2Name.getTagName(property.getTag()));
+        jLabel1.setText(Gedcom.getName(property.getTag()));
         if (property.getDisplayValue().isEmpty() == true) {
             jTextField1.setVisible(false);
         } else {

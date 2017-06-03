@@ -1,7 +1,7 @@
 package ancestris.modules.viewers.entityviewer.nodes;
 
 import ancestris.modules.gedcom.utilities.swing.PropertyTag2Icon;
-import ancestris.modules.gedcom.utilities.PropertyTag2Name;
+import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.PropertyFamilySpouse;
@@ -29,21 +29,21 @@ public class PropertyNode extends AbstractNode {
         genj.gedcom.Property obj = getLookup().lookup(genj.gedcom.Property.class);
         if (obj != null) {
             if (obj instanceof PropertyAssociation) {
-                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
+                return Gedcom.getName(obj.getTag()) + " " + obj.getDisplayValue();
             } else if (obj instanceof PropertyFamilySpouse) {
-                return PropertyTag2Name.getTagName(obj.getTag()) +
+                return Gedcom.getName(obj.getTag()) +
                         " @" + ((PropertyFamilySpouse) obj).getFamily().getId() +
                         "@ " + ((PropertyFamilySpouse) obj).getFamily().getHusband().getName() +
                         " & " + ((PropertyFamilySpouse) obj).getFamily().getWife().getName();
             } else if (obj instanceof PropertyFamilyChild) {
-                return PropertyTag2Name.getTagName(obj.getTag()) +
+                return Gedcom.getName(obj.getTag()) +
                         " @" + ((PropertyFamilyChild) obj).getFamily().getId() +
                         "@ " + ((PropertyFamilyChild) obj).getFamily().getHusband().getName() +
                         " & " + ((PropertyFamilyChild) obj).getFamily().getWife().getName();
             } else if (obj instanceof PropertyXRef) {
-                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
+                return Gedcom.getName(obj.getTag()) + " " + obj.getDisplayValue();
             } else {
-                return PropertyTag2Name.getTagName(obj.getTag()) + " " + obj.getDisplayValue();
+                return Gedcom.getName(obj.getTag()) + " " + obj.getDisplayValue();
             }
         } else {
             return null;
