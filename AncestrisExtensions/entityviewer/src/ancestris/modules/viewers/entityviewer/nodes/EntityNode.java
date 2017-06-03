@@ -1,6 +1,5 @@
 package ancestris.modules.viewers.entityviewer.nodes;
 
-import ancestris.modules.gedcom.utilities.swing.EntityTag2Icon;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import java.awt.Image;

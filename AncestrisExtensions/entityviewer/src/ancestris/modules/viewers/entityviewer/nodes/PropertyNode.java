@@ -1,6 +1,5 @@
 package ancestris.modules.viewers.entityviewer.nodes;
 
-import ancestris.modules.gedcom.utilities.swing.PropertyTag2Icon;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyFamilyChild;
