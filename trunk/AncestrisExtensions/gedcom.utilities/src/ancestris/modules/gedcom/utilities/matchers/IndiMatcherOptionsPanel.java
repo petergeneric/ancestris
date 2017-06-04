@@ -1,27 +1,19 @@
-package ancestris.modules.gedcom.searchduplicates;
+package ancestris.modules.gedcom.utilities.matchers;
 
-import static ancestris.modules.gedcom.searchduplicates.Bundle.CheckDuplicatesVisualPanel3_title;
-import ancestris.modules.gedcom.utilities.matchers.IndiMatcherOptions;
 import javax.swing.JPanel;
 import javax.swing.SpinnerNumberModel;
-import org.openide.util.NbBundle;
 
-@NbBundle.Messages("CheckDuplicatesVisualPanel3.title=Individuals search options")
-public final class SearchDuplicatesVisualPanel3 extends JPanel {
+public final class IndiMatcherOptionsPanel extends JPanel {
 
-    IndiMatcherOptions indiMatcherOptions = new IndiMatcherOptions();
+    private IndiMatcherOptions indiMatcherOptions = new IndiMatcherOptions();
 
     /**
      * Creates new form SearchDuplicatesVisualPanel2
      */
-    public SearchDuplicatesVisualPanel3() {
+    public IndiMatcherOptionsPanel() {
         initComponents();
     }
 
-    @Override
-    public String getName() {
-        return CheckDuplicatesVisualPanel3_title();
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -40,7 +32,8 @@ public final class SearchDuplicatesVisualPanel3 extends JPanel {
         indiEmptyValuesValidRadioButton = new javax.swing.JRadioButton();
         indiAllFirstNamesRadioButton = new javax.swing.JRadioButton();
         indiCheckAllNamesRadioButton = new javax.swing.JRadioButton();
-        indiCheckFamiliesRadioButton = new javax.swing.JRadioButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTextArea1 = new javax.swing.JTextArea();
 
         javax.swing.GroupLayout emptyPanelLayout = new javax.swing.GroupLayout(emptyPanel);
         emptyPanel.setLayout(emptyPanelLayout);
@@ -86,17 +79,23 @@ public final class SearchDuplicatesVisualPanel3 extends JPanel {
             .addGap(0, 166, Short.MAX_VALUE)
         );
 
-        org.openide.awt.Mnemonics.setLocalizedText(indiMaximumDateIntervalLabel, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel3.class, "SearchDuplicatesVisualPanel3.indiMaximumDateIntervalLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(indiMaximumDateIntervalLabel, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiMaximumDateIntervalLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(indiEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel3.class, "SearchDuplicatesVisualPanel3.indiEmptyValuesValidRadioButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(indiEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiEmptyValuesValidRadioButton.text")); // NOI18N
 
         indiAllFirstNamesRadioButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(indiAllFirstNamesRadioButton, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel3.class, "SearchDuplicatesVisualPanel3.indiAllFirstNamesRadioButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(indiAllFirstNamesRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiAllFirstNamesRadioButton.text")); // NOI18N
 
         indiCheckAllNamesRadioButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(indiCheckAllNamesRadioButton, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel3.class, "SearchDuplicatesVisualPanel3.indiCheckAllNamesRadioButton.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(indiCheckAllNamesRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiCheckAllNamesRadioButton.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(indiCheckFamiliesRadioButton, org.openide.util.NbBundle.getMessage(SearchDuplicatesVisualPanel3.class, "SearchDuplicatesVisualPanel3.indiCheckFamiliesRadioButton.text")); // NOI18N
+        jTextArea1.setEditable(false);
+        jTextArea1.setColumns(20);
+        jTextArea1.setLineWrap(true);
+        jTextArea1.setRows(4);
+        jTextArea1.setText(org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.jTextArea1.text")); // NOI18N
+        jTextArea1.setWrapStyleWord(true);
+        jScrollPane1.setViewportView(jTextArea1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -105,47 +104,43 @@ public final class SearchDuplicatesVisualPanel3 extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(indiEmptyValuesValidRadioButton)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(indiMaximumDateIntervalLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(indiAllFirstNamesRadioButton)
-                            .addComponent(indiCheckAllNamesRadioButton))
-                        .addContainerGap())
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(indiEmptyValuesValidRadioButton)
-                            .addComponent(indiCheckFamiliesRadioButton))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(indiMaximumDateIntervalLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(indiAllFirstNamesRadioButton)
+                    .addComponent(indiCheckAllNamesRadioButton)
+                    .addComponent(jScrollPane1))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(indiMaximumDateIntervalLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(indiEmptyValuesValidRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indiAllFirstNamesRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(indiCheckAllNamesRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(indiCheckFamiliesRadioButton)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(indiAllFirstNamesRadioButton)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel emptyPanel;
     private javax.swing.JRadioButton indiAllFirstNamesRadioButton;
     private javax.swing.JRadioButton indiCheckAllNamesRadioButton;
-    private javax.swing.JRadioButton indiCheckFamiliesRadioButton;
     private javax.swing.JRadioButton indiEmptyValuesValidRadioButton;
     private javax.swing.JSpinner indiMaxDateIntervalSpinner;
     private javax.swing.JLabel indiMaximumDateIntervalLabel;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JPanel repositoriesOptionPanel;
     private javax.swing.JPanel sourcesOptionPanel1;
     private javax.swing.JPanel submittersOptionPanel;
@@ -155,7 +150,6 @@ public final class SearchDuplicatesVisualPanel3 extends JPanel {
         indiMatcherOptions.setDateinterval((Integer) indiMaxDateIntervalSpinner.getValue());
         indiMatcherOptions.setCheckAllNames(indiCheckAllNamesRadioButton.isSelected());
         indiMatcherOptions.setAllFirstNames(indiAllFirstNamesRadioButton.isSelected());
-        indiMatcherOptions.setCheckFamilies(indiCheckFamiliesRadioButton.isSelected());
         indiMatcherOptions.setEmptyValueValid(indiEmptyValuesValidRadioButton.isSelected());
         return indiMatcherOptions;
     }

@@ -56,7 +56,7 @@ public class ResultPanel extends javax.swing.JPanel {
         initSortMaps();
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("searchDuplicatesWindowWidth", this.getPreferredSize().width), registry.get("searchDuplicatesWindowHeight", this.getPreferredSize().height)));
-        
+        scrollPane.getVerticalScrollBar().setUnitIncrement(20);
     }
 
     
@@ -221,7 +221,9 @@ public class ResultPanel extends javax.swing.JPanel {
         ArrayList<TagPath> tagPaths = new ArrayList<TagPath>();
         if (pLeft != null) {
             for (Property property : pLeft.getProperties()) {
-                tagPaths.add(property.getPath());
+                if (!tagPaths.contains(property.getPath())) {
+                    tagPaths.add(property.getPath());
+                }
             }
         }
         if (pRight != null) {
@@ -237,10 +239,12 @@ public class ResultPanel extends javax.swing.JPanel {
     private String getLabelFromProperty(Property leftP, Property rightP) {
         String ret = "";
         Property p = leftP != null ? leftP : rightP;
-        if (p.getTag().equals("FAMC")) {  // replace labels which are too long
+        if (p.getTag().equals("FAMC")) {  // replace labels which is too long
             ret = NbBundle.getMessage(ResultPanel.class, "ResultPanel.Parents");
-        } else if (p.getTag().equals("FAMS")) { // replace labels which are too long
+        } else if (p.getTag().equals("FAMS")) { // replace labels which is too long
             ret = NbBundle.getMessage(ResultPanel.class, "ResultPanel.Spouse");
+        } else if (p.getTag().equals("XREF")) { // replace labels which would show XREF otherwise
+            ret = NbBundle.getMessage(ResultPanel.class, "ResultPanel.Reference");
         } else {
             String str = p.getPropertyName();
             int i = str.indexOf(" ");
@@ -285,6 +289,29 @@ public class ResultPanel extends javax.swing.JPanel {
         tagMap.put("FAM:CHIL", 13);
         tagMap.put("FAM:MARR", 14);
         tagMap.put("FAM:MARC", 15);
+        
+        tagMap.put("SUBM:NAME", 21);
+        tagMap.put("SUBM:ADDR", 22);
+        tagMap.put("SUBM:PHON", 23);
+        tagMap.put("SUBM:EMAIL", 24);
+        tagMap.put("SUBM:WWW", 25);
+        
+        tagMap.put("REPO:NAME", 31);
+        tagMap.put("REPO:ADDR", 32);
+        tagMap.put("REPO:PHON", 33);
+        tagMap.put("REPO:EMAIL", 34);
+        tagMap.put("REPO:WWW", 35);
+        
+        tagMap.put("SOUR:TITL", 41);
+        tagMap.put("SOUR:ABBR", 42);
+        tagMap.put("SOUR:AUTH", 43);
+        tagMap.put("SOUR:TEXT", 44);
+        tagMap.put("SOUR:PUBL", 45);
+        
+        tagMap.put("OBJE:FILE", 51);
+        tagMap.put("OBJE:FILE:TITL", 52);
+        
+        
         
     }
 
@@ -333,7 +360,7 @@ public class ResultPanel extends javax.swing.JPanel {
             checkPropB.setEnabled(!same);
             checkPropA.setForeground(color);
             checkPropB.setForeground(color);
-            if (!same) {
+            if (!same && prop.getMetaProperty().isSingleton()) {
                 checkPropA.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {

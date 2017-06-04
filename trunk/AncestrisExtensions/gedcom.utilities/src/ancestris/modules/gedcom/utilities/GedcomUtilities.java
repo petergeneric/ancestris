@@ -22,6 +22,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyXRef;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -171,17 +172,29 @@ public class GedcomUtilities {
                 parentPropertyDest.delProperty(propertyDest);
             }
         }
-        propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue());
-
-        // Move children properties
-        for (Property children : propertySrc.getProperties()) {
-            movePropertyRecursively(children, propertyDest);
+        
+        // Attach parentPropertyDest entity to Parent of PropertySrc in case it is a PropertyForeignXRef
+        if (propertySrc instanceof PropertyForeignXRef) {
+            PropertyForeignXRef pfxref = (PropertyForeignXRef) propertySrc;
+            PropertyXRef pxref = pfxref.getTarget();
+            pxref.unlink();
+            pxref.setValue(parentPropertyDest.getEntity().getId());
+            pxref.link();
+        } // ... else attach src property to dest property in case it is not a PropertyForeignXref
+        else {
+            propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue());
+            propertySrc.getParent().delProperty(propertySrc);
+            if (propertyDest instanceof PropertyXRef) {
+                ((PropertyXRef) propertyDest).link();
+            }
+            
+            // Continue moving children properties
+            for (Property children : propertySrc.getProperties()) {
+                movePropertyRecursively(children, propertyDest);
+            }
         }
 
-        propertySrc.getParent().delProperty(propertySrc);
-        if (propertyDest instanceof PropertyXRef) {
-            ((PropertyXRef) propertyDest).link();
-        }
+
     }
 
     public static <T> List<T> searchProperties(Gedcom gedcom, Class<T> type, int entityType) {
