@@ -9,6 +9,7 @@ import java.awt.Dialog;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 import org.openide.DialogDescriptor;
@@ -23,11 +24,14 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lemovice left and right entities could be the same.
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=Duplicate {0} of {1} estimate matching {2}",
-    "SearchDuplicatesPlugin.nextButton=Next",
-    "SearchDuplicatesPlugin.previousButton=Previous",
-    "SearchDuplicatesPlugin.mergeButton=Merge",
-    "SearchDuplicatesPlugin.noSelectedProperties=You havent selected any properties to merge\nMerge anyway ?"})
+@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=Duplicate {0} of {1} - Estimate matching : {2}",
+    "SearchDuplicatesPlugin.firstButton=Go to first duplicate",
+    "SearchDuplicatesPlugin.previousButton=Go to previous duplicate",
+    "SearchDuplicatesPlugin.nextButton=Go to next duplicate",
+    "SearchDuplicatesPlugin.lastButton=Go to last duplicate",
+    "SearchDuplicatesPlugin.mergeButton=<html>Merge checked properties of the right into the entity of the left,<br>then deletes the entity of the right</html>",
+    "SearchDuplicatesPlugin.closeButton=Stop the duplicates merge and close the window",
+    "SearchDuplicatesPlugin.noSelectedProperties=Nothing is checked on the entity on the right.\nThis will only delete it.\nOK to delete it ?"})
 public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable {
 
     private static final Logger log = Logger.getLogger(SearchDuplicatesPlugin.class.getName());
@@ -43,7 +47,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
         }
     };
     private final List<String> entities2Ckeck;
-    Map<String, ? extends MatcherOptions> selectedOptions;
+    private Map<String, ? extends MatcherOptions> selectedOptions;
 
     public SearchDuplicatesPlugin() {
         this.gedcom = null;
@@ -94,16 +98,31 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
             }
 
             SwingUtilities.invokeLater(new Runnable() {
-                SearchDuplicatesResultPanel entityViewPanel = new SearchDuplicatesResultPanel();
+                ResultPanel entityViewPanel = new ResultPanel(gedcom);
                 DialogDescriptor checkDuplicatePanelDescriptor;
                 int linkedListIndex = -1;
-                final JButton nextButton = new JButton();
+                final JButton firstButton = new JButton();
                 final JButton previousButton = new JButton();
+                final JButton nextButton = new JButton();
+                final JButton lastButton = new JButton();
                 final JButton mergeButton = new JButton();
+                final JButton closeButton = new JButton();
 
                 @Override
                 public void run() {
-                    previousButton.setText(SearchDuplicatesPlugin_previousButton()); // NOI18N
+                    firstButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/first.png")));
+                    firstButton.setToolTipText(SearchDuplicatesPlugin_firstButton()); // NOI18N
+                    firstButton.setEnabled(false);
+                    firstButton.setDefaultCapable(true);
+                    firstButton.putClientProperty("defaultButton", Boolean.FALSE); //NOI18N
+                    firstButton.addActionListener(new java.awt.event.ActionListener() {
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            firstButtonActionPerformed(evt);
+                        }
+                    });
+                    previousButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/previous.png")));
+                    previousButton.setToolTipText(SearchDuplicatesPlugin_previousButton()); // NOI18N
                     previousButton.setEnabled(false);
                     previousButton.setDefaultCapable(true);
                     previousButton.putClientProperty("defaultButton", Boolean.FALSE); //NOI18N
@@ -114,7 +133,8 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                         }
                     });
                     nextButton.setDefaultCapable(true);
-                    nextButton.setText(SearchDuplicatesPlugin_nextButton()); // NOI18N
+                    nextButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/next.png")));
+                    nextButton.setToolTipText(SearchDuplicatesPlugin_nextButton()); // NOI18N
                     nextButton.setEnabled(false);
                     nextButton.addActionListener(new java.awt.event.ActionListener() {
                         @Override
@@ -122,8 +142,20 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                             nextButtonActionPerformed(evt);
                         }
                     });
+                    lastButton.setDefaultCapable(true);
+                    lastButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/last.png")));
+                    lastButton.setToolTipText(SearchDuplicatesPlugin_lastButton()); // NOI18N
+                    lastButton.setEnabled(false);
+                    lastButton.putClientProperty("defaultButton", Boolean.FALSE); //NOI18N
+                    lastButton.addActionListener(new java.awt.event.ActionListener() {
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            lastButtonActionPerformed(evt);
+                        }
+                    });
+                    mergeButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/merge.png")));
+                    mergeButton.setToolTipText(SearchDuplicatesPlugin_mergeButton()); // NOI18N
                     mergeButton.setDefaultCapable(true);
-                    mergeButton.setText(SearchDuplicatesPlugin_mergeButton()); // NOI18N
                     mergeButton.setEnabled(true);
                     mergeButton.addActionListener(new java.awt.event.ActionListener() {
                         @Override
@@ -131,31 +163,32 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                             mergeButtonActionPerformed(evt);
                         }
                     });
+                    closeButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/close.png")));
+                    closeButton.setToolTipText(SearchDuplicatesPlugin_closeButton()); // NOI18N
+                    closeButton.setDefaultCapable(true);
+                    closeButton.setEnabled(true);
                     // There is duplicates let displaying them
                     if (matchesLinkedList.size() > 0) {
                         checkDuplicatePanelDescriptor = new DialogDescriptor(
                                 entityViewPanel,
-                                NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title"),
+                                "",
                                 false,
-                                new Object[]{previousButton, mergeButton, nextButton, DialogDescriptor.CLOSED_OPTION},
-                                DialogDescriptor.CLOSED_OPTION,
+                                new Object[]{firstButton, previousButton, nextButton, lastButton, mergeButton, closeButton},
+                                mergeButton,
                                 DialogDescriptor.DEFAULT_ALIGN,
                                 null,
                                 null);
 
-                        if (matchesLinkedList.size() == 1) {
-                            checkDuplicatePanelDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION, mergeButton});
-                        } else {
-                            checkDuplicatePanelDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION});
-                        }
+                        checkDuplicatePanelDescriptor.setClosingOptions(new Object[]{closeButton});
 
                         this.linkedListIndex = 0;
                         if (linkedListIndex < matchesLinkedList.size() - 1) {
                             nextButton.setEnabled(true);
+                            lastButton.setEnabled(true);
                         }
                         entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
                         SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty());
-                        checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                        checkDuplicatePanelDescriptor.setTitle(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
 
                         // display Dialog
                         Dialog dialog = DialogDisplayer.getDefault().createDialog(checkDuplicatePanelDescriptor);
@@ -167,16 +200,33 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     }
                 }
 
-                private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {
-                    linkedListIndex -= 1;
+                private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    linkedListIndex = 0;
 
                     entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
-                    checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    checkDuplicatePanelDescriptor.setTitle(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
                     if (linkedListIndex <= 0) {
+                        firstButton.setEnabled(false);
                         previousButton.setEnabled(false);
                     }
                     if (linkedListIndex < matchesLinkedList.size() - 1) {
                         nextButton.setEnabled(true);
+                        lastButton.setEnabled(true);
+                    }
+                }
+
+                private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    linkedListIndex -= 1;
+
+                    entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                    checkDuplicatePanelDescriptor.setTitle(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    if (linkedListIndex <= 0) {
+                        firstButton.setEnabled(false);
+                        previousButton.setEnabled(false);
+                    }
+                    if (linkedListIndex < matchesLinkedList.size() - 1) {
+                        nextButton.setEnabled(true);
+                        lastButton.setEnabled(true);
                     }
                 }
 
@@ -184,12 +234,30 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     linkedListIndex += 1;
 
                     entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
-                    checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    checkDuplicatePanelDescriptor.setTitle(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
 
                     if (linkedListIndex >= matchesLinkedList.size() - 1) {
                         nextButton.setEnabled(false);
+                        lastButton.setEnabled(false);
                     }
                     if (linkedListIndex > 0) {
+                        firstButton.setEnabled(true);
+                        previousButton.setEnabled(true);
+                    }
+                }
+
+                private void lastButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    linkedListIndex = matchesLinkedList.size() - 1;
+
+                    entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                    checkDuplicatePanelDescriptor.setTitle(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+
+                    if (linkedListIndex >= matchesLinkedList.size() - 1) {
+                        nextButton.setEnabled(false);
+                        lastButton.setEnabled(false);
+                    }
+                    if (linkedListIndex > 0) {
+                        firstButton.setEnabled(true);
                         previousButton.setEnabled(true);
                     }
                 }
@@ -205,6 +273,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     } else {
                         merge = true;
                     }
+                    
                     if (merge == true) {
                         try {
                             gedcom.doUnitOfWork(new UnitOfWork() {
@@ -213,7 +282,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                                     Entity left = matchesLinkedList.get(linkedListIndex).getLeft();
                                     Entity right = matchesLinkedList.get(linkedListIndex).getRight();
                                     List<Property> selectedProperties = entityViewPanel.getSelectedProperties();
-                                    GedcomUtilities.MergeEntities(gedcom,left,right,selectedProperties);
+                                    GedcomUtilities.MergeEntities(gedcom, left, right, selectedProperties);
                                 }
                             });
                         } catch (GedcomException ex) {
@@ -221,27 +290,38 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                         }
 
                         matchesLinkedList.remove(linkedListIndex);
+                    }
 
-                        // display next
-                        if (matchesLinkedList.size() > 0) {
-                            if (matchesLinkedList.size() == 1) {
-                                checkDuplicatePanelDescriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION, mergeButton});
-                            }
+                    // display next
+                    if (matchesLinkedList.size() > 0) {
 
-                            if (linkedListIndex >= matchesLinkedList.size() - 1) {
-                                nextButton.setEnabled(false);
-                                linkedListIndex = matchesLinkedList.size() - 1;
-                            }
-
-                            if (linkedListIndex > 0) {
-                                previousButton.setEnabled(true);
-                            }
-
-                            entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
-                            checkDuplicatePanelDescriptor.setTitle(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicatePanelDescriptor.title") + " " + SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                        if (linkedListIndex >= matchesLinkedList.size() - 1) {
+                            nextButton.setEnabled(false);
+                            lastButton.setEnabled(false);
+                            linkedListIndex = matchesLinkedList.size() - 1;
                         }
+
+                        if (linkedListIndex <= 0) {
+                            firstButton.setEnabled(false);
+                            previousButton.setEnabled(false);
+                        }
+
+                        if (linkedListIndex > 0) {
+                            firstButton.setEnabled(true);
+                            previousButton.setEnabled(true);
+                        }
+
+                        entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
+                        checkDuplicatePanelDescriptor.setTitle(SearchDuplicatesPlugin_duplicateIndexLabel_text((linkedListIndex + 1), matchesLinkedList.size(), matchesLinkedList.get(linkedListIndex).getCertainty()));
+                    } else {
+                        closeButton.doClick();
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(NbBundle.getMessage(SearchDuplicatesPlugin.class, "CheckDuplicates.mergeCompleted"), NotifyDescriptor.INFORMATION_MESSAGE);
+                        DialogDisplayer.getDefault().notify(nd);
                     }
                 }
+                
+                // end runnable
+                
             });
         } catch (InterruptedException ex) {
             log.log(Level.INFO, "the task was CANCELLED");

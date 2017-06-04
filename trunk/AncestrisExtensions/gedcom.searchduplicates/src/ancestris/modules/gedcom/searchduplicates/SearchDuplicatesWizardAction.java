@@ -27,7 +27,7 @@ import org.openide.util.*;
         iconInMenu = true,
         lazy = false)
 @ActionReference(path = "Menu/Tools/Gedcom", name = "SearchDuplicatesWizardAction", position = 600)
-@NbBundle.Messages({"CTL_CheckDuplicatesAction=Search duplicates",
+@NbBundle.Messages({"CTL_CheckDuplicatesAction=Search and Merge of duplicates",
     "CheckDuplicates.runing=Searching duplicates"})
 public final class SearchDuplicatesWizardAction extends AbstractAncestrisContextAction {
 
@@ -59,8 +59,10 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
             // {1} will be replaced by WizardDescriptor.Iterator.name()
             wizardDescriptor.setTitleFormat(new MessageFormat("{0} ({1})"));
             wizardDescriptor.setTitle(CTL_CheckDuplicatesAction());
+            
+            
+            
             if (DialogDisplayer.getDefault().notify(wizardDescriptor) == WizardDescriptor.FINISH_OPTION) {
-
                 TreeMap<String, MatcherOptions> selectedOptions = new TreeMap();
                 Gedcom myGedcom = contextToOpen.getGedcom();
                 List<String> entities2Ckeck = (List<String>) wizardDescriptor.getProperty("selectedEntities");
@@ -71,19 +73,16 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
 
                     @Override
                     public boolean cancel() {
-
                         log.log(Level.INFO, "handleCancel");
                         if (null == theTask) {
                             return false;
                         }
-
                         return theTask.cancel();
                     }
                 });
 
                 theTask.addTaskListener(
                         new TaskListener() {
-
                             @Override
                             public void taskFinished(org.openide.util.Task task) {
                                 progressHandle.finish();
