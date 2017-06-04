@@ -73,7 +73,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                 final genj.fo.Document doc = new genj.fo.Document(title);
                 doc.startSection(title);
 
-                final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
+                final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result == null ? "0" : result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
                 final JDialog dialog = new JDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GedcomValidate.class, "doc.title"), false);
                 if (result != null && result.size() > 2000) {
                     Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
