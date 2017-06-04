@@ -2,7 +2,6 @@ package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
-import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.modules.gedcom.utilities.matchers.*;
 import genj.gedcom.*;
 import java.awt.Dialog;
@@ -44,6 +43,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
             put(Gedcom.SOUR, new SourceMatcher());
             put(Gedcom.REPO, new RepositoryMatcher());
             put(Gedcom.SUBM, new SubmitterMatcher());
+            put(Gedcom.OBJE, new MediaMatcher());
         }
     };
     private final List<String> entities2Ckeck;
@@ -85,6 +85,8 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     (entitiesMatchers.get(tag)).setOptions((SourceMatcherOptions) selectedOptions.get(Gedcom.SOUR));
                 } else if (tag.equals(Gedcom.SUBM)) {
                     (entitiesMatchers.get(tag)).setOptions((SubmitterMatcherOptions) selectedOptions.get(Gedcom.SUBM));
+                } else if (tag.equals(Gedcom.OBJE)) {
+                    (entitiesMatchers.get(tag)).setOptions((MediaMatcherOptions) selectedOptions.get(Gedcom.OBJE));
                 }
                 List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
                 Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
@@ -282,8 +284,30 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                                     Entity left = matchesLinkedList.get(linkedListIndex).getLeft();
                                     Entity right = matchesLinkedList.get(linkedListIndex).getRight();
                                     List<Property> selectedProperties = entityViewPanel.getSelectedProperties();
-                                    GedcomUtilities.MergeEntities(gedcom, left, right, selectedProperties);
+                                    //GedcomUtilities.MergeEntities(gedcom, left, right, selectedProperties);
+                                    linkedListIndex = cleanList(matchesLinkedList, right);
                                 }
+
+                                // Remove merged entities from remaining matches
+                                private int cleanList(LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList, Entity rightEntity) {
+                                    PotentialMatch currentMatch = matchesLinkedList.get(linkedListIndex);
+                                    LinkedList<PotentialMatch<? extends Entity>> matchToRemove = new LinkedList<PotentialMatch<? extends Entity>>();
+                                    for (PotentialMatch match : matchesLinkedList) {
+                                        if (!match.equals(currentMatch) && (match.getLeft().equals(rightEntity) || match.getRight().equals(rightEntity))) {
+                                            matchToRemove.add(match);
+                                        }
+                                    }
+                                    matchesLinkedList.removeAll(matchToRemove);
+                                    int index = 0;
+                                    for (PotentialMatch match : matchesLinkedList) {
+                                        if (match.equals(currentMatch)) {
+                                            return index;
+                                        }
+                                        index++;
+                                    }
+                                    return 0;
+                                }
+                                
                             });
                         } catch (GedcomException ex) {
                             Exceptions.printStackTrace(ex);
@@ -304,11 +328,17 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                         if (linkedListIndex <= 0) {
                             firstButton.setEnabled(false);
                             previousButton.setEnabled(false);
+                            linkedListIndex = 0;
                         }
 
                         if (linkedListIndex > 0) {
                             firstButton.setEnabled(true);
                             previousButton.setEnabled(true);
+                        }
+
+                        if (linkedListIndex < matchesLinkedList.size() - 1) {
+                            nextButton.setEnabled(true);
+                            lastButton.setEnabled(true);
                         }
 
                         entityViewPanel.setEntities(matchesLinkedList.get(linkedListIndex));
