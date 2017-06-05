@@ -1,17 +1,27 @@
 package ancestris.modules.gedcom.utilities.matchers;
 
+import genj.util.Registry;
+
 /**
  *
- * @author lemovice
+ * @author lemovice & frederic
  */
 public class IndiMatcherOptions extends MatcherOptions {
 
-    private int dateinterval = 2000;
-    private boolean checkAllNames = true;
-    private boolean allFirstNamesEquals = true;
-    private boolean checkFamilies = false;
-    private boolean emptyValueValid = false;
+    private Registry registry;
+    private int dateinterval;
+    private boolean checkAllNames;
+    private boolean allFirstNamesEquals;
+    private boolean emptyValueValid;
 
+    public IndiMatcherOptions() {
+        registry = Registry.get(MatcherOptions.class);
+        dateinterval = registry.get("MatcherOptions.Indi.dateinterval", 365);
+        checkAllNames = registry.get("MatcherOptions.Indi.checkAllNames", true);
+        allFirstNamesEquals = registry.get("MatcherOptions.Indi.allFirstNamesEquals", true);
+        emptyValueValid = registry.get("MatcherOptions.Indi.emptyValueValid", false);
+    }
+    
     /**
      * @return the dateinterval
      */
@@ -24,6 +34,7 @@ public class IndiMatcherOptions extends MatcherOptions {
      */
     public void setDateinterval(int dateinterval) {
         this.dateinterval = dateinterval;
+        registry.put("MatcherOptions.Indi.dateinterval", dateinterval);
     }
 
     /**
@@ -38,6 +49,7 @@ public class IndiMatcherOptions extends MatcherOptions {
      */
     public void setCheckAllNames(boolean checkAllNames) {
         this.checkAllNames = checkAllNames;
+        registry.put("MatcherOptions.Indi.checkAllNames", checkAllNames);
     }
 
     /**
@@ -52,20 +64,7 @@ public class IndiMatcherOptions extends MatcherOptions {
      */
     public void setAllFirstNames(boolean allFirstNames) {
         this.allFirstNamesEquals = allFirstNames;
-    }
-
-    /**
-     * @return the checkFamilies
-     */
-    public boolean isCheckFamilies() {
-        return checkFamilies;
-    }
-
-    /**
-     * @param checkFamilies the checkFamilies to set
-     */
-    public void setCheckFamilies(boolean checkFamilies) {
-        this.checkFamilies = checkFamilies;
+        registry.put("MatcherOptions.Indi.allFirstNamesEquals", allFirstNames);
     }
 
     /**
@@ -80,5 +79,6 @@ public class IndiMatcherOptions extends MatcherOptions {
      */
     public void setEmptyValueValid(boolean emptyValueValid) {
         this.emptyValueValid = emptyValueValid;
+        registry.put("MatcherOptions.Indi.emptyValueValid", emptyValueValid);
     }
 }

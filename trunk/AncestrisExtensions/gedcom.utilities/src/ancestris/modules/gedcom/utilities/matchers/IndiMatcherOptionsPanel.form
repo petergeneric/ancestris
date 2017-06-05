@@ -125,9 +125,9 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JSpinner" name="indiMaxDateIntervalSpinner">
-      <AuxValues>
-        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(new SpinnerNumberModel(365,0,3650,1))"/>
-      </AuxValues>
+      <Events>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="indiMaxDateIntervalSpinnerStateChanged"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="indiEmptyValuesValidRadioButton">
       <Properties>
@@ -135,6 +135,9 @@
           <ResourceString bundle="ancestris/modules/gedcom/utilities/matchers/Bundle.properties" key="IndiMatcherOptionsPanel.indiEmptyValuesValidRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indiEmptyValuesValidRadioButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="indiAllFirstNamesRadioButton">
       <Properties>
@@ -143,6 +146,9 @@
           <ResourceString bundle="ancestris/modules/gedcom/utilities/matchers/Bundle.properties" key="IndiMatcherOptionsPanel.indiAllFirstNamesRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indiAllFirstNamesRadioButtonActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JRadioButton" name="indiCheckAllNamesRadioButton">
       <Properties>
@@ -151,6 +157,9 @@
           <ResourceString bundle="ancestris/modules/gedcom/utilities/matchers/Bundle.properties" key="IndiMatcherOptionsPanel.indiCheckAllNamesRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="indiCheckAllNamesRadioButtonActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
