@@ -26,9 +26,11 @@ import java.awt.image.BufferedImage;
 import ancestris.modules.webbook.Log;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.transfer.FTPRegister;
+import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
+import java.text.Normalizer;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import javax.imageio.ImageIO;
@@ -804,7 +806,7 @@ public class WebHelper {
      * Returns nb of individuals
      *///USED
     public int getNbIndis() {
-        return gedcom.getEntities(Gedcom.INDI, "INDI:NAME").length;
+        return gedcom.getIndis().size();
     }
 
     /**
@@ -905,7 +907,7 @@ public class WebHelper {
             return defchar;
         }
         String str = indi.getLastName();
-        return (str == null ? defchar : str.length() == 0 ? defchar : str);
+        return (str == null ? defchar : str.isEmpty() ? defchar : str);
     }
 
     /**
@@ -1068,7 +1070,7 @@ public class WebHelper {
         for (Iterator<? extends Property> it = placesProps.iterator(); it.hasNext();) {
             Property prop = it.next();
             if (prop instanceof PropertyPlace) {
-                juridic = ((PropertyPlace) prop).getCity().trim();
+                juridic = Normalizer.normalize(((PropertyPlace) prop).getCity().trim(), Normalizer.Form.NFD).replaceAll("[\\p{InCombiningDiacriticalMarks}]", "");  // convert accents
             } else {
                 break;
             }
@@ -1219,18 +1221,12 @@ public class WebHelper {
     @SuppressWarnings("unchecked")
     private boolean buildAncestors(Indi rootIndi) {
         // Depending on option, start at sosa number 1 or if option says 0, the one of the individual selected
-        int startSosa = 1;
+        BigInteger startSosa = BigInteger.ONE;
 
         // Run recursion
-        List list = new ArrayList(3);
-        list.add(new Integer(startSosa));
+        List list = new ArrayList(2); // list includes : sosa, indi
+        list.add(startSosa);
         list.add(rootIndi);
-        Fam[] fams = rootIndi.getFamiliesWhereSpouse();
-        if ((fams != null) && (fams.length > 0)) {
-            list.add(fams[0]);
-        } else {
-            list.add(null);
-        }
         recursion(list, 1);
 
         Collections.sort(listOfAncestors, sortAncestors);
@@ -1240,45 +1236,41 @@ public class WebHelper {
     /**
      * Recurse over a generation list up to the maximum number of generations
      *
-     * @param generation the current generation (sosa,indi,fam) - the list of
+     * @param generation the current generation (sosa,indi) - the list of
      * all individuals in that generation
      * @param gen the current generation
      */
     @SuppressWarnings("unchecked")
     void recursion(List generation, int gen) {
 
-        // Build mext generation (scan individuals in that generation and build next one)
+        // Build next generation (scan individuals in that generation and build next one)
         List nextGeneration = new ArrayList();
 
         for (int i = 0; i < generation.size();) {
-            // next triplet
-            int sosa = ((Integer) generation.get(i++)).intValue();
+            // next biplet
+            BigInteger sosa = (BigInteger) generation.get(i++);
             Indi indi = (Indi) generation.get(i++);
-            Fam fam = (Fam) generation.get(i++);
 
             // grab father and mother
             Fam famc = indi.getFamilyWhereBiologicalChild();
             if (famc != null) {
                 Indi father = famc.getHusband();
                 if (father != null) {
-                    nextGeneration.add(new Integer(sosa * 2));
+                    nextGeneration.add(sosa.shiftLeft(1));
                     nextGeneration.add(father);
-                    nextGeneration.add(famc);
                 }
                 Indi mother = famc.getWife();
                 if (mother != null) {
-                    nextGeneration.add(new Integer(sosa * 2 + 1));
+                    nextGeneration.add(sosa.shiftLeft(1).add(BigInteger.ONE));
                     nextGeneration.add(mother);
-                    nextGeneration.add(famc);
                 }
             }
         }
 
         // store ancestor information
         for (int i = 0; i < generation.size();) {
-            int sosa = ((Integer) generation.get(i++)).intValue();
+            BigInteger sosa = (BigInteger) generation.get(i++);
             Indi indi = (Indi) generation.get(i++);
-            i++;
             Ancestor ancestor = new Ancestor();
             ancestor.sosa = sosa;
             ancestor.gen = gen;
@@ -1294,7 +1286,7 @@ public class WebHelper {
     Comparator<Ancestor> sortAncestors = new Comparator<Ancestor>() {
 
         public int compare(Ancestor a1, Ancestor a2) {
-            return a1.sosa - a2.sosa;
+            return a1.sosa.compareTo(a2.sosa);
         }
     };
 

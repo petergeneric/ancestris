@@ -1,6 +1,7 @@
 package ancestris.modules.webbook.creator;
 
 import genj.gedcom.Indi;
+import java.math.BigInteger;
 
 /**
  * Ancestris - Report creating a web Book or reports
@@ -9,7 +10,7 @@ import genj.gedcom.Indi;
  */
 
 public class Ancestor {
-   int sosa = 0;
+   BigInteger sosa = BigInteger.ZERO;
    int gen = 0;
    Indi indi = null;
    }

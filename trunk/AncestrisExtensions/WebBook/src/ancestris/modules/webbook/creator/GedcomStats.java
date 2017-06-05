@@ -9,15 +9,14 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import ancestris.modules.webbook.WebBookParams;
+import genj.gedcom.PropertyDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -54,7 +53,6 @@ class GedcomStats {
     // private variables
     private int nbGenTemp = 0;
     private int nbAncestorsTemp = 0;
-    private Map<Indi, Integer> gens = null;
 
     // constructor
     public GedcomStats(WebBookParams wp, WebHelper wh) {
@@ -68,34 +66,9 @@ class GedcomStats {
         // number of generations and ancestors
         nbGenTemp = 0;
         nbAncestorsTemp = 0;
-        gens = new TreeMap<Indi, Integer>();          // will map generation to indis
-        calcGenAncestors(indiDeCujus); // calculates nbGenTemp and nbAncestorsTemp
+        calcGenAncestors(indiDeCujus, true); // calculates nbGenTemp and nbAncestorsTemp and indiOlder
         nbGen = nbGenTemp;
         nbAncestors = nbAncestorsTemp;
-
-        // Older ancestor and his/her birthdate
-        indiOlder = indiDeCujus;
-        boolean foundDate = false;
-        PropertyDate propDateMin = indiOlder.getBirthDate();
-        if (propDateMin == null) {
-            propDateMin = new PropertyDate(2100);
-        }
-        for (Iterator<Indi> it = gens.keySet().iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            Integer calcGens = gens.get(indi);
-            if (calcGens == nbGen) {
-                PropertyDate propDate = indi.getBirthDate();
-                if (propDate == null) {
-                    indiOlder = indi;
-                }
-                if (propDate != null && propDate.compareTo(propDateMin) < 0) {
-                    propDateMin = propDate;
-                    foundDate = true;
-                    indiOlder = indi;
-                }
-            }
-        }
-
         nbGen--;
         nbAncestors--;
 
@@ -163,51 +136,33 @@ class GedcomStats {
         return true;
     }
 
-    private void calcGenAncestors(Indi indiStart) {
-        Integer calcGens = 1;
+    private void calcGenAncestors(Indi indiStart, boolean calcOlder) {
+        
+        List<Ancestor> ancestorsList = wh.getAncestorsList(indiStart);
         nbGenTemp = 1;
-        Fam famc;
-        Indi indi = null, indiOther = null;
-        List<Indi> sosaList = new ArrayList<Indi>();
-        Set<Indi> hs = new HashSet<Indi>();
-        sosaList.add(indiStart);
-        gens.clear();
-        gens.put(indiStart, calcGens);
-        for (ListIterator<Indi> listIter = sosaList.listIterator(); listIter.hasNext();) {
-            indi = listIter.next();
-            if (!hs.contains(indi)) {
-                hs.add(indi);
+        nbAncestorsTemp = 0;
+        indiOlder = indiStart;
+        PropertyDate propDateMin = new PropertyDate(9999);
+        Set<Indi> listDifferent = new HashSet<Indi>();
+        for (Ancestor ancestor : ancestorsList) {
+            if (ancestor.gen > nbGenTemp) {
+                nbGenTemp = ancestor.gen;
             }
-            calcGens = gens.get(indi);
-            if (calcGens == null) {
-                calcGens = 1;
-            }
-            famc = indi.getFamilyWhereBiologicalChild();
-            if (famc != null) {
-                calcGens++;
-                if (calcGens > nbGenTemp) {
-                    nbGenTemp = calcGens;
-                }
-                indiOther = famc.getWife();
-                if (indiOther != null && !hs.contains(indiOther)) {
-                    listIter.add(indiOther);
-                    gens.put(indiOther, calcGens);
-                    listIter.previous();
-                }
-                indiOther = famc.getHusband();
-                if (indiOther != null && !hs.contains(indiOther)) {
-                    listIter.add(indiOther);
-                    gens.put(indiOther, calcGens);
-                    listIter.previous();
+            listDifferent.add(ancestor.indi);
+            if (calcOlder) {
+                PropertyDate propDate = ancestor.indi.getBirthDate();
+                if (propDate != null && propDate.compareTo(propDateMin) < 0) {
+                    propDateMin = propDate;
+                    indiOlder = ancestor.indi;
                 }
             }
         }
-        nbAncestorsTemp = sosaList.size();
+        nbAncestorsTemp = listDifferent.size();
     }
 
     public void calcLonguestLine(Indi indiRef) {
-        int nbG1 = 0, nbG2 = 0;
-        int nbA1 = 0, nbA2 = 0;
+        int nbG = 0;
+        int nbA = 0;
 
         // get all individuals from Gedcom
         List<Indi> indis = wh.getIndividuals(indiRef.getGedcom(), null);
@@ -217,31 +172,24 @@ class GedcomStats {
             Indi indi = it.next();
             nbGenTemp = 0;
             nbAncestorsTemp = 0;
-            gens = new TreeMap<Indi,Integer>();
-            calcGenAncestors(indi);
-            if (nbGenTemp > nbG1) {
-                nbG1 = nbGenTemp;
-                nbG2 = nbAncestorsTemp;
+            calcGenAncestors(indi, false);
+            if (nbGenTemp > nbG) {
+                nbG = nbGenTemp;
                 longIndiG = indi;
             }
-            if ((nbGenTemp == nbG1) && (indi == indiRef)) {
-                nbG1 = nbGenTemp;
-                nbG2 = nbAncestorsTemp;
+            if ((nbGenTemp == nbG) && (indi == indiRef)) {
                 longIndiG = indi;
             }
-            if (nbAncestorsTemp > nbA2) {
-                nbA1 = nbGenTemp;
-                nbA2 = nbAncestorsTemp;
+            if (nbAncestorsTemp > nbA) {
+                nbA = nbAncestorsTemp;
                 longIndiA = indi;
             }
-            if ((nbAncestorsTemp == nbA2) && (indi == indiRef)) {
-                nbA1 = nbGenTemp;
-                nbA2 = nbAncestorsTemp;
+            if ((nbAncestorsTemp == nbA) && (indi == indiRef)) {
                 longIndiA = indi;
             }
         }
-        nbGenG = nbG1 - 1;
-        nbAncestorsA = nbA2 - 1;
+        nbGenG = nbG - 1;
+        nbAncestorsA = nbA - 1;
 
         return;
     }
