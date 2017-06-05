@@ -14,9 +14,12 @@ import ancestris.modules.webbook.WebBookParams;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.TreeMap;
 import java.util.HashSet;
@@ -35,7 +38,7 @@ public class WebStatsImplex extends WebSection {
     private static final boolean DEBUG = false;
     private static final String STACK_SEPARATOR = "\n";
     private double dImplexFactor;
-    Vector<GenerationInfo> vecGenerationInfo = new Vector<GenerationInfo>();
+    private Vector<GenerationInfo> vecGenerationInfo = new Vector<GenerationInfo>();
     private HashSet<String> setIndi = new HashSet<String>();
     private HashSet<String> setCommonAncestor = new HashSet<String>();
     private TreeMap<String, Indi> mapImplexCommonIndi = new TreeMap<String, Indi>();
@@ -45,11 +48,11 @@ public class WebStatsImplex extends WebSection {
     private class GenerationInfo {
 
         int iLevel;
-        int iPossibleCount;
+        BigInteger iPossibleCount;
+        BigInteger iPossibleCumul;
         int iKnownCount;
-        int iDiffCount;
-        int iPossibleCumul;
         int iKnownCumul;
+        int iDiffCount;
         int iDiffCumul;
         double dCoverage;
         double dCoverageCumul;
@@ -176,7 +179,7 @@ public class WebStatsImplex extends WebSection {
         out.println("<br /><br />");
         out.println(htmlText(trs("implex_implex_factor")) + SPACE + new Double(dImplexFactor) + "%");
         out.println("<br />");
-        out.println(htmlText(trs("implex_consanguinity_factor")) + SPACE + new Double(dConsanguinityFactor));
+        out.println(htmlText(trs("implex_consanguinity_factor")) + SPACE + String.format( "%.9f", new Double(dConsanguinityFactor) ));
         out.println("<br /></p>");
     }
 
@@ -246,13 +249,17 @@ public class WebStatsImplex extends WebSection {
 
         // Scan common individuals
         Collection<ConsanguinityInfo> col = mapConsanguinityCommonIndi.values();
-        Iterator<ConsanguinityInfo> itr = col.iterator();
-        while (itr.hasNext()) {
-            ConsanguinityInfo info = itr.next();
+        List<ConsanguinityInfo> list = new ArrayList<ConsanguinityInfo>(col);
+        Collections.sort(list, new Comparator<ConsanguinityInfo>(){
+            public int compare(ConsanguinityInfo o1, ConsanguinityInfo o2) {
+                return Double.compare(o1.consanguinityFactor, o2.consanguinityFactor) * (-1);
+            }
+        } );
+        for (ConsanguinityInfo info : list) {
             out.println("<span class=\"column1f\">");
             out.println(wrapEntity(info.indi));
             out.println("</span>");
-            out.println("<span class=\"column2f\">" + htmlText(info.consanguinityFactor) + "</span><br />");
+            out.println("<span class=\"column2f\">" + htmlText(String.format("%.9f", info.consanguinityFactor)) + "</span><br />");
             out.println("<p class=\"spacer\">" + SPACE + "</p>");
         }
         out.println("</div>");
@@ -279,7 +286,7 @@ public class WebStatsImplex extends WebSection {
         }
 
         // Compute cumul statistics
-        int iPossibleCumul = 0;
+        BigInteger iPossibleCumul = BigInteger.ZERO;
         int iKnownCumul = 0;
         int iDiffCumul = 0;
         Iterator<GenerationInfo> itr = vecGenerationInfo.iterator();
@@ -287,10 +294,10 @@ public class WebStatsImplex extends WebSection {
             GenerationInfo info = itr.next();
 
             // Compute possible
-            info.iPossibleCount = (int) Math.pow(2.0f, info.iLevel - 1);
+            info.iPossibleCount = BigInteger.ONE.shiftLeft(info.iLevel - 1);
 
             // Compute cumuls
-            iPossibleCumul += info.iPossibleCount;
+            iPossibleCumul = iPossibleCumul.add(info.iPossibleCount);
             iKnownCumul += info.iKnownCount;
             iDiffCumul += info.iDiffCount;
 
@@ -300,8 +307,10 @@ public class WebStatsImplex extends WebSection {
             info.iDiffCumul = iDiffCumul;
 
             // Compute coverage
-            info.dCoverage = (10000 * info.iKnownCount / info.iPossibleCount) / 100d;
-            info.dCoverageCumul = (10000 * info.iKnownCumul / info.iPossibleCumul) / 100d;
+            BigInteger dC = BigInteger.valueOf(10000 * info.iKnownCount);
+            info.dCoverage = (dC.divide(info.iPossibleCount)).longValue() / 100d;
+            dC = BigInteger.valueOf(10000 * info.iKnownCumul);
+            info.dCoverageCumul = (dC.divide(info.iPossibleCumul)).longValue() / 100d;
 
             // Compute implex
             if (iKnownCumul != 0) {

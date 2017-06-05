@@ -16,6 +16,7 @@ import ancestris.modules.webbook.WebBookVisualPanel4;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.math.BigInteger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -201,7 +202,7 @@ public class WebRepSosa extends WebSection {
         doc.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("RepSosaOptions.generation") + " " + gen) + "</span></p>");
     }
 
-    void formatIndi(Indi indi, int gen, int sosa, PrintWriter doc) {
+    void formatIndi(Indi indi, int gen, BigInteger sosa, PrintWriter doc) {
         // Print individual
         doc.println("<p class=\"sosacolumn1\"><span class=\"gras\">" + sosa + "</span>" + SPACE + "-</p>");
         doc.println("<p class=\"sosacolumn2\">");

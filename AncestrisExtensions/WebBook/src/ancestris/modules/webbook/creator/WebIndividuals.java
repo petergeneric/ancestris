@@ -58,7 +58,6 @@ public class WebIndividuals extends WebSection {
         // We have a change of letter every time the lastname anchored converted string changes
         // Therefore we need to detect both change of anchor and change of lastnames (not necessarily the same)
         char previousLetter = ' ';
-        String previousAnchorLastName = "";
         String previousLastName = "";
         String previousListFile = "";
 
@@ -68,9 +67,8 @@ public class WebIndividuals extends WebSection {
         boolean writeAnchor = false;
         boolean first = true;
 
-        int cpt = 0;
-        int iNames = 0,
-                nbNames = wh.getLastNames(DEFCHAR, sortLastnames).size();
+        int iNames = 0;
+        int nbNames = wh.getLastNames(DEFCHAR, sortLastnames).size();
         int previousPage = 0,
                 currentPage = 0,
                 nextPage = 0,
@@ -80,31 +78,25 @@ public class WebIndividuals extends WebSection {
         // Go through individuals
         for (Iterator <Indi>it = indis.iterator(); it.hasNext();) {
             Indi indi = it.next();
-            cpt++;
 
             // Check if need to increment lastname
             String lastName = wh.getLastName(indi, DEFCHAR);
-            if (lastName.compareTo(previousLastName) != 0) {
-                previousLastName = lastName;
+            String anchorLastName = htmlAnchorText(lastName);
+            if (anchorLastName.compareTo(previousLastName) != 0) {
+                previousLastName = anchorLastName;
                 iNames++;
+                writeAnchor = true;
+            } else {
+                writeAnchor = false;
             }
 
             // Check if need to write anchor letter
-            String anchorLastName = htmlAnchorText(lastName);
             char cLetter = anchorLastName.charAt(0);
             if (cLetter != previousLetter) {
                 previousLetter = cLetter;
                 writeLetter = true;
             } else {
                 writeLetter = false;
-            }
-
-            // Check if need to write anchor lastname
-            if (anchorLastName.compareTo(previousAnchorLastName) != 0) {
-                previousAnchorLastName = anchorLastName;
-                writeAnchor = true;
-            } else {
-                writeAnchor = false;
             }
 
             currentPage = (iNames / nbPerPage) + 1;
