@@ -1,16 +1,26 @@
 package ancestris.modules.gedcom.utilities.matchers;
 
+import genj.util.Registry;
+
 /**
  *
- * @author lemovice
+ * @author lemovice & frederic
  */
 
 
 public class FamMatcherOptions extends MatcherOptions {
-    private int dateinterval = 2000;
-    private boolean checkParents = false;
-    private boolean emptyValueValid = false;
 
+    private Registry registry;
+    private int dateinterval;
+    private boolean emptyValueValid;
+
+    public FamMatcherOptions() {
+        registry = Registry.get(MatcherOptions.class);
+        dateinterval = registry.get("MatcherOptions.Fam.dateinterval", 365);
+        emptyValueValid = registry.get("MatcherOptions.Fam.emptyValueValid", false);
+    }
+    
+    
     /**
      * @return the dateinterval
      */
@@ -23,21 +33,8 @@ public class FamMatcherOptions extends MatcherOptions {
      */
     public void setDateinterval(int dateinterval) {
         this.dateinterval = dateinterval;
-    }
-
-    /**
-     * @return the checkParents
-     */
-    public boolean isCheckParents() {
-        return checkParents;
-    }
-
-    /**
-     * @param checkParents the checkParents to set
-     */
-    public void setCheckParents(boolean checkParents) {
-        this.checkParents = checkParents;
-    }
+        registry.put("MatcherOptions.Fam.dateinterval", dateinterval);
+}
 
     /**
      * @return the emptyValueValid
@@ -51,5 +48,6 @@ public class FamMatcherOptions extends MatcherOptions {
      */
     public void setEmptyValueValid(boolean emptyValueValid) {
         this.emptyValueValid = emptyValueValid;
+        registry.put("MatcherOptions.Fam.checkAllNames", emptyValueValid);
     }
 }

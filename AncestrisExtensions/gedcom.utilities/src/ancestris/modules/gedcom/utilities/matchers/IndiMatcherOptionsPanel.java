@@ -12,6 +12,10 @@ public final class IndiMatcherOptionsPanel extends JPanel {
      */
     public IndiMatcherOptionsPanel() {
         initComponents();
+        indiMaxDateIntervalSpinner.setModel(new SpinnerNumberModel(indiMatcherOptions.getDateinterval(),0,3650,1));
+        indiEmptyValuesValidRadioButton.setSelected(indiMatcherOptions.isEmptyValueValid());
+        indiCheckAllNamesRadioButton.setSelected(indiMatcherOptions.isCheckAllNames());
+        indiAllFirstNamesRadioButton.setSelected(indiMatcherOptions.isAllFirstNamesEquals());
     }
 
 
@@ -28,7 +32,7 @@ public final class IndiMatcherOptionsPanel extends JPanel {
         submittersOptionPanel = new javax.swing.JPanel();
         repositoriesOptionPanel = new javax.swing.JPanel();
         indiMaximumDateIntervalLabel = new javax.swing.JLabel();
-        indiMaxDateIntervalSpinner = new javax.swing.JSpinner(new SpinnerNumberModel(365,0,3650,1));
+        indiMaxDateIntervalSpinner = new javax.swing.JSpinner();
         indiEmptyValuesValidRadioButton = new javax.swing.JRadioButton();
         indiAllFirstNamesRadioButton = new javax.swing.JRadioButton();
         indiCheckAllNamesRadioButton = new javax.swing.JRadioButton();
@@ -81,13 +85,34 @@ public final class IndiMatcherOptionsPanel extends JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(indiMaximumDateIntervalLabel, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiMaximumDateIntervalLabel.text")); // NOI18N
 
+        indiMaxDateIntervalSpinner.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                indiMaxDateIntervalSpinnerStateChanged(evt);
+            }
+        });
+
         org.openide.awt.Mnemonics.setLocalizedText(indiEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiEmptyValuesValidRadioButton.text")); // NOI18N
+        indiEmptyValuesValidRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indiEmptyValuesValidRadioButtonActionPerformed(evt);
+            }
+        });
 
         indiAllFirstNamesRadioButton.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(indiAllFirstNamesRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiAllFirstNamesRadioButton.text")); // NOI18N
+        indiAllFirstNamesRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indiAllFirstNamesRadioButtonActionPerformed(evt);
+            }
+        });
 
         indiCheckAllNamesRadioButton.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(indiCheckAllNamesRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiCheckAllNamesRadioButton.text")); // NOI18N
+        indiCheckAllNamesRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indiCheckAllNamesRadioButtonActionPerformed(evt);
+            }
+        });
 
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
@@ -132,6 +157,23 @@ public final class IndiMatcherOptionsPanel extends JPanel {
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void indiMaxDateIntervalSpinnerStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_indiMaxDateIntervalSpinnerStateChanged
+        saveOptions();
+    }//GEN-LAST:event_indiMaxDateIntervalSpinnerStateChanged
+
+    private void indiEmptyValuesValidRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiEmptyValuesValidRadioButtonActionPerformed
+        saveOptions();
+    }//GEN-LAST:event_indiEmptyValuesValidRadioButtonActionPerformed
+
+    private void indiCheckAllNamesRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiCheckAllNamesRadioButtonActionPerformed
+        saveOptions();
+    }//GEN-LAST:event_indiCheckAllNamesRadioButtonActionPerformed
+
+    private void indiAllFirstNamesRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiAllFirstNamesRadioButtonActionPerformed
+        saveOptions();
+    }//GEN-LAST:event_indiAllFirstNamesRadioButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel emptyPanel;
     private javax.swing.JRadioButton indiAllFirstNamesRadioButton;
@@ -146,11 +188,15 @@ public final class IndiMatcherOptionsPanel extends JPanel {
     private javax.swing.JPanel submittersOptionPanel;
     // End of variables declaration//GEN-END:variables
 
-    public IndiMatcherOptions getSelectedOptions() {
+    public void saveOptions() {
         indiMatcherOptions.setDateinterval((Integer) indiMaxDateIntervalSpinner.getValue());
         indiMatcherOptions.setCheckAllNames(indiCheckAllNamesRadioButton.isSelected());
         indiMatcherOptions.setAllFirstNames(indiAllFirstNamesRadioButton.isSelected());
         indiMatcherOptions.setEmptyValueValid(indiEmptyValuesValidRadioButton.isSelected());
+    }
+
+    public IndiMatcherOptions getSelectedOptions() {
         return indiMatcherOptions;
     }
+    
 }
