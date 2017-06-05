@@ -74,7 +74,7 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
             int size = gedcom.getEntities(entityTag).size();
             cb.setText(Gedcom.getName(entityTag) + " (" + size + ")");
             cb.setEnabled(size > 0);
-            cb.setSelected(size > 0 && entityTag.equals(Gedcom.INDI));
+            cb.setSelected(size > 0 && registry.get("duplicateSelected."+entityTag, entityTag.equals(Gedcom.INDI)));
             JButton b = entitiesButtons.get(entityTag);
             b.setText(NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton.text"));
             b.setEnabled(size > 0);
@@ -308,8 +308,10 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
 
     private void setButton() {
         boolean activated = false;
-        for (JCheckBox cb : entitiesChoices.values()) {
+        for (String entityTag : entitiesChoices.keySet()) {
+            JCheckBox cb = entitiesChoices.get(entityTag);
             activated |= cb.isSelected();
+            registry.put("duplicateSelected."+entityTag, cb.isSelected());
         }
         OKButton.setEnabled(activated);
     }
