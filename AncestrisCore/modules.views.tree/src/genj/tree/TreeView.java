@@ -1393,7 +1393,7 @@ public class TreeView extends View implements Filter {
          */
         private ActionFoldUnfoldAll() {
             super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
-            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip"));
+            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()+1));
         }
 
         /**
@@ -1408,7 +1408,7 @@ public class TreeView extends View implements Filter {
             }
             isFolded = !isFolded;
             super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
-            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip"));
+            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()+1));
             scrollToCurrent();
         }
     } //ActionFolding
