@@ -124,7 +124,7 @@ public class TreeViewSettings extends JTabbedPane {
     options.add(checkBending);
     options.add(checkAntialiasing);
     options.add(checkMarrSymbols);
-    spingen = createSpinner("maxgen",  options, 0, view.getModel().getMaxGenerations(), 99, 1);
+    spingen = createSpinner("maxgen",  options, 1, view.getModel().getMaxGenerations() + 1, 100, 1);
     options.add(font);    
 
     TreeMetrics m = view.getModel().getMetrics();
@@ -294,7 +294,7 @@ public class TreeViewSettings extends JTabbedPane {
         TreeView.setShowPopup(cbShowPopup.isSelected());
       view.getModel().setBendArcs(checkBending.isSelected());
       view.setAntialiasing(checkAntialiasing.isSelected());
-      view.getModel().setMaxGenerations(((Double)spingen.getValue()).intValue());
+      view.getModel().setMaxGenerations(((Double)spingen.getValue()).intValue() -  1);
       view.setContentFont(font.getSelectedFont());
       view.getModel().setMarrSymbols(checkMarrSymbols.isSelected());
       // metrics
