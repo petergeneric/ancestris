@@ -53,7 +53,7 @@ public class GeonamesPlacesList implements SearchPlace {
 
 
                     try {
-                        String tmpStr = searchedPlace.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ");
+                        String tmpStr = searchedPlace.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
                         logger.log(Level.FINE, "   ");
                         logger.log(Level.FINE, "Start searching {0} ...", tmpStr);
 

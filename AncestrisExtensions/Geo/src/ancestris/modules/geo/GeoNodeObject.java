@@ -131,7 +131,7 @@ public class GeoNodeObject {
 
         Toponym topo = defaultToponym();
         boolean foundLocally = false;
-        String searchedPlace = place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ");
+        String searchedPlace = place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
 
         // Return default if place is null or empty (= nothing to search)
         if (avoidInternetSearch && placeDisplayFormat.equals(EMPTY_PLACE)) {
@@ -163,7 +163,7 @@ public class GeoNodeObject {
                     break;
                 }
                 if (topo == null) { // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
-                    searchCriteria.setQ(place.getNumericalJurisdictions().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " "));
+                    searchCriteria.setQ(place.getNumericalJurisdictions().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").trim());
                     searchResult = WebService.search(searchCriteria);
                     for (Toponym iTopo : searchResult.getToponyms()) {
                         topo = iTopo; // take the first one
