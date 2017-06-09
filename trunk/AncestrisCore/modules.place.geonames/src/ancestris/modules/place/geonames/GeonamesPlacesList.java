@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import org.geonames.*;
+import org.openide.*;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
@@ -104,6 +105,12 @@ public class GeonamesPlacesList implements SearchPlace {
                         }
                     } catch (Exception e) {
                         logger.log(Level.SEVERE, e.getLocalizedMessage(), e);
+                        String msg = e.getLocalizedMessage();
+                        if (msg.contains("hourly limit") && msg.contains("has been exceeded")) {
+                            msg = NbBundle.getMessage(GeonamesPlacesList.class, "ERR_GeonamesWaitforanhour");
+                        }
+                        NotifyDescriptor nd = new NotifyDescriptor.Message(msg, NotifyDescriptor.ERROR_MESSAGE);
+                        DialogDisplayer.getDefault().notify(nd);
                     }
 
                     placesList.addAll(mPlacesList);
