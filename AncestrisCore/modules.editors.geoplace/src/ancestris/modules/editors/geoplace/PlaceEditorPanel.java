@@ -11,6 +11,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.Registry;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
@@ -26,6 +27,7 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
@@ -652,11 +654,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void searchPlace() {
         searchPlaceButton.setEnabled(false);
         geonamePlacesListModel.clear();
+        final JPanel panel = this;
+        panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
             geonamesPlacesList.searchPlace(searchPlaceTextField.getText(), geonamePlacesListModel);
             geonamesPlacesList.getTask().addTaskListener(new TaskListener() {
                 @Override
                 public void taskFinished(Task task) {
+                    panel.setCursor(Cursor.getDefaultCursor());
                     searchPlaceButton.setEnabled(true);
                     if (geonamePlacesListModel.getSize() > 0) {
                         geonamesPlacesListResult.setSelectionInterval(0, 0);
