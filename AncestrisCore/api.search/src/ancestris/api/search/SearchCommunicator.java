@@ -56,7 +56,7 @@ public class SearchCommunicator {
         }
         for (SearchCommunicator instance : instances) {
             Gedcom iGedcom = instance.getGedcom();
-            if (iGedcom != null && searchGedcom.getOrigin().getName().equals(iGedcom.getOrigin().getName())) {
+            if (iGedcom != null && searchGedcom.getOrigin() != null && iGedcom.getOrigin() != null && searchGedcom.getOrigin().getName().equals(iGedcom.getOrigin().getName())) {
                 List<Property> list = instance.getResults();
                 if (list != null) {
                     ret.addAll(list);
