@@ -1,7 +1,8 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris
  *
  * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2016 - 2017 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -744,7 +745,7 @@ public class TreeView extends View implements Filter {
 
     private void setRootTitle(String title) {
         title = title.replaceAll("\\)\\+", ")<br>+"); // line break for family entity after husband name to make sure it fits on 2 lines
-        rootTitle.setText("<html><b>" + RESOURCES.getString("root.name") + " " + title + "</b></html");
+        rootTitle.setText("<html><center>" + RESOURCES.getString("root.name") + " " + title + "</center></html");
 
     }
 
