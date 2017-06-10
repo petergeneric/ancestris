@@ -520,7 +520,7 @@ public class TimelineView extends View implements SelectionListener, Filter {
 
     public void setRootTitle(String title) {
         if (rootTitle != null && title != null) {
-            rootTitle.setText("<html><b>" + resources.getString("root.name") + " " + title + "</b></html");
+            rootTitle.setText("<html><center>" + resources.getString("root.name") + " " + title + "</center></html");
         }
     }
     
