@@ -153,6 +153,7 @@ public class AutoCompletion extends PlainDocument {
                 list.add(item);
             }
         }
+        list.add(""); // add empty line in case scrollbar hides last line, therefore to force one more line to display
         return list.toArray(new String[list.size()]);
     }
     
