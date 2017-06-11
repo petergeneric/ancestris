@@ -510,6 +510,9 @@
         <file name="F1.shadow">
             <attr name="originalFile" stringvalue="Actions/Help/org-netbeans-modules-javahelp-HelpAction.instance"/>
         </file>
+        <file name="OS-U.shadow">
+            <attr name="originalFile" stringvalue="Actions/Window/org-netbeans-core-windows-actions-UndockWindowAction.instance"/>
+        </file>
     </folder>
     <folder name="Toolbars">
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
