@@ -26,7 +26,7 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_CommonAncestorAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools", name = "CommonAncestorOpenAction", position = 50)
+@ActionReference(path = "Menu/Tools", name = "CommonAncestorOpenAction", position = -50)
 public final class CommonAncestorOpenAction extends AbstractAncestrisContextAction {
 
     /**

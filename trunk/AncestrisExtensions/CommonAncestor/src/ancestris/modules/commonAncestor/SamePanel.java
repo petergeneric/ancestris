@@ -141,6 +141,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 individu1 = (Indi) context.getGedcom().getEntity("INDI", id1);
                 if (individu1 != null) {
                     jTextFieldIndividu1.setText(individu1.toString());
+                    jTextFieldIndividu1.setCaretPosition(0);
                 }
             }
             String id2 = context.getGedcom().getRegistry().get(PREFERRED_ID + ".individu2", "");
@@ -148,6 +149,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 individu2 = (Indi) context.getGedcom().getEntity("INDI", id2);
                 if (individu2 != null) {
                     jTextFieldIndividu2.setText(individu2.toString());
+                    jTextFieldIndividu2.setCaretPosition(0);
                 }
             }
         } else {
