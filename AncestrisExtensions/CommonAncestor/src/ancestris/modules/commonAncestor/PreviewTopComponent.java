@@ -153,7 +153,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
                 KeyEvent evt = new KeyEvent(PreviewTopComponent.this, KeyEvent.KEY_PRESSED,
                         System.currentTimeMillis() + 100,
                         KeyEvent.ALT_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK,
-                        KeyEvent.VK_D, 'U');
+                        KeyEvent.VK_U, 'U');
                 // send  ALT-D key event
                 PreviewTopComponent.this.dispatchEvent(evt);
                 // resize the window if the window is too small
