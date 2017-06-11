@@ -154,7 +154,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
                         System.currentTimeMillis() + 100,
                         KeyEvent.ALT_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK,
                         KeyEvent.VK_U, 'U');
-                // send  ALT-D key event
+                // send  ALT-Shift-U key event (for Undock)
                 PreviewTopComponent.this.dispatchEvent(evt);
                 // resize the window if the window is too small
                 Dimension dimension = PreviewTopComponent.this.getTopLevelAncestor().getSize();

@@ -84,12 +84,10 @@
                   <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
               </Group>
               <Component id="jScrollPaneAncestortList" alignment="0" max="32767" attributes="0"/>
-              <Group type="103" alignment="1" groupAlignment="1" attributes="0">
-                  <Component id="jPanelSearch2" alignment="0" pref="238" max="32767" attributes="0"/>
-                  <Component id="jTextFieldIndividu2" alignment="0" max="32767" attributes="0"/>
-                  <Component id="jPanelSearch1" alignment="0" pref="238" max="32767" attributes="0"/>
-                  <Component id="jTextFieldIndividu1" alignment="1" max="32767" attributes="0"/>
-              </Group>
+              <Component id="jPanelSearch2" alignment="0" pref="238" max="32767" attributes="0"/>
+              <Component id="jTextFieldIndividu2" alignment="0" max="32767" attributes="0"/>
+              <Component id="jPanelSearch1" alignment="0" pref="238" max="32767" attributes="0"/>
+              <Component id="jTextFieldIndividu1" alignment="1" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
