@@ -12,12 +12,7 @@ import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
-import javax.swing.Action;
-import javax.swing.Box;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
@@ -85,7 +80,7 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         super();
 
     }
-
+    
     public void init(Context context, SamePanel samePanel) {
         this.context = context;
         this.samePanel = samePanel;
@@ -110,8 +105,8 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         view.populate(bar);
         bar.endUpdate();
         if ((bar != null) && (bar.getToolBar() != null)) {
-            bar.setOrientation(SwingConstants.VERTICAL);
-            add(bar.getToolBar(), BorderLayout.WEST);
+            bar.setOrientation(SwingConstants.HORIZONTAL);
+            add(bar.getToolBar(), BorderLayout.NORTH);
         }
         repaint();
 
@@ -152,13 +147,13 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         SwingUtilities.invokeLater(new Runnable() {
 
             public void run() {
-                // previewTopComponent must be active to receive ALT-D key event
+                // previewTopComponent must be active to receive ALT-U key event (set as undocking in layer.xml of main application)
                 requestActive();
                 // create  ALT-D key event
                 KeyEvent evt = new KeyEvent(PreviewTopComponent.this, KeyEvent.KEY_PRESSED,
                         System.currentTimeMillis() + 100,
                         KeyEvent.ALT_DOWN_MASK | KeyEvent.SHIFT_DOWN_MASK,
-                        KeyEvent.VK_D, 'D');
+                        KeyEvent.VK_D, 'U');
                 // send  ALT-D key event
                 PreviewTopComponent.this.dispatchEvent(evt);
                 // resize the window if the window is too small
@@ -214,10 +209,10 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
      * @param indi1
      * @        param indi2
      * @        param firstIndiDirectLinks
- param secondIndiDirectLinks
-param displayedId
-     * @  param displayRecentYears
-   param husband_or_wife_first
+     * @        param secondIndiDirectLinks
+     * @        param displayedId
+     * @        param displayRecentYears
+     * @        param husband_or_wife_first
      */
     public void updatePreView(Indi indi1, Indi indi2, List<Step> firstIndiDirectLinks, List<Step> secondIndiDirectLinks, boolean displayedId, boolean displayRecentYears, int husband_or_wife_first) {
         try {

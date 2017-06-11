@@ -80,6 +80,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         registry = new Registry(Registry.get(SamePanel.class), getClass().getName());
         initComponents();
         jCheckBoxAutoPreview.setSelected(false);
+        jCheckBoxRecentEvent.setSelected(true);
         // j'affecte un modele à la liste
         jListAncestors.setModel(ancestorListModel);
 
@@ -96,6 +97,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 commandPrefix1, null, 
                 maxResult, allMaxResult,
                 QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR);
+        jPanelSearch1.setLayout(new java.awt.BorderLayout());
         jPanelSearch1.add(quickSearchIndividu1, BorderLayout.CENTER);
 
         // Provider individu 2
@@ -109,6 +111,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 commandPrefix2, null, 
                 maxResult, allMaxResult,
                 QuickSearchPopup.WidthMode.HORIZONTAL_SCOLLBAR ); //KeyStroke.getKeyStroke("F7")
+        jPanelSearch2.setLayout(new java.awt.BorderLayout());
         jPanelSearch2.add(quickSearchIndividu2, BorderLayout.CENTER);
 
         // j'intialise la combobox de l'option "marie/femme au centre"
@@ -214,8 +217,8 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         }
 
         if (currentIndi != null) {
-            jbuttonCurrentIndi1.setToolTipText(currentIndi.getName());
-            jbuttonCurrentIndi2.setToolTipText(currentIndi.getName());
+            jbuttonCurrentIndi1.setToolTipText(NbBundle.getMessage(getClass(), "SamePanel.selectAsFirst", currentIndi.getName()));
+            jbuttonCurrentIndi2.setToolTipText(NbBundle.getMessage(getClass(), "SamePanel.selectAsSecond", currentIndi.getName()));
             jbuttonCurrentIndi1.setEnabled(true);
             jbuttonCurrentIndi2.setEnabled(true);
         } else {
@@ -447,326 +450,40 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         jPanel3 = new javax.swing.JPanel();
+        jButtonHelp = new javax.swing.JButton();
         jLabelIndividu1 = new javax.swing.JLabel();
         jTextFieldIndividu1 = new javax.swing.JTextField();
-        jbuttonCurrentIndi1 = new javax.swing.JButton();
         jPanelSearch1 = new javax.swing.JPanel();
+        jbuttonCurrentIndi1 = new javax.swing.JButton();
         jLabelIndividu2 = new javax.swing.JLabel();
-        jTextFieldIndividu2 = new javax.swing.JTextField();
         jbuttonCurrentIndi2 = new javax.swing.JButton();
+        jTextFieldIndividu2 = new javax.swing.JTextField();
         jPanelSearch2 = new javax.swing.JPanel();
         jLabelAncestorList = new javax.swing.JLabel();
         jScrollPaneAncestortList = new javax.swing.JScrollPane();
         jListAncestors = new javax.swing.JList<Indi>();
-        jPanelPreview = new javax.swing.JPanel();
-        jCheckBoxAutoPreview = new javax.swing.JCheckBox();
-        jCheckBoxSeparatedWindow = new javax.swing.JCheckBox();
-        jPanelFile = new javax.swing.JPanel();
-        jPanelOptions = new javax.swing.JPanel();
-        jCheckBoxDisplayedId = new javax.swing.JCheckBox();
-        jCheckBoxRecentEvent = new javax.swing.JCheckBox();
-        jComboBoxHusbandOrWife = new javax.swing.JComboBox<String>();
         jPanelExportFile = new javax.swing.JPanel();
         jComboBoxFileType = new javax.swing.JComboBox<String>();
         jButtonSaveFile = new javax.swing.JButton();
-        jPanelHelp = new javax.swing.JPanel();
-        jButtonHelp = new javax.swing.JButton();
+        jPanelOption = new javax.swing.JPanel();
+        jCheckBoxAutoPreview = new javax.swing.JCheckBox();
+        jCheckBoxSeparatedWindow = new javax.swing.JCheckBox();
+        jCheckBoxDisplayedId = new javax.swing.JCheckBox();
+        jCheckBoxRecentEvent = new javax.swing.JCheckBox();
+        jComboBoxHusbandOrWife = new javax.swing.JComboBox<String>();
 
-        setMaximumSize(new java.awt.Dimension(260, 410));
-        setMinimumSize(new java.awt.Dimension(260, 390));
-        setPreferredSize(new java.awt.Dimension(260, 410));
-        setLayout(new java.awt.GridBagLayout());
+        setPreferredSize(new java.awt.Dimension(250, 630));
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanel3.border.title"))); // NOI18N
-        jPanel3.setMinimumSize(new java.awt.Dimension(60, 230));
-        jPanel3.setPreferredSize(new java.awt.Dimension(124, 250));
-        jPanel3.setLayout(new java.awt.GridBagLayout());
-
-        jLabelIndividu1.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelIndividu1.text")); // NOI18N
-        jLabelIndividu1.setFocusable(false);
-        jLabelIndividu1.setRequestFocusEnabled(false);
-        jLabelIndividu1.setVerifyInputWhenFocusTarget(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.ipadx = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel3.add(jLabelIndividu1, gridBagConstraints);
-        jLabelIndividu1.getAccessibleContext().setAccessibleName(null);
-
-        jTextFieldIndividu1.setEditable(false);
-        jTextFieldIndividu1.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jTextFieldIndividu1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldIndividu1.setBorder(null);
-        jTextFieldIndividu1.setMinimumSize(new java.awt.Dimension(50, 20));
-        jTextFieldIndividu1.setPreferredSize(new java.awt.Dimension(50, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel3.add(jTextFieldIndividu1, gridBagConstraints);
-
-        jbuttonCurrentIndi1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CurrentIndi.png"))); // NOI18N
-        jbuttonCurrentIndi1.setBorder(null);
-        jbuttonCurrentIndi1.setBorderPainted(false);
-        jbuttonCurrentIndi1.setMargin(new java.awt.Insets(0, 2, 0, 2));
-        jbuttonCurrentIndi1.setMaximumSize(new java.awt.Dimension(20, 20));
-        jbuttonCurrentIndi1.setMinimumSize(new java.awt.Dimension(20, 20));
-        jbuttonCurrentIndi1.setPreferredSize(new java.awt.Dimension(20, 20));
-        jbuttonCurrentIndi1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbuttonCurrentIndi1ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        jPanel3.add(jbuttonCurrentIndi1, gridBagConstraints);
-
-        jPanelSearch1.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelSearch1.setMinimumSize(new java.awt.Dimension(50, 20));
-        jPanelSearch1.setPreferredSize(new java.awt.Dimension(50, 20));
-        jPanelSearch1.setLayout(new java.awt.BorderLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel3.add(jPanelSearch1, gridBagConstraints);
-
-        jLabelIndividu2.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelIndividu2.text")); // NOI18N
-        jLabelIndividu2.setMaximumSize(new java.awt.Dimension(42, 14));
-        jLabelIndividu2.setMinimumSize(new java.awt.Dimension(42, 14));
-        jLabelIndividu2.setPreferredSize(new java.awt.Dimension(42, 14));
-        jLabelIndividu2.setRequestFocusEnabled(false);
-        jLabelIndividu2.setVerifyInputWhenFocusTarget(false);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        jPanel3.add(jLabelIndividu2, gridBagConstraints);
-        jLabelIndividu2.getAccessibleContext().setAccessibleName("");
-
-        jTextFieldIndividu2.setEditable(false);
-        jTextFieldIndividu2.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jTextFieldIndividu2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        jTextFieldIndividu2.setBorder(null);
-        jTextFieldIndividu2.setMinimumSize(new java.awt.Dimension(50, 20));
-        jTextFieldIndividu2.setPreferredSize(new java.awt.Dimension(50, 20));
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.insets = new java.awt.Insets(4, 0, 0, 0);
-        jPanel3.add(jTextFieldIndividu2, gridBagConstraints);
-
-        jbuttonCurrentIndi2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CurrentIndi.png"))); // NOI18N
-        jbuttonCurrentIndi2.setBorder(null);
-        jbuttonCurrentIndi2.setBorderPainted(false);
-        jbuttonCurrentIndi2.setMargin(new java.awt.Insets(0, 2, 0, 2));
-        jbuttonCurrentIndi2.setMaximumSize(new java.awt.Dimension(20, 20));
-        jbuttonCurrentIndi2.setMinimumSize(new java.awt.Dimension(20, 20));
-        jbuttonCurrentIndi2.setPreferredSize(new java.awt.Dimension(20, 20));
-        jbuttonCurrentIndi2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jbuttonCurrentIndi2ActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 3;
-        jPanel3.add(jbuttonCurrentIndi2, gridBagConstraints);
-
-        jPanelSearch2.setBackground(new java.awt.Color(255, 255, 255));
-        jPanelSearch2.setMinimumSize(new java.awt.Dimension(50, 20));
-        jPanelSearch2.setPreferredSize(new java.awt.Dimension(50, 20));
-        jPanelSearch2.setLayout(new java.awt.BorderLayout());
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel3.add(jPanelSearch2, gridBagConstraints);
-
-        jLabelAncestorList.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 10, 0);
-        jPanel3.add(jLabelAncestorList, gridBagConstraints);
-
-        jScrollPaneAncestortList.setMinimumSize(new java.awt.Dimension(100, 82));
-        jScrollPaneAncestortList.setPreferredSize(new java.awt.Dimension(100, 84));
-
-        jListAncestors.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
-        jListAncestors.setMaximumSize(new java.awt.Dimension(2147483647, 2147483647));
-        jListAncestors.setMinimumSize(new java.awt.Dimension(80, 80));
-        jListAncestors.setPreferredSize(new java.awt.Dimension(80, 80));
-        jListAncestors.setVisibleRowCount(5);
-        jListAncestors.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
-            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
-                jListAncestorsValueChanged(evt);
-            }
-        });
-        jScrollPaneAncestortList.setViewportView(jListAncestors);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        jPanel3.add(jScrollPaneAncestortList, gridBagConstraints);
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(2, 0, 2, 0);
-        add(jPanel3, gridBagConstraints);
-
-        jPanelPreview.setLayout(new java.awt.GridLayout(1, 1, 20, 0));
-
-        jCheckBoxAutoPreview.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonPreview.text")); // NOI18N
-        jCheckBoxAutoPreview.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jCheckBoxAutoPreview.setMaximumSize(new java.awt.Dimension(64000, 20));
-        jCheckBoxAutoPreview.setMinimumSize(new java.awt.Dimension(61, 20));
-        jCheckBoxAutoPreview.setPreferredSize(new java.awt.Dimension(50, 20));
-        jCheckBoxAutoPreview.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxAutoPreviewActionPerformed(evt);
-            }
-        });
-        jPanelPreview.add(jCheckBoxAutoPreview);
-        jCheckBoxAutoPreview.getAccessibleContext().setAccessibleName(null);
-
-        jCheckBoxSeparatedWindow.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxSeparatedWindow.text")); // NOI18N
-        jCheckBoxSeparatedWindow.setBorder(null);
-        jCheckBoxSeparatedWindow.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jCheckBoxSeparatedWindow.setIconTextGap(2);
-        jCheckBoxSeparatedWindow.setInheritsPopupMenu(true);
-        jCheckBoxSeparatedWindow.setMargin(new java.awt.Insets(2, 2, 2, 0));
-        jCheckBoxSeparatedWindow.setMaximumSize(new java.awt.Dimension(64000, 11000));
-        jCheckBoxSeparatedWindow.setMinimumSize(new java.awt.Dimension(100, 20));
-        jCheckBoxSeparatedWindow.setPreferredSize(new java.awt.Dimension(125, 20));
-        jCheckBoxSeparatedWindow.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxSeparatedWindowActionPerformed(evt);
-            }
-        });
-        jPanelPreview.add(jCheckBoxSeparatedWindow);
-        jCheckBoxSeparatedWindow.getAccessibleContext().setAccessibleName("");
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 10);
-        add(jPanelPreview, gridBagConstraints);
-
-        jPanelFile.setMaximumSize(new java.awt.Dimension(240, 104));
-        jPanelFile.setMinimumSize(new java.awt.Dimension(240, 104));
-        jPanelFile.setPreferredSize(new java.awt.Dimension(240, 104));
-        jPanelFile.setLayout(new java.awt.GridLayout(1, 2));
-
-        jPanelOptions.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanelOptions.border.title"))); // NOI18N
-        jPanelOptions.setEnabled(false);
-        jPanelOptions.setMaximumSize(new java.awt.Dimension(120, 120));
-        jPanelOptions.setMinimumSize(new java.awt.Dimension(110, 114));
-        jPanelOptions.setPreferredSize(new java.awt.Dimension(110, 114));
-        jPanelOptions.setLayout(new java.awt.GridLayout(3, 1, 2, 2));
-
-        jCheckBoxDisplayedId.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxDisplayedId.text")); // NOI18N
-        jCheckBoxDisplayedId.setPreferredSize(new java.awt.Dimension(70, 23));
-        jCheckBoxDisplayedId.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxDisplayedIdActionPerformed(evt);
-            }
-        });
-        jPanelOptions.add(jCheckBoxDisplayedId);
-        jCheckBoxDisplayedId.getAccessibleContext().setAccessibleName("");
-
-        jCheckBoxRecentEvent.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxRecentEvent.text")); // NOI18N
-        jCheckBoxRecentEvent.setPreferredSize(new java.awt.Dimension(70, 23));
-        jCheckBoxRecentEvent.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBoxRecentEventActionPerformed(evt);
-            }
-        });
-        jPanelOptions.add(jCheckBoxRecentEvent);
-        jCheckBoxRecentEvent.getAccessibleContext().setAccessibleName("");
-
-        jComboBoxHusbandOrWife.setMaximumRowCount(2);
-        jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "husband first", "wife first" }));
-        jComboBoxHusbandOrWife.setPreferredSize(new java.awt.Dimension(70, 24));
-        jComboBoxHusbandOrWife.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                jComboBoxHusbandOrWifeItemStateChanged(evt);
-            }
-        });
-        jPanelOptions.add(jComboBoxHusbandOrWife);
-
-        jPanelFile.add(jPanelOptions);
-        jPanelOptions.getAccessibleContext().setAccessibleName(null);
-
-        jPanelExportFile.setBorder(javax.swing.BorderFactory.createTitledBorder(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanelExportFile.border.title"))); // NOI18N
-        jPanelExportFile.setMaximumSize(new java.awt.Dimension(110, 107));
-        jPanelExportFile.setMinimumSize(new java.awt.Dimension(110, 107));
-        jPanelExportFile.setPreferredSize(new java.awt.Dimension(110, 107));
-        jPanelExportFile.setLayout(new java.awt.BorderLayout(0, 10));
-
-        jComboBoxFileType.setMaximumRowCount(3);
-        jComboBoxFileType.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "PDF", "PNG", "SVG" }));
-        jComboBoxFileType.setMinimumSize(new java.awt.Dimension(50, 18));
-        jComboBoxFileType.setName("jComboBoxFileType"); // NOI18N
-        jComboBoxFileType.setPreferredSize(new java.awt.Dimension(30, 20));
-        jPanelExportFile.add(jComboBoxFileType, java.awt.BorderLayout.NORTH);
-
-        jButtonSaveFile.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonSaveFile.text")); // NOI18N
-        jButtonSaveFile.setMargin(new java.awt.Insets(2, 4, 2, 4));
-        jButtonSaveFile.setMaximumSize(null);
-        jButtonSaveFile.setMinimumSize(new java.awt.Dimension(70, 32));
-        jButtonSaveFile.setPreferredSize(new java.awt.Dimension(60, 32));
-        jButtonSaveFile.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonSaveFileActionPerformed(evt);
-            }
-        });
-        jPanelExportFile.add(jButtonSaveFile, java.awt.BorderLayout.CENTER);
-        jButtonSaveFile.getAccessibleContext().setAccessibleName("");
-
-        jPanelFile.add(jPanelExportFile);
-        jPanelExportFile.getAccessibleContext().setAccessibleName("");
-
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.ipadx = 1;
-        gridBagConstraints.ipady = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(10, 0, 0, 0);
-        add(jPanelFile, gridBagConstraints);
-
-        jPanelHelp.setMaximumSize(new java.awt.Dimension(59, 25));
-        jPanelHelp.setPreferredSize(new java.awt.Dimension(100, 26));
-        jPanelHelp.setLayout(new java.awt.BorderLayout());
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanel3.border.title"))); // NOI18N
+        jPanel3.setPreferredSize(new java.awt.Dimension(232, 323));
 
         jButtonHelp.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/information.png"))); // NOI18N
         jButtonHelp.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonHelp.text")); // NOI18N
         jButtonHelp.setToolTipText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonHelp.toolTipText")); // NOI18N
         jButtonHelp.setBorderPainted(false);
-        jButtonHelp.setPreferredSize(new java.awt.Dimension(20, 20));
+        jButtonHelp.setPreferredSize(new java.awt.Dimension(26, 24));
         jButtonHelp.setRequestFocusEnabled(false);
         jButtonHelp.setRolloverEnabled(false);
         jButtonHelp.setVerifyInputWhenFocusTarget(false);
@@ -777,15 +494,296 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
                 jButtonHelpActionPerformed(evt);
             }
         });
-        jPanelHelp.add(jButtonHelp, java.awt.BorderLayout.EAST);
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTH;
-        gridBagConstraints.insets = new java.awt.Insets(0, 0, 0, 10);
-        add(jPanelHelp, gridBagConstraints);
+        jLabelIndividu1.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelIndividu1.text")); // NOI18N
+        jLabelIndividu1.setFocusable(false);
+        jLabelIndividu1.setRequestFocusEnabled(false);
+        jLabelIndividu1.setVerifyInputWhenFocusTarget(false);
+
+        jTextFieldIndividu1.setEditable(false);
+        jTextFieldIndividu1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jTextFieldIndividu1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jTextFieldIndividu1.setBorder(null);
+        jTextFieldIndividu1.setPreferredSize(new java.awt.Dimension(50, 20));
+
+        jPanelSearch1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelSearch1.setPreferredSize(new java.awt.Dimension(50, 20));
+
+        javax.swing.GroupLayout jPanelSearch1Layout = new javax.swing.GroupLayout(jPanelSearch1);
+        jPanelSearch1.setLayout(jPanelSearch1Layout);
+        jPanelSearch1Layout.setHorizontalGroup(
+            jPanelSearch1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanelSearch1Layout.setVerticalGroup(
+            jPanelSearch1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jbuttonCurrentIndi1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CurrentIndi.png"))); // NOI18N
+        jbuttonCurrentIndi1.setBorder(null);
+        jbuttonCurrentIndi1.setBorderPainted(false);
+        jbuttonCurrentIndi1.setPreferredSize(new java.awt.Dimension(24, 24));
+        jbuttonCurrentIndi1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbuttonCurrentIndi1ActionPerformed(evt);
+            }
+        });
+
+        jLabelIndividu2.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelIndividu2.text")); // NOI18N
+        jLabelIndividu2.setMaximumSize(new java.awt.Dimension(42, 14));
+        jLabelIndividu2.setMinimumSize(new java.awt.Dimension(42, 14));
+        jLabelIndividu2.setPreferredSize(new java.awt.Dimension(42, 14));
+        jLabelIndividu2.setRequestFocusEnabled(false);
+        jLabelIndividu2.setVerifyInputWhenFocusTarget(false);
+
+        jbuttonCurrentIndi2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/commonAncestor/CurrentIndi.png"))); // NOI18N
+        jbuttonCurrentIndi2.setBorder(null);
+        jbuttonCurrentIndi2.setBorderPainted(false);
+        jbuttonCurrentIndi2.setPreferredSize(new java.awt.Dimension(24, 24));
+        jbuttonCurrentIndi2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jbuttonCurrentIndi2ActionPerformed(evt);
+            }
+        });
+
+        jTextFieldIndividu2.setEditable(false);
+        jTextFieldIndividu2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        jTextFieldIndividu2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        jTextFieldIndividu2.setBorder(null);
+        jTextFieldIndividu2.setMinimumSize(new java.awt.Dimension(50, 20));
+        jTextFieldIndividu2.setPreferredSize(new java.awt.Dimension(50, 20));
+
+        jPanelSearch2.setBackground(new java.awt.Color(255, 255, 255));
+        jPanelSearch2.setMinimumSize(new java.awt.Dimension(50, 20));
+        jPanelSearch2.setPreferredSize(new java.awt.Dimension(50, 20));
+
+        javax.swing.GroupLayout jPanelSearch2Layout = new javax.swing.GroupLayout(jPanelSearch2);
+        jPanelSearch2.setLayout(jPanelSearch2Layout);
+        jPanelSearch2Layout.setHorizontalGroup(
+            jPanelSearch2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanelSearch2Layout.setVerticalGroup(
+            jPanelSearch2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 20, Short.MAX_VALUE)
+        );
+
+        jLabelAncestorList.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text")); // NOI18N
+
+        jScrollPaneAncestortList.setMinimumSize(new java.awt.Dimension(100, 82));
+        jScrollPaneAncestortList.setPreferredSize(new java.awt.Dimension(100, 84));
+
+        jListAncestors.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jListAncestors.setPreferredSize(new java.awt.Dimension(80, 80));
+        jListAncestors.setVisibleRowCount(5);
+        jListAncestors.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                jListAncestorsValueChanged(evt);
+            }
+        });
+        jScrollPaneAncestortList.setViewportView(jListAncestors);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabelIndividu1, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonHelp, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabelAncestorList)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jPanelSearch2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addComponent(jTextFieldIndividu2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanelSearch1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 238, Short.MAX_VALUE)
+                .addComponent(jTextFieldIndividu1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addComponent(jButtonHelp, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabelIndividu1)
+                    .addComponent(jbuttonCurrentIndi1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextFieldIndividu1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelSearch1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
+                    .addComponent(jLabelIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jbuttonCurrentIndi2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(jTextFieldIndividu2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelSearch2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(jLabelAncestorList)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPaneAncestortList, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        jLabelIndividu1.getAccessibleContext().setAccessibleName("null");
+        jLabelIndividu2.getAccessibleContext().setAccessibleName("");
+
+        jPanelExportFile.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanelExportFile.border.title"))); // NOI18N
+        jPanelExportFile.setPreferredSize(new java.awt.Dimension(110, 107));
+
+        jComboBoxFileType.setMaximumRowCount(3);
+        jComboBoxFileType.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "PDF", "PNG", "SVG" }));
+        jComboBoxFileType.setMinimumSize(new java.awt.Dimension(50, 18));
+        jComboBoxFileType.setName("jComboBoxFileType"); // NOI18N
+        jComboBoxFileType.setPreferredSize(new java.awt.Dimension(30, 24));
+
+        jButtonSaveFile.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonSaveFile.text")); // NOI18N
+        jButtonSaveFile.setMargin(new java.awt.Insets(2, 4, 2, 4));
+        jButtonSaveFile.setMaximumSize(null);
+        jButtonSaveFile.setMinimumSize(new java.awt.Dimension(70, 28));
+        jButtonSaveFile.setPreferredSize(new java.awt.Dimension(60, 28));
+        jButtonSaveFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveFileActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelExportFileLayout = new javax.swing.GroupLayout(jPanelExportFile);
+        jPanelExportFile.setLayout(jPanelExportFileLayout);
+        jPanelExportFileLayout.setHorizontalGroup(
+            jPanelExportFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelExportFileLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelExportFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jComboBoxFileType, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonSaveFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelExportFileLayout.setVerticalGroup(
+            jPanelExportFileLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelExportFileLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jComboBoxFileType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonSaveFile, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(23, Short.MAX_VALUE))
+        );
+
+        jButtonSaveFile.getAccessibleContext().setAccessibleName("");
+
+        jPanelOption.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jPanelOption.border.title"))); // NOI18N
+
+        jCheckBoxAutoPreview.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jButtonPreview.text")); // NOI18N
+        jCheckBoxAutoPreview.setPreferredSize(new java.awt.Dimension(50, 20));
+        jCheckBoxAutoPreview.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxAutoPreviewActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxSeparatedWindow.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxSeparatedWindow.text")); // NOI18N
+        jCheckBoxSeparatedWindow.setInheritsPopupMenu(true);
+        jCheckBoxSeparatedWindow.setPreferredSize(new java.awt.Dimension(125, 20));
+        jCheckBoxSeparatedWindow.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxSeparatedWindowActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxDisplayedId.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxDisplayedId.text")); // NOI18N
+        jCheckBoxDisplayedId.setPreferredSize(new java.awt.Dimension(70, 20));
+        jCheckBoxDisplayedId.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxDisplayedIdActionPerformed(evt);
+            }
+        });
+
+        jCheckBoxRecentEvent.setText(org.openide.util.NbBundle.getMessage(SamePanel.class, "SamePanel.jCheckBoxRecentEvent.text")); // NOI18N
+        jCheckBoxRecentEvent.setPreferredSize(new java.awt.Dimension(70, 20));
+        jCheckBoxRecentEvent.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jCheckBoxRecentEventActionPerformed(evt);
+            }
+        });
+
+        jComboBoxHusbandOrWife.setMaximumRowCount(2);
+        jComboBoxHusbandOrWife.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[] { "husband first", "wife first" }));
+        jComboBoxHusbandOrWife.setPreferredSize(new java.awt.Dimension(70, 24));
+        jComboBoxHusbandOrWife.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                jComboBoxHusbandOrWifeItemStateChanged(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanelOptionLayout = new javax.swing.GroupLayout(jPanelOption);
+        jPanelOption.setLayout(jPanelOptionLayout);
+        jPanelOptionLayout.setHorizontalGroup(
+            jPanelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelOptionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(jPanelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jCheckBoxSeparatedWindow, javax.swing.GroupLayout.DEFAULT_SIZE, 226, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxAutoPreview, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxDisplayedId, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jCheckBoxRecentEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxHusbandOrWife, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        jPanelOptionLayout.setVerticalGroup(
+            jPanelOptionLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelOptionLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxAutoPreview, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxSeparatedWindow, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxDisplayedId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jCheckBoxRecentEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jComboBoxHusbandOrWife, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        jCheckBoxAutoPreview.getAccessibleContext().setAccessibleName("null");
+        jCheckBoxSeparatedWindow.getAccessibleContext().setAccessibleName("");
+        jCheckBoxDisplayedId.getAccessibleContext().setAccessibleName("");
+        jCheckBoxRecentEvent.getAccessibleContext().setAccessibleName("");
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
+        this.setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanelOption, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanelExportFile, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
+                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 334, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelOption, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanelExportFile, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        jPanelExportFile.getAccessibleContext().setAccessibleName("");
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -795,25 +793,11 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
   private void jCheckBoxAutoPreviewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxAutoPreviewActionPerformed
       if (jCheckBoxAutoPreview.isSelected()) {
-            openPreview();
+           openPreview();
       } else {
            closePreview();           
       }
 }//GEN-LAST:event_jCheckBoxAutoPreviewActionPerformed
-
-  private void jbuttonCurrentIndi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonCurrentIndi2ActionPerformed
-      setIndividu2(currentIndi);
-}//GEN-LAST:event_jbuttonCurrentIndi2ActionPerformed
-
-  private void jListAncestorsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListAncestorsValueChanged
-      if (jCheckBoxAutoPreview.isSelected() && evt.getValueIsAdjusting() == false) {
-          openPreview();
-      }
-}//GEN-LAST:event_jListAncestorsValueChanged
-
-  private void jbuttonCurrentIndi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonCurrentIndi1ActionPerformed
-      setIndividu1(currentIndi);
-}//GEN-LAST:event_jbuttonCurrentIndi1ActionPerformed
 
   private void jCheckBoxDisplayedIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBoxDisplayedIdActionPerformed
       if (jCheckBoxAutoPreview.isSelected()) {
@@ -839,13 +823,27 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
       }
   }//GEN-LAST:event_jCheckBoxSeparatedWindowActionPerformed
 
-  private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
-      String id = "ancestris.modules.commonAncestor.about";
-      Help help = Lookup.getDefault().lookup(Help.class);
-      if (help != null && help.isValidID(id, true).booleanValue()) {
-          help.showHelp(new HelpCtx(id));
-      }
-  }//GEN-LAST:event_jButtonHelpActionPerformed
+    private void jButtonHelpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonHelpActionPerformed
+        String id = "ancestris.modules.commonAncestor.about";
+        Help help = Lookup.getDefault().lookup(Help.class);
+        if (help != null && help.isValidID(id, true).booleanValue()) {
+            help.showHelp(new HelpCtx(id));
+        }
+    }//GEN-LAST:event_jButtonHelpActionPerformed
+
+    private void jListAncestorsValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_jListAncestorsValueChanged
+        if (jCheckBoxAutoPreview.isSelected() && evt.getValueIsAdjusting() == false) {
+            openPreview();
+        }
+    }//GEN-LAST:event_jListAncestorsValueChanged
+
+    private void jbuttonCurrentIndi2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonCurrentIndi2ActionPerformed
+        setIndividu2(currentIndi);
+    }//GEN-LAST:event_jbuttonCurrentIndi2ActionPerformed
+
+    private void jbuttonCurrentIndi1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jbuttonCurrentIndi1ActionPerformed
+        setIndividu1(currentIndi);
+    }//GEN-LAST:event_jbuttonCurrentIndi1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonHelp;
@@ -862,10 +860,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
     private javax.swing.JList<Indi> jListAncestors;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanelExportFile;
-    private javax.swing.JPanel jPanelFile;
-    private javax.swing.JPanel jPanelHelp;
-    private javax.swing.JPanel jPanelOptions;
-    private javax.swing.JPanel jPanelPreview;
+    private javax.swing.JPanel jPanelOption;
     private javax.swing.JPanel jPanelSearch1;
     private javax.swing.JPanel jPanelSearch2;
     private javax.swing.JScrollPane jScrollPaneAncestortList;

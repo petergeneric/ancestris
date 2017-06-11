@@ -25,6 +25,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseMotionListener;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.CharArrayWriter;
 import java.io.File;
 import java.io.IOException;
@@ -133,6 +135,15 @@ public class PreviewView extends JPanel {
                 lastPoint = e.getPoint();
             }
         });
+        
+        result.addMouseWheelListener(new MouseWheelListener() {
+
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int newValue = sliderZoom.getValue() - (e.getWheelRotation() * 3);
+                sliderZoom.setValue(newValue);
+            }
+        });
+        
     }
 
     /**
