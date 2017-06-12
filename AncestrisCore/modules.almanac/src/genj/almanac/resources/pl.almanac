@@ -1,5 +1,10 @@
+#=======================================================================
+#                    File for polish events pl.almanac
+#=======================================================================
 #
-# Copyright (C) 2016 - 2016 - ancestris.org
+#
+# Copyright (C) 2009 - 2017 Francois Massonneau <support@ancestris.org>
+#                           Ancestris Team
 #
 #
 # Permission is granted to copy, distribute and/or modify this document
@@ -58,7 +63,7 @@
 #                d = Death
 #                x = Wedding
 #                * = Other
-#                A list of types is allowed, e.g. 'w,p" describes an event
+#                A list of types is allowed, e.g. "w,p" describes an event
 #                in the context of a war with political proportions.
 # Parameter #6 : The event description in a specific language - a prefix
 #                of a valid ISO-639 language code is required:
@@ -73,28 +78,11 @@
 #
 # 15880509;;fr;6;p;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
 #
-# Note de l'auteur : J'ai volontairement fait débuter les événements vers 1600 et 
-#                    j'ai arrêté de les indiquer dans les années 1930.
-#                    Je pense qu'il est difficile dans la majorité des cas de 
-#                    faire remonter sa généalogie avant 1600, et aprés 1930
-#                    les événements sont mieux connus. Cette liste d'informations
-#                    ne se veut pas exhaustive, et c'est volontaire. Elle n'a 
-#                    pour but que de vous aider à mieux comprendre les phases 
-#                    de la vie de vos ancêtres (ex: pourquoi beaucoup de morts 
-#                    à telle période ? Peut-être une épidémie, etc...).
-#                    
-#                    Vous êtes encouragé à rajouter des événements, mais il 
-#                    vous est demandé de ne pas en supprimer.
-#                    Attention de ne pas utiliser le point virgule (;) dans 
-#                    vos textes, car le point virgule est un "séparateur", 
-#                    comme je l'ai indiqué plus haut. Merci. F. Massonneau../.
 #
-#                    Contributeurs :
-#                    Voici une liste des personnes ayant contribué à des ajouts 
-#                    modifications de ce fichier (par ordre alphabétique) :
-#                         . Lionel (lio-sand) : Tous les règnes des Rois de France
+#==============================================================================
 #
-#                    Dernière mise à jour : 27/05/2007
+#
+#                    Last updated : 2017-06-12
 #
 #
 #==============================================================================
@@ -143,7 +131,7 @@
 18621125;;pl;;;5;y;pl=W Warszawie otworzono Szkołę Główną.
 18630114;;pl;;;5;e;pl=Do wojska wcielono 1,5 tys. młodych ludzi
 18630114;;pl;;;5;p;pl=początek rosyjskiej branki.
-18630122;;pl;;;3;PW;pl=Wybuchło powstanie styczniowe
+18630122;;pl;;;3;p,w;pl=Wybuchło powstanie styczniowe
 18630122;;pl;;;5;p;pl=władze w kraju objął Tymczasowy Rząd Narodowy.
 18640805;;pl;;;5;d;pl=Stracono Romualda Traugutta.
 18650428;;pl;;;5;e;pl=Odbyła się premiera opery Straszny dwór Stanisława Moniuszki w Warszawie.
@@ -165,7 +153,7 @@
 1905;;pl;;;5;e;pl=Henryk Sienkiewicz otrzymał Nagrodę Nobla za Quo vadis.
 190512;190601;pl;;;5;e;pl=Kolejny strajk powszechny w Królestwie Polskim.
 1911;;pl;;;5;e,y;pl=Maria Skłodowska-Curie otrzymała Nagrodę Nobla w dziedzinie chemii za pracę nad radem, polonem oraz promieniotwórczością.
-19140728;;pl;;;1;PW;pl=Początek I wojny światowej.
+19140728;;pl;;;1;p,w;pl=Początek I wojny światowej.
 19140806;;pl;;;5;e;pl=Wyruszyła Pierwsza Kompania Kadrowa.
 19140803;;pl;;;5;e;pl=Ogłoszono mobilizację oddziałów Związku Strzeleckiego i Drużyn Strzeleckich w Krakowie.
 1914;;pl;;;5;e;pl=Powstała konspiracyjna Polska Organizacja Wojskowa.
@@ -188,7 +176,7 @@
 19221216;;pl;;;5;p;pl=Fanatyczny nacjonalista zamordował Gabriela Narutowicza.
 192401;;pl;;;5;y;pl=Powstał Bank Polski.
 19241210;;pl;;;5;e;pl=Władysław Reymont otrzymał Nagrodę Nobla za powieść „Chłopi”.
-19250201;;pl;;;5;I;pl=Odbyła się pierwsza transmisja programu Polskiego Radia.
+19250201;;pl;;;5;i;pl=Odbyła się pierwsza transmisja programu Polskiego Radia.
 19260601;;pl;;;5;p;pl=Prezydentem Polski został Ignacy Mościcki.
 19350424;;pl;;;5;p;pl=Uchwalono konstytucję kwietniową.
 19350512;;pl;;;5;d;pl=Zmarł Józef Piłsudski.
@@ -236,9 +224,9 @@
 19450618;19450621;pl;;;4;p;pl=Odbył się proces szesnastu w Moskwie, będący pokazowym procesem 16 przywódców politycznych Polskiego Państwa Podziemnego aresztowanych przez NKWD w 27 marca 1945 r..
 19460704;;pl;;;3;p;pl=Pogrom Żydów w Kielcach
 19481022;;pl;;;5;d;pl=Zmarł kardynał August Hlond, jego następcą został Stefana Wyszyńskiego.
-19500704;;pl;;;3;IP;pl=Pierwsza polska audycja Radia Wolna Europa.
+19500704;;pl;;;3;i,p;pl=Pierwsza polska audycja Radia Wolna Europa.
 19520722;;pl;;;3;p;pl=Przyjęto konstytucję Polskiej Rzeczypospolitej Ludowej (PRL).
-195301;;pl;;;3;I;pl=Rozpoczęto nadawanie regularnego programu telewizyjnego.
+195301;;pl;;;3;i;pl=Rozpoczęto nadawanie regularnego programu telewizyjnego.
 19550514;;pl;;;3;p;pl=Utworzono Układ Warszawski
 19560628;;pl;;;3;p;pl=W Poznaniu rozpoczął się pierwszy w PRL strajk generalny, tzw. poznański czerwiec.
 19701220;;pl;;;5;p;pl=Odsunięto Władysława Gomułki od władzy. Pierwszym sekretarzem KC PZPR został Edward Gierek.
@@ -410,4 +398,7 @@
 #
 #
 #
-#=================================== END OF FILE ==============================
+#==============================================================================
+#                                    END OF FILE                               
+#==============================================================================
+
