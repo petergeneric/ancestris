@@ -1,5 +1,9 @@
+#=======================================================================
+#                    File for netherland events nl.almanac
+#=======================================================================
 #
-# Copyright (C) 2009 - 2011 Francois Massonneau <support@ancestris.org>
+#
+# Copyright (C) 2009 - 2017 Francois Massonneau <support@ancestris.org>
 #                           Ancestris Team
 #
 # Permission is granted to copy, distribute and/or modify this document
@@ -68,7 +72,7 @@
 #                f = Founding
 #                e = Misc. Events
 #                r = Reigns
-#                A list of types is allowed, e.g. wp describes an event
+#                A list of types is allowed, e.g. "w,p" describes an event
 #                in the context of a war with political proportions.
 # Parameter #8 : The event description in a specific language - a prefix
 #                of a valid ISO-639 language code is required:
@@ -141,7 +145,7 @@
 #                y = Ontdekking
 #                z = Film, theater
 #                * = Anderen
-#                Een lijst van types is toegestaan, b.v. W,P beschrijft een gebeurtenis
+#                Een lijst van types is toegestaan, b.v. "w,p" beschrijft een gebeurtenis
 #                in de context van een oorlog met politieke proporties.
 # Parameter #8 : De gebeurtenis beschrijving in een specifieke taal - een voorzetsel
 #                van een geldig ISO-639 taal code is vereist:
@@ -174,8 +178,8 @@
 
 0795;08550929;nl;;;2;s;nl=Lotharius I (geboren Aquitanië, 795 - overleden Prüm, 29 september 855) oudste zoon van Lodewijk de Vrome en Ermengarde van Haspengouw. Vanaf 817 Keizer van het Roomse Rijk, vanaf 818 koning van Italië, vanaf 840 koning van Midden-Francië.
 08400620;08550929;nl;;;0;r;nl=Lotharius I - koning van Midden-Francië.
-0835;8690808;nl;;;2;s;nl=Lotharius II (geboren ca. 835 - overlijden bij Piacenza, 8 augustus 869) oudste zoon van keizer Lotharius I en Ermengarde van Tours. Vanaf 855 koning van het Koninkrijk Lotharingen.
-08550929;8690808;nl;;;0;r;nl=Lotharius II - koning van het Lotharingen.
+0835;08690808;nl;;;2;s;nl=Lotharius II (geboren ca. 835 - overlijden bij Piacenza, 8 augustus 869) oudste zoon van keizer Lotharius I en Ermengarde van Tours. Vanaf 855 koning van het Koninkrijk Lotharingen.
+08550929;08690808;nl;;;0;r;nl=Lotharius II - koning van het Lotharingen.
 0806;08760928;nl;;;2;s;nl=Lodewijk de Duitser (geboren 806 — overleden Frankfurt am Main, 28 september 876), ook bekend als Lodewijk II of Lodewijk de Beier, derde zoon van de Lodewijk de Vrome en Ermengarde van Haspengouw. Vanaf 843 koning van het Oost-Frankische Rijk, vanaf 869 koning van Lotharingen, vanaf 829 hertog van Beieren
 08690808;08760928;nl;;;0;r;nl=Lodewijk II - koning van het Lotharingen. 
 0835;08820120;nl;;;2;s;nl=Lodewijk III de Jonge (geboren ca. 835 - overleden 20 januari 882), tweede zoon van Lodewijk de Duitser en diens vrouw Emma. Vanaf 876 koning van Oost-Francië, vanaf 880 koning van Lotharingen en hertog van Beieren.
@@ -322,10 +326,10 @@
 1626;;nl;;;4;e;nl=Peter Minuit "koopt" het eiland Manhattan van de Manhattoes-indianen voor 24 dollar en legaliseert hiermee de nederzetting Nieuw-Amsterdam (het latere New York) die het voorgaande jaar gesticht werd aan de monding van de Hudson River.
 16290414;16950708;nl;;;3;i;nl=Christiaan Huygens (geboren Den Haag - overleden 14 april 1629 – aldaar, 8 juli 1695) was een vooraanstaande Nederlandse wis-, natuur- en sterrenkundige, uitvinder en schrijver van vroege sciencefiction. Hij was een van de leidende figuren van de zeventiende-eeuwse wetenschap
 16280907;16280908;nl;;;4;e;nl=De vloot van de West-Indische Compagnie onder Piet Hein boekt een spectaculaire overwinning in de Slag in de Baai van Matanzas voor de kust van het eiland Cuba. Hij onderschept de Zilvervloot. Dit laat 11 miljoen gulden in handen vallen van de Republiek. De buit vertegenwoordigt zo'n driekwart jaar oorlogsuitgaven en is niet alleen een financiële, maar vooral ook een morele overwinning van de Republiek
-16290414;16950708;nl;;;3;e;Christiaan Huygens (geboren Den Haag, 14 april 1629 – overleden aldaar, 8 juli 1695) was een vooraanstaande Nederlandse wis-, natuur- en sterrenkundige, uitvinder en schrijver van vroege sciencefiction. Hij was een van de leidende figuren van de zeventiende-eeuwse wetenschap
+16290414;16950708;nl;;;3;e;nl=Christiaan Huygens (geboren Den Haag, 14 april 1629 – overleden aldaar, 8 juli 1695) was een vooraanstaande Nederlandse wis-, natuur- en sterrenkundige, uitvinder en schrijver van vroege sciencefiction. Hij was een van de leidende figuren van de zeventiende-eeuwse wetenschap
 
 16321024;17230826;nl;;;3;e;nl=Antoni van Leeuwenhoek (geboren Delft, 24 oktober 1632 – overleden aldaar, 26 augustus 1723) was een Nederlandse handelsman, landmeter, wijnroeier, glasblazer en microbioloog. Van Leeuwenhoek is vooral bekend door zijn zelf gefabriceerde microscoop en zijn pionierswerk voor de celbiologie en de microbiologie.
-16321124;16770221;nl;;;3;e;Baruch Spinoza (geboren Amsterdam, 24 november 1632 – overleden Den Haag, 21 februari 1677), was een Nederlands filosoof, wiskundige, politiek denker en lenzenslijper uit de vroege Verlichting. Hij was van Sefardisch-Joodse afkomst. 
+16321124;16770221;nl;;;3;e;nl=Baruch Spinoza (geboren Amsterdam, 24 november 1632 – overleden Den Haag, 21 februari 1677), was een Nederlands filosoof, wiskundige, politiek denker en lenzenslijper uit de vroege Verlichting. Hij was van Sefardisch-Joodse afkomst. 
 163408;;nl;;;4;e;nl=In augustus verovert de WIC Curaçao. Met dit eiland heeft de WIC een uitvalsbasis voor handel en kaapvaart. Curaçao ligt gunstig ten opzichte van de Spaanse koloniën op het vasteland en heeft ook had het de beste haven tot dan toe bekend in het Caraïbisch gebied. Daarnaast zoekt de WIC naar een goede bron van zout. Curaçao wordt het Nederlandse verzamelpunt voor de slavenhandel
 1635;;nl;;;4;l;nl=De Atlas Maior of Grooten Atlas is een omvangrijk samengestelde wereldatlas van de hand van Willem Blaeu, samengesteld door zijn zoon Joan Blaeu. De atlas begon onder de titel Atlas Novus in 1635, een uitgave in twee delen. Deze werd in 1662 onder de titel Atlas Maior opnieuw uitgeven, maar dan in elf delen in Latijn, en bevatte 594 kaarten.
 1637;;nl;;;4;e;nl=De 'tulpenmanie' komt tot een hoogtepunt. Op een veiling in Alkmaar wordt een dagomzet gemaakt van 90.000 gulden. Per bol wordt zelfs 1000 gulden betaald, meer dan de prijs van een gemiddeld woonhuis in die tijden. Daarna stort de markt in. De prijzen dalen, bollen worden gedumpt waarna de prijzen nog harder kelderen.
@@ -462,3 +466,10 @@
 20090430;;nl;;;3;e;nl=De aanslag vond plaats rond 11.50 uur, tijdens de officiële viering van Koninginnedag in Apeldoorn. Op dat tijdstip reed een personenauto door dranghekken en een mensenmenigte heen, in de richting van een open bus waarmee de koninklijke familie op dat moment een rijtoer door Apeldoorn maakte. De aanslag kostte acht mensen het leven, onder wie de bestuurder van de auto, Karst Tates. De koninklijke familie, op wie volgens de eerst aanwezige officier van de Koninklijke Marechaussee de aanslag gericht was, bleef ongedeerd.
 20010409;;nl;;;3;e;nl=Tristan van der Vlis schiet in het winkelcentrum De Ridderhof in Alphen aan den Rijn 6 mensen dood alvorens zichzelf van het leven te beroven. Tevens raken 17 mensen gewond
 20140617;;ua;;;4;e;nl=Een Boeing 777-200ER van Malaysia Airlines met vluchtnummer MH17 stort neer bij het Oost-Oekraïense dorp Hrabove in de oblast Donetsk, nadat het toestel op 10 km hoogte was geraakt door een 'BUK'luchtdoelraket. Rondom Donetsk was op dat moment een pro-Russische opstand gaande. Aan boord waren 298 mensen, 283 passagiers en 15 bemanningsleden. 193 inzittenden hadden de Nederlandse nationaliteit, 4 inzittenden hadden de Belgische nationaliteit. Er waren geen overlevenden.
+#
+#
+#
+#
+#==============================================================================
+#                                    END OF FILE                               
+#==============================================================================
