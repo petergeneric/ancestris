@@ -3,7 +3,7 @@
 #=======================================================================
 #
 #
-# Copyright (C) 2009 - 2011 Francois Massonneau <support@ancestris.org>
+# Copyright (C) 2009 - 2017 Francois Massonneau <support@ancestris.org>
 #                           Ancestris Team
 #
 # Permission is granted to copy, distribute and/or modify this document
@@ -63,17 +63,17 @@
 #                2 = less important event.
 #                etc...
 # Parameter #7 : Type, with :
-#                W = War
-#                P = Political event
-#                B = Birthday
-#                D = Death
-#                X = Wedding
-#                I = Invention
-#                Y = Discovery
-#                F = Founding
-#                E = Misc. Events
-#                R = Reigns
-#                A list of types is allowed, e.g. WP describes an event
+#                w = War
+#                p = Political event
+#                b = Birthday
+#                d = Death
+#                x = Wedding
+#                i = Invention
+#                y = Discovery
+#                f = Founding
+#                e = Misc. Events
+#                r = Reigns
+#                A list of types is allowed, e.g. "w,p" describes an event
 #                in the context of a war with political proportions.
 # Parameter #8 : The event description in a specific language - a prefix
 #                of a valid ISO-639 language code is required:
@@ -84,9 +84,9 @@
 # Parameter #9+: More event descriptions in different languages (again
 #                separated by ';')
 #
-# Here's an example for Bruxelles rising.
+# Here's an example for Québec besieged.
 #
-# 17590626;;ca;;;3;P;fr=Siège de la ville de Québec
+# 17590626;;ca;;;3;p;fr=Siège de la ville de Québec
 #
 # --------------------------- F R E N C H    S E C T I O N  ----------------------------
 #
@@ -144,17 +144,17 @@
 #                2 = événement encore moins important.
 #                etc...
 # Paramètre #7 : Le type d'événement, avec :
-#                W = Guerre
-#                P = Evénement politique
-#                B = Anniversaire
-#                D = Décès
-#                X = Mariage
-#                I = Invention
-#                Y = Découverte
-#                F = Fondation
-#                E = Evénements divers
-#                R = Règnes et présidences
-#                Une liste de différents types est autorisée, ainsi WP 
+#                w = Guerre
+#                p = Evénement politique
+#                b = Anniversaire
+#                d = Décès
+#                x = Mariage
+#                i = Invention
+#                y = Découverte
+#                f = Fondation
+#                e = Evénements divers
+#                r = Règnes et présidences
+#                Une liste de différents types est autorisée, ainsi "w,p" 
 #                sera utilisé pour décrire un événement ayant une 
 #                connotation de guerre avec des conséquences politiques 
 #                importantes.
@@ -170,47 +170,25 @@
 #
 # Voici un exemple pour l'entrée du Duc de Guise entrant dans Paris le 9 mai 1588
 #
-# 15880509;;fr;;;6;P;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
-#
-#
-# Note de l'auteur : J'ai volontairement fait débuter les événements vers 1600 et 
-#                    j'ai arrêté de les indiquer dans les années 1930.
-#                    Je pense qu'il est difficile dans la majorité des cas de 
-#                    faire remonter sa généalogie avant 1600, et aprés 1930
-#                    les événements sont mieux connus. Cette liste d'informations
-#                    ne se veut pas exhaustive, et c'est volontaire. Elle n'a 
-#                    pour but que de vous aider à mieux comprendre les phases 
-#                    de la vie de vos ancêtres (ex: pourquoi beaucoup de morts 
-#                    à telle période ? Peut-être une épidémie, etc...).
-#                    
-#                    Vous êtes encouragé à rajouter des événements, mais il 
-#                    vous est demandé de ne pas en supprimer.
-#                    Attention de ne pas utiliser le point virgule (;) dans 
-#                    vos textes, car le point virgule est un "séparateur", 
-#                    comme je l'ai indiqué plus haut. Merci. F. Massonneau../.
-#
-#                    Contributeurs :
-#                    Voici une liste des personnes ayant contribué à des ajouts 
-#                    modifications de ce fichier (par ordre alphabétique) :
-#                         . Lionel (lio-sand) : Tous les règnes des Rois 
-#                           de France
-#                         . Dominique (dacore) : Ajout pour les années 
-#                           1600 à 1700
-#                         . Christian Bouy : A fourni beaucoup de données 
-#                           pour les années postérieures à 1945.
-#                         . Joëlle Lussiau : A mis en forme les données de 
-#                           Christian dans l'almanac et les a classées.
-#
-#                    Dernière mise à jour : 27/11/2011
+# 15880509;;fr;;;6;p;fr=Le Duc de Guise entre dans Paris;de=Der Herzog von Guise betritt Paris;en=The Duke of Guise enters Paris
 #
 #
 #==============================================================================
 #
 #
-17590626;;ca;;;3;P;fr=Siège de la ville de Québec.;en=The city of Québec is besieged.
+#                    Last updated : 2017-06-12
+#
+#
+#==============================================================================
+#
+#
+#
+17590626;;ca;;;3;p;fr=Siège de la ville de Québec.;en=The city of Québec is besieged.
 #
 #
 #
 #
-#=================================== END OF FILE ==============================
+#==============================================================================
+#                                    END OF FILE                               
+#==============================================================================
 
