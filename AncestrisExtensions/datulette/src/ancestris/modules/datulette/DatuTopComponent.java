@@ -62,47 +62,14 @@ public final class DatuTopComponent extends TopComponent {
             public void stateChanged(ChangeEvent e) {
                 if (updateInProgress == false) {
                     updateInProgress = true;
-                    Calendar cal = dw1.getCalendar();
-                    if (cal != null) {
-                        jComboBox1.setSelectedItem(cal);
-                        if (cal.equals(PointInTime.GREGORIAN)) {
-                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
-                        } else if (cal.equals(PointInTime.FRENCHR)) {
-                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.frenchR.toolTipText")); // NOI18N
-                        } else {
-                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.others.toolTipText")); // NOI18N
-                        }
-                        jPanel5.repaint();
+                    updateTooltip();
+                    if (dw1.getCalendar() != null) {
                         update();
                     }
                     updateInProgress = false;
                 }
             }
         });
-
-//        dw1.addActionListener(new ActionListener() {
-//
-//            public void actionPerformed(ActionEvent e) {
-//                if (updateInProgress == false) {
-//                    updateInProgress = true;
-//                    Calendar cal = dw1.getCalendar();
-//                    if (cal != null) {
-//                        jComboBox1.setSelectedItem(cal);
-//                        if (cal.equals(PointInTime.GREGORIAN)) {
-//                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
-//                        } else if (cal.equals(PointInTime.FRENCHR)) {
-//                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.frenchR.toolTipText")); // NOI18N
-//                        } else {
-//                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.others.toolTipText")); // NOI18N
-//                        }
-//                        jPanel5.repaint();
-//                        update();
-//                    }
-//                    updateInProgress = false;
-//                }
-//            }
-//        });
-        
     }
 
     public void update() {
@@ -123,6 +90,21 @@ public final class DatuTopComponent extends TopComponent {
             if (Pit.isComplete()) {
                 jLabel1.setText(calcule(Pit));
             }
+        }
+    }
+
+    private void updateTooltip() {
+        Calendar cal = dw1.getCalendar();
+        if (cal != null) {
+            jComboBox1.setSelectedItem(cal);
+            if (cal.equals(PointInTime.GREGORIAN)) {
+                jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
+            } else if (cal.equals(PointInTime.FRENCHR)) {
+                jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.frenchR.toolTipText")); // NOI18N
+            } else {
+                jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.others.toolTipText")); // NOI18N
+            }
+            jPanel5.repaint();
         }
     }
 
@@ -487,6 +469,7 @@ public final class DatuTopComponent extends TopComponent {
             }
             update();
         }
+        updateTooltip();
     }//GEN-LAST:event_jComboBox1ActionPerformed
 
     private void jTextFieldGap1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_jTextFieldGap1KeyReleased
