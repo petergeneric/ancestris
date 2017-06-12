@@ -62,13 +62,12 @@ public final class DatuTopComponent extends TopComponent {
             public void stateChanged(ChangeEvent e) {
                 if (updateInProgress == false) {
                     updateInProgress = true;
-                    PointInTime pit = dw1.getValue();
-                    if (pit != null) {
-                        from = pit.getCalendar();
-                        jComboBox1.setSelectedItem(from);
-                        if (pit.getCalendar().equals(PointInTime.GREGORIAN)) {
+                    Calendar cal = dw1.getCalendar();
+                    if (cal != null) {
+                        jComboBox1.setSelectedItem(cal);
+                        if (cal.equals(PointInTime.GREGORIAN)) {
                             jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
-                        } else if (pit.getCalendar().equals(PointInTime.FRENCHR)) {
+                        } else if (cal.equals(PointInTime.FRENCHR)) {
                             jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.frenchR.toolTipText")); // NOI18N
                         } else {
                             jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.others.toolTipText")); // NOI18N
@@ -80,6 +79,30 @@ public final class DatuTopComponent extends TopComponent {
                 }
             }
         });
+
+//        dw1.addActionListener(new ActionListener() {
+//
+//            public void actionPerformed(ActionEvent e) {
+//                if (updateInProgress == false) {
+//                    updateInProgress = true;
+//                    Calendar cal = dw1.getCalendar();
+//                    if (cal != null) {
+//                        jComboBox1.setSelectedItem(cal);
+//                        if (cal.equals(PointInTime.GREGORIAN)) {
+//                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.gregorian.toolTipText")); // NOI18N
+//                        } else if (cal.equals(PointInTime.FRENCHR)) {
+//                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.frenchR.toolTipText")); // NOI18N
+//                        } else {
+//                            jPanel5.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.calendar.others.toolTipText")); // NOI18N
+//                        }
+//                        jPanel5.repaint();
+//                        update();
+//                    }
+//                    updateInProgress = false;
+//                }
+//            }
+//        });
+        
     }
 
     public void update() {
@@ -240,6 +263,7 @@ public final class DatuTopComponent extends TopComponent {
 
         jSliderGap.setFont(new java.awt.Font("Dialog", 1, 8)); // NOI18N
         jSliderGap.setMinimum(-100);
+        jSliderGap.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jSliderGap.toolTipText")); // NOI18N
         jSliderGap.setValue(0);
         jSliderGap.addChangeListener(formListener);
 
@@ -279,6 +303,7 @@ public final class DatuTopComponent extends TopComponent {
         jTextFieldGap1.setFont(new java.awt.Font("Dialog", 1, 12)); // NOI18N
         jTextFieldGap1.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldGap1.setText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap1.text")); // NOI18N
+        jTextFieldGap1.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jTextFieldGap1.toolTipText")); // NOI18N
         jTextFieldGap1.addKeyListener(formListener);
 
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
@@ -331,11 +356,13 @@ public final class DatuTopComponent extends TopComponent {
         );
 
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<Calendar>(PointInTime.CALENDARS));
+        jComboBox1.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jComboBox1.toolTipText")); // NOI18N
         jComboBox1.addActionListener(formListener);
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jLabel3.text")); // NOI18N
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<Calendar>(PointInTime.CALENDARS));
+        jComboBox2.setToolTipText(org.openide.util.NbBundle.getMessage(DatuTopComponent.class, "DatuTopComponent.jComboBox2.toolTipText")); // NOI18N
         jComboBox2.addActionListener(formListener);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -360,14 +387,15 @@ public final class DatuTopComponent extends TopComponent {
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jPanel5, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jPanel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)

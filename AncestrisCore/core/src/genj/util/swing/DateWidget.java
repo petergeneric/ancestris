@@ -93,7 +93,7 @@ public class DateWidget extends JPanel {
     // create calendar switches
     switches = new ArrayList<SwitchCalendar>(PointInTime.CALENDARS.length + 1);
     for (int s = 0; s < PointInTime.CALENDARS.length; s++)
-      switches.add(new SwitchCalendar(PointInTime.CALENDARS[s]));
+      switches.add(new SwitchCalendar(PointInTime.CALENDARS[s], changeSupport));
 
     // initialize Sub-components
     widgetYear = new TextFieldWidget("", 4);
@@ -273,6 +273,15 @@ public class DateWidget extends JPanel {
     // done
   }
 
+    /**
+     * Get current selected calendar
+     *
+     * @return
+     */
+    public Calendar getCalendar() {
+        return calendar;
+    }
+    
     /**
      * Get current value
      *
@@ -472,11 +481,13 @@ public class DateWidget extends JPanel {
   private class SwitchCalendar extends AbstractAncestrisAction {
     /** the calendar to switch to */
     private Calendar newCalendar;
+    private ChangeSupport widgetChangeSupport;
 
     /**
      * Constructor
      */
-    private SwitchCalendar(Calendar cal) {
+    private SwitchCalendar(Calendar cal, ChangeSupport cs) {
+      this.widgetChangeSupport = cs;
       newCalendar = cal;
       setImage(newCalendar.getImage());
       setText(cal.getName());
@@ -542,7 +553,7 @@ public class DateWidget extends JPanel {
         setValue(pit);
       }
       // update current status
-      updateStatus();
+      widgetChangeSupport.fireChangeEvent(event);
     }
   } // SwitchCalendar
 
