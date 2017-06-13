@@ -27,7 +27,7 @@ public final class CalcTopComponent extends TopComponent {
     public CalcTopComponent() {
         initCalcPanel();
         setName(NbBundle.getMessage(CalcTopComponent.class, "CTL_CalcTopComponent"));
-        setToolTipText(NbBundle.getMessage(CalcTopComponent.class, "HINT_CalcTopComponent"));
+        //setToolTipText(NbBundle.getMessage(CalcTopComponent.class, "HINT_CalcTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
 
     }
