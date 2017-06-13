@@ -5,7 +5,6 @@
 package ancestris.modules.calculatrice;
 
 import java.util.logging.Logger;
-import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
@@ -21,8 +20,9 @@ public final class CalcTopComponent extends TopComponent {
 
     private static CalcTopComponent instance;
     /** path to the icon used by the component and its open action */
-    static final String ICON_PATH = "ancestris/modules/calculatrice/Calc.png";
+    private static final String ICON_PATH = "ancestris/modules/calculatrice/Calc.png";
     private static final String PREFERRED_ID = "CalcTopComponent";
+    private Calculator calculator = null;
 
     public CalcTopComponent() {
         initCalcPanel();
@@ -33,18 +33,18 @@ public final class CalcTopComponent extends TopComponent {
     }
 
     private void initCalcPanel() {
-        JPanel panel = new Calculator();
+        calculator = new Calculator();
 
-        if (panel == null) {
+        if (calculator == null) {
             return;
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(calculator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
+                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING).addComponent(calculator, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE));
 
     }
 
@@ -108,6 +108,9 @@ public final class CalcTopComponent extends TopComponent {
 
     @Override
     public void componentOpened() {
+        if (calculator != null) {
+            calculator.setFocus();
+        }
     }
 
     @Override
