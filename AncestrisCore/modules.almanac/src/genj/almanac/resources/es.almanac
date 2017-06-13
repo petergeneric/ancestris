@@ -88,14 +88,15 @@
 #
 # 17590626;;ca;;;3;p;fr=Siège de la ville de Québec
 #
-# --------------------------- F R E N C H    S E C T I O N  ----------------------------
+# --------------------------- S P A N I S H  S E C T I O N  ----------------------------
 #
-# IMPORTANT :
-# Ce fichier doit être édité avec un éditeur capable d'utiliser 
-# l'encodage UTF-8 comme Notepad pour Windows, ou Jedit pour Linux ou 
-# Windows. Le fait d'utiliser cet encodage permettra de ne pas perdre 
-# les caractères spéciaux utilisés dans certaines langues, les lettres  
-# accentuées notamment (comme l'allemand, le français, l'espagnol, etc..)
+# IMPORTANTE
+#
+# Este archivo debe ser editado con un editor capaz de usar
+# Codificación UTF-8 como Bloc de notas para Windows o para Linux o Jedit
+# de Windows. Utilizar esta codificación no perderá
+# Caracteres especiales utilizados en algunos idiomas, cartas
+# Acentuados en particular (como alemán, francés, español, etc ..)
 #
 # Le format de ce fichier est le suivant :
 #
@@ -176,13 +177,38 @@
 #==============================================================================
 #
 #
-#                    Last updated : 2017-06-12
+#                    Last updated : 2017-06-13
 #
 #
 #==============================================================================
 #
 #
+# ----------------------- M u e r t e s  S e c t i o n ------------------------
+#   
 17581009;;es;;;3;d;es=Fallecimientos de Juan Elías Gómez de Terán, religioso español.;fr=Décès de Juan Elías Gómez de Terán, religieux espagnol.
+#
+# ------ A c o n t e c i m i e n t o s  P o l i t i c o s  S e c t i o n ------
+190010;;es;ct;es-b;0;p;es=Alzamiento carlista a Badalona;fr=Soulèvement carliste à Badalone
+19090726;19090802;es;ct;es-b;1;p;es="La Semana Trájica" : disturbios contra el envío de tropas a Marruecos;fr="La Semaine Tragique" : émeutes contre l'envoi de troupes au Maroc
+191002;;es;;;1;p;es=La formación del gobierno alrededor de Canalejas;fr=Formation d'un gouvernement autour de Canalejas
+#
+# - R e i n a d o s  d e  l o s  r e y e s  d e  F r a n c i a  S e c t i o n -
+19020517;;es;;;0;r;es=Alfonso XIII es coronado Rey de España;fr=Alphonse XIII est couronné Roi d'Espagne
+
+# ----------------------- C r e a c i ó n  S e c t i o n ------------------------
+1910;;es;;;3;f;es=Creación de la unión de la Confederación Nacional del Trabajo (CNT);fr=Création du syndicat de la Confédération Nationale du Travail (CNT)
+#
+# ------------------- N a c i m i e n t o s  S e c t i o n --------------------
+#
+# ------- A c o n t e c i m i e n t o s  m i l t a r e s  S e c t i o n -------
+#
+# --------------------- I n v e n c í o n  S e c t i o n ----------------------
+#
+# ---------------- D e s c u b r i m i e n t o  S e c t i o n -----------------
+#
+# -------------------- M a t r i m o n i o s  S e c t i o n -------------------
+#
+# ---- A c o n t e c i m i e n t o s  v a r i o p i n t o s  S e c t i o n ----
 #
 #
 #
