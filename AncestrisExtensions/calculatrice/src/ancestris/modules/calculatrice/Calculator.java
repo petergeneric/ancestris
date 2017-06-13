@@ -64,6 +64,7 @@ import genj.util.swing.DateWidget;
 import genj.util.swing.ImageIcon;
 import javax.swing.JTextArea;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 
 /**
@@ -92,6 +93,7 @@ public class Calculator extends JPanel implements KeyListener {
 		ENGINE = engine.getClass();
 
 		buildGUI(); 
+                setFocus();
 	}
 	// Execute the command corresponding to a keyboard key.
 	boolean executeKeyCommand(char key) {
@@ -115,6 +117,7 @@ public class Calculator extends JPanel implements KeyListener {
 		case '*':engine.multiply();break;
 		case '-':engine.subtract();break;
 		case '+':engine.add();break;
+		case '%':engine.percent();break;
 		case '\r':
 		case '\n':
 			engine.equals();break;
@@ -245,6 +248,14 @@ public class Calculator extends JPanel implements KeyListener {
 		return buttons;             
 
 	}
+
+    public void setFocus() {
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            public void run() {
+                display.requestFocusInWindow();
+            }
+        });
+    }
 
 	/*
 	 *  Helper class to handle button formatting.
