@@ -50,6 +50,7 @@ class GeoInternetSearch {
 
     @SuppressWarnings("unchecked")
     public synchronized void executeSearch(Gedcom gedcom, final boolean force) {
+
         // return if busy with this gedcom already
         if (isBusy) {
             if (gedcomSearchingList.contains(gedcom))  {
