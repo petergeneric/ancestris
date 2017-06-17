@@ -34,7 +34,7 @@
 #                YYYYMM and YYYY are allowed.      
 # Parameter #3 : Country (iso code) concerning that event
 #                Please check this url :
-#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
+#                https://en.wikipedia.org/wiki/ISO_3166-1
 #                dz : Algeria
 #                ad : Andorra
 #                be : Belgium
@@ -98,51 +98,50 @@
 # Caracteres especiales utilizados en algunos idiomas, cartas
 # Acentuados en particular (como alemán, francés, español, etc ..)
 #
-# Le format de ce fichier est le suivant :
+# El formato de este archivo es el siguiente :
 #
-# Toutes les lignes vides et celles commençant par "#" sont considérées 
-# comme des commentaires et donc sont ignorées.
+# Todas las líneas vacías y las que comienzan por "#" se consideran como comentarios y por lo tanto son ignorados
 #
-# On doit trouver un événement historique par ligne avec au minimum 6 
-# paramètres séparés par un point-virgule ";"
+# Hay que encontrar un evento histórico por línea con al menos 6
+# parámetros separados por un punto y coma ";"
 #
-# Paramètre #1 : Date de départ de l'événement. Le format a utiliser est : 
-#                YYYYMMDD (année, mois et jour)
-#                Les formats YYYYMM et YYYY sont autorisés.
-#                (Si la date n'est pas indiquée la totalité de la ligne 
-#                est ignorée)
-# Paramètre #2 : Date de fin de l'événement. Le format a utiliser est :
-#                YYYYMMDD (année, mois et jour)
-#                Les formats YYYYMM et YYYY sont autorisés.
-# Paramètre #3 : Le pays(code iso) concerné par cet événement
+# Parámetro #1 : Fecha del comienzo del acontecimiento. Debe utilizar el siguiente formato : 
+#                YYYYMMDD (año, mes y día)
+#                Los formatos YYYYMM et YYYY son autorizados.
+#                (Si no indica la fecha toda la línea se ignora )
+#
+# Parámetro #2 : Fecha de finalización del evento. Debe utilizar el siguiente formato : 
+#                YYYYMMDD (año, mes y día)
+#                Los formatos YYYYMM et YYYY son autorizados.
+# Parámetro #3 : El país (código ISO) afectado por el acontecimiento
 #                Vous pouvez consulter cette url :
-#                http://www.iso.org/iso/fr/english_country_names_and_code_elements
-#                dz : Algérie
-#                de : Allemagne
-#                ad : Andorre
-#                be : Belgique
-#                ca : Canada
-#                es : Espagne
-#                us : Etats-Unis d'Amérique
-#                fr : France
-#                it : Italie
-#                lu : Luxembourg
-#                no : Norvege
-#                pl : Pologne
-#                gb : Royaume uni
-#                se : Suede
-#                ch : Suisse
-# Parameter #4 : Etat
+#                https://es.wikipedia.org/wiki/ISO_3166-1
+#                dz : Argelia
+#                de : Alemania
+#                ad : Andorra
+#                be : Bélgica
+#                ca : El Canadá
+#                es : España
+#                us : Estados Unidos de América
+#                fr : Francia
+#                it : Italia
+#                lu : Luxemburgo
+#                no : Noruega
+#                pl : Polonia
+#                gb : El Reino Unido
+#                se : Suecia
+#                ch : Suiza
+# Parámetro #4 : Estado
 #                
-# Parameter #5 : Region
+# Parámetro #5 : Región
 #                
-# Paramètre #6 : L'importance de cet événement (un chiffre positif à 
-#                choisir entre 
-#                0 et 9), avec :
-#                0 = événement d'une importance majeure. Cet événénement 
-#                    sera toujours affiché.
-#                1 = événement moins important.
-#                2 = événement encore moins important.
+# Parámetro #6 : La importancia de este acontecimiento (una cifra positiva que debe
+#				 elegirse entre  
+#                0 y 9), con:            
+#                0 = acontecimiento de una importancia principal. 
+#					           Se indicará este acontecimiento siempre.
+#                1 = acontecimiento menos importante.
+#                2 = acontecimiento aún menos importante.
 #                etc...
 # Paramètre #7 : Le type d'événement, avec :
 #                w = Guerre
@@ -177,40 +176,44 @@
 #==============================================================================
 #
 #
-#                    Last updated : 2017-06-13
+#                    Last updated : 2017-06-17
 #
 #
 #==============================================================================
 #
 #
-# ----------------------- M u e r t e s  S e c t i o n ------------------------
+# ----------------------- M u e r t e s  S e c c í o n  ------------------------
 #   
 17581009;;es;;;3;d;es=Fallecimientos de Juan Elías Gómez de Terán, religioso español.;fr=Décès de Juan Elías Gómez de Terán, religieux espagnol.
+19121112;;es;md;es-m;1;d;es=Asesinato de Canalejas por un anarquista.;fr=Assassinat de Canalejas par un anarchiste.
 #
-# ------ A c o n t e c i m i e n t o s  P o l i t i c o s  S e c t i o n ------
+# ------ A c o n t e c i m i e n t o s  P o l i t i c o s  S e c c í o n ------
+#
 190010;;es;ct;es-b;0;p;es=Alzamiento carlista a Badalona;fr=Soulèvement carliste à Badalone
 19090726;19090802;es;ct;es-b;1;p;es="La Semana Trájica" : disturbios contra el envío de tropas a Marruecos;fr="La Semaine Tragique" : émeutes contre l'envoi de troupes au Maroc
-191002;;es;;;1;p;es=La formación del gobierno alrededor de Canalejas;fr=Formation d'un gouvernement autour de Canalejas
+191002;;es;;;1;p;es=La formación del gobierno alrededor de Canalejas (Presidente del Consejo de Ministros, Liberal;fr=Formation d'un gouvernement autour de Canalejas (Président du Conseil des Ministres, Libéral)
+19121127;19560407;es,ma;;;2;p;es=Instauración del Protectorado español de Marruecos por convenio franco-español;fr=instauration du protectorat espagnol du Maroc par convention franco-espagnole
 #
-# - R e i n a d o s  d e  l o s  r e y e s  d e  F r a n c i a  S e c t i o n -
+# - R e y e s  y  G o b i e r n o s  d e  E s p a ñ a  S e c c í o n ----------
+#
 19020517;;es;;;0;r;es=Alfonso XIII es coronado Rey de España;fr=Alphonse XIII est couronné Roi d'Espagne
 
-# ----------------------- C r e a c i ó n  S e c t i o n ------------------------
-1910;;es;;;3;f;es=Creación de la unión de la Confederación Nacional del Trabajo (CNT);fr=Création du syndicat de la Confédération Nationale du Travail (CNT)
+# ----------------------- C r e a c i ó n  S e c c í o n  ------------------------
 #
-# ------------------- N a c i m i e n t o s  S e c t i o n --------------------
+1910;;es;ct;es-b;2;f;es=Creación de la unión de la Confederación Nacional del Trabajo (CNT - Sindicato Anarquisto);fr=Création du syndicat de la Confédération Nationale du Travail (CNT - Syndicat Anarchiste)
 #
-# ------- A c o n t e c i m i e n t o s  m i l t a r e s  S e c t i o n -------
+# ------------------- N a c i m i e n t o s  S e c c í o n  --------------------
 #
-# --------------------- I n v e n c í o n  S e c t i o n ----------------------
+# ------- A c o n t e c i m i e n t o s  m i l t a r e s  S e c c í o n  -------
 #
-# ---------------- D e s c u b r i m i e n t o  S e c t i o n -----------------
+# --------------------- I n v e n c í o n  S e c c í o n  ----------------------
 #
-# -------------------- M a t r i m o n i o s  S e c t i o n -------------------
+# ---------------- D e s c u b r i m i e n t o  S e c c í o n  -----------------
 #
-# ---- A c o n t e c i m i e n t o s  v a r i o p i n t o s  S e c t i o n ----
+# -------------------- M a t r i m o n i o s  S e c c í o n  -------------------
 #
-#
+# ---- A c o n t e c i m i e n t o s  v a r i o p i n t o s  S e c c í o n  ----
+19161218;;es;;;2;e;es=Día de huelga general contra la subida de los precios (CNT-Confederación Nacional del Trabajo, anarquista- y UGT-Unión General de los Trabajadores, socialista);fr=Journée de grève générale contre la hausse des prix (CNT-Confédération Nationale des Travailleurs, anarchiste- et UGT-Unión General de los Trabajadores)
 #
 #
 #==============================================================================
