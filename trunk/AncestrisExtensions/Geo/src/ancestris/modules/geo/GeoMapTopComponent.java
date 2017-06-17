@@ -506,8 +506,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public void componentClosed() {
-        if (getGedcom() != null) {
+        Gedcom gedcom = getGedcom();
+        if (gedcom != null) {
             GeoPlacesList gpl2 = GeoPlacesList.getInstance(getGedcom());
+            gpl2.remove(gedcom);
             gpl2.removeGeoPlacesListener(this);
             geoFilter.save();
         }

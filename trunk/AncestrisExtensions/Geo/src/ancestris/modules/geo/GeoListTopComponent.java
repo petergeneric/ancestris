@@ -9,6 +9,7 @@ import ancestris.util.EventUsage;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import genj.gedcom.Gedcom;
 import java.awt.Image;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -194,8 +195,10 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
 
     @Override
     public void componentClosed() {
-        if (getGedcom() != null) {
+        Gedcom gedcom = getGedcom();
+        if (gedcom != null) {
             GeoPlacesList gpl2 = GeoPlacesList.getInstance(getGedcom());
+            gpl2.remove(gedcom);
             gpl2.removeGeoPlacesListener(this);
         }
         mgr.removePropertyChangeListener(this);

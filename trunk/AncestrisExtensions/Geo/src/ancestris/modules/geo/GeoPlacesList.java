@@ -80,6 +80,7 @@ class GeoPlacesList implements GedcomMetaListener {
         if (gpl == null) {
             return;
         }
+        gedcom.removeGedcomListener(gpl);
         instances.remove(gedcom);
     }
     
@@ -105,11 +106,15 @@ class GeoPlacesList implements GedcomMetaListener {
         try {
             versionDate = (Date)formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
             fromValidDate = (Date)formatter.parse(FORCE_REFRESH_DATE);
-            if (versionDate.before(fromValidDate) && JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), 
+            if (versionDate.before(fromValidDate)) {
+                if (JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), 
                     NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesQuestion"), 
                     NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesTitle"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
                 NbPreferences.forModule(GeoPlacesList.class).clear();
                 NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
+                } else {
+                    return;
+                }
             }
         } catch (ParseException ex) {
             Exceptions.printStackTrace(ex);
@@ -152,23 +157,23 @@ class GeoPlacesList implements GedcomMetaListener {
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        reloadPlaces(entity);
+        checkReloadPlaces(entity);
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        reloadPlaces(entity);
+        checkReloadPlaces(entity);
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        reloadPlaces(property);
+        checkReloadPlaces(property);
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        reloadPlaces(property);
+        checkReloadPlaces(property);
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        reloadPlaces(property);
+        checkReloadPlaces(property);
     }
 
     public void gedcomHeaderChanged(Gedcom gedcom) {
@@ -184,9 +189,7 @@ class GeoPlacesList implements GedcomMetaListener {
     }
 
     public void gedcomWriteLockReleased(Gedcom gedcom) {
-        if (updateRequired) {
-            reloadPlaces();
-        }
+        reloadPlaces();
     }
     
     
@@ -210,15 +213,19 @@ class GeoPlacesList implements GedcomMetaListener {
         notifyListeners(TYPEOFCHANGE_NAME);
     }
 
-    private void reloadPlaces(Property property) {
+    private void checkReloadPlaces(Property property) {
         List<PropertyPlace> list = property.getProperties(PropertyPlace.class);
-        if (property instanceof PropertyName || property instanceof PropertyPlace || !list.isEmpty()) {
+        if (property instanceof PropertyPlace || !list.isEmpty()) {  // updating place list is required if we are modifying a place
             updateRequired = true;
+        } else if (property instanceof PropertyName) { // updating place list is required if we are modifying a name of an entity containing a place
+            if (!property.getEntity().getProperties(PropertyPlace.class).isEmpty()) {
+                updateRequired = true;
+            }
         }
     }
     
     public void reloadPlaces() {
-        if (!stopListening) {
+        if (!stopListening && updateRequired) {
             stopListening();
             launchPlacesSearch(false);
             updateRequired = false;
