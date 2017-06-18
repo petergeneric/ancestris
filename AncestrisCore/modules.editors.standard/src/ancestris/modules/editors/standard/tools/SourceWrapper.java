@@ -693,7 +693,7 @@ public class SourceWrapper {
      * @param property 
      */
     private void putSourceCitation(Property property) {
-        property.setValue(title);
+        Utils.setDistinctValue(property, title);
         putProperty(property, "TEXT", text);
         if (property.getMetaProperty().allows("OBJE")) {
             putMediaItems(property);
@@ -730,7 +730,7 @@ public class SourceWrapper {
     private void putProperty(Property property, String tag, String value) {
         Property prop = property.getProperty(tag, true);
         if (prop != null) {
-            prop.setValue(value);
+            Utils.setDistinctValue(prop, value);
         } else {
             property.addProperty(tag, value);
         }

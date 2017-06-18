@@ -105,7 +105,7 @@ public class Undo extends AbstractAncestrisAction implements GedcomMetaListener 
     // ignored
   }
 
-  public void gedcomPropertyChanged(Gedcom gedcom, Property prop) {
+  public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
     // ignored
   }
 

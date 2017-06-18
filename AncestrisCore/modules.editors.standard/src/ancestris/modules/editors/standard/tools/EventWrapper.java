@@ -573,10 +573,10 @@ public class EventWrapper {
         if (!isGeneral) {
             // Description : depends on property.metaProperty
             // = property.getDisplayValue();                            // case of attributes: description is the value of the event
-            // = property.getProperty("TYPE").getDisplayV   alue();        // case of events and RESI: description is the value of the TYPE
+            // = property.getProperty("TYPE").getDisplayValue();        // case of events and RESI: description is the value of the TYPE
             description = description.trim();
             if (hasAttribute) {
-                eventProperty.setValue(description);
+                Utils.setDistinctValue(eventProperty, description);
             } else {
                 Property type = eventProperty.getProperty("TYPE");
                 if (type == null) {
@@ -584,7 +584,7 @@ public class EventWrapper {
                         eventProperty.addProperty("TYPE", description);
                     }
                 } else {
-                    type.setValue(description);
+                    Utils.setDistinctValue(type, description);
                 }
             }
 
@@ -596,7 +596,7 @@ public class EventWrapper {
                     eventProperty.addProperty("DATE", date.getValue());
                 }
             } else {
-                tmpDate.setValue(date.getValue());
+                Utils.setDistinctValue(tmpDate, date.getValue());
             }
 
             // Place
@@ -607,7 +607,7 @@ public class EventWrapper {
                     tmpPlace = (PropertyPlace) eventProperty.addProperty("PLAC", place.getValue());
                 }
             } else {
-                tmpPlace.setValue(place.getValue());
+                Utils.setDistinctValue(tmpPlace, place.getValue());
             }
             setCoordinates(place, tmpPlace);
         }
@@ -736,11 +736,12 @@ public class EventWrapper {
         if (pLatitude != null && pLongitude != null) {
             String strLat = pLatitude.getValue();
             String strLong = pLongitude.getValue();
-            toPlace.setCoordinates(strLat, strLong);
+            if (!toPlace.getLatitude(false).getValue().equals(strLat) || !toPlace.getLongitude(false).getValue().equals(strLong)) {
+                toPlace.setCoordinates(strLat, strLong);
+            }
         }
     }
 
-    
     
     
 }

@@ -80,7 +80,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
     public void componentClosed() {
         super.componentClosed();
         ((TableView) getView()).eraseAll();
-        System.gc();
     }
 
     

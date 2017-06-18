@@ -616,5 +616,18 @@ public class Utils {
     }
 
     
+    /**
+     * Only update property if value is disfferent
+     * (assumes property is not null)
+     * @param p
+     * @param newValue
+     */
+    public static void setDistinctValue(Property p, String newValue) {
+        if (!p.getValue().equals(newValue)) {
+            p.setValue(newValue);
+        }
+    }
+
+    
     
 }

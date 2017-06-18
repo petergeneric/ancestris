@@ -164,7 +164,6 @@ public class SosaNumbersGenerator implements Constants {
                     msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>";
                 }
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
-                System.gc();
                 return null;
             }
         };

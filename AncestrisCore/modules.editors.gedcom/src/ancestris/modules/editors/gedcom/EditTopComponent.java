@@ -73,7 +73,6 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
     @Override
     public void componentClosed() {
         super.componentClosed();
-        System.gc();
     }
 
     

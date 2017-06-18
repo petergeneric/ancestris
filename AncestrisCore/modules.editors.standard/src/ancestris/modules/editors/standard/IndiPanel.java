@@ -2575,34 +2575,22 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void saveData() {
         
-        // Save Indi and Sex
-        indi.setName(firstnamesText.getText(), lastnameText.getText());
-        nameDetails.saveDetails(indi);
+        // Save names
+        nameDetails.saveNameDetails(indi, firstnamesText.getText(), lastnameText.getText());
         
-        //
-        indi.setSex(getSex());
-        //
+        // Save gender
+        saveSex();
         
         // Save privacy
-        boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
-        if (privateCheckBox.isSelected()) {
-            if (!privateTagFound) {
-                indi.addProperty(Options.getInstance().getPrivateTag(), "");
-            }
-        } else {
-            if (privateTagFound) {
-                indi.delProperty(indi.getProperty(Options.getInstance().getPrivateTag()));
-            }
-        }
+        savePrivacy();
         
-        // Save the rest
-        //
+        // Save Events
         saveEvents();
 
-        //
+        // Save assocs
         saveAssociations();
-        //.......................................
         
+        // End
         
     }
 
@@ -2713,6 +2701,36 @@ public class IndiPanel extends Editor implements DocumentListener {
         return ret;
     }
 
+    
+    private void saveSex() {
+        PropertySex p = (PropertySex) indi.getProperty("SEX", false);
+        if (p == null) {
+            indi.setSex(getSex());
+            return;
+        }
+        
+        // Quit if nothing has changed
+        if (p.getSex() == getSex()) {
+            return;
+        }
+        
+        indi.setSex(getSex());
+    }
+    
+    
+    private void savePrivacy() {
+        boolean privateTagFound = (indi.getProperty(Options.getInstance().getPrivateTag()) != null);
+        if (privateCheckBox.isSelected()) {
+            if (!privateTagFound) {
+                indi.addProperty(Options.getInstance().getPrivateTag(), "");
+            }
+        } else {
+            if (privateTagFound) {
+                indi.delProperty(indi.getProperty(Options.getInstance().getPrivateTag()));
+            }
+        }
+    }
+    
     
     private void saveEvents() {
         //eventSet

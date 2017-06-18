@@ -785,7 +785,6 @@ import org.openide.windows.WindowManager;
                 fireStructureChanged();
                 
                 isRedrawing = false;
-                System.gc();
             }
         });
 
@@ -858,7 +857,6 @@ import org.openide.windows.WindowManager;
                 
                 isRedrawing = false;
                 updateView();
-                System.gc();
             }
         });
 
@@ -1010,7 +1008,6 @@ import org.openide.windows.WindowManager;
                     it.next();
                     it.remove();
                 }
-                System.gc();
             }
         };
         

@@ -502,6 +502,10 @@ public class SearchView extends View implements Filter {
     @Override
     public void closing() {
         super.closing();
+        if (results1 != null && results2 != null) {
+            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results1));
+            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results2));
+        }
         SearchCommunicator.unregister(searchCommunicator);
     }
 
@@ -638,30 +642,34 @@ public class SearchView extends View implements Filter {
     @Override
     public void setContext(Context newContext) {
 
+        if (newContext == null) {
+            return;
+        }
+        
+        Gedcom oldGedcom = context.getGedcom();
+        Gedcom newGedcom = newContext.getGedcom();
+        
         // disconnect old
-        if (context.getGedcom() != null && context.getGedcom() != newContext.getGedcom()) {
-
+        if (oldGedcom != null && oldGedcom != newGedcom) {
             stop();
             results1.clear();
             results2.clear();
             labelCount1.setText("");
             labelCount2.setText("");
             actionStart.setEnabled(false);
+            oldGedcom.removeGedcomListener((GedcomListener) Spin.over(results1));
+            oldGedcom.removeGedcomListener((GedcomListener) Spin.over(results2));
+        }
 
-            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results1));
-            context.getGedcom().removeGedcomListener((GedcomListener) Spin.over(results2));
+        // connect new
+        if (newGedcom != null && oldGedcom != newGedcom) {
+            newGedcom.addGedcomListener((GedcomListener) Spin.over(results1));
+            newGedcom.addGedcomListener((GedcomListener) Spin.over(results2));
         }
 
         // keep new
         context = newContext;
-
-        // connect new
-        if (context.getGedcom() != null) {
-            context = new Context(newContext.getGedcom());
-            context.getGedcom().addGedcomListener((GedcomListener) Spin.over(results1));
-            context.getGedcom().addGedcomListener((GedcomListener) Spin.over(results2));
-            actionStart.setEnabled(true);
-        }
+        actionStart.setEnabled(true);
 
         if (searchCommunicator == null) {
             searchCommunicator = new SearchCommunicator() {
@@ -675,7 +683,7 @@ public class SearchView extends View implements Filter {
                 }
             };
         }
-        searchCommunicator.setGedcom(context.getGedcom());
+        searchCommunicator.setGedcom(newGedcom);
     }
 
     /**
@@ -1101,10 +1109,10 @@ public class SearchView extends View implements Filter {
         }
 
         @Override
-        public void gedcomPropertyChanged(Gedcom gedcom, Property prop) {
+        public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
             for (int i = 0; i < hits.size(); i++) {
                 Hit hit = hits.get(i);
-                if (hit.getProperty() == prop) {
+                if (hit.getProperty() == property) {
                     fireContentsChanged(this, i, i);
                 }
             }

@@ -44,7 +44,6 @@ import java.awt.Point;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
@@ -664,8 +663,9 @@ public class PropertyTreeWidget extends DnDTree {
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
       // us?
-      if (root!=property.getEntity())
+      if (root!=property.getEntity()) {
         return;
+      }
       // update
       fireTreeNodesChanged(this, getPathFor(property), null, null);
     }

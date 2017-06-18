@@ -43,7 +43,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
     public void commitRequested(Context context) {
         String gedcomName = context.getGedcom().getName().substring(0, context.getGedcom().getName().lastIndexOf(".") == -1 ? context.getGedcom().getName().length() : context.getGedcom().getName().lastIndexOf("."));
 
-        log.log(Level.INFO, "Commit requested {0}", context.getGedcom().getName());
+        log.log(Level.FINE, "Commit requested {0}", context.getGedcom().getName());
 
         File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
         File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
@@ -55,7 +55,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
             if (size > maxSize) { // truncate to last maxSize changes
                 gedcomHistory.getHistoryList().subList(0, size-maxSize).clear();
             }
-            log.log(Level.INFO, "saving history File {0}", historyFile.getAbsoluteFile());
+            log.log(Level.FINE, "Saving history File {0}", historyFile.getAbsoluteFile());
             try {
                 // create JAXB context and instantiate marshaller
                 JAXBContext jaxbContext = JAXBContext.newInstance(GedcomHistory.class);
@@ -74,7 +74,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
     public void gedcomClosed(Gedcom gedcom) {
         String gedcomName = gedcom.getName().substring(0, gedcom.getName().lastIndexOf(".") == -1 ? gedcom.getName().length() : gedcom.getName().lastIndexOf("."));
 
-        log.log(Level.INFO, "closing gedcom {0}", gedcomName);
+        log.log(Level.FINE, "Closing gedcom {0}", gedcomName);
 
         if (gedcomHistoryMap.get(gedcom) != null) {
             gedcom.removeGedcomListener(gedcomHistoryMap.get(gedcom));
@@ -88,7 +88,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
                 }
             }
         } else {
-            log.log(Level.INFO, "No history register found for gedcom {0}", gedcomName);
+            log.log(Level.FINE, "No history register found for gedcom {0}", gedcomName);
         }
     }
 
@@ -98,7 +98,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
         if (gedcomHistoryMap.containsKey(gedcom) == false) {
             File cacheSubdirectory = Places.getCacheSubdirectory(GedcomHistoryPlugin.class.getCanonicalName());
             File historyFile = new File(cacheSubdirectory.getAbsolutePath() + System.getProperty("file.separator") + gedcomName + ".hist");
-            log.log(Level.INFO, "opening history file {0}", historyFile.getAbsoluteFile());
+            log.log(Level.FINE, "Opening history file {0}", historyFile.getAbsoluteFile());
 
             if (historyFile.exists() == true) {
                 try {
@@ -123,7 +123,7 @@ public class GedcomHistoryPlugin extends AncestrisPlugin implements GedcomFileLi
                 gedcom.addGedcomListener(gedcomHistoryMap.get(gedcom));
             }
         } else {
-            log.log(Level.INFO, "history file already open for gedcom {0}", gedcomName);
+            log.log(Level.FINE, "History file already open for gedcom {0}", gedcomName);
         }
     }
 
