@@ -98,15 +98,15 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                         setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
                         gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
                     } else {
-                        log.log(Level.INFO, "No history recorder found for {0}", gedcomName);
+                        log.log(Level.FINE, "No history recorder found for {0}", gedcomName);
                     }
                     return;
                 }
             }
-            log.log(Level.INFO, "No Instance of GedcomHistoryPlugin found");
+            log.log(Level.FINE, "No Instance of GedcomHistoryPlugin found");
 
         } else {
-            log.log(Level.INFO, "No context found");
+            log.log(Level.FINE, "No context found");
         }
 
     }

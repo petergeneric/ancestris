@@ -288,7 +288,7 @@ public class MediaWrapper {
             mediaForm = mediaFile.addProperty("FORM", "");
         }
         if (mediaForm != null) {
-            mediaForm.setValue(extension);
+            Utils.setDistinctValue(mediaForm, extension);
         }
         
         // Put TITL
@@ -297,7 +297,7 @@ public class MediaWrapper {
             mediaTitle = mediaFile.addProperty("TITL", "");
         }
         if (mediaTitle != null) {
-            mediaTitle.setValue(this.title);
+            Utils.setDistinctValue(mediaTitle, this.title);
         }
     }
 
@@ -336,7 +336,7 @@ public class MediaWrapper {
                 pForm = mediaFile.addProperty("FORM", "");
             }
             if (pForm != null) {
-                pForm.setValue(extension);
+                Utils.setDistinctValue(pForm, extension);
             }
         } else {
             Property pForm = property.getProperty("FORM");
@@ -344,7 +344,7 @@ public class MediaWrapper {
                 pForm = property.addProperty("FORM", "");
             }
             if (pForm != null) {
-                pForm.setValue(extension);
+                Utils.setDistinctValue(pForm, extension);
             }
         }
         
@@ -354,7 +354,7 @@ public class MediaWrapper {
             mediaTitle = property.addProperty("TITL", "");
         }
         if (mediaTitle != null) {
-            mediaTitle.setValue(this.title != null ? this.title : "");
+            Utils.setDistinctValue(mediaTitle, this.title != null ? this.title : "");
         }
     }
 

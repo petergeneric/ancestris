@@ -216,7 +216,7 @@ public class AssoWrapper {
         }
         
         // Record values
-        assoProp.setValue('@' + targetEntity.getId() + '@');
+        Utils.setDistinctValue(assoProp, '@' + targetEntity.getId() + '@');
 
         TagPath anchor = getAnchor(targetEvent.eventProperty);
         putProperty(assoProp, "RELA", assoTxt + (anchor == null ? "" : '@' + anchor.toString()));
@@ -301,7 +301,7 @@ public class AssoWrapper {
     private void putProperty(Property property, String tag, String value) {
         Property prop = property.getProperty(tag, true);
         if (prop != null) {
-            prop.setValue(value);
+            Utils.setDistinctValue(prop, value);
         } else {
             property.addProperty(tag, value);
         }
@@ -361,7 +361,7 @@ public class AssoWrapper {
         
         // Now process match or no match
         if (samePropFound != null) { // found
-            samePropFound.setValue(newValue);
+            Utils.setDistinctValue(samePropFound, newValue);
             putProperty(samePropFound, "DATE", newDate);
         } else {
             if (!newValue.isEmpty()) {

@@ -231,7 +231,6 @@ public class ImagePanel extends javax.swing.JPanel {
 
     public void cropAndSave() {
         try {
-            System.gc();  // clean memory
             int w = this.getWidth();
             int h = this.getHeight();
             BufferedImage subImage = BigBufferedImage.create(new File(System.getProperty("java.io.tmpdir")), w, h, BufferedImage.TYPE_INT_RGB);

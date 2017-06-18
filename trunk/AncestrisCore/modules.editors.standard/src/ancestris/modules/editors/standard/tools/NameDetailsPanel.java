@@ -290,12 +290,24 @@ public class NameDetailsPanel extends javax.swing.JPanel {
         nickText.setText(p.getNick());
     }
 
-    public void saveDetails(Indi indi) {
+    public void saveNameDetails(Indi indi, String first, String last) {
         PropertyName p = (PropertyName) indi.getProperty("NAME", true);
         if (p == null) {
+            indi.setName(first, last);
+            p = (PropertyName) indi.getProperty("NAME", true);
+        }
+        
+        // Quit if nothing has changed
+        if (p.getNamePrefix().equals(prefixText.getText())
+         && p.getFirstName().equals(first) 
+         && p.getSurnamePrefix().equals(surnamePrefixText.getText())
+         && p.getLastName().equals(last)
+         && p.getSuffix().equals(suffixText.getText())
+         && p.getNick().equals(nickText)) {
             return;
         }
-        p.setName(prefixText.getText(), indi.getFirstName(), surnamePrefixText.getText(), indi.getLastName(), suffixText.getText(), false);
+        
+        p.setName(prefixText.getText(), first, surnamePrefixText.getText(), last, suffixText.getText(), false);
         p.setNick(nickText.getText());
     }
 

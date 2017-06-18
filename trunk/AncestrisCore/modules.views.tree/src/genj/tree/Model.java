@@ -742,7 +742,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
       // something visible?
       Node node = getNode(property.getEntity());
       if (node!=null) 
-        //fireNodesChanged(Collections.singletonList(node)); // FL: 2017-03-14 - for mass updates, this line significantly slows down performance, not ncessarry, add the other line instead.
+        //fireNodesChanged(Collections.singletonList(node)); // FL: 2017-03-14 - for mass updates, this line significantly slows down performance, not necessary, add this other line instead.
         repaint.add(getNode(property.getEntity()));
     }
   

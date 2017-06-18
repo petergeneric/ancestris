@@ -299,7 +299,6 @@ public class TableView extends View {
             filter.setColumn(currentMode.getColFilter());
             filter.refresh();
         }
-        System.gc();
     }
 
     @Override
@@ -317,7 +316,6 @@ public class TableView extends View {
         if (context.getGedcom() == null) {
             if (old != null) {
                 eraseAll();
-                System.gc();
             }
             return;
         }
@@ -832,7 +830,6 @@ public class TableView extends View {
                         }
                         fireRowsDeleted(0, s);
                         propertyTable.eraseAll();
-                        System.gc();
                     }
                 }
             };

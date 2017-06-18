@@ -93,7 +93,7 @@ public class NoteWrapper {
                     this.targetNote = mainProp.getGedcom().createEntity(Gedcom.NOTE);
                 }
                 mainProp.addNote((Note) targetNote);
-                targetNote.setValue(text);
+                Utils.setDistinctValue(targetNote, text);
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
@@ -104,12 +104,12 @@ public class NoteWrapper {
         Entity entity = hostingProperty.getEntity();
         // Case of property directly written within mainProp
         if ((entity instanceof Indi || entity instanceof Fam) && !(hostingProperty instanceof PropertyNote)) {
-            hostingProperty.setValue(text);
+            Utils.setDistinctValue(hostingProperty, text);
         } else 
             
         // Case of propertyNote written within mainProp
         if ((entity instanceof Indi || entity instanceof Fam) && (hostingProperty instanceof PropertyNote)) {
-            targetNote.setValue(text);
+            Utils.setDistinctValue(targetNote, text);
             // 2 situations : remplacement of the text of the same note or replacement of the note by another one
             PropertyNote pnote = (PropertyNote) hostingProperty;
             Note tne = (Note) pnote.getTargetEntity();
@@ -121,7 +121,7 @@ public class NoteWrapper {
             
         // Case of property as Note entity
         if (entity instanceof Note) {
-            targetNote.setValue(text);
+            Utils.setDistinctValue(targetNote, text);
         }
     }
 
