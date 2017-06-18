@@ -154,7 +154,7 @@ public class ContextListWidget extends JList {
       // ignore
     }
 
-    public void gedcomPropertyChanged(Gedcom gedcom, Property prop) {
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
       // TODO this could be less coarse grained
       fireContentsChanged(this, 0, list.size());
     }

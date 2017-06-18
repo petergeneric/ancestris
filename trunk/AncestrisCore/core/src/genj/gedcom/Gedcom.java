@@ -1680,7 +1680,7 @@ public class Gedcom implements Comparable {
      * Free up memory
      */
     public void eraseAll() {
-        freeUpMemory();
+        //freeUpMemory();
     }
     
     private void freeUpMemory() {
@@ -1759,7 +1759,6 @@ public class Gedcom implements Comparable {
         password = null;
         noName = null;
         
-        System.gc();
     }
 
     

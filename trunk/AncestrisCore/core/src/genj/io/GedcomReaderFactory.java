@@ -214,7 +214,6 @@ public class GedcomReaderFactory {
          */
         private void readGedcom() throws IOException {
 
-            System.gc();
             long start = System.currentTimeMillis();
 
             // Read the Header
@@ -259,7 +258,6 @@ public class GedcomReaderFactory {
                         lazyLinks.size()
                     });
 
-            System.gc();
             // Done
         }
 

@@ -50,7 +50,6 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  * A static registry for Gedcom instances.
@@ -292,12 +291,6 @@ public abstract class GedcomDirectory {
             context = gdao.getContext();
             openDefaultViews(context);
             SelectionDispatcher.fireSelection(context);
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    System.gc();
-                }
-            });
             return gdao.getContext();
         } catch (Exception e) {
             LOG.info(e.toString());
