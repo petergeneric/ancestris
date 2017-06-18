@@ -225,7 +225,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventUsage.init(eventUsages);
         
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
-        placeEditor = new PlaceEditorPanel();
+        placeEditor = null;
         
         reloadData = true; // force data load at initialisation
         
@@ -2953,11 +2953,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { OKButton, cancelButton };
         
+        if (placeEditor == null) {
+            placeEditor = new PlaceEditorPanel();
+        }
         placeEditor.set(gedcom, event.place, false);
         placeEditor.setOKButton(OKButton);
         
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChoosePlaceTitle"), placeEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
-        placeEditor.saveSize();
+        placeEditor.close();
         if (o == OKButton) {
             placeEditor.copyValue(event.place);
             b = true;

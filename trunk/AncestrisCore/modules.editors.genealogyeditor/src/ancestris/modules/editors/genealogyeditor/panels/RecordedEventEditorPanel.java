@@ -206,7 +206,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
         eventEditorDialog.setOptions(options);
         Object o = eventEditorDialog.show();
         
-        placeEditorPanel.saveSize();
+        placeEditorPanel.close();
         if (o == OKButton) {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {

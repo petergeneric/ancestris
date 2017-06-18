@@ -424,7 +424,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventEditorDialog.setOptions(options);
         Object o = eventEditorDialog.show();
         
-        placeEditorPanel.saveSize();
+        placeEditorPanel.close();
         if (o == OKButton) {
             placeTextField.getDocument().removeDocumentListener(changeListner);
             try {
