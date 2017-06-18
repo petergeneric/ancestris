@@ -821,6 +821,7 @@ public class TreeSharingTopComponent extends TopComponent {
 
     
     private void removeGedcom(SharedGedcom sg) {
+        sg.close();
         desktopPanel.removeFrame(sg);
         desktopPanel.removeLink(sg);
         sharedGedcoms.remove(sg);
