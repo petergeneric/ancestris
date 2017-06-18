@@ -123,7 +123,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                             null,
                             new GeoAction("ACTION_EditPlace"),
                             null,
-                            new GeoAction("ACTION_CopyPlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).areGeoCoordinatesValid(obj.getPlace())),
+                            new GeoAction("ACTION_CopyPlace"),  //, GeoPlacesList.getInstance(obj.getPlace().getGedcom()).areGeoCoordinatesValid(obj.getPlace())),
                             new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
                             null,
                             new GeoAction("ACTION_UpdateList"),
@@ -203,7 +203,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                 GeoPlacesList.getInstance(gedcom).refreshPlaceName();
                 GeoPlacesList.getInstance(gedcom).startListening();    
             } else if (actionName.equals("ACTION_CopyPlace")) {
-                GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace());
+                GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace(), obj.getGeoPosition());
             } else if (actionName.equals("ACTION_PastePlace")) {
                 Gedcom gedcom = obj.getPlace().getGedcom();
                 try {
@@ -213,7 +213,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             obj.updateAllEventsPlaces(GeoPlacesList.getInstance(gedcom).getCopiedPlace());
-                            GeoPlacesList.getInstance(gedcom).setCopiedPlace(null);
+                            //GeoPlacesList.getInstance(gedcom).setCopiedPlace(null, null);
                         }
                     });
                     GeoPlacesList.getInstance(gedcom).refreshPlaceName();
