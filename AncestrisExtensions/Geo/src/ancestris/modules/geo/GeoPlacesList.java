@@ -24,6 +24,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import javax.swing.JOptionPane;
+import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
@@ -48,6 +49,7 @@ class GeoPlacesList implements GedcomMetaListener {
     private boolean stopListening = false;
     private boolean updateRequired = false;
     private PropertyPlace copiedPlace = null;
+    private GeoPosition copiedPosition = null;
 
 
     public GeoPlacesList(Gedcom gedcom) {
@@ -292,11 +294,8 @@ class GeoPlacesList implements GedcomMetaListener {
     public void setMapCoord(PropertyPlace placeSource, List<PropertyPlace> propPlaces) {
         PropertyLatitude latitudeSource = placeSource.getLatitude(false);
         PropertyLongitude longitudeSource = placeSource.getLongitude(false);
-        if (latitudeSource == null || longitudeSource == null) {
-            return;
-        }
-        String latitudeSourceStr = latitudeSource.getValue();
-        String longitudeSourceStr = longitudeSource.getValue();
+        String latitudeSourceStr = latitudeSource == null ? "" : latitudeSource.getValue();
+        String longitudeSourceStr = longitudeSource == null ? "" : longitudeSource.getValue();
         
         for (PropertyPlace pp : propPlaces) {
             pp.setValue(placeSource.getValue());
@@ -304,16 +303,17 @@ class GeoPlacesList implements GedcomMetaListener {
         }
     }
     
-    public void setCopiedPlace(PropertyPlace place) {
+    public void setCopiedPlace(PropertyPlace place, GeoPosition geoPoint) {
         this.copiedPlace = place;
+        this.copiedPosition = geoPoint;
     }
 
     public PropertyPlace getCopiedPlace() {
         return this.copiedPlace;
     }
 
-    public boolean areGeoCoordinatesValid(PropertyPlace place) {
-        return (place.getLatitude(false) != null && place.getLongitude(false) != null);
+    public GeoPosition getCopiedPosition() {
+        return this.copiedPosition;
     }
 
 }

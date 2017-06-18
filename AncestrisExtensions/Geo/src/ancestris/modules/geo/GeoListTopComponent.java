@@ -121,51 +121,50 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
-            String selectedNode = getSelectedNode();
+            final int selectedNode = getSelectedNode();
             nodes = gpl.getPlaces();
             mgr.setRootContext(new GeoNode(gpl));
             ((BeanTreeView) jScrollPane1).setRootVisible(false);
-            selectNode(selectedNode);
             jScrollPane1.repaint();
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
 
                 public void run() {
                     jScrollPane1.updateUI();
+                    selectNode(selectedNode);
                 }
             });
 
         }
     }
 
-    private String getSelectedNode() {
+    private int getSelectedNode() {
 
         // Get selected node
         Node[] geonodes = mgr.getSelectedNodes();
         if (geonodes.length == 0) {
-            return "";
+            return 0;
         }
-        GeoNodeObject obj = geonodes[0].getLookup().lookup(GeoNodeObject.class);
-        return (obj != null) ? obj.toString() : "";
-    }
-
-    private void selectNode(String selectedNode) {
-        // scan nodes to find the one
-        if (selectedNode.isEmpty()) {
-            return;
-        }
+        GeoNodeObject selectedObj = geonodes[0].getLookup().lookup(GeoNodeObject.class);
         Node[] scannedNodes = mgr.getRootContext().getChildren().getNodes();
         for (int i = 0; i < scannedNodes.length; i++) {
             Node node = scannedNodes[i];
             GeoNodeObject obj = node.getLookup().lookup(GeoNodeObject.class);
-            if (obj.toString().equals(selectedNode)) {
-                try {
-                    mgr.setSelectedNodes(new Node[]{node});
-                } catch (PropertyVetoException ex) {
-                    // nothing
-                }
+            if (obj.equals(selectedObj)) {
+                return i;
             }
         }
+        return 0;
+    }
 
+    private void selectNode(int selectedNode) {
+        // scan nodes to find the one
+        Node[] scannedNodes = mgr.getRootContext().getChildren().getNodes();
+        Node node = scannedNodes[selectedNode];
+        try {
+            mgr.setSelectedNodes(new Node[]{node});
+        } catch (PropertyVetoException ex) {
+            // nothing
+        }
     }
 
 
