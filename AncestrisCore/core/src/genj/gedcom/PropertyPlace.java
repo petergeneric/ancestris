@@ -462,6 +462,16 @@ public class PropertyPlace extends PropertyChoiceValue {
      * @param longitude
      */
     public void setCoordinates(String latitude, String longitude) {
+        if (latitude.isEmpty() && longitude.isEmpty()) {
+            PropertyMap map = getMap();
+            if (map == null) {
+                return;
+            }
+            map.delProperties();
+            delProperty(map);
+            return;
+        }
+        
         PropertyMap map = getMap();
         boolean is55 = isVersion55();
         if (map == null) {
