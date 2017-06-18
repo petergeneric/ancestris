@@ -224,9 +224,6 @@ public class PropertyReader {
       // grab it ignoring empty lines
       while (line==null) {
         line = in.readLine();
-//        if (stopIfException) {
-//            System.out.println("DEBUG reading - line = " + line);
-//        }
         if (line==null) 
           return false;
         lines ++;

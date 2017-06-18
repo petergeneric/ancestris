@@ -554,7 +554,6 @@ public class PropertyTableWidget extends JPanel {
             if (propertyModel == null) {
                 eraseAll();
                 tableModels = null;
-                System.gc();
                 return;
             }
 
@@ -571,7 +570,6 @@ public class PropertyTableWidget extends JPanel {
                 tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
             }
             setModel(model);
-            System.gc();
             // done
         }
 

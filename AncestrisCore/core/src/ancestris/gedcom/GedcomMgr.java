@@ -253,16 +253,6 @@ public abstract class GedcomMgr {
         // Release gedcom and clear memory
         context.getGedcom().eraseAll();
 
-        new java.util.Timer().schedule(
-                new java.util.TimerTask() {
-                    @Override
-                    public void run() {
-                        System.gc();
-                    }
-                },
-                5000
-        );
-        
         return true;
     }
     /** Instance of default gedcom manager. */

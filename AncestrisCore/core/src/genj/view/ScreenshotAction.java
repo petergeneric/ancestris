@@ -41,7 +41,6 @@ import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.util.Cancellable;
 import org.openide.util.Exceptions;
-import org.openide.windows.WindowManager;
 
 /**
  * An action for copying to an image
@@ -168,7 +167,6 @@ public class ScreenshotAction extends AbstractAncestrisAction {
         @Override
         public void run() {
         
-            System.gc();
             ImageTransferable imageSelection = null;
             BufferedImage image = null;
             String msg = "";
@@ -221,13 +219,6 @@ public class ScreenshotAction extends AbstractAncestrisAction {
             }
             image = null;
             imageSelection = null;
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    System.gc();
-                }
-
-            });
             
             // done
 
