@@ -15,6 +15,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.KeyboardFocusManager;
 import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -106,7 +107,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         sorter.sort();
-        
     }
 
     /**
@@ -142,6 +142,12 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         placeDetailsLabel = new javax.swing.JLabel();
         separator = new javax.swing.JSeparator();
         gedcomPlaceEditorPanel = new GedcomPlaceEditorPanel();
+
+        addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                formComponentResized(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.placeLabel.text")); // NOI18N
 
@@ -315,7 +321,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         mapPanel.setLayout(mapPanelLayout);
         mapPanelLayout.setHorizontalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 374, Short.MAX_VALUE)
+            .addComponent(MapScrollPane)
             .addGroup(mapPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(tipLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -323,7 +329,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         mapPanelLayout.setVerticalGroup(
             mapPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mapPanelLayout.createSequentialGroup()
-                .addComponent(MapScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 528, Short.MAX_VALUE)
+                .addComponent(MapScrollPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(tipLabel))
         );
@@ -460,8 +466,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_gedcomPlacesListResultValueChanged
 
     private void splitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_splitPanePropertyChange
-        registry.put("placeSplitDividerLocation", splitPane.getDividerLocation());
-        setRefTableColumnWidths();
+        saveSize();
     }//GEN-LAST:event_splitPanePropertyChange
 
     private void gedcomPlacesListResultMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_gedcomPlacesListResultMouseClicked
@@ -481,6 +486,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
         }
     }//GEN-LAST:event_geonamesPlacesListResultMouseClicked
+
+    private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
+        saveSize();
+    }//GEN-LAST:event_formComponentResized
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JScrollPane MapScrollPane;
@@ -571,6 +580,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         // Display location on map
         displayLocationOnMap(new PlaceFactory(mPlace));
 
+        // Set window size
+        this.setPreferredSize(new Dimension(registry.get("placeWindowWidth", this.getPreferredSize().width), registry.get("placeWindowHeight", this.getPreferredSize().height)));
+        splitPane.setDividerLocation(registry.get("placeSplitDividerLocation", splitPane.getDividerLocation()));
+
         // Fill in gedcom places with all places in gedcom
         gedcomPlacesListModel.clear();
         if (placesMap == null) {
@@ -583,13 +596,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         // Set text in search field
         listIsBusy = true;
-        searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(",", " ").replaceAll("\\s+", " ").trim());
+        searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
         listIsBusy = false;
          
-        // Set window size
-        this.setPreferredSize(new Dimension(registry.get("placeWindowWidth", this.getPreferredSize().width), registry.get("placeWindowHeight", this.getPreferredSize().height)));
-        splitPane.setDividerLocation(registry.get("placeSplitDividerLocation", splitPane.getDividerLocation()));
-
         // Give handle on this panel
         gedcomPlaceEditorPanel.setMapHandle(this);
         
@@ -598,11 +607,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             @Override
             public void run() {
                 // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
-                if (!gedcomPlacesListModel.isEmpty()) {
+                if (!gedcomPlacesListModel.isEmpty() && mPlace.getLatitude(true) != null) {
                     placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
                     selectPlace(mPlace);
-                }
-                if (!geonamePlacesListModel.isEmpty()) {
+                } else if (!geonamePlacesListModel.isEmpty()) {
                     placeEditorTabbedPane.setSelectedComponent(internetListPanel);
                     geonamesPlacesListResult.setSelectedIndex(0);
                 }
@@ -716,9 +724,26 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }
 
     
-    public void saveSize() {
-        registry.put("placeWindowWidth", this.getWidth());
-        registry.put("placeWindowHeight", this.getHeight());        
+    private void saveSize() {
+        Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+        int w = this.getWidth();
+        if (w > dim.width*90/100) {
+            w = dim.width*90/100;
+        }
+        int h = this.getHeight();
+        if (h > dim.height*80/100) {
+            h = dim.height*80/100;
+        }
+        
+        
+        registry.put("placeWindowWidth", w);
+        registry.put("placeWindowHeight", h);
+        registry.put("placeSplitDividerLocation", splitPane.getDividerLocation());
+        setRefTableColumnWidths();
+    }
+    
+    
+    public void close() {
         geonamePlacesListModel.clear();
     }
     
@@ -776,7 +801,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 str = (String) referencesTableModel.getValueAt(i, c);
                 maxWidth = Math.max(maxWidth, getFontMetrics(getFont()).stringWidth(str));
             }
-            placeReferencesTable.getColumnModel().getColumn(c).setPreferredWidth(maxWidth);
+            placeReferencesTable.getColumnModel().getColumn(c).setPreferredWidth(c == 0 ? maxWidth*2: maxWidth);
         }
     }
 

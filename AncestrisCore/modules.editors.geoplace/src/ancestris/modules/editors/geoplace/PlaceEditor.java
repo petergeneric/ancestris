@@ -32,11 +32,10 @@ import org.openide.util.lookup.ServiceProvider;
  */
 @ServiceProvider(service = AncestrisEditor.class,position = 100)
 public class PlaceEditor extends AncestrisEditor {
-    private final PlaceEditorPanel editorPanel;
+    private PlaceEditorPanel editorPanel = null;
     private static ImageIcon editorIcon = new ImageIcon(PlaceEditor.class.getResource("resources/geo.png")); // NOI18N
 
     public PlaceEditor() {
-        editorPanel = new PlaceEditorPanel();
     }
 
     @Override
@@ -78,6 +77,9 @@ public class PlaceEditor extends AncestrisEditor {
             }
         }
         if (gedcom != null && place instanceof PropertyPlace) {
+            if (editorPanel == null) {
+                editorPanel = new PlaceEditorPanel();
+            }
             editorPanel.set(gedcom, (PropertyPlace) place, true);
             editorPanel.setGeoPoint(geoPoint);
             String title = NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.all", place.getDisplayValue());

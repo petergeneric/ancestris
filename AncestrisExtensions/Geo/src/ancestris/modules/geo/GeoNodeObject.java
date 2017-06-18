@@ -64,6 +64,7 @@ public class GeoNodeObject {
     private final static String COLOR_UNKNOWN = "color='#ff2300'"; // red
     
     // Unknown places will be pointed to the sea
+    public static Toponym DEFAULT_TOPONYM = defaultToponym();
     private final static int DEFAULT_LAT = 45; // in the middle of the sea
     private final static int DEFAULT_LON = -4; // in the middle of the sea
 
@@ -129,9 +130,12 @@ public class GeoNodeObject {
      */
     public Toponym getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
 
-        Toponym topo = defaultToponym();
+        Toponym topo = null;
         boolean foundLocally = false;
         String searchedPlace = place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
+        if (searchedPlace.isEmpty()) {
+            searchedPlace = place.getFirstAvailableJurisdiction().trim();
+        }
 
         // Return default if place is null or empty (= nothing to search)
         if (avoidInternetSearch && placeDisplayFormat.equals(EMPTY_PLACE)) {
@@ -156,31 +160,39 @@ public class GeoNodeObject {
             //
             try {
                 // try search with all elements of place name to be more precise, separating the words
-                searchCriteria.setQ(searchedPlace);
-                searchResult = WebService.search(searchCriteria);
-                for (Toponym iTopo : searchResult.getToponyms()) {
-                    topo = iTopo; // take the first one
-                    break;
-                }
-                if (topo == null) { // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
-                    searchCriteria.setQ(place.getNumericalJurisdictions().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").trim());
+                if (!searchedPlace.isEmpty()) {
+                    searchCriteria.setQ(searchedPlace);
                     searchResult = WebService.search(searchCriteria);
                     for (Toponym iTopo : searchResult.getToponyms()) {
                         topo = iTopo; // take the first one
                         break;
+                    }
+                }
+                if (topo == null) { // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
+                    String str = place.getNumericalJurisdictions().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").trim();
+                    if (!str.isEmpty()) {
+                        searchCriteria.setQ(str);
+                        searchResult = WebService.search(searchCriteria);
+                        for (Toponym iTopo : searchResult.getToponyms()) {
+                            topo = iTopo; // take the first one
+                            break;
+                        }
                     }
                 }
                 if (topo == null) { // try without "q" so only with namestartswith
-                    searchCriteria.setNameStartsWith(place.getCity());
-                    searchCriteria.setQ(null);
-                    searchResult = WebService.search(searchCriteria);
-                    for (Toponym iTopo : searchResult.getToponyms()) {
-                        topo = iTopo; // take the first one
-                        break;
+                    String city = place.getCity();
+                    if (!city.isEmpty()) {
+                        searchCriteria.setNameStartsWith(place.getCity());
+                        searchCriteria.setQ(null);
+                        searchResult = WebService.search(searchCriteria);
+                        for (Toponym iTopo : searchResult.getToponyms()) {
+                            topo = iTopo; // take the first one
+                            break;
+                        }
                     }
                 }
                 if (topo == null) { // if still not found, default topo
-                    topo = defaultToponym();
+                    topo = DEFAULT_TOPONYM;
                 }
             } catch (Exception e) {
                 isInError = true;
@@ -201,7 +213,7 @@ public class GeoNodeObject {
      *
      * @return
      */
-    private Toponym defaultToponym() {
+    private static Toponym defaultToponym() {
         Toponym topo = new Toponym();
         topo.setLatitude(DEFAULT_LAT);
         topo.setLongitude(DEFAULT_LON);

@@ -304,12 +304,16 @@ class GeoPlacesList implements GedcomMetaListener {
         }
     }
     
-    void setCopiedPlace(PropertyPlace place) {
+    public void setCopiedPlace(PropertyPlace place) {
         this.copiedPlace = place;
     }
 
-    PropertyPlace getCopiedPlace() {
+    public PropertyPlace getCopiedPlace() {
         return this.copiedPlace;
+    }
+
+    public boolean areGeoCoordinatesValid(PropertyPlace place) {
+        return (place.getLatitude(false) != null && place.getLongitude(false) != null);
     }
 
 }

@@ -7,15 +7,14 @@ package ancestris.modules.geo;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.text.Collator;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
-import java.util.SortedSet;
 import java.util.TreeMap;
-import java.util.TreeSet;
 import javax.swing.JOptionPane;
 import org.netbeans.api.progress.ProgressHandle;
 import org.netbeans.api.progress.ProgressHandleFactory;
@@ -60,8 +59,8 @@ class GeoInternetSearch {
         isBusy = true;
         gedcomSearchingList.add(gedcom);
         
-        // Define the key component of data, the nodeobject holding the locations and the events, sorted on string displayed
-        final SortedSet<GeoNodeObject> ret = new TreeSet<GeoNodeObject>(sortPlaces);
+        // Define the key component of data, the nodeobject holding the locations and the events, sorted on key string displayed
+        final SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>(sortString); // pointer from propertyplace to objects, to group events by location
         
         // the progress bar
         final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces"), new Cancellable() {
@@ -79,7 +78,7 @@ class GeoInternetSearch {
             public synchronized void run() {
                 try {
                     StatusDisplayer.getDefault().setStatusText("");
-                    SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>(); // pointer from propertyplace to objects, to group events by location
+                    listOfCities.clear();
                     ph.start(); //we must start the PH before we switch to determinate
                     ph.switchToDeterminate(NUM);
                     int i = 0;
@@ -103,11 +102,10 @@ class GeoInternetSearch {
                                 });
                                 break;
                             }
-                            // Add object to list of objects, and add new city to the list
-                            ret.add(newObj);
+                            // Add city to the list
                             listOfCities.put(key, newObj);
                         } else {
-                            // City is already in the list, just add the events
+                            // City is already in the list, just add the event
                             obj.addEvent(propertyPlace.getParent(), propertyPlace);
                         }
                         // Increment progress bar
@@ -132,6 +130,7 @@ class GeoInternetSearch {
 
             public void taskFinished(Task task) {
                 ph.finish();
+                Collection<GeoNodeObject> ret = listOfCities.values();
                 result = ret.toArray(new GeoNodeObject[ret.size()]);
                 if (result.length > 0) {
                     gplOwner.setPlaces(result);
@@ -157,9 +156,9 @@ class GeoInternetSearch {
     /**
      * Comparator to sort places
      */
-    public Comparator<GeoNodeObject> sortPlaces = new Comparator<GeoNodeObject>() {
+    public Comparator<String> sortString = new Comparator<String>() {
 
-        public int compare(GeoNodeObject o1, GeoNodeObject o2) {
+        public int compare(String o1, String o2) {
             if (o1 == null) {
                 return +1;
             }
@@ -167,9 +166,9 @@ class GeoInternetSearch {
                 return -1;
             }
             Collator myCollator = Collator.getInstance();
-            myCollator.setStrength(Collator.PRIMARY);
+            myCollator.setStrength(Collator.TERTIARY);
             myCollator.setDecomposition(Collator.CANONICAL_DECOMPOSITION);
-            return myCollator.compare(o1.toString(), o2.toString());
+            return myCollator.compare(o1, o2);
         }
     };
 

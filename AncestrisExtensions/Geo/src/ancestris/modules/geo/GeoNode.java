@@ -22,6 +22,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
+import org.geonames.Toponym;
 import org.netbeans.api.javahelp.Help;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -122,7 +123,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                             null,
                             new GeoAction("ACTION_EditPlace"),
                             null,
-                            new GeoAction("ACTION_CopyPlace"),
+                            new GeoAction("ACTION_CopyPlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).areGeoCoordinatesValid(obj.getPlace())),
                             new GeoAction("ACTION_PastePlace", GeoPlacesList.getInstance(obj.getPlace().getGedcom()).getCopiedPlace() != null),
                             null,
                             new GeoAction("ACTION_UpdateList"),
@@ -179,9 +180,17 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
             } else if (actionName.equals("ACTION_FindPlace")) {
                 // display place details
-                String info = obj.displayToponym(obj.getToponymFromPlace(obj.getPlace(), false));
-                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
-                        new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
+                Toponym topo = obj.getToponymFromPlace(obj.getPlace(), false);
+                if (topo != GeoNodeObject.DEFAULT_TOPONYM) {
+                    String info = obj.displayToponym(topo);
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
+                            new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
+                } else {
+                    JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GeoNode.class, "TXT_locationNotFound"), 
+                            NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"),
+                            JOptionPane.INFORMATION_MESSAGE,
+                            new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
+                }
 
             } else if (actionName.equals("ACTION_EditPlace")) {
                 // Popup editor
