@@ -357,13 +357,13 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
-     * Accessor - all jurisdictions starting with city
+     * Accessor - numerical jurisdictions
      */
     public String getNumericalJurisdictions() {
         String str = "";
         String[] juris = toJurisdictions(getValue());
         for (int i = 0; i < juris.length; i++) {
-            String juri = juris[i];
+            String juri = juris[i].replace(" ","");
             if (juri.matches("-?\\d+(\\.\\d+)?")) {         //match a number with optional '-' and decimal.
                 str += juri + JURISDICTION_SEPARATOR;
             }
