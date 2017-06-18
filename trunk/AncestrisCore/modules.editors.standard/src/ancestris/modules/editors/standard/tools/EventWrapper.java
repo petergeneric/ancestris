@@ -736,6 +736,12 @@ public class EventWrapper {
         if (pLatitude != null && pLongitude != null) {
             String strLat = pLatitude.getValue();
             String strLong = pLongitude.getValue();
+            if (toPlace.getLatitude(false) == null || toPlace.getLongitude(false) == null) {
+                if (!strLat.isEmpty() || !strLong.isEmpty()) {
+                    toPlace.setCoordinates(strLat, strLong);
+                }
+                return;
+            }
             if (!toPlace.getLatitude(false).getValue().equals(strLat) || !toPlace.getLongitude(false).getValue().equals(strLong)) {
                 toPlace.setCoordinates(strLat, strLong);
             }
