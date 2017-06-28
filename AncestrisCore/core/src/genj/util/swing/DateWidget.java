@@ -37,6 +37,7 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeListener;
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;
@@ -67,11 +68,20 @@ public class DateWidget extends JPanel {
   private ChangeSupport changeSupport = new ChangeSupport(this) {
     @Override
     public void fireChangeEvent(javax.swing.event.ChangeEvent event) {
-      // update our status
-      updateStatus();
-      // continue
-      super.fireChangeEvent(event);
-    }
+          // update our status
+          if (!SwingUtilities.isEventDispatchThread()) {
+              SwingUtilities.invokeLater(new Runnable() {
+                  @Override
+                  public void run() {
+                      updateStatus();
+                  }
+              });
+          } else {
+              updateStatus();
+          }
+          // continue
+          super.fireChangeEvent(event);
+      }
   };
 
   /**
@@ -385,42 +395,44 @@ public class DateWidget extends JPanel {
    * Update the status icon
    */
   private void updateStatus() {
-    // check whether valid
-    PointInTime value = getValue();
+      // check whether valid
+      PointInTime value = getValue();
       Calendar helpCalendar = null;
-    if (value == null) {
-      // show 'X' on disabled button
-      widgetCalendar.setEnabled(false);
-      widgetCalendar.setDisabledIcon(MetaProperty.IMG_ERROR);
-    } else {
-      // show current calendar on enabled button
-      widgetCalendar.setVisible(true);    
-      widgetCalendar.setEnabled(true);
-      widgetCalendar.setIcon(calendar.getImage());
-      if (value.getCalendar() == preferedCalendar) {
-          helpCalendar = alternateCalendar;
-      } else{
-          helpCalendar = preferedCalendar;
-      }
-    }
-
-      if (helpCalendar == null){
-          altDisplay.setVisible(false);
-            altDisplay.setText("");
+      if (value == null) {
+          // show 'X' on disabled button
+          widgetCalendar.setEnabled(false);
+          widgetCalendar.setDisabledIcon(MetaProperty.IMG_ERROR);
       } else {
-        altDisplay.setVisible(true);
-        try {
-            String dispValue = value.getPointInTime(helpCalendar).toString();
-            if ("?".equals(dispValue))
-                dispValue = "";
-            altDisplay.setText(dispValue);
+          // show current calendar on enabled button
+          widgetCalendar.setVisible(true);
+          widgetCalendar.setEnabled(true);
+          widgetCalendar.setIcon(calendar.getImage());
+          if (value.getCalendar() == preferedCalendar) {
+              helpCalendar = alternateCalendar;
+          } else {
+              helpCalendar = preferedCalendar;
+          }
+      }
 
-        } catch (GedcomException ex) {
-        }
-        }
+      if (helpCalendar == null) {
+          altDisplay.setVisible(false);
+          altDisplay.setText("");
+      } else {
+          altDisplay.setVisible(true);
+          try {
+              String dispValue = value.getPointInTime(helpCalendar).toString();
+              if ("?".equals(dispValue)) {
+                  dispValue = "";
+              }
+              altDisplay.setText(dispValue);
 
-      for (SwitchCalendar switcher : switches)
-      switcher.preview();
+          } catch (GedcomException ex) {
+          }
+      }
+
+      for (SwitchCalendar switcher : switches) {
+          switcher.preview();
+      }
   }
   
     private boolean areValidDaysMonths() {
