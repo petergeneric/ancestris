@@ -2196,7 +2196,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     @Override
     protected void setContextImpl(Context context) {
         LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().start");
-        
+
         // force data reload if to be reloaded or if entity selected is different
         if (reloadData || (this.context != null && context != null && !this.context.equals(context) && this.context.getEntity() != context.getEntity())) {
             reloadData = true;
@@ -2212,7 +2212,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         Entity entity = context.getEntity();
         if (entity != null && (entity instanceof Indi)) {
             
-            // If sticky is off, refresh any context (new indi), otherwise stick to current indi and refresh it at most
+        // If sticky is off, refresh any context (new indi), otherwise stick to current indi and refresh it at most
             if (!stickyButton.isSelected()) {
                 this.indi = (Indi) entity;
             }
@@ -2260,7 +2260,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     /**
      * Select event corresponding to property
      * - if context is of different entity
-     * - if context is an event, select if
+     * - if context is an event, select it
      * @param context 
      */
      private void selectPropertyContext(Context context) {

@@ -112,21 +112,21 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
      * @param newContext
      */
     @Override
-    public void setContextImpl(Context newContext) {
+        public void setContextImpl(Context newContext) {
         
         // Quit if context is null  
         if (newContext == null || newContext.getEntity() == null) {
             return;
         }
 
+        // Adjust context
+        newContext = adjustContext(newContext);
+        
         // Quit if context is the same  
         if (newContext.equals(this.context)) {
             return;
         }
 
-        // Adjust context
-        newContext = adjustContext(newContext);
-        
         // Redisplay and Quit if same entity, different context, and if editor already exists
         if (this.context != null && !newContext.equals(this.context) &&  newContext.getEntity().equals(this.context.getEntity()) && editor != null) {
             this.context = newContext;

@@ -104,8 +104,9 @@ public class ChangeSupport implements DocumentListener, ChangeListener, ActionLi
     hasChanged = true;
     
     if (!mute) {
-      for (ChangeListener listener : listeners)
+      for (ChangeListener listener : listeners) {
         listener.stateChanged(event);
+      }
     }
   }
   
