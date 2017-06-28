@@ -4,6 +4,7 @@ import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import java.io.File;
+import java.math.BigInteger;
 import java.util.*;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
@@ -91,7 +92,7 @@ public class ReportGenealogyStatus extends Report {
 
         // Display sosa list with the status of the data found for each entity
         int sosaCnt = 1;  // counts ancestors
-        int sosaNb;       // represents the sosa number being considered
+        BigInteger sosaNb;       // represents the sosa number being considered
         int i = 1;        // counts the line
         for (Iterator it = sosaList.keySet().iterator(); it.hasNext();) {
             String key = (String) it.next();
@@ -99,12 +100,12 @@ public class ReportGenealogyStatus extends Report {
             sosaNb = getSosaNb(key);
 
             // start counting ancestors from above decujus
-            if (sosaNb > 1) {
+            if (sosaNb.doubleValue() > 1) {
                 sosaCnt++;
             }
 
             // fill in emty lines for all ancestors that are still to be discovered 
-            while (sosaNb > sosaCnt && sosaCnt < maxNbOfAncestors) {
+            while (sosaNb.doubleValue() > sosaCnt && sosaCnt < maxNbOfAncestors) {
                 println(emptyLine());
                 sosaCnt++;
             }
@@ -248,8 +249,14 @@ public class ReportGenealogyStatus extends Report {
         line += TAB;
 
         // Génération
-        int sosaNb = getSosaNb(sosa);
-        line += sosaNb == 0 ? "--" : (int) (Math.log(2 * sosaNb) / Math.log(2));
+        BigInteger sosaNb = getSosaNb(sosa);
+        if (sosaNb == BigInteger.ZERO) {
+            line += "--";
+        } else {
+            int g = 1+ (int) (Math.log(sosaNb.doubleValue()) / Math.log(2));
+            line += (""+g);
+        }
+        
         line += TAB;
 
         // Id
@@ -266,11 +273,11 @@ public class ReportGenealogyStatus extends Report {
         line += SPA;
 
         // Death
-        line += getEvent(sosa, indi, "INDI:DEAT", sosaNb > 15); // mandatory from great-great-grand-father and above
+        line += getEvent(sosa, indi, "INDI:DEAT", sosaNb.doubleValue() > 15); // mandatory from great-great-grand-father and above
         line += SPA;
 
         // Marriage
-        line += getFamilies(sosa, indi, sosaNb > 1 && sosa.indexOf("-") == -1); // family mandatory from parents and above
+        line += getFamilies(sosa, indi, sosaNb.doubleValue() > 1 && sosa.indexOf("-") == -1); // family mandatory from parents and above
         line += TAB;
 
         // Christening
@@ -319,9 +326,9 @@ public class ReportGenealogyStatus extends Report {
      * Get sosa nb from sosa string. (extracts first digital number found when
      * going from start of string)
      */
-    private int getSosaNb(String str) {
+    private BigInteger getSosaNb(String str) {
 
-        int sosaNb;
+        BigInteger sosaNb;
 
         int start = 0, end = str.length() - 1;
         while (start <= end && !Character.isDigit(str.charAt(start))) {
@@ -332,9 +339,9 @@ public class ReportGenealogyStatus extends Report {
             end++;
         }
         if (end == start) {
-            return 0;
+            return BigInteger.ZERO;
         } else {
-            sosaNb = (int) Integer.parseInt(str.substring(start, end));
+            sosaNb = new BigInteger(str.substring(start, end));
         }
 
         return sosaNb;
