@@ -78,6 +78,9 @@ public class TableView extends View {
     /** the modes we're offering */
     private final Map<String, Mode> modes = new HashMap<String, Mode>();
     private final JPanel panelShortcuts;
+    private RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+            
+            ;
 
     {
 //        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
@@ -834,7 +837,7 @@ public class TableView extends View {
                 }
             };
 
-            new RequestProcessor("interruptible tasks", 1, true).create(runnable).schedule(0);
+            RP.create(runnable).schedule(0);
         }
         
         
