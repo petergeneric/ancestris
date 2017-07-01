@@ -15,6 +15,7 @@ import static ancestris.swing.atable.Bundle.*;
 import genj.util.swing.GraphicsHelper;
 import genj.util.swing.PopupWidget;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -32,6 +33,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.TableModel;
@@ -197,6 +199,8 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
          */
         private void invokeFilter() {
             if (sorter != null) {
+                JPanel panel = (JPanel) SwingUtilities.getAncestorOfClass(JPanel.class, filterText);
+                panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                 RowFilter<TableModel, Object> rf;
                 int col = getIndex();
                 String flags = "";
@@ -207,6 +211,7 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
                 try {
                     rf = RowFilter.regexFilter(flags + filterText.getText(), col);
                 } catch (java.util.regex.PatternSyntaxException e) {
+                    panel.setCursor(Cursor.getDefaultCursor());
                     return;
                 }
                 sorter.setRowFilter(rf);
@@ -215,6 +220,8 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
                     numberText = occurrences_label(sorter.getViewRowCount());
                 }
                 number.setText(numberText + " ");
+                panel.setCursor(Cursor.getDefaultCursor());
+                
             }
         }
 

@@ -53,7 +53,7 @@ public class EventTableModel extends AbstractTableModel {
 
         @Override
         public int getRowCount() {
-            return data.length;
+            return data != null ? data.length : 0;
         }
 
         @Override
@@ -63,7 +63,7 @@ public class EventTableModel extends AbstractTableModel {
 
         @Override
         public Object getValueAt(int row, int col) {
-            return data[row][col];
+            return data != null ? data[row][col] : null;
         }
 
         @Override
@@ -78,10 +78,15 @@ public class EventTableModel extends AbstractTableModel {
 
         @Override
         public void setValueAt(Object value, int row, int col) {
+            if (data == null) {
+                return;
+            }
             data[row][col] = value;
             fireTableCellUpdated(row, col);
         }
 
-
+        public void clear() {
+            data = null;
+        }
 
 }

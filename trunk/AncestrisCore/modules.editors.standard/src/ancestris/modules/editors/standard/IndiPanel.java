@@ -42,6 +42,7 @@ import ancestris.modules.editors.standard.tools.SourceWrapper;
 import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import ancestris.util.TimingUtility;
+import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import static ancestris.util.swing.DialogManager.OK_ONLY_OPTION;
 import ancestris.util.swing.FileChooserBuilder;
@@ -168,6 +169,8 @@ public class IndiPanel extends Editor implements DocumentListener {
     private NoteDetailsPanel textDetails = null;
     
     // Events
+    private EventTableModel eventTableModel = null;
+    private ListSelectionListener eventTableListener = null;
     private List<EventWrapper> eventSet = null;
     private List<EventWrapper> eventRemovedSet = null;
     private boolean isBusyEvent = false;
@@ -2209,6 +2212,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         }
         
+        Utilities.setCursorWaiting(this);
         Entity entity = context.getEntity();
         if (entity != null && (entity instanceof Indi)) {
             
@@ -2254,6 +2258,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             
         }
 
+        Utilities.setCursorNormal(this);
         LOG.finer(TimingUtility.getInstance().getTime() + ": setContextImpl().finish");
     }
 
@@ -2755,8 +2760,36 @@ public class IndiPanel extends Editor implements DocumentListener {
 
 
     private void displayEventTable() {
-        EventTableModel etm = new EventTableModel(eventSet);
-        eventTable.setModel(etm);    
+        // Init table
+        if (eventTableListener == null) {
+            eventTableListener = new ListSelectionListener() {
+                public void valueChanged(ListSelectionEvent e) {
+                    if (!e.getValueIsAdjusting() && !isBusyEvent && eventTable.getSelectedRow() != -1) {
+                        eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
+                        displayEvent();
+                        displayAssociationsComboBox();
+                    }
+                }
+            };
+            eventTable.setShowHorizontalLines(false);
+            eventTable.setShowVerticalLines(false);
+            eventTable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
+            
+        }
+
+        
+        // Clear table
+        if (eventTableModel != null) {
+            eventTableModel.clear();
+        }
+        if (eventTableListener != null) {
+            eventTable.getSelectionModel().removeListSelectionListener(eventTableListener);
+        }
+
+        
+        // Refresh table
+        eventTableModel = new EventTableModel(eventSet);
+        eventTable.setModel(eventTableModel);    
         eventTable.setAutoCreateRowSorter(true);
         
         int maxWidth = 0;
@@ -2766,9 +2799,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTable.getColumnModel().getColumn(0).setPreferredWidth(maxWidth + 15); // add icon size
         eventTable.getColumnModel().getColumn(1).setPreferredWidth(getFontMetrics(getFont()).stringWidth(" 9999 "));
         eventTable.getColumnModel().getColumn(2).setPreferredWidth(getFontMetrics(getFont()).stringWidth(" 99.9 "));
-
-        eventTable.setShowHorizontalLines(false);
-        eventTable.setShowVerticalLines(false);
 
         eventTable.getColumnModel().getColumn(0).setCellRenderer(new IconTextCellRenderer());
 
@@ -2785,16 +2815,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventTable.getColumnModel().getColumn(1).setHeaderRenderer(centerHRenderer);
         eventTable.getColumnModel().getColumn(2).setHeaderRenderer(centerHRenderer);
         
-        eventTable.setSelectionMode(DefaultListSelectionModel.SINGLE_SELECTION);
-        eventTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                if (!e.getValueIsAdjusting() && !isBusyEvent && eventTable.getSelectedRow() != -1) {
-                    eventIndex = eventTable.convertRowIndexToModel(eventTable.getSelectedRow());
-                    displayEvent();
-                    displayAssociationsComboBox();
-                }
-            }
-        });
+        eventTable.getSelectionModel().addListSelectionListener(eventTableListener);
+
         sortEventTable();
         
     }
@@ -2852,6 +2874,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDate.removeChangeListener(changes);
 
         EventWrapper event = getCurrentEvent();
+        boolean cursorHasChanged = Utilities.setCursorWaiting(this);
         if (event != null) {        
             
             showGeneralInformation(!event.isGeneral);
@@ -2931,6 +2954,10 @@ public class IndiPanel extends Editor implements DocumentListener {
             event.eventSourceIndex = 0;
             displayEventSource(event);
             
+        }
+
+        if (cursorHasChanged) {
+            Utilities.setCursorNormal(this);
         }
         isBusyEvent = false;
         eventDate.addChangeListener(changes);

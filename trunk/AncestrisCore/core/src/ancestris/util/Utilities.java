@@ -15,15 +15,20 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
+import java.awt.Cursor;
+import java.awt.Frame;
 import java.awt.Image;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Locale;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 import javax.swing.text.Document;
 import javax.swing.text.EditorKit;
 import javax.swing.text.html.HTMLEditorKit;
 import org.openide.util.Lookup;
+import org.openide.windows.TopComponent;
 
 /**
  *
@@ -191,6 +196,48 @@ public class Utilities {
         
         return bit + text.substring(start, end) + bit;
     }
+    
+
+    
+    /**
+     * Sets the cursor for Ancestris frame, all topComponents and panel in parameter
+     * @param panel 
+     */
+    public static boolean setCursorWaiting(JPanel panel) {
+        return setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR), panel);
+    }
+
+    public static boolean setCursorNormal(JPanel panel) {
+        return setCursor(Cursor.getDefaultCursor(), panel);
+    }
+
+    private static boolean setCursor(Cursor cursor, JPanel panel) {
+        boolean changed = false;
+        // All frames
+        for (Frame frame : Frame.getFrames()) {
+            if (frame instanceof JFrame && ((JFrame) frame).getCursor() != cursor) {
+                ((JFrame) frame).setCursor(cursor);
+                changed = true;
+            }
+        }
+        
+        // All top components
+        for (TopComponent tc : Lookup.getDefault().lookupAll(TopComponent.class)) {
+            if (tc.getCursor() != cursor) {
+                tc.setCursor(cursor);
+                changed = true;
+            }
+        }
+        
+        // This panel
+        if (panel != null && panel.getCursor() != cursor) {
+            panel.setCursor(cursor);
+            changed = true;
+        }
+        
+        return changed;
+    }
+
     
     
 }
