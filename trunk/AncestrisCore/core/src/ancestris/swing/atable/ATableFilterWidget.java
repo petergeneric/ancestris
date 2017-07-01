@@ -40,7 +40,7 @@ import org.openide.util.actions.Presenter;
 
 @NbBundle.Messages({
     //    "allfilter=All",
-    "exactmatch=Exact Match",
+    "exactmatch=Match case",
     "# {0} - number of occurences",
     "occurrences.label={0} occurrences"
 })
@@ -162,7 +162,7 @@ public final class ATableFilterWidget implements Presenter.Toolbar {
                 @Override
                 public Dimension getPreferredSize() {
                     Dimension size = super.getPreferredSize();
-                    size.width = 120;
+                    size.width = 140;
                     return size;
                 }
             };

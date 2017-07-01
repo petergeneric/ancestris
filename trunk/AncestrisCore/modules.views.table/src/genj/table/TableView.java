@@ -83,7 +83,6 @@ public class TableView extends View {
             
 
     {
-//        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
         modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{
             "INDI",
             "INDI:SEX",
@@ -103,7 +102,6 @@ public class TableView extends View {
             "INDI:NAME:GIVN",
             "INDI:NAME:SURN"
         }));
-//        modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{"FAM", "FAM:MARR:DATE", "FAM:MARR:PLAC", "FAM:HUSB", "FAM:WIFE", "FAM:CHIL"}));
         modes.put(Gedcom.FAM, new Mode(Gedcom.FAM, new String[]{
             "FAM",
             "FAM:MARR:DATE",
@@ -120,20 +118,17 @@ public class TableView extends View {
             "FAM:CHAN"
         }));
 
-//        modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{"OBJE", "OBJE:FILE:TITL"}));
         modes.put(Gedcom.OBJE, new Mode(Gedcom.OBJE, new String[]{
             "OBJE",
             "OBJE:FILE:TITL"
         }));
 
-//        modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{"NOTE", "NOTE:NOTE"}));
         modes.put(Gedcom.NOTE, new Mode(Gedcom.NOTE, new String[]{
             "NOTE",
             "NOTE:NOTE",
             "NOTE:CHAN"
         }));
 
-//        modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{"SOUR", "SOUR:TITL", "SOUR:TEXT"}));
         modes.put(Gedcom.SOUR, new Mode(Gedcom.SOUR, new String[]{
             "SOUR",
             "SOUR:TITL",
@@ -144,7 +139,6 @@ public class TableView extends View {
             "SOUR:CHAN"
         }));
 
-//        modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{"SUBM", "SUBM:NAME"}));
         modes.put(Gedcom.SUBM, new Mode(Gedcom.SUBM, new String[]{
             "SUBM",
             "SUBM:NAME",
@@ -156,7 +150,6 @@ public class TableView extends View {
             "SUBM:CHAN"
         }));
 
-//        modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{"REPO", "REPO:NAME", "REPO:NOTE"}));
         modes.put(Gedcom.REPO, new Mode(Gedcom.REPO, new String[]{
             "REPO",
             "REPO:NAME",
