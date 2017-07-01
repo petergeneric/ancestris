@@ -35,7 +35,7 @@ class GeoInternetSearch {
 
     private static boolean isBusy = false;
     private static Set<Gedcom> gedcomSearchingList = new HashSet<Gedcom>();
-    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private final static RequestProcessor RP = new RequestProcessor("GeoInternetSearch", 1, true);
 
     private GeoPlacesList gplOwner;
     private List<PropertyPlace> placesProps;

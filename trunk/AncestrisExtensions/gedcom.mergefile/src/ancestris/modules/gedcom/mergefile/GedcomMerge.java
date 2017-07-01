@@ -94,7 +94,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
                 return false;
             }
         });
-        RequestProcessor RP = new RequestProcessor("Merge Task"); 
+        RequestProcessor RP = new RequestProcessor("GedcomMerge"); 
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

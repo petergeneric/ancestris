@@ -41,7 +41,7 @@ public class GeonamesPlacesList implements SearchPlace {
     @Override
     public void searchPlace(final String searchedPlace, final List<Place> placesList) {
         mPlacesList.clear();
-        RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+        RequestProcessor RP = new RequestProcessor("GeonamesPlacesList", 1, true);
         Runnable runnable = new Runnable() {
 
             @Override

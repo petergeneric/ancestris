@@ -138,7 +138,7 @@ import org.openide.windows.WindowManager;
     private final Object lock = new Object();
     private boolean isRebuilding = false;
     private boolean isRedrawing = false;
-    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private final static RequestProcessor RP = new RequestProcessor("Chrono Model View", 1, true);
     private int progressCounter = 0;
     private boolean isGedcomChanging = false;
 
