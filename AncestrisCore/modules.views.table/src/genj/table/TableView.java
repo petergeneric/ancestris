@@ -78,9 +78,9 @@ public class TableView extends View {
     /** the modes we're offering */
     private final Map<String, Mode> modes = new HashMap<String, Mode>();
     private final JPanel panelShortcuts;
-    private RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private RequestProcessor RP = new RequestProcessor("TableView", 1, true);
+    private Runnable eraseRunnable = null;
             
-            ;
 
     {
 //        modes.put(Gedcom.INDI, new Mode(Gedcom.INDI, new String[]{"INDI", "INDI:NAME", "INDI:SEX", "INDI:BIRT:DATE", "INDI:BIRT:PLAC", "INDI:OCCU", "INDI:FAMS", "INDI:FAMC"}));
@@ -237,6 +237,8 @@ public class TableView extends View {
 //        new NextMode(true).install(this, "ctrl pressed LEFT");
 //        new NextMode(false).install(this, "ctrl pressed RIGHT");
         // done
+        
+        
     }
 
     public Gedcom getGedcom() {
@@ -822,22 +824,24 @@ public class TableView extends View {
         }
 
         private void eraseAll() {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    synchronized (rows) {
-                        int s = rows.size() - 1;
-                        for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
-                            it.next();
-                            it.remove();
+            if (eraseRunnable == null) {
+                eraseRunnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        synchronized (rows) {
+                            int s = rows.size() - 1;
+                            for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
+                                it.next();
+                                it.remove();
+                            }
+                            fireRowsDeleted(0, s);
+                            propertyTable.eraseAll();
                         }
-                        fireRowsDeleted(0, s);
-                        propertyTable.eraseAll();
                     }
-                }
-            };
+                };
+            }
 
-            RP.create(runnable).schedule(0);
+            RP.execute(eraseRunnable);
         }
         
         

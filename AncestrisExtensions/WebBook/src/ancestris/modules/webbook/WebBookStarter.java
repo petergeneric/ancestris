@@ -21,7 +21,7 @@ public class WebBookStarter {
 
     private Gedcom gedcom;
     private Log log;
-    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private final static RequestProcessor RP = new RequestProcessor("WebBookStarter", 1, true);
     private RequestProcessor.Task theTask = null;
 
     // Constructor

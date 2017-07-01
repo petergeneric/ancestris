@@ -30,7 +30,7 @@ import org.openide.util.*;
 public final class SearchDuplicatesWizardAction extends AbstractAncestrisContextAction {
 
     private static final Logger log = Logger.getLogger(SearchDuplicatesPlugin.class.getName());
-    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private final static RequestProcessor RP = new RequestProcessor("SearchDuplicatesWizardAction", 1, true);
     private RequestProcessor.Task theTask = null;
 
     public SearchDuplicatesWizardAction() {

@@ -25,7 +25,7 @@ import org.openide.util.TaskListener;
 public class FTPLoader {
 
     private Log log = null;
-    private final static RequestProcessor RP = new RequestProcessor("interruptible tasks", 1, true);
+    private final static RequestProcessor RP = new RequestProcessor("FTPLoader", 1, true);
     private RequestProcessor.Task theTask = null;
     private FTPUpload ftpu = null;
     //
