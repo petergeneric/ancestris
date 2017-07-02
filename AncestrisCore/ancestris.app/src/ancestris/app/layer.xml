@@ -177,7 +177,7 @@
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
             <file name="org-netbeans-modules-autoupdate-ui-actions-PluginManagerAction.instance">
-                <attr name="displayName" bundlevalue="ancestris.welcome.resources.Bundle#LBL_InstallPlugins"/>
+                <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_InstallPlugins"/>
                 <attr name="iconBase" stringvalue="ancestris/view/images/Extension.png"/>
                 <attr name="noIconInMenu" boolvalue="false"/>
             </file>
