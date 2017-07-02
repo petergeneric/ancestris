@@ -13,6 +13,7 @@ package modules.editors.gedcomproperties;
 
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import ancestris.util.swing.DialogManager;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.PropertyPlace;
 import genj.util.Registry;
 import java.awt.Dimension;
@@ -319,7 +320,9 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     }//GEN-LAST:event_jTextField1KeyReleased
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-        setPLAC(parent.getOriginalPlaceFormat());
+        String defaultFormat = GedcomOptions.getInstance().getPlaceFormat();
+        String str = parent.getOriginalPlaceFormat();
+        setPLAC(!str.isEmpty() ? str : defaultFormat);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed

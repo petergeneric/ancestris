@@ -19,7 +19,6 @@ import ancestris.api.imports.Import;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
-import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -67,14 +66,6 @@ public class GeneanetImport extends Import {
         return true;
     }
 
-    private <T> void getPropertiesRecursively(List<T> props, String tag, Property parent) {
-        for (Property child : parent.getProperties()) {
-            if (tag.equals(child.getTag())) {
-                props.add((T) child);
-            }
-            getPropertiesRecursively(props, tag, child);
-        }
-    }
     
     
 }

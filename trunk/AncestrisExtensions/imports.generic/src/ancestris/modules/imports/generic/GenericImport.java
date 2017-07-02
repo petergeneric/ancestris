@@ -12,6 +12,8 @@
 package ancestris.modules.imports.generic;
 
 import ancestris.api.imports.Import;
+import static ancestris.modules.imports.generic.Bundle.genericimport_name;
+import static ancestris.modules.imports.generic.Bundle.genericimport_note;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -19,6 +21,10 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author dominique
  */
+@NbBundle.Messages({
+    "genericimport.name=Unknown (use generic import)",
+    "genericimport.note=This file has been modified by the Ancestris Generic Import plugin."
+})
 @ServiceProvider(service = Import.class)
 public class GenericImport extends Import {
 
@@ -31,11 +37,12 @@ public class GenericImport extends Import {
 
     @Override
     public String toString() {
-        return "Generic";
+        return genericimport_name();
     }
 
     @Override
     protected String getImportComment() {
-        return NbBundle.getMessage(GenericImport.class, "note1", GenericImport.class);
+        return genericimport_note();
     }
+
 }
