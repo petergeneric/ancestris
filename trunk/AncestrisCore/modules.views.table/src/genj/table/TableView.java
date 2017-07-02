@@ -61,6 +61,7 @@ import org.openide.util.NbBundle;
 import java.awt.Component;
 import java.util.Collections;
 import java.util.Iterator;
+import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.RequestProcessor;
 
@@ -828,7 +829,11 @@ public class TableView extends View {
                                 it.remove();
                             }
                             fireRowsDeleted(0, s);
-                            propertyTable.eraseAll();
+                            SwingUtilities.invokeLater(new Runnable(){
+                                public void run() {
+                                    propertyTable.eraseAll();
+                                }
+                            });
                         }
                     }
                 };
