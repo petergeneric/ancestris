@@ -100,6 +100,8 @@ public abstract class Import {
     // protected boolean handleYesTag = true;
     // protected boolean handleInvalidTag = true;
     // protected boolean handleMissingEntities = true;
+    
+    
     /**
      * Constructor
      */
@@ -175,8 +177,8 @@ public abstract class Import {
                         output.writeLine(input);
                         output.writeLine(1, "NOTE", getImportComment());
                         console.println(NbBundle.getMessage(Import.class, "Import.header"));
-                        console.println("=============================");
-                        console.println(NbBundle.getMessage(Import.class, "Import.body"));
+//                        console.println("=============================");
+//                        console.println(NbBundle.getMessage(Import.class, "Import.body"));
                         continue;
                     }
                     if (process()) {
@@ -470,7 +472,7 @@ public abstract class Import {
         return true;
     }
 
-    private <T> void getPropertiesRecursively(List<T> props, String tag, Property parent) {
+    public <T> void getPropertiesRecursively(List<T> props, String tag, Property parent) {
         for (Property child : parent.getProperties()) {
             if (tag.equals(child.getTag())) {
                 props.add((T) child);
