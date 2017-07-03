@@ -737,9 +737,9 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
                 }
             }
 
-            // je copie les champs du relevé précédent            
+            // je copie les champs du relevé précédent     
             copyFieldsfromPreviousRecord(dataManager.getRecord(currentRecordIndex));
-
+            
             // je mets à jour la toolbar
             updateToolBar();
             // je selectionne le nouveau releve dans la table
@@ -758,7 +758,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
      */
     private void copyFieldsfromPreviousRecord(Record record) {
         // je recupère l'index du relevé affiché dans l'editeur 
-        int previousRecordIndex = releveEditor.getCurrentRecordIndex();
+        int previousRecordIndex = dataManager.getPreviousRecordIndex();
         Record previousRecord = dataManager.getDataModel().getRecord(previousRecordIndex);
         if (previousRecord == null) {
             // le relevé précédent du même type n'existe pas 
@@ -780,7 +780,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         }
 
         if (DataManager.getCopySecondDateEnabled() && record.getType() == DataManager.RecordType.misc) {
-            // le champ secondDate est nul si le releve  precedent n'est pas du type misc
+            // le champ secondDate est nul si le releve precedent n'est pas du type misc
             if (previousRecord.getType() == DataManager.RecordType.misc) {
                 record.setSecondDate(previousRecord.getEventSecondDateString());
                 record.setEventCalendar(previousRecord.getEventSecondDateCalendar());
@@ -811,6 +811,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
                 int[] tableIndexList = new int[releveTable.getRowCount()];
                 for (int i = 0; i < tableIndexList.length; i++) {
                     tableIndexList[i] = releveTable.convertRowIndexToView(i);
+                    //tableIndexList[i] = releveTable.convertRowIndexToModel(i);
                 }
                 dataManager.renumberRecords(dataManager.getRecord(currentRecordIndex), tableIndexList);
             }

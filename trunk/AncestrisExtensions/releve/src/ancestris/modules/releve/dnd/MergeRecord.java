@@ -175,7 +175,7 @@ public class MergeRecord {
             if (!eventTypeWithDate.isEmpty()) {
                 eventTypeWithDate += ", ";
             }
-            eventTypeWithDate += recordInfoPlace.getValue().toString();
+            eventTypeWithDate += recordInfoPlace.getValue();
         }
         if (!eventTypeWithDate.isEmpty()) {
             eventTypeWithDate += " (" + getEventDate().getDisplayValue() + ")";
@@ -441,7 +441,7 @@ public class MergeRecord {
         // commentaire de l'insinuation
         if( isInsinuation()) {
             String insinuationComment = appendValue(
-                    "Insinuation de l'acte ''" + getEventType() + "'' du " + getEventDateDDMMYYYY(showFrenchCalendarDate),
+                    "Insinuation de l'acte ''" + getEventType() + "'' du " + getInsinuationDateDDMMYYYY(showFrenchCalendarDate),
                     record.getNotary().isEmpty() ? "" : "retenu par " + getNotary());
 
             if (!insinuationComment.isEmpty()) {

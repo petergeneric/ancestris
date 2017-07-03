@@ -5,13 +5,17 @@ import ancestris.modules.releve.dnd.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordInfoPlace;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
+import genj.util.ReferenceSet;
 import java.util.List;
+import java.util.Set;
 import junit.framework.TestCase;
 import org.junit.Test;
 
@@ -319,7 +323,7 @@ public class MergeModelBirthTest extends TestCase {
 
 
     /**
-     * testMergeRecordBirth avec nouvelle source
+     * testMergeRecordBirth avec nouvelle source et avec le lieu avec des coordonnées
      */
     @Test
     public void testMergeRecordBirthIndiBirthPlace() {
@@ -327,9 +331,8 @@ public class MergeModelBirthTest extends TestCase {
             RecordBirth record;
             MergeRecord mergeRecord;
             
-            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
-            
-
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
+         
             // cas : indiBirthPlace = ""
             record = new RecordBirth();
             record.setEventDate("01/01/2000");
@@ -365,6 +368,35 @@ public class MergeModelBirthTest extends TestCase {
             mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, record);
             assertEquals("Indi Birth place=eventPlace",getRecordsInfoPlace().toString(), mergeRecord.getIndi().getBirthPlace());
 
+            Gedcom gedcom = TestUtility.createGedcom();
+            List<MergeModel> models;
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
+            assertEquals("Nombre model",4,models.size());
+            models.get(0).copyRecordToEntity();
+            Fam family = (Fam)gedcom.getEntity("F1");
+            Indi[] children = family.getChildren();
+            assertEquals("Nombre d'enfants",4,children.length);
+            Indi indi = children[3];
+            // je verifie que le lieu de naissance a ete renseigne avec le lieu par défaut du releve
+            assertEquals("Lieu de naissance",getRecordsInfoPlace().getValue(), indi.getBirthPlace().getValue());
+            
+            // je verifie les coordonnees 
+            ReferenceSet<String, Property>  gedcomPlaces = gedcom.getReferenceSet("PLAC");
+            Set<Property> parisPlaces = gedcomPlaces.getReferences(getRecordsInfoPlace().toString());
+            PropertyPlace parisPlace = null;
+            for(Property place : parisPlaces  )  {
+                if( ((PropertyPlace)place).getMap() != null) {
+                    parisPlace = (PropertyPlace)place;
+                    break;
+                }
+            }
+            assertNotNull("Lieu de naissance existe deja dans le gedcom",parisPlace);
+            assertNotNull("Coordonnées du lieu de naissance sont présentes",parisPlace.getMap());
+            
+            assertEquals("Lieu de naissance","N48.8534", indi.getBirthPlace().getLatitude(true).getValue());
+            assertEquals("Lieu de naissance","E2.3486", indi.getBirthPlace().getLongitude(true).getValue());            
+            
+            
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
             fail(ex.getMessage());

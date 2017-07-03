@@ -48,9 +48,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
     private Bean currentFocusedBean = null;
     private final ArrayList<KeyStroke> recordKeyStrokeList = new ArrayList<KeyStroke>();
     
-    private int currentRecordIndex = -1;
-    private int previousRecordIndex = -1;
-            
     public ReleveEditor() {
         initComponents();
 
@@ -347,7 +344,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         }
         
         // je recupere le releve créé précédemment
-        Record previousRecord = dataManager.getDataModel().getRecord(previousRecordIndex);
+        Record previousRecord = dataManager.getDataModel().getRecord(dataManager.getPreviousRecordIndex());
         if (previousRecord == null) {
             // j'emets un beep
             Toolkit.getDefaultToolkit().beep();
@@ -365,24 +362,11 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
     }
     
     /**
-     * retourne l'index du releve courant affiché
-     * @return 
-     */
-    public int getCurrentRecordIndex() {
-        return currentRecordIndex;
-    }
-
-    /**
      * affiche un relevé
      * si le relevé est nul, nettoie l'affichage
      * @param record
      */
     public void selectRecord(int recordIndex) {
-        
-        if( recordIndex != currentRecordIndex) {
-            previousRecordIndex = currentRecordIndex;
-            currentRecordIndex = recordIndex;
-        }
         
         currentFocusedBean = null;
         fieldsPanel.setVisible(false);
@@ -599,7 +583,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         gridBagConstraints.weightx = 1.0;
-        bean.setMinimumSize(new Dimension(30, 20));
+        //bean.setMinimumSize(new Dimension(30, 20));
         fieldsPanel.add(bean, gridBagConstraints);
         this.addLastFocusListeners(bean);
 

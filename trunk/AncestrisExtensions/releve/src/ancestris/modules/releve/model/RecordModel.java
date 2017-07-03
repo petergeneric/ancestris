@@ -119,12 +119,19 @@ public class RecordModel {
 
             @Override
             Record undo() {
-                Collections.sort(releveList, new OrderArrayList(revertTableIndexList));
+                Record [] records = releveList.toArray(new Record[releveList.size()]);
+                for (int index : revertTableIndexList) {
+                    releveList.set(revertTableIndexList[index], records[index]);
+                }
                 fireAllChanged();
                 return record;
             }
         });
-        Collections.sort(releveList, new OrderArrayList(tableIndexList));
+        
+        Record [] records = releveList.toArray(new Record[releveList.size()]);
+        for(int index :  tableIndexList) {
+            releveList.set(tableIndexList[index], records[index]);
+        }
         fireAllChanged();
     }
     
@@ -138,10 +145,12 @@ public class RecordModel {
 
         @Override
         public int compare(Record itemO, Record itemT) {
-            if (tableIndexList[releveList.indexOf(itemO)] >= tableIndexList[releveList.indexOf(itemT)]) {
+            if (tableIndexList[releveList.indexOf(itemO)] > tableIndexList[releveList.indexOf(itemT)]) {
                 return 1;
-            } else {
+            } if (tableIndexList[releveList.indexOf(itemO)] < tableIndexList[releveList.indexOf(itemT)]) {
                 return -1;
+            } else {
+                return 0;
             }
         }
 
