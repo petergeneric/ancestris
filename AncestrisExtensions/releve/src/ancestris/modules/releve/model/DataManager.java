@@ -22,6 +22,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     private final GedcomLinkProvider gedcomLinkProvider = new GedcomLinkProvider();    
     Gedcom completionGedcom = null;
     File currentFile;
+    private int[] previousRecordIndex = new int[2];
     
     // options de controle
     static boolean duplicateControlEnabled = true;
@@ -98,6 +99,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         int recordIndex = dataModel.addRecord(newRecord);
         completionProvider.addRecord(newRecord);
         gedcomLinkProvider.addRecord(newRecord);
+        previousRecordIndex[1] = previousRecordIndex[0];
+        previousRecordIndex[0] = recordIndex;
         return recordIndex;
     }
    
@@ -126,6 +129,9 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         if (!append) {
             resetDirty();
         }
+        
+        previousRecordIndex[1] = dataModel.getRowCount() -1;
+        previousRecordIndex[0] = dataModel.getRowCount() -1;
     }
 
     /**
@@ -138,12 +144,25 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         dataModel.insertRecord(newRecord,index);
         completionProvider.addRecord(newRecord);
         gedcomLinkProvider.addRecord(newRecord);
+        
+        previousRecordIndex[1] = previousRecordIndex[0];
+        previousRecordIndex[0] = index;
     }
 
     public void removeRecord(Record record) {
-        gedcomLinkProvider.addRecord(record);
+        int recordIndex = dataModel.getIndex(record);
+
+        gedcomLinkProvider.removeRecord(record);
         completionProvider.removeRecord(record);
         dataModel.removeRecord(record);
+
+        if( recordIndex == previousRecordIndex[1]) {
+            previousRecordIndex[1] = dataModel.getRowCount() -1;
+        }
+        if( recordIndex == previousRecordIndex[0]) {
+            previousRecordIndex[0] = dataModel.getRowCount() -1;
+        }
+        
     }
 
      public void swapRecordNext(Record record) {
@@ -176,6 +195,15 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     public Record getRecord( int recordIndex ) {
         return dataModel.getRecord(recordIndex);
     }
+    
+    
+    public int  getPreviousRecordIndex () {
+        return previousRecordIndex[1];
+    }
+
+//    public void setPreviousRecordIndex (int index) {
+//        previousRecordIndex[1] =  index;
+//    }
 
     /*
      * verifie que les champs obligatoires sont renseignés

@@ -7,6 +7,7 @@ import genj.gedcom.GedcomOptions;
 import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
@@ -67,10 +68,12 @@ public class TestUtility extends TestCase {
         husband.setSex(PropertySex.MALE);
         birth = husband.addProperty("BIRT","" );
         birth.addProperty("DATE","01 JAN 1970", 1);
-        birth.addProperty("PLAC","Paris", 2);
+        birth.addProperty("PLAC","Paris,75000,,state,country,", 2);
         birth.addProperty("SOUR","@S1@",3);
         husband.addProperty("OCCU", "I1occupation");
-        
+        PropertyPlace placeParis = (PropertyPlace) birth.getProperty("PLAC");
+        placeParis.setCoordinates("N48.8534", "E2.3486");
+
         Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "Wife2");
         wife.setName("Motherfirstname", "MOTHERLASTNAME");
         wife.setSex(PropertySex.FEMALE);
@@ -82,6 +85,9 @@ public class TestUtility extends TestCase {
         birth.addProperty("DATE","01 JAN 2000");
         birth.addProperty("PLAC","Brest");
         birth.addProperty("SOUR","@S2@");
+
+        PropertyPlace placeBrest = (PropertyPlace) birth.getProperty("PLAC");
+        placeBrest.setCoordinates("N52.09755", "E23.68775");
         
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
         child2.setName("TwoFirstName", "FATHERLASTNAME");
@@ -110,7 +116,7 @@ public class TestUtility extends TestCase {
         birth.addProperty("DATE","02 FEB 1972", 1);
         birth.addProperty("PLAC","Paris", 2);
         birth.addProperty("SOUR","@S1@",3);
-
+        
         Indi sansfamille1 = (Indi) gedcom.createEntity(Gedcom.INDI, "sansfamille1");
         sansfamille1.setName("sansfamille1", "FATHERLASTNAME");
         sansfamille1.setSex(PropertySex.MALE);

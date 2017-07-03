@@ -1,5 +1,7 @@
 package ancestris.modules.releve.model;
 
+import genj.gedcom.GedcomOptions;
+
 /**
  *
  * @author Michel
@@ -13,18 +15,25 @@ public class RecordInfoPlace extends Field implements Cloneable {
     private String stateName = "";
     private String countryName = "";
     
-    static private final String juridictionSeparator = ",";
+    private static final String juridictionSeparator;
+    static {
+        if( GedcomOptions.getInstance().isUseSpacedPlaces() == true ) {
+            juridictionSeparator = ", ";
+        } else {
+            juridictionSeparator = ",";
+        }
+    }
     static private final PlaceFormatModel placeFormatModel =  PlaceFormatModel.getModel();
-    
+
     
     @Override
     public RecordInfoPlace clone() {
         return (RecordInfoPlace) super.clone();
     }
 
+    @Override
     public String getValue() {
         String[] juridictions= new String[placeFormatModel.getJuridictionNumber()];
-        //ArrayList<String> juridictions = new ArrayList<String>(7); 
         
         if ( placeFormatModel.getCityNameJuridiction()>=0 &&  placeFormatModel.getCityNameJuridiction() < placeFormatModel.getJuridictionNumber() ) {
             juridictions[placeFormatModel.getCityNameJuridiction()] =  cityName;
@@ -56,6 +65,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
     }
 
     
+    @Override
     public void setValue(Object value) {
         String[] juridictions = value.toString().split(juridictionSeparator);
         
@@ -115,6 +125,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
         return getValue();
     }
    
+    @Override
     public boolean isEmpty() {
         return cityName.isEmpty() && cityCode.isEmpty() && stateName.isEmpty() && countyName.isEmpty() && countryName.isEmpty() && locality.isEmpty();
     }

@@ -12,17 +12,21 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
+import genj.gedcom.PropertyLatitude;
+import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
+import genj.util.ReferenceSet;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Set;
 import javax.swing.table.AbstractTableModel;
 import org.openide.util.NbBundle;
 
@@ -474,7 +478,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param recordValues
      * @param entityValues
      */
-    void addRowSeparator() {
+    final void addRowSeparator() {
         MergeRow mergeRow = new MergeRow(RowType.Separator);
         mergeRowList.put(mergeRow);
         mergeRow.rowType = RowType.Separator;
@@ -1104,16 +1108,35 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     /**
      * ajoute un lieu a une propriete
      *
-     * @param place
-     * @param eventProperty
+     * @param place          juridictions du lieu à ajouter 
+     * @param eventProperty  propriete dans laquelle est ajoutée le lieu
      */
-    static protected void copyPlace(String place, Property eventProperty) {
+    protected void copyPlace(String place, Property eventProperty) {
         PropertyPlace propertyPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
         if (propertyPlace == null) {
             // je cree le lieu .
             propertyPlace = (PropertyPlace) eventProperty.addProperty("PLAC", "");
         }
+        // je copie les juridictions
         propertyPlace.setValue(place);
+        
+        //je copie les coordonnées s'il existe un lieu avec les mêmes juridicitions dans le gedcom 
+        ReferenceSet<String, Property>  gedcomPlaces = gedcom.getReferenceSet("PLAC");
+        // je recherche les lieux avec la même juridiction
+        Set<Property> similarPlaces = gedcomPlaces.getReferences(place);
+        for(Property similarPlace : similarPlaces  )  {
+            // je vérifie si les coordonnées sont renseignées
+            if( ((PropertyPlace)similarPlace).getMap() != null) {
+                PropertyPlace similarPropertyPlace = (PropertyPlace)similarPlace;
+                PropertyLatitude latitude = similarPropertyPlace.getLatitude(true);
+                PropertyLongitude longitude = similarPropertyPlace.getLongitude(true);
+                if( latitude != null && longitude != null) {
+                    // je copie les coordonnées
+                    propertyPlace.setCoordinates(latitude.getValue(), longitude.getValue());
+                    break;
+                }                    
+            }
+        }
     }
 
     /**
@@ -1163,12 +1186,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie le lieu de l'évènement
             if (isChecked(RowType.EventPlace)) {
-                Property propertyPlace = (Property) getRow(RowType.EventPlace).entityValue;
-                if (propertyPlace == null || !propertyPlace.isContained(eventProperty)) {
-                    // je cree le lieu.
-                    propertyPlace = eventProperty.addProperty("PLAC", "");
-                }
-                propertyPlace.setValue(record.getEventPlace());
+                copyPlace(record.getEventPlace(), eventProperty);
             }
 
             // je copie le commentaire de l'évènement
@@ -1227,12 +1245,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie le lieu de l'insinuation
             if (isChecked(RowType.EventInsinuationPlace)) {
-                Property propertyPlace = (Property) getRow(RowType.EventInsinuationPlace).entityValue;
-                if (propertyPlace == null) {
-                    // je cree le lieu .
-                    propertyPlace = insinuationProperty.addProperty("PLAC", "");
-                }
-                propertyPlace.setValue(record.getEventPlace());
+                copyPlace(record.getEventPlace(), insinuationProperty);                  
             }
 
             // je copie le commentaire de l'insinuation
@@ -1262,16 +1275,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 PropertyDate propertyDate = (PropertyDate) getRow(RowType.EventDate).recordValue;
                 eventProperty = currentEntity.addProperty(record.getEventTag(), "", getPropertyBestPosition(currentEntity, propertyDate));
             }
-            
-            // je copie le type d'évènement
-            if (isChecked(RowType.EventType)) {
-                Property propertyType = eventProperty.getProperty("TYPE");
-                if (propertyType == null) {
-                    propertyType = eventProperty.addProperty("TYPE", "");
-                }
-                propertyType.setValue(record.getEventType());
-            }
-            
+                        
             // je copie la date de de l'évènement insinué
             if (isChecked(RowType.EventDate)) {
                 PropertyDate propertyDate = (PropertyDate) getRow(RowType.EventDate).entityValue;
@@ -1336,7 +1340,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     sourcexref = (PropertyXRef) eventProperty.addProperty("SOUR", "@" + source.getId() + "@");
                     sourcexref.link();
                 } catch (GedcomException ex) {
-                    throw new Exception(String.format("Link source=%s error=% ", source.getTitle(), ex.getMessage()));
+                    throw new Exception(String.format("Link source=%s error=%s ", source.getTitle(), ex.getMessage()));
                 }
             }
         } else {
@@ -1348,7 +1352,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 sourcexref = (PropertyXRef) eventProperty.addProperty("SOUR", "@" + newSource.getId() + "@");
                 sourcexref.link();
             } catch (GedcomException ex) {
-                throw new Exception(String.format("Link source=%s error=% ", source == null ? source : source.getTitle(), ex.getMessage()));
+                throw new Exception(String.format("Link source=%s error=%s ", source == null ? source : source.getTitle(), ex.getMessage()));
             }
         }
 
@@ -1397,11 +1401,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
         // j'ajoute le lieu
         if (!place.isEmpty()) {
-            PropertyPlace propertyPlace = (PropertyPlace) birthProperty.getProperty("PLAC");
-            if (propertyPlace == null) {
-                propertyPlace = (PropertyPlace) birthProperty.addProperty("PLAC", "");
-            }
-            propertyPlace.setValue(place);
+            copyPlace(place, birthProperty);
         }
 
         // j'ajoute une note indiquant l'origine de la date de naissance
@@ -1486,8 +1486,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             date.setValue(occupationDate.getValue());
             // j'ajoute le lieu
             if (!residence.isEmpty()) {
-                PropertyPlace place = (PropertyPlace) occupationProperty.addProperty("PLAC", "");
-                place.setValue(residence);
+                copyPlace(residence, occupationProperty);
             }
 
             // j'ajoute une note indiquant la source

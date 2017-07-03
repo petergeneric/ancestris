@@ -272,7 +272,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Nombre de propositions",2,models.size());
             // je verifie la premiere proposition
             String summary = models.get(0).getSummary(family);
-            assertEquals("Porposition", "Modifier le mariage PERENOM_AA, PerePrenomAA x ---", summary);
+            assertEquals("Proposition", "Modifier le mariage PERENOM_AA, PerePrenomAA x ---", summary);
 
             // j'applique la premiere proposition
             models.get(0).copyRecordToEntity();

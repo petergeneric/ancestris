@@ -24,6 +24,7 @@ import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.releve.dnd.ViewWrapperManager;
+import ancestris.modules.releve.imageAligner.AlignerFrame;
 import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -78,6 +79,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
     private final JMenuItem menuItemStatistics= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.statistics"));
     private final JMenuItem menuItemCheck     = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.check"));    
     private final JMenuItem menuItemDemoFile  = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.demo"));
+    private final JMenuItem menuItemAlignImage= new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.alignImage"));
     private final JMenuItem menuItemHelp      = new JMenuItem(NbBundle.getMessage(ReleveTopComponent.class, "ReleveTopComponent.menu.help"));
     
     private StandaloneEditor standaloneEditor;
@@ -126,6 +128,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         menuItemDemoFile.addActionListener(popupMouseHandler);
         menuItemDemoFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/OpenFile.png")));
         popup.add(menuItemDemoFile);
+        menuItemAlignImage.addActionListener(popupMouseHandler);
+        menuItemAlignImage.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Camera.png")));
+        popup.add(menuItemAlignImage);
         menuItemHelp.addActionListener(popupMouseHandler);
         menuItemHelp.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
         popup.add(menuItemHelp);
@@ -279,6 +284,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             if ( standaloneEditor != null) {
                 standaloneEditor.closeComponent();
             }
+            
+            // je ferme la fenetre pour aligner les images
+            AlignerFrame.closeAlignImage();
         }
         return result;
     }
@@ -296,6 +304,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             standaloneEditor.closeComponent();
         }
         
+        // je ferme la fenetre pour aligner les images
+        AlignerFrame.closeAlignImage();
+                
         // j'arrete le listener des vues
         ViewWrapperManager.removeTreeViewListener();
         
@@ -408,7 +419,10 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             } else if (menuItemCheck.equals(e.getSource())) {
                 showCheck();
             } else if (menuItemDemoFile.equals(e.getSource())) {
-                loadFileDemo();
+                loadFileDemo(); 
+            } else if (menuItemAlignImage.equals(e.getSource())) {
+                // j'affiche la fenetre pour aligner les images
+                AlignerFrame.showAlignImage();
             } else if (menuItemHelp.equals(e.getSource())) {
                 showHelp();
             }
@@ -1236,6 +1250,8 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
 
     }
 
+    
+    
     /**
      * Memorise le nom du fichier courant
      * et affiche le nom dans le titre du TopCompenent

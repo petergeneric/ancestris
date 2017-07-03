@@ -671,12 +671,7 @@ public class MergeModelMarriage extends MergeModel {
 
         // je copie le lieu du mariage
         if (isChecked(RowType.EventPlace)) {
-            Property propertyPlace = marriageProperty.getProperty("PLAC");
-            if (propertyPlace == null) {
-                // je cree le lieu .
-                propertyPlace = marriageProperty.addProperty("PLAC", "");
-            }
-            propertyPlace.setValue(record.getEventPlace());
+            copyPlace(record.getEventPlace(), marriageProperty);
         }
 
         // je copie le commentaire du mariage.
@@ -830,13 +825,13 @@ public class MergeModelMarriage extends MergeModel {
         } else {
             summary =  "Modifier le mariage" + " ";
             if (currentFamily.getHusband() != null) {
-                summary += currentFamily.getHusband().toString(false);
+                summary += currentFamily.getHusband().getName();
             } else {
                 summary += "---";
             }
             summary += " x ";
             if (currentFamily.getWife() != null) {
-                summary += currentFamily.getWife().toString(false);
+                summary += currentFamily.getWife().getName();
             } else {
                 summary += "---";
             }
