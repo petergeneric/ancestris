@@ -314,21 +314,21 @@ public class ReportView extends View {
         // none?
         if (object == null) {
             if (output.isEmpty()) {
-                output.add("*** No Result");
+                output.add(NbBundle.getMessage(getClass(), "msg.noresult"));
             }
             return;
         }
 
         // Exception?
         if (object instanceof InterruptedException) {
-            output.add("*** cancelled");
+            output.add(NbBundle.getMessage(getClass(), "msg.cancelled"));
             return;
         }
 
         if (object instanceof Throwable) {
             CharArrayWriter buf = new CharArrayWriter(256);
             ((Throwable) object).printStackTrace(new PrintWriter(buf));
-            output.add("*** exception caught" + '\n' + buf);
+            output.add(NbBundle.getMessage(getClass(), "msg.exception", buf));
 
             LOG.log(Level.WARNING, "Exception caught ", (Throwable) object);
             return;
@@ -355,8 +355,8 @@ public class ReportView extends View {
                     try {
                         Desktop.getDesktop().open(file);
                     } catch (Throwable t) {
-                        Logger.getLogger("ancestris.report").log(Level.INFO, "can't open " + file, t);
-                        output.add("*** can't open file " + file);
+                        Logger.getLogger("ancestris.report").log(Level.INFO, "cannot open " + file, t);
+                        output.add(NbBundle.getMessage(getClass(), "msg.cannotopenfile", file));
                     }
                     return;
                 }
@@ -367,7 +367,7 @@ public class ReportView extends View {
                 try {
                     output.setPage((URL) object);
                 } catch (IOException e) {
-                    output.add("*** can't open URL " + object + ": " + e.getMessage());
+                    output.add(NbBundle.getMessage(getClass(), "msg.cannotopenurl", object, e.getMessage()));
                 }
                 //XXX:      output.show();
                 return;
@@ -384,7 +384,7 @@ public class ReportView extends View {
             // component?
             if (object instanceof JComponent) {
                 new WidgetDocumentView(new Context(getSelectedGedcom()), tabName, tabToolTip, ((JComponent) object));
-
+                
                 return;
             }
 
@@ -445,7 +445,7 @@ public class ReportView extends View {
                     formatter.format(doc, file);
                 } catch (Throwable t) {
                     LOG.log(Level.WARNING, "formatting " + doc + " failed", t);
-                    output.add("*** formatting " + doc + " failed");
+                    output.add(NbBundle.getMessage(getClass(), "msg.formatting", doc));
                     //XXX: show a dialog to user if file creation failed
                     return;
                 }
@@ -462,7 +462,7 @@ public class ReportView extends View {
         }
 
         // unknown
-        output.add("*** report returned unknown result " + object);
+        output.add(NbBundle.getMessage(getClass(), "msg.unknownresult", object));
     }
 
     /**
