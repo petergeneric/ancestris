@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 /**
  * Panel for showing a document. This class must be extended to
@@ -86,6 +87,20 @@ public class AbstractDocumentView extends JPanel {
             component = new JLabel(nocontent());
         }
         scrollPane.setViewportView(component);
+        
+        // scroll up if text document
+        if (component instanceof HyperLinkTextPane) {
+            final HyperLinkTextPane hltp = (HyperLinkTextPane) component;
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    hltp.setCaretPosition(0);
+                    validate();
+                    repaint();
+                }
+            });
+        }
+        
         validate();
     }
 
