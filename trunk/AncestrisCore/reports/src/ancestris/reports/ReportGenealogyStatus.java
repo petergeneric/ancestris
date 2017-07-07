@@ -391,7 +391,7 @@ public class ReportGenealogyStatus extends Report {
         line += isValidAndComplete(ent.getPropertyByPath(tag + ":PLAC"));
 
         // source and text
-        line += getSource(sosa, ent, tag + ":SOUR", mandatory);
+        line += getSource(sosa, ent, tag + ":SOUR", mandatory || line.contains("1"));
 
         return line;
     }
