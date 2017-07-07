@@ -795,26 +795,32 @@ public class TableView extends View {
             invalidate(gedcom, property.getEntity(), new TagPath(property.getPath(), deleted.getTag()));
         }
 
-        private void invalidate(Gedcom gedcom, Entity entity, TagPath path) {
-            // an entity we're not looking at?
-            if (!mode.getTag().equals(entity.getTag())) {
-                return;
-            }
-            synchronized (rows) {
-                // a path we're interested in?
-                TagPath[] paths = mode.getPaths();
-                for (int i = 0; i < paths.length; i++) {
-                    if (paths[i].equals(path)) {
-                        for (int j = 0; j < rows.size(); j++) {
-                            if (rows.get(j) == entity) {
-                                fireRowsChanged(j, j, i);
-                                return;
+        private void invalidate(Gedcom gedcom, final Entity entity, final TagPath path) {
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    // an entity we're not looking at?
+                    if (!mode.getTag().equals(entity.getTag())) {
+                        return;
+                    }
+                    synchronized (rows) {
+                        // a path we're interested in?
+                        TagPath[] paths = mode.getPaths();
+                        for (int i = 0; i < paths.length; i++) {
+                            if (paths[i].equals(path)) {
+                                for (int j = 0; j < rows.size(); j++) {
+                                    if (rows.get(j) == entity) {
+                                        fireRowsChanged(j, j, i);
+                                        return;
+                                    }
+                                }
                             }
                         }
+                        // done
                     }
                 }
-                // done
-            }
+            });
+            
+            
         }
 
         private void eraseAll() {
