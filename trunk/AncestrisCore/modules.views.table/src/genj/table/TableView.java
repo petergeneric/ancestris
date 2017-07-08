@@ -22,6 +22,8 @@ package genj.table;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.swing.ToolBar;
+import ancestris.swing.atable.ATable;
+import ancestris.swing.atable.ATable.ShortCut;
 import ancestris.swing.atable.ATableFilterWidget;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
@@ -60,6 +62,7 @@ import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
 import java.awt.Component;
 import java.util.Collections;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -220,12 +223,11 @@ public class TableView extends View {
         }
 
         propertyTable.setFilterWidget(filter);
-        propertyTable.setShortcut(panelShortcuts);
-
-        // shortcuts KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK)
-        //XXX: shortcut should be placed in @Action... Annotations (layer)
-//        new NextMode(true).install(this, "ctrl pressed LEFT");
-//        new NextMode(false).install(this, "ctrl pressed RIGHT");
+        
+        List<ATable.ShortCut> shortcutsList = new ArrayList<ATable.ShortCut>();
+        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke('1'), new NextMode(true)));
+        shortcutsList.add(new ShortCut(KeyStroke.getKeyStroke('9'), new NextMode(false)));
+        propertyTable.setShortcut(panelShortcuts, shortcutsList);
         // done
         
         
@@ -416,7 +418,7 @@ public class TableView extends View {
     }
 
     /**
-     * Action - go to next mode
+     * Action - go to previous/next mode
      */
     private class NextMode extends AbstractAncestrisAction {
 
@@ -427,22 +429,23 @@ public class TableView extends View {
                 dir = -1;
             } else {
                 dir = 1;
-            }
         }
+    }
 
         @Override
         public void actionPerformed(ActionEvent event) {
-            int next = -1;
-            for (int i = 0, j = Gedcom.ENTITIES.length; i < j; i++) {
-                next = (i + j + dir) % Gedcom.ENTITIES.length;
-                if (currentMode == getMode(Gedcom.ENTITIES[i])) {
-                    break;
-                }
+        int next = -1;
+        for (int i = 0, j = Gedcom.ENTITIES.length; i < j; i++) {
+            next = (i + j + dir) % Gedcom.ENTITIES.length;
+            if (currentMode == getMode(Gedcom.ENTITIES[i])) {
+                break;
             }
-            getMode(Gedcom.ENTITIES[next]).setSelected(true);
         }
+        getMode(Gedcom.ENTITIES[next]).setSelected(true);
+    }
     } //NextMode
 
+    
     /**
      * Action - toggle sticky mode
      */

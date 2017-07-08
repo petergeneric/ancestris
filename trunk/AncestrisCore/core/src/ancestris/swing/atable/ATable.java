@@ -61,6 +61,7 @@ public class ATable extends JTable {
     private ATableRowSorter<TableModel> currentSorter;
     private ATableFilterWidget filterText;
     private JPanel shortcuts;
+    private List<ShortCut> shortcutsList;
 
     public ATable() {
         getTableHeader().setReorderingAllowed(false);
@@ -124,8 +125,9 @@ public class ATable extends JTable {
         }
     }
 
-    public void setShortCut(JPanel panelShortcuts) {
+    public void setShortCut(JPanel panelShortcuts, List<ShortCut> shortcutsList) {
         this.shortcuts = panelShortcuts;
+        this.shortcutsList = shortcutsList;
         shortcuts.addComponentListener(new ComponentAdapter() {
 
             @Override
@@ -224,6 +226,9 @@ public class ATable extends JTable {
         // loop over rows and create actions
         List<AbstractAncestrisAction> actions = new ArrayList<AbstractAncestrisAction>(3);
 
+        InputMap imap = container.getInputMap(WHEN_IN_FOCUSED_WINDOW);
+        ActionMap amap = container.getActionMap();
+        
         String cursor = "";
         for (int r = 0; r < currentSorter.getViewRowCount(); r++) {
             int vr = (dir == SortOrder.ASCENDING ? r : currentSorter.getViewRowCount() - r - 1);
@@ -247,10 +252,14 @@ public class ATable extends JTable {
             actions.add(action);
 
             // key binding
-            InputMap imap = container.getInputMap(WHEN_IN_FOCUSED_WINDOW);
-            ActionMap amap = container.getActionMap();
             imap.put(KeyStroke.getKeyStroke(value.charAt(0)), action);
+            imap.put(KeyStroke.getKeyStroke(value.toLowerCase().charAt(0)), action);
             amap.put(action, action);
+        }
+        
+        for (ShortCut sc : shortcutsList) {
+            imap.put(sc.key, sc.action);
+            amap.put(sc.action, sc.action);
         }
 
         // generate buttons
@@ -303,6 +312,17 @@ public class ATable extends JTable {
         return currentSorter;
     }
 
+    public static class ShortCut {
+        private KeyStroke key;
+        private AbstractAncestrisAction action;
+        
+        public ShortCut(KeyStroke key, AbstractAncestrisAction action) {
+            this.key = key;
+            this.action = action;
+        }
+    }
+
+    
     private static class LinkWidget extends JButton {
 
         private static Map<String, Dimension> sd = new HashMap<String, Dimension>(3);
