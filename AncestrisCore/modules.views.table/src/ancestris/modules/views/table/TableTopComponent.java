@@ -78,7 +78,6 @@ public final class TableTopComponent extends GenjViewTopComponent {
     @Override
     public void componentClosed() {
         super.componentClosed();
-//        ((TableView) getView()).eraseAll();
     }
 
     
