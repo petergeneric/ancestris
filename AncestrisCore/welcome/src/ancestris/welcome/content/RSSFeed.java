@@ -44,6 +44,7 @@
 
 package ancestris.welcome.content;
 
+import static ancestris.welcome.content.Constants.RSS_FEED_TIMER_RELOAD_MILLIS;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.FontMetrics;
@@ -127,7 +128,7 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     
     private int maxDescriptionChars = -1;
 
-    private static final RequestProcessor RP = new RequestProcessor("StartPage"); //NOI18N
+    private static RequestProcessor RP = null;
 
 
     /** Returns file for caching of content. 
@@ -330,6 +331,9 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
                 });
 
                 //schedule feed reload
+                if (RP == null) {
+                    RP = new RequestProcessor("StartPage"); //NOI18N
+                }
                 reloadTimer = RP.post( this, RSS_FEED_TIMER_RELOAD_MILLIS );
 
             } catch( UnknownHostException uhE ) {
@@ -476,6 +480,9 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
             if( System.currentTimeMillis() - lastReload >= RSS_FEED_TIMER_RELOAD_MILLIS ) {
                 reload();
             } else {
+                if (RP == null) {
+                    RP = new RequestProcessor("StartPage"); //NOI18N
+                }
                 reloadTimer = RP.post( new Reload(),
                         Math.max(1, (int)(RSS_FEED_TIMER_RELOAD_MILLIS - (System.currentTimeMillis() - lastReload))) );
             }
