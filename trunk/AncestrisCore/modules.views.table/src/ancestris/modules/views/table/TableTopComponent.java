@@ -7,7 +7,6 @@ package ancestris.modules.views.table;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
 import ancestris.view.GenjViewTopComponent;
-import genj.table.TableView;
 import genj.table.TableViewFactory;
 import genj.view.ViewFactory;
 import java.awt.BorderLayout;
@@ -79,7 +78,7 @@ public final class TableTopComponent extends GenjViewTopComponent {
     @Override
     public void componentClosed() {
         super.componentClosed();
-        ((TableView) getView()).eraseAll();
+//        ((TableView) getView()).eraseAll();
     }
 
     

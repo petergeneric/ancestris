@@ -60,7 +60,6 @@ import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
 import java.awt.Component;
 import java.util.Collections;
-import java.util.Iterator;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.util.RequestProcessor;
@@ -313,9 +312,9 @@ public class TableView extends View {
         // clear?
         PropertyTableModel old = propertyTable.getModel();
         if (context.getGedcom() == null) {
-            if (old != null) {
-                eraseAll();
-            }
+//            if (old != null) {
+//                eraseAll();
+//            }
             return;
         }
 
@@ -408,11 +407,11 @@ public class TableView extends View {
 
     
     
-    public void eraseAll() {
-        for (Mode mode : modes.values()) {
-            mode.eraseAll();
-        }
-    }
+//    public void eraseAll() {
+//        for (Mode mode : modes.values()) {
+//            mode.eraseAll();
+//        }
+//    }
     
     
     
@@ -666,11 +665,11 @@ public class TableView extends View {
             return tag;
         }
 
-        private void eraseAll() {
-            if (model != null) {
-                model.eraseAll();
-            }
-        }
+//        private void eraseAll() {
+//            if (model != null) {
+//                model.eraseAll();
+//            }
+//        }
 
     } //Mode
     
@@ -823,33 +822,33 @@ public class TableView extends View {
             
         }
 
-        private void eraseAll() {
-            if (eraseRunnable == null) {
-                eraseRunnable = new Runnable() {
-                    @Override
-                    public void run() {
-                        synchronized (rows) {
-                            int s = rows.size() - 1;
-                            for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
-                                it.next();
-                                it.remove();
-                            }
-                            fireRowsDeleted(0, s);
-                            SwingUtilities.invokeLater(new Runnable(){
-                                public void run() {
-                                    propertyTable.eraseAll();
-                                }
-                            });
-                        }
-                    }
-                };
-            }
-
-            if (RP == null) {
-                RP = new RequestProcessor("TableView", 1, true);
-            }
-            RP.execute(eraseRunnable);
-        }
+//        private void eraseAll() {
+//            if (eraseRunnable == null) {
+//                eraseRunnable = new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        synchronized (rows) {
+//                            int s = rows.size() - 1;
+//                            for (Iterator<Entity> it = rows.iterator(); it.hasNext();) {
+//                                it.next();
+//                                it.remove();
+//                            }
+//                            fireRowsDeleted(0, s);
+//                            SwingUtilities.invokeLater(new Runnable(){
+//                                public void run() {
+//                                    propertyTable.eraseAll();
+//                                }
+//                            });
+//                        }
+//                    }
+//                };
+//            }
+//
+//            if (RP == null) {
+//                RP = new RequestProcessor("TableView", 1, true);
+//            }
+//            RP.execute(eraseRunnable);
+//        }
         
         
         
