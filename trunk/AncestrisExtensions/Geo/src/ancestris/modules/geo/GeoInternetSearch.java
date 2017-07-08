@@ -35,7 +35,7 @@ class GeoInternetSearch {
 
     private static boolean isBusy = false;
     private static Set<Gedcom> gedcomSearchingList = new HashSet<Gedcom>();
-    private final static RequestProcessor RP = new RequestProcessor("GeoInternetSearch", 1, true);
+    private static RequestProcessor RP = null;
 
     private GeoPlacesList gplOwner;
     private List<PropertyPlace> placesProps;
@@ -124,6 +124,9 @@ class GeoInternetSearch {
             }
         };
 
+        if (RP == null) {
+            RP = new RequestProcessor("GeoInternetSearch", 1, true);
+        }
         theTask = RP.create(runnable); //the task is not started yet
 
         theTask.addTaskListener(new TaskListener() {

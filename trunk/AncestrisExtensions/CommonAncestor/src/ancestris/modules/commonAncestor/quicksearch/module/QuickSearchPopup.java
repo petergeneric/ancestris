@@ -60,7 +60,6 @@ import javax.swing.event.ListDataEvent;
 import javax.swing.event.ListDataListener;
 import ancestris.modules.commonAncestor.quicksearch.module.recent.RecentSearches;
 import ancestris.modules.commonAncestor.quicksearch.module.ResultsModel.ItemResult;
-import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.Task;
@@ -102,7 +101,7 @@ public class QuickSearchPopup extends javax.swing.JPanel
     private WidthMode widthMode = WidthMode.FIXED;
     
     private Task evalTask;
-    private static final RequestProcessor RP = new RequestProcessor(QuickSearchPopup.class);
+    private static RequestProcessor RP = null;
 
     public QuickSearchPopup (AbstractQuickSearchComboBar comboBar) {
         this.comboBar = comboBar;
@@ -197,6 +196,9 @@ public class QuickSearchPopup extends javax.swing.JPanel
             evalTask = CommandEvaluator.evaluate(comboBar.getProviderModel(), searchedText, rModel);
             evalTask.addTaskListener(this);
             // start waiting on all providers execution
+            if (RP == null) {
+                RP = new RequestProcessor(QuickSearchPopup.class);
+            }
             RP.post(evalTask);
         }
     }

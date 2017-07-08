@@ -31,6 +31,7 @@ public class GeonamesPlacesList implements SearchPlace {
     private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
     private List<Place> mPlacesList = new ArrayList<Place>();
     private RequestProcessor.Task theTask;
+    private RequestProcessor RP = null;
     
     private static String KEYMAP = "geonamesPlaceConversionMap";
 
@@ -41,7 +42,6 @@ public class GeonamesPlacesList implements SearchPlace {
     @Override
     public void searchPlace(final String searchedPlace, final List<Place> placesList) {
         mPlacesList.clear();
-        RequestProcessor RP = new RequestProcessor("GeonamesPlacesList", 1, true);
         Runnable runnable = new Runnable() {
 
             @Override
@@ -118,6 +118,9 @@ public class GeonamesPlacesList implements SearchPlace {
             }
         };
 
+        if (RP == null) {
+            RP = new RequestProcessor("GeonamesPlacesList", 1, true);
+        }
         theTask = RP.create(runnable); //the task is not started yet
 
         theTask.addTaskListener(new TaskListener() {

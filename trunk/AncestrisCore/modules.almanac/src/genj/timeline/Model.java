@@ -138,7 +138,7 @@ import org.openide.windows.WindowManager;
     private final Object lock = new Object();
     private boolean isRebuilding = false;
     private boolean isRedrawing = false;
-    private final static RequestProcessor RP = new RequestProcessor("Chrono Model View", 1, true);
+    private static RequestProcessor RP = null;
     private int progressCounter = 0;
     private boolean isGedcomChanging = false;
 
@@ -705,6 +705,9 @@ import org.openide.windows.WindowManager;
             }
         };
         
+        if (RP == null) {
+            RP = new RequestProcessor("Chrono Model View", 1, true);
+        }
         layoutAllLayersThread = RP.create(runnable); //the task is not started yet
 
         layoutAllLayersThread.addTaskListener(new TaskListener() {
@@ -774,6 +777,9 @@ import org.openide.windows.WindowManager;
             }
         };
         
+        if (RP == null) {
+            RP = new RequestProcessor("Chrono Model View", 1, true);
+        }
         layoutEventLayersThread = RP.create(runnable); //the task is not started yet
 
         layoutEventLayersThread.addTaskListener(new TaskListener() {
@@ -845,6 +851,9 @@ import org.openide.windows.WindowManager;
             }
         };
         
+        if (RP == null) {
+            RP = new RequestProcessor("Chrono Model View", 1, true);
+        }
         layoutIndiLayersThread = RP.create(runnable); //the task is not started yet
 
         layoutIndiLayersThread.addTaskListener(new TaskListener() {

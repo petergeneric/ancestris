@@ -50,6 +50,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
     private Context leftGedcomContext;
     private Context rightGedcomContext;
     private Context mergedGedcomContext;
+    private static RequestProcessor  RP = null;
 
     public GedcomMerge() {
         this.leftGedcomFile = null;
@@ -94,7 +95,9 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
                 return false;
             }
         });
-        RequestProcessor RP = new RequestProcessor("GedcomMerge"); 
+        if (RP == null) {
+            RP = new RequestProcessor("GedcomMerge"); 
+        }
         Runnable runnable = new Runnable() {
             @Override
             public void run() {

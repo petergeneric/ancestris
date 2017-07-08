@@ -25,7 +25,7 @@ import org.openide.util.TaskListener;
 public class FTPLoader {
 
     private Log log = null;
-    private final static RequestProcessor RP = new RequestProcessor("FTPLoader", 1, true);
+    private static RequestProcessor RP = null;
     private RequestProcessor.Task theTask = null;
     private FTPUpload ftpu = null;
     //
@@ -88,7 +88,9 @@ public class FTPLoader {
             }
         };
 
-
+        if (RP == null) {
+            RP = new RequestProcessor("FTPLoader", 1, true);
+        }
         theTask = RP.create(runnable); //the task is not started yet
         theTask.addTaskListener(new TaskListener() {
 

@@ -76,7 +76,7 @@ public class CommandEvaluator {
     /** Temporary narrow evaluation to only specified category **/
     private static boolean isCatTemporary;
 
-    private static final RequestProcessor RP = new RequestProcessor("QuickSearch Command Evaluator", 10); // NOI18N
+    private static RequestProcessor RP = null;
     
     /**
      * Runs evaluation.
@@ -196,6 +196,9 @@ public class CommandEvaluator {
 
     private static Task runEvaluation(final SearchProvider provider, final SearchRequest request,
                                 final SearchResponse response, final ProviderModel.Category cat) {
+        if (RP == null) {
+            RP = new RequestProcessor("QuickSearch Command Evaluator", 10); // NOI18N
+        }
         return RP.post(new Runnable() {
             @Override
             public void run() {

@@ -21,7 +21,7 @@ public class WebBookStarter {
 
     private Gedcom gedcom;
     private Log log;
-    private final static RequestProcessor RP = new RequestProcessor("WebBookStarter", 1, true);
+    private static RequestProcessor RP = null;
     private RequestProcessor.Task theTask = null;
 
     // Constructor
@@ -66,7 +66,9 @@ public class WebBookStarter {
             }
         };
 
-
+        if (RP == null) {
+            RP = new RequestProcessor("WebBookStarter", 1, true);
+        }
         theTask = RP.create(runnable); //the task is not started yet
         theTask.addTaskListener(new TaskListener() {
 

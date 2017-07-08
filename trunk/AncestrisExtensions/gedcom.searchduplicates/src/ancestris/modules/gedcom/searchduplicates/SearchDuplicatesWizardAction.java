@@ -30,7 +30,7 @@ import org.openide.util.*;
 public final class SearchDuplicatesWizardAction extends AbstractAncestrisContextAction {
 
     private static final Logger log = Logger.getLogger(SearchDuplicatesPlugin.class.getName());
-    private final static RequestProcessor RP = new RequestProcessor("SearchDuplicatesWizardAction", 1, true);
+    private static RequestProcessor RP = null;
     private RequestProcessor.Task theTask = null;
 
     public SearchDuplicatesWizardAction() {
@@ -65,6 +65,9 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
             List<String> entities2Ckeck = panel.getEntitiesToCheck();
             TreeMap<String, MatcherOptions> selectedOptions = panel.getSelectedOptions();
 
+            if (RP == null) {
+                RP = new RequestProcessor("SearchDuplicatesWizardAction", 1, true);
+            }
             theTask = RP.create(new SearchDuplicatesPlugin(gedcom, entities2Ckeck, selectedOptions));
             final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(CheckDuplicates_runing(), new Cancellable() {
 
