@@ -269,15 +269,16 @@ public class PointInTime implements Comparable<PointInTime> {
       PointInTime pt;
       if (day == UNKNOWN)
           if (month  == UNKNOWN){
-              //pt = new PointInTime(0,0,year,calendar);
-              pt = new PointInTime(13,6,year,calendar);   // take middle of year by default. In all calendars it is approximately month 7 (6) and day 14 (13)
+              if (cal.months.length > 6 && calendar.months.length > 6) {
+                pt = new PointInTime(0,6,year,calendar);   // take middle of year by default. In all calendars it is approximately month 7 (6) and day 14 (13)
+              } else {
+                pt = new PointInTime(0,0,year,calendar);  
+              }
               // (will not work for calendars with less than 7 months and months with less than 14 days) but this is not likely to happen yet)
               pt.set(cal);
               return new PointInTime(UNKNOWN,UNKNOWN,pt.getYear(),cal);
           } else {
-              //pt = new PointInTime(0,month,year,calendar); // take middle of month by default. In all calendars it is approximately day 14 (13)
-              // (will not work for calendars with months with less than 14 days) but this is not likely to happen yet)
-              pt = new PointInTime(13,month,year,calendar);
+              pt = new PointInTime(0,month,year,calendar);
               pt.set(cal);
               return new PointInTime(UNKNOWN,pt.getMonth(),pt.getYear(),cal);
           }
