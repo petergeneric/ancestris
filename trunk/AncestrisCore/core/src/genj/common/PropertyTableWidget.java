@@ -180,16 +180,6 @@ public class PropertyTableWidget extends JPanel {
         repaint();
     }
 
-//    public void eraseAll() {
-//        if (tableModels == null) {
-//            return;
-//        }
-//        for (PropertyTableModel key : tableModels.keySet()) {
-//            Table.Model model = tableModels.get(key);
-//            //DEBUG model.eraseCells();
-//        }
-//    }
-
     /**
      * Getter for current model
      */
@@ -552,8 +542,6 @@ public class PropertyTableWidget extends JPanel {
             this.propertyModel = propertyModel;
             // pass through 
             if (propertyModel == null) {
-                //DEBUG eraseAll();
-                //DEBUG tableModels = null;
                 return;
             }
 
@@ -566,7 +554,6 @@ public class PropertyTableWidget extends JPanel {
                 tableModels.put(propertyModel, model);
             }
             if (reset) {
-                //DEBUG model.eraseCells();
                 tableChanged(new TableModelEvent(model, TableModelEvent.HEADER_ROW));
             }
             setModel(model);
@@ -714,19 +701,6 @@ public class PropertyTableWidget extends JPanel {
                 model = set;
                 // done
             }
-
-//            public void eraseCells() {
-//                if (cells == null) {
-//                    return;
-//                }
-//                for (int r = 0; r < cells.length; r++) {
-//                    for (int c = 0; c < cells[r].length; c++) {
-//                        cells[r][c] = null;
-//                    }
-//                    cells[r] = null;
-//                }
-//                cells = null;
-//            }
 
             @Override
             public void handleRowsAdded(PropertyTableModel model, int rowStart, int rowEnd) {
