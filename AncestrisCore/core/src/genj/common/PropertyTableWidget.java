@@ -101,8 +101,8 @@ public class PropertyTableWidget extends JPanel {
         // done
     }
 
-    public void setShortcut(JPanel s) {
-        table.setShortCut(s);
+    public void setShortcut(JPanel s, List<ATable.ShortCut> shortcutsList) {
+        table.setShortCut(s, shortcutsList);
     }
 
     /**

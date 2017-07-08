@@ -9,7 +9,7 @@
                 <attr name="displayName" bundlevalue="ancestris.modules.views.table.Bundle#CTL_MENU_TableAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>
-            </folder>
+        </folder>
     </folder>    
     <folder name="Menu">
         <folder name="View">
