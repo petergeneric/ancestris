@@ -790,7 +790,7 @@ public class ReportGenealogyStatus extends Report {
     private boolean isValidFile(Property fp) {
         if (fp != null && fp instanceof PropertyFile) {
             File f = ((PropertyFile) fp).getFile();
-            if (f.exists()) {
+            if (f != null && f.exists()) {
                 return true;
             } else {
                 return false;
