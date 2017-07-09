@@ -124,7 +124,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
+        return TopComponent.PERSISTENCE_NEVER;
     }
 
     @Override
