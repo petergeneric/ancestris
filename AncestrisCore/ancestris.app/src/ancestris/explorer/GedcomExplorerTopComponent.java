@@ -12,12 +12,10 @@ import javax.swing.DefaultComboBoxModel;
 import org.openide.util.NbBundle;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-//import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.explorer.ExplorerManager;
 import org.openide.explorer.ExplorerUtils;
 import org.openide.explorer.view.BeanTreeView;
-//import org.openide.explorer.view.BeanTreeView;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Node;
 import org.openide.util.ImageUtilities;
@@ -48,10 +46,11 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         setName(NbBundle.getMessage(GedcomExplorerTopComponent.class, "CTL_GedcomExplorerTopComponent"));
         setToolTipText(NbBundle.getMessage(GedcomExplorerTopComponent.class, "HINT_GedcomExplorerTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
+
         putClientProperty(TopComponent.PROP_CLOSING_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_MAXIMIZATION_DISABLED, Boolean.TRUE);
         putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);
-        putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
+        putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE); //NOI18N
 
         associateLookup(ExplorerUtils.createLookup(explorerManager, getActionMap()));
         explorerManager.setRootContext(new AbstractNode(new GedcomFileChildren()));
@@ -82,6 +81,8 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     private javax.swing.JComboBox displayType;
     private javax.swing.JScrollPane gedcomsPane;
     // End of variables declaration//GEN-END:variables
+    
+    
     private final DefaultComboBoxModel<String> displayTypeModel = new DefaultComboBoxModel<String>(new String[] {
         org.openide.util.NbBundle.getMessage(GedcomExplorerTopComponent.class, "DisplayType.AllEntities"),
         org.openide.util.NbBundle.getMessage(GedcomExplorerTopComponent.class, "DisplayType.Neighbourhood") });
@@ -120,11 +121,19 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     }
 
     @Override
-    public boolean canClose(){return  forceClose;}
+    public boolean canClose() {
+        return  forceClose;
+    }
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
+        //return TopComponent.PERSISTENCE_ALWAYS;
+        // FL : 2017-07-09 : do not put persistence for 2 reasons : 
+        //      1/ It is not necessary : module is forced open in the installer, in the restored method : GedcomExplorerTopComponent.getDefault().open();
+        //      2/ If persistence is on, netbeans will store settings twice, in two different files. This will tell netbeans to launch it on the next Ancestris launch.
+        //         But because module is launched anyway, it will then be launched twice (once by installer, once by settings), creating 2 settings files the following time, and so on... Multiplicating the number of settings files
+        //      
+        return TopComponent.PERSISTENCE_NEVER;   
     }
 
     @Override
@@ -146,6 +155,8 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
 //        }
 //    }
 //
+    
+    
     @Override
     public void componentClosed() {
         // TODO add custom code on component closing
@@ -154,7 +165,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");  //NOI18N
+        //p.setProperty("version", "1.0");  //NOI18N
         // TODO store your settings
     }
 
@@ -176,6 +187,7 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         return PREFERRED_ID;
     }
 
+    @Override
     public ExplorerManager getExplorerManager() {
          return explorerManager;
     }

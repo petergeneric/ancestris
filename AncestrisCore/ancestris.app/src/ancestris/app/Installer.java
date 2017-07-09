@@ -53,10 +53,11 @@ public class Installer extends ModuleInstall {
                 LOG.fine("open files");
                 List<FileObject> filesToOpen = StartupFiles.getDefault().getCommandLineFiles();
                 LOG.log(Level.FINE, "... tries {0}", filesToOpen);
-                if (filesToOpen.isEmpty())
+                if (filesToOpen.isEmpty()) {
                     filesToOpen = StartupFiles.getDefault().getAll();
+                }
                 App.center.load(filesToOpen);
-//                App.center.load(StartupFiles.getDefault().getAll());
+                // App.center.load(StartupFiles.getDefault().getAll());
                 GedcomExplorerTopComponent.getDefault().open();
             }
         });
@@ -66,7 +67,7 @@ public class Installer extends ModuleInstall {
     //XXX: this doesn't seem to be called before gedcom unregister
     // XXX: unregisters are done in nbDoExit, to be refactored
     public boolean closing() {
-//        StartupFiles.getDefault().addOpenedGedcoms();
+        // StartupFiles.getDefault().addOpenedGedcoms();
         return App.closing();
     }
 
