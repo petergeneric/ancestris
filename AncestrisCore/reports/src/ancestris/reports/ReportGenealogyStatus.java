@@ -35,9 +35,10 @@ public class ReportGenealogyStatus extends Report {
     
     private static String SOSATAG = "_SOSA";  // sosa tag
     private static String SOSADABOVILLETAG = "_SOSADABOVILLE";  // sosadoville tag
-    private static String OUI = "1";          // information found
-    private static String NON = ".";          // information not found or not complete (date is a range for instance)
-    private static String ERR = "#";          // information found but erroneous
+    private static String OUI = "1";          // information found, valid and complete
+    private static String APX = "~";          // tag found, information found, valid, but not complete (date is a range, place is not complete)
+    private static String NON = ".";          // tag found, but information not found or not complete or invalid (date is a range for instance)
+    private static String ERR = "#";          // information found but erroneous or missing and mandatory
     private static String SEQ = "@";          // for family event MARR, indicates that kids appearance is not chronological
     private static String FIL = "§";          // source media found but not transcripted in a text tag
     private static String SPA = " ";          // space
@@ -45,7 +46,7 @@ public class ReportGenealogyStatus extends Report {
     private int maxSosaLength = 5;            // size of max sosa number in characters
     private static String MAXSTR = "                                                                           ";
     private String[] placeFormat = null;
-    private int sizePlaces = (placeFormat != null) ? placeFormat.length : 0;
+    private int sizePlaces = 0;
     private Map<BigInteger, Indi> sosaList = new TreeMap();                      // stores and retrieves individuals by sosa key sorted by sosa nbr
     private Map<String, String> entMap = new TreeMap();                          // stores and retrieves unreferenced sources 
     private int cntAnomaly = 0, // counter of errors
@@ -120,6 +121,7 @@ public class ReportGenealogyStatus extends Report {
 
         // A few initialisations
         placeFormat = validatePlaceFormat(gedcom.getPlaceFormat());
+        sizePlaces = (placeFormat != null) ? placeFormat.length : 0;
         headerLine();
 
         // Display sosa list with the status of the data found for each entity
@@ -206,7 +208,9 @@ public class ReportGenealogyStatus extends Report {
                 }
             }
             for (PropertyFile file : ent.getProperties(PropertyFile.class)) {
-                gedcomFiles.add(file.getFile().getName());
+                if (file != null && file.getFile() != null) {
+                    gedcomFiles.add(file.getFile().getName());
+                }
             }
         }
         
@@ -384,11 +388,15 @@ public class ReportGenealogyStatus extends Report {
             return mandatory ? err() + err() + err() + err() : "    ";
         }
 
+        if (ent.getId().equals("I1216")) {
+            String debug = "DEBUG";
+        }        
+        
         // date
-        line += isValidAndComplete(ent.getPropertyByPath(tag + ":DATE"));
+        line += isValidAndComplete(ent.getPropertyByPath(tag + ":DATE"), mandatory);
 
         // place
-        line += isValidAndComplete(ent.getPropertyByPath(tag + ":PLAC"));
+        line += isValidAndComplete(ent.getPropertyByPath(tag + ":PLAC"), mandatory);
 
         // source and text
         line += getSource(sosa, ent, tag + ":SOUR", mandatory || line.contains("1"));
@@ -652,35 +660,53 @@ public class ReportGenealogyStatus extends Report {
     /**
      * Checks if place is valid and complete.
      */
-    private String isValidAndComplete(Property prop) {
+    private String isValidAndComplete(Property prop, boolean mandatory) {
 
-        if (prop == null || (!(prop instanceof PropertyDate) && !(prop instanceof PropertyPlace))) {
-            return NON;
+        if (prop == null) {
+            return mandatory ? err() : SPA;
+        }
+        
+        if (!(prop instanceof PropertyDate) && !(prop instanceof PropertyPlace)) {
+            return mandatory ? err() : NON;
+        }
+        
+        if (prop.getValue().isEmpty()) {
+            return mandatory ? err() : NON;
         }
 
         if (prop instanceof PropertyDate) {
             PropertyDate pDate = (PropertyDate) prop;
-            if (pDate == null || !pDate.isValid() || pDate.isRange()) {
-                return NON;
+            if (!pDate.isValid()) {
+                return err();
             }
-            PropertyDate.Format pf = pDate.getFormat();
-            if (pf != PropertyDate.DATE) {
-                return NON;
+//            PropertyDate.Format pf = pDate.getFormat();
+//            if (pf != PropertyDate.DATE) {
+//                return err();
+//            }
+            if (pDate.isRange()) {
+                return APX;
             }
             PointInTime pit = pDate.getStart();
-            if (!pit.isValid() || !pit.isComplete()) {
-                return NON;
+            if (!pit.isValid()) {
+                return err();
+            }
+            if (!pit.isComplete()) {
+                return APX;
             }
             return OUI;
         }
 
         if (prop instanceof PropertyPlace) {
-            String[] place = prop.toString().split("\\"+PropertyPlace.JURISDICTION_SEPARATOR, -1);
-            if ((sizePlaces > 0) && (place.length != sizePlaces)) {
-                return NON;
-            }
+            String[] place = prop.getValue().trim().split("\\" + PropertyPlace.JURISDICTION_SEPARATOR, -1);
             if (isEmpty(place)) {
-                return NON;
+                return mandatory ? err() : NON;
+            }
+            if ((sizePlaces > 0) && (place.length != sizePlaces)) {
+                return mandatory ? err() : NON;
+            }
+            PropertyPlace pPlace = (PropertyPlace) prop;
+            if (pPlace.getCity().trim().isEmpty()) {
+                return APX;
             }
             return OUI;
         }
