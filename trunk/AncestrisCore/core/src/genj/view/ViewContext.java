@@ -24,11 +24,8 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
-import ancestris.core.actions.AbstractAncestrisAction;
 import genj.util.swing.ImageIcon;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +36,7 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
   
   private ImageIcon img = null;
   private String txt = null;
+  private String code = null;
   
   /**
    * Constructor
@@ -139,6 +137,21 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
   /**
    * Accessor
    */
+    public String getCode() {
+        return code;
+    }
+  
+  /**
+   * Accessor
+   */
+  public ViewContext setCode(String txt) {
+    code = txt;
+    return this;
+  }
+  
+  /**
+   * Accessor
+   */
   public ImageIcon getImage() {
     // an override?
     if (img!=null)
@@ -168,5 +181,5 @@ public class ViewContext extends Context implements Comparable<ViewContext> {
       return 1;
     return this.txt.compareTo(that.txt);
   }
-  
+
 } //Context

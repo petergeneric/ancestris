@@ -40,7 +40,7 @@ public class TestPlace extends Test {
     // check if different hierarchy
     String hierarchy = place.getFormatAsString(); 
     if (!hierarchy.equals(globalHierarchy)) {
-      issues.add(new ViewContext(place).setText(NbBundle.getMessage(this.getClass(),"warn.plac.format")));
+      issues.add(new ViewContext(place).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(),"warn.plac.format")));
     }
     
     // check if place doesn't match hierarchy 
@@ -48,11 +48,16 @@ public class TestPlace extends Test {
       String[] jurisdictions = place.getJurisdictions();
       String[] format = place.getFormat();
       if (format.length!=jurisdictions.length) {
-        issues.add(new ViewContext(place).setText(NbBundle.getMessage(this.getClass(),"warn.plac.value", String.valueOf(jurisdictions.length), String.valueOf(format.length))));
+        issues.add(new ViewContext(place).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(),"warn.plac.value", String.valueOf(jurisdictions.length), String.valueOf(format.length))));
       }
     }
 
     // done
   }
+
+    @Override
+    String getCode() {
+        return "10";
+    }
 
 }

@@ -66,5 +66,8 @@ abstract class Test {
      * Perform Test on prop&path - fill issues with instances of Issue
      */
     abstract void test(Property prop, TagPath path, List<ViewContext> issues, GedcomValidate report);
+
+    abstract String getCode();
+    
 } //Test
 

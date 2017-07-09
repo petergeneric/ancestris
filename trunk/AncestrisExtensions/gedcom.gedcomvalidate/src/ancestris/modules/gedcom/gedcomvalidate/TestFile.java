@@ -38,8 +38,13 @@ public class TestFile extends Test {
 
         // check it
         if (file.getFile() == null || ! file.getFile().exists()) {
-            issues.add(new ViewContext(prop).setText(NbBundle.getMessage(this.getClass(), "err.nofile")));
+            issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.nofile")));
         }
 
+    }
+
+    @Override
+    String getCode() {
+        return "08";
     }
 } //TestFiles

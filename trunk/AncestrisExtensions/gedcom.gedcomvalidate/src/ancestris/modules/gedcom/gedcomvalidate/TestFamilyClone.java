@@ -67,10 +67,10 @@ public class TestFamilyClone extends Test {
             }
             if (isClone(fam, other)) {
                 if (!reportedFams.contains(fam)) {
-                    issues.add(new ViewContext(fam).setText(NbBundle.getMessage(this.getClass(), "warn.fam.cloned", fam.getId())));
+                    issues.add(new ViewContext(fam).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "warn.fam.cloned", fam.getId())));
                     reportedFams.add(fam);
                 }
-                issues.add(new ViewContext(other).setText(NbBundle.getMessage(this.getClass(), "warn.fam.clone", other.getId(), fam.getId())));
+                issues.add(new ViewContext(other).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "warn.fam.clone", other.getId(), fam.getId())));
                 reportedFams.add(other);
             }
         }
@@ -91,5 +91,10 @@ public class TestFamilyClone extends Test {
         }
         // yeah, looks like one
         return true;
+    }
+
+    @Override
+    String getCode() {
+        return "07";
     }
 } //TestFiles

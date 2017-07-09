@@ -141,7 +141,7 @@ public class TestAge extends Test {
             if (report.showTwins && datesAreComplete && likelyTwins) {
                 WordBuffer words = new WordBuffer();
                 words.append(NbBundle.getMessage(this.getClass(), "err.twins", mainEntity.toString(), indi.toString(), String.valueOf(years)));
-                issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
+                issues.add(new ViewContext(mainEntity).setCode(getCode()+"-1").setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
                 continue;
             }
             error = isError(m) && datesAreComplete && !likelyTwins;
@@ -150,11 +150,22 @@ public class TestAge extends Test {
             // Builds the error context
             // Prop : property being tested (indi or fam) - make sure context is the person involed rather than the "fam" event, so use mainEntity
             // Indi : person involed
+            String code = getCode() + "-";
             WordBuffer words = new WordBuffer();
             if (explanation.equals("minAgeMARR")) {
+                code += "2";
                 words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), delta.getYears(), String.valueOf(years)));
             }
             if (explanation.equals("minAgeMother") || explanation.equals("maxAgeMother") || explanation.equals("minAgeFather")) {
+                if (explanation.equals("minAgeMother")) {
+                    code += "3";
+                }
+                if (explanation.equals("maxAgeMother")) {
+                    code += "4";
+                }
+                if (explanation.equals("minAgeFather")) {
+                    code += "5";
+                }
                 if (pit1.compareTo(pit2) < 0) {
                     words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, indi.toString(), delta.getYears(), mainEntity.toString(), String.valueOf(years)));
                 } else {
@@ -162,15 +173,22 @@ public class TestAge extends Test {
                 }
             }
             if (explanation.equals("maxDiffAgeSibling") || explanation.equals("maxDiffAgeSpouses")) {
+                if (explanation.equals("maxDiffAgeSibling")) {
+                    code += "7";
+                }
+                if (explanation.equals("maxDiffAgeSpouses")) {
+                    code += "8";
+                }
                 words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), indi.toString(), delta.getYears(), String.valueOf(years)));
             }
             if (explanation.equals("minDiffAgeSibling")) {
+                code += "6";
                 words.append(NbBundle.getMessage(this.getClass(), "err."+explanation, mainEntity.toString(), indi.toString(), 12*delta.getYears()+delta.getMonths(), String.valueOf(years)));
             }
             words.append(", ");
             words.append(NbBundle.getMessage(this.getClass(), explanation).toLowerCase());
 
-            issues.add(new ViewContext(mainEntity).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
+            issues.add(new ViewContext(mainEntity).setCode(code).setText(words.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
         }
     }
     
@@ -189,5 +207,10 @@ public class TestAge extends Test {
     }
     return false;
   }
+
+    @Override
+    String getCode() {
+        return "01";
+    }
 
 } //TestAge

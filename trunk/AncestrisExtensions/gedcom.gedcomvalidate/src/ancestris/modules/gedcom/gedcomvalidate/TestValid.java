@@ -41,7 +41,7 @@ import org.openide.util.NbBundle;
     // always an issue with private
     if (!report.isPrivateValueValid&&prop.isPrivate()) {
       // got an issue with that
-      issues.add(new ViewContext(prop).setText(NbBundle.getMessage(this.getClass(), "err.private", path.toString())));
+      issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.private", path.toString())));
     }
 
     // no issue if valid 
@@ -53,9 +53,14 @@ import org.openide.util.NbBundle;
       return;
       
     // got an issue with that
-    issues.add(new ViewContext(prop).setText(NbBundle.getMessage(this.getClass(),"err.notvalid", path.toString())));
+    issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(),"err.notvalid", path.toString())));
     
     // done
   }
+
+    @Override
+    String getCode() {
+        return "13";
+    }
 
 } //TestValid

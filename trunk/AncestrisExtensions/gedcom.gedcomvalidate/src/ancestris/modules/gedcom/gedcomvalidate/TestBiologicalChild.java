@@ -47,11 +47,16 @@ public class TestBiologicalChild extends Test {
     
     // more than one?
     if (famcs.size()>1) for (Iterator<? extends Property> it = famcs.iterator(); it.hasNext() ;) {
-      issues.add(new ViewContext(it.next()).setText(NbBundle.getMessage(this.getClass(), "warn.famc.biological")));
+      issues.add(new ViewContext(it.next()).setText(NbBundle.getMessage(this.getClass(), "warn.famc.biological")).setCode(getCode()));
     }
     
     // done
   }
+
+    @Override
+    String getCode() {
+        return "02";
+    }
   
 
 } //TestBiologicalChild

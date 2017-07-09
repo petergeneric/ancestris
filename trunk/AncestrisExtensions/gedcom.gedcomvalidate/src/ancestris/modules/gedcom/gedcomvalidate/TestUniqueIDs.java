@@ -54,14 +54,19 @@ public class TestUniqueIDs extends Test {
         // mark first as dupe
         Property first = id2first.get(value);
         if (first != null) {
-            issues.add(new ViewContext(first).setText(NbBundle.getMessage(this.getClass(), "err.notuniqueid", first.getTag(), first.getValue())));
+            issues.add(new ViewContext(first).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.notuniqueid", first.getTag(), first.getValue())));
             id2first.put(value, null);
         }
 
         // mark duplicates
-        issues.add(new ViewContext(prop).setText(NbBundle.getMessage(this.getClass(), "err.notuniqueid", prop.getTag(), prop.getValue())));
+        issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.notuniqueid", prop.getTag(), prop.getValue())));
 
 
         // done
+    }
+
+    @Override
+    String getCode() {
+        return "12";
     }
 } //TestFiles

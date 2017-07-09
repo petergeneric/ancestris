@@ -60,9 +60,14 @@ public class TestOrder extends Test {
         Arrays.sort(sorted, new PropertyComparator(pathToSort));
 
         if (!Arrays.asList(sorted).equals(unsorted)) {
-            issues.add(new ViewContext(prop).setText(NbBundle.getMessage(this.getClass(), "warn.order." + tagToSort)));
+            issues.add(new ViewContext(prop).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "warn.order." + tagToSort)));
         }
 
         // done
+    }
+
+    @Override
+    String getCode() {
+        return "09";
     }
 } //TestBiologicalChild
