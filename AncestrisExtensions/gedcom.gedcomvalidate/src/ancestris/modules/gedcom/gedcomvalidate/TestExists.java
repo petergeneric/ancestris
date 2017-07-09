@@ -7,7 +7,6 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
@@ -56,8 +55,13 @@ import org.openide.util.NbBundle;
 
     // found path1 but not path2!
     String text = NbBundle.getMessage(this.getClass(), "err.exists.without", Gedcom.getName(prop1.getTag()), Gedcom.getName(path2.getLast()) );
-    issues.add(new ViewContext(prop1).setText(text));
+    issues.add(new ViewContext(prop1).setCode(getCode()).setText(text));
     
   }
+
+    @Override
+    String getCode() {
+        return "06";
+    }
   
 } //TestEventTime

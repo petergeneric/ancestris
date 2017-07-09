@@ -123,7 +123,7 @@ import org.openide.util.NbBundle;
       if (entity instanceof Indi)
         buf.append(NbBundle.getMessage(this.getClass(), "err.date.of", entity.toString()));
 
-      issues.add(new ViewContext(prop).setText(buf.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
+      issues.add(new ViewContext(prop).setCode(getCode()).setText(buf.toString()).setImage(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false)));
     }
 
     // done
@@ -161,5 +161,10 @@ import org.openide.util.NbBundle;
     // result
     return pit1.compareTo(pit2)*sign>0;
   }
+
+    @Override
+    String getCode() {
+        return "04";
+    }
 
 } //TestEventTime

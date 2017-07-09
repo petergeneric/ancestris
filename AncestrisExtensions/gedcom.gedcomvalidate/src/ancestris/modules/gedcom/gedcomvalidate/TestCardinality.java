@@ -7,7 +7,6 @@
  */
 package ancestris.modules.gedcom.gedcomvalidate;
 
-import genj.gedcom.Media;
 import genj.gedcom.MetaProperty;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
@@ -51,7 +50,7 @@ public class TestCardinality extends Test {
                     Property first = seen.get(tag);
                     if (first != null) {
                         seen.put(tag, null);
-                        issues.add(new ViewContext(first).setText(NbBundle.getMessage(this.getClass(), "err.cardinality.max", prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality())));
+                        issues.add(new ViewContext(first).setCode(getCode()).setText(NbBundle.getMessage(this.getClass(), "err.cardinality.max", prop.getTag(), first.getTag(), prop.getGedcom().getGrammar().getVersion(), meta.getCardinality())));
                     }
                 }
             } else {
@@ -66,10 +65,15 @@ public class TestCardinality extends Test {
         for (int i = 0; i < metas.length; i++) {
             if (metas[i].isRequired() && seen.get(metas[i].getTag()) == null) {
                 String txt = NbBundle.getMessage(this.getClass(), "err.cardinality.min", prop.getTag(), metas[i].getTag(), prop.getGedcom().getGrammar().getVersion(), metas[i].getCardinality());
-                issues.add(new ViewContext(prop).setImage(metas[i].getImage()).setText(txt));
+                issues.add(new ViewContext(prop).setImage(metas[i].getImage()).setCode(getCode()).setText(txt));
             }
         }
 
         // done
+    }
+
+    @Override
+    String getCode() {
+        return "03";
     }
 } //TestFiles

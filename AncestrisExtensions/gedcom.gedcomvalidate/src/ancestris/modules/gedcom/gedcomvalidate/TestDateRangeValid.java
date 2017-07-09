@@ -55,7 +55,7 @@ import org.openide.util.Parameters;
             return;
         }
         // got an issue with that
-        issues.add(new ViewContext(prop).setText(
+        issues.add(new ViewContext(prop).setCode(getCode()).setText(
                 NbBundle.getMessage(this.getClass(), "warn.year.range", propDate.getDisplayValue(), report.minYear.getYear(), report.maxYear.getYear())));
         // done
     }
@@ -82,6 +82,11 @@ import org.openide.util.Parameters;
         Parameters.notNull("min", min);
         Parameters.notNull("max", max);
         return pit.compareTo(min) >= 0 && pit.compareTo(max) <= 0;
+    }
+
+    @Override
+    String getCode() {
+        return "05";
     }
 
 } //TestValid
