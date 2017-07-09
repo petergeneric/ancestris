@@ -368,7 +368,8 @@ public class PropertyTableWidget extends JPanel {
                 table.getRowSorter().setSortKeys(sortKeys);
             }
 
-        } catch (NumberFormatException t) {
+        } catch (Exception t) {
+            //System.out.println("DEBUG SetColumnLayoutException : "+t);
             // ignore
         }
     }
@@ -721,7 +722,9 @@ public class PropertyTableWidget extends JPanel {
                 cells = new Property[rows][cols];
 
                 // tell about it
-                fireTableRowsDeleted(rowStart, rowEnd);
+                if (rowStart < model.getNumRows() && rowEnd < model.getNumRows()) {
+                    fireTableRowsDeleted(rowStart, rowEnd);
+                }
             }
 
             @Override
