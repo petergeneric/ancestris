@@ -65,6 +65,7 @@ import java.util.Collections;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import org.openide.windows.WindowManager;
 
 /**
  * Component for showing entities of a gedcom file in a tabular way
@@ -299,7 +300,7 @@ public class TableView extends View {
     }
 
     @Override
-    public void setContext(Context context) {
+    public void setContext(final Context context) {
 
         if (sticky.isSelected()) {
             return;
@@ -326,10 +327,16 @@ public class TableView extends View {
         }
 
         // pick good mode
-        Mode mode = getModeFor(context);
+        final Mode mode = getModeFor(context);
         if (getFollowEntity()) {
             if (mode != currentMode) {
-                mode.setSelected(true);
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        mode.setSelected(true);
+                        propertyTable.select(context);
+                    }
+                });
             }
         }
 
