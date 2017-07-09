@@ -18,7 +18,7 @@ public class GenealogyEditorPlugin extends AncestrisPlugin {
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
-        if (GedcomOptions.getInstance().getDefaultEditor().equals(GenealogyEditorAction.class.getCanonicalName())) {
+        if (GenealogyEditorAction.class.getCanonicalName().startsWith(GedcomOptions.getInstance().getDefaultEditor())) {
             result.add(EditorTopComponent.class);
         }
         return result;
