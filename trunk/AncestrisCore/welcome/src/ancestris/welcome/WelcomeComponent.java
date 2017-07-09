@@ -61,8 +61,7 @@ import org.openide.util.NbPreferences;
  */
 public class WelcomeComponent extends TopComponent {
     static final long serialVersionUID=6021472310161712676L;
-    private static WeakReference<WelcomeComponent> component =
-                new WeakReference<WelcomeComponent>(null); 
+    private static WeakReference<WelcomeComponent> component = new WeakReference<WelcomeComponent>(null); 
     private JComponent content;
 
     private boolean initialized = false;
