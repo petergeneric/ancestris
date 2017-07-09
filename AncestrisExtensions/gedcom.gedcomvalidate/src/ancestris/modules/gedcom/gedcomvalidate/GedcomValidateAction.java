@@ -71,10 +71,8 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
             final genj.fo.Document doc = new genj.fo.Document(title);
             doc.startSection(title);
             doc.nextParagraph();
-            doc.addText("      ");
-            doc.addText("      ");
+            doc.addText(" ", "font-size=14, space-after=1cm");
             doc.nextParagraph();
-
             final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result == null ? "0" : result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
             final JDialog dialog = new JDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GedcomValidate.class, "doc.title"), false);
             if (result != null && result.size() > 2000) {
@@ -97,17 +95,31 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         return str1.compareTo(str2);
                     }
                 });
-                doc.startTable("genj:csv=true,width=100%");
-                doc.addTableColumn("column-width=10%");
-                doc.addTableColumn("column-width=10%");
-                doc.addTableColumn("column-width=25%");
-                doc.addTableColumn("column-width=55%");
+                
+                String section = "";
                 Iterator<ViewContext> iterator = result.listIterator();
                 while (iterator.hasNext()) {
                     ViewContext c = iterator.next();
+                    if (!c.getCode().equals(section)) {
+                        if (!section.isEmpty()) {
+                            doc.endTable();
+                        }
+                        section = c.getCode();
+                        doc.nextParagraph();
+                        doc.addText(" ", "font-size=14");
+                        doc.nextParagraph();
+                        doc.addText(" ", "font-size=14");
+                        doc.nextParagraph();
+                        doc.addText(getSectionName(section), "font-size=14, font-weight=bold, space-before=2cm, space-after=1cm, keep-with-next.within-page=always, text-decoration=underline");
+                        doc.nextParagraph();
+                        doc.addText(" ", "font-size=14");
+                        doc.nextParagraph();
+                        doc.startTable("genj:csv=true,width=100%");
+                        doc.addTableColumn("column-width=10%");
+                        doc.addTableColumn("column-width=25%");
+                        doc.addTableColumn("column-width=65%");
+                    }
                     doc.nextTableRow();
-                    doc.addText("["+c.getCode()+"]");
-                    doc.nextTableCell();
                     doc.addLink(c.getEntity().getId(), c.getEntity().getAnchor());
                     doc.nextTableCell();
                     doc.addText(c.getEntity().toString(false));
@@ -132,5 +144,18 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                 }
             });
         }
+    }
+
+    private String getSectionName(String code) {
+        String[] codeTable = new String[] {
+            "01-1", "01-2", "01-3", "01-4", "01-5", "01-6", "01-7", "01-8", 
+            "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"
+        };
+        for (String item : codeTable) {
+            if (item.equals(code)) {
+                return NbBundle.getMessage(GedcomValidate.class, "section."+item);
+            }
+        }
+        return "";
     }
 }
