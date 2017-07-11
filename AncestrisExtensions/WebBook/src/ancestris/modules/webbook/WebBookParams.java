@@ -37,6 +37,7 @@ public class WebBookParams {
     public String param_dispNotes;
     public String param_dispId;
     public String param_dispEmailButton;
+    public String param_hidePrivateData;
     // panel 3
     public String param_media_GeneSources;
     public String param_media_DisplaySources;
@@ -105,6 +106,7 @@ public class WebBookParams {
         param_dispNotes = gedcomSettings.get(WB_PREFIX + ".dispNotes", "");
         param_dispId = gedcomSettings.get(WB_PREFIX + ".dispId", "");
         param_dispEmailButton = gedcomSettings.get(WB_PREFIX + ".dispEmailButton", "");
+        param_hidePrivateData = gedcomSettings.get(WB_PREFIX + ".hidePrivateData", "");
 
         // panel 3
         param_media_GeneSources = gedcomSettings.get(WB_PREFIX + ".media_GeneSources", "");
@@ -173,6 +175,7 @@ public class WebBookParams {
         log.write("param_dispNotes = " + param_dispNotes);
         log.write("param_dispId = " + param_dispId);
         log.write("param_dispEmailButton = " + param_dispEmailButton);
+        log.write("param_hidePrivateData = " + param_hidePrivateData);
         // panel 3
         log.write("param_media_GeneSources = " + param_media_GeneSources);
         log.write("param_media_DisplaySources = " + param_media_DisplaySources);
