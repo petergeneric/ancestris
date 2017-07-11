@@ -28,17 +28,20 @@ import java.util.TreeMap;
 class GedcomStats {
 
     // inputs
-    public Indi indiDeCujus = null;
     public WebHelper wh = null;
+    public Indi indiDeCujus = null;         // The deCujus individual
     //
     // outputs
-    public int nbGen = 0;
-    public int nbAncestors = 0;
-    public Indi indiOlder = null;
-    public Indi longIndiG = null;
-    public int nbGenG = 0;
-    public Indi longIndiA = null;
-    public int nbAncestorsA = 0;
+    public int nbAncestors = 0;             // The number of different ancestors of the DeCujus
+    public int nbGen = 0;                   // The level number of generations where these ancestors have been found
+    public Indi indiOlder = null;           // The oldest ancestor of the DeCujus
+    
+    public Indi longIndiG = null;           // Individual with the longuest ancestors line 
+    public int nbGenG = 0;                  // Nb of generations of the longuest line
+    
+    public Indi longIndiA = null;           // Individual with the most ancestors
+    public int nbAncestorsA = 0;            // Nb of ancestors of the largest line
+    
     public int nbIndis = 0;
     public int nbFams = 0;
     public int nbNames = 0;
@@ -64,13 +67,9 @@ class GedcomStats {
     public boolean update(Gedcom gedcom, boolean dispLonguest) {
 
         // number of generations and ancestors
-        nbGenTemp = 0;
-        nbAncestorsTemp = 0;
         calcGenAncestors(indiDeCujus, true); // calculates nbGenTemp and nbAncestorsTemp and indiOlder
-        nbGen = nbGenTemp;
-        nbAncestors = nbAncestorsTemp;
-        nbGen--;
-        nbAncestors--;
+        nbGen = nbGenTemp - 1;
+        nbAncestors = nbAncestorsTemp - 1;
 
         // number of individuals
         nbIndis = wh.getNbIndis();
@@ -136,14 +135,28 @@ class GedcomStats {
         return true;
     }
 
+    /**
+     * Calculates the number of different ancestors of a given individual, and the number of maximum generations up to the "oldest" ancestor
+     * 
+     * @param indiStart : starting individual
+     * @param calcOlder : true means calculate oldest ancestor
+     * Returns:
+     *    - nbAncestorsTemp : nb of ancestors
+     *    - nbGenTemp : nb of generations
+     */
     private void calcGenAncestors(Indi indiStart, boolean calcOlder) {
         
+        // Get all ancestors
         List<Ancestor> ancestorsList = wh.getAncestorsList(indiStart);
+        
+        // Init variables
         nbGenTemp = 1;
         nbAncestorsTemp = 0;
         indiOlder = indiStart;
         PropertyDate propDateMin = new PropertyDate(9999);
-        Set<Indi> listDifferent = new HashSet<Indi>();
+        Set<Indi> listDifferent = new HashSet<Indi>();     // list with no duplicates
+        
+        // Loop over ancestors
         for (Ancestor ancestor : ancestorsList) {
             if (ancestor.gen > nbGenTemp) {
                 nbGenTemp = ancestor.gen;
@@ -151,7 +164,7 @@ class GedcomStats {
             listDifferent.add(ancestor.indi);
             if (calcOlder) {
                 PropertyDate propDate = ancestor.indi.getBirthDate();
-                if (propDate != null && propDate.compareTo(propDateMin) < 0) {
+                if (propDate != null && propDate.isValid() && propDate.compareTo(propDateMin) < 0) {
                     propDateMin = propDate;
                     indiOlder = ancestor.indi;
                 }
@@ -160,18 +173,20 @@ class GedcomStats {
         nbAncestorsTemp = listDifferent.size();
     }
 
+    /**
+     * Calculates the longuest and largest ancestors lines
+     * @param indiRef 
+     */
     public void calcLonguestLine(Indi indiRef) {
+
         int nbG = 0;
         int nbA = 0;
 
         // get all individuals from Gedcom
         List<Indi> indis = wh.getIndividuals(indiRef.getGedcom(), null);
 
-        // loop to look for longuest line
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            nbGenTemp = 0;
-            nbAncestorsTemp = 0;
+        // loop to look for longuest line (G) / largest line (A)
+        for (Indi indi : indis) {
             calcGenAncestors(indi, false);
             if (nbGenTemp > nbG) {
                 nbG = nbGenTemp;

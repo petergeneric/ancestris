@@ -111,6 +111,7 @@ public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, Wi
         ((WebBookVisualPanel2) getComponent()).setPref07(gedcomSettings.get(WB_PREFIX+".dispNotes", ""));
         ((WebBookVisualPanel2) getComponent()).setPref08(gedcomSettings.get(WB_PREFIX+".dispId", ""));
         ((WebBookVisualPanel2) getComponent()).setPref09(gedcomSettings.get(WB_PREFIX+".dispEmailButton", ""));
+        ((WebBookVisualPanel2) getComponent()).setPref10(gedcomSettings.get(WB_PREFIX+".hidePrivateData", ""));
     }
 
     public void storeSettings(Object settings) {
@@ -128,6 +129,7 @@ public class WebBookWizardPanel2 implements WizardDescriptor.ValidatingPanel, Wi
         gedcomSettings.put(WB_PREFIX+".dispNotes", ((WebBookVisualPanel2) getComponent()).getPref07());
         gedcomSettings.put(WB_PREFIX+".dispId", ((WebBookVisualPanel2) getComponent()).getPref08());
         gedcomSettings.put(WB_PREFIX+".dispEmailButton", ((WebBookVisualPanel2) getComponent()).getPref09());
+        gedcomSettings.put(WB_PREFIX+".hidePrivateData", ((WebBookVisualPanel2) getComponent()).getPref10());
 }
 
     /*

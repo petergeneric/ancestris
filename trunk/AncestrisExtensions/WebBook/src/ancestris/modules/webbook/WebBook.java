@@ -25,6 +25,9 @@ import ancestris.modules.webbook.creator.WebStatsImplex;
 import ancestris.modules.webbook.creator.WebTheme;
 import ancestris.modules.webbook.transfer.FTPRegister;
 import ancestris.modules.webbook.transfer.FTPLoader;
+import java.awt.Desktop;
+import java.io.File;
+import java.net.URI;
 
 /**
  * Ancestris WebBook
@@ -236,11 +239,38 @@ public class WebBook {
 
 
         /**
+         * Launch browser if generated in html
+         * - local address if not migrated to Internet
+         * - http site if generated remotely
+         */
+        log.write(" ");
+        log.write("----------- " + log.trs("EXEC_showPages") + " -----------");
+        String fileStr = "";
+        // if upload
+        if (wp.param_FTP_upload.equals("1")) {
+            int i = wp.param_FTP_site.indexOf("ftp");
+            String siteStr = i == -1 ? wp.param_FTP_site : wp.param_FTP_site.substring(3);
+            fileStr = "http://www" + siteStr;
+        } else if (!wp.param_PHP_Support.equals("1")) {
+            fileStr = "file://" + wp.param_localWebDir + File.separator + "index.html";
+        }
+        try {
+            URI uri = new URI(fileStr);
+            if (Desktop.isDesktopSupported()) {
+                Desktop.getDesktop().browse(uri);
+            } else {
+            }
+        } catch (Exception ex) {
+        }
+
+        
+        /**
          * Stop writing to log
          */
         log.write(" ");
         log.timeStamp();
         log.write("----------- " + log.trs("EXEC_end") + " -----------");
 
+        
     }
 }

@@ -62,6 +62,7 @@ public class WebSection {
     private String keywords = "";
     private String siteDesc = "";
     private String language = "";
+    private boolean hidePrivateData = true;
     //
     public String includesDir = "includes";
     public String includeInit = "awb_init.php";
@@ -130,6 +131,7 @@ public class WebSection {
         siteDesc = ""; // not used for now
         owner = htmlText(wp.param_author);
         author = htmlText(wp.param_author);
+        hidePrivateData = wp.param_hidePrivateData.equals("1");
         replyto = wp.param_email;
         keywords = getKeywords();
         language = Locale.getDefault().getLanguage();
@@ -723,7 +725,7 @@ public class WebSection {
         }
 
         // Now handle privacy and PHP support
-        str += phpText(indi, strClear, strHidden);
+        str += phpText(indi, strClear, hidePrivateData ? strHidden : strClear);
 
         // Close link
         if (link) {
@@ -794,7 +796,7 @@ public class WebSection {
         }
 
         // Now handle privacy and PHP support
-        str += phpText(indi, strClear, strHidden);
+        str += phpText(indi, strClear, hidePrivateData ? strHidden : strClear);
 
         return str;
     }
@@ -828,7 +830,7 @@ public class WebSection {
         }
 
         // Now handle privacy and PHP support
-        str += phpText(indi, strClear, strHidden);
+        str += phpText(indi, strClear, hidePrivateData ? strHidden : strClear);
 
         return str;
     }
@@ -862,7 +864,7 @@ public class WebSection {
         }
 
         // Now handle privacy and PHP support
-        str += phpText(indi, strClear, strHidden);
+        str += phpText(indi, strClear, hidePrivateData ? strHidden : strClear);
 
         return str;
     }
@@ -886,7 +888,7 @@ public class WebSection {
         // If whole entity is private, hide even the properties inside else let "sub-privicy" properties be displayed
         if (wh.isPrivate(indi)) {
             String strClear = "<a href='javascript:popup(\\\"" + htmlText(indi.toString()) + "\\\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
-            str += phpText(indi, strClear, strHidden);
+            str += phpText(indi, strClear, hidePrivateData ? strHidden : strClear);
         } else {
             String strClear = "<a href='javascript:popup(\"" + htmlText(indi.toString()) + "\")'><img src='" + themeDirLink + picture + "' alt='" + title + "' title='" + title + "'/></a>";
             str += strClear;
@@ -1291,7 +1293,7 @@ public class WebSection {
         }
 
         // Now handle privacy and PHP support
-        str += phpText(file, strClear, strHidden);
+        str += phpText(file, strClear, hidePrivateData ? strHidden : strClear);
 
         return str;
     }
@@ -1375,7 +1377,7 @@ public class WebSection {
             if (wp.param_PHP_Support.equals("1")) {
                 return "<?php echo " + wp.param_PHP_Test + " ? \"" + strClear + "\" : \"" + strHidden + "\" ?>";
             } else {
-                return strHidden;
+                return hidePrivateData ? strHidden : strClear;
             }
         } else {
             return strClear;
