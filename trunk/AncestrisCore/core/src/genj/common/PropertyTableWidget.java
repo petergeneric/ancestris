@@ -791,11 +791,10 @@ public class PropertyTableWidget extends JPanel {
                 if (row >= cells.length || col >= cells[row].length) {
                     return null;
                 }
-                Property prop = cells[row][col];
-                if (prop == null) {
-                    prop = model.getRowRoot(row).getProperty(model.getColPath(col));
-                    cells[row][col] = prop;
-                }
+
+                Property prop = model.getRowRoot(row).getProperty(model.getColPath(col));
+                cells[row][col] = prop;
+                
                 return prop;
             }
 
