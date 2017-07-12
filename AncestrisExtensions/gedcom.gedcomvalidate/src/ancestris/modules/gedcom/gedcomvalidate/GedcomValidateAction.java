@@ -69,10 +69,6 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
             String title = NbBundle.getMessage(GedcomValidate.class, "name");
             final genj.fo.Document doc = new genj.fo.Document(title);
-            doc.startSection(title);
-            doc.nextParagraph();
-            doc.addText(" ", "font-size=14, space-after=1cm");
-            doc.nextParagraph();
             final JOptionPane optionPane = new JOptionPane(NbBundle.getMessage(GedcomValidate.class, "doc.message", result == null ? "0" : result.size()), JOptionPane.INFORMATION_MESSAGE, JOptionPane.DEFAULT_OPTION, null, new Object[]{}, null);
             final JDialog dialog = new JDialog(WindowManager.getDefault().getMainWindow(), NbBundle.getMessage(GedcomValidate.class, "doc.title"), false);
             if (result != null && result.size() > 2000) {
@@ -85,6 +81,13 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
             }
 
             if (result != null) {
+                
+                doc.addTOC();
+                doc.startSection(title + "  (" + result.size() + ")");
+                doc.nextParagraph();
+                doc.addText(" ", "font-size=14, space-after=1cm");
+                doc.nextParagraph();
+                
                 Collections.sort(result, new Comparator() {
                     @Override
                     public int compare(Object o1, Object o2) {
@@ -100,7 +103,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                 Iterator<ViewContext> iterator = result.listIterator();
                 while (iterator.hasNext()) {
                     ViewContext c = iterator.next();
-                    if (!c.getCode().equals(section)) {
+                    if (c != null && !section.equals(c.getCode())) {
                         if (!section.isEmpty()) {
                             doc.endTable();
                         }
@@ -110,7 +113,9 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         doc.nextParagraph();
                         doc.addText(" ", "font-size=14");
                         doc.nextParagraph();
-                        doc.addText(getSectionName(section), "font-size=14, font-weight=bold, space-before=2cm, space-after=1cm, keep-with-next.within-page=always, text-decoration=underline");
+                        String sectionStr = getSectionName(section);
+                        doc.addText(sectionStr, "font-size=14, font-weight=bold, space-before=2cm, space-after=1cm, keep-with-next.within-page=always, text-decoration=underline");
+                        doc.addTOCEntry(sectionStr + "  (" + getSectionCount(section) + ")");
                         doc.nextParagraph();
                         doc.addText(" ", "font-size=14");
                         doc.nextParagraph();
@@ -148,7 +153,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     private String getSectionName(String code) {
         String[] codeTable = new String[] {
-            "01-1", "01-2", "01-3", "01-4", "01-5", "01-6", "01-7", "01-8", 
+            "00-1", "00-2", "01-1", "01-2", "01-3", "01-4", "01-5", "01-6", "01-7", "01-8", 
             "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"
         };
         for (String item : codeTable) {
@@ -157,5 +162,13 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
             }
         }
         return "";
+    }
+
+    private String getSectionCount(String section) {
+        int count = 0;
+        for (ViewContext c : result) {
+            count += c.getCode().equals(section) ? 1 : 0;
+        }
+        return ""+count;
     }
 }

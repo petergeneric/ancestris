@@ -208,7 +208,7 @@ public class GedcomValidate implements Validator {
             // check if Gedcom grammar allows it
             if (!meta.allows(ctag)) {
                 String msg = NbBundle.getMessage(this.getClass(), "err.notgedcom", ctag, prop.getGedcom().getGrammar().getVersion(), path.toString());
-                issues.add(new ViewContext(child).setText(msg).setImage(MetaProperty.IMG_ERROR));
+                issues.add(new ViewContext(child).setCode("00-1").setText(msg).setImage(MetaProperty.IMG_ERROR));
                 continue;
             }
             // dive into
