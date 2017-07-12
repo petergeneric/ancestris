@@ -74,6 +74,6 @@ public class TestCardinality extends Test {
 
     @Override
     String getCode() {
-        return "03";
+        return "00-2";
     }
 } //TestFiles
