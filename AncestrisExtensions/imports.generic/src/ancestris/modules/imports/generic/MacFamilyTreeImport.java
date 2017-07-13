@@ -15,10 +15,19 @@ package ancestris.modules.imports.generic;
 import ancestris.api.imports.Import;
 import org.openide.util.lookup.ServiceProvider;
 import static ancestris.modules.imports.generic.Bundle.macfamilytreeimport_note;
+import static ancestris.util.swing.FileChooserBuilder.getExtension;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Media;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyChild;
+import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyPlace;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  *
@@ -81,7 +90,9 @@ public class MacFamilyTreeImport extends Import {
     
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
-        return todo(gedcom);
+        boolean ret = super.fixGedcom(gedcom);
+        ret |= processEntities(gedcom);
+        return ret;
     }
 
     
@@ -134,11 +145,100 @@ public class MacFamilyTreeImport extends Import {
     }
 
     
-    private boolean todo(Gedcom gedcom) {
+    
+    public boolean processEntities(Gedcom gedcom) {
 
-        console.println(" ");
+        boolean hasErrors = false;
+        Property[] props = null;
+        Property prop = null;
+        Property prop2 = null;
+        Property host = null;
         
-        return true;
+        // Move FAM:CHIL:PEDI to CHIL_Target:PEDI (=CHIL => INDI => FAMC:PEDI)
+        for (Fam fam : gedcom.getFamilies()) {
+            Property[] children = fam.getProperties("CHIL");
+            for (Property child : children) {
+                prop = child.getProperty("PEDI");
+                if (prop == null) {
+                    continue;
+                }
+                host = ((PropertyChild) child).getTarget();
+                host.addProperty("PEDI", prop.getValue());
+                prop.getParent().delProperty(prop);
+                console.println(NbBundle.getMessage(GrampsImport.class, "Import.fixPedi", host.getEntity().toString(true)));
+                hasErrors = true;
+            }
+        }
+        
+        
+        // Remove empty CHAN if another CHAN is present
+        for (Entity ent : gedcom.getEntities()) {
+            List<Property> changes = ent.getAllProperties("CHAN");
+            for (Property chan : changes) {
+                if (chan.getValue().trim().isEmpty()) {
+                    chan.getParent().delProperty(chan);
+                    console.println(NbBundle.getMessage(GrampsImport.class, "Import.fixEmptyChan", ent.toString(true)));
+                    hasErrors = true;
+                }
+            }
+        }
+        
+        
+        // Move LONG et LATI sous PLAC:MAP
+        List<Property> placeList = (List<Property>) gedcom.getPropertiesByClass(PropertyPlace.class);
+        for (Property place : placeList) {
+            prop = place.getParent().getProperty("LONG");
+            prop2 = place.getParent().getProperty("LATI");
+            if (prop != null) {
+                Property map = place.addProperty("MAP", "");
+                map.addProperty("LONG", prop.getValue());
+                prop.getParent().delProperty(prop);
+                if (prop2 != null) {
+                    map.addProperty("LATI", prop2.getValue());
+                    prop2.getParent().delProperty(prop2);
+                }
+                hasErrors = true;
+                console.println(NbBundle.getMessage(GrampsImport.class, "Import.fixPlaceCoord", place.getValue()));
+            }
+        }
+        
+        
+        // Move OBJE:TITL sous OBJE:FILE
+        for (Media media : gedcom.getMedias()) {
+            host = media.getProperty("FILE");
+            prop = media.getProperty("TITL");
+            if (host != null && prop != null) {
+                host.addProperty("TITL", prop.getValue());
+                media.delProperty(prop);
+                hasErrors = true;
+                console.println(NbBundle.getMessage(GrampsImport.class, "Import.fixMediaTitle", media.toString()));
+            }
+        }
+        
+        // Add OBJE:FILE:FORM sous OBJE:FILE
+        List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
+        for (Property file : fileList) {
+            prop = file.getParent().getProperty("FORM");
+            if (prop != null) {
+                file.addProperty("FORM", prop.getValue());
+                prop.getParent().delProperty(prop);
+                console.println(NbBundle.getMessage(GrampsImport.class, "Import.fixMediaForm", file.toString()));
+                hasErrors = true;
+            }
+            prop = file.getProperty("FORM");
+            if (prop == null) {
+                file.addProperty("FORM", getExtension(file.getValue()));
+                console.println(NbBundle.getMessage(GrampsImport.class, "Import.fixMediaForm", file.toString()));
+                hasErrors = true;
+            }
+        }
+        
+        console.println("=============================");
+        
+        return hasErrors;
+
     }
 
+    
+    
 }
