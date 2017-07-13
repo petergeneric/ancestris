@@ -152,7 +152,7 @@ public class GrampsImport extends Import {
             }
             prop = file.getProperty("FORM");
             if (prop == null) {
-                file.addProperty("FORM", getExtension(host.getValue()));
+                file.addProperty("FORM", getExtension(file.getValue()));
                 hasErrors = true;
             }
         }
