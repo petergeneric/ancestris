@@ -343,8 +343,11 @@ public class GeoNodeObject {
     }
 
     public String getPopulation(Place topo) {
+        if (topo == null) {
+            return "0";
+        }
         Long pop = Long.getLong("0");
-        pop = topo != null ? topo.getPopulation() : 0;
+        pop = topo.getPopulation();
         DecimalFormat format = new DecimalFormat("#,##0");
         return pop != null ? format.format(pop) : "0";
     }
