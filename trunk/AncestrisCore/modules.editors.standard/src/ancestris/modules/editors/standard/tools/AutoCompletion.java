@@ -33,7 +33,7 @@ public class AutoCompletion extends PlainDocument {
     List<String> comboList;
     boolean refreshingList = false;     // true if list is being refreshed in which case editor should not change (when changing list, combo tries to refresh editor)
     boolean refreshList = true;         // true if list is to be refreshed because filter has changed
-    boolean showPopup = false;          // true is opup can be shown
+    boolean showPopup = false;          // true if popup can be shown
     boolean readyToSelect = false;      // true if the enter key can select the selected item and then write in the editor
 
     public AutoCompletion(JComboBox combo, List<String> list) {
