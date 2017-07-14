@@ -1,6 +1,7 @@
 package ancestris.api.place;
 
 import java.util.List;
+import org.openide.util.TaskListener;
 
 public interface SearchPlace {
 
@@ -10,5 +11,5 @@ public interface SearchPlace {
      * @param placeList
      * @return
      */
-    public void searchPlace(String place, List<Place> placeList);
+    public void searchPlace(String place, String city, String code, List<Place> placeList, int maxResults, TaskListener tasklistener);
 }

@@ -5,6 +5,7 @@
 package ancestris.modules.geo;
 
 import ancestris.api.editor.AncestrisEditor;
+import ancestris.api.place.Place;
 //XXX: DAN: remove direct dependency to editors, use lookup
 import ancestris.modules.editors.geoplace.PlaceEditor;
 import ancestris.view.SelectionDispatcher;
@@ -22,7 +23,6 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import org.geonames.Toponym;
 import org.netbeans.api.javahelp.Help;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
@@ -180,9 +180,9 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
 
             } else if (actionName.equals("ACTION_FindPlace")) {
                 // display place details
-                Toponym topo = obj.getToponymFromPlace(obj.getPlace(), false);
-                if (topo != GeoNodeObject.DEFAULT_TOPONYM) {
-                    String info = obj.displayToponym(topo);
+                Place place = obj.getToponymFromPlace(obj.getPlace(), false);
+                if (place != obj.defaultPlace) {
+                    String info = obj.displayToponym(place);
                     JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(), info, NbBundle.getMessage(GeoNode.class, "TXT_geoinfo"), JOptionPane.INFORMATION_MESSAGE,
                             new ImageIcon(ImageUtilities.loadImage("ancestris/modules/geo/geoicon.png")));
                 } else {

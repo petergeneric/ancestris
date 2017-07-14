@@ -4,7 +4,9 @@
  */
 package ancestris.modules.geo;
 
-import ancestris.libs.geonames.GeonamesOptions;
+import ancestris.api.place.Place;
+import ancestris.modules.place.geonames.GeonamesPlace;
+import ancestris.modules.place.geonames.GeonamesResearcher;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -25,16 +27,11 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.SortedMap;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
 import org.geonames.InsufficientStyleException;
-import org.geonames.Style;
 import org.geonames.Toponym;
-import org.geonames.ToponymSearchCriteria;
-import org.geonames.ToponymSearchResult;
-import org.geonames.WebService;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
@@ -63,12 +60,9 @@ public class GeoNodeObject {
     private final static String COLOR_PROPOSED = "color='#0066ff'"; // blue
     private final static String COLOR_UNKNOWN = "color='#ff2300'"; // red
     
-    // Unknown places will be pointed to the sea
-    public static Toponym DEFAULT_TOPONYM = defaultToponym();
-    private final static int DEFAULT_LAT = 45; // in the middle of the sea
-    private final static int DEFAULT_LON = -4; // in the middle of the sea
-
     // Location elements used from and to gedcom
+    private GeonamesResearcher geonamesResearcher = new GeonamesResearcher();
+    public Place defaultPlace = geonamesResearcher.defaultPlace();
     private PropertyPlace place;
     private Double latitude = null;
     private Double longitude = null;
@@ -76,7 +70,7 @@ public class GeoNodeObject {
     // Technical location elements
     private int geo_type = GEO_UNKNOWN;
     private String EMPTY_PLACE = NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
-    private Toponym toponym = defaultToponym();     // Local or internet match
+    private Place toponym = null;                   // Local or internet match
     public  boolean isInError = false;              // In case error while searching
     private String placeDisplayFormat = "";         // Store display format
     private String placeKey = "";                   // Store place key (ex: for sorting)
@@ -128,9 +122,9 @@ public class GeoNodeObject {
      *                              false : always look on the Internet, regardless of whether it is found locally or not
      * @return
      */
-    public Toponym getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
+    public Place getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
 
-        Toponym topo = null;
+        List<Place> placeList = new ArrayList<Place>();
         boolean foundLocally = false;
         String searchedPlace = place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
         if (searchedPlace.isEmpty()) {
@@ -139,111 +133,37 @@ public class GeoNodeObject {
 
         // Return default if place is null or empty (= nothing to search)
         if (avoidInternetSearch && placeDisplayFormat.equals(EMPTY_PLACE)) {
-            return topo;
+            return defaultPlace;
         }
 
         // Search locally first (trimming spaces)
         if (avoidInternetSearch) {
-            topo = Code2Toponym(NbPreferences.forModule(GeoPlacesList.class).get(searchedPlace, null));
-            foundLocally = (topo != null);
+            placeList.add(Code2Place(NbPreferences.forModule(GeoPlacesList.class).get(searchedPlace, null)));
+            foundLocally = !placeList.isEmpty();
         }
 
         // Search on the internet for first instance, if not found locally
         if (!foundLocally) {
-            topo = null;
-            WebService.setUserName(GeonamesOptions.getInstance().getUserName());
-            ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
-            searchCriteria.setStyle(Style.FULL);
-            searchCriteria.setLanguage(Locale.getDefault().toString());
-            searchCriteria.setMaxRows(1);
-            ToponymSearchResult searchResult;
-            //
-            try {
-                // try search with all elements of place name to be more precise, separating the words
-                if (!searchedPlace.isEmpty()) {
-                    searchCriteria.setQ(searchedPlace);
-                    searchResult = WebService.search(searchCriteria);
-                    for (Toponym iTopo : searchResult.getToponyms()) {
-                        topo = iTopo; // take the first one
-                        break;
-                    }
-                }
-                if (topo == null) { // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
-                    String str = place.getNumericalJurisdictions().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").trim();
-                    if (!str.isEmpty()) {
-                        searchCriteria.setQ(str);
-                        searchResult = WebService.search(searchCriteria);
-                        for (Toponym iTopo : searchResult.getToponyms()) {
-                            topo = iTopo; // take the first one
-                            break;
-                        }
-                    }
-                }
-                if (topo == null) { // try without "q" so only with namestartswith
-                    String city = place.getCity();
-                    if (!city.isEmpty()) {
-                        searchCriteria.setNameStartsWith(place.getCity());
-                        searchCriteria.setQ(null);
-                        searchResult = WebService.search(searchCriteria);
-                        for (Toponym iTopo : searchResult.getToponyms()) {
-                            topo = iTopo; // take the first one
-                            break;
-                        }
-                    }
-                }
-                if (topo == null) { // if still not found, default topo
-                    topo = DEFAULT_TOPONYM;
-                }
-            } catch (Exception e) {
-                isInError = true;
-                return null;
-            }
+            geonamesResearcher.searchPlace(searchedPlace, place.getNumericalJurisdictions(), place.getCity(), placeList, 1, null);
         }
 
         // Remember for next time if found on the Internet and not locally
-        if (!foundLocally && topo != null) {
-            NbPreferences.forModule(GeoPlacesList.class).put(searchedPlace, Toponym2Code(topo));
+        if (!foundLocally && !placeList.isEmpty()) {
+            NbPreferences.forModule(GeoPlacesList.class).put(searchedPlace, Place2Code(placeList.get(0)));
         }
 
-        return topo;
+        return placeList.isEmpty() ? null : placeList.get(0);
     }
 
-    /**
-     * Defines a default toponym pointing in the middle of the sea
-     *
-     * @return
-     */
-    private static Toponym defaultToponym() {
-        Toponym topo = new Toponym();
-        topo.setLatitude(DEFAULT_LAT);
-        topo.setLongitude(DEFAULT_LON);
-        topo.setPopulation(Long.getLong("0"));
-        return topo;
-    }
 
     /**
-     * Determines if toponym points to the default geocoordinates, regardless of
-     * its name and other elements
-     *
-     * @param toponym
-     * @return
-     */
-    private boolean calcUnknown(Toponym toponym) {
-        if (toponym == null) {
-            return false;
-        }
-        Toponym topo = defaultToponym();
-        return (toponym.getLatitude() == topo.getLatitude() && toponym.getLongitude() == topo.getLongitude());
-    }
-
-    /**
-     * Converts geocoordinates strings to toponym (elements other than
+     * Converts geocoordinates strings to place (elements other than
      * geocoordinates are not used in that case)
      *
      * @param code
      * @return
      */
-    public Toponym Code2Toponym(String code) {
+    public Place Code2Place(String code) {
         if (code == null || code.isEmpty()) {
             return null;
         }
@@ -261,7 +181,7 @@ public class GeoNodeObject {
             }
         } catch (Throwable t) {
         }
-        return topo;
+        return new GeonamesPlace(topo, null);
     }
 
     /**
@@ -270,16 +190,11 @@ public class GeoNodeObject {
      * @param topo
      * @return
      */
-    public String Toponym2Code(Toponym topo) {
-        if (topo == null) {
+    public String Place2Code(Place place) {
+        if (place == null) {
             return "";
         }
-        try {
-            return topo.getLatitude() + ";" + topo.getLongitude() + ";" + topo.getPopulation();
-        } catch (InsufficientStyleException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        return null;
+        return place.getLatitude() + ";" + place.getLongitude() + ";" + place.getPopulation();
     }
 
     /**
@@ -301,10 +216,11 @@ public class GeoNodeObject {
         
         // Set to toponym coordinates otherwise, and default if null
         if (this.latitude == null || this.longitude == null) {
+            
             if (this.toponym == null) {
-                this.toponym = defaultToponym();
+                this.toponym = geonamesResearcher.defaultPlace();
             }
-            if (calcUnknown(this.toponym)) {
+            if (toponym.getLatitude() == defaultPlace.getLatitude() && toponym.getLongitude() == defaultPlace.getLongitude()) {
                 geo_type = GEO_UNKNOWN;
             } else {
                 geo_type = GEO_PROPOSED;
@@ -426,12 +342,9 @@ public class GeoNodeObject {
         return getPopulation(toponym);
     }
 
-    public String getPopulation(Toponym topo) {
+    public String getPopulation(Place topo) {
         Long pop = Long.getLong("0");
-        try {
-            pop = topo != null ? topo.getPopulation() : defaultToponym().getPopulation();
-        } catch (InsufficientStyleException ex) {
-        }
+        pop = topo != null ? topo.getPopulation() : 0;
         DecimalFormat format = new DecimalFormat("#,##0");
         return pop != null ? format.format(pop) : "0";
     }
@@ -664,7 +577,8 @@ public class GeoNodeObject {
         events.add(new GeoNodeObject(gplOwner, parent, pp));
     }
 
-    public String displayToponym(Toponym topo) {
+    public String displayToponym(Place place) {
+        Toponym topo = place.getToponym();
         if (topo == null) {
             return "";
         }
@@ -687,7 +601,7 @@ public class GeoNodeObject {
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Region")).append(spa).append(dispName(topo.getAdminName1())).append(" (").append(dispName(topo.getAdminCode1())).append(")").append(sep);
             str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Cntry")).append(spa).append(dispName(topo.getCountryName())).append(sep);
             str.append(sep);
-            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop")).append(spa).append(getPopulation(topo));
+            str.append(NbBundle.getMessage(GeoNodeObject.class, "TXT_Pop")).append(spa).append(topo.getPopulation());
             str.append(sep);
             str.append(" ");
         } catch (InsufficientStyleException ex) {

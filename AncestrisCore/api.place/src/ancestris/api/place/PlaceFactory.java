@@ -15,6 +15,7 @@ package ancestris.api.place;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
+import org.geonames.Toponym;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 
 /**
@@ -25,6 +26,7 @@ public class PlaceFactory implements Place {
 
     private PropertyPlace propertyPlace = null;
     private Double latitude, longitude = 0d;
+    private Long population = 0L;
 
     public PlaceFactory(PropertyPlace place) {
         this.propertyPlace = place;
@@ -58,6 +60,16 @@ public class PlaceFactory implements Place {
     @Override
     public Double getLatitude() {
         return latitude;
+    }
+
+    @Override
+    public Long getPopulation() {
+        return population;
+    }
+
+    @Override
+    public Toponym getToponym() {
+        return null;
     }
 
     @Override
@@ -123,6 +135,6 @@ public class PlaceFactory implements Place {
         }
         propertyPlace.setFormatAsString(global, format);
     }
-    
+
 
 }
