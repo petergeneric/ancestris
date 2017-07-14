@@ -745,6 +745,8 @@ public class EventWrapper {
             if (!toPlace.getLatitude(false).getValue().equals(strLat) || !toPlace.getLongitude(false).getValue().equals(strLong)) {
                 toPlace.setCoordinates(strLat, strLong);
             }
+        } else if (toPlace != null) {
+            toPlace.setCoordinates();
         }
     }
 
