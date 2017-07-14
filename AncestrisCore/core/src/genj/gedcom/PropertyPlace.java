@@ -496,6 +496,52 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
+     * Set coordinates as global change (look for the property place which value is the same and where
+     * coordinates exist)
+     */
+    public void setCoordinates(boolean global) {
+
+        if (global) {
+            // change coordinates of all places with same value
+            Property[] others = getSameChoices();
+            for (Property other : others) {
+                if (other instanceof PropertyPlace && other != this) {
+                    ((PropertyPlace) other).setCoordinates();
+                }
+            }
+        }
+        
+        // set coordinates of this place
+        setCoordinates();
+    }
+
+    
+    /**
+     * Set coordinates from first matching place with coordinates in the gedcom with same value
+     */
+    public void setCoordinates() {
+        // Get first place with same value where coordinates exist
+        PropertyPlace source = null;
+        Property[] others = getSameChoices();
+        for (Property other : others) {
+            if (other instanceof PropertyPlace && other != this && other.getValue().equals(getValue())) {
+                if (((PropertyPlace) other).getMap() != null) {
+                    source = (PropertyPlace) other;
+                    break;
+                }
+            }
+        }
+        
+        // Put these found coordinates to this place
+        if (source != null) {
+            setCoordinates(source.getLatitude(false).getValue(), source.getLongitude(false).getValue());
+        }
+        
+    }
+
+
+    
+    /**
      * Display value for a place where format is one of
      * <pre>
      *  null      1st available
