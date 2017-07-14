@@ -1,7 +1,6 @@
 package ancestris.modules.place.geonames;
 
 import ancestris.api.place.Place;
-import java.util.logging.Logger;
 import org.geonames.InsufficientStyleException;
 import org.geonames.PostalCode;
 import org.geonames.Toponym;
@@ -16,13 +15,12 @@ public class GeonamesPlace implements Place {
 
     private PostalCode postalCode = null;
     private Toponym toponym = null;
-    private final static Logger logger = Logger.getLogger(GeonamesPlacesList.class.getName(), null);
 
     public GeonamesPlace(Toponym toponym, PostalCode postalCode) {
         this.postalCode = postalCode;
         this.toponym = toponym;
     }
-
+    
     @Override
     public int compareTo(Place that) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -93,6 +91,18 @@ public class GeonamesPlace implements Place {
         return toponym.getLatitude();
     }
 
+    @Override
+    public Long getPopulation() {
+        if (toponym == null) {
+            return 0L;
+        }
+        try {
+            return toponym.getPopulation();
+        } catch (InsufficientStyleException ex) {
+            return 0L;
+        }
+    }
+
     /**
      * Format is defined as : "City, PostalCode, GeoCode, County, State, Country"
      * 
@@ -154,6 +164,11 @@ public class GeonamesPlace implements Place {
      */
     public static String getPlaceFormat() {
         return NbBundle.getMessage(GeonamesPlace.class, "GeoNamesPlaceFormat"); // Example : "City, PostalCode, GeoCode, County, State, Country";
+    }
+
+    @Override
+    public Toponym getToponym() {
+        return toponym;
     }
 
 

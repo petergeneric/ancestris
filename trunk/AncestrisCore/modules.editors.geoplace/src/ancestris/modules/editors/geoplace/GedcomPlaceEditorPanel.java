@@ -2,7 +2,7 @@ package ancestris.modules.editors.geoplace;
 
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
-import ancestris.modules.place.geonames.GeonamesPlacesList;
+import ancestris.modules.place.geonames.GeonamesResearcher;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,7 +194,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                     map[i] = ""+i;
                 } 
             } else {
-                String mapStr = GeonamesPlacesList.getGeonamesMapString(gedcom);
+                String mapStr = GeonamesResearcher.getGeonamesMapString(gedcom);
                 if (mapStr.isEmpty()) {
                     map = getGeonamesMap();
                 } else {
@@ -413,7 +413,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
     
     
     private String[] getGeonamesMap() {
-        return GeonamesPlacesList.getGeonamesMap(gedcom);
+        return GeonamesResearcher.getGeonamesMap(gedcom);
     }
     
     

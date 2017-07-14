@@ -1,5 +1,7 @@
 package ancestris.api.place;
 
+import org.geonames.Toponym;
+
 public interface Place {
 
     public final static String JURISDICTION_SEPARATOR = ",";
@@ -14,6 +16,10 @@ public interface Place {
     public Double getLongitude();
     
     public Double getLatitude();
+
+    public Long getPopulation();
+
+    public Toponym getToponym();
 
     /**
      * Accessor - first non-empty jurisdiction

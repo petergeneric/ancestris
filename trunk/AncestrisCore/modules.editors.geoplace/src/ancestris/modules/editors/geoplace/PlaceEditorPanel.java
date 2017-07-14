@@ -2,7 +2,7 @@ package ancestris.modules.editors.geoplace;
 
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
-import ancestris.modules.place.geonames.GeonamesPlacesList;
+import ancestris.modules.place.geonames.GeonamesResearcher;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -28,7 +28,6 @@ import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
@@ -76,7 +75,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private ReferencesTableModel referencesTableModel = new ReferencesTableModel();
     
     // List of places searched on the Internet and model in the list window
-    private GeonamesPlacesList geonamesPlacesList = new GeonamesPlacesList();
+    private GeonamesResearcher geonamesSearcher = new GeonamesResearcher();
     private final GeonamePlacesListModel geonamePlacesListModel = new GeonamePlacesListModel();
     
     // Popup when clicking on the map
@@ -422,7 +421,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
         String searchedPlace = searchPlaceTextField.getText();
-            if (searchedPlace.isEmpty() == false) {
+            if (!searchedPlace.isEmpty()) {
                 searchPlace();
                 placeEditorTabbedPane.setSelectedComponent(internetListPanel);
             }
@@ -574,12 +573,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         this.mGedcom = gedcom;
         this.mPlace = (PropertyPlace) propertyPlaceArray[0];
 
-        // Display place details
-        gedcomPlaceEditorPanel.set(gedcom, mPlace);
-        
-        // Display location on map
-        displayLocationOnMap(new PlaceFactory(mPlace));
-
         // Set window size
         this.setPreferredSize(new Dimension(registry.get("placeWindowWidth", this.getPreferredSize().width), registry.get("placeWindowHeight", this.getPreferredSize().height)));
         splitPane.setDividerLocation(registry.get("placeSplitDividerLocation", splitPane.getDividerLocation()));
@@ -594,11 +587,18 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             gedcomPlacesListModel.addElement(place);
         }
 
+        // Display place details
+        gedcomPlaceEditorPanel.set(gedcom, mPlace);
+        
         // Set text in search field
         listIsBusy = true;
-        searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
+        searchPlaceTextField.setText(mPlace.getValue());
+        //searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
         listIsBusy = false;
          
+        // Display location on map
+        displayLocationOnMap(new PlaceFactory(mPlace));
+
         // Give handle on this panel
         gedcomPlaceEditorPanel.setMapHandle(this);
         
@@ -607,12 +607,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             @Override
             public void run() {
                 // Display gedcom list tab or internet result tab depending on whether place exists in gedcom list
+                selectPlace(mPlace);
                 if (!gedcomPlacesListModel.isEmpty() && mPlace.getLatitude(true) != null) {
                     placeEditorTabbedPane.setSelectedComponent(gedcomListPanel);
-                    selectPlace(mPlace);
                 } else if (!geonamePlacesListModel.isEmpty()) {
                     placeEditorTabbedPane.setSelectedComponent(internetListPanel);
                     geonamesPlacesListResult.setSelectedIndex(0);
+                } else {
+                    placeEditorTabbedPane.setSelectedComponent(internetListPanel);
                 }
 
                 searchPlaceTextField.setSelectionStart(0);
@@ -662,23 +664,21 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private void searchPlace() {
         searchPlaceButton.setEnabled(false);
         geonamePlacesListModel.clear();
-        final JPanel panel = this;
-        panel.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+        setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
-            geonamesPlacesList.searchPlace(searchPlaceTextField.getText(), geonamePlacesListModel);
-            geonamesPlacesList.getTask().addTaskListener(new TaskListener() {
+            geonamesSearcher.searchPlace(searchPlaceTextField.getText(), "", "", geonamePlacesListModel, 0, new TaskListener() {
                 @Override
                 public void taskFinished(Task task) {
-                    panel.setCursor(Cursor.getDefaultCursor());
                     searchPlaceButton.setEnabled(true);
                     if (geonamePlacesListModel.getSize() > 0) {
                         geonamesPlacesListResult.setSelectionInterval(0, 0);
                     }
-
                 }
             });
         } catch (Exception e) {
            // Nothing 
+        } finally {
+            setCursor(Cursor.getDefaultCursor());
         }
     }
 
@@ -921,7 +921,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 showLocation(mpm.getGeoPoint());
             }
             if (actionName.equals("ACTION_MapNearestPoint")) {
-                gedcomPlaceEditorPanel.updatePlace(geonamesPlacesList.searchNearestPlace(mpm.getGeoPoint().getLatitude(), mpm.getGeoPoint().getLongitude()), 0, true);
+                gedcomPlaceEditorPanel.updatePlace(geonamesSearcher.searchNearestPlace(mpm.getGeoPoint().getLatitude(), mpm.getGeoPoint().getLongitude()), 0, true);
                 showLocation(mpm.getGeoPoint());
             }
         }
