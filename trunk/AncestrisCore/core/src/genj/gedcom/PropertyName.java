@@ -426,11 +426,11 @@ public class PropertyName extends Property {
         if (hasParent && !isBusy) {
             isBusy = true;
             boolean add = GedcomOptions.getInstance().getAddNameSubtags();
-            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);    
-            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);  
-            addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);
-            addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);
-            addNameSubProperty(add, "NSFX", suff);
+            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);    // GIVN forced if name prefix not empty and FIRST contains a name not followed by a comma ","
+            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);             // SURN forced if surname prefix not empty and SURN contains commas
+            addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);                                   // name prefix forced if name prefix not empty
+            addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);                                   // surname prefix forced if surname prefix not empty
+            addNameSubProperty(add || !suff.isEmpty(), "NSFX", suff);                                   // suffix forced if suffix not empty
         }
 
         // Make sure no Information is kept in base class
