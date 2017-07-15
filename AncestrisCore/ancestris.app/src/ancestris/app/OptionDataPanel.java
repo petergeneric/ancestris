@@ -61,10 +61,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         namesPanel = new javax.swing.JPanel();
         cbNamesInUppercase = new javax.swing.JCheckBox();
         cbAddNameSubtags = new javax.swing.JCheckBox();
-        cbGivenName = new javax.swing.JCheckBox();
-        jtGivenTag = new javax.swing.JTextField();
         cbSpaceIsSep = new javax.swing.JCheckBox();
         cbSameSpouseName = new javax.swing.JCheckBox();
+        cbGivenName = new javax.swing.JCheckBox();
+        jtGivenTag = new javax.swing.JTextField();
         IDPanel = new javax.swing.JPanel();
         cbReuseIDs = new javax.swing.JCheckBox();
         lDefaultIDLength = new javax.swing.JLabel();
@@ -96,6 +96,11 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
         cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(cbSpaceIsSep, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(cbSameSpouseName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.text")); // NOI18N
+        cbSameSpouseName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.toolTipText")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(cbGivenName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbGivenName.text")); // NOI18N
         cbGivenName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -105,11 +110,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
         jtGivenTag.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtGivenTag.text")); // NOI18N
         jtGivenTag.setMinimumSize(new java.awt.Dimension(64, 23));
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbSpaceIsSep, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbSameSpouseName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.text")); // NOI18N
-        cbSameSpouseName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout namesPanelLayout = new javax.swing.GroupLayout(namesPanel);
         namesPanel.setLayout(namesPanelLayout);
@@ -137,14 +137,14 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addComponent(cbNamesInUppercase)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAddNameSubtags)
-                .addGap(0, 0, 0)
-                .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cbGivenName)
-                    .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbSpaceIsSep)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbSameSpouseName))
+                .addComponent(cbSameSpouseName)
+                .addGap(2, 2, 2)
+                .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cbGivenName)
+                    .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         IDPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.IDPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
