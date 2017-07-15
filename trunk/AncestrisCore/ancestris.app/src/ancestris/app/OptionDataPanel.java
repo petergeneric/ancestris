@@ -97,11 +97,13 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSpaceIsSep, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.text")); // NOI18N
+        cbSpaceIsSep.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSameSpouseName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.text")); // NOI18N
         cbSameSpouseName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbGivenName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbGivenName.text")); // NOI18N
+        cbGivenName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbGivenName.toolTipText")); // NOI18N
         cbGivenName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cbGivenNameActionPerformed(evt);
@@ -109,6 +111,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         });
 
         jtGivenTag.setText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtGivenTag.text")); // NOI18N
+        jtGivenTag.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.jtGivenTag.toolTipText")); // NOI18N
         jtGivenTag.setMinimumSize(new java.awt.Dimension(64, 23));
 
         javax.swing.GroupLayout namesPanelLayout = new javax.swing.GroupLayout(namesPanel);
@@ -153,6 +156,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbReuseIDs.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReuseIDs.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lDefaultIDLength, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultIDLength.text")); // NOI18N
+        lDefaultIDLength.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultIDLength.toolTipText")); // NOI18N
 
         idLength.setModel(new javax.swing.SpinnerNumberModel(0, 0, 10, 1));
         idLength.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.idLength.toolTipText")); // NOI18N
@@ -188,8 +192,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
         placePanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.placePanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbUseSpace, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbUseSpace.text")); // NOI18N
+        cbUseSpace.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbUseSpace.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSplitJuridictions, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSplitJuridictions.text")); // NOI18N
+        cbSplitJuridictions.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSplitJuridictions.toolTipText")); // NOI18N
 
         javax.swing.GroupLayout placePanelLayout = new javax.swing.GroupLayout(placePanel);
         placePanel.setLayout(placePanelLayout);
@@ -214,6 +220,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         encodingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.encodingPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lFileEncoding, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lFileEncoding.text")); // NOI18N
+        lFileEncoding.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lFileEncoding.toolTipText")); // NOI18N
 
         cboxEncoding.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cboxEncoding.toolTipText")); // NOI18N
 
@@ -251,10 +258,23 @@ final class OptionDataPanel extends javax.swing.JPanel {
         editingPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.editingPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(lDefaultEditor, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultEditor.text")); // NOI18N
+        lDefaultEditor.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.lDefaultEditor.toolTipText")); // NOI18N
 
         cboxDefaultEditor.setModel(comboModel);
+        cboxDefaultEditor.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cboxDefaultEditor.toolTipText")); // NOI18N
+        cboxDefaultEditor.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboxDefaultEditorActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(cbAutoCommit, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.text")); // NOI18N
+        cbAutoCommit.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAutoCommit.toolTipText")); // NOI18N
+        cbAutoCommit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cbAutoCommitActionPerformed(evt);
+            }
+        });
 
         nbCancellations.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.nbCancellations.toolTipText")); // NOI18N
 
@@ -320,7 +340,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(IDPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -364,6 +384,14 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private void cbGivenNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbGivenNameActionPerformed
         jtGivenTag.setEnabled(cbGivenName.isSelected());
     }//GEN-LAST:event_cbGivenNameActionPerformed
+
+    private void cboxDefaultEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboxDefaultEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboxDefaultEditorActionPerformed
+
+    private void cbAutoCommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAutoCommitActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cbAutoCommitActionPerformed
 
     void load() {
         // Names

@@ -378,7 +378,7 @@ public class GedcomOptions {
     }
 
     public boolean getAddNameSubtags() {
-        return getPreferences().get(ADD_NAME_SUBTAGS, false);
+        return getPreferences().get(ADD_NAME_SUBTAGS, true);
     }
 
     /**
@@ -416,7 +416,7 @@ public class GedcomOptions {
      * defaults to true
      */
     public boolean spaceIsSeparator() {
-        return getPreferences().get(SPACE_IS_SEPARATOR, false);
+        return getPreferences().get(SPACE_IS_SEPARATOR, true);
     }
 
     public void setSpaceIsSeparator(boolean value) {
