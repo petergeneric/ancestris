@@ -53,6 +53,7 @@ import ancestris.welcome.content.Constants;
 import ancestris.welcome.ui.StartPageContent;
 import org.openide.ErrorManager;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbPreferences;
 
 /**
@@ -69,6 +70,7 @@ public class WelcomeComponent extends TopComponent {
     private WelcomeComponent(){
         setLayout(new BorderLayout());
         setName(NbBundle.getMessage(WelcomeComponent.class, "LBL_Tab_Title"));   //NOI18N
+        setIcon(ImageUtilities.loadImage("ancestris/welcome/resources/welcome.png", true));  
         setToolTipText(NbBundle.getMessage(WelcomeComponent.class, "ACS_Welcome_DESC"));   //NOI18N
         content = null;
         initialized = false;
