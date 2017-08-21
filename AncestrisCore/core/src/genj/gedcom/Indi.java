@@ -356,7 +356,7 @@ public class Indi extends Entity {
         ArrayList<Fam> result = new ArrayList<Fam>(getNoOfProperties());
         for (int i = 0, j = getNoOfProperties(); i < j; i++) {
             Property prop = getProperty(i);
-            if ("FAMS".equals(prop.getTag()) && prop.isValid()) {
+            if ("FAMS".equals(prop.getTag()) && prop.isValid() && prop instanceof PropertyFamilySpouse) {
                 result.add(((PropertyFamilySpouse) prop).getFamily());
             }
         }
