@@ -23,6 +23,7 @@
         <xmlproperty>
             <propertyresource name="buildversion"/>
         </xmlproperty>
+        <property name="info.entry.commit(revision)" value="0" />
         <property name="buildnumber" value="${info.entry.commit(revision)}" />
     </target>
     <target name="build-bundles" description="Builds the zip bundles for translators">
