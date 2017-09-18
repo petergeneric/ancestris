@@ -2,6 +2,7 @@ package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import static ancestris.modules.gedcom.searchduplicates.Bundle.*;
+import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import ancestris.modules.gedcom.utilities.matchers.*;
 import genj.gedcom.*;
 import java.awt.Dialog;
@@ -284,7 +285,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                                     Entity left = matchesLinkedList.get(linkedListIndex).getLeft();
                                     Entity right = matchesLinkedList.get(linkedListIndex).getRight();
                                     List<Property> selectedProperties = entityViewPanel.getSelectedProperties();
-                                    //GedcomUtilities.MergeEntities(gedcom, left, right, selectedProperties);
+                                    GedcomUtilities.MergeEntities(gedcom, left, right, selectedProperties);
                                     linkedListIndex = cleanList(matchesLinkedList, right);
                                 }
 
