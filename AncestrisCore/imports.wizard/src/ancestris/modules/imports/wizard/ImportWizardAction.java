@@ -2,10 +2,10 @@ package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.view.SelectionDispatcher;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
+import genj.util.Resources;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.io.File;
@@ -49,24 +49,29 @@ public final class ImportWizardAction extends CallableSystemAction {
             File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
             // Import file fixing most issues
             if (importMethod.run(inputFile, outFile) == true) {
-                Context context = GedcomDirectory.getDefault().openGedcom(FileUtil.toFileObject(outFile));
+                Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outFile));
                 if (context != null) {
-                    // If imported correctly, fix last gedcom issues
+                    // If imported correctly, fix remaining gedcom issues
                     Gedcom importedGedcom = context.getGedcom();
                     importedGedcom.setName(inputFile.getName());
                     importMethod.fixGedcom(importedGedcom);
                     importMethod.complete();
                     
-                    // Force context refresh to redisplay modified context in case it has been modified by "fixGedcom"
-                    // (by displaying another context (header) then the memorized context)
-                    Property tmpProperty = importedGedcom.getFirstEntity("HEAD");
-                    SelectionDispatcher.fireSelection(new Context(tmpProperty));
-                    SelectionDispatcher.fireSelection(context);
-                    
                     // Save as a new file
-                    GedcomDirectory.getDefault().saveAsGedcom(context);
+                    GedcomDirectory.getDefault().saveAsGedcom(context, outFile);
+                    
+                    // Popup results
+                    Resources RES = Resources.get(GedcomDirectory.class);
+                    Object rc = DialogManager.create(RES.getString("cc.open.title"),
+                            RES.getString("cc.importResults?", inputFile.getName(), importMethod.toString(),
+                                    importMethod.getIndisNb(), importMethod.getFamsNb(), importMethod.getNotesNb(), importMethod.getObjesNb(),
+                                    importMethod.getSoursNb(), importMethod.getReposNb(), importMethod.getSubmsNb(), importMethod.getChangesNb()))
+                            .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
+                    if (rc == DialogManager.YES_OPTION) {
+                        importMethod.showDetails();
+                    }
                 }
-                outFile.delete();
+                //outFile.delete();
             }
         }
     }

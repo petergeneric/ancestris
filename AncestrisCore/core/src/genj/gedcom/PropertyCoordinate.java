@@ -86,7 +86,7 @@ public abstract class PropertyCoordinate extends Property{
                 direction = p.charAt(0);
             }
             try {
-                result = Double.parseDouble(matcher.group("deg"));
+                result = Double.parseDouble(matcher.group("deg").replace(",", "."));
                 result = ((direction == 'S') || (direction == 'W')) ? -result : result;
             } catch (NumberFormatException e){}
         }

@@ -80,6 +80,7 @@ public final class ImportVisualImport extends JPanel {
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
 
+        jComboBox1.setMaximumRowCount(15);
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<Import>(importList));
         jComboBox1.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {

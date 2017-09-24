@@ -206,25 +206,10 @@ public class PropertyName extends Property {
     }
 
     /**
-     * the suffix
-     */
-    public String getSuffix() {
-        return getPropertyValue("NSFX");
-    }
-
-    /**
      * nested nickname
      */
     public String getNick() {
         return getPropertyValue("NICK");
-    }
-
-    public String getSurnamePrefix() {
-        return getPropertyValue("SPFX");
-    }
-
-    public String getNamePrefix() {
-        return getPropertyValue("NPFX");
     }
 
     public void setNick(String nick) {
@@ -236,6 +221,53 @@ public class PropertyName extends Property {
             addProperty("NICK", nick);
         } else {
             n.setValue(nick);
+        }
+    }
+
+
+    /**
+     * the name prefix
+     */
+    public String getNamePrefix() {
+        return getPropertyValue("NPFX");
+    }
+
+    public String getNamePrefix(boolean displayValue) {
+        if (displayValue) {
+            return getNamePrefix().replaceAll(" *, *", " ");
+        } else {
+            return getNamePrefix();
+        }
+    }
+
+    /**
+     * the surname prefix
+     */
+    public String getSurnamePrefix() {
+        return getPropertyValue("SPFX");
+    }
+
+    public String getSurnamePrefix(boolean displayValue) {
+        if (displayValue) {
+            return getSurnamePrefix().replaceAll(" *, *", " ");
+        } else {
+            return getSurnamePrefix();
+        }
+    }
+
+
+    /**
+     * the suffix
+     */
+    public String getSuffix() {
+        return getPropertyValue("NSFX");
+    }
+
+    public String getSuffix(boolean displayValue) {
+        if (displayValue) {
+            return getSuffix().replaceAll(" *, *", " ");
+        } else {
+            return getSuffix();
         }
     }
 
@@ -273,11 +305,11 @@ public class PropertyName extends Property {
      */
     private String computeNameValue() {
         return computeNameValue(
-                getNamePrefix(),
+                getNamePrefix(true),
                 getFirstName(true),
-                getSurnamePrefix(),
+                getSurnamePrefix(true),
                 getLastName(true),
-                getSuffix());
+                getSuffix(true));
 
     }
 
@@ -336,14 +368,14 @@ public class PropertyName extends Property {
             }
             b.append(getSurnamePrefix());
             b.append(last);
-            b.append(getSuffix());
+            b.append(getSuffix(true));
             b.setFiller(", ");
             b.append(getFirstName(true));
 
         } else {
 
             b.append(getFirstName(true));
-            b.append(getSurnamePrefix());
+            b.append(getSurnamePrefix(true));
             b.append(getLastName(true));
 
         }
@@ -402,11 +434,12 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memory
-        first = normalizeName(first, GedcomOptions.getInstance().spaceIsSeparator());
+        boolean sis = GedcomOptions.getInstance().spaceIsSeparator();
+        first = normalizeName(first, sis);
         last = normalizeName(last, false);
-        suff = suff.trim();
-        nPfx = nPfx.trim();
-        sPfx = sPfx.trim();
+        nPfx = normalizeName(nPfx, sis);
+        sPfx = normalizeName(sPfx, sis);
+        suff = normalizeName(suff, sis);
 
         // replace all last names?
         if (replaceAllLastNames) {
@@ -426,7 +459,7 @@ public class PropertyName extends Property {
         if (hasParent && !isBusy) {
             isBusy = true;
             boolean add = GedcomOptions.getInstance().getAddNameSubtags();
-            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);    // GIVN forced if name prefix not empty and FIRST contains a name not followed by a comma ","
+            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);    // GIVN forced if name prefix not empty or FIRST contains a name not followed by a comma ","
             addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);             // SURN forced if surname prefix not empty and SURN contains commas
             addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);                                   // name prefix forced if name prefix not empty
             addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);                                   // surname prefix forced if surname prefix not empty
@@ -481,6 +514,9 @@ public class PropertyName extends Property {
     }
 
     private static String normalizeName(String namePiece, boolean spaceIsSeparator) {
+        if (namePiece.isEmpty()) {
+            return "";
+        }
         String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
         if (spaceIsSeparator) {
             result = result.replaceAll(" +", ",");

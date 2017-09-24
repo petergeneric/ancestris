@@ -31,7 +31,7 @@ import org.openide.util.NbBundle;
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        GedcomDirectory.getDefault().saveAsGedcom(getContext());
+        GedcomDirectory.getDefault().saveAsGedcom(getContext(), null);
     }
 
     @Override
