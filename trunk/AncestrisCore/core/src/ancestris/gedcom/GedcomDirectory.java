@@ -20,6 +20,7 @@
  */
 package ancestris.gedcom;
 
+import ancestris.api.imports.Import;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import static ancestris.gedcom.Bundle.*;
@@ -50,6 +51,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
+
 
 /**
  * A static registry for Gedcom instances.
@@ -257,23 +259,179 @@ public abstract class GedcomDirectory {
     }
 
     /**
-     * Opens a Gedcom FileObject.
-     *
-     * Use DataObject loaders to find the proper handler and then register it in local
-     * gedcom registry. Il file is already opened, doesn't open twice and return
-     * the saved context
+     * Main opening Gedcom method. Assumes gedcom could be coming from any other software
+     * 
+     * FL: 2017-09-24 : Auto-detect where gedcom is coming from and choose proper import module before opening Gedcom
+     * 
+     * Logic is:
+     *  - Detect Gedcom origin
+     *      - Open file header line "1 SOUR xxxx" => software = xxxx
+     *  - Depending on origin, select import or none if coming from Ancestris
+     *      - If software not Ancestris:
+     *          - Detect name of software among an import list (lookup xxxx)
+     *          - Popup user 
+     *              - "File is not an Ancestris Gedcom file, it is coming from software xxxx and needs to be modified to be 100% Gedcom compatible"
+     *              - "Ancestris will create a copy 'filename_ancestris.ged', modify it and save it to ....."
+     *              - "OK to proceed ?" else cancel operation.
+     *          - Run corresponding import
+     *              - Fix header and lines (progress bar) 
+     *              - Open Gedcom normally (progress bar). There should be no errror message.
+     *              - Fix gedcom (it will need to be reopen afterwards to take into account all modifications, therefore it needs to be saved) (progress bar)
+     *              - Save gedcom with temporary name without asking user anything
+     *              - Open Gedcom normally (progress bar) - this is done withing the saveas function already.
+     *          - Popup user 
+     *              - "File coming from "xxxx" has been correctly opened and saved to 'filename_ancestris.ged'"
+     *              - "The following number of entities have been imported:
+     *              - "    xxxx individuals,
+     *              - "    xxxx families,
+     *              - "    xxxx notes,
+     *              - "    xxxx media,
+     *              - "    xxxx sources,
+     *              - "    xxxx repositories,
+     *              - "    xxxx submitters.
+     *              - "All the data has been kept but some modifications had to be made to be 100% Gedcom compatible."
+     *              - "Do you want to see them ?" Yes, No.
+     *              - if Yes, display console.
+     *      - Else
+     *          - Open Gedcom normally (progress bar)
+     * 
+     * @param foInput
+     * @return context to display
+     */
+    public Context openGedcom(FileObject foInput) {
+        
+        // Detect Gedcom origin : Open file header line "1 SOUR xxxx" => software = xxxx
+        String software = "";
+        boolean stop = false;
+        try {
+            GedcomFileReader input = GedcomFileReader.create(new File(foInput.getPath()));
+            try {
+                while ((input.getNextLine(true)) != null && !stop) {
+                    if (input.getLevel() == 0 && input.getTag().equals("HEAD")) {
+                        continue;
+                    }
+                    if (input.getLevel() == 1 && input.getTag().equals("SOUR")) {
+                        software = input.getValue();
+                        stop = true;
+                    }
+                    if (input.getLevel() == 0 && !input.getTag().equals("HEAD")) {
+                        stop = true;
+                    }
+                }
+            } finally {
+                input.close();
+            }
+        } catch (Exception e) {
+            LOG.info(e.toString());
+        }
+        
+        // If software is Ancestris, open file normally
+        if (software.equalsIgnoreCase("ANCESTRIS")) {
+            return openAncestrisGedcom(foInput);
+        }
+
+        // Detect name of software among the import list (lookup xxxx)
+        Import identifiedImport = null;
+        Import defaultImport = null;
+        Collection<? extends Import> c = Lookup.getDefault().lookupAll(Import.class);
+        for (Import o : c) {
+            if (o.toString().toLowerCase().contains(software.toLowerCase())) {
+                identifiedImport = o;
+                break;
+            }
+            if (software.toLowerCase().contains(o.toString().toLowerCase())) {
+                identifiedImport = o;
+                break;
+            }
+            if (o.isGeneric()) {
+                defaultImport = o;
+            }
+        }
+        if (identifiedImport == null) {
+            identifiedImport = defaultImport;
+        }
+        if (identifiedImport == null) {
+            LOG.info("Opening a non Ancestris file from " + software + " and cannot find any import module to be used. Using normal Ancestris file open.");
+            return openAncestrisGedcom(foInput);
+        }
+
+        
+        // Popup confirmation to user
+        software = identifiedImport.toString();
+        String dirname = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
+        String tmpFileName = foInput.getName()+"_ancestris.ged";
+        LOG.info("Opening a non Ancestris file from " + software + ". Using corresponding import module.");
+        String message = identifiedImport.isGeneric() ? RES.getString("cc.importGenericGedcom?", foInput.getNameExt(), tmpFileName, dirname) : RES.getString("cc.importGedcom?", foInput.getNameExt(), software, tmpFileName, dirname);
+        Object rc = DialogManager.create(RES.getString("cc.open.title"), message).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
+        if (rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
+            return null;
+        }
+        LOG.info("Conversion of file from " + software + " confirmed by user.");
+        
+        // Run corresponding import
+        // - Fix header and lines (progress bar) 
+        identifiedImport.setTabName(NbBundle.getMessage(Import.class, "OpenIDE-Module-Name") + " - " + identifiedImport.toString());
+        File inputFile = new File(foInput.getPath());
+        File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + tmpFileName);
+        boolean fixedOk = identifiedImport.run(inputFile, outFile);
+        if (!fixedOk) {
+            return null;  // error messages have been displayed already
+        }
+        // - Open Gedcom normally (progress bar). There should be no errror message.
+        Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outFile));
+        if (context == null) {
+            return null;  // error messages have been displayed already
+        }
+        
+        // - Fix gedcom (it will need to be reopen afterwards to take into account all modifications, therefore it needs to be saved) (progress bar)
+        Gedcom importedGedcom = context.getGedcom();
+        importedGedcom.setName(inputFile.getName());
+        identifiedImport.fixGedcom(importedGedcom);
+        identifiedImport.complete();
+
+        // - Save gedcom with temporary name without asking user anything
+        LOG.info("Conversion of file from " + software + " done. Saving to temp file " + dirname + tmpFileName + ".");
+        GedcomDirectory.getDefault().saveAsGedcom(context, outFile);
+        // - Nothing to do (new file should be opened)
+
+        // Popup user conversion stats
+        rc = DialogManager.create(RES.getString("cc.open.title"), 
+                RES.getString("cc.importResults?", foInput.getNameExt(), software, 
+                        identifiedImport.getIndisNb(), identifiedImport.getFamsNb(), identifiedImport.getNotesNb(), identifiedImport.getObjesNb(),
+                        identifiedImport.getSoursNb(), identifiedImport.getReposNb(), identifiedImport.getSubmsNb(), identifiedImport.getChangesNb()))
+                .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
+        if (rc == DialogManager.YES_OPTION) {
+            identifiedImport.showDetails();
+        }
+
+        return null;
+    }
+    
+    
+    
+    
+    
+    /**
+     * 
+     * Open Gedcom normally (witout any correction) : assumes input file is an Ancestris gedcom file.
+     * 
+     *      Opens a Gedcom FileObject.
+     * 
+     *      Use DataObject loaders to find the proper handler and then register it in local
+     *      gedcom registry. Il file is already opened, doesn't open twice and return
+     *      the saved context
      *
      * @param input Gedcom FileObject
      *
      * @return
      */
-    public Context openGedcom(FileObject input) {
+    public Context openAncestrisGedcom(FileObject input) {
         Context context = getContext(input);
         if (context != null) {
             return context;
         }
         try {
-            DataObject dao = DataObject.find(input);
+            DataObject dao = DataObject.find(input); // loads gedcom file here
             GedcomDataObject gdao = dao.getLookup().lookup(GedcomDataObject.class);
             if (gdao == null) {
                 return null;
@@ -309,7 +467,7 @@ public abstract class GedcomDirectory {
         if (context != null
                 && (context.getGedcom().getOrigin() == null
                 || !context.getGedcom().getOrigin().getFile().exists())) {
-            return saveAsGedcom(context);
+            return saveAsGedcom(context, null);
         }
         try {
             return GedcomMgr.getDefault().saveGedcom(context, getDataObject(context).getPrimaryFile());
@@ -327,7 +485,7 @@ public abstract class GedcomDirectory {
      *
      * @return
      */
-    public boolean saveAsGedcom(Context context) {
+    public boolean saveAsGedcom(Context context, File outputFile) {
 
         if (context == null || context.getGedcom() == null) {
             return false;
@@ -365,36 +523,40 @@ public abstract class GedcomDirectory {
         }
 
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
-        File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString(), true);
-        if (file == null) {
-            return false;
-        }
-
-        // .. take chosen one & filters
-        if (!file.getName().endsWith(".ged")) {
-            file = new File(file.getAbsolutePath() + ".ged");
-        }
-
-        // Need confirmation if File exists?
-        if (file.exists()) {
-            if (DialogManager.YES_OPTION
-                    != DialogManager.createYesNo(
-                            RES.getString("cc.save.title", context.getGedcom().toString()),
-                            file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+        
+        if (outputFile == null) {
+            File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString(), true);
+            if (file == null) {
                 return false;
             }
-        } else {
-            //FIXME: if file doesn't exist, create a blank one (FileObject will then be correctly set)
-            // On drawback is that an empty backup file is created.
-            // FIXME: on the other hand, if file exists, the backup created will not necesserally be related 
-            // To this gedcom data
-            try {
-                file.createNewFile();
-            } catch (IOException ex) {
+
+            // .. take chosen one & filters
+            if (!file.getName().endsWith(".ged")) {
+                file = new File(file.getAbsolutePath() + ".ged");
             }
+
+            // Need confirmation if File exists?
+            if (file.exists()) {
+                if (DialogManager.YES_OPTION
+                        != DialogManager.createYesNo(
+                                RES.getString("cc.save.title", context.getGedcom().toString()),
+                                file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                    return false;
+                }
+            } else {
+            //FIXME: if file doesn't exist, create a blank one (FileObject will then be correctly set)
+                // On drawback is that an empty backup file is created.
+                // FIXME: on the other hand, if file exists, the backup created will not necesserally be related 
+                // To this gedcom data
+                try {
+                    file.createNewFile();
+                } catch (IOException ex) {
+                }
+            }
+            outputFile = file;
         }
 
-        Origin o = GedcomMgr.getDefault().saveGedcomAs(context, options, FileUtil.toFileObject(file));
+        Origin o = GedcomMgr.getDefault().saveGedcomAs(context, options, FileUtil.toFileObject(outputFile));
         //XXX: must handle close old file and open new
 
         if (o == null) {
@@ -402,7 +564,7 @@ public abstract class GedcomDirectory {
         } else {
             if (context != null) {
                 closeGedcom(context); // was:unregisterGedcom(context);
-                openGedcom(FileUtil.toFileObject(o.getFile()));
+                openAncestrisGedcom(FileUtil.toFileObject(o.getFile()));
             }
             return true;
         }

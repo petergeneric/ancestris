@@ -182,8 +182,8 @@ public class GedcomUtilities {
             pxref.link();
         } // ... else attach src property to dest property in case it is not a PropertyForeignXref
         else {
-            propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue());
-            propertySrc.getParent().delProperty(propertySrc);
+            int n = parentPropertyDest.getNoOfProperties();
+            propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue(), n);  // add to the end
             if (propertyDest instanceof PropertyXRef) {
                 ((PropertyXRef) propertyDest).link();
             }
@@ -192,6 +192,10 @@ public class GedcomUtilities {
             for (Property children : propertySrc.getProperties()) {
                 movePropertyRecursively(children, propertyDest);
             }
+            
+            // Remove src property
+            propertySrc.getParent().delProperty(propertySrc);
+            
         }
 
 
