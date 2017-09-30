@@ -389,8 +389,9 @@ public class ImportLegacy extends Import {
      */
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
-        boolean ret = super.fixGedcom(gedcom);
+        boolean ret = fixNames(gedcom);
         ret |= fixOther(gedcom);
+        ret |= fixPlaces(gedcom);
         return ret;
     }
 

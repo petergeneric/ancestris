@@ -301,7 +301,9 @@ public abstract class GedcomDirectory {
      */
     public Context openGedcom(FileObject foInput) {
         
-        // Detect Gedcom origin : Open file header line "1 SOUR xxxx" => software = xxxx
+        // Detect Gedcom origin : 
+        // - Open file header line "1 SOUR xxxx" => software = xxxx
+        // -                       "2 NAME xxxx" => software = xxxx if nothing in SOUR
         String software = "";
         boolean stop = false;
         try {
@@ -313,6 +315,13 @@ public abstract class GedcomDirectory {
                     }
                     if (input.getLevel() == 1 && input.getTag().equals("SOUR")) {
                         software = input.getValue();
+                        if (software.isEmpty()) {
+                            continue;
+                        }
+                        stop = true;
+                    }
+                    if (input.getLevel() == 2 && input.getTag().equals("NAME")) {
+                        software = input.getValue();
                         stop = true;
                     }
                     if (input.getLevel() == 0 && !input.getTag().equals("HEAD")) {
@@ -322,6 +331,11 @@ public abstract class GedcomDirectory {
             } finally {
                 input.close();
             }
+        } catch (GedcomFormatException e) {
+            String l = ""+e.getLine();
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", l));
+            //Exceptions.printStackTrace(e);
+            return null;
         } catch (Exception e) {
             LOG.info(e.toString());
             JOptionPane.showMessageDialog(null, e.getMessage());
@@ -338,6 +352,9 @@ public abstract class GedcomDirectory {
         Import defaultImport = null;
         Collection<? extends Import> c = Lookup.getDefault().lookupAll(Import.class);
         for (Import o : c) {
+            if (o.isGeneric()) {
+                defaultImport = o;
+            }
             if (o.toString().toLowerCase().contains(software.toLowerCase())) {
                 identifiedImport = o;
                 break;
@@ -346,15 +363,12 @@ public abstract class GedcomDirectory {
                 identifiedImport = o;
                 break;
             }
-            if (o.isGeneric()) {
-                defaultImport = o;
-            }
         }
-        if (identifiedImport == null) {
+        if (identifiedImport == null || software.isEmpty()) {
             identifiedImport = defaultImport;
         }
         if (identifiedImport == null) {
-            LOG.info("Opening a non Ancestris file from " + software + " and cannot find any import module to be used. Using normal Ancestris file open.");
+            LOG.info("Opening a non Ancestris file from '" + software + "' and cannot find any import module to be used. Using normal Ancestris file open.");
             return openAncestrisGedcom(foInput);
         }
 

@@ -74,10 +74,10 @@ public class GedcomFileReader extends PropertyReader {
 
     public String getNextLine(boolean consume) throws IOException {
         boolean ret = readLine(false, true);
+        theLine = line;
         if (!ret && tag == null) {   // empty line, return 
             throw new GedcomFormatException(RESOURCES.getString("read.error.norecord"), 0);
         }
-        theLine = line;
         if (level <= 0) {
             path = new TagPath(tag);
         } else {
