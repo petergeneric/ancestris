@@ -25,6 +25,7 @@ import genj.gedcom.PropertyRelationship;
 import genj.gedcom.TagPath;
 import genj.io.GedcomFileReader;
 import genj.io.GedcomFileWriter;
+import genj.io.GedcomFormatException;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -173,10 +174,11 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
             //Exceptions.printStackTrace(e1);
             return false;
-//        } catch (IOException ex) {
-//            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
-//            //Exceptions.printStackTrace(ex);
-//            return false;
+        } catch (GedcomFormatException e) {
+            String l = ""+e.getLine();
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", l));
+            //Exceptions.printStackTrace(e);
+            return false;
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
             //Exceptions.printStackTrace(e);
@@ -224,11 +226,13 @@ public abstract class Import {
         } catch (FileNotFoundException e1) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
             return false;
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
+        } catch (GedcomFormatException e) {
+            String l = ""+e.getLine();
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", l));
+            //Exceptions.printStackTrace(e);
             return false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown") + "\n" + e.getMessage());
+            JOptionPane.showMessageDialog(null, e.getMessage());
             return false;
         }
 
@@ -360,7 +364,9 @@ public abstract class Import {
      * @return
      */
     public boolean fixGedcom(Gedcom gedcom) {
-        return fixNames(gedcom);
+        boolean ret = fixNames(gedcom);
+        ret |= fixPlaces(gedcom);
+        return ret;
     }
 
     /**
@@ -505,14 +511,14 @@ public abstract class Import {
         if (place_found == TAG_MISSING) {
             if ((input.getLevel() == 1) && (input.getTag().equals("PLAC"))) {   // case of PLAC tag present and missing FORM subtag
                 output.writeLine(input.getLevel(), input.getTag(), input.getValue());
-                output.writeLine(2, "FORM", getPlaceFormat());
+                output.writeLine(2, "FORM", getPlaceFormat(false));
                 place_found = TAG_VALID;
                 nbChanges++;
                 return true;
             }
             if ((input.getLevel() == 0) && (!input.getTag().equals("HEAD"))) {   // case of PLAC tag missing and next entity reached
                 output.writeLine(1, "PLAC", "");
-                output.writeLine(2, "FORM", getPlaceFormat());
+                output.writeLine(2, "FORM", getPlaceFormat(false));
                 output.writeLine(input.getLevel(), input.getXref(), input.getTag(), input.getValue());
                 place_found = TAG_VALID;
                 nbChanges++;
@@ -644,6 +650,32 @@ public abstract class Import {
     }
 
     /**
+     * Fix places.  This is called at any import.
+     * Makes sure that the PLAC tag has the properly constructed string with the proper number of jurisdictions
+     * @param gedcom
+     * @return 
+     */
+    public boolean fixPlaces(Gedcom gedcom) {
+
+        boolean hasErrors = false;
+        String[] locs = null;
+        
+        console.println(NbBundle.getMessage(Import.class, "Import.fixPlaces"));
+
+        List<PropertyPlace> places = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
+        for (PropertyPlace place : places) {
+            locs = place.getJurisdictions();
+            if (!place.setJurisdictions(gedcom, locs)) {
+                hasErrors = true;
+                nbChanges++;
+            }
+        }
+        
+        console.println("=============================");
+        return hasErrors;
+    }
+
+    /**
      * ConvertAssociations.  This is called only for specific imports.
      * @param gedcom
      * @return 
@@ -751,14 +783,22 @@ public abstract class Import {
         }
     }
 
-    private String getPlaceFormat() {
+    /**
+     * Calculates place format length based on all place sizes found
+     * @param freq : if true, length will be the maximum frequency length, otherwise the longuest place size
+     * @return 
+     */
+    private String getPlaceFormat(boolean freq) {
         String place_format = "";
         int place_format_length = 0;
         int max = 0;
         for (int i = 0 ; i < PLACE_MAX_LENGTH ; i++) {
-            if (place_format_sizes[i] > max) {
+            if (freq && place_format_sizes[i] > max) {
                 place_format_length = i;
                 max = place_format_sizes[i];
+            }
+            if (!freq && place_format_sizes[i] > 0) {
+                place_format_length = i;
             }
         }
         if (place_format_length == 0) {

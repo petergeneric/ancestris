@@ -255,7 +255,7 @@ public class PropertyReader {
             }
         } catch (NumberFormatException nfe) {
             if (stopIfException) {
-                throw new GedcomFormatException(RESOURCES.getString("read.error.nonumber"), lines);
+                throw new GedcomFormatException(RESOURCES.getString("read.error.nonumber") + "\n" + line, lines);
             } else {
                 return false;
             }

@@ -314,6 +314,57 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
+     * Accessor - jurisdictions
+     */
+    public boolean setJurisdictions(Gedcom gedcom, String[] locs) {
+        int nbLocs = PropertyPlace.getFormat(gedcom.getPlaceFormat()).length;
+
+        // If nb of jurisdictions of correct length, set it and return true
+        if (locs.length == nbLocs) {
+            setValue(arrayToString(locs));
+            return true;
+        }
+        
+        // If too short, fill in first jurisdictions
+        if (locs.length < nbLocs) {
+            String[] newLocs = new String[nbLocs];
+            for (int i = 0; i < nbLocs - locs.length; i++) {
+                newLocs[i] = "";
+            }
+            for (int i = nbLocs - locs.length; i < nbLocs ; i++) {
+                newLocs[i] = locs[i - (nbLocs - locs.length)];
+            }
+            setValue(arrayToString(newLocs));
+            return false;
+        }
+
+        // If too long, truncate first jurisdictions
+        if (locs.length > nbLocs) {
+            String[] newLocs = new String[nbLocs];
+            for (int i = 0; i < nbLocs ; i++) {
+                newLocs[i] = locs[locs.length - nbLocs + i];
+            }
+            setValue(arrayToString(newLocs));
+            return false;
+        }
+        
+        return true;
+    }
+
+    private String arrayToString(String[] locs) {
+        StringBuilder result = new StringBuilder();
+        for (int i = 0; i < locs.length; i++) {
+            if (i > 0) {
+                result.append(JURISDICTION_SEPARATOR);
+            }
+            result.append(locs[i]);
+        }
+        return result.toString();
+    }
+
+    
+    
+    /**
      * Accessor - jurisdictions that is the city
      */
     public String getCity() {
