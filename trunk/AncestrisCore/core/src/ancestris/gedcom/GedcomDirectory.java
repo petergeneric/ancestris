@@ -42,6 +42,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -323,6 +324,8 @@ public abstract class GedcomDirectory {
             }
         } catch (Exception e) {
             LOG.info(e.toString());
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            return null;
         }
         
         // If software is Ancestris, open file normally
@@ -358,7 +361,7 @@ public abstract class GedcomDirectory {
         
         // Popup confirmation to user
         software = identifiedImport.toString();
-        String dirname = System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
+        String dirname = foInput.getParent().getPath() + System.getProperty("file.separator"); // System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
         String tmpFileName = foInput.getName()+"_ancestris.ged";
         LOG.info("Opening a non Ancestris file from " + software + ". Using corresponding import module.");
         String message = identifiedImport.isGeneric() ? RES.getString("cc.importGenericGedcom?", foInput.getNameExt(), tmpFileName, dirname) : RES.getString("cc.importGedcom?", foInput.getNameExt(), software, tmpFileName, dirname);
@@ -372,7 +375,7 @@ public abstract class GedcomDirectory {
         // - Fix header and lines (progress bar) 
         identifiedImport.setTabName(NbBundle.getMessage(Import.class, "OpenIDE-Module-Name") + " - " + identifiedImport.toString());
         File inputFile = new File(foInput.getPath());
-        File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + tmpFileName);
+        File outFile = new File(dirname + tmpFileName);
         boolean fixedOk = identifiedImport.run(inputFile, outFile);
         if (!fixedOk) {
             return null;  // error messages have been displayed already
