@@ -224,11 +224,14 @@ public class ImportLegacy extends Import {
         if ("DATE".equals(input.getTag())) {
             String date = input.getValue().toLowerCase().replace(".", "").replace("okt", "Oct").replace("maj", "May").replace("eft", "AFT").replace("omkr", "ABT").replace("omk", "ABT")
                     .replace("før", "BEF").replace("ansl", "EST").replace("ansl", "EST").replace("fra", "FROM").replace("til", "TO").replace("mel", "BET").replace("og", "AND");
+            // Includes routine from Import.java
+            if (date.contains("/")) {
+                date = convertDate(date);
+            }
             output.writeLine(input.getLevel(), "DATE", date);
             nbChanges++;
             return true;
         }
-        
         
         // Run default fixes
         if (super.process()) {

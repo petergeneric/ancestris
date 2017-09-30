@@ -342,6 +342,9 @@ public abstract class Import {
         if (processInvalidTag()) {
             return true;
         }
+        if (processInvalidDates()) {
+            return true;
+        }
         return false;
     }
 
@@ -609,6 +612,53 @@ public abstract class Import {
         return false;
     }
 
+    /**
+     * Normallize DATE tags. This is called at any import.
+     * Ensure dates are formattedd as .. month year
+     * @return
+     * @throws IOException 
+     */
+    public boolean processInvalidDates() throws IOException {
+        if ("DATE".equals(input.getTag())) {
+            String date = input.getValue();
+            if (date.contains("/")) {
+                date = convertDate(date);
+                output.writeLine(input.getLevel(), "DATE", date);
+                nbChanges++;
+                return true;
+            }
+        }
+        
+        return false;
+    }
+
+    public String convertDate(String date) {
+        if (date.contains("@#DHEBREW@")) {  // { "TSH","CSH","KSL","TVT","SHV","ADR","ADS","NSN","IYR","SVN","TMZ","AAV","ELL" };
+            date = date.replaceAll("/01/", " TSH ").replaceAll("/02/", " CSH ").replaceAll("/03/", " KSL ").replaceAll("/04/", " TVT ")
+                    .replaceAll("/05/", " SHV ").replaceAll("/06/", " ADR ").replaceAll("/07/", " ADS ").replaceAll("/08/", " NSN ")
+                    .replaceAll("/09/", " IYR ").replaceAll("/10/", " SVN ").replaceAll("/11/", " TMZ ").replaceAll("/12/", " AAV ").replaceAll("/13/", " ELL ")
+                    .replaceAll("/1/", " TSH ").replaceAll("/2/", " CSH ").replaceAll("/3/", " KSL ").replaceAll("/4/", " TVT ")
+                    .replaceAll("/5/", " SHV ").replaceAll("/6/", " ADR ").replaceAll("/7/", " ADS ").replaceAll("/8/", " NSN ")
+                    .replaceAll("/9/", " IYR ");
+        } else if (date.contains("@#DFRENCH R@")) { // { "VEND","BRUM","FRIM","NIVO","PLUV","VENT","GERM","FLOR","PRAI","MESS","THER","FRUC","COMP" };
+            date = date.replaceAll("/01/", " VEND ").replaceAll("/02/", " BRUM ").replaceAll("/03/", " FRIM ").replaceAll("/04/", " NIVO ")
+                    .replaceAll("/05/", " PLUV ").replaceAll("/06/", " VENT ").replaceAll("/07/", " GERM ").replaceAll("/08/", " FLOR ")
+                    .replaceAll("/09/", " PRAI ").replaceAll("/10/", " MESS ").replaceAll("/11/", " THER ").replaceAll("/12/", " FRUC ").replaceAll("/12/", " COMP ")
+                    .replaceAll("/1/", " VEND ").replaceAll("/2/", " BRUM ").replaceAll("/3/", " FRIM ").replaceAll("/4/", " NIVO ")
+                    .replaceAll("/5/", " PLUV ").replaceAll("/6/", " VENT ").replaceAll("/7/", " GERM ").replaceAll("/8/", " FLOR ")
+                    .replaceAll("/9/", " PRAI ");
+        } else {
+            date = date.replaceAll("/01/", " JAN ").replaceAll("/02/", " FEB ").replaceAll("/03/", " MAR ").replaceAll("/04/", " APR ")
+                    .replaceAll("/05/", " MAY ").replaceAll("/06/", " JUN ").replaceAll("/07/", " JUL ").replaceAll("/08/", " AUG ")
+                    .replaceAll("/09/", " SEP ").replaceAll("/10/", " OCT ").replaceAll("/11/", " NOV ").replaceAll("/12/", " DEC ")
+                    .replaceAll("/1/", " JAN ").replaceAll("/2/", " FEB ").replaceAll("/3/", " MAR ").replaceAll("/4/", " APR ")
+                    .replaceAll("/5/", " MAY ").replaceAll("/6/", " JUN ").replaceAll("/7/", " JUL ").replaceAll("/8/", " AUG ")
+                    .replaceAll("/9/", " SEP ");
+        }
+        return date;
+    }
+    
+    
     /**
      * Fix names.  This is called at any import.
      * Makes sure that the NAME tag has the properly constructed string from the provided subtags
