@@ -28,7 +28,7 @@ import java.io.IOException;
  * The import function for ImportFamilyTreeMaker
  */
 @NbBundle.Messages({
-    "importfamilytreemaker.name=Family Tree Maker",
+    "importfamilytreemaker.name=Family Tree Maker (FTM)",
     "importfamilytreemaker.note=This file has been modified by Ancestris Family Tree Maker Import module."
 })
 @ServiceProvider(service = Import.class)
