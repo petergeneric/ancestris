@@ -218,6 +218,17 @@ public class ImportLegacy extends Import {
             return true;
         }
 
+
+        // For each date, check that it is valid and repeat code of Import on invalid dates.  (bypasses super.process())
+        // (remove dots, translate some anomalies in Danish, etc.)
+        if ("DATE".equals(input.getTag())) {
+            String date = input.getValue().toLowerCase().replace(".", "").replace("okt", "Oct").replace("maj", "May").replace("eft", "AFT").replace("omkr", "ABT").replace("omk", "ABT")
+                    .replace("før", "BEF").replace("ansl", "EST").replace("ansl", "EST").replace("fra", "FROM").replace("til", "TO").replace("mel", "BET").replace("og", "AND");
+            output.writeLine(input.getLevel(), "DATE", date);
+            nbChanges++;
+            return true;
+        }
+        
         
         // Run default fixes
         if (super.process()) {
@@ -324,16 +335,6 @@ public class ImportLegacy extends Import {
         }
 
         
-        // For each date, check that it is valid
-        // (remove dots, translate some anomalies in Danish, etc.)
-        if ("DATE".equals(input.getTag())) {
-            String date = input.getValue().toLowerCase().replace(".", "").replace("okt", "Oct").replace("maj", "May").replace("eft", "AFT").replace("omkr", "ABT").replace("omk", "ABT")
-                    .replace("før", "BEF").replace("ansl", "EST").replace("ansl", "EST").replace("fra", "FROM").replace("til", "TO").replace("mel", "BET").replace("og", "AND");
-            output.writeLine(input.getLevel(), "DATE", date);
-            nbChanges++;
-            return true;
-        }
-        
         // Check invalid tags
         if ("SOUR:MEDI".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, replace with SOUR:NOTE
             String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
@@ -347,6 +348,7 @@ public class ImportLegacy extends Import {
         if (processOther()) {
             return true;
         }
+        
         return false;
     }
     
