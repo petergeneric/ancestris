@@ -46,7 +46,7 @@ public final class ImportWizardAction extends CallableSystemAction {
             }
             importMethod.setTabName(NbBundle.getMessage(ImportWizardAction.class, "OpenIDE-Module-Name") + " - " + importMethod.toString());
             File inputFile = importPanel.getInputFile();
-            File outFile = new File(System.getProperty("java.io.tmpdir") + System.getProperty("file.separator") + inputFile.getName());
+            File outFile = new File(inputFile.getParent() + System.getProperty("file.separator") + inputFile.getName().replaceFirst("[.][^.]+$", "") +"_ancestris.ged");   // System.getProperty("java.io.tmpdir") + System.getProperty("file.separator")
             // Import file fixing most issues
             if (importMethod.run(inputFile, outFile) == true) {
                 Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outFile));

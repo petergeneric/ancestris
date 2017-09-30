@@ -173,12 +173,12 @@ public abstract class Import {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
             //Exceptions.printStackTrace(e1);
             return false;
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
-            //Exceptions.printStackTrace(ex);
-            return false;
+//        } catch (IOException ex) {
+//            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.read.error", fileIn.getName()));
+//            //Exceptions.printStackTrace(ex);
+//            return false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.unknown") + e);
+            JOptionPane.showMessageDialog(null, e.getMessage());
             //Exceptions.printStackTrace(e);
             return false;
         }
@@ -243,6 +243,9 @@ public abstract class Import {
      * *** 0 *** Initialisation of variables
      */
     protected void init() {
+        headerzone = false;
+        destination_found = TAG_MISSING;
+        place_found = TAG_MISSING;
         for (int i = 0 ; i < PLACE_MAX_LENGTH ; i++) {
             place_format_sizes[i] = 0;
         }
