@@ -555,8 +555,8 @@ import org.openide.windows.WindowManager;
             if (target instanceof Fam) {
                 return getIndiFromEntity(target);
             }
-        } // else give up
-        return null;
+        } // else find first indi of genealogy
+        return (Indi) entity.getGedcom().getFirstEntity("INDI");
     }
     
     
