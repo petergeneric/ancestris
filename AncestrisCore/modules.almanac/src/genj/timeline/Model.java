@@ -502,9 +502,13 @@ import org.openide.windows.WindowManager;
         if (entity == null) {
             return null; 
         }
+        
+        // Case of indi
         if (entity instanceof Indi) {
             return (Indi) entity;
         }
+
+        // Case of fam
         if (entity instanceof Fam) {
             Fam fam = (Fam) entity;
             Indi husb = fam.getHusband();
@@ -541,6 +545,8 @@ import org.openide.windows.WindowManager;
             }
             return husb;
         }
+        
+        // Case of other entity, find a linkned indi
         Entity target = null;
         // return any indi linked to that entity
         for (PropertyXRef xref : entity.getProperties(PropertyXRef.class)) {
@@ -555,8 +561,8 @@ import org.openide.windows.WindowManager;
             if (target instanceof Fam) {
                 return getIndiFromEntity(target);
             }
-        } // else give up
-        return null;
+        } // else find first indi of genealogy
+        return (Indi) entity.getGedcom().getFirstEntity("INDI");
     }
     
     
@@ -1254,9 +1260,10 @@ import org.openide.windows.WindowManager;
         // (Re)build layers using scan traverse of the tree from root indi, getting ancestor-most individual along the way and descending kids
         Entity entity = context.getEntity();
         Indi rootIndi = getIndiFromEntity(entity);
-        if (rootIndi != null) {
-            traverseTreeFromIndi(rootIndi, tmpTraversedIndi, ph);
+        if (rootIndi == null) {
+            return;
         }
+        traverseTreeFromIndi(rootIndi, tmpTraversedIndi, ph);
 
         // Do the same for the remaining individuals, but in other layers, separating each "tree" by a blank line
         List<EventSerie> values = new LinkedList(indiSeries.values());
