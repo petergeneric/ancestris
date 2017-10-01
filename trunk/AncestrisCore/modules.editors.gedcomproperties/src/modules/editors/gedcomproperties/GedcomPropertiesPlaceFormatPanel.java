@@ -415,6 +415,9 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
+        if (parent.getPlaceFormatConverter() == null) {
+            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(parent.getOriginalPlaceFormat(), getPLAC(), null));
+        }
         DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
     }//GEN-LAST:event_jButton5ActionPerformed
 
@@ -457,7 +460,9 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     // End of variables declaration//GEN-END:variables
 
     public void setPLAC(String str) {
-        parent.setPlaceFormatConverter(null);
+        if (!str.equals(getPLAC())) {
+            parent.setPlaceFormatConverter(null);
+        }
         String[] placeFormatList = PropertyPlace.getFormat(str);
         listModel.clear();
         for (String p : placeFormatList) {
