@@ -18,6 +18,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
 
     private Gedcom gedcom = null;
     private Map<String, Set<PropertyPlace>> placesMap = null;
+    private String currentPlaceFormat = null;
     private String[] columsTitle;
     private String[][] data = null;
     private int nbColumns = 0;
@@ -26,6 +27,7 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     public GedcomPlaceTableModel(Gedcom gedcom) {
         this.gedcom = gedcom;
         String[] placeFormat = PropertyPlace.getFormat(gedcom);
+        currentPlaceFormat = convertToString(placeFormat);
         nbColumns = placeFormat.length + 2;
         columsTitle = new String[nbColumns];
         
@@ -38,6 +40,21 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
     }
 
     public void update() {
+
+        String[] placeFormat = PropertyPlace.getFormat(gedcom);
+        String newPlaceFormat = convertToString(placeFormat);
+        if (!newPlaceFormat.equals(currentPlaceFormat)) {
+            nbColumns = placeFormat.length + 2;
+            columsTitle = new String[nbColumns];
+            int index = 0;
+            for (; index < placeFormat.length; index++) {
+                columsTitle[index] = placeFormat[index];
+            }
+            columsTitle[index] = "Latitude";
+            columsTitle[index + 1] = "Longitude";
+            fireTableStructureChanged();
+        }
+        
         placesMap = getGeoPlaces();
         Set<String> places = placesMap.keySet();
         nbRows = places.size();
@@ -47,7 +64,6 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
             data[row] = PropertyPlace.getFormat(place);
             row++;
         }
-        
         fireTableDataChanged();
     }
 
@@ -127,6 +143,14 @@ public class GedcomPlaceTableModel extends AbstractTableModel {
             it.remove();
         }
         placesMap = null;
+    }
+
+    private String convertToString(String[] placeFormat) {
+        String ret = "";
+        for (String str : placeFormat) {
+            ret += str + PropertyPlace.JURISDICTION_SEPARATOR;
+        }
+        return ret;
     }
 
     

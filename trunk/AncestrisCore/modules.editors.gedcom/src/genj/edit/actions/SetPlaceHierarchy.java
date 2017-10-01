@@ -209,22 +209,6 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
             }
         }
         
-        // Place Header change
-        String oldFormat = gedcom.getPlaceFormat();
-        String newFormat = placePanel.getPLAC();
-        if (!oldFormat.equals(newFormat)) {
-            Object o = DialogManager.createYesNo(
-                    NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "STEP_4_name"),
-                    NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "WNG_ConfirmPlaceHeaderChange")).setMessageType(DialogManager.YES_NO_OPTION).show();
-            if (o == DialogManager.YES_OPTION) {
-                String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesHeaderModification");
-                gedcom.setPlaceFormat(newFormat);
-                String msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomHeaderModified");
-                DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
-            }
-        }
-        
-        
         // Places conversion
         if (placePanel.getConversionToBeDone()) {
             Object o = DialogManager.createYesNo(
@@ -236,12 +220,30 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
                 GedcomPlacesConverter placesConverter = new GedcomPlacesConverter(gedcom, getOriginalPlaceFormat(), placePanel.getPLAC(), pfc.getConversionMapAsString());
                 if (placesConverter.convert()) {
                     msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
+                    gedcom.setPlaceFormat(placePanel.getPLAC());
                 } else {
                     msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomNotModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
                 }
                 DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
             }
+        } else {
+            // Place Header change (if no conversion done already)
+            String oldFormat = gedcom.getPlaceFormat();
+            String newFormat = placePanel.getPLAC();
+            if (!oldFormat.equals(newFormat)) {
+                Object o = DialogManager.createYesNo(
+                        NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "STEP_4_name"),
+                        NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "WNG_ConfirmPlaceHeaderChange")).setMessageType(DialogManager.YES_NO_OPTION).show();
+                if (o == DialogManager.YES_OPTION) {
+                    String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesHeaderModification");
+                    gedcom.setPlaceFormat(newFormat);
+                    String msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomHeaderModified");
+                    DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+                }
+            }
         }
+        
+        
         return new Context(place);
     }
 
