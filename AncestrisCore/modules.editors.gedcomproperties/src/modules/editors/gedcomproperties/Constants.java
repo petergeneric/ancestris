@@ -117,5 +117,6 @@ public interface Constants {
     static final String CONV_PLACE_TO = "ConversionPlaceFormatTo";
     static final String CONV_PLACE_MAP = "ConversionPlaceFormatMap";
 
+    static final String ALIGN_PLACE = "AlignPlaceFormat";
     
 }

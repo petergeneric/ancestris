@@ -416,7 +416,7 @@ public abstract class GedcomDirectory {
                 RES.getString("cc.importResults?", foInput.getNameExt(), software, 
                         identifiedImport.getIndisNb(), identifiedImport.getFamsNb(), identifiedImport.getNotesNb(), identifiedImport.getObjesNb(),
                         identifiedImport.getSoursNb(), identifiedImport.getReposNb(), identifiedImport.getSubmsNb(), identifiedImport.getChangesNb()))
-                .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
+                .setMessageType(DialogManager.INFORMATION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
         if (rc == DialogManager.YES_OPTION) {
             identifiedImport.showDetails();
         }

@@ -22,6 +22,7 @@ import genj.gedcom.GedcomOptions;
 import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Submitter;
 import genj.gedcom.TagPath;
@@ -35,6 +36,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.JPanel;
+import modules.editors.gedcomproperties.utils.GedcomPlacesAligner;
 import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
 import modules.editors.gedcomproperties.utils.GedcomVersionConverter;
 import org.openide.DialogDisplayer;
@@ -97,7 +99,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         // Create wizard and feed its data properties from gedcom
         gedcom.initLanguages();
         mode = CREATION;
-        wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(mode));
+        wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(mode, gedcom));
         wiz.setTitleFormat(new MessageFormat("{0}"));
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create"));
         copyGedcomToProperties();
@@ -170,7 +172,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         // Create wizard and feed its data properties from gedcom
         mode = UPDATE;
         gedcom.initLanguages();
-        wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(mode));
+        wiz = new WizardDescriptor(new GedcomPropertiesWizardIterator(mode, gedcom));
         wiz.setTitleFormat(new MessageFormat("{0}"));
         String location = gedcom.getOrigin().toString(); // gedcom.getName().replaceFirst("[.][^.]+$", ""); // remove extension to filename
         wiz.setTitle(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_update", location));   
@@ -185,6 +187,16 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                         NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmVersionConversion")).setMessageType(DialogManager.YES_NO_OPTION).show();
                 if (o != DialogManager.YES_OPTION) {
                     notifyCancellation();
+                    return null;
+                }
+            }
+            if (wiz.getProperty(ALIGN_PLACE) == CONVERSION) {
+                Object o = DialogManager.createYesNo(
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length),
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceAlignment")).setMessageType(DialogManager.YES_NO_OPTION).show();
+                if (o != DialogManager.YES_OPTION) {
+                    notifyCancellation();
+                    return null;
                 }
             }
             if (wiz.getProperty(CONV_PLACE) == CONVERSION) {
@@ -193,6 +205,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                         NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceConversion")).setMessageType(DialogManager.YES_NO_OPTION).show();
                 if (o != DialogManager.YES_OPTION) {
                     notifyCancellation();
+                    return null;
                 }
             }
             try {
@@ -344,8 +357,9 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         // Prepare report of changes
         String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModificationResults");
         boolean withVersionErrors = false, withPlacesErrors = false;
-        GedcomPlacesConverter placesConverter = null;
         GedcomVersionConverter versionConverter = null;
+        GedcomPlacesAligner placesAligner = null;
+        GedcomPlacesConverter placesConverter = null;
         String message = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_Title");
         if (chg) {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_HeaderChanged");
@@ -379,6 +393,19 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             }
         }
         
+        // Align nb of jurisdictions if requested
+        if (wiz.getProperty(ALIGN_PLACE) == CONVERSION) {
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceAligned", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length); 
+            placesAligner = new GedcomPlacesAligner(gedcom);
+            if (placesAligner.convert()) {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceSuccessAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                chg = true;
+            } else {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceFailureAligned", placesAligner.getError().getMessage());
+                withPlacesErrors = true;
+            }
+        }
+
         // Convert place format if requested
         if (wiz.getProperty(CONV_PLACE) == CONVERSION) {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_PlaceChanged", wiz.getProperty(CONV_PLACE_FROM), wiz.getProperty(CONV_PLACE_TO)); 

@@ -11,6 +11,7 @@
  */
 package modules.editors.gedcomproperties;
 
+import genj.gedcom.Gedcom;
 import java.awt.Component;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,16 @@ import org.openide.util.NbBundle;
 public final class GedcomPropertiesWizardIterator implements WizardDescriptor.Iterator<WizardDescriptor>, Constants {
 
     static private int mode;
+    static private Gedcom gedcom;
 
     static public int getMode(){
         return mode;
     }
+    
+    static public Gedcom getGedcom(){
+        return gedcom;
+    }
+    
     
     private int index;
     private List<WizardDescriptor.Panel<WizardDescriptor>> panels;
@@ -35,8 +42,9 @@ public final class GedcomPropertiesWizardIterator implements WizardDescriptor.It
     /**
      * Constructor
      */
-    public GedcomPropertiesWizardIterator(int mode) {
+    public GedcomPropertiesWizardIterator(int mode, Gedcom gedcom) {
         this.mode = mode;
+        this.gedcom = gedcom;
     }
 
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
