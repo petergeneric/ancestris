@@ -11,12 +11,16 @@
  */
 package modules.editors.gedcomproperties.utils;
 
+import genj.gedcom.Gedcom;
+
 /**
  *
  * @author frederic
  */
 public interface PlaceFormatInterface {
 
+    public Gedcom getGedcom();
+    
     public void warnVersionChange(boolean canBeConverted);
 
     public String getOriginalPlaceFormat();

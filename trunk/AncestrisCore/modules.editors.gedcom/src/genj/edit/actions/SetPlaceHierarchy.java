@@ -38,6 +38,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import modules.editors.gedcomproperties.GedcomPropertiesPlaceFormatPanel;
+import modules.editors.gedcomproperties.GedcomPropertiesWizardIterator;
+import modules.editors.gedcomproperties.utils.GedcomPlacesAligner;
 import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
@@ -188,6 +190,42 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
      */
     @Override
     protected Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
+        
+        // Places Alignment
+        if (placePanel.getPlacesConversionToBeDone()) {
+                Object o = DialogManager.createYesNo(
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox2.toolTipText", PropertyPlace.getFormat(gedcom.getPlaceFormat()).length),
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmPlaceAlignment")).setMessageType(DialogManager.YES_NO_OPTION).show();
+            if (o == DialogManager.YES_OPTION) {
+                String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesAlignment");
+                String msg = "";
+                GedcomPlacesAligner placesAligner = new GedcomPlacesAligner(gedcom);
+                if (placesAligner.convert()) {
+                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomPlacesAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                } else {
+                    msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomPlacesNotAligned", placesAligner.getNbOfPlacesAligned(), placesAligner.getNbOfPlaces());
+                }
+                DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+            }
+        }
+        
+        // Place Header change
+        String oldFormat = gedcom.getPlaceFormat();
+        String newFormat = placePanel.getPLAC();
+        if (!oldFormat.equals(newFormat)) {
+            Object o = DialogManager.createYesNo(
+                    NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "STEP_4_name"),
+                    NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "WNG_ConfirmPlaceHeaderChange")).setMessageType(DialogManager.YES_NO_OPTION).show();
+            if (o == DialogManager.YES_OPTION) {
+                String title = NbBundle.getMessage(SetPlaceHierarchy.class, "TITL_PlacesHeaderModification");
+                gedcom.setPlaceFormat(newFormat);
+                String msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomHeaderModified");
+                DialogManager.create(title, msg).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+            }
+        }
+        
+        
+        // Places conversion
         if (placePanel.getConversionToBeDone()) {
             Object o = DialogManager.createYesNo(
                     NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "GedcomPropertiesPlaceFormatPanel.jCheckBox1.text"),
@@ -198,7 +236,6 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
                 GedcomPlacesConverter placesConverter = new GedcomPlacesConverter(gedcom, getOriginalPlaceFormat(), placePanel.getPLAC(), pfc.getConversionMapAsString());
                 if (placesConverter.convert()) {
                     msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
-                    place.getGedcom().setPlaceFormat(placePanel.getPLAC());
                 } else {
                     msg = NbBundle.getMessage(SetPlaceHierarchy.class, "MSG_GedcomNotModified", placesConverter.getNbOfDifferentChangedPlaces(), placesConverter.getNbOfDifferentFoundPlaces());
                 }

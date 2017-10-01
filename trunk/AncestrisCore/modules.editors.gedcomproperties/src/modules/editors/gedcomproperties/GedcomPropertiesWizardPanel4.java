@@ -12,6 +12,7 @@
 package modules.editors.gedcomproperties;
 
 import ancestris.util.swing.DialogManager;
+import genj.gedcom.Gedcom;
 import javax.swing.event.ChangeListener;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
@@ -24,6 +25,7 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
 
     private WizardDescriptor wiz = null;
     private final int mode = GedcomPropertiesWizardIterator.getMode();
+    private final Gedcom gedcom = GedcomPropertiesWizardIterator.getGedcom();
 
     // Place format
     private String originalPlaceformat = "";
@@ -102,12 +104,17 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
         } else {
             wiz.putProperty(CONV_PLACE, NO_CONVERSION);
         }
+        if (getComponent().getPlacesConversionToBeDone()) {
+            wiz.putProperty(ALIGN_PLACE, CONVERSION);
+        } else {
+            wiz.putProperty(ALIGN_PLACE, NO_CONVERSION);
+        }
     }
 
     @Override
     public void validate() throws WizardValidationException {
         Boolean canBeConverted = (mode == UPDATE) && !((GedcomPropertiesPlaceFormatPanel) getComponent()).getPLAC().equals(originalPlaceformat);
-        Boolean isConversionRequired = ((GedcomPropertiesPlaceFormatPanel) getComponent()).getConversionSelection();
+        Boolean isConversionRequired = ((GedcomPropertiesPlaceFormatPanel) getComponent()).getConversionToBeDone();
         if (canBeConverted && isConversionRequired) {
             if ((pfc == null) || !pfc.isValidatedMap()) {
                 throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_ConversionMapMandatory"), null);
@@ -152,6 +159,11 @@ public class GedcomPropertiesWizardPanel4 implements WizardDescriptor.Validating
     @Override
     public int getMode() {
         return mode;
+    }
+
+    @Override
+    public Gedcom getGedcom() {
+        return gedcom;
     }
 
 }
