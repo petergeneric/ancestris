@@ -174,6 +174,7 @@ param text
 
     protected abstract NotifyDescriptor getDescriptor();
     protected String dialogId = null;
+    protected boolean isResizable = true;
 
     public DialogManager setOptions(Object[] newOptions) {
         getDescriptor().setOptions(newOptions);
@@ -206,6 +207,11 @@ param text
 
     public DialogManager setDialogId(String id) {
         dialogId = id;
+        return this;
+    }
+
+    public DialogManager setResizable(boolean set) {
+        isResizable = set;
         return this;
     }
 
@@ -294,9 +300,11 @@ param text
                     prev.grow((bounds.width - prev.width) / 2, (bounds.height - prev.height) / 2);
                     dialog.setBounds(prev);
                 }
+                dialog.setResizable(isResizable);
                 dialog.setVisible(true);
                 registry.put(dialogId + ".dialog", dialog.getSize());
             } else {
+                dialog.setResizable(isResizable);
                 dialog.setVisible(true);
             }
             return descriptor.getValue();
