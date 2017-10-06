@@ -158,6 +158,8 @@ public class ActionAPropos extends JDialog implements ActionListener {
     private JScrollPane getScrollableText(String text) {
         JLabel area = new JLabel(text);
         area.setOpaque(true);
-        return new JScrollPane(area);
+        JScrollPane sp = new JScrollPane(area);
+        sp.setBorder(null);
+        return sp;
     }
 }
