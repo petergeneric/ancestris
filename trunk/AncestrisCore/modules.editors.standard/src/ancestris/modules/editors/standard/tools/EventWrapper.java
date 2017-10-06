@@ -589,27 +589,39 @@ public class EventWrapper {
             }
 
             // Date
+            boolean nodate = false;
             PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE", false);
             if (tmpDate == null) {
                 String val = date.getValue().trim();
                 if (!val.isEmpty()) {
                     eventProperty.addProperty("DATE", date.getValue());
+                } else {
+                    nodate = true;
                 }
             } else {
                 Utils.setDistinctValue(tmpDate, date.getValue());
             }
 
             // Place
+            boolean noplace = false;
             PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
             if (tmpPlace == null) {
                 String val = place.getValue().trim();
                 if (!val.isEmpty()) {
                     tmpPlace = (PropertyPlace) eventProperty.addProperty("PLAC", place.getValue());
+                } else {
+                    noplace = true;
                 }
             } else {
                 Utils.setDistinctValue(tmpPlace, place.getValue());
             }
             setCoordinates(place, tmpPlace);
+            
+            // Set Y flag if neigher date nor any place in case tags matches
+            if (nodate && noplace && eventProperty.getTag().matches(
+                    "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
+                Utils.setDistinctValue(eventProperty, "Y");
+            }
         }
         
         // Media
