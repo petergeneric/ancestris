@@ -494,12 +494,12 @@ public class SourceEditor extends EntityEditor {
                     sourceTitle.setValue(sourceTitleTextField.getText());
                 }
             }
-            if (!sourceTextTextArea.getText().isEmpty()) {
+            if (!publicationFactsTextArea.getText().isEmpty()) {
                 Property publicationFacts = mSource.getProperty("PUBL");
                 if (publicationFacts == null) {
-                    mSource.addProperty("PUBL", sourceTextTextArea.getText());
+                    mSource.addProperty("PUBL", publicationFactsTextArea.getText());
                 } else {
-                    publicationFacts.setValue(sourceTextTextArea.getText());
+                    publicationFacts.setValue(publicationFactsTextArea.getText());
                 }
             }
             if (!sourceTextTextArea.getText().isEmpty()) {
