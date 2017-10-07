@@ -633,7 +633,9 @@ public class EventWrapper {
             
             
             // Set Y flag if neigher date nor any place in case tags matches, remove it otherwise
-            if (eventProperty.getTag().matches("(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
+            // Note : rule is different between 5.5 and 5.5.1 (only BIRT, CHR, DEAT, MARR should have a Y tag in 5.5.1) but it would generate inconsistencies for users otherwise).
+            if (eventProperty.getTag().matches(
+                    "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI|ANUL|DIV|DIVF|ENGA|MARR|MARB|MARC|MARL|MARS)")) {
                 Utils.setDistinctValue(eventProperty, (nodate && noplace) ? "Y" : "");
                 }
         }
