@@ -194,7 +194,7 @@ public class GedcomVersionConverter {
     private final Set<String> REPLACED_TAGS_MAP = new HashSet<String>(Arrays.asList("_LATI", "_LONG"));
     private final Set<String> REPLACED_TAGS_INDI = new HashSet<String>(Arrays.asList("_FACT"));
     private final Set<String> REPLACED_TAGS_EVEN = new HashSet<String>(Arrays.asList("_RESN", "_RELI"));
-    private final Set<String> MOVED_TAGS = new HashSet<String>(Arrays.asList("FORM"));
+    private final Set<String> MOVED_TAGS = new HashSet<String>(Arrays.asList("FORM", "TITL"));
     private final Set<String> REMOVED_TAGS = new HashSet<String>(Arrays.asList("BLOB"));
 
     private final Set<String> EVENTS = new HashSet<String>(Arrays.asList(
@@ -243,17 +243,15 @@ public class GedcomVersionConverter {
                 continue;
             }
             if (MOVED_TAGS.contains(tag) && parentTag.equals("OBJE")) {
-                // if entity OBJE, create OBJE:FILE and move from OBJE:FORM to OBJE:FILE:FORM
-                Property p;
-                if (entityTag.equals(Gedcom.OBJE)) {
-                    p = parent.addProperty("FILE", "");
-                } else { // if entity OBJE link, OBJE:FILE exists, just move from OBJE:FORM to OBJE:FILE:FORM
-                    p = parent.getProperty("FILE");
-                    if (p == null) {
-                        p = parent.addProperty("FILE", "");
-                    }
+                // Get or create OBJE:FILE if does not already exists, and move prop from OBJE:tag to OBJE:FILE:tag if OBJE is an entity, only for FORM otherwise 
+                if (!entityTag.equals(Gedcom.OBJE) && (tag.equals("TITL"))) { // case of OBJE link (not entity) for a TITL
+                    continue;
                 }
-                Property newProp = p.addProperty("FORM", prop.getValue());
+                Property p = parent.getProperty("FILE");
+                if (p == null) {
+                    p = parent.addProperty("FILE", "");
+                }
+                Property newProp = p.addProperty(tag, prop.getValue());
                 moveSubTree(prop, newProp);
                 parent.delProperty(prop);
                 continue;
@@ -329,9 +327,9 @@ public class GedcomVersionConverter {
                 continue;
             }
             if (MOVED_TAGS.contains(tag) && parentTag.equals("FILE")) {
-                // if entity OBJE, move from OBJE:FILE:FORM to OBJE:FORM and delete OBJE:FILE:FORM
-                Property p = parent.getParent();
-                Property newProp = p.addProperty("FORM", prop.getValue());
+                // Move from OBJE:FILE:tag to OBJE:tag and delete OBJE:FILE:tag
+                Property obje = parent.getParent();
+                Property newProp = obje.addProperty(tag, prop.getValue());
                 moveSubTree(prop, newProp);
                 parent.delProperty(prop);
                 continue;
