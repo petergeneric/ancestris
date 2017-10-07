@@ -588,40 +588,54 @@ public class EventWrapper {
                 }
             }
 
-            // Date
+            // Date (set date, and if empty, remove it)
             boolean nodate = false;
             PropertyDate tmpDate = (PropertyDate) eventProperty.getProperty("DATE", false);
-            if (tmpDate == null) {
+            if (tmpDate == null) { // there is no date tag in the gedcom for that event...
                 String val = date.getValue().trim();
-                if (!val.isEmpty()) {
+                if (!val.isEmpty()) { // if new one not empty, add it
                     eventProperty.addProperty("DATE", date.getValue());
-                } else {
+                } else { // if empty, nothing
                     nodate = true;
                 }
-            } else {
-                Utils.setDistinctValue(tmpDate, date.getValue());
+            } else { // there is a date in the gedcom for that event...
+                String val = date.getValue().trim();
+                if (!val.isEmpty()) { // if new one not empty, replace only if different
+                    Utils.setDistinctValue(tmpDate, date.getValue());
+                } else { // if empty, remove it
+                    eventProperty.delProperty(tmpDate);
+                    nodate = true;
+                }
+                
             }
 
-            // Place
+            // Place (set place, and if empty, remove it)
             boolean noplace = false;
             PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
-            if (tmpPlace == null) {
+            if (tmpPlace == null) { // there is no place tag in the gedcom for that event... 
                 String val = place.getValue().trim();
-                if (!val.isEmpty()) {
+                if (!val.isEmpty()) { // if new one not empty, add it
                     tmpPlace = (PropertyPlace) eventProperty.addProperty("PLAC", place.getValue());
-                } else {
+                } else { // if empty, nothing
                     noplace = true;
                 }
-            } else {
-                Utils.setDistinctValue(tmpPlace, place.getValue());
+                setCoordinates(place, tmpPlace);
+            } else { // there is a place in the gedcom for that event...
+                String val = place.getValue().trim();
+                if (!val.isEmpty()) { // if new one not empty, add it
+                    Utils.setDistinctValue(tmpPlace, place.getValue());
+                    setCoordinates(place, tmpPlace);
+                } else { // if empty, remove it
+                    eventProperty.delProperty(tmpPlace);
+                    noplace = true;
+                }
             }
-            setCoordinates(place, tmpPlace);
             
-            // Set Y flag if neigher date nor any place in case tags matches
-            if (nodate && noplace && eventProperty.getTag().matches(
-                    "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
-                Utils.setDistinctValue(eventProperty, "Y");
-            }
+            
+            // Set Y flag if neigher date nor any place in case tags matches, remove it otherwise
+            if (eventProperty.getTag().matches("(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
+                Utils.setDistinctValue(eventProperty, (nodate && noplace) ? "Y" : "");
+                }
         }
         
         // Media
