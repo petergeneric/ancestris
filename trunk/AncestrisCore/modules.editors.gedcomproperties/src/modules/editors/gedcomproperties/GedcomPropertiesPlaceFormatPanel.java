@@ -628,7 +628,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
 
     private void DisplayIncorrectPlaces(Set<String> list) {
         JScrollPane panel = new JScrollPane(new JList(list.toArray()));
-        panel.setPreferredSize(new Dimension(panel.getPreferredSize().width, 300));
+        panel.setPreferredSize(new Dimension(Math.max(panel.getPreferredSize().width, 400), 300));
         DialogManager.create(NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "TITL_IncorrectList", list.size(), nbExpectedPlaces), panel)
                 .setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
     }
