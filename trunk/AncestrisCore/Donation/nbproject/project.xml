@@ -31,7 +31,9 @@
                     </run-dependency>
                 </dependency>
             </module-dependencies>
-            <public-packages/>
+            <public-packages>
+                <package>ancestris.modules.donation</package>
+            </public-packages>
         </data>
     </configuration>
 </project>
