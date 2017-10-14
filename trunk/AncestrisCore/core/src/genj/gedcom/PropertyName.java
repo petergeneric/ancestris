@@ -94,7 +94,7 @@ public class PropertyName extends Property {
      * the first name
      */
     public String getFirstName(boolean displayValue) {
-        return getFirstName(displayValue, false);
+        return getFirstName(displayValue, true);
     }
     
     /**
@@ -317,7 +317,7 @@ public class PropertyName extends Property {
     private String computeNameValue() {
         return computeNameValue(
                 getNamePrefix(true),
-                getFirstName(true),
+                getFirstName(true, false),
                 getSurnamePrefix(true),
                 getLastName(true),
                 getSuffix(true));
@@ -381,11 +381,11 @@ public class PropertyName extends Property {
             b.append(last);
             b.append(getSuffix(true));
             b.setFiller(", ");
-            b.append(getFirstName(true));
+            b.append(getFirstName(true, false));
 
         } else {
 
-            b.append(getFirstName(true));
+            b.append(getFirstName(true, false));
             b.append(getSurnamePrefix(true));
             b.append(getLastName(true));
 
