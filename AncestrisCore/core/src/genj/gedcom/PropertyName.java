@@ -94,8 +94,19 @@ public class PropertyName extends Property {
      * the first name
      */
     public String getFirstName(boolean displayValue) {
+        return getFirstName(displayValue, false);
+    }
+    
+    /**
+     * the first name
+     */
+    public String getFirstName(boolean displayValue, boolean useSepOption) {
         if (displayValue) {
-            return firstName.replaceAll(" *, *", " ");
+            if (useSepOption) {
+                return firstName.replaceAll(" *, *", GedcomOptions.getInstance().spaceIsSeparator() ? ", " : " ");    // spaceIsSeparator actually means commaIsSep
+            } else {
+                return firstName.replaceAll(" *, *", " ");
+            }
         } else {
             return firstName;
         }
