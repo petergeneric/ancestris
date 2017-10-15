@@ -22,6 +22,7 @@ import genj.gedcom.GedcomOptions;
 import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.Submitter;
@@ -35,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.swing.JPanel;
+import modules.editors.gedcomproperties.utils.GedcomMediaConverter;
 import modules.editors.gedcomproperties.utils.GedcomPlacesAligner;
 import modules.editors.gedcomproperties.utils.GedcomPlacesConverter;
 import modules.editors.gedcomproperties.utils.GedcomVersionConverter;
@@ -208,6 +211,15 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
                     return null;
                 }
             }
+            if (wiz.getProperty(RELOCATE_MEDIA) == CONVERSION) {
+                Object o = DialogManager.createYesNo(
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesMediaFormatPanel.Conversion"),
+                        NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "WNG_ConfirmMediaConversion")).setMessageType(DialogManager.YES_NO_OPTION).show();
+                if (o != DialogManager.YES_OPTION) {
+                    notifyCancellation();
+                    return null;
+                }
+            }
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -356,10 +368,11 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         
         // Prepare report of changes
         String title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomModificationResults");
-        boolean withVersionErrors = false, withPlacesErrors = false;
+        boolean withVersionErrors = false, withPlacesErrors = false, withMediaErrors = false;
         GedcomVersionConverter versionConverter = null;
         GedcomPlacesAligner placesAligner = null;
         GedcomPlacesConverter placesConverter = null;
+        GedcomMediaConverter mediaConverter = null;
         String message = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_Title");
         if (chg) {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_HeaderChanged");
@@ -419,10 +432,24 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             }
         }
 
+        // Convert media locations if requested
+        if (wiz.getProperty(RELOCATE_MEDIA) == CONVERSION) {
+            message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaLocationsChanged"); 
+            wiz.getInstantiatedObjects();
+            mediaConverter = new GedcomMediaConverter(gedcom, (Map<PropertyFile, String>) wiz.getProperty(RELOCATE_MEDIA_MAP));
+            if (mediaConverter.convert()) {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaLocationsSuccessChanged", mediaConverter.getNbOfChangedMedia());
+                chg = true;
+            } else {
+                message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_MediaLocationsFailureChanged", mediaConverter.getError().getMessage());
+                withMediaErrors = true;
+            }
+        }
+
         // Complete report message
-        if (chg && !withVersionErrors && !withPlacesErrors) {
+        if (chg && !withVersionErrors && !withPlacesErrors && !withMediaErrors) {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_GedcomModifiedSuccessfully");
-        } else if (chg && (withVersionErrors || withPlacesErrors)) {
+        } else if (chg && (withVersionErrors || withPlacesErrors || withMediaErrors)) {
             message += NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "RSLT_GedcomModifiedPartiallySuccessfully");
         } else {  // no change
             title = NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotModifiedTitle");
