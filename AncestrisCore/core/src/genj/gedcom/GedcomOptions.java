@@ -78,6 +78,10 @@ public class GedcomOptions {
     Set<String> getPlaceHierarchyCityKeys() {
         return new HashSet<String>(Arrays.asList(new String[] { "city", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo", "by", "sogn" }));    // NOI18N  // "By" and "Sogn" means "City" in danish
     }
+    
+// NOI18N 
+//Greek explanation : Village "χωριό": up to 1000 inhabitants ; Town "κωμόπολη": up to 5000 inhabitants ; City "πόλη": over 5,000 inhabitants ; Municipality "δήμος": must have at least 10000 inhabitants, except for historical areas that may have less than 10000 inhabitants. ; District "συνοικία": a residential area that has a separate name but is part of a city or municipality or village still. ; Suburbs "προάστια": Residential areas of usually sparsely populated areas located around the central city to which they refer.
+
 
     /**
      * Format
