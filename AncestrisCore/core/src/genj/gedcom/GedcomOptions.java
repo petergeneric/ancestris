@@ -76,7 +76,7 @@ public class GedcomOptions {
      * Place hierarchy keys for city NOT EDITABLE ATM
      */
     Set<String> getPlaceHierarchyCityKeys() {
-        return new HashSet<String>(Arrays.asList(new String[] { "city", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo" }));    // NOI18N
+        return new HashSet<String>(Arrays.asList(new String[] { "city", "commune", "ville", "stadt", "ciudad", "stad", "πόλη", "miasto", "cidade", "urbo", "by" }));    // NOI18N  // "By" means "City" in danish
     }
 
     /**
