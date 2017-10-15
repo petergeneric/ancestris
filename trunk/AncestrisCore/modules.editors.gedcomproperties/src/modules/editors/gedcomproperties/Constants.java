@@ -119,4 +119,6 @@ public interface Constants {
 
     static final String ALIGN_PLACE = "AlignPlaceFormat";
     
+    static final String RELOCATE_MEDIA = "RelocateMedia";
+    static final String RELOCATE_MEDIA_MAP = "MediaMap";
 }

@@ -208,6 +208,7 @@ public class GedcomVersionConverter {
         // Go through invalid tags
         while (!invalidPropsInvalidTags.isEmpty()) {
             Property prop = (Property) ((LinkedList) invalidPropsInvalidTags).removeFirst();
+            System.out.println("***DEBUG prop = "+prop);
             String entityTag = prop.getEntity().getTag();
             String tag = prop.getTag();
             String newTag = tag.substring(1, tag.length());
@@ -469,6 +470,7 @@ public class GedcomVersionConverter {
     private void moveSubTree(Property fromProp, Property toProp) {
         // Create and populate temporary table holding linear tree elements
         List<Tab> subtree = new LinkedList<Tab>();
+        List<Tab> removedTabs = new LinkedList<Tab>();
         subtree.add(new Tab(fromProp, null, toProp));
         storePropertiesRecursively(fromProp, subtree);
 
@@ -486,15 +488,17 @@ public class GedcomVersionConverter {
         subtree.remove(0);
         boolean isLeaf;
         while (!subtree.isEmpty()) {
+            removedTabs.clear();
             for (Tab tabElement : subtree) {
                 isLeaf = tabElement.fromProp.getNoOfProperties() == 0;
                 if (isLeaf) {
                     tabElement.fromProp.getParent().delProperty(tabElement.fromProp);
                     invalidPropsInvalidTags.remove(tabElement.fromProp);
                     invalidPropsInvalidTags.add(tabElement.toProp);
-                    subtree.remove(tabElement);
+                    removedTabs.add(tabElement);
                 }
             }
+            subtree.removeAll(removedTabs);
         }
 
     }

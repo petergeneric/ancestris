@@ -13,13 +13,11 @@ package modules.editors.gedcomproperties;
 
 import javax.swing.event.ChangeListener;
 import org.openide.WizardDescriptor;
-import org.openide.WizardValidationException;
 import org.openide.util.HelpCtx;
-import org.openide.util.NbBundle;
 
-public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.ValidatingPanel, Constants {
+public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.Panel<WizardDescriptor>, Constants {
 
-    private WizardDescriptor wiz = null;
+    private final int mode = GedcomPropertiesWizardIterator.getMode();
 
     /**
      * The visual component that displays this panel. If you need to access the
@@ -66,28 +64,18 @@ public class GedcomPropertiesWizardPanel6 implements WizardDescriptor.Validating
     }
 
     @Override
-    public void validate() throws WizardValidationException {
-        if (getComponent().getFirstName().isEmpty()){
-            getComponent().setFirstNameFocus();
-            throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_FirstNameIsMandatory"), null);
-        }
-        if (getComponent().getLastName().isEmpty()){
-            getComponent().setLastNameFocus();
-            throw new WizardValidationException(null, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_LastNameIsMandatory"), null);
-        }
+    public void readSettings(WizardDescriptor wiz) {
+        getComponent().setSOUR((String) wiz.getProperty(HEADER + ":" + SOUR));
+        getComponent().setVERS((String) wiz.getProperty(HEADER + ":" + SOUR + ":" + VERS));
+        getComponent().setNAME((String) wiz.getProperty(HEADER + ":" + SOUR + ":" + NAME));
+        getComponent().setCORP((String) wiz.getProperty(HEADER + ":" + SOUR + ":" + CORP));
+        getComponent().setADDR((String) wiz.getProperty(HEADER + ":" + SOUR + ":" + CORP + ":" + ADDR));
+        getComponent().setDATE((String) wiz.getProperty(HEADER + ":" + DATE));
+        getComponent().setTIME((String) wiz.getProperty(HEADER + ":" + DATE + ":" + TIME));
     }
 
     @Override
-    public void readSettings(Object data) {
-    }
-
-    @Override
-    public void storeSettings(Object data) {
-        wiz = (WizardDescriptor) data;
-        
-        wiz.putProperty(INDI + ":" + FIRSTNAME, getComponent().getFirstName());
-        wiz.putProperty(INDI + ":" + LASTNAME, getComponent().getLastName());
-        wiz.putProperty(INDI + ":" + SEX, getComponent().getSex());
+    public void storeSettings(WizardDescriptor wiz) {
     }
 
 }
