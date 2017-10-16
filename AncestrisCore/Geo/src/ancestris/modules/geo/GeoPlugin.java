@@ -28,4 +28,18 @@ public class GeoPlugin extends AncestrisPlugin implements GedcomFileListener {
     public void gedcomOpened(Gedcom gedcom) {
     }
 
+    @Override
+    public boolean launchModule(Object o) {
+        if (o instanceof Gedcom) {
+            Gedcom gedcom = (Gedcom) o;
+            GeoListTopComponent tc = new GeoListTopComponent();
+            tc.init(new Context(gedcom));
+            tc.open();
+            tc.requestActive();
+        }
+
+        return true;
+    }
+
+    
 }
