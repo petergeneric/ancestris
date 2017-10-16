@@ -90,6 +90,9 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                 // Check existence
                 PropertyFile pFile = (PropertyFile) file;
                 File f = pFile.getFile();
+                if (f == null) {
+                    continue;
+                }
                 String name = f.getName();
                 String path = value.substring(0, value.indexOf(name));
                 filesPaths.add(path);
@@ -281,6 +284,9 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                 // Calc path
                 String value = file.getValue();
                 File f = pFile.getFile();
+                if (f == null) {
+                    continue;
+                }
                 String name = f.getName();
                 String path = value.substring(0, value.indexOf(name));
                 property2PathMap.put(pFile, path);

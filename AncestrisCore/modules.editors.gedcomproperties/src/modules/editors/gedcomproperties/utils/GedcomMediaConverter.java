@@ -42,6 +42,9 @@ public class GedcomMediaConverter {
         for (PropertyFile pFile : property2PathMap.keySet()) {
             String oldValue = pFile.getValue();
             File f = pFile.getFile();
+            if (f == null) {
+                continue;
+            }
             String name = f.getName();
             String newValue = property2PathMap.get(pFile) + name;
             if (!newValue.equals(oldValue)) {
