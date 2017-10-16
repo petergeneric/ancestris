@@ -11,6 +11,7 @@
  */
 package modules.editors.gedcomproperties;
 
+import ancestris.core.pluginservice.PluginInterface;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
@@ -19,13 +20,17 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.util.Registry;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.Set;
 import java.util.TreeSet;
 import javax.swing.DefaultListModel;
+import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import modules.editors.gedcomproperties.utils.PlaceFormatInterface;
+import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 
 public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Constants {
@@ -628,10 +633,31 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     }
 
     private void DisplayIncorrectPlaces(Set<String> list) {
+        boolean isGeoFound = false;
+        PluginInterface pi = null;
+        for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
+            if ("ancestris.modules.geo".equals(sInterface.getPluginName())) {
+                pi = sInterface;
+                isGeoFound = true;
+                break;
+            }
+        }
+        JButton geoButton = new JButton(NbBundle.getMessage(getClass(), "Button_Geo"));
+        geoButton.setEnabled(isGeoFound);
+        if (isGeoFound) {
+            final PluginInterface geo = pi;
+            geoButton.addActionListener(new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    geo.launchModule(gedcom);
+                }
+            });
+        }
+        Object[] options = new Object[] { DialogManager.OK_OPTION, geoButton, DialogManager.CANCEL_OPTION };
         JScrollPane panel = new JScrollPane(new JList(list.toArray()));
         panel.setPreferredSize(new Dimension(Math.max(panel.getPreferredSize().width, 400), 300));
         DialogManager.create(NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "TITL_IncorrectList", list.size(), nbExpectedPlaces), panel)
-                .setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                .setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setOptions(options).show();
     }
 
 
