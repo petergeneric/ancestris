@@ -633,8 +633,11 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     }
 
     private void DisplayIncorrectPlaces(Set<String> list) {
+
+        // Create geo button
         boolean isGeoFound = false;
         PluginInterface pi = null;
+                
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
             if ("ancestris.modules.geo".equals(sInterface.getPluginName())) {
                 pi = sInterface;
@@ -653,11 +656,13 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
                 }
             });
         }
-        Object[] options = new Object[] { DialogManager.OK_OPTION, geoButton, DialogManager.CANCEL_OPTION };
+        
+        // Create panel
         JScrollPane panel = new JScrollPane(new JList(list.toArray()));
         panel.setPreferredSize(new Dimension(Math.max(panel.getPreferredSize().width, 400), 300));
+        Object[] options = new Object[] { DialogManager.OK_OPTION, geoButton };
         DialogManager.create(NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "TITL_IncorrectList", list.size(), nbExpectedPlaces), panel)
-                .setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setOptions(options).show();
+                .setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setOptions(options).setDialogId("incorrectPlaces").show();
     }
 
 
