@@ -168,6 +168,9 @@ public class MediaManagerPanel extends javax.swing.JPanel {
         for (PropertyFile pFile : property2PathMap.keySet()) {
             // Build key from value and existence
             File currentFile = pFile.getFile();
+            if (currentFile == null) {
+                continue;
+            }
             String name = currentFile.getName();
             String newPath = property2PathMap.get(pFile);
             boolean rel = !ABSOLUTE.matcher(newPath).matches();
