@@ -60,9 +60,10 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                 ProgressListener.Dispatcher.processStopped(validator);
             }
 
-            final ProgressMonitor progressMonitor = new ProgressMonitor(null, NbBundle.getMessage(GedcomValidate.class, "doc.title", result.size()), "", 0, result.size());
+            final int size = result != null ? result.size() : 0;
+            final ProgressMonitor progressMonitor = new ProgressMonitor(null, NbBundle.getMessage(GedcomValidate.class, "doc.title", size), "", 0, size);
             progressMonitor.setProgress(0);
-            Task fullTask = new Task(progressMonitor, result.size()) {
+            Task fullTask = new Task(progressMonitor, size) {
                 @Override
                 public Void doInBackground() {
                     String title = NbBundle.getMessage(GedcomValidate.class, "name");
@@ -133,7 +134,7 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
                         }
                     });
 
-                    progressMonitor.setProgress(result.size());
+                    progressMonitor.setProgress(size);
                     return null;
                 }
             };
