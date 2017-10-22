@@ -198,7 +198,7 @@ public class ImportHeredis extends Import {
     private void firstPassRepo() {
         if (!repoOK && (input.getLevel() == 1) && input.getTag().equals("REPO")) {
             String value = input.getValue();
-            if (!value.matches("\\@[0-9]+\\@")) {
+            if (!value.matches("\\@[A-Z0-9]+\\@")) {
                 if (!hashrepo.containsKey(value)) {
                     clerepo++;
                     hashrepo.put(input.getValue(), clerepo);
