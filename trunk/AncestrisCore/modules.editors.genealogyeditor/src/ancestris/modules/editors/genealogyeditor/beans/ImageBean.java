@@ -121,21 +121,27 @@ public class ImageBean extends javax.swing.JPanel {
     }
 
     public void setImage(byte[] imageData, int defaultGender) {
+        isDefault = true;
         if (imageData != null) {
             ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
 
             try {
                 loadImage = ImageIO.read(bais);
-                if (getWidth() > 0 && getWidth() < getHeight()) {
-                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
-                } else if (getHeight() > 0) {
-                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+                if (loadImage != null) {
+                    if (getWidth() > 0 && getWidth() < getHeight()) {
+                        scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
+                    } else if (getHeight() > 0) {
+                        scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
+                    }
+                    isDefault = false;
                 }
-                isDefault = false;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
-        } else {
+        } 
+        
+        // fall back if imageData is null or loadimage is null
+        if (isDefault) {
             try {
                 loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png"));
                 if (getWidth() > 0 && getWidth() < getHeight()) {
@@ -143,11 +149,11 @@ public class ImageBean extends javax.swing.JPanel {
                 } else if (getHeight() > 0) {
                     scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                 }
-                isDefault = true;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
+        
         repaint();
     }
 
