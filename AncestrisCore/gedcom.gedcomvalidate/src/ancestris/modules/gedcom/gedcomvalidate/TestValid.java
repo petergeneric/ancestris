@@ -60,7 +60,7 @@ import org.openide.util.NbBundle;
 
     @Override
     String getCode() {
-        return "13";
+        return "00-3";
     }
 
 } //TestValid
