@@ -498,7 +498,11 @@ public class ImportHeredis extends Import {
             if (host != null) {
                 prop = host.getProperty("FORM");
                 if (prop == null) {
-                    host.addProperty("FORM", getExtension(host.getValue()));
+                    String ext = getExtension(host.getValue());
+                    if (ext == null) {
+                        ext = "none";
+                    }
+                    host.addProperty("FORM", ext);
                     hasErrors = true;
                 }
                 prop = host.getProperty("TITL");
