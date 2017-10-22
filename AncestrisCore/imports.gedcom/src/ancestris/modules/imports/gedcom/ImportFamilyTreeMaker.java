@@ -254,6 +254,18 @@ public class ImportFamilyTreeMaker extends Import {
                 
             }
             
+
+            // For individual with several BIRTs, BAPM, DEAT, etc. change the other ones into EVEN
+            if (entity.getTag().equals("INDI")) {
+                reduceEvents(entity, "BIRT");
+                reduceEvents(entity, "BAPM");
+                reduceEvents(entity, "DEAT");
+                reduceEvents(entity, "BURI");
+                reduceEvents(entity, "CREM");
+            }
+
+            
+            
             
             // Add FORM to FILE
             if (entity.getTag().equals("OBJE")) {
@@ -296,6 +308,30 @@ public class ImportFamilyTreeMaker extends Import {
         
 
         return hasErrors;
+    }
+
+    
+    
+    private void reduceEvents(Entity entity, String tag) {
+        int n = 0;
+        Property[] props = entity.getProperties(tag);
+        for (Property event : props) {
+            if (n == 0) {
+                n++;
+                continue;
+            }
+            Property host = entity.addProperty("EVEN", "");
+            Property prop = host.addProperty("TYPE", tag);
+            try {
+                for (Property p : event.getProperties()) {
+                    GedcomUtilities.movePropertyRecursively(p, host);
+                }
+                nbChanges++;
+            } catch (GedcomException ex) {
+                continue;
+            }
+            entity.delProperty(event);
+        }
     }
 
     
