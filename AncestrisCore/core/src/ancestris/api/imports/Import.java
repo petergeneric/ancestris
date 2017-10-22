@@ -248,6 +248,7 @@ public abstract class Import {
      * *** 0 *** Initialisation of variables
      */
     protected void init() {
+        nbChanges = 0;
         headerzone = false;
         destination_found = TAG_MISSING;
         place_found = TAG_MISSING;
