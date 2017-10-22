@@ -180,7 +180,8 @@ public abstract class Import {
             //Exceptions.printStackTrace(e);
             return false;
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.other", e.getMessage()));
+            e.printStackTrace();
             //Exceptions.printStackTrace(e);
             return false;
         }
@@ -727,6 +728,17 @@ public abstract class Import {
 
     /**
      * ConvertAssociations.  This is called only for specific imports.
+     * The way associations work in ANCESTRIS is the following:
+     *    If individual A is the "relation" of B, then in A, we should have 1 ASSO B with RELA = relation
+     *    Example : if A is oncle of B, we should have in A the "1 ASSO @B@" tag with "2 RELA Oncle"
+     * In gedcoms files from other software, it seems that :
+     *    - The 1 ASSO tags are in the same direction as Ancestris
+     *    - But the 2 ASSO tags underneath events of A are the other way around and should be reversed to be put under individual B.
+     *      So if A has got 2 ASSO @B@ ; 3 RELA Notary, the notary is actually B
+     *      so then we need to go to individual B, write 1 ASSO @A@ 2 RELA Notary
+     * 
+     * The idea of this method is therefore to get all ASSOs tags that are level 2 or more (PropertySimpleValue), and leave 1 ASSO as is (PropertyAssociation)
+     * 
      * @param gedcom
      * @return 
      */
@@ -748,11 +760,14 @@ public abstract class Import {
             getPropertiesRecursively(list, "ASSO", entity);
         }
         for (Property prop : list) {
-            //console.println(prop.getEntity().toString());
+            // Skip PropertyAssociation
+            if (prop instanceof PropertyAssociation) {
+                continue;
+            }
             
-            // Get indi
+            // Get initial individual B
             id = prop.getValue().replace("@", "");
-            indiRela = (Indi) gedcom.getEntity(id);
+            indiRela = (Indi) gedcom.getEntity(id);  // This will be the new individual A
             if (indiRela == null) {
                 nbChanges++;
                 console.println(NbBundle.getMessage(Import.class, "Import.indiNotFound", id));
@@ -767,9 +782,9 @@ public abstract class Import {
             }
             tagpath = prop.getParent().getPath(true);
 
-            // Create asso set
-            id = prop.getEntity().getId();
-            propAsso = (PropertyAssociation) indiRela.addProperty("ASSO", "@" + id + "@");
+            // Create asso set in B
+            id = prop.getEntity().getId();  // id of A
+            propAsso = (PropertyAssociation) indiRela.addProperty("ASSO", "@" + id + "@");  // add 1 ASSO @A@
             propAsso.addProperty("TYPE", type);
             pship = (PropertyRelationship) propAsso.getProperty("RELA", false);
             rela +=  "@" + tagpath.toString();
@@ -778,12 +793,22 @@ public abstract class Import {
             } else {
                 pship.setValue(rela);
             }
+
+            // Add other sub-tags of A:ASSO to the new B:ASSO => copy prop/subtags to propAsso/ except RELA and TYPE
+            for (Property child : prop.getProperties()) {
+                if (child.getTag().equals("RELA") || child.getTag().equals("TYPE")) {
+                    continue;
+                }
+                movePropertiesRecursively(child, propAsso);
+            }
+            
+            // Link A with B
             try {
                 propAsso.link();
             } catch (GedcomException ex) {
                 return false;
             }
-
+            
             // Delete from first asso entity
             prop.getParent().delProperty(prop);
             nbChanges++;
@@ -833,6 +858,42 @@ public abstract class Import {
         }
     }
 
+
+    /**
+     * Adds all the sub-tags from propertySrc after the last child property of parentPropertyDest
+     * 
+     * @param propertySrc
+     * @param parentPropertyDest 
+     */
+    private void movePropertiesRecursively(Property propertySrc, Property parentPropertyDest) {
+
+        if (parentPropertyDest == null) {
+            return;
+        }
+        
+        int n = parentPropertyDest.getNoOfProperties();
+        Property propertyDest = null;
+        try {
+            String tag = propertySrc.getTag();
+            if (!parentPropertyDest.getMetaProperty().allows(tag)) {
+                tag = "_" + tag;
+            }
+            propertyDest = parentPropertyDest.addProperty(tag, propertySrc.getValue(), n);  // add to the end
+        } catch (GedcomException ex) {
+            //Exceptions.printStackTrace(ex);
+        }
+
+        // Continue moving children properties
+        for (Property children : propertySrc.getProperties()) {
+            movePropertiesRecursively(children, propertyDest);
+        }
+
+        // Remove src property
+        propertySrc.getParent().delProperty(propertySrc);
+
+    }
+
+    
     /**
      * Calculates place format length based on all place sizes found
      * @param freq : if true, length will be the maximum frequency length, otherwise the longuest place size

@@ -44,6 +44,7 @@ import java.util.HashMap;
 @ServiceProvider(service = Import.class)
 public class ImportHeredis extends Import {
 
+    private boolean repoOK = false;
     private static int clerepo = 0;
     private static final HashMap<String, Integer> hashrepo = new HashMap<String, Integer>();
     private static final StringBuilder sb = new StringBuilder();
@@ -70,33 +71,39 @@ public class ImportHeredis extends Import {
         return importheredis_note();
     }
 
+    ///////////////////////////// START OF LOGIC ///////////////////////////////
     
-    @Override
-    protected void finalise() throws IOException {
-        super.finalise();
-        finaliseRepo();
+    /**
+     * *** 0 *** Initialisation of variables
+     */
+    protected void init() {
+        super.init();
     }
 
+    
+    
+    /**
+     * **** 1 ***
+     * - Run generic code
+     * - Prepare REPO
+     */
     @Override
     protected void firstPass() {
         super.firstPass();
-        // Heredis (2017) seems to consider 5.5.1 tags as being within 5.5 (WWW, OBJE:FILE, etc.), so force gedcom version to 5.5.1
-        GEDCOM_VERSION = "5.5.1";
         firstPassRepo();
     }
 
+    /**
+     * *** 2 ***
+     * - Run generic code
+     * - Etc
+     * 
+     */
     @Override
     protected boolean process() throws IOException {
-//        // Heredis does not seem to create the DEST tag in the header, so let's add it
-//        if ((input.getLevel() == 1) && (input.getTag().equals("GEDC"))) {
-//            output.writeLine(1, "DEST", "ANY");
-//            output.writeLine(1, "GEDC", "");
-//            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixDestination"));
-//            return true;
-//        }
-        
         // Overwrite version
         if ((input.getLevel() == 2) && (input.getTag().equals("VERS") && (input.getValue().startsWith("5.5")))) {
+            GEDCOM_VERSION = "5.5.1"; // Heredis (2017) seems to consider 5.5.1 tags as being within 5.5 (WWW, OBJE:FILE, etc.), so force gedcom version to 5.5.1
             output.writeLine(2, "VERS", GEDCOM_VERSION);
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixVersion", GEDCOM_VERSION));
             return true;
@@ -132,23 +139,88 @@ public class ImportHeredis extends Import {
         return false;
     }
 
+    
+    /**
+     * *** 3 ***
+     * - Run generic code
+     * - Write unused places to NOTEs @Pxxx@, using only user-defined tags
+     * 
+     */
+    
+    @Override
+    protected void finalise() throws IOException {
+        super.finalise();
+        finaliseRepo();
+    }
+
+    
+    /**
+     * *** 4 ***
+     * - Run generic code
+     * - <run specific code>
+     * - Quit *after* all have been run
+     */
+    @Override
+    public boolean fixGedcom(Gedcom gedcom) {
+        boolean ret = super.fixGedcom(gedcom);
+        ret |= processEntities(gedcom);
+        ret |= super.convertAssociations(gedcom);
+        return ret;
+    }
+
+    
+    /**
+     * *** 5 *** 
+     * - Run generic code
+     * - <run specific code>
+     */
+    @Override
+    public void complete() {
+        super.complete();
+    }
+
+    ////////////////////////////  END OF LOGIC /////////////////////////////////
+
+
+    
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    //                     SPECIFIC IMPORT FIXES                              //
+    ////////////////////////////////////////////////////////////////////////////
+    
+    
+    
+    /**
+     * REPO in Heredis 2017 are not stored as separated RECORDs so first, store them in memory
+     * I Heredis 2018, it is ok
+     */
     private void firstPassRepo() {
-        if ((input.getLevel() == 1) && input.getTag().equals("REPO")) {
-            if (!hashrepo.containsKey(input.getValue())) {
-                clerepo++;
-                hashrepo.put(input.getValue(), clerepo);
-                sb.append("0 @" + typerepo).append(clerepo).append("@ REPO").append(EOL);
-                sb.append("1 NAME ").append(input.getValue()).append(EOL);
+        if (!repoOK && (input.getLevel() == 1) && input.getTag().equals("REPO")) {
+            String value = input.getValue();
+            if (!value.matches("\\@[0-9]+\\@")) {
+                if (!hashrepo.containsKey(value)) {
+                    clerepo++;
+                    hashrepo.put(input.getValue(), clerepo);
+                    sb.append("0 @" + typerepo).append(clerepo).append("@ REPO").append(EOL);
+                    sb.append("1 NAME ").append(input.getValue()).append(EOL);
+                }
+            } else {
+                repoOK = true;
             }
         }
 
     }
 
+    /**
+     * Replace all pointers to REPO with their corresponding record
+     * @return
+     * @throws IOException 
+     */
     private boolean processRepo() throws IOException {
-        if ((input.getLevel() == 1) && input.getTag().equals("REPO")) {
+        if (!repoOK && (input.getLevel() == 1) && input.getTag().equals("REPO")) {
             if (hashrepo.containsKey(input.getValue())) {
-                output.writeLine(1, "REPO", "@" + typerepo
-                        + hashrepo.get(input.getValue()) + "@");
+                output.writeLine(1, "REPO", "@" + typerepo + hashrepo.get(input.getValue()) + "@");
                 String str = input.getLine();
                 console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixRepo", str.substring(0, Math.min(str.length(), 30))));
             }
@@ -158,10 +230,18 @@ public class ImportHeredis extends Import {
 
     }
 
+    /**
+     * Write REPO records at the end
+     * @throws IOException 
+     */
     private void finaliseRepo() throws IOException {
-        output.write(sb.toString());
+        if (!repoOK) {
+            output.write(sb.toString());
+        }
     }
 
+    
+    
     // Addr sans resi
     private boolean processAddr() throws IOException {
         if (input.getTag().equals("ADDR")) {
@@ -190,9 +270,6 @@ public class ImportHeredis extends Import {
         // C'est un tag DATE: on transforme les dates rep
         String tag = input.getTag();
         TagPath path = input.getPath();
-        if ("_FNA".equalsIgnoreCase(tag)) {  // remove this tag
-            //return true;
-        }
         if ("SOUR:DATE".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
             String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
@@ -203,7 +280,17 @@ public class ImportHeredis extends Import {
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
         }
+        if ("INDI:ASSO:TITL".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
         if ("SOUR:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("OBJE:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
             String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
@@ -214,6 +301,11 @@ public class ImportHeredis extends Import {
             return true;
         }
         if ("SOUR:NOTE:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("REPO:NOTE:RESN".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with _RESN
             String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
@@ -230,6 +322,11 @@ public class ImportHeredis extends Import {
         }
         if ("SOUR:TYPE".equalsIgnoreCase(path.toString())) {  // invalid tag here but useful information, replace with NOTE
             String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if (path.toString().endsWith("PAGE:CONT")) {  // invalid tag here, replace with _CONT
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
         }
@@ -352,21 +449,13 @@ public class ImportHeredis extends Import {
         return from;
     }
 
-    @Override
-    public boolean fixGedcom(Gedcom gedcom) {
-        boolean ret = super.fixGedcom(gedcom);
-        ret |= processEntities(gedcom);
-        ret |= super.convertAssociations(gedcom);
-        return ret;
-    }
-
-    
     public boolean processEntities(Gedcom gedcom) {
 
         boolean hasErrors = false;
         Property[] props = null;
         Property prop = null;
         Property host = null;
+        boolean moved = false;
         
         console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixMedia"));
 
@@ -427,16 +516,24 @@ public class ImportHeredis extends Import {
 
         
         for (Source source : gedcom.getSources()) {
-            // Put QUAY in SOURCE citation rather than SOUR
+            // Put QUAY in SOURCE citation rather than SOUR, if not already there
+            moved = false;
             prop = source.getProperty("QUAY");
             if (prop != null) {
                 for (PropertyXRef xref : source.getProperties(PropertyXRef.class)) {
                     if (xref.isValid()) {
                         host = xref.getTarget();
                         if (host instanceof PropertySource) {
-                            host.addProperty("QUAY", prop.getValue());
+                            Property quay = host.getProperty("QUAY");
+                            if (quay == null) {
+                                host.addProperty("QUAY", prop.getValue());
+                                moved = true;
+                            }
                         }
                     }
+                }
+                if (!moved) {
+                    source.addProperty("_QUAY", prop.getValue());
                 }
                 source.delProperty(prop);
                 hasErrors = true;

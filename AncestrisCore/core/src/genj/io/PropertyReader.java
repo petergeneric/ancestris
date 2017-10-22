@@ -43,6 +43,8 @@ public class PropertyReader {
   protected boolean useIndents = false;
   protected int lines = 0;
   protected String line = null;
+  protected String nextLine = null;
+  protected boolean cont = true;
   protected Collection<PropertyXRef> collectXRefs;
   protected boolean isMerge = false;
   
@@ -230,6 +232,29 @@ public class PropertyReader {
         if (line.trim().length()==0) {
           trackEmptyLine();
           line = null;
+        }
+      }
+      
+      // Add ability to detect that the next line should be appened to the current line:
+      // - Read next lines to check if it starts with a single digit number
+      // - If yes, skip, else append.
+      // - If eof reached, skip as well
+      in.mark(1024); // mark where we are
+      cont = true;
+      while (cont) {
+        nextLine = in.readLine();
+        if (nextLine != null) {
+           String bit = nextLine.substring(0, nextLine.indexOf(' '));
+           if (bit.length() == 1 && bit.matches("[0-9]")) {
+               // next line seems to be ok, reset and continue;
+               in.reset();  // go back to previous mark
+               cont = false;
+           } else {
+               in.mark(1024);  // progress marking
+               line = line.trim() + " " + nextLine;
+           }
+        } else {
+            cont = false;
         }
       }
       
