@@ -63,8 +63,15 @@ public class ImportLegacy extends Import {
     private static String TODO_RECORD_TAG = "_TODO";
     private int    todoIndex = 0;
     
+    // Hashtag records
+    private static String HASHTAG_RECORD_TAG = "_HASHTAG_DEFN";
+    
+    // Story records
+    private static String STORY_RECORD_TAG = "_STORY";
+    
     // Flags
     private boolean fixindi = false;
+    private boolean fixaddr = false;
     
     /**
      * Constructor
@@ -102,6 +109,7 @@ public class ImportLegacy extends Import {
         eventIndex =0;
         todoIndex = 0;
         fixindi = false;
+        fixaddr = false;
     }
 
     
@@ -156,12 +164,18 @@ public class ImportLegacy extends Import {
             return;
         }
 
-        // Spot buricrem issues
+        // Spot buricrem issues, indi addr issues, etc.
         if ("INDI:BURI:CREM".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, will have to be replaced with CREM
             fixindi = true;
         }
         if ("INDI:ADDR".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, will have to be fixed
             fixindi = true;
+        }
+        if (input.getPath().toString().endsWith("ADDR:MAP")) {  // invalid tag here, will have to be fixed
+            fixaddr = true;
+        }
+        if (input.getPath().toString().endsWith("ADDR:NOTE")) {  // invalid tag here, will have to be fixed
+            fixaddr = true;
         }
         
         
@@ -186,8 +200,10 @@ public class ImportLegacy extends Import {
      */
     @Override
     protected boolean process() throws IOException {
+        String path = input.getPath().toString();
+        
         // Check invalid events (bypasses super.process())
-        if ("FAM:BLES".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, replace with MARR
+        if ("FAM:BLES".equalsIgnoreCase(path)) {  // invalid tag here, replace with MARR
             // Fix tag
             String tag = "MARR";
             
@@ -218,6 +234,83 @@ public class ImportLegacy extends Import {
             return true;
         }
 
+        // For each REPO:ADDR, MAP, LATI, LONG tag, replace with _XXX
+        if (("REPO:ADDR:MAP").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_MAP", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        if (("REPO:ADDR:MAP:LATI").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_LATI", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        if (("REPO:ADDR:MAP:LONG").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_LONG", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        if (("REPO:ADDR:OBJE").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_OBJE", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        if (("REPO:ADDR:OBJE:FILE").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_FILE", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        if (("REPO:ADDR:OBJE:FORM").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_FORM", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        
+        
+        // For each _STORY tag, replace with NOTE
+        if (input.getTag().equals(STORY_RECORD_TAG)) {
+            output.writeLine(input.getLevel(), input.getXref(), "NOTE", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        if ((STORY_RECORD_TAG+":TITL").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
+            String result = output.writeLine(1, "CONC", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ((STORY_RECORD_TAG+":DATE").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
+            String result = output.writeLine(1, "CONT", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ((STORY_RECORD_TAG+":PLAC").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
+            String result = output.writeLine(1, "CONT", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ((STORY_RECORD_TAG+":TEXT").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
+            String result = output.writeLine(1, "CONT", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ((STORY_RECORD_TAG+":TEXT:CONC").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
+            String result = output.writeLine(1, "CONC", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ((STORY_RECORD_TAG+":TEXT:CONT").equalsIgnoreCase(path)) {  // invalid tag here, replace with "1 CONC"
+            String result = output.writeLine(1, "CONT", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        
+        // For each _HASHTAG:NOTE tag, replace with _NOTE
+        if ((HASHTAG_RECORD_TAG+":NOTE").equalsIgnoreCase(path)) {
+            output.writeLine(input.getLevel(), "_NOTE", input.getValue());
+            nbChanges++;
+            return true;
+        }
+        
 
         // For each date, check that it is valid and repeat code of Import on invalid dates.  (bypasses super.process())
         // (remove dots, translate some anomalies in Danish, etc.)
@@ -339,7 +432,7 @@ public class ImportLegacy extends Import {
 
         
         // Check invalid tags
-        if ("SOUR:MEDI".equalsIgnoreCase(input.getPath().toString())) {  // invalid tag here, replace with SOUR:NOTE
+        if ("SOUR:MEDI".equalsIgnoreCase(path)) {  // invalid tag here, replace with SOUR:NOTE
             String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
             console.println(NbBundle.getMessage(ImportLegacy.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             nbChanges++;
@@ -442,6 +535,127 @@ public class ImportLegacy extends Import {
         Property[] props = null;
         Property prop = null;
         Property host = null;
+
+        /**
+         * Fix invalid tags in INDIs
+         * - BURI:CREM to be replaced by CREM
+         * - Move ADDR, PHON, EMAIL, and WWW to a to-be-created RESI event ; at the same time, move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
+         * - ...ADDR:NOTE is invalid, move note one level up
+         * 
+         */
+        if (fixindi) {
+            Property crem = null;
+            for (Entity entity : gedcom.getIndis()) {
+                // Fix BURI
+                for (Property buri : entity.getProperties("BURI")) {
+                    // If no CREM, continue
+                    crem = buri.getProperty("CREM");
+                    if (crem == null) {
+                        continue;
+                    }
+                    // else remove crem
+                    buri.delProperty(crem);
+                    // and create a new CREM property at the same position, and move to it all properties underneath BURI
+                    try {
+                        crem= entity.addProperty("CREM", buri.getValue()); //, entity.getPropertyPosition(buri));
+                        for (Property p : buri.getProperties()) {
+                            GedcomUtilities.movePropertyRecursively(p, crem);
+                        }
+                    } catch (GedcomException ex) {
+                        continue;
+                    }
+                    // delete buri
+                    entity.delProperty(buri);
+                    nbChanges++;
+                }
+                
+                // Fix ADDR
+                for (Property addr : entity.getProperties("ADDR")) {
+                    prop = entity.getProperty("RESI");
+                    if (prop == null) {
+                        prop = entity.addProperty("RESI", "");
+                    }
+                    try {
+                        GedcomUtilities.movePropertyRecursively(addr, prop);
+                        nbChanges++;
+                    } catch (GedcomException ex) {
+                        continue;
+                    }
+                }
+                for (Property phon : entity.getProperties("PHON")) {
+                    prop = entity.getProperty("RESI");
+                    if (prop == null) {
+                        prop = entity.addProperty("RESI", "");
+                    }
+                    prop.addProperty(phon.getTag(), phon.getValue());
+                    entity.delProperty(phon);
+                    nbChanges++;
+                }
+                for (Property email : entity.getProperties("EMAIL")) {
+                    prop = entity.getProperty("RESI");
+                    if (prop == null) {
+                        prop = entity.addProperty("RESI", "");
+                    }
+                    prop.addProperty(email.getTag(), email.getValue());
+                    entity.delProperty(email);
+                    nbChanges++;
+                }
+                for (Property www : entity.getProperties("WWW")) {
+                    prop = entity.getProperty("RESI");
+                    if (prop == null) {
+                        prop = entity.addProperty("RESI", "");
+                    }
+                    prop.addProperty(www.getTag(), www.getValue());
+                    entity.delProperty(www);
+                    nbChanges++;
+                }
+                
+                // Fix INDI:DEAT:CAUS:SOUR to INDI:DEAT:SOUR
+                for (Property cause : entity.getAllProperties("CAUS")) {
+                    props = cause.getProperties();
+                    for (Property source : props) {
+                        try {
+                            GedcomUtilities.movePropertyRecursively(source, cause.getParent());
+                            nbChanges++;
+                        } catch (GedcomException ex) {
+                            continue;
+                        }
+                    }
+                }
+                
+            }
+        }
+
+        if (fixaddr) {
+            for (Entity entity : gedcom.getEntities()) {
+                // Fix MAP in ADDR. move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
+                for (Property addr : entity.getAllProperties("ADDR")) {
+                    for (Property map : addr.getAllProperties("MAP")) {
+                        String city = addr.getPropertyValue("CITY");
+                        String stae = addr.getPropertyValue("STAE");
+                        String ctry = addr.getPropertyValue("CTRY");
+                        Property plac = addr.getParent().addProperty("PLAC", city + PropertyPlace.JURISDICTION_SEPARATOR + stae + PropertyPlace.JURISDICTION_SEPARATOR + ctry);
+                        try {
+                            GedcomUtilities.movePropertyRecursively(map, plac);
+                            nbChanges++;
+                        } catch (GedcomException ex) {
+                            continue;
+                        }
+                    }
+                    for (Property note : addr.getAllProperties("NOTE")) {
+                        try {
+                            GedcomUtilities.movePropertyRecursively(note, addr.getParent());
+                            nbChanges++;
+                        } catch (GedcomException ex) {
+                            continue;
+                        }
+                    }
+                }
+            }
+        }
+        
+        
+        
         
         /**
          * Fix of structure in all entities
@@ -477,7 +691,7 @@ public class ImportLegacy extends Import {
                         nbChanges++;
                     }
                     prop = obje.getProperty("TITL");
-                    if (prop == null) {
+                    if (prop == null && host instanceof PropertyFile) {
                         PropertyFile filep = (PropertyFile) host;
                         File file = filep.getFile();
                         String title = file != null ? file.getName() : "";
@@ -577,120 +791,6 @@ public class ImportLegacy extends Import {
         }
         
 
-        
-        /**
-         * Fix invalid tags in INDIs
-         * - BURI:CREM to be replaced by CREM
-         * - Move ADDR, PHON, EMAIL, and WWW to a to-be-created RESI event ; at the same time, move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
-         * - ...ADDR:NOTE is invalid, move note one level up
-         * 
-         */
-        if (fixindi) {
-            Property crem = null;
-            for (Entity entity : gedcom.getIndis()) {
-                // Fix BURI
-                for (Property buri : entity.getProperties("BURI")) {
-                    // If no CREM, continue
-                    crem = buri.getProperty("CREM");
-                    if (crem == null) {
-                        continue;
-                    }
-                    // else remove crem
-                    buri.delProperty(crem);
-                    // and create a new CREM property at the same position, and move to it all properties underneath BURI
-                    try {
-                        crem= entity.addProperty("CREM", buri.getValue()); //, entity.getPropertyPosition(buri));
-                        for (Property p : buri.getProperties()) {
-                            GedcomUtilities.movePropertyRecursively(p, crem);
-                        }
-                    } catch (GedcomException ex) {
-                        continue;
-                    }
-                    // delete buri
-                    entity.delProperty(buri);
-                    nbChanges++;
-                }
-                
-                // Fix ADDR
-                for (Property addr : entity.getProperties("ADDR")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    try {
-                        GedcomUtilities.movePropertyRecursively(addr, prop);
-                        nbChanges++;
-                    } catch (GedcomException ex) {
-                        continue;
-                    }
-                }
-                for (Property phon : entity.getProperties("PHON")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    prop.addProperty(phon.getTag(), phon.getValue());
-                    entity.delProperty(phon);
-                    nbChanges++;
-                }
-                for (Property email : entity.getProperties("EMAIL")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    prop.addProperty(email.getTag(), email.getValue());
-                    entity.delProperty(email);
-                    nbChanges++;
-                }
-                for (Property www : entity.getProperties("WWW")) {
-                    prop = entity.getProperty("RESI");
-                    if (prop == null) {
-                        prop = entity.addProperty("RESI", "");
-                    }
-                    prop.addProperty(www.getTag(), www.getValue());
-                    entity.delProperty(www);
-                    nbChanges++;
-                }
-                
-                // Fix INDI:DEAT:CAUS:SOUR to INDI:DEAT:SOUR
-                for (Property cause : entity.getAllProperties("CAUS")) {
-                    props = cause.getProperties();
-                    for (Property source : props) {
-                        try {
-                            GedcomUtilities.movePropertyRecursively(source, cause.getParent());
-                            nbChanges++;
-                        } catch (GedcomException ex) {
-                            continue;
-                        }
-                    }
-                }
-                
-                // Fix MAP in ADDR. move the MAP tag underneath ADDR to a PLAC tag with a name made of CITY, STAE, CTRY
-                for (Property addr : entity.getAllProperties("ADDR")) {
-                    for (Property map : addr.getAllProperties("MAP")) {
-                        String city = addr.getPropertyValue("CITY");
-                        String stae = addr.getPropertyValue("STAE");
-                        String ctry = addr.getPropertyValue("CTRY");
-                        Property plac = addr.getParent().addProperty("PLAC", city + PropertyPlace.JURISDICTION_SEPARATOR + stae + PropertyPlace.JURISDICTION_SEPARATOR + ctry);
-                        try {
-                            GedcomUtilities.movePropertyRecursively(map, plac);
-                            nbChanges++;
-                        } catch (GedcomException ex) {
-                            continue;
-                        }
-                    }
-                    for (Property note : addr.getAllProperties("NOTE")) {
-                        try {
-                            GedcomUtilities.movePropertyRecursively(note, addr.getParent());
-                            nbChanges++;
-                        } catch (GedcomException ex) {
-                            continue;
-                        }
-                    }
-                }
-                
-            }
-        }
         
         return hasErrors;
     }
