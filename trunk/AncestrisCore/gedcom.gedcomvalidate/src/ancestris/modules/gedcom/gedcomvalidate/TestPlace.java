@@ -57,7 +57,7 @@ public class TestPlace extends Test {
 
     @Override
     String getCode() {
-        return "10";
+        return "00-4";
     }
 
 }

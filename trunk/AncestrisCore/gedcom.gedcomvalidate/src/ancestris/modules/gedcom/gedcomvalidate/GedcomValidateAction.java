@@ -145,8 +145,8 @@ public final class GedcomValidateAction extends AbstractAncestrisContextAction {
 
     private String getSectionName(String code) {
         String[] codeTable = new String[]{
-            "00-1", "00-2", "01-1", "01-2", "01-3", "01-4", "01-5", "01-6", "01-7", "01-8",
-            "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13"
+            "00-1", "00-2", "00-3", "00-4", "01-1", "01-2", "01-3", "01-4", "01-5", "01-6", "01-7", "01-8",
+            "02", "03", "04", "05", "06", "07", "08", "09", "11", "12"
         };
         for (String item : codeTable) {
             if (item.equals(code)) {
