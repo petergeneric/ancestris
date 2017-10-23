@@ -90,8 +90,11 @@ public class ImageBean extends javax.swing.JPanel {
             try {
                 imageInputStream = new FileInputStream(file);
                 loadImage = ImageIO.read(imageInputStream);
-                // FIXME: We should display some icon if file cannot be read as image
-                if (loadImage != null){
+                if (loadImage == null) {
+                    imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
+                    loadImage = ImageIO.read(imageInputStream);
+                }
+                if (loadImage != null) {
                     if (getWidth() > 0 && getWidth() < getHeight()) {
                         scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
                     } else if (getHeight() > 0) {
