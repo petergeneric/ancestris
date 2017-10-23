@@ -1578,7 +1578,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_motherButtonActionPerformed
 
     private void moreNamesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moreNamesButtonActionPerformed
-        DialogManager.create(NbBundle.getMessage(getClass(), "IndiPanel.moreNamesButton.toolTipText"), nameDetails).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(OK_ONLY_OPTION).show();
+        DialogManager.create(NbBundle.getMessage(getClass(), "IndiPanel.moreNamesButton.toolTipText"), nameDetails).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(OK_ONLY_OPTION).setDialogId("cygnus_names").show();
         String f = nameDetails.getFirstName();
         String l = nameDetails.getLastName();
         if (!firstnamesText.getText().equals(f)) {
