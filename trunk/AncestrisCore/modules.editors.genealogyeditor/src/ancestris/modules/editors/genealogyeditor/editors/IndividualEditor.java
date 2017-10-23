@@ -560,7 +560,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
                 // bmp | gif | jpeg
-                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                if (objetFormat != null) { // && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
 
                     MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                     multiMediaObjectEditor.setContext(new Context(multiMediaObject));
