@@ -93,7 +93,7 @@ public class GedcomOptions {
     public String getPlaceFormat() {
         String format = getPreferences().get(PLACE_FORMAT, defaultPlaceFormat);   
         format = format.replaceAll(" *, *", ",");
-        if (spaceIsSeparator()) {
+        if (isUseSpacedPlaces()) {
             format = format.replace(",", ", ");
         }
         return format;
