@@ -45,6 +45,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private int mode;
     private Gedcom gedcom;
 
+    private String originalPlaceFormat = "";
     private final DefaultListModel<String> listModel = new DefaultListModel<String>();
 
     private Set<String> incorrectList = null;
@@ -58,6 +59,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         this.parent = parent;
         mode = parent.getMode();
         gedcom = parent.getGedcom();
+        originalPlaceFormat = format(parent.getOriginalPlaceFormat());
         EMPTY_PLACE = NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "Panel4.emptyPlace");
         initComponents();
 
@@ -387,8 +389,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
         String defaultFormat = GedcomOptions.getInstance().getPlaceFormat();
-        String str = parent.getOriginalPlaceFormat();
-        setPLAC(!str.isEmpty() ? str : defaultFormat);
+        setPLAC(!originalPlaceFormat.isEmpty() ? originalPlaceFormat : defaultFormat);
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
@@ -418,14 +419,14 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
         jButton5.setEnabled(jCheckBox1.isSelected());
         if (jCheckBox1.isSelected() && parent.getPlaceFormatConverter() == null) {
-            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(parent.getOriginalPlaceFormat(), getPLAC(), null));
+            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(originalPlaceFormat, getPLAC(), null));
             DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
         }
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jButton5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton5ActionPerformed
         if (parent.getPlaceFormatConverter() == null) {
-            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(parent.getOriginalPlaceFormat(), getPLAC(), null));
+            parent.setPlaceFormatConverter(new PlaceFormatConverterPanel(originalPlaceFormat, getPLAC(), null));
         }
         DisplayPlaceFormatConverter(parent.getPlaceFormatConverter());
     }//GEN-LAST:event_jButton5ActionPerformed
@@ -468,10 +469,28 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
+    private String format(String str) {
+        boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
+        String addStr = PropertyPlace.JURISDICTION_SEPARATOR + (USE_SPACES ? " " : "");
+        String[] placeFormatList = PropertyPlace.getFormat(str);
+        String value = "";
+        for (int i = 0; i < placeFormatList.length; i++) {
+            String p = placeFormatList[i].trim();
+            if (i == placeFormatList.length-1) {
+                addStr = "";
+            }
+            value += p + addStr;
+        }
+        return value;
+    }
+
     public void setPLAC(String str) {
-        if (!str.equals(getPLAC())) {
+        
+        String value = format(str);
+        if (!value.equals(getPLAC())) {
             parent.setPlaceFormatConverter(null);
         }
+        
         String[] placeFormatList = PropertyPlace.getFormat(str);
         listModel.clear();
         for (String p : placeFormatList) {
@@ -481,18 +500,20 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
                 listModel.addElement(p);
             }
         }
+        
         updateDisplay();
     }
 
     public String getPLAC() {
+        boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
         String ret = "";
         String tmpStr = "";
-        String addStr = PropertyPlace.JURISDICTION_SEPARATOR;
+        String addStr = PropertyPlace.JURISDICTION_SEPARATOR + (USE_SPACES ? " " : "");
         for (int i = 0; i < listModel.getSize(); i++) {
             if (i == listModel.getSize()-1) {
                 addStr = "";
             } 
-            tmpStr = listModel.elementAt(i);
+            tmpStr = listModel.elementAt(i).trim();
             if (tmpStr.equals(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.emptyField"))) {
                 tmpStr = "";
             }
@@ -568,10 +589,11 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             jList1.ensureIndexIsVisible(index);
         }
         jTextArea1.setText(getPLAC());
-        jTextArea2.setText(parent.getOriginalPlaceFormat());
+        originalPlaceFormat = format(parent.getOriginalPlaceFormat());
+        jTextArea2.setText(originalPlaceFormat);
         
         // Fields related to place conversion
-        boolean canBeConverted = (mode == UPDATE) && !getPLAC().equals(parent.getOriginalPlaceFormat());   // true if place format has changed
+        boolean canBeConverted = (mode == UPDATE) && !getPLAC().equals(originalPlaceFormat);   // true if place format has changed
         jCheckBox1.setVisible(canBeConverted);
         jButton5.setVisible(canBeConverted);
         jButton5.setEnabled(jCheckBox1.isSelected());
@@ -588,7 +610,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         Set<String> keys = getNbOfDifferentPlaces(gedcom);
         String nbOfDifferentFoundPlaces = "" + keys.size();
         jLabel3.setText(NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "Panel4.jLabel3.update", nbOfDifferentFoundPlaces));
-        nbExpectedPlaces = PropertyPlace.getFormat(parent.getOriginalPlaceFormat()).length;
+        nbExpectedPlaces = PropertyPlace.getFormat(originalPlaceFormat).length;
         incorrectList = getIncorrectPlaces(nbExpectedPlaces, keys);
         if (incorrectList.isEmpty()) {
             jLabel5.setText(NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "Panel4.jLabel5.update"));
