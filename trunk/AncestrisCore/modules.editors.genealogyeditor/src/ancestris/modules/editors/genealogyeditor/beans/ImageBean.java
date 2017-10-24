@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
+import ancestris.util.swing.DialogManager;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -10,6 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -91,6 +93,9 @@ public class ImageBean extends javax.swing.JPanel {
                 imageInputStream = new FileInputStream(file);
                 loadImage = ImageIO.read(imageInputStream);
                 if (loadImage == null) {
+                    String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                    String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                    DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
                     imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
                     loadImage = ImageIO.read(imageInputStream);
                 }
