@@ -239,23 +239,25 @@ public class PropertyReader {
       // - Read next lines to check if it starts with a single digit number
       // - If yes, skip, else append.
       // - If eof reached, skip as well
-      in.mark(1024); // mark where we are
-      cont = true;
-      while (cont) {
-        nextLine = in.readLine();
-        if (nextLine != null) {
-           String bit = nextLine.substring(0, nextLine.indexOf(' '));
-           if (bit.length() == 1 && bit.matches("[0-9]")) {
-               // next line seems to be ok, reset and continue;
-               in.reset();  // go back to previous mark
-               cont = false;
-           } else {
-               in.mark(1024);  // progress marking
-               line = line.trim() + " " + nextLine;
-           }
-        } else {
-            cont = false;
-        }
+      if (!useIndents) {
+          in.mark(1024); // mark where we are
+          cont = true;
+          while (cont) {
+              nextLine = in.readLine();
+              if (nextLine != null) {
+                  String bit = nextLine.substring(0, nextLine.indexOf(' '));
+                  if (bit.length() == 1 && bit.matches("[0-9]")) {
+                      // next line seems to be ok, reset and continue;
+                      in.reset();  // go back to previous mark
+                      cont = false;
+                  } else {
+                      in.mark(1024);  // progress marking
+                      line = line.trim() + " " + nextLine;
+                  }
+              } else {
+                  cont = false;
+              }
+          }
       }
       
       // 20040322 use space and also \t for delim in case someone used tabs in file
