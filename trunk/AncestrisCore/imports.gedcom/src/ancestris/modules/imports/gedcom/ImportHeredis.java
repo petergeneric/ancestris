@@ -121,6 +121,12 @@ public class ImportHeredis extends Import {
             return true;
         }
         
+        // Heredis has introduced _SHAR tags which are actually ASSO tags.
+        if ((input.getLevel() == 2) && (input.getTag().equals("_SHAR"))) {
+            output.writeLine(2, "ASSO", input.getValue());
+            return true;
+        }
+        
         if (processAddr()) {
             return true;
         }
