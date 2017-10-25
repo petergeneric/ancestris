@@ -26,6 +26,8 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.Source;
+import genj.gedcom.TagPath;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -47,7 +49,6 @@ public class ImportMacFamilyTree extends Import {
     private static int counter = 0;
     private static final HashMap<Integer, String> hashFixes = new HashMap<Integer, String>();
     String previousLine = "";
-    private boolean header = false;
     
     /**
      * Constructor
@@ -121,8 +122,12 @@ public class ImportMacFamilyTree extends Import {
 
     
     
-    private boolean beforeProcess() {
-        //console.println(input.getLine());
+    private boolean beforeProcess() throws IOException {
+
+        String tag = input.getTag();
+        TagPath path = input.getPath();
+        
+//console.println(input.getLine());
         if (hashFixes.containsValue(input.getLine())) {
             try {
                 String str = input.getValue()+"/";
@@ -134,14 +139,21 @@ public class ImportMacFamilyTree extends Import {
             }
         }
         
-        if ((input.getLevel() == 0) && (!header)) {
-            try {
-                header = true;
-                output.writeLine(1, null, "DEST", "ANY");
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
-            }
+        // Replace OBJE:URL with OBJE:FILE
+        if ("OBJE:URL".equalsIgnoreCase(path.toString())) {  
+            String result = output.writeLine(input.getLevel(), "FILE", input.getValue());
+            result += "\n" + output.writeLine(input.getLevel(), "FORM", "url");
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
         }
+        
+        // ASSO does not accept DATE
+        if ("INDI:ASSO:DATE".equalsIgnoreCase(path.toString())) {  // invalid tag here, replace with "_XXX"
+            String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
+            return true;
+        }
+        
         
         
         return false;
@@ -179,15 +191,26 @@ public class ImportMacFamilyTree extends Import {
         
         
         // Remove empty CHAN if another CHAN is present
-        for (Entity ent : gedcom.getEntities()) {
-            List<Property> changes = ent.getAllProperties("CHAN");
+        for (Entity entity : gedcom.getEntities()) {
+            List<Property> changes = entity.getAllProperties("CHAN");
             for (Property chan : changes) {
                 if (chan.getValue().trim().isEmpty()) {
                     chan.getParent().delProperty(chan);
-                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixEmptyChan", ent.toString(true)));
+                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixEmptyChan", entity.toString(true)));
                     hasErrors = true;
                 }
             }
+            
+            // For individual with several BIRTs, BAPM, DEAT, etc. change the other ones into EVEN
+            if (entity.getTag().equals("INDI")) {
+                reduceEvents(entity, "BIRT");
+                reduceEvents(entity, "BAPM");
+                reduceEvents(entity, "DEAT");
+                reduceEvents(entity, "BURI");
+                reduceEvents(entity, "CREM");
+            }
+
+            
         }
         
         
@@ -239,6 +262,45 @@ public class ImportMacFamilyTree extends Import {
                 hasErrors = true;
             }
         }
+        
+        
+        // Fix PLAC, DATE, AGNC under SOUR records
+        for (Source sour : gedcom.getSources()) {
+            Property plac = sour.getProperty("PLAC");
+            Property date = sour.getProperty("DATE");
+            Property agnc = sour.getProperty("AGNC");
+            if (plac != null || date != null || agnc != null) {
+                Property data = sour.getProperty("DATA");
+                if (data == null) {
+                    data = sour.addProperty("DATA", "");
+                }
+                if (agnc != null) {
+                    data.addProperty("AGNC", agnc.getValue());
+                    sour.delProperty(agnc);
+                    hasErrors = true;
+                }
+
+                Property even = data.getProperty("EVEN");
+                if (even == null) {
+                    even = data.addProperty("EVEN", "");
+                }
+                if (date != null) {
+                    even.addProperty("DATE", date.getValue());
+                    sour.delProperty(date);
+                    hasErrors = true;
+                }
+                if (plac != null) {
+                    even.addProperty("PLAC", plac.getValue());
+                    sour.delProperty(plac);
+                    hasErrors = true;
+                }
+                
+            }
+            
+            console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixSource", sour.toString()));
+        }
+        
+        
         
         console.println("=============================");
         

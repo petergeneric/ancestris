@@ -312,27 +312,6 @@ public class ImportRootsTrust extends Import {
 
     
     
-    private void reduceEvents(Entity entity, String tag) {
-        int n = 0;
-        Property[] props = entity.getProperties(tag);
-        for (Property event : props) {
-            if (n == 0) {
-                n++;
-                continue;
-            }
-            Property host = entity.addProperty("EVEN", "");
-            try {
-                for (Property p : event.getProperties()) {
-                    GedcomUtilities.movePropertyRecursively(p, host);
-                }
-                nbChanges++;
-            } catch (GedcomException ex) {
-                continue;
-            }
-            entity.delProperty(event);
-        }
-    }
-
     
     
 }

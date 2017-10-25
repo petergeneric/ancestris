@@ -117,6 +117,7 @@ public abstract class Import {
     public GedcomFileWriter output;
     protected Console console;
     public int nbChanges = 0;
+    private Object GedcomUtilities;
 
     
     /**
@@ -856,6 +857,24 @@ public abstract class Import {
             if (!hashEntities.containsKey(value)) {
                 hashEntities.put(value, new ImportEnt());
             }
+        }
+    }
+
+
+    public void reduceEvents(Entity entity, String tag) {
+        int n = 0;
+        Property[] props = entity.getProperties(tag);
+        for (Property event : props) {
+            if (n == 0) {
+                n++;
+                continue;
+            }
+            Property host = entity.addProperty("EVEN", "");
+            for (Property p : event.getProperties()) {
+                movePropertiesRecursively(p, host);
+            }
+            nbChanges++;
+            entity.delProperty(event);
         }
     }
 
