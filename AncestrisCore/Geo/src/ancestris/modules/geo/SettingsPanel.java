@@ -282,7 +282,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jRoolIndiLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(rootIndividual, javax.swing.GroupLayout.PREFERRED_SIZE, 435, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(rootIndividual, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jBirthCheckBox)
@@ -330,7 +330,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                                 .addComponent(jChooseRootButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addComponent(jEventsLabel)
                     .addComponent(jRootLabel))
-                .addContainerGap(124, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
