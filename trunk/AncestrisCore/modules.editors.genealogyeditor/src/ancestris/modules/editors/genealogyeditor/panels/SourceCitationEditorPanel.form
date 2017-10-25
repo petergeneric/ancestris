@@ -63,8 +63,8 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="sourceReferencedTitleLabel" max="32767" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="sourceReferencedTitleLabel" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="addSourceButton" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="linkToSourceButton" min="-2" max="-2" attributes="0"/>
@@ -74,24 +74,24 @@
                   <Component id="jScrollPane1" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="jLabel5" max="32767" attributes="0"/>
+                          <Component id="jLabel5" pref="137" max="32767" attributes="0"/>
                           <Component id="referencedEventLabel" alignment="0" max="32767" attributes="0"/>
                           <Component id="eventRoleLabel" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="eventRoleComboBox" max="32767" attributes="0"/>
-                          <Component id="referencedEventComboBox" max="32767" attributes="0"/>
-                          <Component id="dataQualityComboBox" max="32767" attributes="0"/>
+                          <Component id="dataQualityComboBox" alignment="0" max="32767" attributes="0"/>
+                          <Component id="eventRoleComboBox" alignment="0" pref="0" max="32767" attributes="0"/>
+                          <Component id="referencedEventChoiceWidget" alignment="0" pref="126" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="recordingDateLabel" max="32767" attributes="0"/>
+                          <Component id="recordingDateLabel" pref="98" max="32767" attributes="0"/>
                           <Component id="pageLabel" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="recordingDate" max="32767" attributes="0"/>
+                          <Component id="recordingDate" pref="270" max="32767" attributes="0"/>
                           <Component id="pageTextField" max="32767" attributes="0"/>
                       </Group>
                   </Group>
@@ -113,8 +113,8 @@
                           <Component id="referencedEventLabel" alignment="2" min="-2" max="-2" attributes="0"/>
                           <Group type="103" alignment="2" groupAlignment="3" attributes="0">
                               <Component id="pageTextField" alignment="3" min="-2" max="-2" attributes="0"/>
-                              <Component id="referencedEventComboBox" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="pageLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                              <Component id="referencedEventChoiceWidget" alignment="3" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -242,17 +242,6 @@
                 </Component>
               </SubComponents>
             </Container>
-            <Component class="javax.swing.JComboBox" name="referencedEventComboBox">
-              <Properties>
-                <Property name="editable" type="boolean" value="true"/>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                  <Connection code="mEventsModel" type="code"/>
-                </Property>
-              </Properties>
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="referencedEventComboBoxActionPerformed"/>
-              </Events>
-            </Component>
             <Component class="javax.swing.JLabel" name="referencedEventLabel">
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="4"/>
@@ -339,6 +328,14 @@
               </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="genj.util.swing.ChoiceWidget" name="referencedEventChoiceWidget">
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="referencedEventChoiceWidgetActionPerformed"/>
+              </Events>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new genj.util.swing.ChoiceWidget()"/>
               </AuxValues>
             </Component>
           </SubComponents>
