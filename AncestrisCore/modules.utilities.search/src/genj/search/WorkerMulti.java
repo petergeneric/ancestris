@@ -226,7 +226,7 @@ public class WorkerMulti extends Worker {
      *               |  between    | GT, pit1)      |
      *               |  pitFrom    | &&             |
      *               |  and        | match(pitFrom, |
-     *               |  pitTo)     | LT, pit1)      |
+     *               |  pitTo)     | LT, pit2)      |
      *               |             |                |
      *          --------------------------------------
      * 
@@ -235,6 +235,14 @@ public class WorkerMulti extends Worker {
     private boolean isCommonDate(PropertyDate dateFound, DateBean dateBean) {
         
         PointInTime nullPit = new PointInTime();
+        
+        if (dateFound != null) {
+            String id = dateFound.getEntity().getId();
+            if (id.equals("I2503")) {
+                String debug = "";
+            }
+        }
+        
 
         // Part 1&2 : Extract pits && Eliminate obvious cases
         //     - null criteria => always true
@@ -273,7 +281,11 @@ public class WorkerMulti extends Worker {
         if (isRange(dateBean.getFormat())) {
             if (isRange(dateFound.getFormat())) {
                 // A
-                return (match(pit1, MT_GT, pitFrom) && match(pit1, MT_LT, pitTo)) || (match(pit1, MT_LT, pitFrom) && match(pit2, MT_GT, pitFrom));
+                if (isEqual(pitFrom, nullPit)) {
+                    return (match(pit1, MT_LT, pitTo) && match(pit2, MT_GT, pitTo)) || (match(pit1, MT_LT, pitTo) && match(pit2, MT_LT, pitTo));
+                } else {
+                    return (match(pit1, MT_GT, pitFrom) && match(pit1, MT_LT, pitTo)) || (match(pit1, MT_LT, pitFrom) && match(pit2, MT_GT, pitFrom));
+                }
             } else {
                 // B
                 return match(pit1, MT_GT, pitFrom) && match(pit1, MT_LT, pitTo);
