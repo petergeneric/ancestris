@@ -100,6 +100,23 @@ public class PropertyPlace extends PropertyChoiceValue {
         return buf.toString().intern();
     }
 
+    static public String formatSpaces(String str) {
+        boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
+        String addStr = PropertyPlace.JURISDICTION_SEPARATOR + (USE_SPACES ? " " : "");
+        String[] placeFormatList = PropertyPlace.getFormat(str);
+        String value = "";
+        for (int i = 0; i < placeFormatList.length; i++) {
+            String p = placeFormatList[i].trim();
+            if (i == placeFormatList.length-1) {
+                addStr = "";
+            }
+            value += p + addStr;
+        }
+        return value;
+    }
+
+    
+    
     /**
      * Remember a jurisdiction's value
      */

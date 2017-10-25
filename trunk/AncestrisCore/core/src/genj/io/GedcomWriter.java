@@ -24,6 +24,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
 import genj.util.Resources;
 import java.io.BufferedWriter;
@@ -260,7 +261,7 @@ public class GedcomWriter implements IGedcomWriter {
             replaceProperties(header, "LANG", gedcom.getLanguage());
         }
         if (gedcom.getPlaceFormat().length() > 0) {
-            replaceProperties(header, "PLAC", "").addProperty("FORM", gedcom.getPlaceFormat());
+            replaceProperties(header, "PLAC", "").addProperty("FORM", PropertyPlace.formatSpaces(gedcom.getPlaceFormat()));
         }
 
         new EntityWriter().write(0, header);

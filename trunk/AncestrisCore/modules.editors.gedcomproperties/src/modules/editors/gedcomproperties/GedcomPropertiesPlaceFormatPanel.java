@@ -59,7 +59,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         this.parent = parent;
         mode = parent.getMode();
         gedcom = parent.getGedcom();
-        originalPlaceFormat = format(parent.getOriginalPlaceFormat());
+        originalPlaceFormat = PropertyPlace.formatSpaces(parent.getOriginalPlaceFormat());
         EMPTY_PLACE = NbBundle.getMessage(GedcomPropertiesPlaceFormatPanel.class, "Panel4.emptyPlace");
         initComponents();
 
@@ -469,24 +469,9 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
     private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
-    private String format(String str) {
-        boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
-        String addStr = PropertyPlace.JURISDICTION_SEPARATOR + (USE_SPACES ? " " : "");
-        String[] placeFormatList = PropertyPlace.getFormat(str);
-        String value = "";
-        for (int i = 0; i < placeFormatList.length; i++) {
-            String p = placeFormatList[i].trim();
-            if (i == placeFormatList.length-1) {
-                addStr = "";
-            }
-            value += p + addStr;
-        }
-        return value;
-    }
-
     public void setPLAC(String str) {
         
-        String value = format(str);
+        String value = PropertyPlace.formatSpaces(str);
         if (!value.equals(getPLAC())) {
             parent.setPlaceFormatConverter(null);
         }
@@ -589,7 +574,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             jList1.ensureIndexIsVisible(index);
         }
         jTextArea1.setText(getPLAC());
-        originalPlaceFormat = format(parent.getOriginalPlaceFormat());
+        originalPlaceFormat = PropertyPlace.formatSpaces(parent.getOriginalPlaceFormat());
         jTextArea2.setText(originalPlaceFormat);
         
         // Fields related to place conversion
