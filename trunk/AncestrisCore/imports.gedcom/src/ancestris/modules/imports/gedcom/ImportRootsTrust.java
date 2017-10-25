@@ -14,8 +14,8 @@ package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
 import ancestris.modules.gedcom.utilities.GedcomUtilities;
-import static ancestris.modules.imports.gedcom.Bundle.importfamilytreemaker_name;
-import static ancestris.modules.imports.gedcom.Bundle.importfamilytreemaker_note;
+import static ancestris.modules.imports.gedcom.Bundle.importrootstrust_name;
+import static ancestris.modules.imports.gedcom.Bundle.importrootstrust_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
 import org.openide.util.lookup.ServiceProvider;
@@ -37,16 +37,16 @@ import java.util.Stack;
  * The import function for ImportFamilyTreeMaker
  */
 @NbBundle.Messages({
-    "importfamilytreemaker.name=Family Tree Maker (FTM)",
-    "importfamilytreemaker.note=This file has been modified by Ancestris Family Tree Maker Import module."
+    "importrootstrust.name=RootsTrust",
+    "importrootstrust.note=This file has been modified by Ancestris RootsTrust Import module."
 })
 @ServiceProvider(service = Import.class)
-public class ImportFamilyTreeMaker extends Import {
+public class ImportRootsTrust extends Import {
 
     /**
      * Constructor
      */
-    public ImportFamilyTreeMaker() {
+    public ImportRootsTrust() {
         super();
     }
 
@@ -57,12 +57,12 @@ public class ImportFamilyTreeMaker extends Import {
 
     @Override
     public String toString() {
-        return importfamilytreemaker_name();
+        return importrootstrust_name();
     }
 
     @Override
     protected String getImportComment() {
-        return importfamilytreemaker_note();
+        return importrootstrust_note();
     }
 
     ///////////////////////////// START OF LOGIC ///////////////////////////////
