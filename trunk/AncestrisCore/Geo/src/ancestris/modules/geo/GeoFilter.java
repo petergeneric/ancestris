@@ -108,14 +108,18 @@ public class GeoFilter {
         isBusy = true;
         selectedIndi = getSelectedIndi();
         if (rootIndi == null) {
+            rootIndi = getDeCujusIndi();
+        }
+        if (rootIndi == null) {
             rootIndi = selectedIndi;
         }
-        if (rootIndi != null) {
-            ancestorsList = getAncestors(rootIndi);
-            descendantsList = getDescendants(rootIndi);
-            cousinsList = getCousins();
-            othersList = getOthersList();
+        if (rootIndi == null) {
+            rootIndi = (Indi) gedcom.getFirstEntity("INDI");
         }
+        ancestorsList = getAncestors(rootIndi);
+        descendantsList = getDescendants(rootIndi);
+        cousinsList = getCousins();
+        othersList = getOthersList();
         searchedIndis = getSearchedIndis();
         isBusy = false;
     }
@@ -147,12 +151,16 @@ public class GeoFilter {
     }
 
     public boolean compliesEvent(GeoNodeObject event) {
-        
+
         // Reject if none of the individuals match
+        boolean found = false;
         for (Indi indi : event.getIndis()) {
             if (compliesIndi(indi)) {
+                found = true;
                 break;
             }
+        }
+        if (!found) {
             return false;
         }
 
@@ -188,7 +196,7 @@ public class GeoFilter {
         if (selectedSearch && !searchedIndis.contains(indi)) {
             return false;
         }
-        if (selectedIndividual && !selectedIndi.contains(indi)) {
+        if (selectedIndividual && selectedIndi != null && !selectedIndi.equals(indi)) {
             return false;
         }
         if (males || females) {
