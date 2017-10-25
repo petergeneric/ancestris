@@ -108,7 +108,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         linkToSourceButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         sourceReferencedTitleTextArea = new javax.swing.JTextArea();
-        referencedEventComboBox = new javax.swing.JComboBox();
         referencedEventLabel = new javax.swing.JLabel();
         pageLabel = new javax.swing.JLabel();
         pageTextField = new javax.swing.JTextField();
@@ -118,6 +117,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         recordingDate = new ancestris.modules.beans.ADateBean();
         jLabel5 = new javax.swing.JLabel();
         dataQualityComboBox = new javax.swing.JComboBox<String>();
+        referencedEventChoiceWidget = new genj.util.swing.ChoiceWidget();
         sourceCitationTabbedPane = new javax.swing.JTabbedPane();
         SourceDataPanel = new javax.swing.JPanel();
         sourceDataScrollPane = new javax.swing.JScrollPane();
@@ -179,14 +179,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         sourceReferencedTitleTextArea.setWrapStyleWord(true);
         jScrollPane1.setViewportView(sourceReferencedTitleTextArea);
 
-        referencedEventComboBox.setEditable(true);
-        referencedEventComboBox.setModel(mEventsModel);
-        referencedEventComboBox.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                referencedEventComboBoxActionPerformed(evt);
-            }
-        });
-
         referencedEventLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         referencedEventLabel.setText(org.openide.util.NbBundle.getMessage(SourceCitationEditorPanel.class, "SourceCitationEditorPanel.referencedEventLabel.text")); // NOI18N
 
@@ -241,13 +233,19 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
         });
 
+        referencedEventChoiceWidget.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                referencedEventChoiceWidgetActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(sourceReferencedTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sourceReferencedTitleLabel)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(addSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(linkToSourceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -256,21 +254,21 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             .addComponent(jScrollPane1)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
                     .addComponent(referencedEventLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(eventRoleLabel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventRoleComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(referencedEventComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(dataQualityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(dataQualityComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eventRoleComboBox, 0, 1, Short.MAX_VALUE)
+                    .addComponent(referencedEventChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(recordingDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE)
                     .addComponent(pageLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(recordingDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(recordingDate, javax.swing.GroupLayout.DEFAULT_SIZE, 270, Short.MAX_VALUE)
                     .addComponent(pageTextField)))
         );
         jPanel1Layout.setVerticalGroup(
@@ -288,8 +286,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     .addComponent(referencedEventLabel)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(pageTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(referencedEventComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(pageLabel)))
+                        .addComponent(pageLabel)
+                        .addComponent(referencedEventChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -501,9 +499,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         mDataQualityModified = true;
     }//GEN-LAST:event_dataQualityComboBoxActionPerformed
 
-    private void referencedEventComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referencedEventComboBoxActionPerformed
+    private void referencedEventChoiceWidgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referencedEventChoiceWidgetActionPerformed
         mEventTypeModified = true;
-    }//GEN-LAST:event_referencedEventComboBoxActionPerformed
+    }//GEN-LAST:event_referencedEventChoiceWidgetActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SourceDataPanel;
@@ -525,7 +523,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private javax.swing.JTextField pageTextField;
     private ancestris.modules.beans.ADateBean recordingDate;
     private javax.swing.JLabel recordingDateLabel;
-    private javax.swing.JComboBox referencedEventComboBox;
+    private genj.util.swing.ChoiceWidget referencedEventChoiceWidget;
     private javax.swing.JLabel referencedEventLabel;
     private javax.swing.JTabbedPane sourceCitationTabbedPane;
     private javax.swing.JScrollPane sourceDataScrollPane;
@@ -587,7 +585,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             Property eventType = sourceCitation.getProperty("EVEN");
             if (eventType != null) {
-                referencedEventComboBox.setSelectedItem(PropertyTag2Name.getTagName(eventType.getValue()));
+                referencedEventChoiceWidget.setSelectedItem(PropertyTag2Name.getTagName(eventType.getValue()));
                 Property eventRole = eventType.getProperty("ROLE");
                 if (eventRole != null) {
                     /*
@@ -612,7 +610,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     eventRoleComboBox.setSelectedIndex(0);
                 }
             } else {
-                referencedEventComboBox.setSelectedItem("");
+                referencedEventChoiceWidget.setSelectedItem("");
                 eventRoleComboBox.setSelectedIndex(0);
             }
             mEventTypeModified = false;
@@ -670,7 +668,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             pageTextField.setVisible(false);
 
             referencedEventLabel.setVisible(false);
-            referencedEventComboBox.setVisible(false);
+            referencedEventChoiceWidget.setVisible(false);
 
             eventRoleLabel.setVisible(false);
             eventRoleComboBox.setVisible(false);
@@ -718,9 +716,9 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 mEventTypeModified = false;
                 Property eventType = mSourceCitation.getProperty("EVEN");
                 if (eventType == null) {
-                    mSourceCitation.addProperty("EVEN", PropertyTag2Name.getPropertyTag(referencedEventComboBox.getSelectedItem().toString()));
+                    mSourceCitation.addProperty("EVEN", PropertyTag2Name.getPropertyTag(referencedEventChoiceWidget.getSelectedItem().toString()));
                 } else {
-                    eventType.setValue(PropertyTag2Name.getPropertyTag(referencedEventComboBox.getSelectedItem().toString()));
+                    eventType.setValue(PropertyTag2Name.getPropertyTag(referencedEventChoiceWidget.getSelectedItem().toString()));
                 }
             }
 
@@ -850,12 +848,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         java.util.Collections.sort(localizedEventsList);
 
-        mEventsModel.removeAllElements();
-
-        mEventsModel.addElement("");
-
-        for (String tag : localizedEventsList) {
-            mEventsModel.addElement(tag);
-        }
+        referencedEventChoiceWidget.setValues(localizedEventsList);
+        
+        
     }
 }
