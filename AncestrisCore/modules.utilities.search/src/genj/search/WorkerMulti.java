@@ -236,14 +236,6 @@ public class WorkerMulti extends Worker {
         
         PointInTime nullPit = new PointInTime();
         
-        if (dateFound != null) {
-            String id = dateFound.getEntity().getId();
-            if (id.equals("I2503")) {
-                String debug = "";
-            }
-        }
-        
-
         // Part 1&2 : Extract pits && Eliminate obvious cases
         //     - null criteria => always true
         //     - null date to be tested but criteria not null => always false
