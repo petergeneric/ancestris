@@ -13,13 +13,18 @@
 package ancestris.modules.imports.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.modules.gedcom.utilities.GedcomUtilities;
 import static ancestris.modules.imports.gedcom.Bundle.importancestrologie_name;
 import static ancestris.modules.imports.gedcom.Bundle.importancestrologie_note;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
 import genj.gedcom.TagPath;
 import java.io.IOException;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -67,17 +72,24 @@ public class ImportAncestrologie extends Import {
 
     @Override
     protected boolean process() throws IOException {
-        // before super process
-        if (beforeProcess()) {
+
+        String tag = input.getTag();
+        TagPath path = input.getPath();
+        
+        
+        // Replace SOUR:EVEN by SOUR:NOTE
+        if (path.toString().equals("SOUR:EVEN")) {  
+            String result = output.writeLine(input.getLevel(), "NOTE", input.getValue());
+            console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
         }
+        
+        
+
         // Super process  (yes tags, invalid tags, etc)
         if (super.process()) {
             return true;
         }
-        
-        String tag = input.getTag();
-        TagPath path = input.getPath();
         
         // invalid tag here, replace with _TIME
         if (path.toString().contains("TIME") && !path.toString().contains("CHAN")) {  
@@ -86,10 +98,6 @@ public class ImportAncestrologie extends Import {
             return true;
         }
         
-        //After super process
-        if (afterProcess()) {
-            return true;
-        }
         return false;
     }
     
@@ -97,6 +105,7 @@ public class ImportAncestrologie extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= processEntities(gedcom);
+        ret |= super.convertAssociations(gedcom);
         return ret;
     }
 
@@ -106,30 +115,41 @@ public class ImportAncestrologie extends Import {
     
     
     
-    private boolean beforeProcess() {
-        if ((input.getLevel() == 0) && (!header)) {
-            try {
-                header = true;
-                output.writeLine(1, null, "DEST", "ANY");
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
-            }
-        }
-        
-        
-        return false;
-    }
-
-
-    private boolean afterProcess() {
-        return false;
-    }
-
-    
     
     public boolean processEntities(Gedcom gedcom) {
 
         boolean hasErrors = false;
+        Property[] props = null;
+        Property host = null;
+        Property date = null;
+        
+
+        // Move INDI:ADDR under a new RESI tag
+        for (Indi indi : gedcom.getIndis()) {
+            props = indi.getProperties("ADDR");
+            for (Property prop : props) {
+                // Create RESI
+                host = indi.addProperty("RESI", "");
+                
+                // In case a adte appears under ADDR, move it to RESI level
+                date = prop.getProperty("DATE");
+                if (date != null) {
+                    host.addProperty("DATE", date.getValue());
+                    prop.delProperty(date);
+                }
+                
+                // Move rest of ADDR
+                try {
+                    GedcomUtilities.movePropertyRecursively(prop, host);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                }
+                
+                nbChanges++;
+            }
+            hasErrors = true;
+        }
+
         
         
         
