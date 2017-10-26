@@ -32,6 +32,7 @@ import java.io.Reader;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import org.openide.util.Exceptions;
 
 /**
  * Reads gedcom lines into properties
@@ -248,7 +249,14 @@ public class PropertyReader {
                   String bit = nextLine.substring(0, nextLine.indexOf(' '));
                   if (bit.length() == 1 && bit.matches("[0-9]")) {
                       // next line seems to be ok, reset and continue;
-                      in.reset();  // go back to previous mark
+                      try {
+                          in.reset();  // go back to previous mark
+                      } catch (Exception e) {
+                          System.err.println("******");
+                          System.err.println("Error exceeding marker while reading line = "+ nextLine + "\n");
+                          System.err.println("******");
+                          Exceptions.printStackTrace(e);
+                      }
                       cont = false;
                   } else {
                       in.mark(1024);  // progress marking

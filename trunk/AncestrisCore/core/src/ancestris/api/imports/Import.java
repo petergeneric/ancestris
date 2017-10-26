@@ -768,10 +768,9 @@ public abstract class Import {
             }
             
             // Get initial individual B
-            id = prop.getValue().replace("@", "");
+            id = prop.getValue().replace("@", "").trim();
             indiRela = (Indi) gedcom.getEntity(id);  // This will be the new individual A
             if (indiRela == null) {
-                nbChanges++;
                 console.println(NbBundle.getMessage(Import.class, "Import.indiNotFound", id));
                 continue;
             }
@@ -779,6 +778,7 @@ public abstract class Import {
             // Get type, rela and tagpath
             type = prop.getEntity().getTag();
             relaProp = prop.getProperty("RELA");
+            rela = "";
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
             }

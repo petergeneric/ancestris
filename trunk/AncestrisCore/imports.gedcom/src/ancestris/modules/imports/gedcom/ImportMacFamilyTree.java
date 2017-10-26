@@ -257,7 +257,11 @@ public class ImportMacFamilyTree extends Import {
             }
             prop = file.getProperty("FORM");
             if (prop == null) {
-                file.addProperty("FORM", getExtension(file.getValue()));
+                String ext = getExtension(file.getValue());
+                if (ext == null) {
+                    ext = "none";
+                }
+                file.addProperty("FORM", ext);
                 console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
                 hasErrors = true;
             }
