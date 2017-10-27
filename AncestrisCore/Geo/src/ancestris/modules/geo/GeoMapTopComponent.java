@@ -671,6 +671,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             return;
         }
         isBusyRecalc = true;
+        String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.inprogress");
+        StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
         geoPoints.clear();
         boolean filterIsOn = false;
         if (markers != null) {
@@ -688,10 +690,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             jActiveFilters.setVisible(filterIsOn);
             StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
             if (geoPoints.size() < markers.length) {
-                String indi = (geoFilter.rootIndi != null) ? geoFilter.rootIndi.toString(true) : "";
-                String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
+                msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
-                msg += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.DeCujus") + " " + indi;
+                msg += geoFilter.getShortDescription();
                 StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             }
         }
