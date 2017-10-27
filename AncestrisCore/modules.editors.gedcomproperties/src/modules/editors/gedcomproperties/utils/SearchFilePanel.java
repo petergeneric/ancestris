@@ -253,7 +253,7 @@ public class SearchFilePanel extends javax.swing.JPanel {
             defaultDir = System.getProperty("user.home");
         }
         File file = new FileChooserBuilder(SearchFilePanel.class)
-                .setDirectoriesOnly(true)
+                .setDirectoriesOnly(false)
                 .setDefaultBadgeProvider()
                 .setTitle(NbBundle.getMessage(SearchFilePanel.class, "FileChooserTitle"))
                 .setApproveText(NbBundle.getMessage(SearchFilePanel.class, "FileChooserButton"))
@@ -266,6 +266,9 @@ public class SearchFilePanel extends javax.swing.JPanel {
                 .setDefaultWorkingDirectory(new File(defaultDir))
                 .showOpenDialog();
         if (file != null) {
+            if (!file.isDirectory()) {
+                file = file.getParentFile();
+            }
             jTextField1.setText(file.getAbsolutePath());
             recalc();
         }
