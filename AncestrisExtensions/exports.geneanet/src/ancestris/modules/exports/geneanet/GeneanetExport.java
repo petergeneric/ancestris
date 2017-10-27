@@ -35,6 +35,7 @@ import java.io.FilenameFilter;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.List;
+import java.util.Stack;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -89,6 +90,7 @@ public class GeneanetExport {
         // Convert to geneanet format (only associations are to be converted)
         if (ok && copyGedcom != null) {
             ok = convertAssociations(copyGedcom);
+            ok &= convertOther(copyGedcom);
         }
 
         // Save gedcom copy
@@ -185,4 +187,58 @@ public class GeneanetExport {
         return true;
     }
 
+    
+    
+    private boolean convertOther(Gedcom gedcom) {
+
+        Property[] props = null;
+        Property prop = null;
+        String rela = null;
+        
+        console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingOther"));
+
+        // Convert FAM:EVEN:TYPE from Relation to unmarried
+        for (Entity entity : gedcom.getFamilies()) {
+            props = entity.getProperties("EVEN");
+            for (Property p : props) {
+                prop = p.getProperty("TYPE");
+                if (prop != null) {
+                    rela = prop.getValue();
+                    if (rela.equals("Relation")) {
+                        prop.setValue("unmarried");
+                    }
+                }
+            }
+            
+        }
+        
+        Stack propToDelete = new Stack();
+        
+        
+        // Remove _SOSA and _SOSADABOVILLE and _DABOVILLE tags
+        for (Entity entity : gedcom.getIndis()) {
+            propToDelete.clear();
+            props = entity.getProperties("_SOSA");
+            for (Property p : props) {
+                propToDelete.add(p);
+            }
+            props = entity.getProperties("_SOSADABOVILLE");
+            for (Property p : props) {
+                propToDelete.add(p);
+            }
+            props = entity.getProperties("_DABOVILLE");
+            for (Property p : props) {
+                propToDelete.add(p);
+            }
+            while (!propToDelete.empty()) {
+                entity.delProperty((Property) propToDelete.pop());
+            }
+        }
+        
+        
+        
+        
+        return true;
+        
+    }
 }
