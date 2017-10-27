@@ -550,4 +550,168 @@ public class GeoFilter {
             System.out.println("DEBUG - " + str + "indi(" + i + ")=" + indi);
         }
     }
+
+    /**
+     * Display description of filter depending on what filters are selected
+     * @return 
+     */
+    public String getShortDescription() {
+        String ret = "";
+
+        // Are there any filters on location
+        if (!location.isEmpty()) {
+            ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.location", location);
+        }
+
+        // Are there any filters on tree structure
+        String indi = (rootIndi != null) ? rootIndi.toString(true) : "";
+        if (ascendants | descendants | cousins | otherAncestors) {
+            String tree = "";
+            String asce  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jAncestorCheckBox.text");
+            String desc = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jDescendantCheckBox.text");
+            String cous = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jCousinCheckBox.text");
+            String othe  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jOthersCheckBox.text");
+            if (!ascendants) {
+                asce = "";
+            } 
+            tree += asce;
+            
+            if (!descendants) {
+                desc = "";
+            } else if (!tree.isEmpty()) {
+                tree += "+";
+            }
+            tree += desc;
+            
+            if (!cousins) {
+                cous = "";
+            } else if (!tree.isEmpty()) {
+                tree += "+";
+            }
+            tree += cous;
+
+            if (!otherAncestors) {
+                othe = "";
+            } else if (!tree.isEmpty()) {
+                tree += "+";
+            }
+            tree += othe;
+
+            if (!tree.isEmpty()) {
+                if (!ret.isEmpty()) {
+                    ret += " + ";
+                }
+                ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.tree", tree, indi);
+            }
+        }
+
+        // Are there any filters on events
+        if (!yearStart.isEmpty() | !yearEnd.isEmpty() | births | marriages | deaths | otherEvents) {
+            String event = "";
+            String yeas  = ">";
+            String yeae  = "<";
+            String birt  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jBirthCheckBox.text");
+            String marr  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWeddingCheckBox.text");
+            String deat  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jDeathCheckBox1.text");
+            String othe  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jOtherEventCheckBox1.text");
+
+            if (yearStart.isEmpty()) {
+                yeas = "";
+            } else {
+                yeas += yeas + yearStart;
+            }
+
+            if (yearEnd.isEmpty()) {
+                yeae = "";
+            } else {
+                yeae += yeae + yearEnd;
+            }
+            if (!event.isEmpty()) {
+                event += "+"; 
+            }
+            event += yeae;
+            
+            if (!births) {
+                birt = "";
+            } else if (!event.isEmpty()) {
+                event += "+";
+            }
+            event += birt;
+
+            if (!marriages) {
+                marr = "";
+            } else if (!event.isEmpty()) {
+                event += "+";
+            }
+            event += marr;
+
+            if (!deaths) {
+                deat = "";
+            } else if (!event.isEmpty()) {
+                event += "+";
+            }
+            event += deat;
+
+            if (!otherEvents) {
+                othe = "";
+            } else if (!event.isEmpty()) {
+                event += "+";
+            }
+            event += othe;
+            
+            if (!event.isEmpty()) {
+                if (!ret.isEmpty()) {
+                    ret += " + ";
+                }
+                ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.events", event);
+            }
+            
+        }
+        
+        // Are there any filters on individuals
+        String selected = (selectedIndi != null) ? selectedIndi.toString(true) : "";
+        if (males | females | selectedIndividual | selectedSearch) {
+            String selindi = "";
+            String male  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jMenCheckBox.text");
+            String fema = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWomenCheckBox.text");
+            String sind = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSelectedCheckBox.text");
+            String ssea  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSearchedCheckBox.text");
+            if (!males) {
+                male = "";
+            } else {
+                selindi += male;
+            }
+            
+            if (!females) {
+                fema = "";
+            } else if (!selindi.isEmpty()) {
+                selindi += "+";
+            }
+            selindi +=  fema;
+            
+            if (!selectedIndividual) {
+                sind = "";
+            } else if (!selindi.isEmpty()) {
+                selindi += "+";
+            }
+            selindi += sind + " (" + selected + ")";
+            
+            if (!selectedSearch) {
+                ssea = "";
+            } else if (!selindi.isEmpty()) {
+                selindi += "+";
+            }
+            selindi += ssea;
+            
+            if (!selindi.isEmpty()) {
+                if (!ret.isEmpty()) {
+                    ret += " + ";
+                }
+                ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.indi", selindi);
+            }
+        }
+
+        
+        return ret;
+    }
 }
