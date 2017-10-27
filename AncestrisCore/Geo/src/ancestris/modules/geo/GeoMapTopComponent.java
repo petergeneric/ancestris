@@ -6,12 +6,14 @@ package ancestris.modules.geo;
 
 import ancestris.api.search.SearchCommunicator;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.gedcom.GedcomDirectory;
 import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.modules.utilities.search.SearchTopComponent;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.SelectionActionEvent;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -42,6 +44,8 @@ import org.openide.awt.StatusDisplayer;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
+import org.openide.util.LookupEvent;
+import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
@@ -87,8 +91,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private boolean refreshFlag = false;
     //
     private Set<Entity> filteredIndis;
-    
+    //
     private SearchCommunicator searchCommunicator = null;
+    //
+    private Lookup.Result<SelectionActionEvent> result;
+
 
     public GeoMapTopComponent() {
         super();
@@ -113,6 +120,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void init(Context context) {
         super.init(context);
         ToolTipManager.sharedInstance().setDismissDelay(10000);
+
+        // Listener to the search view
         searchCommunicator = new SearchCommunicator() {
             @Override
             public void changedResults(Gedcom gedcom) {
@@ -120,6 +129,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
         };
         searchCommunicator.setGedcom(context.getGedcom());
+        
+        // Listener to selected individual
+        if (result == null) {
+            result = addLookupListener(context);
+        }
+
     }
 
     @Override
@@ -176,6 +191,37 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return markers;
     }
 
+    
+    
+    
+    // FL : code taken from TreeView.java
+    private Lookup.Result<SelectionActionEvent> addLookupListener(Context context) {
+        Lookup.Result<SelectionActionEvent> r;
+        try {
+            // Install action listener
+            r = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookupResult(SelectionActionEvent.class);
+        } catch (GedcomDirectory.ContextNotFoundException ex) {
+            r = null;
+        }
+        final Lookup.Result<SelectionActionEvent> returnValue = r;
+        if (returnValue != null) {
+            returnValue.addLookupListener(new LookupListener() {
+
+                @Override
+                public void resultChanged(LookupEvent ev) {
+                    for (SelectionActionEvent e : returnValue.allInstances()) {
+                        if (e != null) {
+                            applyFilters();
+                        }
+                    }
+                }
+            });
+        }
+        return returnValue;
+    }
+
+    
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is

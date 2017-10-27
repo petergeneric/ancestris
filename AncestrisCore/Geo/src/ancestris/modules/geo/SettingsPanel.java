@@ -204,6 +204,11 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                 jSelectedCheckBoxActionPerformed(evt);
             }
         });
+        jSelectedCheckBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jSelectedCheckBoxPropertyChange(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jSearchedCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedCheckBox.text")); // NOI18N
         jSearchedCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedCheckBox.toolTipText")); // NOI18N
@@ -532,6 +537,11 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
             gmtc.setMarkersSize((int) Integer.valueOf(jSizeSpinner.getValue().toString()));
         }
     }//GEN-LAST:event_jResizeWithZoomActionPerformed
+
+    private void jSelectedCheckBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSelectedCheckBoxPropertyChange
+        // replaced with addLookupListener in GeoMapTopComponent
+        //gmtc.setFilterSelectedIndi(jSelectedCheckBox.isSelected());
+    }//GEN-LAST:event_jSelectedCheckBoxPropertyChange
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
