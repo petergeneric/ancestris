@@ -18,10 +18,12 @@ package ancestris.modules.imports.gedcom;
 import ancestris.api.imports.Import;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_note;
-import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_notewarning;
-import genj.gedcom.Entity;
+import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Grammar;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
+import java.util.List;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -29,7 +31,7 @@ import org.openide.util.lookup.ServiceProvider;
  * The import function for Geneanet
  */
 @NbBundle.Messages({
-    "importgeneanet.name=Geneanet",
+    "importgeneanet.name=Geneanet / GeneWeb",
     "importgeneanet.note=This file has been modified by the Ancestris Geneanet Import module.",
     "importgeneanet.notewarning=Gedcom file made to be uploaded to Geneanet. File is NOT to be used to modify your genealogy !"
 })
@@ -61,24 +63,60 @@ public class ImportGeneanet extends Import {
     
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
-        super.convertAssociations(gedcom);
-        return specialNote(gedcom);
+        boolean ret = super.fixGedcom(gedcom);
+        ret |= super.convertAssociations(gedcom);
+        ret |= fixOther(gedcom);
+        return ret;
     }
 
-    private boolean specialNote(Gedcom gedcom) {
-
-        Entity entity = gedcom.getFirstEntity("HEAD");
-        String note = " - " + importgeneanet_notewarning();
-        Property[] noteProps = entity.getProperties("NOTE");
-        for (Property noteProp : noteProps) {
-            String str = noteProp.getDisplayValue();
-            if (str.contains(note)) {
-                noteProp.setValue(str.replace(note, ""));
+    /**
+     * Specific code depending from import type after Gedcom is processed
+     * @return 
+     */
+    public boolean fixOther(Gedcom gedcom) {
+        boolean hasErrors = false;
+    
+        // Move OBJE:FORM under OBJE:FILE for grammar 5.5.1
+        if (gedcom.getGrammar().equals(Grammar.V551)) {
+            List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
+            Property obje = null;
+            Property form = null;
+            for (Property file : fileList) {
+                obje = file.getParent();
+                form = obje.getProperty("FORM");
+                if (form != null) {
+                    if (file.getProperty("FORM") == null) {
+                        file.addProperty("FORM", form.getValue());
+                    }
+                    obje.delProperty(form);
+                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
+                    hasErrors = true;
+                } else {
+                    if (file.getProperty("FORM") == null) {
+                        String value = file.getValue();
+                        String ext = "";
+                        if (value.startsWith("http")) {
+                            ext = "web";
+                        } else {
+                            ext = getExtension(value);
+                        }
+                        if (ext == null) {
+                            ext = "none";
+                        }
+                        file.addProperty("FORM", ext);
+                        console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
+                        hasErrors = true;
+                    }
+                }
             }
         }
-        console.println(note);
-        return true;
+        
+        
+        return hasErrors;
     }
+
+    
+    
 
     
     
