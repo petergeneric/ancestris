@@ -15,10 +15,15 @@ package ancestris.modules.imports.gedcom;
 import ancestris.api.imports.Import;
 import static ancestris.modules.imports.gedcom.Bundle.importmyheritage_name;
 import static ancestris.modules.imports.gedcom.Bundle.importmyheritage_note;
+import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Grammar;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyFile;
 import java.io.IOException;
+import java.util.List;
 
 /**
  *
@@ -147,7 +152,37 @@ public class ImportMyHeritage extends Import {
      */
     public boolean fixOther(Gedcom gedcom) {
         boolean hasErrors = false;
-
+    
+        // Move OBJE:FORM under OBJE:FILE
+        if (gedcom.getGrammar().equals(Grammar.V551)) {
+            List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
+            Property obje = null;
+            Property form = null;
+            for (Property file : fileList) {
+                obje = file.getParent();
+                form = obje.getProperty("FORM");
+                if (form != null) {
+                    if (file.getProperty("FORM") == null) {
+                        file.addProperty("FORM", form.getValue());
+                    }
+                    obje.delProperty(form);
+                    console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
+                    hasErrors = true;
+                } else {
+                    if (file.getProperty("FORM") == null) {
+                        String ext = getExtension(file.getValue());
+                        if (ext == null) {
+                            ext = "none";
+                        }
+                        file.addProperty("FORM", ext);
+                        console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
+                        hasErrors = true;
+                    }
+                }
+            }
+        }
+        
+        
         return hasErrors;
     }
 
