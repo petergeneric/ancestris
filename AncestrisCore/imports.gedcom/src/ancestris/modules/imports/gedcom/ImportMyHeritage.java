@@ -153,7 +153,7 @@ public class ImportMyHeritage extends Import {
     public boolean fixOther(Gedcom gedcom) {
         boolean hasErrors = false;
     
-        // Move OBJE:FORM under OBJE:FILE
+        // Move OBJE:FORM under OBJE:FILE for grammar 5.5.1
         if (gedcom.getGrammar().equals(Grammar.V551)) {
             List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
             Property obje = null;
@@ -170,7 +170,13 @@ public class ImportMyHeritage extends Import {
                     hasErrors = true;
                 } else {
                     if (file.getProperty("FORM") == null) {
-                        String ext = getExtension(file.getValue());
+                        String value = file.getValue();
+                        String ext = "";
+                        if (value.startsWith("http")) {
+                            ext = "web";
+                        } else {
+                            ext = getExtension(value);
+                        }
                         if (ext == null) {
                             ext = "none";
                         }
