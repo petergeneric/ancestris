@@ -193,6 +193,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
 
         buttonGroup1.add(jAllRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(jAllRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jAllRadioButton.text")); // NOI18N
+        jAllRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jAllRadioButton.toolTipText")); // NOI18N
         jAllRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jAllRadioButtonActionPerformed(evt);
@@ -201,6 +202,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
 
         buttonGroup1.add(jMenRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(jMenRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jMenRadioButton.text")); // NOI18N
+        jMenRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jMenRadioButton.toolTipText")); // NOI18N
         jMenRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jMenRadioButtonActionPerformed(evt);
@@ -209,6 +211,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
 
         buttonGroup1.add(jWomenRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(jWomenRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jWomenRadioButton.text")); // NOI18N
+        jWomenRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jWomenRadioButton.toolTipText")); // NOI18N
         jWomenRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jWomenRadioButtonActionPerformed(evt);
@@ -217,6 +220,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
 
         buttonGroup1.add(jSelectedRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(jSelectedRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSelectedRadioButton.text")); // NOI18N
+        jSelectedRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSelectedRadioButton.toolTipText")); // NOI18N
         jSelectedRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSelectedRadioButtonActionPerformed(evt);
@@ -225,6 +229,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
 
         buttonGroup1.add(jSearchedRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(jSearchedRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedRadioButton.text")); // NOI18N
+        jSearchedRadioButton.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedRadioButton.toolTipText")); // NOI18N
         jSearchedRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jSearchedRadioButtonActionPerformed(evt);

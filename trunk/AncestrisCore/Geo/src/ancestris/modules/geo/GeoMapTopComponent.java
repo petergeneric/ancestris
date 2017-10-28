@@ -95,7 +95,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private SearchCommunicator searchCommunicator = null;
     //
     private Lookup.Result<SelectionActionEvent> result;
-
+    private DialogManager settingsDialog;
 
     public GeoMapTopComponent() {
         super();
@@ -805,13 +805,13 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     private void showSettings() {
-        SettingsPanel sp = new SettingsPanel(this);
-        DialogManager.create(
-                NbBundle.getMessage(getClass(), "TITL_Setting"), sp)
+        SettingsPanel settingsPanel = new SettingsPanel(this);
+        settingsDialog = DialogManager.create(
+                NbBundle.getMessage(getClass(), "TITL_Setting"), settingsPanel)
                 .setOptionType(DialogManager.OK_ONLY_OPTION)
-                .setDialogId(SettingsPanel.class)
-                .show();
-        sp.saveDates();
+                .setDialogId(SettingsPanel.class);
+        settingsDialog.show();
+        settingsPanel.saveDates();
         geoFilter.save();
     }
 
@@ -929,6 +929,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                         NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
                         JOptionPane.INFORMATION_MESSAGE);
                 searchWindow.requestActive();
+                
+                // Trick to run the Advanced Research View in an Undocked mode
+                for (Action a : searchWindow.getActions()) {
+                    if (a != null && a.getClass().toString().equals("class org.netbeans.core.windows.actions.UndockWindowAction")) {
+                        a.actionPerformed(new ActionEvent(this, 0, "undock"));
+                        settingsDialog.cancel();  // close geo settings
+                    }
+                }
             }
         }
         geoFilter.selectedSearch = selected;

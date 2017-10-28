@@ -222,6 +222,8 @@ param text
 
     public abstract Object show();
 
+    public abstract void cancel();
+
     public static class Message extends DialogManager {
 
         private NotifyDescriptor descriptor;
@@ -245,6 +247,11 @@ param text
         @Override
         public Object show() {
             return DialogDisplayer.getDefault().notify(descriptor);
+        }
+
+        @Override
+        public void cancel() {
+            return;
         }
     }
 
@@ -272,6 +279,12 @@ param text
             }
             return null;
         }
+
+        @Override
+        public void cancel() {
+            return;
+        }
+        
     }
 
     public static class ADialog extends DialogManager {
