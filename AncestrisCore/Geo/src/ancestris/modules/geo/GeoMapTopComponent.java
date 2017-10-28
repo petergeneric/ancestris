@@ -809,6 +809,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         DialogManager.create(
                 NbBundle.getMessage(getClass(), "TITL_Setting"), sp)
                 .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .setDialogId(SettingsPanel.class)
                 .show();
         sp.saveDates();
         geoFilter.save();
