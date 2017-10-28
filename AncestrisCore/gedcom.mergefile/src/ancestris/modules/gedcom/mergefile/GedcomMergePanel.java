@@ -14,7 +14,6 @@ package ancestris.modules.gedcom.mergefile;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.util.swing.DialogManager;
 import genj.util.Registry;
-import java.awt.Dimension;
 import java.io.File;
 import javax.swing.JButton;
 
@@ -40,7 +39,6 @@ public class GedcomMergePanel extends javax.swing.JPanel {
         jTextField1.setText(registry.get("merge_leftFile", ""));
         jTextField2.setText(registry.get("merge_rightFile", ""));
         jTextField3.setText(registry.get("merge_mergeFile", ""));
-        this.setPreferredSize(new Dimension(registry.get("mergeWindowWidth", this.getPreferredSize().width), registry.get("mergeWindowHeight", this.getPreferredSize().height)));
         setButton();
     }
 
@@ -188,8 +186,6 @@ public class GedcomMergePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("mergeWindowWidth", evt.getComponent().getWidth());
-        registry.put("mergeWindowHeight", evt.getComponent().getHeight());
     }//GEN-LAST:event_formComponentResized
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
