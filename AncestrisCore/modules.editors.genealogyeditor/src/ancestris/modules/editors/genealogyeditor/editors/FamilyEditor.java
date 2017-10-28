@@ -740,7 +740,7 @@ public class FamilyEditor extends EntityEditor {
                     }
 
                     // bmp | gif | jpeg
-                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    if (objetFormat != null) { 
                         husbandImageBean.setImage(file, mHusband.getSex());
                         break;
                     }
@@ -844,7 +844,7 @@ public class FamilyEditor extends EntityEditor {
                     }
 
                     // bmp | gif | jpeg
-                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    if (objetFormat != null) { 
                         wifeImageBean.setImage(file, mWife.getSex());
                         break;
                     }
@@ -937,7 +937,7 @@ public class FamilyEditor extends EntityEditor {
                     }
 
                     // bmp | gif | jpeg
-                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    if (objetFormat != null) { 
                         husbandImageBean.setImage(file, mHusband.getSex());
                         break;
                     }
@@ -1031,7 +1031,7 @@ public class FamilyEditor extends EntityEditor {
                     }
 
                     // bmp | gif | jpeg
-                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    if (objetFormat != null) { 
                         wifeImageBean.setImage(file, mWife.getSex());
                         break;
                     }
@@ -1103,7 +1103,7 @@ public class FamilyEditor extends EntityEditor {
                 }
 
                 // bmp | gif | jpeg
-                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                if (objetFormat != null) { 
                     husbandImageBean.setImage(file, mHusband.getSex());
                     break;
                 }
@@ -1168,7 +1168,7 @@ public class FamilyEditor extends EntityEditor {
                 }
 
                 // bmp | gif | jpeg
-                if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                if (objetFormat != null) { 
                     wifeImageBean.setImage(file, mWife.getSex());
                     break;
                 }
@@ -1542,7 +1542,7 @@ public class FamilyEditor extends EntityEditor {
                     }
 
                     // bmp | gif | jpeg
-                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    if (objetFormat != null) { 
                         selectedFile = file;
                         break;
                     }
@@ -1618,7 +1618,7 @@ public class FamilyEditor extends EntityEditor {
                     }
 
                     // bmp | gif | jpeg
-                    if (objetFormat != null && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                    if (objetFormat != null) { 
                         selectedFile = file;
                         break;
                     }

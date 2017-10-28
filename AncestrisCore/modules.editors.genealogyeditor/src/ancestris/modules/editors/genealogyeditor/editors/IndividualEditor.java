@@ -560,7 +560,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
                 // any kind of file
-                if (objetFormat != null) { // && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                if (objetFormat != null) { 
 
                     MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                     multiMediaObjectEditor.setContext(new Context(multiMediaObject));
@@ -971,7 +971,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
                 // any kind of file
-                if (objetFormat != null) { // && (objetFormat.equals("bmp") || objetFormat.equals("gif") || objetFormat.equals("jpeg") || objetFormat.equals("jpg") || objetFormat.equals("png"))) {
+                if (objetFormat != null) { 
                     if (multiMediaObject instanceof PropertyMedia) {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                     }
