@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
 import ancestris.modules.editors.genealogyeditor.panels.IndividualsTablePanel;
@@ -739,9 +740,14 @@ public class FamilyEditor extends EntityEditor {
                         }
                     }
 
-                    // bmp | gif | jpeg
-                    if (objetFormat != null) { 
-                        husbandImageBean.setImage(file, mHusband.getSex());
+                    // Any format
+                    if (true) { 
+                        boolean correct = husbandImageBean.setImage(file, mHusband.getSex());
+                        if (!correct) {
+                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                        }
                         break;
                     }
                 }
@@ -843,9 +849,14 @@ public class FamilyEditor extends EntityEditor {
                         }
                     }
 
-                    // bmp | gif | jpeg
-                    if (objetFormat != null) { 
-                        wifeImageBean.setImage(file, mWife.getSex());
+                    // Any format
+                    if (true) { 
+                        boolean correct = wifeImageBean.setImage(file, mWife.getSex());
+                        if (!correct) {
+                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                        }
                         break;
                     }
                 }
@@ -936,9 +947,14 @@ public class FamilyEditor extends EntityEditor {
                         }
                     }
 
-                    // bmp | gif | jpeg
-                    if (objetFormat != null) { 
-                        husbandImageBean.setImage(file, mHusband.getSex());
+                    // Any format
+                    if (true) { 
+                        boolean correct = husbandImageBean.setImage(file, mHusband.getSex());
+                        if (!correct) {
+                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                        }
                         break;
                     }
                 }
@@ -1030,9 +1046,14 @@ public class FamilyEditor extends EntityEditor {
                         }
                     }
 
-                    // bmp | gif | jpeg
-                    if (objetFormat != null) { 
-                        wifeImageBean.setImage(file, mWife.getSex());
+                    // Any format
+                    if (true) { 
+                        boolean correct = wifeImageBean.setImage(file, mWife.getSex());
+                        if (!correct) {
+                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                        }
                         break;
                     }
                 }
@@ -1102,9 +1123,14 @@ public class FamilyEditor extends EntityEditor {
                     }
                 }
 
-                // bmp | gif | jpeg
-                if (objetFormat != null) { 
-                    husbandImageBean.setImage(file, mHusband.getSex());
+                // Any format
+                if (true) { 
+                    boolean correct = husbandImageBean.setImage(file, mHusband.getSex());
+                    if (!correct) {
+                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                    }
                     break;
                 }
             }
@@ -1167,9 +1193,14 @@ public class FamilyEditor extends EntityEditor {
                     }
                 }
 
-                // bmp | gif | jpeg
-                if (objetFormat != null) { 
-                    wifeImageBean.setImage(file, mWife.getSex());
+                // Any format
+                if (true) { 
+                    boolean correct = wifeImageBean.setImage(file, mWife.getSex());
+                    if (!correct) {
+                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                    }
                     break;
                 }
             }
@@ -1541,8 +1572,8 @@ public class FamilyEditor extends EntityEditor {
                         }
                     }
 
-                    // bmp | gif | jpeg
-                    if (objetFormat != null) { 
+                    // Any format
+                    if (true) { 
                         selectedFile = file;
                         break;
                     }
@@ -1617,8 +1648,8 @@ public class FamilyEditor extends EntityEditor {
                         }
                     }
 
-                    // bmp | gif | jpeg
-                    if (objetFormat != null) { 
+                    // Any format
+                    if (true) { 
                         selectedFile = file;
                         break;
                     }

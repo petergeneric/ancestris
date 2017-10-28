@@ -1,6 +1,5 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
-import ancestris.util.swing.DialogManager;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import org.openide.util.Exceptions;
-import org.openide.util.NbBundle;
 
 /**
  *
@@ -85,7 +83,8 @@ public class ImageBean extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public void setImage(File file, int defaultGender) {
+    public boolean setImage(File file, int defaultGender) {
+        boolean ret = true;
         InputStream imageInputStream;
 
         if (file != null && file.exists()) {
@@ -93,11 +92,9 @@ public class ImageBean extends javax.swing.JPanel {
                 imageInputStream = new FileInputStream(file);
                 loadImage = ImageIO.read(imageInputStream);
                 if (loadImage == null) {
-                    String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
-                    String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
-                    DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
                     imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
                     loadImage = ImageIO.read(imageInputStream);
+                    ret = false;
                 }
                 if (loadImage != null) {
                     if (getWidth() > 0 && getWidth() < getHeight()) {
@@ -109,6 +106,7 @@ public class ImageBean extends javax.swing.JPanel {
                 isDefault = false;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
+                ret = false;
             }
         } else {
             imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png");
@@ -122,14 +120,19 @@ public class ImageBean extends javax.swing.JPanel {
                 isDefault = true;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
+                ret = false;
             }
         }
 
         repaint();
+        return ret;
     }
 
-    public void setImage(byte[] imageData, int defaultGender) {
+    public boolean setImage(byte[] imageData, int defaultGender) {
+        boolean ret = true;
         isDefault = true;
+        InputStream imageInputStream;
+        
         if (imageData != null) {
             ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
 
@@ -142,9 +145,14 @@ public class ImageBean extends javax.swing.JPanel {
                         scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                     }
                     isDefault = false;
+                } else {
+                    imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
+                    loadImage = ImageIO.read(imageInputStream);
+                    ret = false;
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
+                ret = false;
             }
         } 
         
@@ -159,10 +167,12 @@ public class ImageBean extends javax.swing.JPanel {
                 }
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
+                ret = false;
             }
         }
         
         repaint();
+        return ret;
     }
 
     @Override
