@@ -120,7 +120,7 @@ public class Utils {
         } else {
             image = IMG_INVALID_PHOTO;
         }
-        if ((image.getWidth(null) <= 0) || (image.getHeight(null) <= 0)) {
+        if ((image == null || image.getWidth(null) <= 0) || (image.getHeight(null) <= 0)) {
             return IMG_INVALID_PHOTO;
         }
     
