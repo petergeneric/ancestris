@@ -61,6 +61,7 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
         Object choice = DialogManager.create(NbBundle.getMessage(GenerateSosaAction.class, "GenerateSosaAction.AskDeCujus"), sosaPanel)
                 .setMessageType(DialogManager.PLAIN_MESSAGE)
                 .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .setDialogId("sosaPanel")
                 .show();
 
         // Return if cancelled

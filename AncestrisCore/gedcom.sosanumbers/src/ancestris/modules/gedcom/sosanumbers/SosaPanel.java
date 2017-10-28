@@ -18,7 +18,6 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.util.Registry;
-import java.awt.Dimension;
 import org.openide.util.NbBundle;
 
 /**
@@ -32,8 +31,6 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
     private Registry registry = null;
     private Indi selectedIndividual = null;
     private Indi decujusIndividual = null;
-    private final String winWidth = "sosaPanelWidth";
-    private final String winHeight = "sosaPanelHeight";
     private SelectEntityPanel selectEntityPanel = null;
 
 
@@ -61,7 +58,6 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         
         // Set panel
         registry = gedcom.getRegistry();
-        this.setPreferredSize(new Dimension(registry.get(winWidth, Math.max(this.getPreferredSize().width, 500)), registry.get(winHeight, Math.max(this.getPreferredSize().height, 450))));
 
         // Init components including the entity selector
         initComponents();
@@ -338,8 +334,6 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put(winWidth, evt.getComponent().getWidth());
-        registry.put(winHeight, evt.getComponent().getHeight());
     }//GEN-LAST:event_formComponentResized
 
     private void generateRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateRadioButtonActionPerformed
