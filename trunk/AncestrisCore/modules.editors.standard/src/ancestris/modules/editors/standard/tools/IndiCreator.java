@@ -317,7 +317,7 @@ public class IndiCreator {
         FamChooser famChooser = new FamChooser(parent, child, isFather, okButton);
         if (!famChooser.existChoices() || 
             okButton == DialogManager.create(NbBundle.getMessage(FamChooser.class, "FamChooser.TITL_ChooseFamTitle", child.toString(true)), famChooser)
-                    .setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show()) {
+                    .setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).setDialogId("famChooserWindow").show()) {
             famChooser.updateGedcom();
         }
         
