@@ -18,7 +18,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertyHusband;
 import genj.gedcom.PropertyWife;
 import genj.util.Registry;
-import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +59,6 @@ public class FamChooser extends javax.swing.JPanel {
         
         initComponents();
         
-        this.setPreferredSize(new Dimension(registry.get("famChooserWindowWidth", this.getPreferredSize().width), registry.get("famChooserWindowHeight", this.getPreferredSize().height)));
         
         jList.setSelectedIndex(0);
     }
@@ -108,9 +106,6 @@ public class FamChooser extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("famChooserWindowWidth", evt.getComponent().getWidth());
-        registry.put("famChooserWindowHeight", evt.getComponent().getHeight());
-
     }//GEN-LAST:event_formComponentResized
 
     private void jListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jListMouseClicked
