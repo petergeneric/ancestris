@@ -2183,15 +2183,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         reloadData = true;
         
         // Remember selections
-        EventWrapper ew = getCurrentEvent();            
-        savedEventTagDateDesc = ew.getEventKey(flag);
-        savedEventMediaIndex = ew.eventMediaIndex;
-        savedEventNoteIndex = ew.eventNoteIndex;
-        savedEventSourceIndex = ew.eventSourceIndex;
-        savedEventSourceMediaIndex = 0;
-        if (ew.eventSourceSet != null && !ew.eventSourceSet.isEmpty()) {
-            SourceWrapper sw = ew.eventSourceSet.get(ew.eventSourceIndex);
-            savedEventSourceMediaIndex = sw.sourceMediaIndex;
+        EventWrapper ew = getCurrentEvent();  
+        if (ew != null) {
+            savedEventTagDateDesc = ew.getEventKey(flag);
+            savedEventMediaIndex = ew.eventMediaIndex;
+            savedEventNoteIndex = ew.eventNoteIndex;
+            savedEventSourceIndex = ew.eventSourceIndex;
+            savedEventSourceMediaIndex = 0;
+            if (ew.eventSourceSet != null && !ew.eventSourceSet.isEmpty()) {
+                SourceWrapper sw = ew.eventSourceSet.get(ew.eventSourceIndex);
+                savedEventSourceMediaIndex = sw.sourceMediaIndex;
+            }
         }
         savedFocusedControl = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
     }
