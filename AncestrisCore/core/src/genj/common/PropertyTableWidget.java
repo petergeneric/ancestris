@@ -722,9 +722,7 @@ public class PropertyTableWidget extends JPanel {
                 cells = new Property[rows][cols];
 
                 // tell about it
-                if (rowStart < model.getNumRows() && rowEnd < model.getNumRows()) {
-                    fireTableRowsDeleted(rowStart, rowEnd);
-                }
+                fireTableRowsDeleted(rowStart, rowEnd);
             }
 
             @Override
