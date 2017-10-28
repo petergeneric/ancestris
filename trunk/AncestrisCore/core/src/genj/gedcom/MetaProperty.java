@@ -156,7 +156,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     // Loop over subs
     List<MetaProperty> result = new ArrayList<MetaProperty>(nested.size());
     for (int s=0;s<nested.size();s++) {
-      
+        
       // .. next sub
       MetaProperty sub = nested.get(s);
 
