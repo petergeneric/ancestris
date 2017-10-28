@@ -48,11 +48,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jDescendantCheckBox.setSelected(gmtc.getFilterDescendants());
         jCousinCheckBox.setSelected(gmtc.getFilterCousins());
         jOthersCheckBox.setSelected(gmtc.getFilterAncestors());
-        jSelectedCheckBox.setSelected(gmtc.getFilterSelectedIndi());
-        jSelectedCheckBox.setText(gmtc.getSelectedIndividual());
-        jSearchedCheckBox.setSelected(gmtc.getFilterSearch());
-        jMenCheckBox.setSelected(gmtc.getFilterMales());
-        jWomenCheckBox.setSelected(gmtc.getFilterFemales());
+
         jFromTextField.setText(gmtc.getFilterYearStart());
         jToTextField.setText(gmtc.getFilterYearEnd());
         jBirthCheckBox.setSelected(gmtc.getFilterBirths());
@@ -60,6 +56,12 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jDeathCheckBox1.setSelected(gmtc.getFilterDeaths());
         jOtherEventCheckBox1.setSelected(gmtc.getFilterEvents());
         
+        jMenRadioButton.setSelected(gmtc.getFilterMales());
+        jWomenRadioButton.setSelected(gmtc.getFilterFemales());
+        jSelectedRadioButton.setSelected(gmtc.getFilterSelectedIndi());
+        jSelectedRadioButton.setText(gmtc.getSelectedIndividual());
+        jSearchedRadioButton.setSelected(gmtc.getFilterSearch());
+
     }
     
     /**
@@ -71,6 +73,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        buttonGroup1 = new javax.swing.ButtonGroup();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel2 = new javax.swing.JPanel();
@@ -86,10 +89,11 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jCousinCheckBox = new javax.swing.JCheckBox();
         jOthersCheckBox = new javax.swing.JCheckBox();
         jIndividualLabel = new javax.swing.JLabel();
-        jMenCheckBox = new javax.swing.JCheckBox();
-        jWomenCheckBox = new javax.swing.JCheckBox();
-        jSelectedCheckBox = new javax.swing.JCheckBox();
-        jSearchedCheckBox = new javax.swing.JCheckBox();
+        jAllRadioButton = new javax.swing.JRadioButton();
+        jMenRadioButton = new javax.swing.JRadioButton();
+        jWomenRadioButton = new javax.swing.JRadioButton();
+        jSelectedRadioButton = new javax.swing.JRadioButton();
+        jSearchedRadioButton = new javax.swing.JRadioButton();
         jEventsLabel = new javax.swing.JLabel();
         jYearsLabel = new javax.swing.JLabel();
         jFromTextField = new javax.swing.JTextField();
@@ -110,6 +114,12 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                 formComponentShown(evt);
             }
         });
+
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(646, 383));
+
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(646, 383));
+
+        jPanel2.setPreferredSize(new java.awt.Dimension(646, 383));
 
         jRootLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jRootLabel, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jRootLabel.text")); // NOI18N
@@ -181,40 +191,43 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jIndividualLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jIndividualLabel, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jIndividualLabel.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jMenCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jMenCheckBox.text")); // NOI18N
-        jMenCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jMenCheckBox.toolTipText")); // NOI18N
-        jMenCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jAllRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(jAllRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jAllRadioButton.text")); // NOI18N
+        jAllRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenCheckBoxActionPerformed(evt);
+                jAllRadioButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jWomenCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jWomenCheckBox.text")); // NOI18N
-        jWomenCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jWomenCheckBox.toolTipText")); // NOI18N
-        jWomenCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jMenRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(jMenRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jMenRadioButton.text")); // NOI18N
+        jMenRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jWomenCheckBoxActionPerformed(evt);
+                jMenRadioButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jSelectedCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSelectedCheckBox.text")); // NOI18N
-        jSelectedCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSelectedCheckBox.toolTipText")); // NOI18N
-        jSelectedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jWomenRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(jWomenRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jWomenRadioButton.text")); // NOI18N
+        jWomenRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jSelectedCheckBoxActionPerformed(evt);
-            }
-        });
-        jSelectedCheckBox.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
-            public void propertyChange(java.beans.PropertyChangeEvent evt) {
-                jSelectedCheckBoxPropertyChange(evt);
+                jWomenRadioButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jSearchedCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedCheckBox.text")); // NOI18N
-        jSearchedCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedCheckBox.toolTipText")); // NOI18N
-        jSearchedCheckBox.addActionListener(new java.awt.event.ActionListener() {
+        buttonGroup1.add(jSelectedRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(jSelectedRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSelectedRadioButton.text")); // NOI18N
+        jSelectedRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jSearchedCheckBoxActionPerformed(evt);
+                jSelectedRadioButtonActionPerformed(evt);
+            }
+        });
+
+        buttonGroup1.add(jSearchedRadioButton);
+        org.openide.awt.Mnemonics.setLocalizedText(jSearchedRadioButton, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jSearchedRadioButton.text")); // NOI18N
+        jSearchedRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jSearchedRadioButtonActionPerformed(evt);
             }
         });
 
@@ -287,52 +300,57 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jRoolIndiLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(rootIndividual, javax.swing.GroupLayout.DEFAULT_SIZE, 553, Short.MAX_VALUE))
+                                .addComponent(rootIndividual, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jBirthCheckBox)
-                                    .addComponent(jWeddingCheckBox)
-                                    .addComponent(jDeathCheckBox1)
-                                    .addComponent(jOtherEventCheckBox1)
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jAncestorCheckBox)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jDescendantCheckBox)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jCousinCheckBox))
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addComponent(jYearsLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jFromTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jAndLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jToTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(40, 40, 40)
                                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jIndividualLabel)
+                                            .addComponent(jBirthCheckBox)
+                                            .addComponent(jWeddingCheckBox)
+                                            .addComponent(jDeathCheckBox1)
+                                            .addComponent(jOtherEventCheckBox1)
                                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                                .addGap(2, 2, 2)
+                                                .addComponent(jAncestorCheckBox)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jDescendantCheckBox)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jCousinCheckBox))
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addComponent(jYearsLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jFromTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jAndLabel)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jToTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(40, 40, 40)
                                                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                    .addComponent(jIndividualLabel)
                                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                                        .addComponent(jMenCheckBox)
-                                                        .addGap(44, 44, 44)
-                                                        .addComponent(jWomenCheckBox))
-                                                    .addComponent(jSelectedCheckBox)
-                                                    .addComponent(jSearchedCheckBox)))))
+                                                        .addGap(2, 2, 2)
+                                                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                            .addComponent(jSearchedRadioButton)
+                                                            .addComponent(jSelectedRadioButton)
+                                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                                .addComponent(jAllRadioButton)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                                .addComponent(jMenRadioButton)
+                                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                                .addComponent(jWomenRadioButton))))))
+                                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                                .addGap(18, 18, 18)
+                                                .addComponent(jOthersCheckBox))))
                                     .addGroup(jPanel2Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jOthersCheckBox))))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jChooseLabel)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jChooseDecujusButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jChooseSelectedButton)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jChooseRootButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                        .addComponent(jChooseLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jChooseDecujusButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jChooseSelectedButton)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jChooseRootButton, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(345, 345, 345))))
                     .addComponent(jEventsLabel)
                     .addComponent(jRootLabel))
                 .addContainerGap())
@@ -364,12 +382,13 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                         .addComponent(jIndividualLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jMenCheckBox, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jWomenCheckBox))
+                            .addComponent(jMenRadioButton)
+                            .addComponent(jAllRadioButton)
+                            .addComponent(jWomenRadioButton))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSelectedCheckBox)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jSearchedCheckBox))
+                        .addComponent(jSelectedRadioButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSearchedRadioButton))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jEventsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -386,7 +405,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                         .addComponent(jDeathCheckBox1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jOtherEventCheckBox1)))
-                .addGap(0, 139, Short.MAX_VALUE))
+                .addGap(0, 56, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jPanel2.TabConstraints.tabTitle"), jPanel2); // NOI18N
@@ -447,11 +466,11 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 657, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -471,25 +490,9 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         gmtc.setFilterAncestors(jOthersCheckBox.isSelected());
     }//GEN-LAST:event_jOthersCheckBoxActionPerformed
 
-    private void jSelectedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSelectedCheckBoxActionPerformed
-        gmtc.setFilterSelectedIndi(jSelectedCheckBox.isSelected());
-    }//GEN-LAST:event_jSelectedCheckBoxActionPerformed
-
-    private void jSearchedCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSearchedCheckBoxActionPerformed
-        gmtc.setFilterSelectedSearch(jSearchedCheckBox.isSelected());
-    }//GEN-LAST:event_jSearchedCheckBoxActionPerformed
-
-    private void jMenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenCheckBoxActionPerformed
-        gmtc.setFilterMales(jMenCheckBox.isSelected());
-    }//GEN-LAST:event_jMenCheckBoxActionPerformed
-
     private void jChooseRootButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jChooseRootButtonActionPerformed
         rootIndividual.setText(gmtc.setFilterRootIndi());
     }//GEN-LAST:event_jChooseRootButtonActionPerformed
-
-    private void jWomenCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jWomenCheckBoxActionPerformed
-        gmtc.setFilterFemales(jWomenCheckBox.isSelected());
-    }//GEN-LAST:event_jWomenCheckBoxActionPerformed
 
     private void jFromTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFromTextFieldActionPerformed
         gmtc.setFilterYearStart(jFromTextField.getText());
@@ -538,13 +541,30 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         }
     }//GEN-LAST:event_jResizeWithZoomActionPerformed
 
-    private void jSelectedCheckBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jSelectedCheckBoxPropertyChange
-        // replaced with addLookupListener in GeoMapTopComponent
-        //gmtc.setFilterSelectedIndi(jSelectedCheckBox.isSelected());
-    }//GEN-LAST:event_jSelectedCheckBoxPropertyChange
+    private void jMenRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenRadioButtonActionPerformed
+        setRadioButtons();
+    }//GEN-LAST:event_jMenRadioButtonActionPerformed
+
+    private void jWomenRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jWomenRadioButtonActionPerformed
+        setRadioButtons();
+    }//GEN-LAST:event_jWomenRadioButtonActionPerformed
+
+    private void jSelectedRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSelectedRadioButtonActionPerformed
+        setRadioButtons();
+    }//GEN-LAST:event_jSelectedRadioButtonActionPerformed
+
+    private void jSearchedRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jSearchedRadioButtonActionPerformed
+        setRadioButtons();
+    }//GEN-LAST:event_jSearchedRadioButtonActionPerformed
+
+    private void jAllRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jAllRadioButtonActionPerformed
+        setRadioButtons();
+    }//GEN-LAST:event_jAllRadioButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JRadioButton jAllRadioButton;
     private javax.swing.JCheckBox jAncestorCheckBox;
     private javax.swing.JLabel jAndLabel;
     private javax.swing.JCheckBox jBirthCheckBox;
@@ -559,7 +579,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private javax.swing.JLabel jEventsLabel;
     private javax.swing.JTextField jFromTextField;
     private javax.swing.JLabel jIndividualLabel;
-    private javax.swing.JCheckBox jMenCheckBox;
+    private javax.swing.JRadioButton jMenRadioButton;
     private javax.swing.JCheckBox jOtherEventCheckBox1;
     private javax.swing.JCheckBox jOthersCheckBox;
     private javax.swing.JPanel jPanel1;
@@ -568,14 +588,14 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private javax.swing.JLabel jRoolIndiLabel;
     private javax.swing.JLabel jRootLabel;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JCheckBox jSearchedCheckBox;
-    private javax.swing.JCheckBox jSelectedCheckBox;
+    private javax.swing.JRadioButton jSearchedRadioButton;
+    private javax.swing.JRadioButton jSelectedRadioButton;
     private javax.swing.JLabel jSizeLabel;
     private javax.swing.JSpinner jSizeSpinner;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTextField jToTextField;
     private javax.swing.JCheckBox jWeddingCheckBox;
-    private javax.swing.JCheckBox jWomenCheckBox;
+    private javax.swing.JRadioButton jWomenRadioButton;
     private javax.swing.JLabel jYearsLabel;
     private javax.swing.JLabel rootIndividual;
     // End of variables declaration//GEN-END:variables
@@ -587,6 +607,13 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     public void saveDates() {
         gmtc.setFilterYearStart(jFromTextField.getText());
         gmtc.setFilterYearEnd(jToTextField.getText());
+    }
+
+    private void setRadioButtons() {
+        gmtc.setFilterMales(jMenRadioButton.isSelected());
+        gmtc.setFilterFemales(jWomenRadioButton.isSelected());
+        gmtc.setFilterSelectedIndi(jSelectedRadioButton.isSelected());
+        gmtc.setFilterSelectedSearch(jSearchedRadioButton.isSelected());
     }
 
 }

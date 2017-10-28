@@ -672,10 +672,10 @@ public class GeoFilter {
         String selected = (selectedIndi != null) ? selectedIndi.toString(true) : "";
         if (males | females | selectedIndividual | selectedSearch) {
             String selindi = "";
-            String male  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jMenCheckBox.text");
-            String fema = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWomenCheckBox.text");
-            String sind = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSelectedCheckBox.text");
-            String ssea  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSearchedCheckBox.text");
+            String male  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jMenRadioButton.text");
+            String fema = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWomenRadioButton.text");
+            String sind = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSelectedRadioButton.text");
+            String ssea  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSearchedRadioButton.text");
             if (!males) {
                 male = "";
             } else {
@@ -694,7 +694,10 @@ public class GeoFilter {
             } else if (!selindi.isEmpty()) {
                 selindi += "+";
             }
-            selindi += sind + " (" + selected + ")";
+            selindi += sind;
+            if (selectedIndividual) {
+                selindi +=  " (" + selected + ")";
+            }
             
             if (!selectedSearch) {
                 ssea = "";
