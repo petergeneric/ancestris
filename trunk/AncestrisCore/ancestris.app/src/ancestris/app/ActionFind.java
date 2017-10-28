@@ -24,7 +24,7 @@ public final class ActionFind extends AbstractAncestrisContextAction {
     protected void actionPerformedImpl(ActionEvent event) {
         Gedcom gedcom = getContext().getGedcom();
         ReplacePanel panel = new ReplacePanel(gedcom, false);
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Find", gedcom.getName()), panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Find", gedcom.getName()), panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("findreplace").show();
         panel.saveParams();
     }
     

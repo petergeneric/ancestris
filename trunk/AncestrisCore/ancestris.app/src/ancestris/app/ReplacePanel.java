@@ -24,7 +24,6 @@ import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.swing.ImageIcon;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -168,8 +167,6 @@ public class ReplacePanel extends javax.swing.JPanel {
         matchCheckBox.setSelected(registry.get("findreplace_old_matchcase", false));
         wholeWordCheckBox.setSelected(registry.get("findreplace_old_wholeword", false));
         selectionCheckBox.setSelected(registry.get("findreplace_old_selection", false));
-        
-        this.setPreferredSize(new Dimension(registry.get("findreplace_Width", this.getPreferredSize().width), registry.get("findreplace_Height", this.getPreferredSize().height)));
         
         // Launch first search 
         ready = true;
@@ -434,9 +431,6 @@ public class ReplacePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("findreplace_Width", evt.getComponent().getWidth());
-        registry.put("findreplace_Height", evt.getComponent().getHeight());
-
     }//GEN-LAST:event_formComponentResized
 
     private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
