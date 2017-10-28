@@ -35,7 +35,6 @@ import java.io.FilenameFilter;
 import java.nio.file.Files;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import java.util.List;
-import java.util.Stack;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -212,28 +211,27 @@ public class GeneanetExport {
             
         }
         
-        Stack propToDelete = new Stack();
-        
-        
-        // Remove _SOSA and _SOSADABOVILLE and _DABOVILLE tags
-        for (Entity entity : gedcom.getIndis()) {
-            propToDelete.clear();
-            props = entity.getProperties("_SOSA");
-            for (Property p : props) {
-                propToDelete.add(p);
-            }
-            props = entity.getProperties("_SOSADABOVILLE");
-            for (Property p : props) {
-                propToDelete.add(p);
-            }
-            props = entity.getProperties("_DABOVILLE");
-            for (Property p : props) {
-                propToDelete.add(p);
-            }
-            while (!propToDelete.empty()) {
-                entity.delProperty((Property) propToDelete.pop());
-            }
-        }
+//        Stack propToDelete = new Stack();
+//        
+//        // Remove _SOSA and _SOSADABOVILLE and _DABOVILLE tags
+//        for (Entity entity : gedcom.getIndis()) {
+//            propToDelete.clear();
+//            props = entity.getProperties("_SOSA");
+//            for (Property p : props) {
+//                propToDelete.add(p);
+//            }
+//            props = entity.getProperties("_SOSADABOVILLE");
+//            for (Property p : props) {
+//                propToDelete.add(p);
+//            }
+//            props = entity.getProperties("_DABOVILLE");
+//            for (Property p : props) {
+//                propToDelete.add(p);
+//            }
+//            while (!propToDelete.empty()) {
+//                entity.delProperty((Property) propToDelete.pop());
+//            }
+//        }
         
         
         
