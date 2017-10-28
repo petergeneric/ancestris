@@ -16,7 +16,6 @@ import ancestris.modules.gedcom.utilities.matchers.MatcherOptions;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -49,8 +48,6 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
         registry = Registry.get(getClass());
         
         initComponents();
-        
-        this.setPreferredSize(new Dimension(registry.get("duplicateWindowWidth", this.getPreferredSize().width), registry.get("duplicateWindowHeight", this.getPreferredSize().height)));
         
         //INDI, FAM, OBJE, NOTE, SOUR, SUBM, REPO
         entitiesChoices.put(Gedcom.INDI, jCheckBox1); 
@@ -257,8 +254,6 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        registry.put("duplicateWindowWidth", evt.getComponent().getWidth());
-        registry.put("duplicateWindowHeight", evt.getComponent().getHeight());
     }//GEN-LAST:event_formComponentResized
 
 

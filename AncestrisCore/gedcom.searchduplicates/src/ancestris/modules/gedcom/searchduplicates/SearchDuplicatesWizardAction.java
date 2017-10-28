@@ -57,6 +57,7 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
             Object o = DialogManager.create(NbBundle.getMessage(SearchDuplicatesWizardAction.class, "CTL_CheckDuplicatesAction") + " - " + gedcom.getName(), panel)
                     .setMessageType(DialogManager.PLAIN_MESSAGE)
                     .setOptions(new Object[]{OKButton, DialogManager.CANCEL_OPTION})
+                    .setDialogId("duplicateWindow")
                     .show();
             if (o != OKButton) {
                 return;
