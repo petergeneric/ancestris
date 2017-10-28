@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
 import ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel;
@@ -512,7 +513,12 @@ public final class IndividualEditor extends EntityEditor {
             if (multiMediaObjectEditor.showPanel()) {
                 if (mMultiMediaObject instanceof Media) {
                     mIndividual.addMedia((Media) mMultiMediaObject);
-                    imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                    if (!correct) {
+                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                    }
                     repaint();
                     changes.fireChangeEvent();
                 }
@@ -560,7 +566,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
                 // any kind of file
-                if (objetFormat != null) { 
+                if (true) { 
 
                     MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                     multiMediaObjectEditor.setContext(new Context(multiMediaObject));
@@ -573,14 +579,20 @@ public final class IndividualEditor extends EntityEditor {
                         }
 
                         Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                        boolean correct = false;
                         if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                            imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
+                            correct = imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
                         } else {
                             PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                            imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
+                            correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
                         }
                         repaint();
                         changes.fireChangeEvent();
+                        if (!correct) {
+                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                        }
                     }
                     break;
                 }
@@ -971,19 +983,25 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
                 // any kind of file
-                if (objetFormat != null) { 
+                if (true) { 
                     if (multiMediaObject instanceof PropertyMedia) {
                         multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                     }
 
                     Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                    boolean correct = true;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                        imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
+                        correct = imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
                     } else {
                         PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                        imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
+                        correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
                     }
                     found = true;
+                    if (!correct) {
+                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                    }
                     break;
                 }
             }
