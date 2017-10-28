@@ -31,7 +31,7 @@ public final class ActionReplace extends AbstractAncestrisContextAction {
         undoNb = gedcom.getUndoNb();
         
         ReplacePanel panel = new ReplacePanel(gedcom, true);
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Replace", gedcom.getName()), panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Replace", gedcom.getName()), panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("findreplace").show();
         panel.saveParams();
         if (o != DialogManager.OK_OPTION) {
             panel.cancel(gedcom, undoNb);
