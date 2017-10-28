@@ -11,7 +11,6 @@ import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
 import genj.util.Registry;
 import java.awt.Color;
-import java.awt.Dimension;
 import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -68,7 +67,6 @@ final class FlashListPanel extends javax.swing.JPanel {
         initContextIndi(gedcom);
         location3ComboBox1.setVisible(false);
         location3ComboBox2.setVisible(false);
-        this.setPreferredSize(new Dimension(registry.get("flashListWindowWidth", this.getPreferredSize().width), registry.get("flashListWindowHeight", this.getPreferredSize().height)));
 
         
         // Load saved parameters
@@ -509,10 +507,6 @@ final class FlashListPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_location3ComboBox2FocusGained
 
     private void formComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentResized
-        int w = evt.getComponent().getWidth();
-        int h = evt.getComponent().getHeight();
-        registry.put("flashListWindowWidth", w);
-        registry.put("flashListWindowHeight", h);
     }//GEN-LAST:event_formComponentResized
 
     private void load() {

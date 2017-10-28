@@ -289,6 +289,7 @@ public class ReportFlashList extends Report {
         Object choice = DialogManager.create(NbBundle.getMessage(getClass(), "FlashListPanel.title"), flashListOptions)
                 .setMessageType(DialogManager.PLAIN_MESSAGE)
                 .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .setDialogId("flashListWindow")
                 .show();
 
         // Return if cancelled
