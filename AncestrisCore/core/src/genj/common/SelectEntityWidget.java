@@ -266,9 +266,9 @@ public class SelectEntityWidget extends JPanel {
   private MetaProperty getMeta(TagPath tagPath) {
     MetaProperty meta;
     if (tagPath.length()>1&&!tagPath.getLast().equals("TITL"))
-      meta = gedcom.getGrammar().getMeta(new TagPath(tagPath, 2));
+      meta = gedcom.getGrammar().getMeta(new TagPath(tagPath, 2), false);
     else
-      meta = gedcom.getGrammar().getMeta(tagPath);
+      meta = gedcom.getGrammar().getMeta(tagPath, false);
     return meta;
   }
   
