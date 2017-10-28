@@ -262,6 +262,7 @@ public class SearchFilePanel extends javax.swing.JPanel {
                 .setAcceptAllFileFilterUsed(true)
                 .setFileHiding(true)
                 .setParent(this)
+                .setDefaultPreviewer()
                 .setSelectedFile(new File(defaultDir))
                 .setDefaultWorkingDirectory(new File(defaultDir))
                 .showOpenDialog();
