@@ -26,6 +26,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
      */
     private class Tree extends HashSet<Indi> implements Comparable<Tree> {
 
+        private int number;
         private Indi oldestIndividual;
         private Indi youngestIndividual;
         private HashSet<Entity> entities = new HashSet<Entity>();
@@ -33,6 +34,14 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         @Override
         public int compareTo(Tree that) {
             return (that).size() - (this).size();
+        }
+
+        public void setNb(int i) {
+            number = i;
+        }
+
+        public int getNb() {
+            return number;
         }
 
         public Indi getOldestIndividual() {
@@ -138,11 +147,13 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             }
 
         }
+
     } //Tree
 
     private static class FamilyGroupFilter implements Filter {
 
         private Tree tree;
+        private int SIZEMAX = 90;
 
         public FamilyGroupFilter(Tree tree) {
             this.tree = tree;
@@ -154,8 +165,12 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
         @Override
         public String getFilterName() {
-            return NbBundle.getMessage(FamilyGroupFilter.class, "TTL_Filter",
-                    tree.size(), tree.getTitle());
+            String text = NbBundle.getMessage(FamilyGroupFilter.class, "TTL_Filter", tree.size(), tree.getNb(), tree.getOldestIndividual());
+            if (text.length() > SIZEMAX) {
+                int index = text.substring(0, SIZEMAX).lastIndexOf(" ");
+                text = text.substring(0, index) + "...";
+            }
+            return text;
         }
 
         @Override
@@ -234,6 +249,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                 if (tree.size() < getMinGroupSize()) {
                     loners += tree.size();
                 } else {
+                    tree.setNb(i);
                     doc.nextTableRow("font-size=1.125em, font-weight=bold, line-height=200%");
                     doc.nextTableCell("colspan=6, width=100%");
                     doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.groupCount", new Object[]{i, tree.size()}));
@@ -314,14 +330,18 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             }
             doc.endTable();
 
-            doc.nextParagraph("font-size=1.25em,line-height=200%");
+            doc.nextParagraph(" ");
+            doc.addText("   ");
+            doc.nextParagraph("font-size=1.1em,font-weight=bold,line-height=200%");
             doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.grandtotal", grandtotal));
-
             if (loners > 0) {
-
-                doc.nextParagraph("font-size=1.25em, ,line-height=200%");
+                doc.nextParagraph("font-size=1.1em,font-weight=bold,line-height=200%");
                 doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.loners", loners, getMinGroupSize()));
             }
+            doc.nextParagraph(" ");
+            doc.addText("   ");
+            doc.nextParagraph("font-size=1em,line-height=200%");
+            doc.addText(NbBundle.getMessage(this.getClass(), "FamilyGroupsTopComponent.saveas"));
         }
 
         return doc;
@@ -421,7 +441,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         this.maxGroupSize = maxGroupSize;
     }
 
-    private void resetFilters() {
+    public void stop() {
         // Clears filters
         if (filters != null) {
             for (FamilyGroupFilter filter : filters) {
