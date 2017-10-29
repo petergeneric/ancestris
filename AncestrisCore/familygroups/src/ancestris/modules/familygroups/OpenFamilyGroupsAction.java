@@ -52,9 +52,16 @@ public final class OpenFamilyGroupsAction  extends AbstractAncestrisContextActio
 
                 OptionsDisplayer.getDefault().open("Extensions/FamilyGroups");
             } else {
-                Document doc = new FamilyGroupsPlugin().start(contextToOpen.getGedcom());
+                final FamilyGroupsPlugin fgp = new FamilyGroupsPlugin();
+                Document doc = fgp.start(contextToOpen.getGedcom());
                 if (doc != null) {
                     FopDocumentView window = new FopDocumentView(contextToOpen, title_short(),title(contextToOpen.getGedcom().getName()));
+                    window.executeOnClose(new Runnable() {
+                        @Override
+                        public void run() {
+                            fgp.stop();
+                        }
+                    });
                     window.displayDocument(doc, modulePreferences);
                 }
             }

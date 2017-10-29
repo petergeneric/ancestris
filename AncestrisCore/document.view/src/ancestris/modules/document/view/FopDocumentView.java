@@ -46,6 +46,8 @@ public class FopDocumentView extends AbstractDocumentView {
     private Document document = null;
     private Preferences preferences = null;
     private JEditorPane editorPane;
+    
+    private Runnable runnable = null;
 
     /**
      * Create and register the FopDocumentView
@@ -92,7 +94,15 @@ public class FopDocumentView extends AbstractDocumentView {
             tempfile.delete();
             super.closeNotify();
         }
-        // TODO add custom code on component closing
+        // Add custom code on component closing
+        if (runnable != null) {
+            runnable.run();
+        }
+        
+    }
+
+    public void executeOnClose(Runnable runnable) {
+        this.runnable = runnable;
     }
 
     /**
