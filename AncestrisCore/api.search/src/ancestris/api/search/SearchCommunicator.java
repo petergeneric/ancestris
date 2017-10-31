@@ -39,6 +39,7 @@ public class SearchCommunicator {
     }
     
     public static void unregister(SearchCommunicator sc) {
+        sc.fireClosing();
         if (sc != null && instances.contains(sc)) {
             instances.remove(sc);
         }
@@ -79,6 +80,18 @@ public class SearchCommunicator {
         }
     }
     
+    public void fireClosing() {
+        if (instances == null) {
+            return;
+        }
+        for (SearchCommunicator instance : instances) {
+            Gedcom iGedcom = instance.getGedcom();
+            if (gedcom != null && iGedcom.getOrigin().getName().equals(gedcom.getOrigin().getName())) {
+                instance.closing(gedcom);
+            }
+        }
+    }
+    
     
     
     
@@ -97,6 +110,8 @@ public class SearchCommunicator {
     
     public void changedResults(Gedcom gedcom) {
     }
-    
+
+    public void closing(Gedcom gedcom) {
+    }
     
 }
