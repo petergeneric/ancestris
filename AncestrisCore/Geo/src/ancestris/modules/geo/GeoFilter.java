@@ -208,7 +208,7 @@ public class GeoFilter {
     }
 
     public boolean isBirth(String tag) {
-        return ("BIRT".equals(tag) || "CHR".equals(tag));
+        return ("BIRT".equals(tag));
     }
 
     public boolean isMarriage(String tag) {
