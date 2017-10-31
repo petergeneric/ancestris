@@ -56,12 +56,13 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jDeathCheckBox1.setSelected(gmtc.getFilterDeaths());
         jOtherEventCheckBox1.setSelected(gmtc.getFilterEvents());
         
+        jSelectedRadioButton.setText(gmtc.getSelectedIndividual());
+        
         jMenRadioButton.setSelected(gmtc.getFilterMales());
         jWomenRadioButton.setSelected(gmtc.getFilterFemales());
         jSelectedRadioButton.setSelected(gmtc.getFilterSelectedIndi());
-        jSelectedRadioButton.setText(gmtc.getSelectedIndividual());
         jSearchedRadioButton.setSelected(gmtc.getFilterSearch());
-
+        jAllRadioButton.setSelected(!gmtc.getFilterMales() && !gmtc.getFilterFemales() && !gmtc.getFilterSelectedIndi() && !gmtc.getFilterSearch());
     }
     
     /**
