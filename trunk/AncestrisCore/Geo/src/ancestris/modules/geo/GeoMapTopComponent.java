@@ -132,6 +132,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             public void changedResults(Gedcom gedcom) {
                 applyFilters();
             }
+            @Override
+            public void closing(Gedcom gedcom) {
+                geoFilter.selectedSearch = false;
+                applyFilters();
+            }
         };
         searchCommunicator.setGedcom(context.getGedcom());
         
@@ -681,6 +686,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         geoPoints.clear();
         boolean filterIsOn = false;
         if (markers != null) {
+            if (geoFilter.selectedSearch && findSearchWindow() == null) {
+                geoFilter.selectedSearch = false;
+            }
             geoFilter.calculatesIndividuals(getGedcom());
             for (int i = 0; i < markers.length; i++) {
                 GeoNodeObject geoNodeObject = markers[i];
@@ -911,34 +919,40 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         applyFilters();
     }
 
-    public void setFilterSelectedSearch(boolean selected) {
-        if (selected) {
-            SearchTopComponent searchWindow = null;
-            for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-                if (tc instanceof SearchTopComponent) {
-                    SearchTopComponent gltc = (SearchTopComponent) tc;
-                    if (gltc.getGedcom() == getGedcom()) {
-                        searchWindow = gltc;
-                        break;
-                    }
+    
+    private SearchTopComponent findSearchWindow() {
+        SearchTopComponent searchWindow = null;
+        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            if (tc instanceof SearchTopComponent) {
+                SearchTopComponent gltc = (SearchTopComponent) tc;
+                if (gltc.getGedcom() == getGedcom()) {
+                    searchWindow = gltc;
+                    break;
                 }
             }
+        }
+        return searchWindow;
+    }
+    
+    
+    public void setFilterSelectedSearch(boolean selected) {
+        if (selected) {
+            SearchTopComponent searchWindow = findSearchWindow();
             if (searchWindow == null) {
                 searchWindow = new SearchTopComponent();
             }
             if (!searchWindow.isOpen) {
                 searchWindow.init(getContext());
-                searchWindow.open();
-                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
-                        NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
-                        NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
-                        JOptionPane.INFORMATION_MESSAGE);
-                searchWindow.requestActive();
-                
                 // Trick to run the Advanced Research View in an Undocked mode
                 for (Action a : searchWindow.getActions()) {
                     if (a != null && a.getClass().toString().equals("class org.netbeans.core.windows.actions.UndockWindowAction")) {
                         a.actionPerformed(new ActionEvent(this, 0, "undock"));
+                        searchWindow.open();
+                        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
+                                NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
+                                NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
+                                JOptionPane.INFORMATION_MESSAGE);
+                        searchWindow.requestActive();
                         settingsDialog.cancel();  // close geo settings
                     }
                 }
@@ -1172,6 +1186,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         return ret;
     }
+
 
 
 
