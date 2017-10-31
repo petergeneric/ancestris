@@ -1,6 +1,7 @@
 package ancestris.modules.familygroups;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.util.Utilities;
 import genj.fo.Document;
 import genj.gedcom.*;
 import genj.io.Filter;
@@ -30,6 +31,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
         private Indi oldestIndividual;
         private Indi youngestIndividual;
         private HashSet<Entity> entities = new HashSet<Entity>();
+        public HashSet<Entity> connectedEntities = new HashSet<Entity>();
 
         @Override
         public int compareTo(Tree that) {
@@ -173,22 +175,44 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
             return text;
         }
 
-        @Override
-        public boolean veto(Property property) {
-            return false;
-        }
-
+        /**
+         * Include all entities which depend on at least one Indi which is in
+         * the tree (uses utility)
+         *
+         * @param entity
+         * @return
+         */
         @Override
         public boolean veto(Entity entity) {
-            if (entity instanceof Indi || entity instanceof Fam) {
-                return !tree.hasEntity(entity);
-            }
-            for (PropertyXRef xref : entity.getProperties(PropertyXRef.class)) {
-                if (xref.isValid() && tree.hasEntity(xref.getTargetEntity())) {
-                    return false;
+            // Check if belongs to connected entities
+            if (tree.connectedEntities.isEmpty()) {
+                for (Entity hit : tree.entities) {
+                    tree.connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
                 }
             }
+            if (tree.connectedEntities.contains(entity)) {
+                return false;
+            }
+
             return true;
+        }
+
+        /**
+         * Exclude properties that reference individuals which are not part of
+         * the tree
+         *
+         * @param property
+         * @return
+         */
+        @Override
+        public boolean veto(Property property) {
+            if (property instanceof PropertyXRef) {
+                PropertyXRef xref = (PropertyXRef) property;
+                if (xref.isValid() && !tree.connectedEntities.contains(xref.getTargetEntity())) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         @Override
@@ -233,7 +257,6 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
 
             filters = new ArrayList<FamilyGroupFilter>(10);
 
-
             doc.startSection(NbBundle.getMessage(this.getClass(), "CTL_OpenFamilyGroups"));
             doc.startTable("width=100%, border=1");
 
@@ -264,7 +287,7 @@ public class FamilyGroupsPlugin extends AncestrisPlugin {
                             if (PropertyPlace.format(null).length() > 0) {
                                 doc.nextTableRow();
                                 doc.nextTableCell("colspan=6, width=100%");
-                                String str = PropertyPlace.format(null).replaceAll("\\<.*?>","").replaceAll(",", " ").trim().replaceAll(" ", ", ");
+                                String str = PropertyPlace.format(null).replaceAll("\\<.*?>", "").replaceAll(",", " ").trim().replaceAll(" ", ", ");
                                 doc.addText(str);
                             }
                         }

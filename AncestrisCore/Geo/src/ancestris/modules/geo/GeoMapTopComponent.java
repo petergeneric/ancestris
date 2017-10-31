@@ -9,6 +9,7 @@ import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.modules.utilities.search.SearchTopComponent;
+import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
@@ -18,6 +19,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.view.ScreenshotAction;
 import java.awt.*;
@@ -96,6 +98,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     //
     private Lookup.Result<SelectionActionEvent> result;
     private DialogManager settingsDialog;
+    //
+    private HashSet<Entity> connectedEntities = new HashSet<Entity>();
+
 
     public GeoMapTopComponent() {
         super();
@@ -1106,20 +1111,48 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return NbBundle.getMessage(GeoMapTopComponent.class, "TTL_Filter", filteredIndis.size(), NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent"));
     }
 
-    public boolean veto(Property property) {
-        // all non-entities are fine
-        return false;
-    }
-
+    /**
+     * Include all entities which depend on at least one Indi which is in the
+     * tree (uses utility)
+     *
+     * @param entity
+     * @return
+     */
     public boolean veto(Entity entity) {
         if (filteredIndis == null) {
             filteredIndis = getIndisFromGeoPoints();
         }
-        if (filteredIndis.contains(entity)) {
+        
+        // Check if belongs to connected entities
+        if (connectedEntities.isEmpty()) {
+            for (Entity hit : filteredIndis) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit));
+            }
+        }
+        if (connectedEntities.contains(entity)) {
             return false;
         }
+
         return true;
     }
+
+        /**
+         * Exclude properties that reference individuals which are not part of
+         * the tree
+         *
+         * @param property
+         * @return
+         */
+        @Override
+        public boolean veto(Property property) {
+            if (property instanceof PropertyXRef) {
+                PropertyXRef xref = (PropertyXRef) property;
+                if (xref.isValid() && !connectedEntities.contains(xref.getTargetEntity())) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
     public boolean canApplyTo(Gedcom gedcom) {
         return (gedcom != null && gedcom.equals(getGedcom()));
