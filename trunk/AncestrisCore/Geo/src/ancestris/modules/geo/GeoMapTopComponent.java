@@ -943,19 +943,19 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
             if (!searchWindow.isOpen) {
                 searchWindow.init(getContext());
-                // Trick to run the Advanced Research View in an Undocked mode
-                for (Action a : searchWindow.getActions()) {
-                    if (a != null && a.getClass().toString().equals("class org.netbeans.core.windows.actions.UndockWindowAction")) {
-                        a.actionPerformed(new ActionEvent(this, 0, "undock"));
-                        searchWindow.open();
-                        JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
-                                NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
-                                NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
-                                JOptionPane.INFORMATION_MESSAGE);
-                        searchWindow.requestActive();
-                        settingsDialog.cancel();  // close geo settings
-                    }
-                }
+                searchWindow.open();
+                JOptionPane.showMessageDialog(WindowManager.getDefault().getMainWindow(),
+                        NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Message"),
+                        NbBundle.getMessage(getClass(), "GeoMapTopComponent.jSelectionWindow.Title"),
+                        JOptionPane.INFORMATION_MESSAGE);
+                searchWindow.requestActive();
+                settingsDialog.cancel();  // close geo settings
+//                // Trick to run the Advanced Research View in an Undocked mode
+//                for (Action a : searchWindow.getActions()) {
+//                    if (a != null && a.getClass().toString().equals("class org.netbeans.core.windows.actions.UndockWindowAction")) {
+//                        a.actionPerformed(new ActionEvent(this, 0, "undock"));
+//                    }
+//                }
             }
         }
         geoFilter.selectedSearch = selected;
