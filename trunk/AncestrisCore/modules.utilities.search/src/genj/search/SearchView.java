@@ -29,8 +29,10 @@ import genj.util.swing.ChoiceWidget;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
 import ancestris.swing.ToolBar;
+import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.view.Images;
 import genj.view.View;
@@ -45,8 +47,10 @@ import java.awt.event.MouseEvent;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 import javax.swing.AbstractListModel;
 import static javax.swing.BorderFactory.createEmptyBorder;
 import static javax.swing.BorderFactory.createLineBorder;
@@ -131,7 +135,8 @@ public class SearchView extends View implements Filter {
     
     private SearchCommunicator searchCommunicator = null;
     
-    
+    /** for filter */
+    Set<Entity> connectedEntities = null;
     
     /**
      * Constructor
@@ -297,6 +302,7 @@ public class SearchView extends View implements Filter {
 //        setExplorerHelper(new ExplorerHelper(listResults2));
         // done
         
+        connectedEntities = new HashSet<Entity>();
         
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
@@ -542,6 +548,8 @@ public class SearchView extends View implements Filter {
             worker.start(context.getGedcom(), max_hits, case_sensitive,
                     tags, value, checkRegExp.isSelected());
         }
+        
+        connectedEntities.clear();
     }
 
     public void stop() {
@@ -796,20 +804,34 @@ public class SearchView extends View implements Filter {
         return NbBundle.getMessage(SearchView.class, "TTL_Filter", getSelectedResults().getSize(), RESOURCES.getString("title"));
     }
 
-    @Override
-    public boolean veto(Property property) {
-        // all non-entities are fine
-        return false;
-    }
 
+    
+    // Include all entities included in the list and all indis connected to them 
     @Override
     public boolean veto(Entity entity) {
-        for (Hit hit : getSelectedResults().hits) {
-            if (hit.getProperty() == entity) {
-                return false;
+        // Check if belongs to connected entities
+        if (connectedEntities.isEmpty()) {
+            for (Hit hit : getSelectedResults().hits) {
+                connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit.getProperty().getEntity()));
             }
         }
+        if (connectedEntities.contains(entity)) {
+            return false;
+        }
+
         return true;
+    }
+
+    // Exclude all properties pointing to an entity which is not part of the results
+    @Override
+    public boolean veto(Property property) {
+        if (property instanceof PropertyXRef) {
+            PropertyXRef xref = (PropertyXRef) property;
+            if (xref.isValid() && !connectedEntities.contains(xref.getTargetEntity())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

@@ -12,8 +12,13 @@
 package ancestris.util;
 
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
+import genj.gedcom.Repository;
+import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.awt.Cursor;
 import java.awt.Frame;
@@ -21,7 +26,9 @@ import java.awt.Image;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Locale;
+import java.util.Set;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.text.Document;
@@ -239,5 +246,53 @@ public class Utilities {
     }
 
     
+    /**
+     * Get all entities depending from another entity
+     * For instance, from an indi, get the families, the obje, the sources, the notes, and the repo of the sources, etc.
+     * 
+     * @param entity
+     * @param indis
+     * @param seen
+     * @return 
+     */
+    public static Set<Entity> getDependingEntitiesRecursively(Entity entity) {
+        Set<Entity> entities = new HashSet<Entity>();
+        Set<Entity> seen = new HashSet<Entity>();
+        return getDependingEntitiesRecursively(entity, entities, seen);
+    }
+    
+    private static Set<Entity> getDependingEntitiesRecursively(Entity entity, Set<Entity> entities, Set<Entity> seen) {
+        
+        // If already seen that entity, return, else add it to seen
+        if (seen.contains(entity)) {
+            return entities;
+        }
+        seen.add(entity);
+        
+        // Add itself
+        entities.add(entity);
+        
+        // Get all xref and collect target entities
+        for (PropertyXRef xref : entity.getProperties(PropertyXRef.class)) {
+            if (!xref.isValid()) {
+                continue;
+            }
+            Entity target = xref.getTargetEntity();
+            if (target instanceof Indi) { // continue if another indi, a REPO, a NOTE
+                continue;
+            }
+            if (entity instanceof Repository && target instanceof Source) { // continue if going REPO to SOUR
+                continue;
+            }
+            if (!(entity instanceof Indi) && target instanceof Fam) { // continue if going non indi to Fam
+                continue;
+            }
+            entities.add(target);
+            entities.addAll(getDependingEntitiesRecursively(target, entities, seen));
+        }
+
+        return entities;
+    }
+
     
 }
