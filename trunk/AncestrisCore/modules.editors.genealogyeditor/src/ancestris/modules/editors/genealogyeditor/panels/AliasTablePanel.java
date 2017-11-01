@@ -127,6 +127,10 @@ public class AliasTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editAliasButtonActionPerformed
 
     private void deleteAliasButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAliasButtonActionPerformed
+        int selectedRow = aliasTable.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
         int rowIndex = aliasTable.convertRowIndexToModel(aliasTable.getSelectedRow());
         Gedcom gedcom = mRoot.getGedcom();
 
