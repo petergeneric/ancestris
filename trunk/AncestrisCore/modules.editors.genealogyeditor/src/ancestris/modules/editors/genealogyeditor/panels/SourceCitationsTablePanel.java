@@ -7,6 +7,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
+import genj.gedcom.Source;
 import genj.gedcom.UnitOfWork;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
@@ -23,6 +24,7 @@ import org.openide.util.NbBundle;
 public class SourceCitationsTablePanel extends javax.swing.JPanel {
 
     private Property mRoot;
+    private Source mSource;
     private PropertySource mSourceCitation;
     private SourceCitationsTableModel mSourceCitationsTableModel = new SourceCitationsTableModel();
     private final ChangeListner changeListner = new ChangeListner();
@@ -128,7 +130,9 @@ public class SourceCitationsTablePanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mSourceCitation = (PropertySource) mRoot.addProperty("SOUR", "@@");
+                    mSource = (Source) gedcom.createEntity(Gedcom.SOUR);
+                    mSourceCitation = (PropertySource) mRoot.addProperty("SOUR", '@' + mSource.getId() + '@');
+                    ((PropertySource) mSourceCitation).link();
                 }
             }); // end of doUnitOfWork
             final SourceCitationEditorPanel sourceCitationEditor = new SourceCitationEditorPanel();
