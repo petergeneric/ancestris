@@ -7,6 +7,7 @@ import ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTab
 import ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.io.File;
@@ -114,6 +115,7 @@ public final class IndividualEditor extends EntityEditor {
     };
     private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
     private NamesTablePanel namesTablePanel;
+    private Registry registry = null;
 
     /**
      * Creates new form IndividualEditor
@@ -138,6 +140,7 @@ public final class IndividualEditor extends EntityEditor {
         associationsTablePanel.addChangeListener(changes);
         multimediaObjectCitationsTablePanel.addChangeListener(changes);
         sexBeanPanel.addChangeListener(changes);
+        privateRecordToggleButton.addActionListener(changes);
         JTabbedPane nameEditorTabbedPane = nameEditorPanel.getNameEditorTabbedPane();
         namesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel();
         nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.namesTablePanel.TabConstraints.tabTitle"), namesTablePanel); // NOI18N
@@ -151,6 +154,10 @@ public final class IndividualEditor extends EntityEditor {
         };
         eventTypeComboBox.setKeySelectionManager(manager);
         eventTypeComboBox.putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+        
+        registry = Registry.get(getClass());
+        eventsSplitPane.setDividerLocation(registry.get("ariesindieventSplitDividerLocation", eventsSplitPane.getDividerLocation()));
+
     }
 
     /**
@@ -199,10 +206,11 @@ public final class IndividualEditor extends EntityEditor {
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
 
-        setMinimumSize(new java.awt.Dimension(1042, 462));
+        setMinimumSize(new java.awt.Dimension(700, 462));
         setName(""); // NOI18N
 
-        generalPanel.setMinimumSize(new java.awt.Dimension(1018, 200));
+        generalPanel.setMinimumSize(new java.awt.Dimension(700, 200));
+        generalPanel.setPreferredSize(new java.awt.Dimension(798, 205));
 
         individualIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.individualIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -276,7 +284,7 @@ public final class IndividualEditor extends EntityEditor {
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -297,11 +305,19 @@ public final class IndividualEditor extends EntityEditor {
         );
 
         individualInformationTabbedPane.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        individualInformationTabbedPane.setMinimumSize(new java.awt.Dimension(1018, 219));
+        individualInformationTabbedPane.setMinimumSize(new java.awt.Dimension(700, 219));
+        individualInformationTabbedPane.setPreferredSize(new java.awt.Dimension(798, 360));
 
         eventsSplitPane.setBorder(null);
-        eventsSplitPane.setDividerSize(1);
+        eventsSplitPane.setDividerSize(6);
+        eventsSplitPane.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                eventsSplitPanePropertyChange(evt);
+            }
+        });
 
+        eventsListPanel.setMinimumSize(new java.awt.Dimension(20, 57));
+        eventsListPanel.setPreferredSize(new java.awt.Dimension(200, 166));
         eventsListPanel.setLayout(new java.awt.BorderLayout());
 
         jToolBar1.setFloatable(false);
@@ -459,7 +475,7 @@ public final class IndividualEditor extends EntityEditor {
 
         individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.associationsPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/association.png")), associationsPanel); // NOI18N
 
-        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -470,12 +486,11 @@ public final class IndividualEditor extends EntityEditor {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(changeDateLabel)
+                        .addGap(18, 18, 18)
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(generalPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap())
+                    .addComponent(individualInformationTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -698,6 +713,10 @@ public final class IndividualEditor extends EntityEditor {
             imageBean.setImage((File)null, sexBeanPanel.getSelectedSex());
         }
     }//GEN-LAST:event_sexBeanPanelStateChanged
+
+    private void eventsSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_eventsSplitPanePropertyChange
+        registry.put("ariesindieventSplitDividerLocation", eventsSplitPane.getDividerLocation());
+    }//GEN-LAST:event_eventsSplitPanePropertyChange
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel SOSALabel;

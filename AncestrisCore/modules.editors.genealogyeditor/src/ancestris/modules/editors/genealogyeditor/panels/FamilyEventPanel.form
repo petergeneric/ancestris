@@ -48,6 +48,9 @@
       <SubComponents>
         <Container class="javax.swing.JPanel" name="EventDetailPanel">
           <Properties>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[100, 272]"/>
+            </Property>
             <Property name="requestFocusEnabled" type="boolean" value="false"/>
           </Properties>
           <Constraints>
@@ -110,21 +113,21 @@
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="wifeAgeTextField" max="32767" attributes="0"/>
                               </Group>
-                              <Group type="102" alignment="0" attributes="0">
-                                  <Component id="eventNameChoiceWidget" min="-2" pref="259" max="-2" attributes="0"/>
-                                  <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                              </Group>
                               <Component id="responsibleAgencyTextField" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
                                   <Group type="103" groupAlignment="1" attributes="0">
                                       <Component id="placeTextField" max="32767" attributes="0"/>
-                                      <Component id="aDateBean" pref="376" max="32767" attributes="0"/>
+                                      <Component id="aDateBean" max="32767" attributes="0"/>
                                   </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Group type="103" groupAlignment="0" attributes="0">
                                       <Component id="privateRecordToggleButton" alignment="1" min="-2" max="-2" attributes="0"/>
                                       <Component id="editPlaceButton" alignment="1" min="-2" max="-2" attributes="0"/>
                                   </Group>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="eventNameChoiceWidget" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
                       </Group>
@@ -343,6 +346,11 @@
                   </SubComponents>
                 </Container>
                 <Component class="genj.util.swing.ChoiceWidget" name="eventNameChoiceWidget">
+                  <Properties>
+                    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                      <Dimension value="[50, 33]"/>
+                    </Property>
+                  </Properties>
                 </Component>
                 <Component class="javax.swing.JLabel" name="responsibleAgencyLabel">
                   <Properties>
@@ -366,7 +374,10 @@
         <Container class="javax.swing.JPanel" name="sourcesPanel">
           <Properties>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[541, 208]"/>
+              <Dimension value="[100, 208]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[100, 59]"/>
             </Property>
           </Properties>
           <Constraints>
@@ -385,7 +396,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsTablePanel" alignment="0" pref="541" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsTablePanel" alignment="0" pref="453" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -407,6 +418,11 @@
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="notesPanel">
+          <Properties>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[100, 59]"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Notes">
@@ -423,7 +439,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsTablePanel" alignment="0" pref="541" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" pref="453" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -445,6 +461,11 @@
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="galleryPanel">
+          <Properties>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[100, 59]"/>
+            </Property>
+          </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
               <JTabbedPaneConstraints tabName="Gallery">
@@ -461,7 +482,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" pref="541" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" pref="453" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

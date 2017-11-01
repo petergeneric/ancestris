@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceInformationTabbedPane" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceInformationTabbedPane" alignment="0" pref="727" max="32767" attributes="0"/>
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                       <Component id="sourceIDLabel" min="-2" max="-2" attributes="0"/>
@@ -168,7 +168,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="eventTypePanel" alignment="0" pref="885" max="32767" attributes="0"/>
+                  <Component id="eventTypePanel" alignment="0" pref="727" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -196,7 +196,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceTextScrollPane" pref="885" max="32767" attributes="0"/>
+                  <Component id="sourceTextScrollPane" pref="727" max="32767" attributes="0"/>
                   <Component id="SourceTextToolBar" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
@@ -256,7 +256,7 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="publicationFactsToolBar" max="32767" attributes="0"/>
-                  <Component id="publicationFactsScrollPane" alignment="0" pref="885" max="32767" attributes="0"/>
+                  <Component id="publicationFactsScrollPane" alignment="0" pref="727" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -315,7 +315,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="repositoryCitationPanel" alignment="0" pref="885" max="32767" attributes="0"/>
+                  <Component id="repositoryCitationPanel" alignment="0" pref="727" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">

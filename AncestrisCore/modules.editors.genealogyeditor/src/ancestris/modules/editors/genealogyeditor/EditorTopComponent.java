@@ -167,7 +167,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
                 editor.setContext(old);
             }
             editorContainer.setViewportView(editor);
-            titleLabel.setText("  " + editor.getTitle());
+            titleLabel.setText("<html>  " + editor.getTitle() + " </html>");
             editor.getExplorerHelper().setPopupAllowed(true);
             editor.addChangeListener(confirmPanel);
         }

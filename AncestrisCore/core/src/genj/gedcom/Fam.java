@@ -458,6 +458,7 @@ public class Fam extends Entity {
         Indi husband = getHusband();
         if (husband != null) {
             result.append(husband.toString(showIds));
+            result.append(" ");
             result.append(GedcomOptions.getInstance().getTxtMarriageSymbol());
         }
 

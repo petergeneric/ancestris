@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="eventInformationTabbedPane" max="32767" attributes="0"/>
+          <Component id="eventInformationTabbedPane" pref="461" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -47,10 +47,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="EventDetailEditorPanel" max="32767" attributes="0"/>
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  </Group>
+                  <Component id="EventDetailEditorPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -63,7 +60,7 @@
             <Container class="javax.swing.JPanel" name="EventDetailEditorPanel">
               <Properties>
                 <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-                  <Dimension value="[634, 217]"/>
+                  <Dimension value="[400, 217]"/>
                 </Property>
               </Properties>
 
@@ -91,7 +88,7 @@
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="eventNameChoiceWidget" min="-2" pref="261" max="-2" attributes="0"/>
-                                  <EmptySpace pref="184" max="32767" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
                                   <Component id="associateButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
@@ -371,7 +368,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="sourceCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="sourceCitationsTablePanel" alignment="0" pref="461" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -409,7 +406,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" pref="461" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -447,7 +444,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" max="32767" attributes="0"/>
+                  <Component id="multimediaObjectCitationsTablePanel" alignment="0" pref="461" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
