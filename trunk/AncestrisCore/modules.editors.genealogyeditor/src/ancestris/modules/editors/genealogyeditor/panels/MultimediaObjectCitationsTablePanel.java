@@ -238,6 +238,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_editMMObjecButtonActionPerformed
 
     private void multiMediaObjectCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_multiMediaObjectCitationsTableMouseClicked
+        System.out.println("**DEBUG****** multiMediaObjectCitationsTableMouseClicked evt="+evt.paramString());
         if (evt.getClickCount() >= 2) {
             int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
             if (selectedRow != -1) {

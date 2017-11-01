@@ -3,6 +3,7 @@ package ancestris.modules.editors.genealogyeditor.models;
 import genj.gedcom.Note;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyNote;
+import genj.gedcom.PropertyXRef;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -96,4 +97,18 @@ public class NoteCitationsTableModel extends AbstractTableModel {
         fireTableDataChanged();
         return note;
     }
+
+    public int getRowOf(Property p) {
+        for (int row = 0 ; row < getRowCount() ; row++) {
+            Property pList = getValueAt(row);
+            if (pList instanceof PropertyXRef) {
+                pList = ((PropertyXRef) pList).getTargetEntity();
+            }
+            if (pList == p) {
+                return row;
+            }
+        }
+        return -1;
+    }
+
 }

@@ -238,6 +238,7 @@ public class SourceCitationsTablePanel extends javax.swing.JPanel {
 
     private void sourceCitationsTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sourceCitationsTableMouseClicked
 
+        System.out.println("**DEBUG****** sourceCitationsTableMouseClicked evt="+evt.paramString());
         if (evt.getClickCount() >= 2) {
             int selectedRow = sourceCitationsTable.getSelectedRow();
             if (selectedRow != -1) {

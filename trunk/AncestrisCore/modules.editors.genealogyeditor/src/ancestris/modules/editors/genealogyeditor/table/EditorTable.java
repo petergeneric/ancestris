@@ -4,12 +4,8 @@ import genj.util.Registry;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.AbstractButton;
-import javax.swing.JButton;
 import javax.swing.JTable;
-import javax.swing.RootPaneContainer;
 import javax.swing.RowSorter;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.RowSorterEvent;
@@ -91,14 +87,19 @@ public class EditorTable extends JTable {
             @Override
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 JTable table = (JTable) evt.getSource();
-                if (evt.getClickCount() == 2) {
-                    RootPaneContainer c = (RootPaneContainer) SwingUtilities.getAncestorOfClass(RootPaneContainer.class, table);
-                    if (c != null) {
-                        JButton defaultButton = c.getRootPane().getDefaultButton();
-                        if (defaultButton != null) 
-                            defaultButton.doClick();
-                    }
-                }
+
+//  FL: 2017-11-01 : Comment out the code below. It changes the behaviour of the double-click on items in list depending on whether it is from the main top component or a popup dialog.
+//                 : Therefore there is an annoying tendency to consider double clicking as pressing OK, which is wrrong because it is supposed to do the same as in the main window, 
+//                 : that is : opening the element, not validating the entry.
+//                
+//                if (evt.getClickCount() == 2) {
+//                    RootPaneContainer c = (RootPaneContainer) SwingUtilities.getAncestorOfClass(RootPaneContainer.class, table);
+//                    if (c != null) {
+//                        JButton defaultButton = c.getRootPane().getDefaultButton();
+//                        if (defaultButton != null) 
+//                            defaultButton.doClick();
+//                    }
+//                }
             }
         });
     }
