@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jTabbedPane1" max="32767" attributes="0"/>
+                  <Component id="jTabbedPane1" pref="453" max="32767" attributes="0"/>
                   <Group type="102" attributes="0">
                       <Component id="repositoryNameLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
@@ -118,7 +118,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="addressEditorPanel" pref="690" max="32767" attributes="0"/>
+                  <Component id="addressEditorPanel" pref="453" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -147,7 +147,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteCitationsTablePanel" alignment="0" pref="690" max="32767" attributes="0"/>
+                  <Component id="noteCitationsTablePanel" alignment="0" pref="453" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
@@ -178,7 +178,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Component id="referencesTablePanel" pref="690" max="32767" attributes="0"/>
+                      <Component id="referencesTablePanel" pref="453" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

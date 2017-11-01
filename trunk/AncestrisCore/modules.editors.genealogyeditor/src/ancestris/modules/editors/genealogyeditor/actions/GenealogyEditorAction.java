@@ -59,10 +59,9 @@ public class GenealogyEditorAction extends AncestrisEditor {
         } else {
             contextToOpen = new Context(property);
         }
-        
-        
+
         if (contextToOpen != null) {
-            if (!(property instanceof Entity))  {
+            if (!(property instanceof Entity)) {
                 property = property.getEntity();
             }
             if (property instanceof Indi) {
@@ -73,7 +72,7 @@ public class GenealogyEditorAction extends AncestrisEditor {
             } else if (property instanceof Fam) {
                 FamilyEditor familyEditor = new FamilyEditor(isNew);
                 familyEditor.setContext(contextToOpen);
-               familyEditor.showPanel();
+                familyEditor.showPanel();
                 return property;
             } else if (property instanceof Note) {
                 NoteEditor noteEditor = new NoteEditor(isNew);
@@ -111,7 +110,7 @@ public class GenealogyEditorAction extends AncestrisEditor {
     public Property add(Property parent) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
     public String getName(boolean canonical) {
         if (canonical) {
             return getClass().getCanonicalName();

@@ -250,7 +250,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventPlaceText = (JTextField) eventPlaceCombo.getEditor().getEditorComponent();
         
         registry = Registry.get(getClass());
-        eventSplitPane.setDividerLocation(registry.get("eventSplitDividerLocation", eventSplitPane.getDividerLocation()));
+        eventSplitPane.setDividerLocation(registry.get("cygnuseventSplitDividerLocation", eventSplitPane.getDividerLocation()));
         
     }
     
@@ -1678,7 +1678,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_delNoteEventButtonActionPerformed
 
     private void eventSplitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_eventSplitPanePropertyChange
-        registry.put("eventSplitDividerLocation", eventSplitPane.getDividerLocation());
+        registry.put("cygnuseventSplitDividerLocation", eventSplitPane.getDividerLocation());
         imagePanel.redraw();
     }//GEN-LAST:event_eventSplitPanePropertyChange
 
