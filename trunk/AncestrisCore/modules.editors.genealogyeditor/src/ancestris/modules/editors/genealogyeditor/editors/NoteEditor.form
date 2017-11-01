@@ -19,11 +19,11 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="noteInformationTabbedPane" alignment="0" max="32767" attributes="0"/>
+                  <Component id="noteInformationTabbedPane" alignment="0" pref="547" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="changeDateLabel" pref="0" max="32767" attributes="0"/>
+                      <Component id="changeDateLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="changeDateLabeldate" min="-2" pref="171" max="-2" attributes="0"/>
+                      <Component id="changeDateLabeldate" max="32767" attributes="0"/>
                   </Group>
                   <Component id="noteIDPanel" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -39,9 +39,9 @@
               <EmptySpace max="-2" attributes="0"/>
               <Component id="noteInformationTabbedPane" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="changeDateLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="changeDateLabeldate" alignment="3" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                  <Component id="changeDateLabel" max="32767" attributes="0"/>
+                  <Component id="changeDateLabeldate" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
@@ -188,7 +188,7 @@
     </Container>
     <Component class="javax.swing.JLabel" name="changeDateLabel">
       <Properties>
-        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="NoteEditor.changeDateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>

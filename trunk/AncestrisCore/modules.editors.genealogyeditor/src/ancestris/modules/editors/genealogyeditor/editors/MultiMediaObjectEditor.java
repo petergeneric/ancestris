@@ -5,7 +5,10 @@ import genj.gedcom.*;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
+import java.awt.Desktop;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -127,7 +130,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectTitleTextField.setMinimumSize(new java.awt.Dimension(303, 19));
         multiMediaObjectTitleTextField.setPreferredSize(new java.awt.Dimension(303, 27));
 
-        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.changeDateLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -148,9 +151,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(changeDateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(multiMediaObjectTabbedPane))
                 .addContainerGap())
         );
@@ -166,38 +169,47 @@ public class MultiMediaObjectEditor extends EntityEditor {
                         .addComponent(multiMediaObjectTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(filler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(multiMediaObjectTabbedPane)
+                .addComponent(multiMediaObjectTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(changeDateLabel)
-                    .addComponent(changeDateLabeldate))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
     private void imageBeanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageBeanMouseClicked
+        if (evt.getButton() == MouseEvent.BUTTON1) {
+            File file = new FileChooserBuilder(MultiMediaObjectEditor.class)
+                    .setFilesOnly(true)
+                    .setDefaultBadgeProvider()
+                    .setTitle(NbBundle.getMessage(getClass(), "TITL_ChooseImage"))
+                    .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
+                    .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
+                    .setFileFilter(FileChooserBuilder.getImageFilter())
+                    .setAcceptAllFileFilterUsed(true)
+                    .setDefaultPreviewer()
+                    .setFileHiding(true)
+                    .setDefaultWorkingDirectory(new File(Registry.get(MultiMediaObjectEditor.class).get("rootPath", ".")))
+                    .showOpenDialog();
 
-        File file = new FileChooserBuilder(MultiMediaObjectEditor.class)
-                .setFilesOnly(true)
-                .setDefaultBadgeProvider()
-                .setTitle(NbBundle.getMessage(getClass(), "TITL_ChooseImage"))
-                .setApproveText(NbBundle.getMessage(getClass(), "OK_Button"))
-                .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
-                .setFileFilter(FileChooserBuilder.getImageFilter())
-                .setAcceptAllFileFilterUsed(true)
-                .setDefaultPreviewer()
-                .setFileHiding(true)
-                .setDefaultWorkingDirectory(new File(Registry.get(MultiMediaObjectEditor.class).get("rootPath", ".")))
-                .showOpenDialog();
+            if (file == null) {
+                return;
+            }
 
-        if (file == null) {
-            return;
+            mFile = file;
+            imageBean.setImage(mFile, PropertySex.UNKNOWN);
+            changes.fireChangeEvent();
+        }
+        if (evt.getButton() == MouseEvent.BUTTON3 && mFile != null && mFile.exists()) {
+            try {
+                Desktop.getDesktop().open(mFile);
+            } catch (IOException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
         }
 
-        mFile = file;
-        imageBean.setImage(mFile, PropertySex.UNKNOWN);
-        changes.fireChangeEvent();
-        
+
     }//GEN-LAST:event_imageBeanMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -292,7 +304,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
 
             Property multimediaFile = mMultiMediaObject.getProperty("FILE", true);
             if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                imageBean.setImage(((PropertyFile) multimediaFile).getFile(), PropertySex.UNKNOWN);
+                mFile = ((PropertyFile) multimediaFile).getFile();
+                imageBean.setImage(mFile, PropertySex.UNKNOWN);
+                
             } else {
                 PropertyBlob propertyBlob = (PropertyBlob) mMultiMediaObject.getProperty("BLOB", true);
                 imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, PropertySex.UNKNOWN);

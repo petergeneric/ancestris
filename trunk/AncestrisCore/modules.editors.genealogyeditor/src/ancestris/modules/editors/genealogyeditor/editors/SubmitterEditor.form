@@ -20,11 +20,11 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="languagesPanel" max="32767" attributes="0"/>
-                  <Component id="submitterTabbedPane" pref="0" max="32767" attributes="0"/>
+                  <Component id="submitterTabbedPane" pref="486" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="changeDateLabel" pref="309" max="32767" attributes="0"/>
+                      <Component id="changeDateLabel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="changeDateLabeldate" min="-2" pref="171" max="-2" attributes="0"/>
+                      <Component id="changeDateLabeldate" max="32767" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -50,7 +50,7 @@
               <EmptySpace min="-2" max="-2" attributes="0"/>
               <Component id="submitterTabbedPane" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="changeDateLabel" min="-2" max="-2" attributes="0"/>
                   <Component id="changeDateLabeldate" min="-2" pref="14" max="-2" attributes="0"/>
               </Group>
@@ -112,7 +112,7 @@
     </Container>
     <Component class="javax.swing.JLabel" name="changeDateLabel">
       <Properties>
-        <Property name="horizontalAlignment" type="int" value="4"/>
+        <Property name="horizontalAlignment" type="int" value="2"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="SubmitterEditor.changeDateLabel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
