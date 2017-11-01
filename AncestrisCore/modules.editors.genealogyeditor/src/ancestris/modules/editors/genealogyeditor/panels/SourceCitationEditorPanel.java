@@ -81,12 +81,16 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         // common
         "EVEN"
     };
+    private ChangeListner changeListner = new ChangeListner();
 
     /**
      * Creates new form SourceCitationEditorPanel
      */
     public SourceCitationEditorPanel() {
         initComponents();
+
+        referencedEventChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+        
     }
 
     /**
@@ -228,12 +232,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         dataQualityComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 dataQualityComboBoxActionPerformed(evt);
-            }
-        });
-
-        referencedEventChoiceWidget.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                referencedEventChoiceWidgetActionPerformed(evt);
             }
         });
 
@@ -496,10 +494,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
     private void dataQualityComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_dataQualityComboBoxActionPerformed
         mDataQualityModified = true;
     }//GEN-LAST:event_dataQualityComboBoxActionPerformed
-
-    private void referencedEventChoiceWidgetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_referencedEventChoiceWidgetActionPerformed
-        mEventTypeModified = true;
-    }//GEN-LAST:event_referencedEventChoiceWidgetActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SourceDataPanel;
@@ -847,7 +841,27 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         java.util.Collections.sort(localizedEventsList);
 
         referencedEventChoiceWidget.setValues(localizedEventsList);
-        
-        
+
     }
+    
+    
+    public class ChangeListner implements DocumentListener {
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                mEventTypeModified = true;
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                mEventTypeModified = true;
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                mEventTypeModified = true;
+            }
+    }
+    
 }
+    
+    

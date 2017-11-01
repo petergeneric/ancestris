@@ -331,9 +331,6 @@
               </AuxValues>
             </Component>
             <Component class="genj.util.swing.ChoiceWidget" name="referencedEventChoiceWidget">
-              <Events>
-                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="referencedEventChoiceWidgetActionPerformed"/>
-              </Events>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new genj.util.swing.ChoiceWidget()"/>
               </AuxValues>
