@@ -87,7 +87,7 @@ public class SubmitterEditor extends EntityEditor {
                 .addContainerGap())
         );
 
-        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         org.openide.awt.Mnemonics.setLocalizedText(changeDateLabel, org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.changeDateLabel.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(submitterNameLabel, org.openide.util.NbBundle.getMessage(SubmitterEditor.class, "SubmitterEditor.submitterNameLabel.text")); // NOI18N
@@ -104,11 +104,11 @@ public class SubmitterEditor extends EntityEditor {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(languagesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(submitterTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(submitterTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 486, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                        .addComponent(changeDateLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(2, 2, 2)
                         .addComponent(submitterNameLabel)
@@ -128,7 +128,7 @@ public class SubmitterEditor extends EntityEditor {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(submitterTabbedPane)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(changeDateLabel)
                     .addComponent(changeDateLabeldate, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
