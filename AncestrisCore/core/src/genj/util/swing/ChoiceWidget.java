@@ -219,7 +219,8 @@ public class ChoiceWidget extends JComboBox {
         if (isEditable()) {
             return getEditor().getItem().toString();
         }
-        return super.getSelectedItem().toString();
+        Object o = super.getSelectedItem();
+        return o == null ? "" : o.toString();
     }
 
     /**
