@@ -94,6 +94,7 @@ public class ImageBean extends javax.swing.JPanel {
                 if (loadImage == null) {
                     imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
                     loadImage = ImageIO.read(imageInputStream);
+                    isDefault = true;
                     ret = false;
                 }
                 if (loadImage != null) {
@@ -102,8 +103,8 @@ public class ImageBean extends javax.swing.JPanel {
                     } else if (getHeight() > 0) {
                         scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                     }
+                    isDefault = false;
                 }
-                isDefault = false;
             } catch (IOException ex) {
                 Exceptions.printStackTrace(ex);
                 ret = false;
