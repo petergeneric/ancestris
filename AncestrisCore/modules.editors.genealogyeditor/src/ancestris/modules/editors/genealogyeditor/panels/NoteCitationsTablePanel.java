@@ -138,6 +138,7 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
                 NbBundle.getMessage(NoteCitationEditorPanel.class, "NoteCitationEditorPanel.create.title"),
                 noteCitationEditorPanel);
         noteCitationEditorDialog.setDialogId(NoteCitationEditorPanel.class.getName());
+        final Note note = (Note) noteCitationEditorPanel.get();
         if (noteCitationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
@@ -146,12 +147,14 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
                     public void perform(Gedcom gedcom) throws GedcomException {
                         noteCitationEditorPanel.commit();
                         if (noteCitationEditorPanel.get() instanceof Note) {
-                            mRoot.addNote((Note) noteCitationEditorPanel.get());
+                            mRoot.addNote(note);
                         }
                     }
                 }); // end of doUnitOfWork
                 mNoteCitationsTableModel.clear();
                 mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
+                int row = mNoteCitationsTableModel.getRowOf(note);
+                noteCitationsTable.getSelectionModel().setSelectionInterval(row, row);
                 editNoteButton.setEnabled(true);
                 deleteNoteButton.setEnabled(true);
 
@@ -228,6 +231,8 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
 
                 mNoteCitationsTableModel.clear();
                 mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
+                int row = mNoteCitationsTableModel.getRowOf(selectedNote);
+                noteCitationsTable.getSelectionModel().setSelectionInterval(row, row);
                 editNoteButton.setEnabled(true);
                 deleteNoteButton.setEnabled(true);
                 changeListner.stateChanged(null);
