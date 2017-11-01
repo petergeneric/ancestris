@@ -98,6 +98,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
+import javax.swing.UIManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.openide.filesystems.MIMEResolver;
 //import org.netbeans.modules.openide.filesystems.FileFilterSupport;
@@ -209,6 +210,7 @@ public class FileChooserBuilder {
     public FileChooserBuilder(String dirKey) {
         Parameters.notNull("dirKey", dirKey);
         this.dirKey = dirKey;
+        localizeLabels();
     }
 
     /**
@@ -893,6 +895,46 @@ public class FileChooserBuilder {
 
     private String getExtensionFromFilter(FileFilter fileFilter) {
         return formats.get(fileFilter.getDescription());
+    }
+
+    private void localizeLabels() {
+        String[] KEYS = {
+            "acceptAllFileFilterText",
+            "lookInLabelText",
+            "cancelButtonText",
+            "cancelButtonToolTipText",
+            "openButtonText",
+            "openButtonToolTipText",
+            "filesOfTypeLabelText",
+            "fileNameLabelText",
+            "folderNameLabelText",
+            "listViewButtonToolTipText",
+            "listViewButtonAccessibleName",
+            "detailsViewButtonToolTipText",
+            "detailsViewButtonAccessibleName",
+            "upFolderToolTipText",
+            "upFolderAccessibleName",
+            "homeFolderToolTipText",
+            "homeFolderAccessibleName",
+            "fileNameHeaderText",
+            "fileSizeHeaderText",
+            "fileTypeHeaderText",
+            "fileDateHeaderText",
+            "fileAttrHeaderText",
+            "openDialogTitleText",
+            "newFolderToolTipText",
+            "saveButtonText",
+            "updateButtonText",
+            "helpButtonText",
+            "saveButtonToolTipText",
+            "updateButtonToolTipText",
+            "helpButtonToolTipText"
+        };
+        
+        for (String key : KEYS) {
+            UIManager.put("FileChooser."+key, NbBundle.getMessage(FileChooserBuilder.class, "FileChooser."+key));
+        }
+        
     }
     
     
