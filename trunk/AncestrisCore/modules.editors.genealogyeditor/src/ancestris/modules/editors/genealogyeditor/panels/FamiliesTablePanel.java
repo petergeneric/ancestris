@@ -2,12 +2,10 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
-import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
@@ -70,14 +68,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
         editFamilyNameButton = new javax.swing.JButton();
         deleteFamilyNameButton = new javax.swing.JButton();
         familyNamesScrollPane = new javax.swing.JScrollPane();
-        familyNamesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable() {
-            public TableCellRenderer getCellRenderer(int row, int column) {
-                if (column == 4) {
-                    return new TextPaneTableCellRenderer ();
-                }
-                return super.getCellRenderer(row, column);
-            }
-        };
+        familyNamesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         familyNamesToolBar.setFloatable(false);
         familyNamesToolBar.setRollover(true);

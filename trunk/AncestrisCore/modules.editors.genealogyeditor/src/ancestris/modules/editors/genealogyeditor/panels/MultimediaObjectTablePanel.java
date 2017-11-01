@@ -1,10 +1,8 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectsTableModel;
-import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import genj.gedcom.*;
 import java.util.List;
-import javax.swing.table.TableCellRenderer;
 
 /**
  *
@@ -33,14 +31,7 @@ public class MultimediaObjectTablePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         MultimediaObjectTableScrollPane = new javax.swing.JScrollPane();
-        MultimediaObjectsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable() {
-            public TableCellRenderer getCellRenderer(int row, int column) {
-                if (column == 1) {
-                    return new TextPaneTableCellRenderer ();
-                }
-                return super.getCellRenderer(row, column);
-            }
-        };
+        MultimediaObjectsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         MultimediaObjectsTable.setModel(mMultiMediaObjectsTableModel);
         MultimediaObjectsTable.setSelectionBackground(new java.awt.Color(89, 142, 195));
