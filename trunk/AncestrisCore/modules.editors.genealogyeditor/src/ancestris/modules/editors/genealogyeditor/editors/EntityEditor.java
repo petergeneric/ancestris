@@ -30,9 +30,7 @@ public abstract class EntityEditor extends Editor {
                 getTitle(),
                 this);
         dialogManager.setDialogId(this.getClass().getName());
-        System.out.println("**DEBUG****** showPanel ******************** before");
         if (dialogManager.show().equals(NotifyDescriptor.OK_OPTION)) {
-            System.out.println("**DEBUG****** showPanel ******************** inside");
             if (changes.hasChanged()) {
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
