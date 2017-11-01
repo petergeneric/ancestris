@@ -15,6 +15,7 @@
     <folder name="Menu">
         <folder name="File">
             <folder name="Import">
+                <attr name="displayName" bundlevalue="ancestris.modules.imports.wizard.Bundle#Menu/File/Import"/> 
                 <file name="ancestris-modules-imports-wizard-ImportWizardAction.shadow">
                     <attr name="originalFile" stringvalue="Actions/File/ancestris-modules-imports-wizard-ImportWizardAction.instance"/>
                 </file>
