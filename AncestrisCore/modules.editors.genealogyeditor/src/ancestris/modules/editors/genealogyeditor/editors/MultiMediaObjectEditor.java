@@ -185,6 +185,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 .setDefaultExtension(FileChooserBuilder.getImageFilter().getExtensions()[0])
                 .setFileFilter(FileChooserBuilder.getImageFilter())
                 .setAcceptAllFileFilterUsed(true)
+                .setDefaultPreviewer()
                 .setFileHiding(true)
                 .setDefaultWorkingDirectory(new File(Registry.get(MultiMediaObjectEditor.class).get("rootPath", ".")))
                 .showOpenDialog();
