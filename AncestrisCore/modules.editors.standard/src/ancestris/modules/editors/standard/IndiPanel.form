@@ -83,7 +83,7 @@
                   <Group type="102" attributes="0">
                       <Component id="namePanel" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" max="-2" attributes="0"/>
-                      <Component id="scrollPaneFamily" pref="25" max="32767" attributes="0"/>
+                      <Component id="scrollPaneFamily" pref="104" max="32767" attributes="0"/>
                   </Group>
                   <Component id="mediaPanel" max="32767" attributes="0"/>
               </Group>
@@ -210,9 +210,9 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
                   <Component id="mediaImagePanel" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                  <Component id="scrollPanePhotos" pref="138" max="32767" attributes="0"/>
-                  <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                  <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
+                  <Component id="scrollPanePhotos" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="delMediaEventButton" alignment="1" min="-2" max="-2" attributes="0"/>
                       <Component id="addMediaEventButton" alignment="1" min="-2" max="-2" attributes="0"/>
@@ -252,6 +252,11 @@
           </Layout>
         </Container>
         <Container class="javax.swing.JScrollPane" name="scrollPanePhotos">
+          <Properties>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[238, 50]"/>
+            </Property>
+          </Properties>
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
           </AuxValues>
@@ -273,6 +278,9 @@
                   <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.textAreaPhotos.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="wrapStyleWord" type="boolean" value="true"/>
+                <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+                  <Dimension value="[232, 40]"/>
+                </Property>
               </Properties>
             </Component>
           </SubComponents>
