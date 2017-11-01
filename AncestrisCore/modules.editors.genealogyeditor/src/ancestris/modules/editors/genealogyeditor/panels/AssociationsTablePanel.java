@@ -231,6 +231,10 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_associationsTableMouseClicked
 
     private void deleteAssociationButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteAssociationButtonActionPerformed
+        int selectedRow = associationsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
         int rowIndex = associationsTable.convertRowIndexToModel(associationsTable.getSelectedRow());
         Gedcom gedcom = mRootEntity.getGedcom();
 
