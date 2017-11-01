@@ -9,7 +9,6 @@ import genj.gedcom.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import org.openide.DialogDescriptor;
@@ -82,7 +81,6 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         // common
         "EVEN"
     };
-    private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
 
     /**
      * Creates new form SourceCitationEditorPanel
