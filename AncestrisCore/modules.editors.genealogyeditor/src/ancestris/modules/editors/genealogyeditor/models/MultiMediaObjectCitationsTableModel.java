@@ -5,6 +5,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyBlob;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
+import genj.gedcom.PropertyXRef;
 import java.awt.Image;
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -217,5 +218,18 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
      */
     protected ImageIcon createImageIcon(String path, String description) {
         return new ImageIcon(path, description);
+    }
+    
+    public int getRowOf(Property p) {
+        for (int row = 0 ; row < getRowCount() ; row++) {
+            Property pList = getValueAt(row);
+            if (pList instanceof PropertyXRef) {
+                pList = ((PropertyXRef) pList).getTargetEntity();
+            }
+            if (pList == p) {
+                return row;
+            }
+        }
+        return -1;
     }
 }

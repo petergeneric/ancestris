@@ -1,7 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.models.NoteCitationsTableModel;
-import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
@@ -11,7 +10,6 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
@@ -51,14 +49,7 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
-        noteCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable() {
-            public TableCellRenderer getCellRenderer(int row, int column) {
-                if (column == 1) {
-                    return new TextPaneTableCellRenderer ();
-                }
-                return super.getCellRenderer(row, column);
-            }
-        };
+        noteCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         setMinimumSize(new java.awt.Dimension(453, 57));
 
@@ -134,7 +125,7 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(notesToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -2,7 +2,6 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
-import ancestris.modules.editors.genealogyeditor.renderer.TextPaneTableCellRenderer;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -10,7 +9,6 @@ import java.util.Collection;
 import java.util.List;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-import javax.swing.table.TableCellRenderer;
 import org.openide.DialogDescriptor;
 import org.openide.util.ChangeSupport;
 import org.openide.util.Exceptions;
@@ -51,14 +49,7 @@ public class NotesTablePanel extends javax.swing.JPanel {
         editNoteButton = new javax.swing.JButton();
         deleteNoteButton = new javax.swing.JButton();
         notesTableScrollPane = new javax.swing.JScrollPane();
-        notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable() {
-            public TableCellRenderer getCellRenderer(int row, int column) {
-                if (column == 1) {
-                    return new TextPaneTableCellRenderer ();
-                }
-                return super.getCellRenderer(row, column);
-            }
-        };
+        notesTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
         notesToolBar.setFloatable(false);
         notesToolBar.setRollover(true);

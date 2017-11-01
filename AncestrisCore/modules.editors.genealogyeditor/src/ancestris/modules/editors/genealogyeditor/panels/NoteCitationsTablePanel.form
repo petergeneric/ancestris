@@ -129,9 +129,6 @@
           <Events>
             <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="noteCitationsTableMouseClicked"/>
           </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ancestris.modules.editors.genealogyeditor.table.EditorTable() {&#xa;    public TableCellRenderer getCellRenderer(int row, int column) {&#xa;        if (column == 1) {&#xa;            return new TextPaneTableCellRenderer ();&#xa;        }&#xa;        return super.getCellRenderer(row, column);&#xa;    }&#xa;}"/>
-          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

@@ -160,6 +160,8 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             if (multiMediaObjectEditor.showPanel()) {
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                int row = multiMediaObjectCitationsTableModel.getRowOf(mMultiMediaObject);
+                multiMediaObjectCitationsTable.getSelectionModel().setSelectionInterval(row, row);
                 editMMObjecButton.setEnabled(true);
                 deleteMMObjectButton.setEnabled(true);
             } else {
@@ -174,7 +176,11 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_addMMObjectButtonActionPerformed
 
     private void deleteMMObjectButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteMMObjectButtonActionPerformed
-        final int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(multiMediaObjectCitationsTable.getSelectedRow());
+        int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
+        if (selectedRow == -1) {
+            return;
+        }
+        final int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
         Gedcom gedcom = mRoot.getGedcom();
 
         if (rowIndex != -1) {
@@ -274,6 +280,8 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
 
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                int row = multiMediaObjectCitationsTableModel.getRowOf(selectedMultimediaObject);
+                multiMediaObjectCitationsTable.getSelectionModel().setSelectionInterval(row, row);
                 editMMObjecButton.setEnabled(true);
                 deleteMMObjectButton.setEnabled(true);
                 changeSupport.fireChange();
@@ -301,6 +309,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
         if (multiMediaObjectCitationsTableModel.getRowCount() > 0) {
             editMMObjecButton.setEnabled(true);
             deleteMMObjectButton.setEnabled(true);
+            multiMediaObjectCitationsTable.getSelectionModel().setSelectionInterval(0, 0);
         } else {
             editMMObjecButton.setEnabled(false);
             deleteMMObjectButton.setEnabled(false);
