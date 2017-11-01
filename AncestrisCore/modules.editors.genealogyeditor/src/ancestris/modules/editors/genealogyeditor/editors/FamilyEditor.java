@@ -1317,6 +1317,7 @@ public class FamilyEditor extends EntityEditor {
                         if (mEventsListModel.indexOf(mEvent) == -1) {
                             mEventsListModel.add(mEvent);
                         }
+                        selectedEventContext = new Context(mEvent);
                         eventsList.setSelectedIndex(mEventsListModel.indexOf(mEvent));
                         changes.fireChangeEvent();
                     }
