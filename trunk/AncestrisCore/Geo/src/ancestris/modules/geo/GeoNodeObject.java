@@ -220,7 +220,7 @@ public class GeoNodeObject {
             if (this.toponym == null) {
                 this.toponym = geonamesResearcher.defaultPlace();
             }
-            if (toponym.getLatitude() == defaultPlace.getLatitude() && toponym.getLongitude() == defaultPlace.getLongitude()) {
+            if (toponym.getLatitude().compareTo(defaultPlace.getLatitude()) == 0 && toponym.getLongitude().compareTo(defaultPlace.getLongitude()) == 0) {
                 geo_type = GEO_UNKNOWN;
             } else {
                 geo_type = GEO_PROPOSED;
@@ -231,6 +231,10 @@ public class GeoNodeObject {
             geo_type = GEO_CONFIRMED;
         }
 
+    }
+    
+    public boolean isUnknown() {
+        return geo_type == GEO_UNKNOWN;
     }
 
     public Double getLatitude() {

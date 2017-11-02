@@ -35,6 +35,7 @@ public class GeoFilter {
     
     private Gedcom gedcom;
     public String location = "";
+    public boolean showUnknown = true;
     public boolean ascendants = false;
     public boolean descendants = false;
     public boolean cousins = false;
@@ -67,6 +68,7 @@ public class GeoFilter {
 
     public void load() {
         location = registry.get("GEO.geofilter.location", "");
+        showUnknown = registry.get("GEO.geofilter.showUnknown", true);
         ascendants = registry.get("GEO.geofilter.ascendants", false);
         descendants = registry.get("GEO.geofilter.descendants", false);
         cousins = registry.get("GEO.geofilter.cousins", false);
@@ -85,6 +87,7 @@ public class GeoFilter {
 
     public void save() {
         registry.put("GEO.geofilter.location", location);
+        registry.put("GEO.geofilter.showUnknown", showUnknown);
         registry.put("GEO.geofilter.ascendants", ascendants);
         registry.put("GEO.geofilter.descendants", descendants);
         registry.put("GEO.geofilter.cousins", cousins);
@@ -139,6 +142,12 @@ public class GeoFilter {
                 return false;
             }
         }
+        
+        // exclude default/unknown locations
+        if (!showUnknown && node.isUnknown()) {   
+            return false;
+        }
+        
         
         // Make sure at least an event matches a criteria
         for (GeoNodeObject event : node.getAllEvents()) {
@@ -561,6 +570,14 @@ public class GeoFilter {
         // Are there any filters on location
         if (!location.isEmpty()) {
             ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.location", location);
+        }
+
+        // Are we hiding unknown places
+        if (!showUnknown) {
+            if (!ret.isEmpty()) {
+                ret += " + ";
+            }
+            ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.unknown");
         }
 
         // Are there any filters on tree structure

@@ -252,6 +252,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jPanel1 = new javax.swing.JPanel();
         jPlaceFilter = new javax.swing.JTextField();
+        jToggleShowUnknown = new javax.swing.JToggleButton();
         jSeparator4 = new javax.swing.JToolBar.Separator();
         jCaptureButton = new javax.swing.JButton();
         filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
@@ -381,6 +382,20 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         );
 
         jToolBar.add(jPanel1);
+
+        jToggleShowUnknown.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/geo/unknown.png"))); // NOI18N
+        jToggleShowUnknown.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(jToggleShowUnknown, org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jToggleShowUnknown.text")); // NOI18N
+        jToggleShowUnknown.setToolTipText(org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "GeoMapTopComponent.jToggleShowUnknown.toolTipText")); // NOI18N
+        jToggleShowUnknown.setFocusable(false);
+        jToggleShowUnknown.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jToggleShowUnknown.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToggleShowUnknown.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleShowUnknownActionPerformed(evt);
+            }
+        });
+        jToolBar.add(jToggleShowUnknown);
         jToolBar.add(jSeparator4);
 
         jCaptureButton.setAction(new ScreenshotAction(jXMapKit1));
@@ -522,6 +537,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         showListAtLocation(gno);
     }//GEN-LAST:event_jGoToListButtonActionPerformed
 
+    private void jToggleShowUnknownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleShowUnknownActionPerformed
+        geoFilter.showUnknown = jToggleShowUnknown.isSelected();
+        geoFilter.save();
+        applyFilters();
+    }//GEN-LAST:event_jToggleShowUnknownActionPerformed
+
     private void jXMapKit1PropertyChange(java.beans.PropertyChangeEvent evt) {                                         
         String pn = evt.getPropertyName();
         if ("zoom".equals(pn) && resizeWithZoom) {
@@ -554,6 +575,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private javax.swing.JToggleButton jSwapMarkersButton;
     private javax.swing.JToggleButton jToggleMarkersButton;
     private javax.swing.JToggleButton jToggleOverviewButton;
+    private javax.swing.JToggleButton jToggleShowUnknown;
     private javax.swing.JToggleButton jToggleSliderButton;
     private javax.swing.JToolBar jToolBar;
     private javax.swing.JButton jViewAllButton;
@@ -646,6 +668,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jSwapMarkersButton.setSelected(useNames);
 
         jPlaceFilter.setText(geoFilter.location);
+        jToggleShowUnknown.setSelected(geoFilter.showUnknown);
     }
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
