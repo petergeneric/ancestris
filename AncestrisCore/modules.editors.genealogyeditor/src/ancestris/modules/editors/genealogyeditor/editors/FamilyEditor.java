@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.modules.editors.genealogyeditor.EditorTopComponent;
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
@@ -78,7 +79,7 @@ public class FamilyEditor extends EntityEditor {
     private final EventsListModel mEventsListModel = new EventsListModel();
     private final DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
     private Registry registry = null;
-    
+    private boolean changeListInProgress = false;    
 
     /**
      * Creates new form FamilyEditor
@@ -1521,6 +1522,7 @@ public class FamilyEditor extends EntityEditor {
 
             });
             familyEventPanel.setVisible(false);
+            changeListInProgress = true;
             mEventsListModel.clear();
             mEventsListModel.addAll(familyEvents);
             seteventTypeComboBox(familyEvents);
@@ -1535,6 +1537,7 @@ public class FamilyEditor extends EntityEditor {
                 }
             }
             eventsList.setSelectedIndex(index);
+            changeListInProgress = false;
 
             /*
              * +1 HUSB @<XREF:INDI>@
@@ -1804,19 +1807,12 @@ public class FamilyEditor extends EntityEditor {
         public void valueChanged(ListSelectionEvent lse) {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
             if (lse.getValueIsAdjusting() == false && lsm.isSelectionEmpty() == false) {
-//                if (familyEventPanel.hasChanged()) {
-//                    try {
-//                        mFamily.getGedcom().doUnitOfWork(new UnitOfWork() {
-//
-//                            @Override
-//                            public void perform(Gedcom gedcom) throws GedcomException {
-//                                familyEventPanel.commit();
-//                            }
-//                        });
-//                    } catch (GedcomException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                }
+                if (!changeListInProgress && familyEventPanel.hasChanged()) {
+                    EditorTopComponent etc = EditorTopComponent.findEditorWindow(mFamily.getGedcom());
+                    if (etc != null) {
+                        etc.commit();
+                    }
+                }
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     familyEventPanel.set(mFamily, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
                     familyEventPanel.setVisible(true);

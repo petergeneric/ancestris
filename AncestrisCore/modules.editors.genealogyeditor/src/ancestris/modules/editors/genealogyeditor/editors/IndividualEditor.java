@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.modules.editors.genealogyeditor.EditorTopComponent;
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
@@ -66,6 +67,7 @@ public final class IndividualEditor extends EntityEditor {
     private Property mMultiMediaObject;
     private boolean updateOnGoing = false;
     private final EventsListModel mEventsListModel = new EventsListModel();
+    private boolean changeListInProgress = false;
     private static final ArrayList<String> mIndividualEventsTags = new ArrayList<String>() {
         {
             /*
@@ -883,6 +885,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
 
             });
+            changeListInProgress = true;
             mEventsListModel.clear();
             mEventsListModel.addAll(individualEvents);
             seteventTypeComboBox(individualEvents);
@@ -897,6 +900,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
             }
             eventsList.setSelectedIndex(index);
+            changeListInProgress = false;
 
             /*
              * +1 <<LDS_INDIVIDUAL_ORDINANCE>>
@@ -1104,19 +1108,12 @@ public final class IndividualEditor extends EntityEditor {
         public void valueChanged(ListSelectionEvent lse) {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
             if (!lse.getValueIsAdjusting() && !lsm.isSelectionEmpty()) {
-//                if (individualEventEditorPanel.hasChanged()) {
-//                    try {
-//                        mIndividual.getGedcom().doUnitOfWork(new UnitOfWork() {
-//
-//                            @Override
-//                            public void perform(Gedcom gedcom) throws GedcomException {
-//                                individualEventEditorPanel.commit();
-//                            }
-//                        });
-//                    } catch (GedcomException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                }
+                if (!changeListInProgress && individualEventEditorPanel.hasChanged()) {
+                    EditorTopComponent etc = EditorTopComponent.findEditorWindow(mIndividual.getGedcom());
+                    if (etc != null) {
+                        etc.commit();
+                    }
+                }
                 if (lsm.getMinSelectionIndex() < mEventsListModel.getSize()) {
                     individualEventEditorPanel.set(mIndividual, mEventsListModel.getValueAt(lsm.getMinSelectionIndex()));
                     individualEventEditorPanel.setVisible(true);
