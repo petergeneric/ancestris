@@ -55,6 +55,7 @@ import org.openide.awt.UndoRedo;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  *
@@ -73,6 +74,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     private Editor editor;
     private ConfirmChangeWidget confirmPanel;
     private Gedcom gedcom;
+    private Context context = null;
     private JScrollPane editorContainer;
     private JLabel titleLabel;
     private int undoNb;
@@ -228,6 +230,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         } finally {
             isChangeSource = false;
             confirmPanel.setChanged(false);
+            undoNb = gedcom.getUndoNb();
         }
     }
 
@@ -248,18 +251,26 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
     }
 
     @Override
-    public void setContextImpl(Context context) {
+    public void setContextImpl(Context newContext) {
         // see also EditView
-        if (context == null) {
+        if (newContext == null) {
             return;
         }
+        
+        // Quit if context is the same  
+        if (newContext.equals(this.context)) {
+            return;
+        }
+        this.context = newContext;
+
+        
         // disconnect from last gedcom?
-        if (context.getGedcom() != gedcom && gedcom != null) {
+        if (newContext.getGedcom() != gedcom && gedcom != null) {
             gedcom.removeGedcomListener(callback);
             gedcom = null;
         }
         // clear?
-        if (context.getGedcom() == null) {
+        if (newContext.getGedcom() == null) {
 //            sticky.setSelected(false);
             setEditor(null);
 //            populate(toolbar);
@@ -268,19 +279,19 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         }
 
         // connect to gedcom?
-        if (context.getGedcom() != gedcom) {
-            gedcom = context.getGedcom();
+        if (newContext.getGedcom() != gedcom) {
+            gedcom = newContext.getGedcom();
             gedcom.addGedcomListener(callback);
         }
 
-        // commit if necessary
-        commit(false);
-        if (context.getEntity() == null) {
+        // Commit asking for confirmation (in case newContext changes, user will be asked to confirm)
+        commit(true);
+        if (newContext.getEntity() == null) {
             return;
         }
-        Editor panel = panels.get(context.getEntity().getClass());
+        Editor panel = panels.get(newContext.getEntity().getClass());
         if (panel != null) {
-            panel.setContext(context);
+            panel.setContext(newContext);
             setEditor(panel);
         }
 
@@ -380,4 +391,19 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             editor.setContext(ctx);
         }
     }
+    
+    public static EditorTopComponent findEditorWindow(Gedcom gedcom) {
+        EditorTopComponent editorWindow = null;
+        for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
+            if (tc instanceof EditorTopComponent) {
+                EditorTopComponent gltc = (EditorTopComponent) tc;
+                if (gltc.getGedcom() == gedcom) {
+                    editorWindow = gltc;
+                    break;
+                }
+            }
+        }
+        return editorWindow;
+    }
+    
 }
