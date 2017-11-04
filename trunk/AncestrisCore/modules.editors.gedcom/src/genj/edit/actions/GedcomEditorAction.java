@@ -110,10 +110,9 @@ public class GedcomEditorAction extends AncestrisEditor {
                 if (tmpContext.getGedcom() == context.getGedcom())  {
                     return editTopComponent;
                 }
-                ret = editTopComponent;
             }
         }
-        return null;
+        return ret;
     }
     
     

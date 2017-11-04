@@ -53,6 +53,8 @@ public abstract class AncestrisEditor {
     }
 
     /**
+     * Find the first editor that can edit the property, that has the default editor's name (otherwise backup), and that corresponds to the same opened gedcom
+     * 
      * @param property
      * @return null if no editor can be found.
      */
@@ -60,7 +62,7 @@ public abstract class AncestrisEditor {
         AncestrisEditor editor = null;
         AncestrisEditor backupEditor = null;
         if (property == null) {
-            return null;
+            return NoOpEditor.instance;
         }
         String canonicalName = GedcomOptions.getInstance().getDefaultEditor();
         for (AncestrisEditor edt : findEditors()) {
