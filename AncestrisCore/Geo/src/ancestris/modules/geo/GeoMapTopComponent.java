@@ -27,6 +27,9 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.*;
@@ -149,6 +152,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public boolean createPanel() {
+        checkConnection();
         // TopComponent window parameters
         initComponents();
         loadSettings();
@@ -1208,6 +1212,20 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
         }
         return ret;
+    }
+
+    // Check access to map tiles
+    private boolean checkConnection() {
+        try {
+            URL url = new URL("http://tile.openstreetmap.org/");
+            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
+        } catch (Exception ex) {
+            //Exceptions.printStackTrace(ex);
+            String txt = NbBundle.getMessage(GeoMapTopComponent.class, "MSG_ConnectionError", ex.getLocalizedMessage());
+            DialogManager.createError(NbBundle.getMessage(GeoMapTopComponent.class, "TITL_ConnectionError"), txt).show();
+            return false;
+        }
+        return true;
     }
 
 
