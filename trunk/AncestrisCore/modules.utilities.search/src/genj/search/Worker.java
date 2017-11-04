@@ -90,10 +90,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
      */
     public void search(Gedcom gedcom) {
         
+        // Sort entities by id number in the results
         Comparator<Property> comparator = new Comparator<Property>() {
             @Override
             public int compare(Property p1, Property p2) {
-                return p1.toString().compareTo(p2.toString());
+                //return p1.toString().compareTo(p2.toString());
+                return getValue(p1.getEntity().getId()).compareTo(getValue(p2.getEntity().getId()));
+            }
+            
+            private Integer getValue(String id) {
+                return Integer.parseInt(id.replaceAll("[^0-9]", ""));
             }
         };
         
