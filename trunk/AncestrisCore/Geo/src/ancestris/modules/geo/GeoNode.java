@@ -201,7 +201,7 @@ class GeoNode extends AbstractNode implements PropertyChangeListener {
                     obj.updateAllEventsPlaces(p); // need to update everytime (even if p == null) as listener has been stopped
                 } catch (ClassCastException ex){}
                 GeoPlacesList.getInstance(gedcom).refreshPlaceName();
-                GeoPlacesList.getInstance(gedcom).startListening();    
+                GeoPlacesList.getInstance(gedcom).startListening();
             } else if (actionName.equals("ACTION_CopyPlace")) {
                 GeoPlacesList.getInstance(obj.getGedcom()).setCopiedPlace(obj.getPlace(), obj.getGeoPosition());
             } else if (actionName.equals("ACTION_PastePlace")) {
