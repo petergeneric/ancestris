@@ -144,7 +144,10 @@ public class EditorAction extends AncestrisEditor {
                 if (editor.getEditedEntity() == context.getEntity())  {
                     return editorTopComponent;
                 }
-                ret = editorTopComponent;
+                // In case same Gedcom, remember this editor as backup (no need to re-open another topcomponent)
+                if (editor.getEditedEntity().getGedcom() == context.getEntity().getGedcom()) {
+                    ret = editorTopComponent;
+                }
             }
         }
         return ret;

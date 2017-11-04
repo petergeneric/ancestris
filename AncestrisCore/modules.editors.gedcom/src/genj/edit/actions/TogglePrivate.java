@@ -106,10 +106,7 @@ public class TogglePrivate extends AbstractChange {
         // check gedcom
         if (pwd == null) {
 
-            pwd = DialogManager.create(
-                    getText(),
-                    AbstractChange.resources.getString("password", gedcom.getName()),
-                    "").show();
+            pwd = DialogManager.create(getText(), AbstractChange.resources.getString("password", gedcom.getName()), "").show();
 
             // canceled?
             if (pwd == null) {
@@ -118,10 +115,7 @@ public class TogglePrivate extends AbstractChange {
         }
 
         // check if the user wants to do it recursively
-        boolean recursive = (DialogManager.YES_OPTION == DialogManager.createYesNo(
-                getText(),
-                AbstractChange.resources.getString("recursive")
-                ));
+        boolean recursive = (DialogManager.YES_OPTION == DialogManager.createYesNo(getText(), AbstractChange.resources.getString("recursive")).show());
 
         // change it
         gedcom.setPassword(pwd);
