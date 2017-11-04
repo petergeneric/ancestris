@@ -38,7 +38,6 @@ import genj.view.Images;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -106,7 +105,7 @@ public class SearchView extends View implements Filter {
     private final static Registry REGISTRY = Registry.get(SearchView.class);
     
     /** current context */
-    private Context context = new Context();
+    private Context context = null;
     
     /** shown results */
     private Results results1 = new Results();
@@ -586,7 +585,9 @@ public class SearchView extends View implements Filter {
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
-                searchCommunicator.fireNewResults();
+                if (searchCommunicator != null) {
+                    searchCommunicator.fireNewResults();
+                }
             }
         });
     }
@@ -650,32 +651,27 @@ public class SearchView extends View implements Filter {
     @Override
     public void setContext(Context newContext) {
 
-        if (newContext == null) {
+        // Do not change anything if not first initialisation of context
+        if (newContext == null || context != null) {
             return;
         }
         
-        Gedcom oldGedcom = context.getGedcom();
+        //Gedcom oldGedcom = context.getGedcom();
         Gedcom newGedcom = newContext.getGedcom();
         
-        // disconnect old
-        if (oldGedcom != null && oldGedcom != newGedcom) {
-            stop();
-            results1.clear();
-            results2.clear();
-            labelCount1.setText("");
-            labelCount2.setText("");
-            actionStart.setEnabled(false);
-            oldGedcom.removeGedcomListener((GedcomListener) Spin.over(results1));
-            oldGedcom.removeGedcomListener((GedcomListener) Spin.over(results2));
-        }
+        // init 
+        stop();
+        results1.clear();
+        results2.clear();
+        labelCount1.setText("");
+        labelCount2.setText("");
+        actionStart.setEnabled(false);
 
         // connect new
-        if (newGedcom != null && oldGedcom != newGedcom) {
-            newGedcom.addGedcomListener((GedcomListener) Spin.over(results1));
-            newGedcom.addGedcomListener((GedcomListener) Spin.over(results2));
-        }
+        newGedcom.addGedcomListener((GedcomListener) Spin.over(results1));
+        newGedcom.addGedcomListener((GedcomListener) Spin.over(results2));
 
-        // keep new
+        // remember context once for all
         context = newContext;
         actionStart.setEnabled(true);
 
@@ -1165,8 +1161,6 @@ public class SearchView extends View implements Filter {
 
         private final Results results;
         private final JTextPane text = new JTextPane();
-        /** background colors */
-        private final Color[] bgColors = new Color[3];
 
         /**
          * Constructor
@@ -1174,13 +1168,6 @@ public class SearchView extends View implements Filter {
         private ResultWidget(final Results results) {
             super(results);
             this.results = results;
-            // colors
-            bgColors[0] = getSelectionBackground();
-            bgColors[1] = getBackground();
-            bgColors[2] = new Color(
-                    Math.max(bgColors[1].getRed() - 16, 0),
-                    Math.min(bgColors[1].getGreen() + 16, 255),
-                    Math.max(bgColors[1].getBlue() - 16, 0));
 
             // rendering
             setCellRenderer(this);
@@ -1224,9 +1211,7 @@ public class SearchView extends View implements Filter {
             Hit hit = (Hit) value;
 
             // prepare color
-            int c = isSelected ? 0 : 1 + (hit.getEntity() & 1);
-            text.setBackground(bgColors[c]);
-            text.setBorder(isSelected ? createLineBorder(getSelectionBackground(), 1, false) : createEmptyBorder(2, 2, 2, 2));
+            text.setBorder(isSelected ? createLineBorder(getSelectionBackground(), 1, false) : createEmptyBorder(3, 3, 3, 3));
 
             // show hit document (includes image and text)
             text.setDocument(hit.getDocument());

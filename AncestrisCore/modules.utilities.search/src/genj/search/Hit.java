@@ -34,12 +34,17 @@ import javax.swing.text.StyledDocument;
  */
 /*package*/ class Hit {
 
-    private final static SimpleAttributeSet RED = new SimpleAttributeSet(),
-            BOLD = new SimpleAttributeSet();
-
+    private final static SimpleAttributeSet PLAIN = new SimpleAttributeSet(),
+                                            RED = new SimpleAttributeSet(),
+                                            BOLD = new SimpleAttributeSet();
+    
+    /** background colors */
+    private final static Color[] fgColors = new Color[2];
     static {
         StyleConstants.setForeground(RED, Color.RED);
         StyleConstants.setBold(BOLD, true);
+        fgColors[0] = Color.BLACK;
+        fgColors[1] = new Color(0, 51, 241);
     }
 
     /**
@@ -75,11 +80,16 @@ import javax.swing.text.StyledDocument;
         entity = setEntity;
         // prepare document
         doc = new DefaultStyledDocument();
+        
+        Color c = fgColors[setEntity & 1];
+        StyleConstants.setForeground(PLAIN, c);
+        StyleConstants.setForeground(BOLD, c);
+        
         try {
             int offset = 0;
             String tag = setProp.getPropertyName();
             // indent
-            doc.insertString(offset++, " ", null);
+            doc.insertString(offset++, " ", PLAIN);
 
             if (setProp instanceof Entity) {
                 tag = "";
@@ -89,10 +99,10 @@ import javax.swing.text.StyledDocument;
             if (!isID) {
                 doc.insertString(offset, tag, BOLD);
                 offset += tag.length();
-                doc.insertString(offset++, " ", null);
+                doc.insertString(offset++, " ", PLAIN);
             }
             // keep value and format for matches
-            doc.insertString(offset, value, null);
+            doc.insertString(offset, value, PLAIN);
             if (matches != null) {
                 for (int i = 0; i < matches.length; i++) {
                     Matcher.Match m = matches[i];
@@ -102,13 +112,16 @@ import javax.swing.text.StyledDocument;
             offset += value.length();
             // tag last for IDs
             if (isID) {
-                doc.insertString(offset++, " ", null);
+                doc.insertString(offset++, " ", PLAIN);
                 doc.insertString(offset, tag, BOLD);
             }
             // keep image
             SimpleAttributeSet img = new SimpleAttributeSet();
             StyleConstants.setIcon(img, setProp.getImage(false));
             doc.insertString(0, " ", img);
+            
+            // prefix with entity id
+            doc.insertString(0, "["+setProp.getEntity().getId()+"] ", PLAIN);
         } catch (Throwable t) {
         }
         // done

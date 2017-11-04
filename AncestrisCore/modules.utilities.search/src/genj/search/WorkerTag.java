@@ -112,8 +112,10 @@ public class WorkerTag extends Worker {
     }
 
     private boolean checkPath(Entity entity, Property prop) {
+        // Fix 2017-11-03 : FL : Why are entities always OK ???? It would mean that entity.getValue() are always matched regardless of the tag chosen by user ???????? => remove
         // entities are always ok, no path all good as well
-        if (entity == prop || tags.isEmpty()) {
+//        if (entity == prop || tags.isEmpty()) {
+        if (tags.isEmpty()) {
             return true;
         }
         // all tags in path?
@@ -123,6 +125,10 @@ public class WorkerTag extends Worker {
                 return false;
             }
         }
+        if (prop.getTag().equals("CHAN")) {
+            String debug = "";
+        }
+        
         return true;
     }
 
@@ -133,10 +139,11 @@ public class WorkerTag extends Worker {
     public void search(Entity entity, Property prop) {
         // parse all where path ok and not transient
         if (checkPath(entity, prop) && !prop.isTransient()) {
-            // check entity's id
-            if (entity == prop) {
-                search(entity, entity, entity.getId(), true);
-            }
+            // Fix 2017-11-03 : FL : Why check Ids regardless of the tag chosen by user ???????? => remove
+//            // check entity's id
+//            if (entity == prop) {
+//                search(entity, entity, entity.getId(), true);
+//            }
             // check prop's value
             search(entity, prop, prop.getDisplayValue(), false);
         }
