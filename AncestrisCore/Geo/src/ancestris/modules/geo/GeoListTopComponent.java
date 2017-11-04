@@ -43,8 +43,8 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     private static final String PREFERRED_ID = "GeoListTopComponent";
     //
     // Each node is a location object. We also store the list of places
-    private GeoNodeObject[] nodes = null;
     private GeoPlacesList gpl = null;
+    private int selectedNode = -1;
     //
     // Setup an explorer structure for the list of locations
     private ExplorerManager mgr = new ExplorerManager();
@@ -121,8 +121,10 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
-            final int selectedNode = getSelectedNode();
-            nodes = gpl.getPlaces();
+            int currentNode = getSelectedNode();
+            if (currentNode != -1 && currentNode != selectedNode) {
+                selectedNode = currentNode;
+            }
             mgr.setRootContext(new GeoNode(gpl));
             ((BeanTreeView) jScrollPane1).setRootVisible(false);
             jScrollPane1.repaint();
@@ -142,7 +144,7 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
         // Get selected node
         Node[] geonodes = mgr.getSelectedNodes();
         if (geonodes.length == 0) {
-            return 0;
+            return -1;
         }
         GeoNodeObject selectedObj = geonodes[0].getLookup().lookup(GeoNodeObject.class);
         Node[] scannedNodes = mgr.getRootContext().getChildren().getNodes();
@@ -153,13 +155,19 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
                 return i;
             }
         }
-        return 0;
+        return -1;
     }
 
-    private void selectNode(int selectedNode) {
+    private void selectNode(int nodeIndex) {
+        if (nodeIndex < 0) {
+            nodeIndex = 0;
+        }
         // scan nodes to find the one
         Node[] scannedNodes = mgr.getRootContext().getChildren().getNodes();
-        Node node = scannedNodes[selectedNode];
+        if (nodeIndex >= scannedNodes.length) {
+            nodeIndex = scannedNodes.length-1;
+        }
+        Node node = scannedNodes[nodeIndex];
         try {
             mgr.setSelectedNodes(new Node[]{node});
         } catch (PropertyVetoException ex) {
