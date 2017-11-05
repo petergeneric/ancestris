@@ -22,7 +22,6 @@ import java.io.File;
 import java.util.Set;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
 import javax.swing.filechooser.FileFilter;
@@ -79,7 +78,6 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         this.context = context;
         registry = new Registry(Registry.get(SamePanel.class), getClass().getName());
         initComponents();
-        jCheckBoxAutoPreview.setSelected(false);
         jCheckBoxRecentEvent.setSelected(true);
         // j'affecte un modele à la liste
         jListAncestors.setModel(ancestorListModel);
@@ -164,13 +162,7 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         revalidate();
         
         // 
-        jCheckBoxAutoPreview.setSelected(true);
-        SwingUtilities.invokeLater(new Runnable() {
-
-            public void run() {
-                openPreview();
-            }
-        });
+        jCheckBoxAutoPreview.setSelected(false);
 
     }
 
@@ -233,6 +225,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
 
     void openPreview() {
         int i = jListAncestors.getSelectedIndex();
+        if (i == -1) {
+            return;
+        }
         if (context != null) {
 
             if (previewTopComponent == null) {
@@ -328,13 +323,19 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
      * recherche et affiche les ancetres communs
      */
     private void findCommonAncestors() {
-        Set<Indi> ancestorList = commonAncestorTree.findCommonAncestors(individu1, individu2);
+        // Clear model and list
         ancestorListModel.clear();
-        // copy ancestor list into listeModel
+        jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", 
+                NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.searching")));
+        
+        // Search common ancestors
+        Set<Indi> ancestorList = commonAncestorTree.findCommonAncestors(individu1, individu2);
+        
+        // Display in result field
         for (Indi ancestor : ancestorList) {
             ancestorListModel.addElement(ancestor);
         }
-        // je met a jour la taille de la JList por forcer la mise à jour des scrollbar
+        // update scrollbars
         if (ancestorListModel.size()>0) {
             // je recupere la hauteur de l'ensemble des lignes de la liste
             int cellHeight = jListAncestors.getCellBounds(0, ancestorListModel.getSize()-1).height;
@@ -352,6 +353,9 @@ public class SamePanel extends javax.swing.JPanel implements AncestorListener {
         } else {
             jButtonSaveFile.setEnabled(false);
         }
+
+        jLabelAncestorList.setText(NbBundle.getMessage(SamePanel.class, "SamePanel.jLabelAncestorList.text", ""));
+    
     }
 
     /**
