@@ -637,8 +637,8 @@ public class ChoiceWidget extends JComboBox {
                 if (isIgnoreCase) {
                     strB = value.toLowerCase();
                 }
-                //if (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length())) {
-                if (strB.contains(strA)) {
+                if (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length())) {
+                //if (strB.contains(strA)) {
                     setSelectedItem(value);
                     return value;
                 }
