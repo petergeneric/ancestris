@@ -151,8 +151,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventDescriptorTextArea.getDocument().putProperty("name", "eventDescriptorTextArea");
         individualAgeTextField.getDocument().addDocumentListener(changeListner);
         individualAgeTextField.getDocument().putProperty("name", "individualAgeTextField");
-        placeTextField.getDocument().addDocumentListener(changeListner);
-        placeTextField.getDocument().putProperty("name", "placeTextField");
+        placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+        placeChoiceWidget.getTextEditor().getDocument().putProperty("name", "placeChoiceWidget");
+        placeChoiceWidget.setIgnoreCase(true);
+        placeChoiceWidget.setHorizontalScrollBar();
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
         sourceCitationsTablePanel.addChangeListener(changeListner);
@@ -174,7 +176,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         EventDetailPanel = new JPanel();
         EventDetailEditorPanel = new JPanel();
         placeLabel = new JLabel();
-        placeTextField = new JTextField();
+        placeChoiceWidget = new ChoiceWidget();
         privateRecordToggleButton = new JToggleButton();
         IndividualAgeLabel = new JLabel();
         eventDescriptorLabel = new JLabel();
@@ -204,7 +206,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         placeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         placeLabel.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeLabel.text")); // NOI18N
 
-        placeTextField.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeTextField.text")); // NOI18N
+        placeChoiceWidget.setMaximumRowCount(19);
+        placeChoiceWidget.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.placeChoiceWidget.toolTipText")); // NOI18N
+        placeChoiceWidget.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMM");
 
         privateRecordToggleButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
         privateRecordToggleButton.setMaximumSize(new Dimension(26, 26));
@@ -291,12 +295,12 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
-                        .addComponent(placeTextField)
+                        .addComponent(placeChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                     .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                         .addComponent(associateButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
@@ -324,8 +328,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                     .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(placeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE))
+                    .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(placeChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(responsibleAgencyLabel)
@@ -397,7 +401,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+            .addComponent(eventInformationTabbedPane)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(eventInformationTabbedPane)
@@ -424,7 +428,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         
         placeEditorPanel.close();
         if (o == OKButton) {
-            placeTextField.getDocument().removeDocumentListener(changeListner);
+            placeChoiceWidget.getTextEditor().getDocument().removeDocumentListener(changeListner);
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -438,9 +442,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             }
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
             //mAddress = mEvent.getProperty("ADDR", false);
-            placeTextField.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
+            placeChoiceWidget.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
             changeSupport.fireChange();
-            placeTextField.getDocument().addDocumentListener(changeListner);
+            placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -512,8 +516,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
     private NoteCitationsTablePanel noteCitationsTablePanel;
     private JPanel notesPanel;
+    private ChoiceWidget placeChoiceWidget;
     private JLabel placeLabel;
-    private JTextField placeTextField;
     private JToggleButton privateRecordToggleButton;
     private JLabel responsibleAgencyLabel;
     private JTextField responsibleAgencyTextField;
@@ -680,14 +684,11 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
         //mAddress = mEvent.getProperty("ADDR", false);
+        placeChoiceWidget.setValues(mRoot.getGedcom().getReferenceSet("PLAC").getKeys(mRoot.getGedcom().getCollator()));
         if (mPlace != null) { // || mAddress != null) {
-            placeTextField.setText(mPlace.getDisplayValue());
-            //addPlaceButton.setVisible(false);
-            //editPlaceButton.setVisible(true);
+            placeChoiceWidget.setText(mPlace.getDisplayValue());
         } else {
-            placeTextField.setText("");
-            //addPlaceButton.setVisible(true);
-            //editPlaceButton.setVisible(false);
+            placeChoiceWidget.setText("");
         }
 
         Property[] sourcesList = mEvent.getProperties("SOUR");
@@ -834,9 +835,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     mPlaceModified = false;
                     Property place = mEvent.getProperty("PLAC", false);
                     if (place != null) {
-                        place.setValue(placeTextField.getText());
+                        place.setValue(placeChoiceWidget.getText());
                     } else {
-                        mEvent.addProperty("PLAC", placeTextField.getText());
+                        mEvent.addProperty("PLAC", placeChoiceWidget.getText());
                     }
                 }
 
@@ -907,7 +908,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
                     }
-                    if (propertyName.equals("placeTextField")) {
+                    if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {
@@ -937,7 +938,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
                     }
-                    if (propertyName.equals("placeTextField")) {
+                    if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {
@@ -967,7 +968,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("individualAgeTextField")) {
                         mIndividualAgeModified = true;
                     }
-                    if (propertyName.equals("placeTextField")) {
+                    if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {

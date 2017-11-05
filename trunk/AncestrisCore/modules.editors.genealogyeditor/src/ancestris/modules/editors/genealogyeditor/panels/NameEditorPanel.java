@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import org.openide.util.Utilities;
 
 /**
  *
@@ -36,8 +35,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
     public NameEditorPanel() {
         initComponents();
         jCheckBox1.setSelected(false);
+        firstNameChoiceWidget.setIgnoreCase(true);
         firstNamePrefixLabel.setVisible(false);
         firstNamePrefixTextField.setVisible(false);
+        familyNameChoiceWidget.setIgnoreCase(true);
         familyNamePrefixLabel.setVisible(false);
         familyNamePrefixTextField.setVisible(false);
         firstNameSuffixLabel.setVisible(false);
@@ -46,23 +47,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
         // add changelistener
         firstNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
         familyNamePrefixTextField.getDocument().addDocumentListener(changeSupport);
-        firstNameTextField.getDocument().addDocumentListener(changeSupport);
-        familyNameTextField.getDocument().addDocumentListener(changeSupport);
+        firstNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeSupport);
+        familyNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeSupport);
         nicknameTextField.getDocument().addDocumentListener(changeSupport);
         firstNameSuffixTextField.getDocument().addDocumentListener(changeSupport);
-
-        Context contextToOpen = Utilities.actionsGlobalContext().lookup(Context.class);
-        if (contextToOpen != null) {
-            Gedcom gedcom = contextToOpen.getGedcom();
-
-            // FIXME : aucocompletion does not respect case sensitivity. Remove for now. Some simple ways to do autocompletion seem to exist as an alternative.
-//            AutoCompleteDecorator.decorate(firstNameTextField, PropertyName.getFirstNames(gedcom, true), true);
-//            InputMap map = firstNameTextField.getInputMap();
-//            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
-//            AutoCompleteDecorator.decorate(familyNameTextField, PropertyName.getLastNames(gedcom, true), true);
-//            map = familyNameTextField.getInputMap();
-//            map.put(KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_BACK_SPACE, 0), DefaultEditorKit.deletePrevCharAction);
-        }
     }
 
     /**
@@ -82,10 +70,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
         nameTypeComboBox = new javax.swing.JComboBox<String>();
         firstNamePrefixLabel = new javax.swing.JLabel();
         firstNamePrefixTextField = new javax.swing.JTextField();
-        firstNameTextField = new javax.swing.JTextField();
+        firstNameChoiceWidget = new genj.util.swing.ChoiceWidget();
         familyNamePrefixLabel = new javax.swing.JLabel();
         familyNamePrefixTextField = new javax.swing.JTextField();
-        familyNameTextField = new javax.swing.JTextField();
+        familyNameChoiceWidget = new genj.util.swing.ChoiceWidget();
         firstNameSuffixTextField = new javax.swing.JTextField();
         nicknameLabel = new javax.swing.JLabel();
         nicknameTextField = new javax.swing.JTextField();
@@ -137,8 +125,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        firstNameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.firstNameTextField.toolTipText"), new Object[] {})); // NOI18N
-        firstNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+        firstNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
@@ -179,23 +166,21 @@ public class NameEditorPanel extends javax.swing.JPanel {
             }
         });
 
-        familyNameTextField.setColumns(16);
-        familyNameTextField.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("NameEditorPanel.familyNameTextField.toolTipText"), new Object[] {})); // NOI18N
-        familyNameTextField.getDocument().addDocumentListener(new DocumentListener() {
+        familyNameChoiceWidget.getTextEditor().getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void changedUpdate(DocumentEvent e) {
-                familyNameModified = true;
+                firstNameModified = true;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                familyNameModified = true;
+                firstNameModified = true;
             }
 
             @Override
             public void insertUpdate(DocumentEvent e) {
-                familyNameModified = true;
+                firstNameModified = true;
             }
         });
 
@@ -269,7 +254,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     .addComponent(firstNamePrefixLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 133, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(firstNamePrefixTextField)
+                    .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
                     .addComponent(familyNamePrefixTextField))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -278,15 +263,17 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     .addComponent(firstnameLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(firstNameTextField)
                     .addGroup(nameEditorPanelLayout.createSequentialGroup()
-                        .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(nicknameTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
-                            .addComponent(familyNameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE))
+                        .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(nicknameTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, nameEditorPanelLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(familyNameChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, 1, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(firstNameSuffixLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(firstNameSuffixTextField))))
+                        .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
+                    .addComponent(firstNameChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         nameEditorPanelLayout.setVerticalGroup(
             nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -298,21 +285,22 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(firstNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(firstNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstNamePrefixLabel)
-                    .addComponent(firstnameLabel))
+                    .addComponent(firstnameLabel)
+                    .addComponent(firstNameChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(familyNamePrefixLabel)
                     .addComponent(familyNamePrefixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(familyNameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(familyNameLabel)
-                    .addComponent(firstNameSuffixLabel))
+                    .addComponent(firstNameSuffixLabel)
+                    .addComponent(familyNameChoiceWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(nameEditorPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nicknameLabel)
-                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(nicknameTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(4, 4, 4))
         );
 
         javax.swing.GroupLayout namePanelLayout = new javax.swing.GroupLayout(namePanel);
@@ -374,15 +362,15 @@ public class NameEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_nameTypeComboBoxActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private genj.util.swing.ChoiceWidget familyNameChoiceWidget;
     private javax.swing.JLabel familyNameLabel;
     private javax.swing.JLabel familyNamePrefixLabel;
     private javax.swing.JTextField familyNamePrefixTextField;
-    private javax.swing.JTextField familyNameTextField;
+    private genj.util.swing.ChoiceWidget firstNameChoiceWidget;
     private javax.swing.JLabel firstNamePrefixLabel;
     private javax.swing.JTextField firstNamePrefixTextField;
     private javax.swing.JLabel firstNameSuffixLabel;
     private javax.swing.JTextField firstNameSuffixTextField;
-    private javax.swing.JTextField firstNameTextField;
     private javax.swing.JLabel firstnameLabel;
     private javax.swing.JCheckBox jCheckBox1;
     private javax.swing.JPanel nameEditorPanel;
@@ -435,7 +423,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * separated by a comma.
              */
             Property givenName = mName.getProperty("GIVN");
-            firstNameTextField.setText(givenName != null ? givenName.getValue() : mName.getFirstName());
+            firstNameChoiceWidget.setValues(PropertyName.getFirstNames(mRoot.getGedcom(), true));
+            firstNameChoiceWidget.setText(givenName != null ? givenName.getValue() : mName.getFirstName());
             firstNameModified = false;
 
             /*
@@ -461,10 +450,11 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * a comma.
              */
             Property familyName = mName.getProperty("SURN");
+            familyNameChoiceWidget.setValues(PropertyName.getLastNames(mRoot.getGedcom(), true));
             if (familyName != null) {
-                familyNameTextField.setText(familyName.getValue());
+                familyNameChoiceWidget.setText(familyName.getValue());
             } else {
-                familyNameTextField.setText(mName.getLastName());
+                familyNameChoiceWidget.setText(mName.getLastName());
             }
             familyNameModified = false;
 
@@ -594,7 +584,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     // mName.addProperty("GIVN", firstNameTextField.getText().trim());
                 } else {
                     logger.log(Level.INFO, "Update property GIVN");
-                    givenName.setValue(firstNameTextField.getText().trim());
+                    givenName.setValue(firstNameChoiceWidget.getText().trim());
                 }
             }
 
@@ -638,7 +628,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     // mName.addProperty("SURN", familyNameTextField.getText().trim());
                 } else {
                     logger.log(Level.INFO, "Update property SURN");
-                    familyName.setValue(familyNameTextField.getText().trim());
+                    familyName.setValue(familyNameChoiceWidget.getText().trim());
                 }
             }
 
@@ -655,9 +645,9 @@ public class NameEditorPanel extends javax.swing.JPanel {
             // ... store changed value
             mName.setName(
                     firstNamePrefixTextField.getText().trim(),
-                    firstNameTextField.getText().trim(),
+                    firstNameChoiceWidget.getText().trim(),
                     familyNamePrefixTextField.getText().trim(),
-                    familyNameTextField.getText().trim(),
+                    familyNameChoiceWidget.getText().trim(),
                     firstNameSuffixTextField.getText().trim(),
                     false);
             logger.log(Level.INFO, "... finished");
