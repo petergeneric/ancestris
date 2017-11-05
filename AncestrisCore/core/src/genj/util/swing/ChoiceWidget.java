@@ -622,10 +622,10 @@ public class ChoiceWidget extends JComboBox {
          */
         private String setSelectedPrefix(String prefix) {
 
-            String strA = prefix;
-            if (isIgnoreCase) {
-                strA = prefix.toLowerCase();
-            }
+//            String strA = prefix;
+//            if (isIgnoreCase) {
+//                strA = prefix.toLowerCase();
+//            }
             
             if (values.length == 0)
                 updateValues();
@@ -633,10 +633,10 @@ public class ChoiceWidget extends JComboBox {
             // try to find a match
             for (int i = 0; i < values.length; i++) {
                 String value = values[i].toString();
-                String strB = value;
-                if (isIgnoreCase) {
-                    strB = value.toLowerCase();
-                }
+//                String strB = value;
+//                if (isIgnoreCase) {
+//                    strB = value.toLowerCase();
+//                }
                 if (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length())) {
                 //if (strB.contains(strA)) {
                     setSelectedItem(value);
