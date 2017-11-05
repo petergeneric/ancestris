@@ -40,6 +40,9 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxEditor;
 import javax.swing.ComboBoxModel;
 import javax.swing.JComboBox;
+import javax.swing.JPopupMenu;
+import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.Timer;
 import javax.swing.event.ChangeListener;
@@ -398,6 +401,19 @@ public class ChoiceWidget extends JComboBox {
      */
     public void removeActionListener(ActionListener l) {
         getEditor().removeActionListener(l);
+    }
+
+    public void setHorizontalScrollBar() {
+        Object comp = getUI().getAccessibleChild(this, 0);
+        if (!(comp instanceof JPopupMenu)) {
+            return;
+        }
+        JPopupMenu popup = (JPopupMenu) comp;
+        if (popup.getComponent(0) instanceof JScrollPane) {
+            JScrollPane scrollPane = (JScrollPane) popup.getComponent(0);
+            scrollPane.setHorizontalScrollBar(new JScrollBar(JScrollBar.HORIZONTAL));
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        }
     }
 
     /**

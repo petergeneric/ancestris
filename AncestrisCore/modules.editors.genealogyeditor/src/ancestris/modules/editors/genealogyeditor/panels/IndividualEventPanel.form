@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="eventInformationTabbedPane" pref="461" max="32767" attributes="0"/>
+          <Component id="eventInformationTabbedPane" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -82,13 +82,13 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="1" attributes="0">
-                                  <Component id="placeTextField" max="32767" attributes="0"/>
+                                  <Component id="placeChoiceWidget" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
                               </Group>
                               <Group type="102" alignment="1" attributes="0">
                                   <Component id="eventNameChoiceWidget" min="-2" pref="261" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace pref="11" max="32767" attributes="0"/>
                                   <Component id="associateButton" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
@@ -126,8 +126,8 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="2" attributes="0">
                               <Component id="editPlaceButton" alignment="2" min="-2" max="-2" attributes="0"/>
-                              <Component id="placeTextField" alignment="2" min="-2" max="-2" attributes="0"/>
                               <Component id="placeLabel" alignment="2" min="-2" pref="15" max="-2" attributes="0"/>
+                              <Component id="placeChoiceWidget" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
@@ -162,12 +162,17 @@
                     </Property>
                   </Properties>
                 </Component>
-                <Component class="javax.swing.JTextField" name="placeTextField">
+                <Component class="genj.util.swing.ChoiceWidget" name="placeChoiceWidget">
                   <Properties>
-                    <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.placeTextField.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+                    <Property name="maximumRowCount" type="int" value="19"/>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.placeChoiceWidget.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                   </Properties>
+                  <AuxValues>
+                    <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new genj.util.swing.ChoiceWidget()"/>
+                    <AuxValue name="JavaCodeGenerator_InitCodePost" type="java.lang.String" value="placeChoiceWidget.setPrototypeDisplayValue(&quot;MMMMMMMMMMMMMMMMMMMMMM&quot;);"/>
+                  </AuxValues>
                 </Component>
                 <Component class="javax.swing.JToggleButton" name="privateRecordToggleButton">
                   <Properties>
