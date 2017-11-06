@@ -1,4 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
     <indexitem text="Aggiungere degli Ascendenti" target="ancestris.app.new.parent"/>
@@ -29,7 +33,6 @@
     <indexitem text="La vista Geografica" target="ancestris.app.view.geo"/>
     <indexitem text="La vista Tabella" target="ancestris.app.view.table"/>
     <indexitem text="La visualizzazione cronologica" target="ancestris.app.view.chrono"/>
-    <indexitem text="La visualizzazione geografica" target="ancestris.app.view.geo"/>
     <indexitem text="Il gestore di files Gedcom" target="ancestris.app.gedcoms.manager"/>
     <indexitem text="Il Navigatorer" target="ancestris.app.view.navigator"/>
     <indexitem text="Le diverse viste" target="ancestris.app.views"/>

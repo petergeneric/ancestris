@@ -7,11 +7,13 @@ and open the template in the editor.
 <map version="2.0">
     <mapID target="ancestris.app.about" url="app-about.html"/>
     <mapID target="ancestris.app.advanced" url="./advanced/advanced_ancestris.html"/>
+    <mapID target="ancestris.app.additional.features" url="./advanced/advanced_additional_features.html"/>
     <mapID target="ancestris.app.aids" url="./basic_use/basic_use_ancestris_different_aids_available.html"/>
     <mapID target="ancestris.app.basic" url="./first_steps/first_steps_basic_ancestris.html"/>
     <mapID target="ancestris.app.blueprints" url="./advanced/advanced_blueprints.html"/>
     <mapID target="ancestris.app.conform.genealogy" url="./first_steps/first_steps_conform_import_genealogy.html"/>
     <mapID target="ancestris.app.discovering" url="./first_steps/first_steps_decouverte_ancestris.html"/>
+    <mapID target="ancestris.app.download" url="./basic_use/basic_use_download_ancestris.html"/>
     <mapID target="ancestris.app.external.links" url="./advanced/advanced_external_links_ancestris.html"/>
     <mapID target="ancestris.app.gedcom.standard" url="./advanced/advanced_gedcom_standard.html"/>
     <mapID target="ancestris.app.gedcoms.manager" url="./first_steps/first_steps_gedcoms_manager.html"/>

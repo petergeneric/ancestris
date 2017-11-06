@@ -47,10 +47,13 @@ Arborescence de l'aide
             <tocitem text="Preferenze - Configurazione" target="ancestris.app.options.menu1" />
             <tocitem text="Le norme Gedcom" target="ancestris.app.gedcom.standard" />
             <tocitem text="I Calchi" target="ancestris.app.blueprints" />
+            <tocitem text="Additional features" target="ancestris.app.additional.features" />
             <tocitem text="Ancestris in modo nomade" target="ancestris.app.nomade" />
             <tocitem text="Scrivere un proprio plugin" target="ancestris.app.plugins.development" />
         </tocitem>
         <tocitem expand="true" text="Gli aiuti di Ancestris" target="ancestris.app.aids">
+            <tocitem text="Download Ancestris" target="ancestris.app.download" />
+            <tocitem text="Ancestris community" target="ancestris.app.external.links" />
         </tocitem>
     </tocitem>
   </tocitem>
