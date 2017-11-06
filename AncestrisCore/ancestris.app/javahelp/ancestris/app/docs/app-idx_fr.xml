@@ -32,7 +32,6 @@ and open the template in the editor.
     <indexitem text="La visualisation géographique" target="ancestris.app.view.geo"/>
     <indexitem text="La Vue des Rapports" target="ancestris.app.view.reports"/>
     <indexitem text="La vue Entité" target="ancestris.app.view.entity"/>
-    <indexitem text="La vue Géographique" target="ancestris.app.view.geo"/>
     <indexitem text="La vue Table" target="ancestris.app.view.table"/>
     <indexitem text="Le gestionnaire de fichiers Gedcom" target="ancestris.app.gedcoms.manager"/>
     <indexitem text="Le Navigateur" target="ancestris.app.view.navigator"/>
