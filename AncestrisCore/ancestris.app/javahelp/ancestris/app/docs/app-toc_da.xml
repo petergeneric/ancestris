@@ -1,57 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
+ï»¿<?xml version="1.0" encoding="UTF-8"?>
 <!--
 arborescence de l'aide ?
 -->
 <!DOCTYPE toc PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp TOC Version 2.0//EN" "http://java.sun.com/products/javahelp/toc_2_0.dtd">
 <toc version="2.0">
-  <tocitem image="toplevelfolder" text="Dit slægtstræ og Ancestris" target="ancestris.app.help.title">
-    <tocitem target="ancestris.app.intro">Et godt råd
+  <tocitem image="toplevelfolder" text="Dit slÃ¦gtstrÃ¦ og Ancestris" target="ancestris.app.help.title">
+    <tocitem target="ancestris.app.intro">Et godt rÃ¥d
     </tocitem>
     <tocitem expand="true" text="Ancestris - Hvad indeholder det" target="ancestris.app.about">
-        <tocitem expand="true" text="Grundlæggende brug" target="ancestris.app.discovering">
-              <tocitem expand="false" text="Første opsætning" target="ancestris.app.basic">
+        <tocitem expand="true" text="GrundlÃ¦ggende brug" target="ancestris.app.discovering">
+              <tocitem expand="false" text="FÃ¸rste opsÃ¦tning" target="ancestris.app.basic">
               </tocitem>
-              <tocitem text="Håndtering af vinduer" target="ancestris.app.windows" />
-              <tocitem text="Håndtering af steder" target="ancestris.app.place.management" />
+              <tocitem text="HÃ¥ndtering af vinduer" target="ancestris.app.windows" />
+              <tocitem text="HÃ¥ndtering af steder" target="ancestris.app.place.management" />
               <tocitem text="Gedcom explorer" target="ancestris.app.gedcoms.manager" />
               <tocitem expand="false" text="Plugins" target="ancestris.app.plugins" />
               <tocitem expand="false" text="Kilder og henvisninger" target="ancestris.app.repo.source.management">
               </tocitem>
         </tocitem>
-        <tocitem expand="true" text="Importer dit slægtstræ" target="ancestris.app.genealogy.import">
-                  <tocitem text="Gør dine data kompatible" target="ancestris.app.conform.genealogy" />
-                  <tocitem text="FAQ - Spørgsmål og svar" target="ancestris.app.import.issue" />
+        <tocitem expand="true" text="Importer dit slÃ¦gtstrÃ¦" target="ancestris.app.genealogy.import">
+                  <tocitem text="GÃ¸r dine data kompatible" target="ancestris.app.conform.genealogy" />
+                  <tocitem text="FAQ - SpÃ¸rgsmÃ¥l og svar" target="ancestris.app.import.issue" />
         </tocitem>
-        <tocitem expand="true" text="Start på mit slægtstræ" target="ancestris.app.new.genealogy">
+        <tocitem expand="true" text="Start pÃ¥ mit slÃ¦gtstrÃ¦" target="ancestris.app.new.genealogy">
                   <tocitem text="Opret den 1. person" target="ancestris.app.new.entity" />
-                  <tocitem text="Tilføj ægtefælle" target="ancestris.app.new.spouse" />
-                  <tocitem text="Tilføj familie" target="ancestris.app.new.family" />
-                  <tocitem text="Tilføj barn" target="ancestris.app.new.child" />
-                  <tocitem text="Tilføj forældre" target="ancestris.app.new.parent" />
+                  <tocitem text="TilfÃ¸j Ã¦gtefÃ¦lle" target="ancestris.app.new.spouse" />
+                  <tocitem text="TilfÃ¸j familie" target="ancestris.app.new.family" />
+                  <tocitem text="TilfÃ¸j barn" target="ancestris.app.new.child" />
+                  <tocitem text="TilfÃ¸j forÃ¦ldre" target="ancestris.app.new.parent" />
         </tocitem>
         <tocitem expand="true" text="De forskellige visninger" target="ancestris.app.views">
-            <tocitem text="Slægtstræ visning" target="ancestris.app.view.tree" />
+            <tocitem text="SlÃ¦gtstrÃ¦ visning" target="ancestris.app.view.tree" />
             <tocitem text="Tabel visning" target="ancestris.app.view.table" />
             <tocitem text="Ancestris editor" target="ancestris.app.view.editors.ancestris" />
             <tocitem text="Gedcom editor" target="ancestris.app.view.editors.gedcom" />
             <tocitem text="Kronologisk visning" target="ancestris.app.view.chrono" />
             <tocitem text="Enkel navigator" target="ancestris.app.view.navigator" />
             <tocitem text="Entitets/enheds visning" target="ancestris.app.view.entity" />
-            <tocitem text="Søge vinduet" target="ancestris.app.view.search" />
+            <tocitem text="SÃ¸ge vinduet" target="ancestris.app.view.search" />
             <tocitem text="Lister og rapporter" target="ancestris.app.view.reports" />
             <tocitem text="Plugins - Oversigt" target="ancestris.app.plugins.liste" />
             <tocitem text="Geografisk visning" target="ancestris.app.view.geo" />
             <tocitem text="Stedliste" target="ancestris.app.juridictions.list" />
         </tocitem>
         <tocitem expand="true" text="Avanceret brug" target="ancestris.app.advanced">
-            <tocitem text="Præferencer og 1. konfiguration" target="ancestris.app.options.menu1" />
+            <tocitem text="PrÃ¦ferencer og 1. konfiguration" target="ancestris.app.options.menu1" />
             <tocitem text="Gedcom specifikationer" target="ancestris.app.gedcom.standard" />
             <tocitem text="Arkitektur - Lag" target="ancestris.app.blueprints" />
             <tocitem text="Additional features" target="ancestris.app.additional.features" />
             <tocitem text="Migrer Ancestris" target="ancestris.app.nomade" />
             <tocitem text="Skriv et plugin" target="ancestris.app.plugins.development" />
         </tocitem>
-        <tocitem expand="true" text="Hvordan får jeg hjælp" target="ancestris.app.aids">
+        <tocitem expand="true" text="Hvordan fÃ¥r jeg hjÃ¦lp" target="ancestris.app.aids">
             <tocitem text="Download Ancestris" target="ancestris.app.download" />
             <tocitem text="Ancestris community" target="ancestris.app.external.links" />        
         </tocitem>
