@@ -6,15 +6,15 @@ and open the template in the editor.
 <!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
 <index version="2.0">
     <indexitem text="Ancestris - Hvad indeholder det" target="ancestris.app.about"/>
-    <indexitem text="Fonctionnalités additionnelles" target="ancestris.app.additional.features"/>
+    <indexitem text="Yderligere funktioner" target="ancestris.app.additional.features"/>
     <indexitem text="Avanceret brug" target="ancestris.app.advanced"/>
     <indexitem text="Hvordan får jeg hjælp" target="ancestris.app.aids"/>
     <indexitem text="Første opsætning" target="ancestris.app.basic"/>
     <indexitem text="Arkitektur - Lag" target="ancestris.app.blueprints"/>
     <indexitem text="Gør dine data kompatible" target="ancestris.app.conform.genealogy"/>
     <indexitem text="Grundlæggende brug" target="ancestris.app.discovering"/>
-    <indexitem text="Téléchargement d'Ancestris" target="ancestris.app.download"/>
-    <indexitem text="Lieux où parler d'Ancestris" target="ancestris.app.external.links"/>
+    <indexitem text="Download Ancestris" target="ancestris.app.download"/>
+    <indexitem text="Brugerportal" target="ancestris.app.external.links"/>
     <indexitem text="Gedcom specifikationer" target="ancestris.app.gedcom.standard"/>
     <indexitem text="Gedcom explorer" target="ancestris.app.gedcoms.manager"/>
     <indexitem text="Importer dit slægtstræ" target="ancestris.app.genealogy.import"/>
