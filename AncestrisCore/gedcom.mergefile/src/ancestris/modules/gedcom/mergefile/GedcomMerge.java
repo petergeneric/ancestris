@@ -224,9 +224,14 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         gedcomMergeResultDialog.setVisible(true);
 
         // Close gedcoms
-        GedcomMgr.getDefault().gedcomClose(rightGedcomContext);
-        GedcomMgr.getDefault().gedcomClose(leftGedcomContext);
-
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                GedcomMgr.getDefault().gedcomClose(rightGedcomContext);
+                GedcomMgr.getDefault().gedcomClose(leftGedcomContext);
+            }
+        });
+        
         // Open merged gedcom if user chooses to do so
         if (gedcomMergeResultDescriptor.getValue() == openMergeGedcomButton) {
             WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
