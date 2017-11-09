@@ -34,6 +34,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         Locale.FRENCH,
         new Locale("hu"),
         Locale.ITALIAN,
+        new Locale("lv"),
         new Locale("nl"),
         new Locale("no"),
         new Locale("pl"),
