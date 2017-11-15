@@ -45,18 +45,13 @@
 package ancestris.welcome.content;
 
 import java.awt.BasicStroke;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.Rectangle;
 import java.awt.Stroke;
 import javax.swing.BorderFactory;
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
@@ -81,7 +76,7 @@ public class ContentSection extends JPanel implements Constants {
         this.showSeparator = showSeparator;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         if (createBorder)
-            setBorder( BorderFactory.createEmptyBorder(20,25,6,25) );   // top, left, bottom, right
+            setBorder( BorderFactory.createEmptyBorder(12,25,5,25) );   // top, left, bottom, right
         if (title != null) {
             JLabel lblTitle = new JLabel( title );
             lblTitle.setFont(SECTION_HEADER_FONT);

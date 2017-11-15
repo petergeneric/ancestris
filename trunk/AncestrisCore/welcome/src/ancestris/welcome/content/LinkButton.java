@@ -105,8 +105,8 @@ public abstract class LinkButton extends JButton
         this.usageTrackingId = usageTrackingId;
 
         if( showBorder ) {
-            setBorder( BorderFactory.createEmptyBorder(5, 11, 5, 11) );
-            setMargin( new Insets(11,11,11,11) );
+            setBorder( BorderFactory.createEmptyBorder(VBORDER, HBORDER, VBORDER, HBORDER) );
+            setMargin( new Insets(HBORDER,HBORDER,HBORDER,HBORDER) );
         } else {
             setBorder( new EmptyBorder(1, 1, 1, 1) );
             setMargin( new Insets(0, 0, 0, 0) );
