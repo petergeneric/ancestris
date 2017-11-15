@@ -22,16 +22,16 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
     @Override
     public int compare(Indi leftIndi, Indi rightIndi) {
         if ((leftIndi.getSex() == rightIndi.getSex())) {
-            // Same birth date ?
-            if (compareDates(leftIndi.getBirthDate(), rightIndi.getBirthDate()) < options.getDateinterval()) {
-                // same death date
-                if (compareDates(leftIndi.getDeathDate(), rightIndi.getDeathDate()) < options.getDateinterval()) {
-                    // Same last names ?
-                    if (compareLastNames(leftIndi, rightIndi)) {
-                        // same firt names
-                        if (compareFirstNames(leftIndi, rightIndi)) {
-                            // Same birth Place ?
-                            if (compareBirthPlace(leftIndi, rightIndi)) {
+            // Same last names ?
+            if (compareLastNames(leftIndi, rightIndi)) {
+                // same firt names
+                if (compareFirstNames(leftIndi, rightIndi)) {
+                    // Same birth date ?
+                    if (compareDates(leftIndi.getBirthDate(), rightIndi.getBirthDate()) < options.getDateinterval()) {
+                        // Same birth Place ?
+                        if (compareBirthPlace(leftIndi, rightIndi)) {
+                            // same death date
+                            if (compareDates(leftIndi.getDeathDate(), rightIndi.getDeathDate()) < options.getDateinterval()) {
                                 if (compareDeathPlace(leftIndi, rightIndi)) {
                                     return 100;
                                 } else {

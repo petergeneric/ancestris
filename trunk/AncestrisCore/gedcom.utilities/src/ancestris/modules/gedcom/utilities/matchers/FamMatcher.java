@@ -20,7 +20,6 @@ public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
         Indi leftHusband = left.getHusband();
         Indi rightHusband = right.getHusband();
         if (leftHusband != null && rightHusband != null) {
-            IndiMatcherOptions indiMatcherOptions = new IndiMatcherOptions();
             if (new IndiMatcher().compare(leftHusband, rightHusband) >= 80) {
                 Indi leftWife = left.getWife();
                 Indi rightWife = right.getWife();
@@ -29,7 +28,7 @@ public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
                         PropertyDate leftwhen = left.getMarriageDate();
                         PropertyDate rightwhen = right.getMarriageDate();
 
-                        if (leftwhen != null && leftwhen.isComparable() && leftwhen != null && rightwhen.isComparable()) {
+                        if (leftwhen != null && leftwhen.isComparable() && rightwhen != null && rightwhen.isComparable()) {
                             if (leftwhen.compareTo(rightwhen) <= options.getDateinterval()) {
                                 return 100;
                             }
