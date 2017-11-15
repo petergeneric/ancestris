@@ -62,7 +62,7 @@ class PreferencesPanel extends JPanel implements Constants {
         b.setIcon(new ImageIcon(ICON));
         add(b);
         JLabel jDesc = new JLabel(description);
-        jDesc.setBorder( BorderFactory.createEmptyBorder(0,9,2,0) );
+        jDesc.setBorder( BorderFactory.createEmptyBorder(5,9,2,0) );
         add(jDesc);
     }
 

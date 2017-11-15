@@ -99,6 +99,8 @@ public interface Constants {
     static final int TEXT_INSETS_RIGHT = 10;
 
     static final Border HEADER_TEXT_BORDER = BorderFactory.createEmptyBorder( 1, TEXT_INSETS_LEFT, 1, TEXT_INSETS_RIGHT );
+    static final int HBORDER = 11, VBORDER = 2;
+
     
     static final int START_PAGE_MIN_WIDTH = 600;
 
