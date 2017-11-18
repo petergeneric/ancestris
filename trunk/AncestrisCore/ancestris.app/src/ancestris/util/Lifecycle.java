@@ -16,6 +16,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Locale;
 import java.util.ResourceBundle;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.LifecycleManager;
@@ -55,8 +58,12 @@ public class Lifecycle {
                 : NbBundle.getBundle(findName(App.class), locale, App.class.getClassLoader());
 
         String msg = message == null ? bundle.getString("NeedStopStart.text") : message;
+        JLabel label = new JLabel(msg);
+        label.setIcon(new ImageIcon(App.class.getResource("/ancestris/app/restart.png")));
+        label.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        label.setIconTextGap(30);
 
-        DialogDescriptor dd = new DialogDescriptor(msg, bundle.getString("NeedStopStart.title"), false, NotifyDescriptor.OK_CANCEL_OPTION, null,
+        DialogDescriptor dd = new DialogDescriptor(label, bundle.getString("NeedStopStart.title"), false, NotifyDescriptor.OK_CANCEL_OPTION, null,
                 new ActionListener() {
                     public void actionPerformed(ActionEvent arg0) {
                         if (arg0.getSource() == NotifyDescriptor.OK_OPTION) {
