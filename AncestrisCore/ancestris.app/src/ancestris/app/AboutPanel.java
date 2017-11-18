@@ -65,6 +65,8 @@ public class AboutPanel extends javax.swing.JPanel {
                     yTop = jScrollPane1.getHeight();
                 }
                 jPanel2.setBounds(jPanel2.getX(), yTop, jPanel2.getWidth(), hSize);
+                jScrollPane1.validate();
+                jScrollPane1.repaint();
             }
         });
         timer.stop();
