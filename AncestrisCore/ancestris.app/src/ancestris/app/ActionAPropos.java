@@ -97,14 +97,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
         }
     }
 
-    // Take last 72 charachters of userdir if too long
-    private String getUserDir() {
-        String str = System.getProperty("netbeans.user");
-        int length = str.length();
-        int index = length > 72 ? length - 72 : 0;
-        return (index > 0 ? "..." : "") + str.substring(index);
-    }
-
     private void displayLicence() {
         String title = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceTitle");
         String text = NbBundle.getMessage(ActionAPropos.class, "CTL_APropos_LicenceText");
@@ -144,15 +136,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 .setOptionType(DialogManager.OK_ONLY_OPTION)
                 .setDialogId("ancestris.about.versions")
                 .show();
-    }
-
-    private String getContributors() {
-        String contributors = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors"); // NOI18N
-        String translators = NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.translators"); // NOI18N
-
-        return NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.contributors.text",
-                "<br>" + contributors.replaceAll(",", "<br>"),
-                "<br>" + translators.replaceAll(",", "<br>") + "<br><br><br>" + "-:-:-:-:-:-:-:-:-:-:-:-:-" + "<br><br><br>"); // NOI18N
     }
 
     private JScrollPane getScrollableText(String text) {

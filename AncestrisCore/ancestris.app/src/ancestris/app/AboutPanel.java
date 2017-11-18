@@ -59,11 +59,10 @@ public class AboutPanel extends javax.swing.JPanel {
 
         timer = new Timer(30, new ActionListener() {
 
-            // to make this work, panel 2 preferred height size has to be equal to h;
             public void actionPerformed(ActionEvent evt) {
                 yTop--;
-                if ((yTop + hSize - 5) < jScrollPane1.getHeight()) {   // 5 is to remove the little overlap we have
-                    yTop = 0;
+                if ((yTop + hSize) < jScrollPane1.getHeight()) {  
+                    yTop = jScrollPane1.getHeight();
                 }
                 jPanel2.setBounds(jPanel2.getX(), yTop, jPanel2.getWidth(), hSize);
             }
@@ -86,7 +85,7 @@ public class AboutPanel extends javax.swing.JPanel {
 
         return NbBundle.getMessage(AboutPanel.class, "AboutPanel.contributors.text",
                 "<br>" + contributors.replaceAll(",", "<br>"),
-                "<br>" + translators.replaceAll(",", "<br>") + "<br><br><br>" + "-:-:-:-:-:-:-:-:-:-:-:-:-" + "<br><br><br>"); // NOI18N
+                "<br>" + translators.replaceAll(",", "<br>") + "<br><br><br><br><br>"); // NOI18N
     }
 
     public void start() {
@@ -118,14 +117,14 @@ public class AboutPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
         jLabel11 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -133,32 +132,32 @@ public class AboutPanel extends javax.swing.JPanel {
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
 
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11)); // NOI18N
-        jLabel3.setText(Lookup.getDefault().lookup(Version.class).getVersionString());
-
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
-        jLabel2.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel2.text")); // NOI18N
-
         jLabel1.setBackground(new java.awt.Color(240, 176, 111));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("");
         jLabel1.setPreferredSize(new java.awt.Dimension(640, 335));
         jLabel1.setIcon(new ImageIcon(App.class.getResource("/ancestris/app/splash.gif")));
 
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+        jLabel2.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel2.text")); // NOI18N
+
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 11)); // NOI18N
+        jLabel3.setText(Lookup.getDefault().lookup(Version.class).getVersionString());
+
         jLabel5.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel5.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel5.text")); // NOI18N
-
-        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
-        jLabel6.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel6.text")); // NOI18N
-
-        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
-        jLabel8.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel8.text")); // NOI18N
 
         jLabel9.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel9.setText(java);
 
+        jLabel6.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+        jLabel6.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel6.text")); // NOI18N
+
         jLabel10.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel10.setText(systeme);
+
+        jLabel8.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+        jLabel8.setText(org.openide.util.NbBundle.getMessage(AboutPanel.class, "AboutPanel.jLabel8.text")); // NOI18N
 
         jLabel11.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
         jLabel11.setText(userdir);
