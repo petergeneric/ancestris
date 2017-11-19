@@ -58,7 +58,10 @@ public class ATable extends JTable {
     private Collator cachedCollator = null;
 
     private Map<TableModel, ATableRowSorter<TableModel>> sorters;
-    private ATableRowSorter<TableModel> currentSorter;
+    private ATableRowSorter<TableModel> currentSorter, oldSorter;
+    private TableModel currentTableModel;
+    private RowSorterListener rowSorterListener;
+    private TableModelListener tableModelListener;
     private ATableFilterWidget filterText;
     private JPanel shortcuts;
     private List<ShortCut> shortcutsList;
@@ -90,10 +93,19 @@ public class ATable extends JTable {
         if (sorters == null) {
             sorters = new HashMap<TableModel, ATableRowSorter<TableModel>>();
         }
+        oldSorter = currentSorter;
         currentSorter = sorters.get(tableModel);
         if (currentSorter == null) {                                            
+            // remove old listeners
+            if (oldSorter != null) {
+                oldSorter.removeRowSorterListener(rowSorterListener);
+            }
+            if (currentTableModel != null) {
+                currentTableModel.removeTableModelListener(tableModelListener);
+            }
+            // add new ones
             currentSorter = new ATableRowSorter<TableModel>(tableModel);
-            currentSorter.addRowSorterListener(new RowSorterListener() {
+            currentSorter.addRowSorterListener(rowSorterListener = new RowSorterListener() {
                 @Override
                 public void sorterChanged(RowSorterEvent e) {
                     createShortcuts();
@@ -101,7 +113,7 @@ public class ATable extends JTable {
             });
             sorters.put(tableModel, currentSorter);
             // listen to changes for generating shortcuts
-            tableModel.addTableModelListener(new TableModelListener() {
+            tableModel.addTableModelListener(tableModelListener = new TableModelListener() {
                 @Override
                 public void tableChanged(TableModelEvent e) {
                     if (e.getLastRow() == Integer.MAX_VALUE) {
@@ -116,6 +128,9 @@ public class ATable extends JTable {
         if (filterText != null) {
             filterText.setSorter(currentSorter);
         }
+        
+        // remember current model
+        currentTableModel = tableModel;
     }
 
     public void setFilterWidget(ATableFilterWidget filter) {
