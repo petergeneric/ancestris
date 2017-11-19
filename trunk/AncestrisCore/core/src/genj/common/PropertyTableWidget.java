@@ -550,7 +550,7 @@ public class PropertyTableWidget extends JPanel {
                 tableModels = new HashMap<PropertyTableModel, Model>();
             }
             Model model = tableModels.get(propertyModel);
-            if (model == null) {
+            if (model == null || reset) {
                 model = new Model(propertyModel);
                 tableModels.put(propertyModel, model);
             }
