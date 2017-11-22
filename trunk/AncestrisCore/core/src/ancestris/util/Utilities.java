@@ -23,6 +23,10 @@ import genj.gedcom.TagPath;
 import java.awt.Cursor;
 import java.awt.Frame;
 import java.awt.Image;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.util.Collection;
@@ -294,5 +298,30 @@ public class Utilities {
         return entities;
     }
 
+    
+    
+    public static File getResourceAsFile(Class clazz, String resourcePath) {
+        try {
+            InputStream in = clazz.getResourceAsStream(resourcePath);
+            if (in == null) {
+                return null;
+            }
+
+            File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
+            tempFile.deleteOnExit();
+
+            FileOutputStream out = new FileOutputStream(tempFile);
+            //copy stream
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = in.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            return tempFile;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     
 }
