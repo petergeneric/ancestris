@@ -36,6 +36,7 @@ import org.openide.util.NbBundle;
  */
 public class ActionAPropos extends JDialog implements ActionListener {
 
+    private JButton jbAbout = new JButton();
     private JButton jbContrib = new JButton();
     private JButton jbLicence = new JButton();
     private JButton jbVersions = new JButton();
@@ -43,6 +44,15 @@ public class ActionAPropos extends JDialog implements ActionListener {
 
     /** Creates new form ActionAPropos */
     public ActionAPropos() {
+        jbAbout.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jbAbout.text")); // NOI18N
+        jbAbout.setFocusable(false);
+        jbAbout.addActionListener(new java.awt.event.ActionListener() {
+
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                displayFlyerBox();
+            }
+        });
+
         jbContrib.setText(org.openide.util.NbBundle.getMessage(ActionAPropos.class, "ActionAPropos.jbContrib.text")); // NOI18N
         jbContrib.setFocusable(false);
         jbContrib.addActionListener(new java.awt.event.ActionListener() {
@@ -82,7 +92,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 DialogDescriptor.DEFAULT_ALIGN,
                 HelpCtx.DEFAULT_HELP,
                 null);
-        descriptor.setAdditionalOptions(new Object[]{jbContrib, jbLicence, jbVersions});
+        descriptor.setAdditionalOptions(new Object[]{jbAbout, jbContrib, jbLicence, jbVersions});
         descriptor.setClosingOptions(new Object[]{DialogDescriptor.CLOSED_OPTION});
         Dialog dlg = null;
         try {
@@ -95,6 +105,12 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 dlg.dispose();
             }
         }
+    }
+
+    private void displayFlyerBox() {
+        FlyerPanel flyerPanel = new FlyerPanel();
+        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "CTL_APropos_Flyer"), flyerPanel).setMessageType(DialogManager.PLAIN_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION).setResizable(false).show();
     }
 
     private void displayLicence() {
