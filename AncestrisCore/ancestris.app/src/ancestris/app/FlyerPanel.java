@@ -105,9 +105,7 @@ public class FlyerPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            String filename = "resources/Flyer_page_" + TextOptions.getInstance().getOutputLocale(Locale.getDefault());
-            filename = filename.replace("__", "");  // for some strange reason, portuguese is "pt_PT__" rather than "pt" ?!?!
-            filename += ".pdf";
+            String filename = "resources/Flyer_page_" + TextOptions.getInstance().getOutputLocale(Locale.getDefault()) + ".pdf";
             File file = Utilities.getResourceAsFile(getClass(), filename);
             if (file == null || !file.exists()) {
                 filename = "resources/Flyer_page_en.pdf";
