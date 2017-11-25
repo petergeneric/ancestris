@@ -190,6 +190,7 @@
             <arg value="${app.name}.app"/>
         </exec>
     </target>
+    
     <target name="build-bundles" description="Builds the zip bundles for translators">
         <property name="parent.dir" location=".."/>
         <basename property="current.dirName" file="${basedir}"/>
