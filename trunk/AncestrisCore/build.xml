@@ -184,6 +184,14 @@
         <!-- Note that file permissions will not be stored in the resulting zipfile.
             so zip task is inappropriate to create a zip archive
         -->
+        <copy file="${basedir}/Info.plist" tofile="${dist.dir}/${app.name}.app/Contents/Info.plist">
+            <filterchain>
+                <replacestring from="$${app.title}" to="Ancestris"/>
+                <replacestring from="$${app.version}" to="0.10"/>
+                <replacestring from="$${branding.token}" to="${branding.token}"/>
+                <replacestring from="$${app.name}" to="${app.name}"/>
+            </filterchain>
+        </copy>        
         <exec executable="zip" dir="${dist.dir}">
             <arg value="-yrq"/>
             <arg value="${app.name}-osx.zip"/>
