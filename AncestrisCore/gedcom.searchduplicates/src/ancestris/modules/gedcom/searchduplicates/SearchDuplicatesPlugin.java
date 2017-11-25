@@ -24,9 +24,10 @@ import org.openide.util.lookup.ServiceProvider;
  * @author lemovice left and right entities could be the same.
  */
 @ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
-@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=Duplicate {0} of {1} - Estimate matching : {2}",
+@NbBundle.Messages({"SearchDuplicatesPlugin.duplicateIndexLabel.text=Probability : {2}% - Duplicate {0} of {1}",
     "SearchDuplicatesPlugin.firstButton=Go to first duplicate",
     "SearchDuplicatesPlugin.previousButton=Go to previous duplicate",
+    "SearchDuplicatesPlugin.swapButton=Swap left and right entities",
     "SearchDuplicatesPlugin.nextButton=Go to next duplicate",
     "SearchDuplicatesPlugin.lastButton=Go to last duplicate",
     "SearchDuplicatesPlugin.mergeButton=<html>Merge checked properties of the right into the entity of the left,<br>then deletes the entity of the right</html>",
@@ -64,12 +65,15 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
 
     @Override
     public void run() {
+        //final LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList<PotentialMatch<? extends Entity>>();
         final LinkedList<PotentialMatch<? extends Entity>> matchesLinkedList = new LinkedList<PotentialMatch<? extends Entity>>();
         final HashMap<String, Integer> duplicatesHashMap = new HashMap<String, Integer>();
         if (gedcom == null) {
             return;
         }
         try {
+            
+            // Get matches by block of entity type
             for (String tag : entities2Ckeck) {
                 List<? extends Entity> entities = new ArrayList<Entity>(gedcom.getEntities(tag));
 
@@ -89,23 +93,40 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                 } else if (tag.equals(Gedcom.OBJE)) {
                     (entitiesMatchers.get(tag)).setOptions((MediaMatcherOptions) selectedOptions.get(Gedcom.OBJE));
                 }
+                // Get block
                 List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
-                Collections.sort(potentialMatches, new Comparator<PotentialMatch>() {
+                
+                // Swap matches so that left entity is with smaller id
+                for (PotentialMatch<? extends Entity> e : potentialMatches) {
+                    String idLeft = e.getLeft().getId();
+                    String idRight = e.getRight().getId();
+                    if (idLeft.compareToIgnoreCase(idRight) > 0) {
+                        e.swap();
+                    }
+                }
+                
+                // Sort matches by certainty then entity name
+                Collections.sort(potentialMatches, new Comparator<PotentialMatch<? extends Entity>>() {
                     @Override
-                    public int compare(PotentialMatch e1, PotentialMatch e2) {
-                        return e2.getCertainty() - e1.getCertainty();
+                    public int compare(PotentialMatch<? extends Entity> e1, PotentialMatch<? extends Entity> e2) {
+                        if (e2.getCertainty() - e1.getCertainty() != 0) {
+                            return e2.getCertainty() - e1.getCertainty();
+                        }
+                        return e1.getLeft().toString(true).toLowerCase().compareTo(e2.getLeft().toString(true).toLowerCase());
                     }
                 });
                 matchesLinkedList.addAll(potentialMatches);
                 duplicatesHashMap.put(tag, potentialMatches.size());
             }
-
+            
+            // Display them
             SwingUtilities.invokeLater(new Runnable() {
                 ResultPanel entityViewPanel = new ResultPanel(gedcom);
                 DialogDescriptor checkDuplicatePanelDescriptor;
                 int linkedListIndex = -1;
                 final JButton firstButton = new JButton();
                 final JButton previousButton = new JButton();
+                final JButton swapButton = new JButton();
                 final JButton nextButton = new JButton();
                 final JButton lastButton = new JButton();
                 final JButton mergeButton = new JButton();
@@ -133,6 +154,17 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                         @Override
                         public void actionPerformed(java.awt.event.ActionEvent evt) {
                             previousButtonActionPerformed(evt);
+                        }
+                    });
+                    swapButton.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/gedcom/searchduplicates/swap.png")));
+                    swapButton.setToolTipText(SearchDuplicatesPlugin_swapButton()); // NOI18N
+                    swapButton.setEnabled(true);
+                    swapButton.setDefaultCapable(true);
+                    swapButton.putClientProperty("defaultButton", Boolean.FALSE); //NOI18N
+                    swapButton.addActionListener(new java.awt.event.ActionListener() {
+                        @Override
+                        public void actionPerformed(java.awt.event.ActionEvent evt) {
+                            swapButtonActionPerformed(evt);
                         }
                     });
                     nextButton.setDefaultCapable(true);
@@ -170,13 +202,14 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     closeButton.setToolTipText(SearchDuplicatesPlugin_closeButton()); // NOI18N
                     closeButton.setDefaultCapable(true);
                     closeButton.setEnabled(true);
-                    // There is duplicates let displaying them
+                    
+                    // There are duplicates let displaying them
                     if (matchesLinkedList.size() > 0) {
                         checkDuplicatePanelDescriptor = new DialogDescriptor(
                                 entityViewPanel,
                                 "",
                                 false,
-                                new Object[]{firstButton, previousButton, nextButton, lastButton, mergeButton, closeButton},
+                                new Object[]{firstButton, previousButton, swapButton, nextButton, lastButton, mergeButton, closeButton},
                                 mergeButton,
                                 DialogDescriptor.DEFAULT_ALIGN,
                                 null,
@@ -231,6 +264,12 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                         nextButton.setEnabled(true);
                         lastButton.setEnabled(true);
                     }
+                }
+
+                private void swapButtonActionPerformed(java.awt.event.ActionEvent evt) {
+                    PotentialMatch<? extends Entity> e = matchesLinkedList.get(linkedListIndex);
+                    e.swap();
+                    entityViewPanel.setEntities(e);
                 }
 
                 private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {
