@@ -59,7 +59,10 @@ public class AutoCompletion extends PlainDocument {
                     comboBox.setPopupVisible(showPopup);
                 } else if (e.getKeyCode() == KeyEvent.VK_ENTER) {
                     if (comboBox.isPopupVisible()) {
-                        setText(comboBox.getModel().getSelectedItem().toString());
+                        String text = comboBox.getModel().getSelectedItem().toString().trim();
+                        if (!text.isEmpty()) {
+                            setText(text);
+                        }
                     }
                     showPopup = false;
                     comboBox.setPopupVisible(showPopup);
