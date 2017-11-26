@@ -103,7 +103,7 @@ public class PropertyName extends Property {
     public String getFirstName(boolean displayValue, boolean useSepOption) {
         if (displayValue) {
             if (useSepOption) {
-                return firstName.replaceAll(" *, *", GedcomOptions.getInstance().spaceIsSeparator() ? ", " : " ");    // spaceIsSeparator actually means commaIsSep
+                return firstName.replaceAll(" *, *", GedcomOptions.getInstance().replaceSpaceSeparatorWithComma() ? ", " : " ");    // replaceSpaceSeparatorWithComma actually means commaIsSep
             } else {
                 return firstName.replaceAll(" *, *", " ");
             }
@@ -445,12 +445,12 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memory
-        boolean sis = GedcomOptions.getInstance().spaceIsSeparator();
-        first = normalizeName(first, sis);
+        boolean rswc = GedcomOptions.getInstance().replaceSpaceSeparatorWithComma();
+        first = normalizeName(first, rswc);
         last = normalizeName(last, false);
-        nPfx = normalizeName(nPfx, sis);
-        sPfx = normalizeName(sPfx, sis);
-        suff = normalizeName(suff, sis);
+        nPfx = normalizeName(nPfx, rswc);
+        sPfx = normalizeName(sPfx, rswc);
+        suff = normalizeName(suff, rswc);
 
         // replace all last names?
         if (replaceAllLastNames) {
@@ -464,13 +464,13 @@ public class PropertyName extends Property {
         }
 
         // remember us
-        remember(first, last);
+        remember(first, last, rswc);
 
         // update GIVN|SURN - IF we have a parent
         if (hasParent && !isBusy) {
             isBusy = true;
             boolean add = GedcomOptions.getInstance().getAddNameSubtags();
-            addNameSubProperty(add || !nPfx.isEmpty() || first.matches(".*[^,] .*"), "GIVN", first);    // GIVN forced if name prefix not empty or FIRST contains a name not followed by a comma ","
+            addNameSubProperty(add || !nPfx.isEmpty() || (first.matches(".*[^,] .*") && rswc), "GIVN", first);    // GIVN forced if name prefix not empty or FIRST contains a name not followed by a comma ","
             addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);             // SURN forced if surname prefix not empty and SURN contains commas
             addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);                                   // name prefix forced if name prefix not empty
             addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);                                   // surname prefix forced if surname prefix not empty
@@ -524,12 +524,12 @@ public class PropertyName extends Property {
         sub.setReadOnly(true);
     }
 
-    private static String normalizeName(String namePiece, boolean spaceIsSeparator) {
+    private static String normalizeName(String namePiece, boolean replaceSpaceSeparatorWithComma) {
         if (namePiece.isEmpty()) {
             return "";
         }
         String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
-        if (spaceIsSeparator) {
+        if (replaceSpaceSeparatorWithComma) {
             result = result.replaceAll(" +", ",");
         }
         return result.replaceAll(",", ", ");
@@ -547,7 +547,7 @@ public class PropertyName extends Property {
         // continue
         super.afterAddNotify();
         // our change to remember the last name
-        remember(firstName, lastName);
+        remember(firstName, lastName, GedcomOptions.getInstance().replaceSpaceSeparatorWithComma());
         // done
     }
 
@@ -561,7 +561,7 @@ public class PropertyName extends Property {
     @Override
     void beforeDelNotify() {
         // forget value
-        remember("", "");
+        remember("", "", false);
         // continue
         super.beforeDelNotify();
         // done
@@ -743,7 +743,7 @@ public class PropertyName extends Property {
     /**
      * Remember a last name
      */
-    private void remember(String newFirst, String newLast) {
+    private void remember(String newFirst, String newLast, boolean replaceSpaceSeparatorWithComma) {
         // got access to a reference set?
         Gedcom gedcom = getGedcom();
         if (gedcom == null) {
@@ -763,7 +763,11 @@ public class PropertyName extends Property {
             refSet.remove(firstName, this);
         }
         if (newFirst.length() > 0) {
-            refSet.add(newFirst, this);
+            String f = newFirst;
+            if (!replaceSpaceSeparatorWithComma) {
+                f = f.replace(",", " ").replaceAll(" +", " ");
+            }
+            refSet.add(f, this);
         }
         // done
     }

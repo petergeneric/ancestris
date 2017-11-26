@@ -61,7 +61,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         namesPanel = new javax.swing.JPanel();
         cbNamesInUppercase = new javax.swing.JCheckBox();
         cbAddNameSubtags = new javax.swing.JCheckBox();
-        cbSpaceIsSep = new javax.swing.JCheckBox();
+        cbReplaceSpaceWithComma = new javax.swing.JCheckBox();
         cbSameSpouseName = new javax.swing.JCheckBox();
         cbGivenName = new javax.swing.JCheckBox();
         jtGivenTag = new javax.swing.JTextField();
@@ -96,8 +96,8 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
         cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbSpaceIsSep, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.text")); // NOI18N
-        cbSpaceIsSep.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSpaceIsSep.toolTipText")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(cbReplaceSpaceWithComma, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReplaceSpaceWithComma.text")); // NOI18N
+        cbReplaceSpaceWithComma.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReplaceSpaceWithComma.toolTipText")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(cbSameSpouseName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.text")); // NOI18N
         cbSameSpouseName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.toolTipText")); // NOI18N
@@ -129,7 +129,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cbNamesInUppercase)
                             .addComponent(cbAddNameSubtags)
-                            .addComponent(cbSpaceIsSep)
+                            .addComponent(cbReplaceSpaceWithComma)
                             .addComponent(cbSameSpouseName))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -141,7 +141,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbAddNameSubtags)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbSpaceIsSep)
+                .addComponent(cbReplaceSpaceWithComma)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbSameSpouseName)
                 .addGap(2, 2, 2)
@@ -400,7 +400,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         cbGivenName.setSelected(!gedcomOptions.getGivenTag().isEmpty());
         jtGivenTag.setText(gedcomOptions.getGivenTag());
         cbGivenNameActionPerformed(new java.awt.event.ActionEvent(this,0,null));
-        cbSpaceIsSep.setSelected(gedcomOptions.spaceIsSeparator());
+        cbReplaceSpaceWithComma.setSelected(gedcomOptions.replaceSpaceSeparatorWithComma());
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
 
         // ID Numbers
@@ -427,7 +427,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         gedcomOptions.setUpperCaseNames(cbNamesInUppercase.isSelected());
         gedcomOptions.setAddNameSubtags(cbAddNameSubtags.isSelected());
         gedcomOptions.setGivenTag(cbGivenName.isSelected()?jtGivenTag.getText().trim():"");
-        gedcomOptions.setSpaceIsSeparator(cbSpaceIsSep.isSelected());
+        gedcomOptions.setReplaceSpaceSeparatorWithComma(cbReplaceSpaceWithComma.isSelected());
         gedcomPrefs.put("setWifeLastname", getNamesSpouse());
 
         // ID Numbers
@@ -465,10 +465,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox cbGivenName;
     private javax.swing.JCheckBox cbNamesInUppercase;
+    private javax.swing.JCheckBox cbReplaceSpaceWithComma;
     private javax.swing.JCheckBox cbReuseIDs;
     private javax.swing.JCheckBox cbSameSpouseName;
     private javax.swing.JCheckBox cbSaveEncoding;
-    private javax.swing.JCheckBox cbSpaceIsSep;
     private javax.swing.JCheckBox cbSplitJuridictions;
     private javax.swing.JCheckBox cbUseSpace;
     private javax.swing.JComboBox cboxDefaultEditor;

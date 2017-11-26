@@ -419,11 +419,11 @@ public class GedcomOptions {
      * True if space is considered as separator (same as comma) in name pieces
      * defaults to true
      */
-    public boolean spaceIsSeparator() {
+    public boolean replaceSpaceSeparatorWithComma() {
         return getPreferences().get(SPACE_IS_SEPARATOR, true);
     }
 
-    public void setSpaceIsSeparator(boolean value) {
+    public void setReplaceSpaceSeparatorWithComma(boolean value) {
         getPreferences().put(SPACE_IS_SEPARATOR, value);
     }
 
