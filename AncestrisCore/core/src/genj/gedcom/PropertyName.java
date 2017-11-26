@@ -103,7 +103,7 @@ public class PropertyName extends Property {
     public String getFirstName(boolean displayValue, boolean useSepOption) {
         if (displayValue) {
             if (useSepOption) {
-                return firstName.replaceAll(" *, *", GedcomOptions.getInstance().replaceSpaceSeparatorWithComma() ? ", " : " ");    // replaceSpaceSeparatorWithComma actually means commaIsSep
+                return firstName.replaceAll(" *, *", GedcomOptions.getInstance().replaceSpaceSeparatorWithComma() ? ", " : " ");    
             } else {
                 return firstName.replaceAll(" *, *", " ");
             }
@@ -616,7 +616,9 @@ public class PropertyName extends Property {
         l = stripPrefix(l, spfx);
 
         // Format GIVN Tag (' ' char replaced by ', ')
-        f = f.replaceAll(" +", ", ");// Normalize
+        if (GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()) {
+            f = f.replaceAll(" +", ", ");// Normalize
+        }
 
         // Replace first, last and suffix by tag values if present
         if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
