@@ -246,7 +246,13 @@ public class PropertyReader {
           while (cont) {
               nextLine = in.readLine();
               if (nextLine != null) {
-                  String bit = nextLine.substring(0, nextLine.indexOf(' '));
+                  String bit = "";
+                  if (!nextLine.trim().isEmpty()) {
+                      int i = nextLine.indexOf(' ');
+                      if (i != -1) {
+                          bit = nextLine.substring(0, i);
+                      }
+                  }
                   if (bit.length() == 1 && bit.matches("[0-9]")) {
                       // next line seems to be ok, reset and continue;
                       try {
