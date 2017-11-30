@@ -54,8 +54,6 @@ public class App {
      */
     public static void main(final String[] args) {
 
-        System.setProperty("com.apple.mrj.application.apple.menu.about.name", "Ancestris");  // Useful for Mac OS X only. Has to be rght after "main". // does not have any effect apparently
-        
         // we're ready to be run twice
         synchronized (App.class) {
             if (startup == null) {
@@ -162,11 +160,6 @@ public class App {
                 // Startup Information
                 EnvironmentChecker.log();
 
-                // Look and Feel, only for local development & testing : do not let code to be executed in the uploaded version
-                //UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-                //UIManager.setLookAndFeel("com.jtattoo.plaf.mint.MintLookAndFeel");
-                //UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-                
                 // Patch up Ancestris menu for Mac if applicable
                 LOG.info("Controlling OS...");
                 if (EnvironmentChecker.isMac()) {
@@ -186,15 +179,15 @@ public class App {
                 center = new ControlCenter();
                 
                 // Done
-                new java.util.Timer().schedule(
-                        new java.util.TimerTask() {
-                            @Override
-                            public void run() {
-                                System.gc();
-                            }
-                        },
-                        10000
-                );
+//                new java.util.Timer().schedule(
+//                        new java.util.TimerTask() {
+//                            @Override
+//                            public void run() {
+//                                System.gc();
+//                            }
+//                        },
+//                        10000
+//                );
 
                 LOG.info("/Startup");
                 LOG.info("   ");
