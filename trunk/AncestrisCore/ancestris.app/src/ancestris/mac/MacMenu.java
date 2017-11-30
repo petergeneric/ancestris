@@ -42,6 +42,7 @@ import javax.swing.UIManager;
  * -----------------
  * 
  * 2017-11-30 : found this link with more recent information. Maybe better. To try. But nothing on changing the language of the sub-menu items...
+ * - https://developer.apple.com/library/content/documentation/Java/Conceptual/Java14Development/03-JavaDeployment/JavaDeployment.html
  * - https://stackoverflow.com/questions/28560911/internationalization-of-native-mac-menu-bar
  * - http://moomoohk.github.io/snippets/java_osx.html
  * - https://developer.apple.com/library/content//documentation/UserExperience/Conceptual/OSXHIGuidelines/MenuBarMenus.html#//apple_ref/doc/uid/20000957-CH29-SW3
