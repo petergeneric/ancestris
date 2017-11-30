@@ -40,7 +40,14 @@ import javax.swing.UIManager;
  * -----------------
  *  Quit ancestris
  * -----------------
-  * 
+ * 
+ * 2017-11-30 : found this link with more recent information. Maybe better. To try. But nothing on changing the language of the sub-menu items...
+ * - https://stackoverflow.com/questions/28560911/internationalization-of-native-mac-menu-bar
+ * - http://moomoohk.github.io/snippets/java_osx.html
+ * - https://developer.apple.com/library/content//documentation/UserExperience/Conceptual/OSXHIGuidelines/MenuBarMenus.html#//apple_ref/doc/uid/20000957-CH29-SW3
+ * 
+ * 
+ * 
  * @author frederic
  */
 public class MacMenu {
