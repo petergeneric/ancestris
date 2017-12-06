@@ -105,11 +105,13 @@ public class FlyerPanel extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         try {
-            String filename = "resources/Flyer_page_" + TextOptions.getInstance().getOutputLocale(Locale.getDefault()) + ".pdf";
-            File file = Utilities.getResourceAsFile(getClass(), filename);
+            String ext = ".pdf";
+            String prefix = "resources/Flyer_page_";
+            String filename = prefix + TextOptions.getInstance().getOutputLocale(Locale.getDefault()) + ext;
+            File file = Utilities.getResourceAsFile(getClass(), filename, ext);
             if (file == null || !file.exists()) {
-                filename = "resources/Flyer_page_en.pdf";
-                file = Utilities.getResourceAsFile(getClass(), filename);
+                filename = prefix + "en" + ext;
+                file = Utilities.getResourceAsFile(getClass(), filename, ext);
             }
             Desktop.getDesktop().open(file);
         } catch (Exception ex) {

@@ -300,14 +300,14 @@ public class Utilities {
 
     
     
-    public static File getResourceAsFile(Class clazz, String resourcePath) {
+    public static File getResourceAsFile(Class clazz, String resourcePath, String ext) {
         try {
             InputStream in = clazz.getResourceAsStream(resourcePath);
             if (in == null) {
                 return null;
             }
 
-            File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ".tmp");
+            File tempFile = File.createTempFile(String.valueOf(in.hashCode()), ext);
             tempFile.deleteOnExit();
 
             FileOutputStream out = new FileOutputStream(tempFile);
