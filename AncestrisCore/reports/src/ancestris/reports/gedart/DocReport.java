@@ -533,6 +533,7 @@ public class DocReport {
 	}
 	public class reportOptions {
 		private ReportGedart report;
+                private TextOptions OPTIONS = TextOptions.getInstance();
 
 		// TODO: use reflexion/introspection in future?
 		reportOptions(ReportGedart rep){
@@ -544,5 +545,6 @@ public class DocReport {
 		public boolean getShowIndex() {return report.includeIndex;}
 		public boolean getShowIndis() {return report.includeIndi;}
 		public boolean getShowFams() {return report.includeFam;}
+                public String getLocale() {return OPTIONS.getOutputLocale().getLanguage();}
 	}
 }
