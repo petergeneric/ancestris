@@ -68,18 +68,23 @@ public final class FamilyPanel extends JPanel {
 
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
         husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
+        husband.setAntialiasing(true);
 
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
         wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
+        wife.setAntialiasing(true);
 
         husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
         husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
+        husbFather.setAntialiasing(true);
 
         husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
         husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
+        husbMother.setAntialiasing(true);
 
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
         familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));  // NOI18N
+        familySpouse.setAntialiasing(true);
 
         // Childs
         childrenPanel = new EntitiesPanel(jScrollPane1) {
