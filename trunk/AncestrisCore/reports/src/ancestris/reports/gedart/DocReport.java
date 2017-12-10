@@ -372,6 +372,7 @@ public class DocReport {
 		}
 		public reportEntity getSubmitter() {return new reportEntity(theGedcom.getSubmitter());}
 		public String getFileName() { return theGedcom.getOrigin().getFileName(); }
+                public String getProperty(String tagPath) { return theGedcom.getFirstEntity("HEAD").getPropertyByPath("HEAD:" + tagPath).getDisplayValue(); }
 	}
 	
 	public class reportPropertyAge extends reportProperty{
