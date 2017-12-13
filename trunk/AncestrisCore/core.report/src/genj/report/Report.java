@@ -372,7 +372,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
                 .setDefaultBadgeProvider()
                 .setTitle(title)
                 .setApproveText(button)
-                .setDefaultExtension((extension != null && !extension.isEmpty()) ? extension : FileChooserBuilder.getImageFilter().getExtensions()[0])
+                .setDefaultExtension((extension != null && !extension.isEmpty()) ? extension : FileChooserBuilder.getTextFilter().getExtensions()[0])
                 .setFileFilter(new FileExtensionFilter(extension))
                 .setAcceptAllFileFilterUsed(true)
                 .setFileHiding(true)
