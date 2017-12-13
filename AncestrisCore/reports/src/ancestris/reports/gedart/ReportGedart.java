@@ -184,7 +184,7 @@ public class ReportGedart extends Report {
         thetemplate = usetemplate.getPath();
         LOG.log(Level.INFO, "template:{0}", thetemplate);
         extension = usetemplate.getFormat();
-        if (extension != null && !extension.isEmpty()) {
+        if (extension == null || extension.isEmpty()) {
             extension = "html";
         }
         // if only one item, special case
