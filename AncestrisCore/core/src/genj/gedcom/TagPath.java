@@ -125,7 +125,7 @@ public class TagPath implements Comparable{
     
     // check qualifier
     int qualifier = -1;
-    int separator = tag.indexOf('#');
+    int separator = tag.indexOf(SELECTOR);
     if (separator>0) {
       try {
         qualifier = Integer.parseInt(tag.substring(separator+1));
@@ -292,7 +292,7 @@ public class TagPath implements Comparable{
       if (i>0) result.append(':');
       result.append(tags[i]);
       if (qualifiers[i]>=0) {
-        result.append('#');
+        result.append(SELECTOR);
         result.append(qualifiers[i]);
       }
     }
