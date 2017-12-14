@@ -520,29 +520,34 @@ public class Fam extends Entity {
             return;
         }
 
-        // only one?
+        // swivel pointers
+        PropertyFamilySpouse famsh = null;
+        PropertyFamilySpouse famsw = null;
+
+        if (husband != null) {
+            famsh = (PropertyFamilySpouse) husband.getTarget();
+            husband.unlink();
+        }
+
+        if (wife != null) {
+            famsw = (PropertyFamilySpouse) wife.getTarget();
+            wife.unlink();
+        }
+
+        // only one? (leave this code after unlink)
         if (husband == null) {
-            setHusband(getWife());
+            setHusband((Indi) famsw.getEntity());
+            delProperty(wife);
             return;
         }
 
         if (wife == null) {
-            setWife(getHusband());
+            setWife((Indi) famsh.getEntity());
+            delProperty(husband);
             return;
         }
 
-        // swivel pointers
-        PropertyFamilySpouse famsh;
-        PropertyFamilySpouse famsw;
-
-        famsh = (PropertyFamilySpouse) husband.getTarget();
-        husband.unlink();
-
-        famsw = (PropertyFamilySpouse) wife.getTarget();
-        wife.unlink();
-
         husband.link(famsw);
-
         wife.link(famsh);
 
     }
