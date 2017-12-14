@@ -12,6 +12,8 @@
 package ancestris.modules.gedcom.searchduplicates;
 
 import ancestris.modules.gedcom.utilities.matchers.PotentialMatch;
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
@@ -27,9 +29,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -46,6 +51,13 @@ public class ResultPanel extends javax.swing.JPanel {
     private HashMap<String, Integer> tagMap = new HashMap<String, Integer>();
     
     private List<PropertyRow> propRows = new ArrayList<PropertyRow>();
+    private boolean isMerged = false;
+    private JLabel dummyLabel = new JLabel();
+    private JButton entAButton = new JButton();
+    private JButton entBButton = new JButton();
+    private JSeparator dummySeparator = new JSeparator();
+    private Action goToLeft, goToRight;
+    
         
     /**
      * Creates new form ResultPanel
@@ -57,6 +69,19 @@ public class ResultPanel extends javax.swing.JPanel {
         initComponents();
         this.setPreferredSize(new Dimension(registry.get("searchDuplicatesWindowWidth", this.getPreferredSize().width), registry.get("searchDuplicatesWindowHeight", this.getPreferredSize().height)));
         scrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        
+        goToLeft = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showLeftEntity();
+            }
+        };
+        goToRight = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                showRightEntity();
+            }
+        };
     }
 
     
@@ -104,12 +129,18 @@ public class ResultPanel extends javax.swing.JPanel {
 
 
     public void setEntities(PotentialMatch<? extends Entity> potentialMatch) {
-        Entity leftEntity = potentialMatch.getLeft();
-        Entity rightEntity = potentialMatch.getRight();
+        isMerged = potentialMatch.isMerged();
+        final Entity leftEntity = potentialMatch.getLeft();
+        final Entity rightEntity = potentialMatch.getRight();
         propRows.clear();
 
         // Init IDs
         propRows.add(new PropertyRow(leftEntity.getPropertyName() + " " + NbBundle.getMessage(ResultPanel.class, "ResultPanel.ID"), leftEntity, rightEntity, false));
+        entAButton.setAction(goToLeft);
+        entBButton.setAction(goToRight);
+        entAButton.setText(leftEntity.getId() + " = " + leftEntity.toString(false));
+        entBButton.setText(isMerged ? "  -  " : rightEntity.getId() + " = " + rightEntity.toString(false));
+        entBButton.setEnabled(!isMerged);
 
         // Get all first level tags and for each first level tag, get second level tags and fill in rows
         ArrayList<TagPath> firstLevelTagPaths = getTagPaths(leftEntity, rightEntity);
@@ -128,9 +159,9 @@ public class ResultPanel extends javax.swing.JPanel {
                 ArrayList<TagPath> secondLevelTagPaths = getTagPaths(leftP, rightP);
                 // loop second level properties
                 for (TagPath tagPath2 : secondLevelTagPaths) {
-                    Property leftP2 = leftEntity.getProperty(tagPath2);
-                    Property rightP2 = rightEntity.getProperty(tagPath2);
-                    String label2 = leftP2 != null ? leftP2.getPropertyName() : rightP2.getPropertyName();
+                    Property leftP2 = leftEntity.getProperty(tagPath2, true);
+                    Property rightP2 = rightEntity.getProperty(tagPath2, true);
+                    String label2 = getLabelFromProperty(leftP2, rightP2);  // leftP2 != null ? leftP2.getPropertyName() : rightP2.getPropertyName();
                     // Add second level row with no separator
                     propRows.add(new PropertyRow(label2, leftP2, rightP2, false));
                 }
@@ -141,7 +172,20 @@ public class ResultPanel extends javax.swing.JPanel {
 
         drawPanelElements();
     }
-
+        
+    private void showLeftEntity() {
+        if (!propRows.isEmpty()) {
+            SelectionDispatcher.fireSelection(new Context(propRows.get(0).propA));  ;
+        }
+    }
+    
+    private void showRightEntity() {
+        if (!propRows.isEmpty()) {
+            SelectionDispatcher.fireSelection(new Context(propRows.get(0).propB));  ;
+        }
+    }
+    
+    
     private void drawPanelElements() {
         // Draw panel elements
         JPanel panel = new javax.swing.JPanel();
@@ -155,6 +199,13 @@ public class ResultPanel extends javax.swing.JPanel {
         ParallelGroup pgHH = panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING); // labels
         ParallelGroup pgHHA = panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING); // col A
         ParallelGroup pgHHB = panelLayout.createParallelGroup(GroupLayout.Alignment.LEADING); // col B
+
+        // Add first row of buttons
+        pgHH.addComponent(dummyLabel);
+        pgHHA.addComponent(entAButton, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
+        pgHHB.addComponent(entBButton, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
+        
+        // Add other rows
         for (PropertyRow row : propRows) {
             pgHH.addComponent(row.label); //, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
             pgHHA.addComponent(row.checkPropA, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
@@ -168,7 +219,13 @@ public class ResultPanel extends javax.swing.JPanel {
         sgH.addGroup(pgHHB);
         sgH.addContainerGap();
         pg.addGroup(sgH);
+        
         // Add separators
+        sgH = panelLayout.createSequentialGroup();
+        sgH.addContainerGap();
+        sgH.addComponent(dummySeparator);
+        sgH.addContainerGap();
+        pg.addGroup(sgH);
         for (PropertyRow row : propRows) {
             if (row.separator) {
                 sgH = panelLayout.createSequentialGroup();
@@ -183,6 +240,13 @@ public class ResultPanel extends javax.swing.JPanel {
         // Vertical Groups
         SequentialGroup sgV = panelLayout.createSequentialGroup();
         sgV.addContainerGap();
+        sgV.addGroup(panelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
+                .addComponent(dummyLabel)
+                .addComponent(entAButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                .addComponent(entBButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
+        sgV.addComponent(dummySeparator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE);
+        
+        // display lines
         for (PropertyRow row : propRows) {
             if (row.separator) {
                 sgV.addComponent(row.jSeparator, GroupLayout.PREFERRED_SIZE, 10, GroupLayout.PREFERRED_SIZE);
@@ -221,15 +285,17 @@ public class ResultPanel extends javax.swing.JPanel {
         ArrayList<TagPath> tagPaths = new ArrayList<TagPath>();
         if (pLeft != null) {
             for (Property property : pLeft.getProperties()) {
-                if (!tagPaths.contains(property.getPath())) {
-                    tagPaths.add(property.getPath());
+                TagPath tp = property.getPath(true);
+                if (!tagPaths.contains(tp)) {
+                    tagPaths.add(tp);
                 }
             }
         }
         if (pRight != null) {
             for (Property property : pRight.getProperties()) {
-                if (!tagPaths.contains(property.getPath())) {
-                    tagPaths.add(property.getPath());
+                TagPath tp = property.getPath(true);
+                if (!tagPaths.contains(tp)) {
+                    tagPaths.add(tp);
                 }
             }
         }
@@ -354,17 +420,19 @@ public class ResultPanel extends javax.swing.JPanel {
             checkPropB.setText(getTextFromProperty(propB));
             same = checkPropA.getText().equals(checkPropB.getText()) || propA instanceof Entity;
             Color color = same ? Color.BLUE : Color.red;
+            if (isMerged) {
+                color = new Color(0, 94, 20); // dark green
+            }
             checkPropA.setSelected(true);
             checkPropB.setSelected(false);
-            //checkPropA.setEnabled(!same);
-            checkPropB.setEnabled(!same);
+            checkPropB.setEnabled(!isMerged && !same);
             checkPropA.setForeground(color);
             checkPropB.setForeground(color);
             if (!same && prop.getMetaProperty().isSingleton()) {
                 checkPropA.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        checkPropB.setSelected(!checkPropA.isSelected());
+                        checkPropB.setSelected(!isMerged && !checkPropA.isSelected());
                     }
                 });
                 checkPropB.addActionListener(new ActionListener() {

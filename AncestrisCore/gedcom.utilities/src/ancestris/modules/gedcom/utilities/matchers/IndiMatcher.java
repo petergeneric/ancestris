@@ -1,6 +1,11 @@
 package ancestris.modules.gedcom.utilities.matchers;
 
-import genj.gedcom.*;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyName;
+import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
