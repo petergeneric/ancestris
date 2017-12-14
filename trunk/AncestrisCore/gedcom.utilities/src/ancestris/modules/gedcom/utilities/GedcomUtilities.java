@@ -24,6 +24,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyForeignXRef;
 import genj.gedcom.PropertyXRef;
+import genj.gedcom.TagPath;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -102,70 +103,121 @@ public class GedcomUtilities {
     }
 
     /*
-     * Merge 2 entities :
-     *    - dest : the final entity 
-     *    - src : the source entity 
-     *    - properties : the property list of the source to be included in the dest entity
+     * Merge 2 entities for selected properties:
+     *
+     *    Copy all properties from the src entity to the dest entity
+     *
+     *    Clean list of properties to merge:
+     *    - For properties which include both a child and its parent, only include parent, remove child
+     *
+     *    Copy/Merge propoerties using their absolute path
+     *    - For properties which are singleton : replace them
+     *    - For properties which are not singleton, add them
+     *    - For xref left attached to the entity which will be deleted, do not do anything unless they are in properties
+     *    - For asso links attached to the entity which will be deleted, do not do anything unless they are in properties
+     *
+     *    Paremeters
+     *    - dest : the final entity which will be kept
+     *    - src : the source entity which will be deleted at the end
+     *    - properties : the list of properties of the source to be kept and moved to the dest entity
      */
-    public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> properties) {
+    public static void MergeEntities(Gedcom gedcom, Entity dest, Entity src, List<Property> allProperties) {
         LOG.log(Level.FINER, "Merging {0} with {1}", new Object[]{src.getId(), dest.getId()});
 
-        for (Property rightProperty : properties) {
-            try {
-                if (rightProperty != null) {
-                    movePropertyRecursively(rightProperty, dest);
+        // Clean properties : only keep properties for which no ancestors is includeed in the list
+        List<Property> properties = new ArrayList<Property>();
+        boolean found = false;
+        for (Property prop : allProperties) {
+            if (prop == null) {
+                continue;
+            }
+            found = false;
+            for (Property parent : getAncestors(prop)) {
+                if (allProperties.contains(parent)) {
+                    found = true;
+                    break;
                 }
+            }
+            if (!found) {
+               properties.add(prop); 
+            }
+        }
+        
+        // Copy / add each property to dest entity at the parent level
+        for (Property prop : properties) {
+            TagPath tagPath = prop.getParent().getPath();
+            Property propDest = dest.getProperty(tagPath);
+            try {
+                if (prop instanceof PropertyXRef && !(prop instanceof PropertyForeignXRef)) {   // unlink FAMS for instance, but do not unlink pointers to ASSO
+                    ((PropertyXRef) prop).unlink();
+                }
+                movePropertyRecursively(prop, propDest);
             } catch (GedcomException ex) {
                 LOG.log(Level.SEVERE, "Unexpected Gedcom exception {0}", ex);
                 Exceptions.printStackTrace(ex);
             }
         }
+        
+          // Update linked entities  : if source entity is removed, entities pointing to it will point in the vaccum.
+          // So make these pointers point to the copied entity.
+// FL : 2017-12-12 : this is not neccessarily what the user wants. If he wants to do so, he needs to select the properties before pressing the merge button.        
+//        for (Entity reference : PropertyXRef.getReferences(src)) {
+//            for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
+//                PropertyXRef propertyXRef = it.next();
+//                Entity targetEntity = propertyXRef.getTargetEntity();
+//                if (targetEntity != null && targetEntity.equals(src)) {
+//                    propertyXRef.unlink();
+//                    Property parent = propertyXRef.getParent();
+//                    boolean alreadyLinked = false;
+//                    for (PropertyXRef PropertyXRef : parent.getProperties(PropertyXRef.class)) {
+//                        if (PropertyXRef.getValue().replaceAll("@","").equals(dest.getId())) {
+//                            alreadyLinked = true;
+//                        }
+//                    }
+//                    if (alreadyLinked == false) {
+//                        propertyXRef.setValue(dest.getId());
+//                    }
+//
+//                    /*
+//                     * Try to cope with PropertyForeignXRef exception on link as
+//                     * the visibility of the class is restricted to gedcom
+//                     * package use this workaround as it seem to be the unique
+//                     * Xref properties for which transient property true
+//                     */
+//                    if (propertyXRef.isTransient() == false) {
+//                        try {
+//                            propertyXRef.link();
+//                        } catch (GedcomException e) {
+//                            LOG.log(Level.SEVERE, "unexpected", e);
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
-        // Update linked entities
-        for (Entity reference : PropertyXRef.getReferences(src)) {
-            for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
-                PropertyXRef propertyXRef = it.next();
-                Entity targetEntity = propertyXRef.getTargetEntity();
-                if (targetEntity != null && targetEntity.equals(src)) {
-                    propertyXRef.unlink();
-                    Property parent = propertyXRef.getParent();
-                    boolean alreadyLinked = false;
-                    for (PropertyXRef PropertyXRef : parent.getProperties(PropertyXRef.class)) {
-                        if (PropertyXRef.getValue().replaceAll("@","").equals(dest.getId())) {
-                            alreadyLinked = true;
-                        }
-                    }
-                    if (alreadyLinked == false) {
-                        propertyXRef.setValue(dest.getId());
-                    }
-
-                    /*
-                     * Try to cope with PropertyForeignXRef exception on link as
-                     * the visibility of the class is restricted to gedcom
-                     * package use this workaround as it seem to be the unique
-                     * Xref properties for which transient property true
-                     */
-                    if (propertyXRef.isTransient() == false) {
-                        try {
-                            propertyXRef.link();
-                        } catch (GedcomException e) {
-                            LOG.log(Level.SEVERE, "unexpected", e);
-                        }
-                    }
-                }
-            }
-        }
-
-        // delete merged entity
+        // Delete merged entity
         gedcom.deleteEntity(src);
     }
+    
+    private static List<Property> getAncestors(Property prop) {
+        List<Property> ancestors = new ArrayList<Property>();
+        Property parent = prop.getParent();
+        while (parent != null) {
+            ancestors.add(parent);
+            parent = parent.getParent();
+        }
+        return ancestors;
+    }
+    
 
     /*
-     * this function move property propertysrc in parent property
+     * This function moves property propertysrc in parent property
      * parentPropertyDest and update Xref properties
      */
     public static void movePropertyRecursively(Property propertySrc, Property parentPropertyDest) throws GedcomException {
         Property propertyDest;
+        
+        // Remove dest equivalent property from dest first in case property to be moved is singleton
         if (propertySrc.getMetaProperty().isSingleton()) {
             propertyDest = parentPropertyDest.getProperty(propertySrc.getTag());
             if (propertyDest != null) {
@@ -180,7 +232,8 @@ public class GedcomUtilities {
             pxref.unlink();
             pxref.setValue(parentPropertyDest.getEntity().getId());
             pxref.link();
-        } // ... else attach src property to dest property in case it is not a PropertyForeignXref
+        } 
+        // ... else attach src property to dest property in case it is not a PropertyForeignXref
         else {
             int n = parentPropertyDest.getNoOfProperties();
             propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue(), n);  // add to the end
@@ -234,6 +287,7 @@ public class GedcomUtilities {
         }
         return foundProperties;
     }
+
     
     
     

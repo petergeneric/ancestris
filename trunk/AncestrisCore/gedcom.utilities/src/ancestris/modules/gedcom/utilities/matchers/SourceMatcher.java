@@ -1,6 +1,7 @@
 package ancestris.modules.gedcom.utilities.matchers;
 
 import genj.gedcom.Property;
+import genj.gedcom.PropertyRepository;
 import genj.gedcom.Source;
 
 /**
@@ -16,32 +17,39 @@ public class SourceMatcher extends EntityMatcher<Source, SourceMatcherOptions> {
 
     @Override
     public int compare(Source left, Source right) {
+        int ret = 0;
+        
         if (!left.getTitle().isEmpty() && left.getTitle().equals(right.getTitle())) {
-            Property abbrLeft = left.getProperty("ABBR");
-            Property abbrRight = right.getProperty("ABBR");
-            if (abbrLeft != null && abbrRight != null 
-                &&  !abbrLeft.getDisplayValue().isEmpty() 
-                &&  !abbrRight.getDisplayValue().isEmpty() 
-                &&  abbrRight.getDisplayValue().equals(abbrLeft.getDisplayValue())) {
-                Property authLeft = left.getProperty("AUTH");
-                Property authRight = right.getProperty("AUTH");
-                if (authLeft != null && authRight != null
-                        && !authLeft.getDisplayValue().isEmpty()
-                        && !authRight.getDisplayValue().isEmpty()
-                        && authRight.getDisplayValue().equals(authLeft.getDisplayValue())) {
-                    if (!left.getText().isEmpty() && left.getText().equals(right.getText())) {
-                        return 100;
-                    } else {
-                        return 90;
-                    }
-                } else {
-                    return 80;
-                }
-            } else {
-                return 50;
-            }
+            ret += 20;
         }
-        return 0;
+
+        Property abbrLeft = left.getProperty("ABBR");
+        Property abbrRight = right.getProperty("ABBR");
+        if (abbrLeft != null && abbrRight != null && !abbrLeft.getDisplayValue().isEmpty() && !abbrRight.getDisplayValue().isEmpty()
+                && abbrRight.getDisplayValue().equals(abbrLeft.getDisplayValue())) {
+            ret += 20;
+        }
+
+        Property authLeft = left.getProperty("AUTH");
+        Property authRight = right.getProperty("AUTH");
+        if (authLeft != null && authRight != null && !authLeft.getDisplayValue().isEmpty() && !authRight.getDisplayValue().isEmpty()
+                && authRight.getDisplayValue().equals(authLeft.getDisplayValue())) {
+            ret += 20;
+        }
+
+        Property pLeft = left.getProperty("REPO");
+        Property pRight = right.getProperty("REPO");
+        Property repoLeft = (pLeft != null && pLeft instanceof PropertyRepository) ? ((PropertyRepository) pLeft).getTargetEntity() : null;
+        Property repoRight = (pRight != null && pRight instanceof PropertyRepository) ? ((PropertyRepository) pRight).getTargetEntity() : null;
+        if (repoLeft != null && repoLeft.equals(repoRight)) {
+            ret += 20;
+        }
+        
+        if (!left.getText().isEmpty() && left.getText().equals(right.getText())) {
+            ret += 20;
+        }
+        
+        return ret;
     }
 
     @Override

@@ -10,11 +10,21 @@ public class PotentialMatch<T> {
     private T left;
     private T right;
     private int certainty;
+    private boolean merged;
 
     public PotentialMatch(T left, T right, int certainty) {
         this.left = left;
         this.right = right;
         this.certainty = certainty;
+        this.merged = false;
+    }
+
+    public void setMerged(boolean merged) {
+        this.merged = merged;
+    }
+
+    public boolean isMerged() {
+        return merged;
     }
 
     public int getCertainty() {
