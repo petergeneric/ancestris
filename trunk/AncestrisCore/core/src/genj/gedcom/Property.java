@@ -583,6 +583,7 @@ public abstract class Property implements Comparable<Property> {
 
         // loop through parents
         String tag = getTag();
+        Property child = this;
         Property parent = getParent();
         while (parent != null) {
 
@@ -591,7 +592,7 @@ public abstract class Property implements Comparable<Property> {
                 int qualifier = 0;
                 for (int i = 0, j = parent.getNoOfProperties(); i < j; i++) {
                     Property sibling = parent.getProperty(i);
-                    if (sibling == this) {
+                    if (sibling == child) {
                         break;
                     }
                     if (sibling.getTag().equals(tag)) {
@@ -605,6 +606,7 @@ public abstract class Property implements Comparable<Property> {
 
             // next up
             tag = parent.getTag();
+            child = parent;
             parent = parent.getParent();
         }
 
