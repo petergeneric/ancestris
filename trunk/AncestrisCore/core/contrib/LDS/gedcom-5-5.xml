@@ -23,7 +23,7 @@
     *************************************
     <INDI type="Indi" img="Indi" img.male="IndiMale" img.female="IndiFemale">
         +++++++++++++ Name and Sex +++++++++++++
-        <NAME default="1" type="PropertyName" img="Name" cardinality="1:1">
+        <NAME default="1" type="PropertyName" img="Name" cardinality="1:M">
             <NPFX type="PropertySimpleValue" img="Name" cardinality="0:1"/>
             <GIVN type="PropertySimpleValue" img="Name" cardinality="0:1"/>
             <NICK type="PropertySimpleValue" img="Name" cardinality="0:1"/>
