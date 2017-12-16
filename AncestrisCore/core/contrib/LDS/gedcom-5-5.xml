@@ -159,7 +159,7 @@
         +++++++++++++ Relationships +++++++++++++
         <NOTE super="INDI:NAME:NOTE"/>
         <FAMC hide="1" type="PropertyFamilyChild" img="Fam">
-            <PEDI type="PropertyChoiceValue" img="Type" cardinality="1:1"/>
+            <PEDI type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
             <NOTE super="INDI:NAME:NOTE"/>
         </FAMC>
         <FAMS hide="1" type="PropertyFamilySpouse" img="Fam">
