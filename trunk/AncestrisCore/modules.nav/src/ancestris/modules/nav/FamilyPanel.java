@@ -13,8 +13,10 @@ package ancestris.modules.nav;
 
 import ancestris.api.editor.AncestrisEditor;
 import ancestris.awt.FilteredMouseAdapter;
+import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
+import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -30,17 +32,28 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyEvent;
+import genj.renderer.Blueprint;
+import genj.renderer.BlueprintManager;
+import genj.renderer.ChooseBlueprintAction;
+import genj.util.Registry;
 import java.awt.Component;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import org.openide.awt.MouseUtils;
 import org.openide.util.NbBundle;
+import org.openide.nodes.Node;
 
-public final class FamilyPanel extends JPanel {
 
-    private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.empty");
+public final class FamilyPanel extends JPanel implements AncestrisActionProvider {
+
+    private final static Registry REGISTRY = Registry.get(FamilyPanel.class);
+    
+    //private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.empty");
     private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
     private final static String HUSBAND_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.husband.empty");
-    private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.child.empty");
+    //private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.child.empty");
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
@@ -51,39 +64,45 @@ public final class FamilyPanel extends JPanel {
     private final EntitiesPanel oFamsPanel;
     private final EntitiesPanel siblingsPanel;
     private final EntitiesPanel eventsPanel;
+    /** the blueprints we're using */
+    private final Map<String, String> tag2blueprint = new HashMap<String, String>();
 
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
         initComponents();
-
+        
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
 
+        // Add contextual popup menu
+        new ExplorerHelper(husband).setPopupAllowed(true);
+        new ExplorerHelper(wife).setPopupAllowed(true);
+        new ExplorerHelper(husbFather).setPopupAllowed(true);
+        new ExplorerHelper(husbMother).setPopupAllowed(true);
+        new ExplorerHelper(familySpouse).setPopupAllowed(true);
+
+        // Add mouse listeners for clics and double-clics
         husband.addMouseListener(new ABeanHandler(false));
         wife.addMouseListener(new SpouseHandler(husband));
-
         husbFather.addMouseListener(new ParentHandler(husband, PropertySex.MALE));
         husbMother.addMouseListener(new ParentHandler(husband, PropertySex.FEMALE));
-
         familySpouse.addMouseListener(new ABeanHandler(false));
 
+        // Load saved blueprints for this view
+        for (String tag : Gedcom.ENTITIES) {
+            tag2blueprint.put(tag, REGISTRY.get("blueprint." + tag, ""));
+        }
+
+        // Set panels' blueprints
+        resetBlueprints();
         husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setBlueprint(Gedcom.INDI, "<body bgcolor=#e9e9ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
         husband.setAntialiasing(true);
-
         wife.setEmptyBluePrint(WIFE_EMPTY_BP);
-        wife.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
         wife.setAntialiasing(true);
-
         husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
-        husbFather.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
         husbFather.setAntialiasing(true);
-
         husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
-        husbMother.setBlueprint(Gedcom.INDI, "<body bgcolor=#f1f1f1>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI"));  // NOI18N
         husbMother.setAntialiasing(true);
-
         familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
-        familySpouse.setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM"));  // NOI18N
         familySpouse.setAntialiasing(true);
 
         // Childs
@@ -142,6 +161,15 @@ public final class FamilyPanel extends JPanel {
         };
         eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
         
+    }
+    
+    public void resetBlueprints() {
+        husband.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
+        wife.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
+        husbFather.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
+        husbMother.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
+        familySpouse.setBlueprint(Gedcom.FAM, getBlueprint("FAM").getHTML());  // NOI18N
+        refresh();
     }
 
     public void setContext(Context context) {
@@ -223,6 +251,42 @@ public final class FamilyPanel extends JPanel {
 
     }
 
+    
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (!hasFocus) {
+            return new ArrayList<Action>();
+        }
+        List<Action> actions = new ArrayList<Action>();
+        actions.add(new ChooseBlueprintAction(focusIndi, getBlueprint(focusIndi.getTag())) {
+            @Override
+            protected void commit(Entity recipient, Blueprint blueprint) {
+                tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                resetBlueprints();
+                REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
+            }
+        });
+        actions.add(new ChooseBlueprintAction(focusFam, getBlueprint(focusFam.getTag())) {
+            @Override
+            protected void commit(Entity recipient, Blueprint blueprint) {
+                tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                resetBlueprints();
+                REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
+            }
+        });
+        return actions;
+    }
+
+    /**
+     * Get blueprint used for given type
+     */
+    private Blueprint getBlueprint(String tag) {
+        return BlueprintManager.getInstance().getBlueprint(tag, tag2blueprint.get(tag));
+    }
+
+    
+
+    
+    
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -388,7 +452,6 @@ public final class FamilyPanel extends JPanel {
         );
 
         jScrollPane2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jScrollPane2.setToolTipText("");
 
         jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);

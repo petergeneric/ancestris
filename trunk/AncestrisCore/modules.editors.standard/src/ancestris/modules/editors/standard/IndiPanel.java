@@ -2243,13 +2243,13 @@ public class IndiPanel extends Editor implements DocumentListener {
                 public void run() {
                     if (savedFocusedControl == null || !savedFocusedControl.isFocusable()) {
                         firstnamesText.setCaretPosition(firstnamesText.getText().length());
-                        //firstnamesText.requestFocus();
+                        firstnamesText.requestFocus();
                     } else {
                         if (savedFocusedControl instanceof JTextField) {
                             JTextField jtf = (JTextField) savedFocusedControl;
                             jtf.setCaretPosition(jtf.getText().length());
                         }
-                        //savedFocusedControl.requestFocus();
+                        savedFocusedControl.requestFocus();
                         savedFocusedControl = null;
                     }
                 }
@@ -3823,7 +3823,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
             putSeparator = true;
-            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation));
+            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, indi));
         }
         // attach father or mother 
         if ((relation == IndiCreator.REL_FATHER || relation == IndiCreator.REL_MOTHER) && familyMember == null) {
@@ -3925,14 +3925,14 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
             menu.add(menuItem);
-            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, currentFam));
+            menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, indi, currentFam));
             // Now, for child only, if there was one valid spouse, create another menu item to create a child from unknown spouse without creating the spouse
             if (relation == IndiCreator.REL_CHILD && currentFam != null) {
                 label = NbBundle.getMessage(getClass(), "CreateIndi_" + IndiCreator.RELATIONS[relation]);
                 label += " " + NbBundle.getMessage(getClass(), "CreateIndi_CHILD_unknownSpouse");
                 menuItem = new JMenuItem(prefixLabel + (changes.hasChanged() ? label.toLowerCase() : label), createIcon);
                 menu.add(menuItem);
-                menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, null));
+                menuItem.addActionListener(new ActionCreation(getEditorTopComponent(), IndiCreator.CREATION, relation, indi, null));
             }
             putSeparator = true;
         }

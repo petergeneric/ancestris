@@ -25,6 +25,7 @@ package genj.tree;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.actions.AbstractAncestrisContextAction;
+import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
@@ -103,7 +104,7 @@ import javax.swing.event.ChangeListener;
 import org.openide.awt.DropDownButtonFactory;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
 import org.openide.awt.DynamicMenuContent;
-import org.openide.util.Lookup;
+import org.openide.nodes.Node;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
@@ -114,7 +115,7 @@ import org.openide.util.Utilities;
  */
 // FIXME: used to find proper TreeView component for RootAction
 //@ServiceProvider(service=TreeView.class)
-public class TreeView extends View implements Filter {
+public class TreeView extends View implements Filter, AncestrisActionProvider {
 
     private static final Logger LOG = Logger.getLogger("ancestris.tree");
 
@@ -156,7 +157,7 @@ public class TreeView extends View implements Filter {
     private boolean ignoreContextChange = false;
     private final Sticky sticky = new Sticky();
     // Lookup listener for action callback
-    private Lookup.Result<SelectionActionEvent> result;
+    private org.openide.util.Lookup.Result<SelectionActionEvent> result;
 
     private final TemplateToolTip tt = new TemplateToolTip();
     private JLabel rootTitle;
@@ -425,15 +426,15 @@ public class TreeView extends View implements Filter {
     }
 
     //XXX: we could probable install listners in gedcomdirectory
-    private Lookup.Result<SelectionActionEvent> addLookupListener(Context context) {
-        Lookup.Result<SelectionActionEvent> r;
+    private org.openide.util.Lookup.Result<SelectionActionEvent> addLookupListener(Context context) {
+        org.openide.util.Lookup.Result<SelectionActionEvent> r;
         try {
             // Install action listener
             r = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookupResult(SelectionActionEvent.class);
         } catch (ContextNotFoundException ex) {
             r = null;
         }
-        final Lookup.Result<SelectionActionEvent> returnValue = r;
+        final org.openide.util.Lookup.Result<SelectionActionEvent> returnValue = r;
         if (returnValue != null) {
             returnValue.addLookupListener(new LookupListener() {
 
@@ -692,7 +693,7 @@ public class TreeView extends View implements Filter {
         Action def2 = new ActionChooseRoot(rootMenu);
         rootMenu.putClientProperty(
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def1, def2}, Lookup.EMPTY));
+                Utilities.actionsToPopup(new Action[]{def1, def2}, org.openide.util.Lookup.EMPTY));
         rootMenu.setAction(def1);
         
         gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
@@ -700,7 +701,7 @@ public class TreeView extends View implements Filter {
         def2 = new ActionGotoRoot(gotoMenu);
         gotoMenu.putClientProperty(
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def1,def2}, Lookup.EMPTY));
+                Utilities.actionsToPopup(new Action[]{def1,def2}, org.openide.util.Lookup.EMPTY));
         gotoMenu.setAction(def1);
 
         toolbar.add(gotoMenu);
@@ -851,6 +852,18 @@ public class TreeView extends View implements Filter {
             tag2renderer.put(tag, renderer);
         }
         return renderer;
+    }
+
+    @Override
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (!hasFocus) {
+            return new ArrayList<Action>();
+        }
+        List<Action> actions = new ArrayList<Action>();
+        if (nodes.length == 1) {
+            actions.add(new ActionBluePrint());
+        }
+        return actions;
     }
 
     /**

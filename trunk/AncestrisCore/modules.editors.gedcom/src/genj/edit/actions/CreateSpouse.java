@@ -59,11 +59,12 @@ public class CreateSpouse extends CreateRelationship {
 
     @Override
     protected final void contextChanged() {
-        spouse = null;
+        Indi contextSpouse = null;
         if (contextProperties.size() == 1 && contextProperties.get(0) instanceof Indi) {
-            spouse = (Indi) (contextProperties.get(0));
+            contextSpouse = (Indi) (contextProperties.get(0));
         }
-        if (spouse != null) {
+        if (contextSpouse != null) {
+            spouse = contextSpouse;
             setEnabled(true);
             setTip(getDescription());
         } else {
@@ -75,7 +76,17 @@ public class CreateSpouse extends CreateRelationship {
     /** warn about a spouse that already has spouses */
     @Override
     public String getWarning(Entity target) {
-        int n = spouse.getNoOfFams();
+        if (spouse == null) {
+            return null;
+        }
+        int n = 0;
+        Fam[] fams = spouse.getFamiliesWhereSpouse();
+        for (Fam fam : fams) {
+            if (fam.getOtherSpouse(spouse) != null) {
+                n++;
+            }
+        }
+        //int n = spouse.getNoOfFams();
         if (n > 0) {
             return resources.getString("create.spouse.warning", spouse.toString(), "" + n);
         }

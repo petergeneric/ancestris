@@ -94,12 +94,12 @@ public class GedcomEditorAction extends AncestrisEditor {
 
     @Override
     public Action getCreateParentAction(Indi indi, int sex) {
-        return getDefaultAction(indi);
+        return new CreateParent(indi, sex);
     }
 
     @Override
     public Action getCreateSpouseAction(Indi indi) {
-        return getDefaultAction(indi);
+        return new CreateSpouse(indi);
     }
 
     private EditTopComponent getCurrentEditorTopComponent(Context context) {

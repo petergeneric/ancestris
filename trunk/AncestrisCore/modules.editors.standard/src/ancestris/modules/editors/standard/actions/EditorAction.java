@@ -114,7 +114,7 @@ public class EditorAction extends AncestrisEditor {
             return new ActionCreation(
                         editorTopComponent, 
                         IndiCreator.CREATION, 
-                        sex == PropertySex.MALE ? IndiCreator.REL_FATHER : IndiCreator.REL_MOTHER);
+                        sex == PropertySex.MALE ? IndiCreator.REL_FATHER : IndiCreator.REL_MOTHER, indi);
         }
         return getDefaultAction(indi);
     }
@@ -122,11 +122,21 @@ public class EditorAction extends AncestrisEditor {
     @Override
     public Action getCreateSpouseAction(Indi indi) {
         EditorTopComponent editorTopComponent = getCurrentEditorTopComponent(new Context(indi));
+
+        Fam fam = null;
         if (editorTopComponent != null) {
-            return new ActionCreation(
+            Fam[] fams = indi.getFamiliesWhereSpouse(true);
+            for (Fam f : fams) {
+                if (f.getOtherSpouse(indi) == null) {
+                    fam = f;
+                    break;
+                }
+            }
+            
+            return new ActionCreation( 
                         editorTopComponent, 
                         IndiCreator.CREATION, 
-                        IndiCreator.REL_PARTNER);
+                        IndiCreator.REL_PARTNER, indi, fam);
                 
         }
         return getDefaultAction(indi);

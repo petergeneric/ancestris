@@ -37,26 +37,30 @@ public class ActionCreation extends AbstractAction {
     private int relation;
     private ChangeSupport changes;
     
-    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation) {
-        init(editorTopComponent, type, relation, null);
+    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Entity ent) {
+        init(editorTopComponent, type, relation, ent, null);
     }
 
-    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Fam fam) {
-        init(editorTopComponent, type, relation, fam);
+    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Entity ent, Fam fam) {
+        init(editorTopComponent, type, relation, ent, fam);
     }
 
-    private void init(EditorTopComponent editorTopComponent, int type, int relation, Fam fam) {
+    private void init(EditorTopComponent editorTopComponent, int type, int relation, Entity ent, Fam fam) {
         this.editorTopComponent = editorTopComponent;
         this.type = type;
         this.relation = relation;
         this.fam = fam;
         
-        Entity entity = editorTopComponent.getEditor().getEditedEntity();
+        Entity entity = ent;
+        if (entity == null) {
+            entity = editorTopComponent.getEditor().getEditedEntity();
+        }
         if (entity instanceof Indi) {
             this.indi = (Indi) entity;
         } else {
             this.indi = null;
         }
+        
         Editor editor = editorTopComponent.getEditor();
         if (editor instanceof IndiPanel) {
             this.changes = ((IndiPanel)editor).getChangeSupport();
