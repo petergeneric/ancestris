@@ -131,7 +131,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1100,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.fam=Create Family")
+    @NbBundle.Messages("create.fam=Add Family")
     public static CreateEntity createFamFactory() {
         return new CreateEntity(Gedcom.FAM);
     }
@@ -141,7 +141,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1000,separatorBefore=900,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.indi=Create Person")
+    @NbBundle.Messages("create.indi=Add Person")
     public static CreateEntity createIndiFactory() {
         return new CreateEntity(Gedcom.INDI);
     }
@@ -151,7 +151,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1200,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.note=Create Note")
+    @NbBundle.Messages("create.note=Add Note")
     public static CreateEntity createNoteFactory() {
         return new CreateEntity(Gedcom.NOTE);
     }
@@ -161,7 +161,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1300,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.obje=Create Multimedia Object")
+    @NbBundle.Messages("create.obje=Add Multimedia Object")
     public static CreateEntity createObjeFactory() {
         return new CreateEntity(Gedcom.OBJE);
     }
@@ -171,7 +171,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1500,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.repo=Create Repository")
+    @NbBundle.Messages("create.repo=Add Repository")
     public static CreateEntity createRepoFactory() {
         return new CreateEntity(Gedcom.REPO);
     }
@@ -181,7 +181,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1400,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.sour=Create Source")
+    @NbBundle.Messages("create.sour=Add Source")
     public static CreateEntity createSourFactory() {
         return new CreateEntity(Gedcom.SOUR);
     }
@@ -191,7 +191,7 @@ public class CreateEntity extends AbstractChange {
         lazy = false)
     @ActionReferences(value = {
         @ActionReference(position=1600,path = ADD_ACTION_SUBMENU)})
-    @NbBundle.Messages("create.subm=Create Submitter")
+    @NbBundle.Messages("create.subm=Add Submitter")
     public static CreateEntity createSubmFactory() {
         return new CreateEntity(Gedcom.SUBM);
     }
@@ -199,7 +199,7 @@ public class CreateEntity extends AbstractChange {
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateEntityMenu")
     @ActionRegistration(displayName = "#create.entity",
         lazy = false)
-    @NbBundle.Messages("create.entity=Create Gedcom Entity")
+    @NbBundle.Messages("create.entity=Add Gedcom Entity")
     public static SubMenuAction getCreateEntityMenu() {
         SubMenuAction menuAction = new SubMenuAction(NbBundle.getMessage(CreateEntity.class, "create.entity"));
         menuAction.putValue(Action.SMALL_ICON, Gedcom.getImage());

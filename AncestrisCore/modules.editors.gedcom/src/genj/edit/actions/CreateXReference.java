@@ -68,7 +68,8 @@ public class CreateXReference extends CreateRelationship {
         if (targetType.equals(sourceTag)) {
             return Gedcom.getName(targetType);
         }
-        return Gedcom.getName(targetType) + " (" + Gedcom.getName(sourceTag) + ")";
+        //return Gedcom.getName(targetType) + " (" + Gedcom.getName(sourceTag) + ")";
+        return resources.getString("create."+targetType.toLowerCase()) + " (" + Gedcom.getName(sourceTag) + ")";
     }
 
     @Override

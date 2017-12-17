@@ -60,7 +60,8 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
     
     this.recipient = recipient;
     this.current = current;
-    setText(RESOURCES.getString("blueprint.select"));
+    //setText(RESOURCES.getString("blueprint.select"));
+    setText(RESOURCES.getString("blueprint.select.for", Gedcom.getName(recipient.getTag(), true)));
     setImage(IMAGE.getOverLayed(recipient.getImage(false)));
   }
 

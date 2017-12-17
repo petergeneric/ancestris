@@ -70,6 +70,7 @@ public class CreateParent extends CreateRelationship {
 //        setImageText(IMG, resources.getString("create.parent"));
         this.entity = entity;
 //FIXME: sex not used?        initialize(entity, sex);
+        initialize(entity, sex);
         contextChanged();
     }
 
@@ -111,7 +112,7 @@ public class CreateParent extends CreateRelationship {
         if (contextProperties.size() == 1 && contextProperties.get(0) instanceof Entity) {
             entity = (Entity) (contextProperties.get(0));
         }
-        if (entity != null && initialize(entity, -1)) {
+        if (entity != null && initialize(entity, sex)) {
             setEnabled(true);
             setTip(resources.getString("link", getDescription()));
         } else {

@@ -879,23 +879,27 @@ public class BlueprintRenderer {
     
     private void render(Property prop, Graphics2D g, Rectangle r) {
 
-      // entities (specifically NOTE) can be a multi-line - let fall through
-      if (!(prop instanceof Entity) && prop instanceof MultiLineProperty) {
-        render((MultiLineProperty)prop, g, r);
-        return;
-      }
-      if (prop instanceof PropertyFile||prop instanceof PropertyBlob) {
-        MediaRenderer.render(g, r, prop);
-        return;
-      }
-      // image?
-      if (HINT_VALUE_TRUE.equals(attributes.get(HINT_KEY_IMG))) 
-          //XXX: prop or prop.getParent may be null. We must handle this before prop is rendered
-        render(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false), g, r);
-      // text?
-      if (!HINT_VALUE_FALSE.equals(attributes.get(HINT_KEY_TXT)))
-            render(getText(prop), g, r);
+          // entities (specifically NOTE) can be a multi-line - let fall through
+          if (!(prop instanceof Entity) && prop instanceof MultiLineProperty) {
+              render((MultiLineProperty) prop, g, r);
+              return;
+          }
+          if (prop instanceof PropertyFile || prop instanceof PropertyBlob) {
+              MediaRenderer.render(g, r, prop);
+              return;
+          }
+          // image?
+          if (HINT_VALUE_TRUE.equals(attributes.get(HINT_KEY_IMG))) {
+              //XXX: prop or prop.getParent may be null. We must handle this before prop is rendered
+              if (prop != null && prop.getParent() != null) {
+                  render(prop instanceof PropertyDate ? prop.getParent().getImage(false) : prop.getImage(false), g, r);
               }
+          }
+          // text?
+          if (!HINT_VALUE_FALSE.equals(attributes.get(HINT_KEY_TXT))) {
+              render(getText(prop), g, r);
+          }
+      }
 
     private void render(MultiLineProperty mle, Graphics2D g, Rectangle r) {
       // get lines

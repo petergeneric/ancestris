@@ -98,7 +98,7 @@ public abstract class CreateRelationship extends AbstractChange {
         // A warning already?
         String warning = getWarning(existing);
         if (warning != null) {
-            result.append("**Note**: " + warning);
+            result.append("**** " + warning);
         }
 
         // combine
