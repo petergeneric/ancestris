@@ -19,19 +19,28 @@
  */
 package genj.edit.beans;
 
+import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.view.ExplorerHelper;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyChange;
+import genj.renderer.Blueprint;
+import genj.renderer.BlueprintManager;
+import genj.renderer.ChooseBlueprintAction;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.Action;
 
 import javax.swing.JLabel;
+import org.openide.nodes.Node;
 
 /**
  * A Proxy knows how to generate interaction components that the user
  * will use to change a property : ENTITY
  */
-public class EntityBean extends PropertyBean {
+public class EntityBean extends PropertyBean implements AncestrisActionProvider {
 
   private Preview preview;
   private JLabel changed;
@@ -51,6 +60,9 @@ public class EntityBean extends PropertyBean {
     setLayout(new BorderLayout());
     add(BorderLayout.CENTER, preview);
     add(BorderLayout.SOUTH, changed);
+    
+    new ExplorerHelper(this).setPopupAllowed(true);
+    setToolTipText(RESOURCES.getString("entity.tooltip", RESOURCES.getString("entity.editorblueprint")));
   }
   
   @Override
@@ -78,5 +90,22 @@ public class EntityBean extends PropertyBean {
     
     // Done
   }
+
+    public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+        if (!hasFocus) {
+            return new ArrayList<Action>();
+        }
+        List<Action> actions = new ArrayList<Action>();
+        String tag = property.getEntity().getTag();
+        Blueprint bp = BlueprintManager.getInstance().getBlueprint(tag, RESOURCES.getString("entity.editorblueprint"));
+        actions.add(new ChooseBlueprintAction(property.getEntity(), bp) {
+            @Override
+            protected void commit(Entity recipient, Blueprint blueprint) {
+                Entity entity = (Entity) property;
+                preview.setEntity(entity);
+            }
+        });
+        return actions;
+    }
   
 } //ProxyEntity
