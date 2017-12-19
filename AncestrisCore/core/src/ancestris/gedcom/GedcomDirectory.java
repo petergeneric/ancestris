@@ -52,6 +52,7 @@ import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 
 /**
@@ -902,6 +903,7 @@ public abstract class GedcomDirectory {
             Gedcom gedcom = gedcomObject.getContext().getGedcom();
             if (!gedcomsOpened.containsKey(gedcom)) {
                 gedcomsOpened.put(gedcom, gedcomObject);
+                ActivateTopComponent(); 
                 setAutoSave(gedcomObject.getContext());
             }
             return true;
@@ -967,6 +969,32 @@ public abstract class GedcomDirectory {
             return dao;
         }
 
+        /**
+         * Make sure Menu and Tools menu items are enabled at startup
+         * FL 2017-12-19 - In case Welcome View is opened at startup, focus needs to be put on a gedcom-context-TopComponent to enable menu actions 
+         *                 because registering the gedcom comes after TopComponents are opened and before resultChangedd is triggered
+         */
+        public void ActivateTopComponent() {
+            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                @Override
+                public void run() {
+                    TopComponent tc = WindowManager.getDefault().findTopComponent("AncestrisEditor"); // Try Cygnus editor
+                    if (tc == null) {
+                        tc = WindowManager.getDefault().findTopComponent("GenealogyEditor"); // Else Aries editor
+                    }
+                    if (tc == null) {
+                        tc = WindowManager.getDefault().findTopComponent("EditTopComponent"); // Else Gedcom editor
+                    }
+                    if (tc == null) {
+                        tc = WindowManager.getDefault().findTopComponent("TreeTopComponent"); // Else Dynamic Tree
+                    }
+                    if (tc != null) {  // else give up
+                        tc.requestActive();
+                    }
+                }
+            });
+        }
+        
         public void setAutosaveDelay() {
             for (Context context : getContexts()) {
                 setAutoSave(context);
