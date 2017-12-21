@@ -979,13 +979,13 @@ public abstract class GedcomDirectory {
                 @Override
                 public void run() {
                     TopComponent tc = WindowManager.getDefault().findTopComponent("AncestrisEditor"); // Try Cygnus editor
-                    if (tc == null) {
+                    if (tc == null || !tc.isShowing()) {
                         tc = WindowManager.getDefault().findTopComponent("GenealogyEditor"); // Else Aries editor
                     }
-                    if (tc == null) {
+                    if (tc == null || !tc.isShowing()) {
                         tc = WindowManager.getDefault().findTopComponent("EditTopComponent"); // Else Gedcom editor
                     }
-                    if (tc == null) {
+                    if (tc == null || !tc.isShowing()) {
                         tc = WindowManager.getDefault().findTopComponent("TreeTopComponent"); // Else Dynamic Tree
                     }
                     if (tc != null) {  // else give up

@@ -62,7 +62,7 @@ public class EntityBean extends PropertyBean implements AncestrisActionProvider 
     add(BorderLayout.SOUTH, changed);
     
     new ExplorerHelper(this).setPopupAllowed(true);
-    setToolTipText(RESOURCES.getString("entity.tooltip", RESOURCES.getString("entity.editorblueprint")));
+    setToolTipText(RESOURCES.getString("entity.tooltip"));
   }
   
   @Override
@@ -97,10 +97,11 @@ public class EntityBean extends PropertyBean implements AncestrisActionProvider 
         }
         List<Action> actions = new ArrayList<Action>();
         String tag = property.getEntity().getTag();
-        Blueprint bp = BlueprintManager.getInstance().getBlueprint(tag, RESOURCES.getString("entity.editorblueprint"));
+        Blueprint bp = BlueprintManager.getInstance().getBlueprint(tag, REGISTRY.get("blueprint.entity" + tag, ""));
         actions.add(new ChooseBlueprintAction(property.getEntity(), bp) {
             @Override
             protected void commit(Entity recipient, Blueprint blueprint) {
+                REGISTRY.put("blueprint.entity" + blueprint.getTag(), blueprint.getName());
                 Entity entity = (Entity) property;
                 preview.setEntity(entity);
             }
