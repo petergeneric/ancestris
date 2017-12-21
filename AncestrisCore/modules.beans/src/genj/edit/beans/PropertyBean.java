@@ -425,7 +425,7 @@ public abstract class PropertyBean extends JPanel {
         protected void setEntity(Entity ent) {
             entity = ent;
             if (entity != null) {
-                renderer = new BlueprintRenderer(BlueprintManager.getInstance().getBlueprint(entity.getTag(), RESOURCES.getString("entity.editorblueprint")));
+                renderer = new BlueprintRenderer(BlueprintManager.getInstance().getBlueprint(entity.getTag(), REGISTRY.get("blueprint.entity" + entity.getTag(), "")));
             }
             repaint();
         }
