@@ -33,6 +33,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.AbstractListModel;
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -109,6 +110,7 @@ public class TreeViewSettings extends JTabbedPane {
 
     jcAction = new JComboBox<OnAction>(OnAction.values());
     jcAction.setSelectedItem(TreeView.getOnAction());
+    
     jcAction.addActionListener(commit);
 
     cbTreeAutoScroll = createCheck("autoscroll", TreeView.isAutoScroll());
@@ -167,6 +169,9 @@ public class TreeViewSettings extends JTabbedPane {
     bPanel.add(new JButton(delete));
     
     // add those tabs
+    options.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    colors.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+    bPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
     add(RESOURCES.getString("page.main")  , options);
     add(RESOURCES.getString("page.colors"), colors);
     add(RESOURCES.getString("page.bookmarks"), bPanel);
@@ -347,7 +352,7 @@ public class TreeViewSettings extends JTabbedPane {
 
         @Override
         public String toString() {
-            return description;
+            return description+"     ";
         }
     };
 } //TreeViewSettings
