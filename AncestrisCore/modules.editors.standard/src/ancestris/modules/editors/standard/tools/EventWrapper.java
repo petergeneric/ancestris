@@ -506,8 +506,8 @@ public class EventWrapper {
         return true;
     }
     
-    public boolean setSourceFile(File file) {
-        eventSourceSet.get(eventSourceIndex).setMediaFile(file);
+    public boolean setSourceFile(File file, boolean addMedia) {
+        eventSourceSet.get(eventSourceIndex).setMediaFile(file, addMedia);
         return true;
     }
     
