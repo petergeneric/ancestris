@@ -352,7 +352,7 @@ public class SourceWrapper {
     
     // Constructor from choose File
     public SourceWrapper(File f) {
-        setMediaFile(f);
+        setMediaFile(f, false);
     }
 
     
@@ -479,11 +479,11 @@ public class SourceWrapper {
         }
     }
 
-    public void setMediaFile(File f) {
+    public void setMediaFile(File f, boolean addMedia) {
         if (sourceMediaSet == null) {
             resetMediaSet();
         }
-        if (sourceMediaSet.isEmpty()) {
+        if (sourceMediaSet.isEmpty() || addMedia) {
             sourceMediaSet.add(new MediaWrapper(f));
         } else {
             sourceMediaSet.get(sourceMediaIndex).setFile(f);

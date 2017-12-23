@@ -1958,7 +1958,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else if (evt.getButton() == MouseEvent.BUTTON1 && ((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
             imagePanel.cropAndSave();
             EventWrapper event = getCurrentEvent();
-            event.setSourceFile(imagePanel.getFile());
+            event.setSourceFile(imagePanel.getFile(), false);
             triggerChange();
         }
     }//GEN-LAST:event_sourceImagePanelMouseClicked
@@ -3397,14 +3397,14 @@ public class IndiPanel extends Editor implements DocumentListener {
             triggerChange();
             b = true;
         } else if (o == fileButton) {
-            return chooseSourceFile(event, index);
+            return chooseSourceFile(event, index, addMedia);
         }
         
         return b;
     }
     
     
-    private boolean chooseSourceFile(EventWrapper event, int index) {
+    private boolean chooseSourceFile(EventWrapper event, int index, boolean addMedia) {
         boolean b = false;
         boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
 
@@ -3424,7 +3424,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .showOpenDialog();
         if (file != null) {
             if (exists) {
-                event.setSourceFile(file);
+                event.setSourceFile(file, addMedia);
             } else {
                 event.addSourceFile(file);
             }
