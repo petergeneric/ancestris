@@ -868,7 +868,7 @@ public class TreeViewSettings extends javax.swing.JPanel {
 
         @Override
         public void stateChanged(ChangeEvent e) {
-            if (e.getSource() instanceof ColorsWidget) {
+            if (e != null && e.getSource() instanceof ColorsWidget) {
                 actionPerformed(new ActionEvent(e.getSource(), 1, "settings"));
             } else {
                 actionPerformed(null);
