@@ -1,7 +1,9 @@
 /**
  * GenJ - GenealogyJ
+ * Ancestris
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2017 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -22,9 +24,12 @@ package genj.tree;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertySex;
 import genj.renderer.EmptyHintKey;
 import genj.renderer.BlueprintRenderer;
 import genj.renderer.RenderPreviewHintKey;
+import genj.tree.Model.FoldUnfold;
+import genj.tree.Model.NextFamily;
 import genj.util.swing.UnitGraphics;
 import gj.model.Node;
 
@@ -41,13 +46,22 @@ import java.util.Collection;
  */
 public class ContentRenderer {
   
+    
+  /*package*/ boolean overview = false;
+    
+    
   /*package*/ Font font = null;
 
   /** shape color for indis */
-  /*package*/ Color cIndiShape = null;
+  /*package*/ Color cBackground = null;
+  /*package*/ Color cMaleIndiShape = null;
+  /*package*/ Color cFemaleIndiShape = null;
+  /*package*/ Color cUnknownIndiShape = null;
+  /*package*/ int indisThick = 1;
   
   /** shape color for fams */
   /*package*/ Color cFamShape = null;
+  /*package*/ int famsThick = 1;
   
   /** shape color for arcs */
   /*package*/ Color cArcs = null;
@@ -108,7 +122,7 @@ public class ContentRenderer {
       )) continue;
       // render it
       count++;
-      renderNode(g, pos, shape, node.getContent());
+      renderNode(g, pos, shape, node.getContent(), model);
       // next
     }
     if (count>0)
@@ -120,14 +134,19 @@ public class ContentRenderer {
   /**
    * Render a node
    */
-  private void renderNode(UnitGraphics g, Point2D pos, Shape shape, Object content) {
+  private void renderNode(UnitGraphics g, Point2D pos, Shape shape, Object content, Model model) {
     
     double 
       x = pos.getX(),
       y = pos.getY();
     // draw its shape
-    g.setColor(getColor(content));
-    g.draw(shape, x, y);
+    g.setColor(getColor(content, model));
+    if (overview && content != null) {
+        boolean fill = content.equals(root) || selected.contains(content);
+        g.draw(shape, x, y, fill);
+    } else {
+        g.draw(shape, x, y, getThickness(content, model));
+    }
     // draw its content if not meant for speed
     if (!Boolean.TRUE.equals(g.getGraphics().getRenderingHint(RenderPreviewHintKey.KEY)))
       renderContent(g, x, y, shape, content);
@@ -137,23 +156,94 @@ public class ContentRenderer {
   /**
    * Calc color for given node
    */
-  private Color getColor(Object content) {
-    // selected?
-    if (cRootShape!=null&&content != null && content.equals(root)) {
+  private Color getColor(Object content, Model model) {
+
+    // Special content meaning :
+    // - null => marr shape
+    // - NextFamily => spouse shape
+    // - FoldUnfold => plus/minus shape
+    if (content == null) {
+        if (!model.isMarrSymbols()) {
+            return cBackground;
+        } else {
+            return cFamShape;
+        }
+    }
+    if (content instanceof NextFamily) {
+       return getSexColor(((NextFamily) content).getSpouseSex());
+    }
+    if (content instanceof FoldUnfold) {
+        return cArcs;
+    }
+    
+      
+    // 1. selected?
+    if (cSelectedShape!=null && selected.contains(content)) {
+      return cSelectedShape;
+    }
+
+    // 2. root ?
+    if (cRootShape!=null && content.equals(root)) {
       return cRootShape;
     }
 
-    // selected?
-    if (cSelectedShape!=null&&selected.contains(content)) {
-      return cSelectedShape;
-    }
-    // fam?
+    // 3. fam?
     if (content instanceof Fam)
       return cFamShape;
-    // indi?
-    return cIndiShape;
+    
+    // 4. indi?
+    if (content instanceof Indi) {
+      return getSexColor(((Indi)content).getSex());
+    }
+    
+    // Else cArcs
+    return cArcs;
   }
   
+  /**
+   * Calc border thickness for given node
+   */
+  private int getThickness(Object content, Model model) {
+
+    // Special content meaning :
+    // - null => marr shape
+    // - NextFamily => spouse shape
+    // - FoldUnfold => plus/minus shape
+    if (content == null) {
+        if (!model.isMarrSymbols()) {
+            return 1;
+        } else {
+            return indisThick;
+        }
+    }
+    if (content instanceof NextFamily) {
+        return indisThick;
+    }
+    if (content instanceof FoldUnfold) {
+        return 1;
+    }
+    
+    if (content instanceof Fam) {
+        return famsThick;
+    }
+    
+    if (content instanceof Indi) {
+         return indisThick;  
+    }
+    
+    // Else 1
+    return 1;
+  }
+  
+  private Color getSexColor(int sex) {
+      if (sex == PropertySex.MALE) {
+         return cMaleIndiShape;
+      } else if (sex == PropertySex.FEMALE) {
+         return cFemaleIndiShape; 
+      } else {
+         return cUnknownIndiShape;  
+      }
+  }
   /**
    * Render the content of a node
    */

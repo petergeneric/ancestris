@@ -1,8 +1,8 @@
 /**
  * Ancestris
  *
- * Copyright (C) 1997 - 2010 Nils Meier <nils@meiers.net>
- * Copyright (C) 2016 - 2017 Frederic Lapeyre <frederic@ancestris.org>
+ * Copyright (C) 1997 - 2007 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2008 - 2018 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -30,6 +30,8 @@ import ancestris.core.actions.CommonActions;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
+import ancestris.modules.views.tree.style.Style;
+import ancestris.modules.views.tree.style.TreeStyleManager;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionActionEvent;
@@ -45,7 +47,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.renderer.Blueprint;
-import genj.renderer.BlueprintManager;
 import genj.renderer.BlueprintRenderer;
 import genj.renderer.ChooseBlueprintAction;
 import genj.renderer.DPI;
@@ -82,7 +83,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -136,20 +136,15 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private final ContentRenderer contentRenderer;
     /** our current zoom */
     private double zoom = 1.0D;
-    /** our current zoom */
     private SliderWidget sliderZoom;
-    /** whether we use antialising */
-    private boolean isAntialiasing = false;
-    /** folded statee */
+    /** folded state */
     private boolean isFolded = true;
-    /** our colors */
-    private Map<String, Color> colors = new HashMap<String, Color>();
-    /** our blueprints */
-    private final Map<String, String> tag2blueprint = new HashMap<String, String>();
-    /** our renderers */
-    private final Map<String, BlueprintRenderer> tag2renderer = new HashMap<String, BlueprintRenderer>();
-    /** our content's font */
-    private Font contentFont = new Font("SansSerif", 0, 10);
+
+    
+    /** our styles */
+    private TreeStyleManager styleManager;
+    private Style style;
+
     /** current centered position */
     private final Point2D.Double center = new Point2D.Double(0, 0);
     /** current context */
@@ -164,7 +159,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     
     // set root menu
     private JButton rootMenu;
-
     // set goto menu
     private JButton gotoMenu;
 
@@ -179,34 +173,15 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
                 dpi.horizontal() / 2.54F / 10,
                 dpi.vertical() / 2.54F / 10);
 
-        // grab colors
-        colors.put("background", Color.WHITE);
-        colors.put("indis", Color.BLACK);
-        colors.put("fams", Color.DARK_GRAY);
-        colors.put("arcs", Color.BLUE);
-        colors.put("selects", Color.RED);
-        colors = REGISTRY.get("color", colors);
-
-        // grab font
-        contentFont = REGISTRY.get("font", contentFont);
-        for (String tag : Gedcom.ENTITIES) {
-            tag2blueprint.put(tag, REGISTRY.get("blueprint." + tag, ""));
-        }
+        // grab styles
+        styleManager = TreeStyleManager.getInstance(REGISTRY);
+        style = styleManager.getStyle(REGISTRY.get("style", "default"));
+        zoom = Math.max(0.1, Math.min(1.0, REGISTRY.get("zoom", 1.0F)));  // zoom can be distinct from style.zoom
 
         // setup model
-        model = new Model();
+        model = new Model(style);
         model.setVertical(REGISTRY.get("vertical", true));
         model.setFamilies(REGISTRY.get("families", true));
-        model.setBendArcs(REGISTRY.get("bend", true));
-        model.setMarrSymbols(REGISTRY.get("marrs", true));
-        TreeMetrics defm = model.getMetrics();
-        model.setMetrics(new TreeMetrics(
-                REGISTRY.get("windis", defm.wIndis),
-                REGISTRY.get("hindis", defm.hIndis),
-                REGISTRY.get("wfams", defm.wFams),
-                REGISTRY.get("hfams", defm.hFams),
-                REGISTRY.get("pad", defm.pad)));
-        isAntialiasing = REGISTRY.get("antial", false);
         model.setHideAncestorsIDs(REGISTRY.get("hide.ancestors", new ArrayList<String>()));
         model.setHideDescendantsIDs(REGISTRY.get("hide.descendants", new ArrayList<String>()));
         model.setMaxGenerations(REGISTRY.get("maxgenerations", 20));
@@ -219,24 +194,12 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         overview = new Overview(scroll);
         overview.setVisible(REGISTRY.get("overview", true));
         overview.setSize(REGISTRY.get("overview", new Dimension(160, 80)));
-        zoom = Math.max(0.1, Math.min(1.0, REGISTRY.get("zoom", 1.0F)));
+        
 
         // setup layout
         add(overview);
         add(scroll);
-//FIXME: to be removed?
-        // scroll to current
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                Point center = getGedcom().getRegistry().get("tree.center", (Point) null);
-                if (center != null){
-                    scrollTo(center,true);
-                } else {
-                    scrollToCurrent(true);
-                }
-            }
-        });
+        
         // done
     }
 
@@ -271,24 +234,12 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         REGISTRY.put("zoom", (float) zoom);
         REGISTRY.put("vertical", model.isVertical());
         REGISTRY.put("families", model.isFamilies());
-        REGISTRY.put("bend", model.isBendArcs());
-        REGISTRY.put("marrs", model.isMarrSymbols());
-        TreeMetrics m = model.getMetrics();
-        REGISTRY.put("windis", m.wIndis);
-        REGISTRY.put("hindis", m.hIndis);
-        REGISTRY.put("wfams", m.wFams);
-        REGISTRY.put("hfams", m.hFams);
-        REGISTRY.put("pad", m.pad);
-        REGISTRY.put("antial", isAntialiasing);
-        REGISTRY.put("font", contentFont);
-        REGISTRY.put("color", colors);
         REGISTRY.put("maxgenerations", model.getMaxGenerations());
-
-        // blueprints
-        for (String tag : tag2blueprint.keySet()) {
-            REGISTRY.put("blueprint." + tag, getBlueprint(tag).getName());
+        REGISTRY.put("style", style.key);
+        if (style.key.equals(TreeStyleManager.PERSOSTYLE)) { // only save perso settings if current style is perso (otherwise, it would overwrite perso style)
+            saveStyle();
         }
-
+        
         // root    
         if (model.getRoot() != null) {
             Registry r = getGedcom().getRegistry();
@@ -303,6 +254,26 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         
     }
 
+    public void saveStyle(){
+        styleManager.putStyle(REGISTRY);
+    }
+
+    
+    public boolean confirmStyleOverwrite() {
+        Style persoStyle = getStyleManager().getPersoStyle();
+        if (getStyle() != persoStyle) {
+            String title = NbBundle.getMessage(Style.class, "TITL_WarnStyleChange");
+            String msg = NbBundle.getMessage(Style.class, "MSG_WarnStyleChange");
+            Object o = DialogManager.create(title, msg).setOptionType(DialogManager.YES_NO_OPTION).setDialogId("style.change").show();
+            if (o.equals(DialogManager.OK_OPTION)) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        return true;
+    }
+            
     // TreeView Preferences
     public static boolean isAutoScroll() {
         return REGISTRY.get("auto.scroll", true);
@@ -322,6 +293,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     
   /**
    * option - behaviour on action event (double click)
+     * @return 
    */
     public static TreeViewSettings.OnAction getOnAction(){
         return REGISTRY.get("on.action",TreeViewSettings.OnAction.SETROOT);
@@ -369,17 +341,17 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
      * Accessor - isAntialising.
      */
     public boolean isAntialising() {
-        return isAntialiasing;
+        return style.antialiasing;
     }
 
     /**
      * Accessor - isAntialising.
      */
     public void setAntialiasing(boolean set) {
-        if (isAntialiasing == set) {
+        if (style.antialiasing == set) {
             return;
         }
-        isAntialiasing = set;
+        style.antialiasing = set;
         repaint();
     }
 
@@ -387,7 +359,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
      * Access - contentFont
      */
     public Font getContentFont() {
-        return contentFont;
+        return style.font;
     }
 
     /**
@@ -395,34 +367,66 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
      */
     public void setContentFont(Font set) {
         // change?
-        if (set == null || contentFont.equals(set)) {
+        if (set == null || style.font.equals(set)) {
             return;
         }
         // remember
-        contentFont = set;
+        style.font = set;
         // show
         repaint();
     }
 
     public void setColors(Map<String, Color> set) {
-        for (String key : colors.keySet()) {
+        for (String key : style.colors.keySet()) {
             Color c = set.get(key);
             if (c != null) {
-                colors.put(key, c);
+                style.colors.put(key, c);
             }
         }
         repaint();
     }
 
     public Map<String, Color> getColors() {
-        return Collections.unmodifiableMap(colors);
+        return Collections.unmodifiableMap(style.colors);
     }
 
     /**
-     * Access - Mode
+     * Access - Model
      */
-    Model getModel() {
+    public Model getModel() {
         return model;
+    }
+
+    /**
+     * Access - Style
+     */
+    public Style getStyle() {
+        return style;
+    }
+
+    /**
+     * Access - Style
+     */
+    public void setStyle(Style set) {
+        // change?
+        if (set == null || style.equals(set)) {
+            return;
+        }
+        // remember
+        style = set;
+        // reset zoom to new style zoom
+        zoom = style.zoom;
+        sliderZoom.setValue((int) (zoom * 100));
+        // show
+        getModel().setStyle(set);
+        //repaint();
+    }
+
+    /**
+     * Access - Styles
+     */
+    public TreeStyleManager getStyleManager() {
+        return styleManager;
     }
 
     //XXX: we could probable install listners in gedcomdirectory
@@ -523,7 +527,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             return;
         }
 
-            setContextImpl(newContext);
+        setContextImpl(newContext);
     }
 
     private void setContextImpl(Context newContext) {
@@ -535,7 +539,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         }
 
         show(context.getEntity());
-
         // done
     }
 
@@ -643,6 +646,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private void setZoom(double d) {
         Point centr = getCenter();
         zoom = Math.max(0.1D, Math.min(1.0, d));
+        if (getStyleManager().getPersoStyle() == style) { // only change style zoom value if style is perso
+            style.zoom = zoom;
+        }
         content.invalidate();
         if (isAutoScroll()){
             scrollToCurrent();
@@ -734,10 +740,12 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         setRootTitle("");
 
         toolbar.addSeparator();
-        toolbar.add(new ActionBluePrint());
         // sticky
         toolbar.add(new JToggleButton(sticky));
 
+        // Blueprint
+        toolbar.add(new ActionBluePrint());
+        // Settings
         toolbar.add(new Settings());
         toolbar.setFloatable(false);
 
@@ -836,22 +844,14 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     }
 
     /**
-     * Resolve a blueprint
-     */
-    /* package */ Blueprint getBlueprint(String tag) {
-        return BlueprintManager.getInstance().getBlueprint(tag, tag2blueprint.get(tag));
-    }
-
-    /**
      * Resolve a renderer
      */
     private BlueprintRenderer getEntityRenderer(String tag) {
-        BlueprintRenderer renderer = tag2renderer.get(tag);
-        if (renderer == null) {
-            renderer = new BlueprintRenderer(getBlueprint(tag));
-            tag2renderer.put(tag, renderer);
+        if (tag.equals("INDI")) {
+            return new BlueprintRenderer(style.blueprintIndi);
+        } else {
+            return new BlueprintRenderer(style.blueprintFam);
         }
-        return renderer;
     }
 
     @Override
@@ -919,11 +919,17 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             UnitGraphics gw = new UnitGraphics(g, DPMM.getX() * zoomx * zoom, DPMM.getY() * zoomy * zoom);
 
             // init renderer
-            contentRenderer.cIndiShape = Color.BLACK;
+            contentRenderer.overview = true;
+            contentRenderer.cBackground = style.colors.get("background");
+            contentRenderer.cMaleIndiShape = Color.BLACK;
+            contentRenderer.cFemaleIndiShape = Color.BLACK;
+            contentRenderer.cUnknownIndiShape = Color.BLACK;
             contentRenderer.cFamShape = Color.BLACK;
             contentRenderer.cArcs = Color.LIGHT_GRAY;
-            contentRenderer.cSelectedShape = Color.RED;
-            contentRenderer.cRootShape = Color.GREEN;
+            contentRenderer.cSelectedShape = style.colors.get("selects");
+            contentRenderer.cRootShape = style.colors.get("roots");
+            contentRenderer.indisThick = 1;
+            contentRenderer.famsThick = 1;
             contentRenderer.selected = context.getEntities();
             contentRenderer.root = getRoot();
             contentRenderer.indiRenderer = null;
@@ -1149,12 +1155,12 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         @Override
         public void paint(Graphics g) {
             // fill backgound
-            g.setColor(colors.get("background"));
+            g.setColor(style.colors.get("background"));
             Rectangle r = g.getClipBounds();
             g.fillRect(r.x, r.y, r.width, r.height);
             // resolve our Graphics
             UnitGraphics gw = new UnitGraphics(g, DPMM.getX() * zoom, DPMM.getY() * zoom);
-            gw.setAntialiasing(isAntialiasing);
+            gw.setAntialiasing(style.antialiasing);
 
             // render selection?
             Boolean selection = (Boolean) ((Graphics2D) g).getRenderingHint(RenderSelectionHintKey.KEY);
@@ -1163,12 +1169,18 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             }
 
             // init renderer
-            contentRenderer.font = contentFont;
-            contentRenderer.cIndiShape = colors.get("indis");
-            contentRenderer.cFamShape = colors.get("fams");
-            contentRenderer.cArcs = colors.get("arcs");
-            contentRenderer.cSelectedShape = colors.get("selects");
-            contentRenderer.cRootShape = Color.GREEN;
+            contentRenderer.overview = false;
+            contentRenderer.font = style.font;
+            contentRenderer.cBackground = style.colors.get("background");
+            contentRenderer.cMaleIndiShape = style.colors.get("maleindis");
+            contentRenderer.cFemaleIndiShape = style.colors.get("femaleindis");
+            contentRenderer.cUnknownIndiShape = style.colors.get("unknownindis");
+            contentRenderer.cFamShape = style.colors.get("fams");
+            contentRenderer.cArcs = style.colors.get("arcs");
+            contentRenderer.cSelectedShape = style.colors.get("selects");
+            contentRenderer.cRootShape = style.colors.get("roots");
+            contentRenderer.indisThick = model.getMetrics().indisThick;
+            contentRenderer.famsThick = model.getMetrics().famsThick;
             contentRenderer.selected = selection ? context.getEntities() : new ArrayList<Entity>();
             contentRenderer.root = getRoot();
             contentRenderer.indiRenderer = getEntityRenderer(Gedcom.INDI);
@@ -1407,7 +1419,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
          */
         private ActionFoldUnfoldAll() {
             super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
-            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()+1));
+            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()));
         }
 
         /**
@@ -1422,7 +1434,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             }
             isFolded = !isFolded;
             super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
-            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()+1));
+            super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()));
             scrollToCurrent();
         }
     } //ActionFolding
@@ -1731,12 +1743,29 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         protected void actionPerformedImpl(final ActionEvent event) {
             if (entity != null) {
 
-                new ChooseBlueprintAction(entity, getBlueprint(entity.getTag())) {
+                Blueprint styleBlueprint;
+                if (entity instanceof Indi) {
+                    styleBlueprint = style.blueprintIndi;
+                } else {
+                    styleBlueprint = style.blueprintFam;
+                }
+                new ChooseBlueprintAction(entity, styleBlueprint) {
 
                     @Override
                     protected void commit(Entity recipient, Blueprint blueprint) {
-                        tag2blueprint.put(recipient.getTag(), blueprint.getName());
-                        tag2renderer.remove(recipient.getTag());
+                        
+                        // First warn user if current style is not perso style and changes could overwrite it. Ask for confirmation.
+                        if (!confirmStyleOverwrite()) {
+                            return;
+                        }
+                        Style persoStyle = getStyleManager().getPersoStyle();
+                        setStyle(persoStyle);
+                        if (recipient instanceof Indi) {
+                            style.blueprintIndi = blueprint;
+                        } else {
+                            style.blueprintFam = blueprint;
+                        }
+                        saveStyle();
                         repaint();
                     }
                 }.actionPerformed(null);

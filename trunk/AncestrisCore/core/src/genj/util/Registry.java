@@ -31,6 +31,7 @@ import java.awt.geom.Point2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -79,12 +80,12 @@ public class Registry implements PropertyChangeListener, AncestrisPreferences {
    * that can't be looked up and won't be saved
    * @param InputStream to load registry from
    */
-//  public Registry(InputStream in) {
-//    // Load settings
-//    prefix = "";
-//    LOG.info("set storage to input streams storage");
-//    storage = new RegistryStorage.Properties(in);
-//  }
+  public Registry(InputStream in) {
+    // Load settings
+    prefix = "";
+    LOG.info("set storage to input streams storage");
+    storage = new RegistryStorage.Properties(in);
+  }
   
 // FIXME: not used: to be removed
 //  private Registry(File file) {

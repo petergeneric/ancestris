@@ -146,7 +146,8 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
       String html = selection!=null ? selection.getHTML() : "";
       // add it
       try {
-        Blueprint blueprint = MGR.addBlueprint(new Blueprint(recipient.getTag(), name, html, false));
+        String key = MGR.name2key(name);
+        Blueprint blueprint = MGR.addBlueprint(new Blueprint(recipient.getTag(), key, name, html, false));
         blueprints.setListData(MGR.getBlueprints(recipient.getTag()).toArray());
         blueprints.setSelectedValue(blueprint, true);
       } catch (IOException ex) {

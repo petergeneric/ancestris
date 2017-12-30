@@ -18,6 +18,7 @@
  */
 package genj.util.swing;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -226,6 +227,16 @@ public class UnitGraphics {
      */
     public void draw(Shape shape, double x, double y) {
         draw(shape, x, y, false);
+    }
+
+    /**
+     * Draw shape
+     */
+    public void draw(Shape shape, double x, double y, int thickness) {
+        Stroke oldStroke = graphics.getStroke();
+        graphics.setStroke(new BasicStroke(thickness));
+        draw(shape, x, y, false);
+        graphics.setStroke(oldStroke);
     }
 
     /**

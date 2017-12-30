@@ -27,7 +27,10 @@ public class Blueprint {
   /** the entity tag this bp is for */
   private String tag;
   
-  /** the name of this scheme */
+  /** the key of this scheme */
+  private String key;
+
+  /** the name of this scheme in the local language*/
   private String name;
 
   /** the html of this scheme */
@@ -49,9 +52,10 @@ public class Blueprint {
   /**
    * Constructor - name, html and editable
    */
-  /*package*/ Blueprint(String etag, String nAme, String hTml, boolean readOnly) {
+  /*package*/ Blueprint(String etag, String kEy, String nAme, String hTml, boolean readOnly) {
     // remember
     tag = etag;
+    key = kEy;
     name = nAme;
     html = hTml;
     isReadOnly = readOnly;
@@ -96,7 +100,7 @@ public class Blueprint {
    * Accessor - name
    */
   public String getName() {
-    return name;
+    return key;
   }
   
   /**
@@ -122,7 +126,7 @@ public class Blueprint {
   
   @Override
   public String toString() {
-    return getName();
+    return getDisplayName();
   }
   
 } //RenderingScheme

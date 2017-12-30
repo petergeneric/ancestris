@@ -389,6 +389,9 @@ public class BlueprintRenderer {
    */
   private abstract class MyView extends View {
   
+    /** name */
+    private String name = "";
+    
     /** the cached font we're using */
     private Font font = null;
     
@@ -399,17 +402,18 @@ public class BlueprintRenderer {
     private Dimension2D preferredSpan = null;
 
     /** max span percent 0-100 */
-    private int max = 0;
+    private int maxAtt = 0;
     
     /**
      * Constructor
      */
     MyView(Element elem) {
       super(elem);
+      name = elem.getName();
       
       // minimum?
       try {
-        max = Integer.parseInt((String)elem.getAttributes().getAttribute("max"));
+        maxAtt = Integer.parseInt((String)elem.getAttributes().getAttribute("max"));
       } catch (Throwable t) {
       }
     }
@@ -449,15 +453,21 @@ public class BlueprintRenderer {
     /**
      * @see javax.swing.text.View#getPreferredSpan(int)
      */
+    @Override
     public float getPreferredSpan(int axis) {
       // check cached preferred Span
       if (preferredSpan==null) {
         preferredSpan = getPreferredSpan();
         
-        if (max>0) {
-          double maxWidth = root.width*max/100;
-          if (preferredSpan.getWidth()>maxWidth)
-            preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight() * maxWidth/preferredSpan.getWidth());
+        if (maxAtt>0) {
+          double maxWidth = root.width*maxAtt/100;
+          if (preferredSpan.getWidth()>maxWidth) {
+              if ("prop".equals(name)) {
+                preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight());
+              } else {
+                preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight() * maxWidth/preferredSpan.getWidth());
+              }
+          }
         }        
       }
       return (float)(axis==X_AXIS ? preferredSpan.getWidth() : preferredSpan.getHeight());
@@ -757,7 +767,7 @@ public class BlueprintRenderer {
         return BROKEN.getSizeInPoints(DPI.get(graphics));
       return size;
     }
-
+    
     @Override
     public void paint(Graphics g, Shape allocation) {
       
