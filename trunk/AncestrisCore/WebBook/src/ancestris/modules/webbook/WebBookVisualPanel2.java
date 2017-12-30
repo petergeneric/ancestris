@@ -210,9 +210,9 @@ public final class WebBookVisualPanel2 extends JPanel {
         String sosaStr = "";
         for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
             Indi indi = it.next();
-            props = indi.getProperties("_SOSA");
+            props = indi.getProperties(Indi.TAG_SOSA);
             if (props == null || props.length == 0) {
-                props = indi.getProperties("_SOSADABOVILLE");
+                props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
                 if (props == null) {
                     continue;
                 }

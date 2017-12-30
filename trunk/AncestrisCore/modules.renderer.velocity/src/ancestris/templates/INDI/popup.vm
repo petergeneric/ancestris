@@ -20,7 +20,8 @@ text-align: left;
 border-style: dotted;
 border-width: 1px;
 border-color: black;
-background-color: #CEECF5;
+#background-color: #CEECF5;
+font-weight: bold;
 font-size: 12px;
 text-align: center;
 text-decoration: underline;
@@ -74,47 +75,27 @@ text-align: left;
 #set($inhumation=$INDI.getProperty("BURI"))
 #set($residence=$INDI.getProperty("RESI"))
 #set($profession=$INDI.getProperty("OCCU"))
-#set($version="DD_FM_FL_2016/02/14")
+#set($version="DD_FM_FL_2017/12/30")
 
 
 <!----------------------------------- Titre de la page --------------------------->
-<TABLE width="100%" CELLSPACING="0" COLS="2" BORDER="0">
+<TABLE width="100%" CELLSPACING="0">
 	<TBODY>
 		<TR>
-			<TD height="100" WIDTH="65%">
-        <center>
-          <span class="title"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN") ($INDI.Id)</span>
-        </center>
-      </TD>
-			<TD WIDTH="5%">
-        <center>
-          &nbsp;
-        </center>
-			<TD WIDTH="30%">
-        #set($portrait=$INDI.getProperty("OBJE"))
-        #if ($portrait)
-         <center>
-         <IMG height="100" width="80" SRC="file:///$!INDI.getProperty("OBJE:FILE").getAbsolutePath()">
-         </center>
-        #end
-      </TD>
+			<TD WIDTH="65%">
+                            <center>
+                            <span class="title"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")</span><br>($INDI.Id - Sosa: $!INDI.getSosaString())
+                            </center>
+                        </TD>
+			<TD WIDTH="35%" >
+                            #set($portrait=$INDI.getProperty("OBJE"))
+                            #if ($portrait)
+                                <center>
+                                <IMG height="100" width="$!INDI.getWidthForMedia(100)" SRC="$!INDI.getMediaFilePath()">
+                                </center>
+                            #end
+                        </TD>
 		</TR>
-	</TBODY>
-</TABLE>
-<TABLE width="100%" CELLSPACING="0" COLS="2" BORDER="0">
-	<TBODY>
-		<TR>
-			<TD WIDTH="50%" ALIGN="left" VALIGN="top">
-        <u>Sosa</u> : 
-        #foreach ($event in $INDI.getProperties("_SOSA")) <span class="italic">$event.Value</span>
-        #end
-			</TD>
-			<TD WIDTH="50%" ALIGN="left" VALIGN="top"> 
-        <u>Daboville</u> : 
-        #foreach ($event in $INDI.getProperties("_SOSA_DABOVILLE")) <span class="italic">$event.Value</span>
-        #end
-      </TD>
-    </TR>
 	</TBODY>
 </TABLE>
 

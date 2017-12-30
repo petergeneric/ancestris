@@ -18,10 +18,6 @@ package ancestris.modules.gedcom.sosanumbers;
  */
 public interface Constants {
     
-    final public String SOSADABOVILLE_TAG = "_SOSADABOVILLE";
-    final public String SOSA_TAG = "_SOSA";
-    final public String DABOVILLE_TAG = "_DABOVILLE";
-
     final public String ACTION = "sosaPanelAction";
     final public String NUMBERING = "sosaPanelNumbering";
     final public String ALLSOSA = "sosaPanelAllSosa";

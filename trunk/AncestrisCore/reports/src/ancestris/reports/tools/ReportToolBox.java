@@ -1617,7 +1617,7 @@ public class ReportToolBox extends Report {
 //                    }
 //                    for (int k = 0; k < kids.length; k++) {
 //                        Indi kid = kids[k];
-//                        if (kid.getProperty("_SOSA") != null) {
+//                        if (kid.getProperty("Indi.TAG_SOSA") != null) {
 //                            continue;
 //                        }
 //                        String counter = daboCounter + (families.length > 1 ? suffix.toString() : "") + (k + 1);
@@ -1714,7 +1714,6 @@ public class ReportToolBox extends Report {
     // Generation of Sosas
     public class SettingSosas {
 
-        public String sosaTag = "_SOSA";
         public boolean daboville = false;
         public String olderSign = "+";
         public String youngerSign = "-";

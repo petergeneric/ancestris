@@ -19,7 +19,8 @@ text-align: left;
 border-style: dotted;
 border-width: 1px;
 border-color: black;
-background-color: #CEECF5;
+#background-color: #CEECF5;
+font-weight: bold;
 font-size: 12px;
 text-align: center;
 text-decoration: underline;
@@ -42,7 +43,7 @@ text-align: left;
 
 <body>
 
-#set($version="DD_FM_FL_2016/02/14")
+#set($version="DD_FM_FL_2017/12/30")
 #set($fam=$fams)
 #set($child=$children)
 #set($mariage=$FAM.getProperty("MARR"))

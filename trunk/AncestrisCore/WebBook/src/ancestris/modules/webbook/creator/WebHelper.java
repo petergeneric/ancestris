@@ -60,7 +60,6 @@ public class WebHelper {
      */
     //
     //
-    public final String SOSA_TAG = "_SOSA";
     public final String DEFCHAR = "-";
     //
     private MediaTracker mediaTracker = new MediaTracker(new Container());
@@ -835,15 +834,7 @@ public class WebHelper {
         if (indi == null) {
             return "";
         }
-        Property prop = indi.getProperty(SOSA_TAG);
-        if (prop == null) {
-            return "";
-        }
-        String str = prop.getDisplayValue();
-        while (str.startsWith("0")) {
-            str = str.substring(1);
-        }
-        return str;
+        return indi.getSosaString();
     }
 
     /**

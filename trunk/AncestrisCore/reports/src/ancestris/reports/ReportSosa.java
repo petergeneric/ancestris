@@ -60,7 +60,6 @@ public class ReportSosa extends Report {
     };
     public boolean displayBullet = true;
     public int startSosa = 1;
-    public String sosaTag = "_SOSA";
     /** option - number of generations from root considered to be private and to display */
     public int privateGen = 0;
     public int reportMinGenerations = 1;
@@ -169,7 +168,7 @@ public class ReportSosa extends Report {
         assignColor(srcColor);
 //TODO: a reactiver plus tard    if (!getOptionsFromUser(translate("name"), this)) return;
         if (startSosa == 0) {
-            Property sosaProp = indi.getProperty(sosaTag);
+            Property sosaProp = indi.getProperty(Indi.TAG_SOSA);
             if (sosaProp != null) {
                 try {
                     startSosa = Integer.parseInt(sosaProp.getValue(), 10);

@@ -156,9 +156,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     private DefaultMutableTreeNode familyTop = null;
     private Registry registry = null;
 
-    private String SOSA_TAG = "_SOSA";
-    private String SOSADABOVILLE_TAG = "_SOSADABOVILLE";
-    private String DABOVILLE_TAG = "_DABOVILLE";
     private final static String NO_SOSA = NbBundle.getMessage(IndiPanel.class, "noSosa");
     
     private static Map<String, EventUsage> eventUsages = null;
@@ -2487,14 +2484,8 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         // IDs
         idLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.idLabel.text") + " " + indi.getId());
-        if (indi.getProperty(SOSADABOVILLE_TAG) != null) {
-            str = indi.getPropertyDisplayValue(SOSADABOVILLE_TAG);
-        } else if (indi.getProperty(SOSA_TAG) != null) {
-            str = indi.getPropertyDisplayValue(SOSA_TAG);
-        } else if (indi.getProperty(DABOVILLE_TAG) != null) {
-            str = indi.getPropertyDisplayValue(DABOVILLE_TAG);
-        } 
-        if (str == null || str.isEmpty()) {
+        str = indi.getSosaString();
+        if (str.isEmpty()) {
             str = NO_SOSA;
         }
         sosaLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.sosaLabel.text") + " " + str);

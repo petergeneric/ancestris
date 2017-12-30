@@ -33,8 +33,6 @@ public class ReportGenealogyStatus extends Report {
     public String directoryParam = System.getProperty("user.home") + "<insert media directory name here>";       // default to home directory
     
     
-    private static String SOSATAG = "_SOSA";  // sosa tag
-    private static String SOSADABOVILLETAG = "_SOSADABOVILLE";  // sosadoville tag
     private static String OUI = "1";          // information found, valid and complete
     private static String APX = "~";          // tag found, information found, valid, but not complete (date is a range, place is not complete)
     private static String NON = ".";          // tag found, but information not found or not complete or invalid (date is a range for instance)
@@ -75,9 +73,9 @@ public class ReportGenealogyStatus extends Report {
         String sib = "0";
         for (Iterator it = entities.iterator(); it.hasNext();) {
             Indi indi = (Indi) it.next();
-            props = indi.getProperties(SOSATAG);
+            props = indi.getProperties(Indi.TAG_SOSA);
             if (props.length == 0) {
-                props = indi.getProperties(SOSADABOVILLETAG);
+                props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
             }
             for (int i = 0; i < props.length; i++) {
                 Property prop = props[i];
@@ -638,7 +636,7 @@ public class ReportGenealogyStatus extends Report {
                 spouse = family.getWife();
             }
             // continue if spouse not valid (null, not an ancestor or a siblings)
-            if (spouse != null && spouse.getProperty(SOSATAG) == null && spouse.getProperty(SOSADABOVILLETAG) == null) {
+            if (spouse != null && spouse.getProperty(Indi.TAG_SOSA) == null && spouse.getProperty(Indi.TAG_SOSADABOVILLE) == null) {
                 continue;
             }
             famFound = family;

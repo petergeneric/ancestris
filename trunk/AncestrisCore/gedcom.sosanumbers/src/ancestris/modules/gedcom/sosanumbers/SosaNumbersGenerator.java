@@ -191,17 +191,17 @@ public class SosaNumbersGenerator implements Constants {
 
     private void eraseAll() {
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
-            if (!deleteTags(SOSADABOVILLE_TAG)) {
+            if (!deleteTags(Indi.TAG_SOSADABOVILLE)) {
                 return;
             }
         }
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA) {
-            if (!deleteTags(SOSA_TAG)) {
+            if (!deleteTags(Indi.TAG_SOSA)) {
                 return;
             }
         }
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
-            if (!deleteTags(DABOVILLE_TAG)) {
+            if (!deleteTags(Indi.TAG_DABOVILLE)) {
                 return;
             }
         }
@@ -313,21 +313,21 @@ public class SosaNumbersGenerator implements Constants {
 
         // Clean numbering all or one numbering if individual not in list yet
         if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE)) {
-            nbErased += indi.getProperties(SOSADABOVILLE_TAG).length;
+            nbErased += indi.getProperties(Indi.TAG_SOSADABOVILLE).length;
             if (!runBlank) {
-                indi.delProperties(SOSADABOVILLE_TAG);
+                indi.delProperties(Indi.TAG_SOSADABOVILLE);
             }
         }
         if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSA)) {
-            nbErased += indi.getProperties(SOSA_TAG).length;
+            nbErased += indi.getProperties(Indi.TAG_SOSA).length;
             if (!runBlank) {
-                indi.delProperties(SOSA_TAG);
+                indi.delProperties(Indi.TAG_SOSA);
             }
         }
         if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE)) {
-            nbErased += indi.getProperties(DABOVILLE_TAG).length;
+            nbErased += indi.getProperties(Indi.TAG_DABOVILLE).length;
             if (!runBlank) {
-                indi.delProperties(DABOVILLE_TAG);
+                indi.delProperties(Indi.TAG_DABOVILLE);
             }
         }
 
@@ -357,11 +357,11 @@ public class SosaNumbersGenerator implements Constants {
             try {
                 String value = nbToString(sosaNumber, "", true, daboValue);
                 if (numbering == NUMBERING_SOSADABOVILLE) {
-                    prop = indi.addProperty(SOSADABOVILLE_TAG, value, getNumberPosition(indi, SOSADABOVILLE_TAG, sosaNumber));
+                    prop = indi.addProperty(Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
                 } else if (numbering == NUMBERING_SOSA) {
-                    prop = indi.addProperty(SOSA_TAG, value, getNumberPosition(indi, SOSA_TAG, sosaNumber));
+                    prop = indi.addProperty(Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
                 } else if (numbering == NUMBERING_DABOVILLE) {
-                    prop = indi.addProperty(DABOVILLE_TAG, value, setPropertyPosition(indi, DABOVILLE_TAG));
+                    prop = indi.addProperty(Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
                 }
                 LOG.log(Level.FINER, "{0} -> {1}", new Object[]{indi.toString(true), value});
             } catch (Exception ex) {
