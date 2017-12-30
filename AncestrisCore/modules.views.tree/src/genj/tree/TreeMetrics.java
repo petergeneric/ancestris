@@ -24,21 +24,24 @@ package genj.tree;
  */  
 public class TreeMetrics {
     
-  /*package*/ int
+  public int
     wIndis, hIndis,
     wFams, hFams,
-    pad;
+    pad, indisThick, famsThick;
     
   /**
    * Constructor
    */
-  public TreeMetrics(int windis, int hindis, int wfams, int hfams, int padng) {
+  public TreeMetrics(int windis, int hindis, int wfams, int hfams, int padng, int indisthick, int famsthick) {
     // remember
     wIndis = windis;
     hIndis = hindis;
     wFams  = wfams;
     hFams  = hfams;
     pad    = padng;
+    indisThick = indisthick;
+    famsThick = famsthick;
+    
     // done      
   }
   
@@ -56,14 +59,16 @@ public class TreeMetrics {
       hIndis == other.hIndis&&
       wFams  == other.wFams &&
       hFams  == other.hFams &&
-      pad    == other.pad   ;
+      pad    == other.pad   &&
+      indisThick  == other.indisThick &&
+      famsThick    == other.famsThick   ;
   }
 
   /**
    * @see java.lang.Object#equals(Object)
    */
   public int hashCode() {
-    return wIndis+hIndis+wFams+hFams+pad;
+    return wIndis+hIndis+wFams+hFams+pad+indisThick+famsThick;
   }
 
   /**
@@ -76,6 +81,8 @@ public class TreeMetrics {
     if (wFams >max) max=wFams ;
     if (hFams >max) max=hFams ;
     if (pad   >max) max=pad   ;
+    if (indisThick   >max) max=indisThick   ;
+    if (famsThick   >max) max=famsThick   ;
     return max;
   }
 

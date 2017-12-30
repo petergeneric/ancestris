@@ -57,14 +57,16 @@ public class BlueprintManager {
   
   public final static String TXT_BLUEPRINT = RESOURCES.getString("blueprint");
   
+  private final static String DEFAULT = "default";
+  
   private final static String[][] DEFAULTS = {
-   { "INDI", "default", "complete", "verbose", "colorful", "professional", "simple", "pastel", "light", "small" },
-   { "FAM", "default", "complete", "simple", "pastel", "light", "small" },
-   { "OBJE", "default", "complete", "55" },
-   { "NOTE", "default", "complete" },
-   { "SOUR", "default", "complete" },
-   { "SUBM", "default", "complete" },
-   { "REPO", "default", "complete" }
+   { "INDI", DEFAULT, "complete", "classic", "verbose", "colorful", "professional", "simple", "pastel", "light", "small", "small_picture" },
+   { "FAM", DEFAULT, "complete", "classic", "simple", "pastel", "light", "small" },
+   { "OBJE", DEFAULT, "complete", "55" },
+   { "NOTE", DEFAULT, "complete" },
+   { "SOUR", DEFAULT, "complete" },
+   { "SUBM", DEFAULT, "complete" },
+   { "REPO", DEFAULT, "complete" }
   };
 
   /*package*/ final static Logger LOG = Logger.getLogger("ancestris.renderer");
@@ -105,6 +107,7 @@ public class BlueprintManager {
           addBlueprint(loadBlueprint(
               getClass().getResourceAsStream("blueprints/"+tag+"/"+key+SUFFIX),
               tag,
+              key,
               name,
               true
           ));
@@ -151,7 +154,7 @@ public class BlueprintManager {
     File file = getBlueprintFile(blueprint); 
     File parent = file.getParentFile();
     if ( (!parent.exists()&&!parent.mkdirs()) ||!parent.isDirectory() )
-      throw new IOException("Cannot create folder for blueprint "+blueprint.getName());
+      throw new IOException("Cannot create folder for blueprint "+blueprint.getDisplayName());
     
     readwrite(new StringReader(blueprint.getHTML()), new OutputStreamWriter(new FileOutputStream(file), "UTF8"));
     
@@ -204,7 +207,8 @@ public class BlueprintManager {
         continue;
       name = name.substring(0, name.length()-SUFFIX.length());
       
-      Blueprint blueprint = loadBlueprint(new FileInputStream(file), tag, name, false);
+      String key = name2key(name);
+      Blueprint blueprint = loadBlueprint(new FileInputStream(file), tag, key, name, false);
       blueprint.clearDirty();
       addBlueprint(blueprint);
       
@@ -213,16 +217,20 @@ public class BlueprintManager {
     // done
   }
   
+  public String name2key(String name) {
+      return name.trim().toLowerCase().replace("+ ", "_");
+  }
+  
   /**
    * Load one blueprint from inputstream
    */
-  private Blueprint loadBlueprint(InputStream in, String tag, String name, boolean readOnly) throws IOException {
+  private Blueprint loadBlueprint(InputStream in, String tag, String key, String name, boolean readOnly) throws IOException {
     
     StringWriter html = new StringWriter(512);
     readwrite(new InputStreamReader(in, "UTF8"), html);
     in.close();
     
-    return new Blueprint(tag, name, html.toString(), readOnly);
+    return new Blueprint(tag, key, name, html.toString(), readOnly);
   }
   
   /**
@@ -245,14 +253,14 @@ public class BlueprintManager {
   
   /**
    * Blueprint for given type with given name
-   * @param origin an optional context that blueprints are loaded from if necessary
    * @param tag the entity tag the blueprint is supposed to be for
-   * @param the name of the blueprint
+   * @param name the name of the blueprint in local language 
+   * // FIXME : should be the key, not the name ; displayname should be local language ; for local name, trim it.
    */
   public Blueprint getBlueprint(String tag, String name) {
     // patch name if default
     if (name.length()==0)
-      name = "Default";
+      name = DEFAULT;
     // look through global blueprints for that type
     List<Blueprint> bps = getBlueprints(tag);
     for (int i=0; i<bps.size(); i++) {

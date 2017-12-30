@@ -19,6 +19,7 @@
  */
 package genj.tree;
 
+import ancestris.modules.views.tree.style.Style;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -26,6 +27,7 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import gj.layout.LayoutException;
 import gj.layout.tree.TreeLayout;
@@ -77,11 +79,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
   private boolean isFamilies = true;
   
   /** whether we bend arcs or not */
-  private boolean isBendArcs = true;
-  
-  /** whether we show marriage symbols */
-  private boolean isMarrSymbols = true;
-  
+  private Style style;
+
   /** whether we show toggles for un/folding */
   private boolean isFoldSymbols = true;
   
@@ -103,7 +102,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
   private Entity root;
 
   /** metrics */
-  private TreeMetrics metrics = new TreeMetrics( 66, 40, 80, 7, 10 );
+  //private TreeMetrics metrics = new TreeMetrics( 66, 40, 80, 7, 10 );
   
   /** bookmarks */
   //XXX: We must write a standalone bookmark manager with all styuff
@@ -115,7 +114,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
   /**
    * Constructor
    */
-  public Model() {
+  public Model(Style style) {
+      this.style = style;
   }
   
   /**
@@ -182,6 +182,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
    * Accessor - wether we're vertical
    */
   public void setMaxGenerations(int gen) {
+    if (gen < 1) {
+        gen = 1;
+    }
+    if (gen > 100) {
+        gen = 100;
+    }
     maxGenerations = gen;
     update();
   }
@@ -190,15 +196,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
    * Accessor - wether we bend arcs or not
    */
   public boolean isBendArcs() {
-    return isBendArcs;
+    return style.bend;
   }
   
   /**
    * Accessor - wether we bend arcs or not
    */
   public void setBendArcs(boolean set) {
-    if (isBendArcs==set) return;
-    isBendArcs = set;
+    if (style.bend==set) return;
+    style.bend = set;
     update();
   }
   
@@ -222,15 +228,15 @@ import java.util.concurrent.CopyOnWriteArrayList;
    * Access - isMarrSymbol
    */
   public boolean isMarrSymbols() {
-    return isMarrSymbols;
+    return style.marr;
   }
 
   /**
    * Access - isShowMarrSymbol
    */
   public void setMarrSymbols(boolean set) {
-    if (isMarrSymbols==set) return;
-    isMarrSymbols = set;
+    if (style.marr==set) return;
+    style.marr = set;
     update();
   }
 
@@ -285,18 +291,47 @@ import java.util.concurrent.CopyOnWriteArrayList;
     }
 
   /**
+   * Accessor - Style
+   */
+  public void setStyle(Style set) {
+      // change?
+      if (set == null || style.equals(set)) {
+          return;
+      }
+      style = set;
+      update();
+  } 
+  
+
+  /**
+   * Access - rectangle shape
+   */
+  public boolean isRoundedRectangle() {
+    return style.roundrect;
+  }
+
+  /**
+   * Accessor - rectangle shape
+   */
+  public void setRoundedRectangle(boolean set) {
+    if (style.roundrect==set) return;
+    style.roundrect = set;
+    update();
+  } 
+  
+  /**
    * Accessor - the metrics
    */
   public TreeMetrics getMetrics() {
-    return metrics;
+    return style.tm;
   } 
   
   /**
    * Accessor - the metrics
    */
   public void setMetrics(TreeMetrics set) {
-    if (metrics.equals(set)) return;
-    metrics = set;
+    if (style.tm.equals(set)) return;
+    style.tm = set;
     update();
   } 
   
@@ -344,8 +379,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
     if (cache==null) return null;
     // get nodes in possible range
     int
-      w = Math.max(metrics.wIndis, metrics.wFams),
-      h = Math.max(metrics.hIndis, metrics.hFams);
+      w = Math.max(style.tm.wIndis, style.tm.wFams),
+      h = Math.max(style.tm.hIndis, style.tm.hFams);
     Rectangle range = new Rectangle(x-w/2, y-h/2, w, h);
     // loop nodes
     Iterator it = cache.get(range).iterator();
@@ -537,10 +572,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
       // make sure families only when root is not family
       boolean isFams = isFamilies || root instanceof Fam;
       // parse its descendants
-      Parser descendants = Parser.getInstance(false, isFams, this, metrics);
+      Parser descendants = Parser.getInstance(false, isFams, this, style.tm);
       bounds.add(layout(descendants.parse(root), true));
       // parse its ancestors 
-      bounds.add(layout(descendants.align(Parser.getInstance(true, isFams, this, metrics).parse(root)), false));
+      bounds.add(layout(descendants.align(Parser.getInstance(true, isFams, this, style.tm).parse(root)), false));
     } catch (LayoutException e) {
       e.printStackTrace();
       root = null;
@@ -550,7 +585,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
     
     // create gridcache
     cache = new GridCache(
-      bounds, 3*metrics.calcMax()
+      bounds, 3*style.tm.calcMax()
     );
     Iterator it = nodes.iterator();
     while (it.hasNext()) {
@@ -575,7 +610,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
     
     // layout
     TreeLayout layout = new TreeLayout();
-    layout.setBendArcs(isBendArcs);
+    layout.setBendArcs(style.bend);
     layout.setDebug(false);
     layout.setIgnoreUnreachables(true);
     layout.setBalanceChildren(false);
@@ -629,6 +664,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
     public void run() {
       indi2fam.put(indi, fam);
       update();
+    }
+    /**
+     * access
+     */
+    public int getSpouseSex() {
+        Indi spouse = fam.getOtherSpouse(indi);
+        return spouse != null ? spouse.getSex() : PropertySex.UNKNOWN;
     }
   } //NextFamily
   
