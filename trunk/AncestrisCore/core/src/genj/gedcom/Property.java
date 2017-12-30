@@ -383,6 +383,7 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Removes a property by looking in the property's properties
+     * @param deletee
      */
     public void delProperty(Property deletee) {
 
@@ -414,7 +415,8 @@ public abstract class Property implements Comparable<Property> {
 
         // range check
         if (children == null || pos < 0 || pos >= children.size()) {
-            throw new IndexOutOfBoundsException("No property " + pos);
+            throw new IndexOutOfBoundsException("Trying to delete a non existing property position.\nEntity/Property is : " 
+                    + this.getEntity().toString(true) + ":" + this + ", position is '" + pos + "'.");
         }
         Property removed = children.get(pos);
 
