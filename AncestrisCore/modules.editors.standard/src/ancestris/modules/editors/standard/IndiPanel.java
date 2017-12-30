@@ -73,6 +73,7 @@ import java.awt.KeyboardFocusManager;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -102,6 +103,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollBar;
 import javax.swing.JTable;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
@@ -248,6 +250,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         registry = Registry.get(getClass());
         eventSplitPane.setDividerLocation(registry.get("cygnuseventSplitDividerLocation", eventSplitPane.getDividerLocation()));
+        
+        // Remove Enter key stroke bindings
+        removeEnterKeyBindingsFromButtons();
+
         
     }
     
@@ -4368,6 +4374,54 @@ public class IndiPanel extends Editor implements DocumentListener {
         if (!isBusyEvent) {
             triggerChange();
         }
+    }
+
+    private void removeEnterKeyBindingsFromButtons() {
+        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+
+        stickyButton.getInputMap().put(enterStroke, "none");
+        warningButton.getInputMap().put(enterStroke, "none");
+
+        indiAddButton.getInputMap().put(enterStroke, "none");
+        indiDelButton.getInputMap().put(enterStroke, "none");
+        fatherButton.getInputMap().put(enterStroke, "none");
+        motherButton.getInputMap().put(enterStroke, "none");
+        moreNamesButton.getInputMap().put(enterStroke, "none");
+        brothersButton.getInputMap().put(enterStroke, "none");
+        sistersButton.getInputMap().put(enterStroke, "none");
+        spousesButton.getInputMap().put(enterStroke, "none");
+        childrenButton.getInputMap().put(enterStroke, "none");
+
+        addMediaEventButton.getInputMap().put(enterStroke, "none");
+        addMediaSourceButton.getInputMap().put(enterStroke, "none");
+        addNoteEventButton.getInputMap().put(enterStroke, "none");
+        addSourceEventButton.getInputMap().put(enterStroke, "none");
+        delMediaEventButton.getInputMap().put(enterStroke, "none");
+        delMediaSourceButton.getInputMap().put(enterStroke, "none");
+        delNoteEventButton.getInputMap().put(enterStroke, "none");
+        delSourceEventButton.getInputMap().put(enterStroke, "none");
+
+        assoEditButton.getInputMap().put(enterStroke, "none");
+        assoEditIndi.getInputMap().put(enterStroke, "none");
+
+        eventBaptButton.getInputMap().put(enterStroke, "none");
+        eventBirtButton.getInputMap().put(enterStroke, "none");
+        eventBuriButton.getInputMap().put(enterStroke, "none");
+        eventDeatButton.getInputMap().put(enterStroke, "none");
+        eventMarrButton.getInputMap().put(enterStroke, "none");
+        eventOccuButton.getInputMap().put(enterStroke, "none");
+        eventOthersButton.getInputMap().put(enterStroke, "none");
+        eventPlaceButton.getInputMap().put(enterStroke, "none");
+        eventRemoveButton.getInputMap().put(enterStroke, "none");
+        eventResiButton.getInputMap().put(enterStroke, "none");
+        eventRetiButton.getInputMap().put(enterStroke, "none");
+
+        maxNoteEventButton.getInputMap().put(enterStroke, "none");
+        maxSourceEventButton.getInputMap().put(enterStroke, "none");
+        replaceNoteEventButton.getInputMap().put(enterStroke, "none");
+        replaceSourceEventButton.getInputMap().put(enterStroke, "none");
+        repoEditButton.getInputMap().put(enterStroke, "none");
+    
     }
 
 
