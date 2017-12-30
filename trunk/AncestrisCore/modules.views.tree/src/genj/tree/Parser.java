@@ -162,7 +162,7 @@ import java.util.List;
 
         shapeNext = new Path();
 
-        double d = metrics.hIndis / 10;
+        double d = metrics.hIndis / 12;
         int h = 4;
         
         shapeNext = new Path();
