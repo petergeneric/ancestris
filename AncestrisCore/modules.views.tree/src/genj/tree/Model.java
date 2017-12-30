@@ -663,7 +663,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
      */
     public void run() {
       indi2fam.put(indi, fam);
+      boolean on = TreeView.isAutoScroll();
+      if (on) {
+          TreeView.setAutoScroll(false);
+      }
       update();
+      if (on) {
+          TreeView.setAutoScroll(true);
+      }
     }
     /**
      * access
