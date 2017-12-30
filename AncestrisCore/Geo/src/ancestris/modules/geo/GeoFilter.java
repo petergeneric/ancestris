@@ -255,7 +255,7 @@ public class GeoFilter {
     
     /**
      * Get root indi in two ways:
-     * - first look for _SOSA=1
+     * - first look for sosa is number 1
      * - if not found, return null
      * @param gedcom
      * @return
@@ -267,7 +267,7 @@ public class GeoFilter {
         String sosaStr = "";
         for (Iterator <Indi>it = entities.iterator(); it.hasNext();) {
             Indi indi = it.next();
-            props = indi.getProperties("_SOSA");
+            props = indi.getProperties(Indi.TAG_SOSA);
             if (props != null) {
                 for (int i = 0; i < props.length; i++) {
                     Property prop = props[i];
@@ -277,14 +277,11 @@ public class GeoFilter {
                     }
                 }
             }
-            props = indi.getProperties("_SOSADABOVILLE");
+            props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
             if (props != null) {
                 for (int i = 0; i < props.length; i++) {
                     Property prop = props[i];
                     sosaStr = prop.getDisplayValue();
-                    if (sosaStr.startsWith("1")) {
-                        String str = "";
-                    }
                     if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2))) {
                         return indi;
                     }

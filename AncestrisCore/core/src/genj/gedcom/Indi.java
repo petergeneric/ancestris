@@ -23,6 +23,7 @@ import ancestris.core.TextOptions;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.ImageIcon;
+import java.io.File;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +49,11 @@ public class Indi extends Entity {
     public final static ImageIcon IMG_MALE = Grammar.V55.getMeta(PATH_INDI).getImage("male"),
             IMG_FEMALE = Grammar.V55.getMeta(PATH_INDI).getImage("female"),
             IMG_UNKNOWN = Grammar.V55.getMeta(PATH_INDI).getImage();
+
+    // Specific tags
+    public static String TAG_SOSADABOVILLE = "_SOSADABOVILLE";
+    public static String TAG_SOSA = "_SOSA";
+    public static String TAG_DABOVILLE = "_DABOVILLE";
 
     public Indi() {
         super(Gedcom.INDI, "?");
@@ -756,7 +762,7 @@ public class Indi extends Entity {
                 return true;
             }
         }
-    // TODO: we should have a configurable value for max age 
+        // TODO: we should have a configurable value for max age 
 
         // born more than 100 years ago?
         PropertyDate birt = getBirthDate();
@@ -770,6 +776,60 @@ public class Indi extends Entity {
         return false;
     }
 
+    /**
+     * Get first media file found for the indi
+     */
+    public File getMediaFile() {
+        Property obje = getProperty("OBJE");
+        if (obje != null) {
+            if (obje instanceof PropertyMedia) {
+                PropertyMedia pm = (PropertyMedia) obje;
+                Media media = (Media) pm.getTargetEntity();
+                if (media != null) {
+                    File file = media.getFile();
+                    return file;
+                }
+            } else {
+                PropertyFile file = (PropertyFile) obje.getProperty("FILE");
+                if (file != null) {
+                    return file.getFile();
+                }
+            }
+        }
+        return null;
+    }
+
+    
+    /**
+     * Get sosa number starting from SOSADABOVILLE, SOSA, DABOVILLE
+     * @param validOnly
+     * @return 
+     */
+    public Property getSosa(boolean validOnly) {
+        Property p = getProperty(Indi.TAG_SOSADABOVILLE, validOnly);
+        if (p != null) {
+            return p;
+        }
+        p = getProperty(Indi.TAG_SOSA, validOnly);
+        if (p != null) {
+            return p;
+        }
+        p = getProperty(Indi.TAG_DABOVILLE, validOnly);
+        if (p != null) {
+            return p;
+        }
+        return null;
+    }
+
+    public String getSosaString() {
+        Property p = getSosa(true);
+        if (p != null) {
+            return p.getDisplayValue();
+        }
+        return "";
+    }
+
+    
     @Override
     public PropertyComparator2 getDisplayComparator() {
         return INDIComparator.getInstance();
