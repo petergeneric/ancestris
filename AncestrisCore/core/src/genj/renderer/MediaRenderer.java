@@ -195,7 +195,7 @@ public class MediaRenderer {
           
           iin = ImageIO.createImageInputStream(in);
           Iterator<ImageReader> iter = ImageIO.getImageReaders(iin);
-          if (iter.hasNext()) {
+          if (iter.hasNext() && bounds.width > 0 && bounds.height > 0) {
             ImageReader reader = iter.next();
             try {
               reader.setInput(iin, false, false);
