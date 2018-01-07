@@ -679,6 +679,10 @@ import java.util.concurrent.CopyOnWriteArrayList;
         Indi spouse = fam.getOtherSpouse(indi);
         return spouse != null ? spouse.getSex() : PropertySex.UNKNOWN;
     }
+
+    public Entity getSpouse() {
+        return fam.getOtherSpouse(indi);
+    }
   } //NextFamily
   
   /**
