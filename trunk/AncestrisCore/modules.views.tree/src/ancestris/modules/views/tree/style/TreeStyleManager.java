@@ -157,6 +157,8 @@ public class TreeStyleManager {
         registry.put("wfams", style.tm.wFams);
         registry.put("hfams", style.tm.hFams);
         registry.put("pad", style.tm.pad);
+        registry.put("indisthick", style.tm.indisThick);
+        registry.put("famsthick", style.tm.famsThick);
         
         registry.put("bend", style.bend);
         registry.put("marrs", style.marr);

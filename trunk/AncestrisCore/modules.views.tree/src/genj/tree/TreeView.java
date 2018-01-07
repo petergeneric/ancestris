@@ -65,6 +65,7 @@ import genj.util.swing.ViewPortOverview;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import ancestris.swing.ToolBar;
+import genj.tree.Model.NextFamily;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.Color;
@@ -139,6 +140,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private SliderWidget sliderZoom;
     /** folded state */
     private boolean isFolded = true;
+    /** fam and spouse button */
+    private ActionFamsAndSpouses famAndSpouseAction;
 
     
     /** our styles */
@@ -639,6 +642,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
         // scroll
         scrollTo(node.pos, force);
+        
 
         // done    
     }
@@ -684,7 +688,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         toolbar.add(bh.create(new ActionOrientation(), Images.imgVert, model.isVertical()));
 
         // families?
-        toolbar.add(bh.create(new ActionFamsAndSpouses(), Images.imgDoFams, model.isFamilies()));
+        famAndSpouseAction = new ActionFamsAndSpouses();
+        toolbar.add(bh.create(famAndSpouseAction, null, model.isFamilies()));
 
         // toggless?
         toolbar.add(bh.create(new ActionFoldSymbols(), null, model.isFoldSymbols()));
@@ -753,7 +758,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     }
 
     private void setRootTitle(String title) {
-        title = title.replaceAll("\\)\\+", ")<br>+"); // line break for family entity after husband name to make sure it fits on 2 lines
+        title = title.replaceAll("\\) \\+", ")<br>+"); // line break for family entity after husband name to make sure it fits on 2 lines
         rootTitle.setText("<html><center>" + RESOURCES.getString("root.name") + " " + title + "</center></html");
 
     }
@@ -816,6 +821,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             show(root, true);
             String title = root == null ? "" : root.toString(true);
             setRootTitle(title);
+            famAndSpouseAction.updateButton();
         }
 
         // load bookmarks
@@ -1072,6 +1078,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             if (content != null && content instanceof Entity) {
                 entity = (Entity) content;
             }
+            if (content != null && content instanceof NextFamily) {
+                entity = ((NextFamily) content).getSpouse();
+            }
             return entity;
         }
 
@@ -1128,6 +1137,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             repaint();
             // scrolling should work now
             scrollToCurrent();
+            // update button
+            famAndSpouseAction.updateButton();
+
         }
 
         /**
@@ -1368,12 +1380,23 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
      */
     private class ActionFamsAndSpouses extends AbstractAncestrisAction {
 
+        public void updateButton() {
+            boolean forceFamily = (getRoot() instanceof Fam);
+            super.setEnabled(!forceFamily);
+            String addition = "";
+            if (forceFamily) {
+                model.setFamilies(forceFamily);
+                addition = RESOURCES.getString("familiesforced.tip");
+            }
+            super.setImage(model.isFamilies() ? Images.imgDontFams : Images.imgDoFams);
+            super.setTip("<html>" + RESOURCES.getString(model.isFamilies() ? "familiesnot.tip" : "families.tip") + "<br>" + addition + "</html>");
+        }
+        
         /**
          * Constructor
          */
         private ActionFamsAndSpouses() {
-            super.setImage(Images.imgDontFams);
-            super.setTip(RESOURCES.getString("families.tip"));
+            updateButton();
         }
 
         /**
@@ -1382,6 +1405,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         @Override
         public void actionPerformed(ActionEvent event) {
             model.setFamilies(!model.isFamilies());
+            updateButton();
             scrollToCurrent();
         }
     } //ActionFamsAndSpouses
