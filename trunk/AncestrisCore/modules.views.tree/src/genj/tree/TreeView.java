@@ -110,6 +110,7 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
+import org.openide.windows.WindowManager;
 
 /**
  * TreeView
@@ -202,6 +203,15 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         // setup layout
         add(overview);
         add(scroll);
+        
+        // Centers on selected entity at opening (does not seem to always have an effect)
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            @Override
+            public void run() {
+                gotoMenu.doClick();
+            }
+        });
+        
         
         // done
     }
@@ -543,6 +553,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
         show(context.getEntity());
         // done
+        
     }
 
     /**
@@ -642,7 +653,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
         // scroll
         scrollTo(node.pos, force);
-        
 
         // done    
     }
