@@ -389,8 +389,8 @@ public class BlueprintRenderer {
    */
   private abstract class MyView extends View {
   
-    /** name */
-    private String name = "";
+    /** element */
+    private Element element;
     
     /** the cached font we're using */
     private Font font = null;
@@ -409,7 +409,7 @@ public class BlueprintRenderer {
      */
     MyView(Element elem) {
       super(elem);
-      name = elem.getName();
+      element = elem;
       
       // minimum?
       try {
@@ -455,22 +455,27 @@ public class BlueprintRenderer {
      */
     @Override
     public float getPreferredSpan(int axis) {
-      // check cached preferred Span
-      if (preferredSpan==null) {
-        preferredSpan = getPreferredSpan();
-        
-        if (maxAtt>0) {
-          double maxWidth = root.width*maxAtt/100;
-          if (preferredSpan.getWidth()>maxWidth) {
-              if ("prop".equals(name)) {
-                preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight());
-              } else {
-                preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight() * maxWidth/preferredSpan.getWidth());
-              }
-          }
-        }        
-      }
-      return (float)(axis==X_AXIS ? preferredSpan.getWidth() : preferredSpan.getHeight());
+        // check cached preferred Span
+        if (preferredSpan == null) {
+            preferredSpan = getPreferredSpan();
+
+            if (maxAtt > 0) {
+                double maxWidth = root.width * maxAtt / 100;
+                if (preferredSpan.getWidth() > maxWidth) {
+                    Object p = element.getAttributes().getAttribute("path");
+                    Property prop = null;
+                    if (p != null) {
+                        prop = BlueprintRenderer.this.getProperty(entity, new TagPath((String) p));
+                    }
+                    if ("media".equals(element.getName()) || prop instanceof PropertyFile || prop instanceof PropertyBlob) {
+                        preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight() * maxWidth / preferredSpan.getWidth());
+                    } else {
+                        preferredSpan = new Dimension2d(maxWidth, preferredSpan.getHeight());
+                    }
+                }
+            }
+        }
+        return (float) (axis == X_AXIS ? preferredSpan.getWidth() : preferredSpan.getHeight());
     }
     
     @Override
