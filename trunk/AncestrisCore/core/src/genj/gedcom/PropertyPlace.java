@@ -602,7 +602,11 @@ public class PropertyPlace extends PropertyChoiceValue {
         
         // Put these found coordinates to this place
         if (source != null) {
-            setCoordinates(source.getLatitude(false).getValue(), source.getLongitude(false).getValue());
+            PropertyLatitude lat = source.getLatitude(false);
+            PropertyLongitude lon = source.getLongitude(false);
+            if (lat != null && lon != null) {
+                setCoordinates(lat.getValue(), lon.getValue());
+            }
         }
         
     }
