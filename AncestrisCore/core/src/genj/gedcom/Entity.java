@@ -306,6 +306,9 @@ public class Entity extends Property {
             if (r == Integer.MAX_VALUE) {
                 try {
                     r = i1.getID() - i2.getID();
+                    if (r == 0) {
+                        r = i1.id.compareToIgnoreCase(i2.id);
+                    }
                 } catch (NumberFormatException e) {
                     r = i1.id.compareToIgnoreCase(i2.id);
                 }
