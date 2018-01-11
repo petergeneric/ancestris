@@ -1451,7 +1451,12 @@ public abstract class Property implements Comparable<Property> {
         switch (marker) {
             case 'D': {
                 prop = property.getProperty("DATE");
-                value = (prop instanceof PropertyDate) && prop.isValid() ? prop.getDisplayValue() : null;
+                if ((prop instanceof PropertyDate) && prop.isValid()) {
+                    value = prop.getDisplayValue();
+                } else {
+                    prop = property;
+                    value = property.getDisplayValue();
+                }
                 break;
             }
             case 'y': {
