@@ -77,6 +77,13 @@ public class PropertyEvent extends Property {
   }
 
   /**
+   * Returns the display value of this property
+   */
+  public String getDisplayValue() {
+    return knownToHaveHappened ? resources.getString("prop.event.knwontohavehappened") : "";
+  }
+
+  /**
    * Sets the value of this property
    */
   public void setValue(String value) {
