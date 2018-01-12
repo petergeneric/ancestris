@@ -129,7 +129,12 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 }
                 @Override
                 public void removeUpdate(DocumentEvent e) {
-                    placeModified = true;
+                    if (!updateOnGoing) {
+                        placeModified = true;
+                        if (jtf.getText().isEmpty()) {
+                            updatePlace(mPlace, index + 1);
+                        }
+                    }
                 }
                 @Override
                 public void insertUpdate(DocumentEvent e) {
@@ -143,7 +148,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                         if (sameChoices.length > 0) {
                             updatePlace(sameChoices[0], index + 1);
                         } else {
-                            updatePlace(null, index + 1);
+                            updatePlace(mPlace, index + 1);
                         }
                     }
                 }
