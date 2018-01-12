@@ -39,6 +39,7 @@ public final class FamMatcherOptionsPanel extends JPanel {
             }
         });
 
+        famEmptyValuesValidRadioButton.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(famEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(FamMatcherOptionsPanel.class, "FamMatcherOptionsPanel.famEmptyValuesValidRadioButton.text")); // NOI18N
         famEmptyValuesValidRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

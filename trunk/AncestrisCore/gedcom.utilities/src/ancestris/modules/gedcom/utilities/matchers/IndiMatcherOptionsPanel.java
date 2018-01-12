@@ -91,6 +91,7 @@ public final class IndiMatcherOptionsPanel extends JPanel {
             }
         });
 
+        indiEmptyValuesValidRadioButton.setSelected(true);
         org.openide.awt.Mnemonics.setLocalizedText(indiEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiEmptyValuesValidRadioButton.text")); // NOI18N
         indiEmptyValuesValidRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

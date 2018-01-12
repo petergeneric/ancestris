@@ -61,6 +61,7 @@
     </Component>
     <Component class="javax.swing.JRadioButton" name="famEmptyValuesValidRadioButton">
       <Properties>
+        <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/utilities/matchers/Bundle.properties" key="FamMatcherOptionsPanel.famEmptyValuesValidRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
