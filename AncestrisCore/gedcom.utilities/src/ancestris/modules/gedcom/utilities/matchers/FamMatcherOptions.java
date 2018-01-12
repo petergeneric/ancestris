@@ -17,7 +17,7 @@ public class FamMatcherOptions extends MatcherOptions {
     public FamMatcherOptions() {
         registry = Registry.get(MatcherOptions.class);
         dateinterval = registry.get("MatcherOptions.Fam.dateinterval", 365);
-        emptyValueValid = registry.get("MatcherOptions.Fam.emptyValueValid", false);
+        emptyValueValid = registry.get("MatcherOptions.Fam.emptyValueValid", true);
     }
     
     

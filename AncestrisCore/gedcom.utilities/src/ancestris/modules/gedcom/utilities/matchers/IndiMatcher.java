@@ -26,35 +26,42 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
 
     @Override
     public int compare(Indi leftIndi, Indi rightIndi) {
+        int score = 0;
+        
+        // Same sex
         if ((leftIndi.getSex() == rightIndi.getSex())) {
-            // Same last names ?
-            if (compareLastNames(leftIndi, rightIndi)) {
-                // same firt names
-                if (compareFirstNames(leftIndi, rightIndi)) {
-                    // Same birth date ?
-                    if (compareDates(leftIndi.getBirthDate(), rightIndi.getBirthDate()) < options.getDateinterval()) {
-                        // Same birth Place ?
-                        if (compareBirthPlace(leftIndi, rightIndi)) {
-                            // same death date
-                            if (compareDates(leftIndi.getDeathDate(), rightIndi.getDeathDate()) < options.getDateinterval()) {
-                                if (compareDeathPlace(leftIndi, rightIndi)) {
-                                    return 100;
-                                } else {
-                                    return 80;
-                                }
-                            } else {
-                                return 60;
-                            }
-                        }
-                        return 40;
-                    }
-                    return 20;
-                }
-                return 10;
-            }
-            return 5;
+            score += 5;
         }
-        return 0;
+        // Same last names ?
+        if (compareLastNames(leftIndi, rightIndi)) {
+            score += 5;
+        }
+
+        // same firt names
+        if (compareFirstNames(leftIndi, rightIndi)) {
+            score += 10;
+        }
+        // Same birth date ?
+        if (compareDates(leftIndi.getBirthDate(), rightIndi.getBirthDate()) < options.getDateinterval()) {
+            score += 20;
+        }
+
+        // Same birth Place ?
+        if (compareBirthPlace(leftIndi, rightIndi)) {
+            score += 20;
+        }
+
+        // same death date ?
+        if (compareDates(leftIndi.getDeathDate(), rightIndi.getDeathDate()) < options.getDateinterval()) {
+            score += 20;
+        }
+
+        // same death place ?
+        if (compareDeathPlace(leftIndi, rightIndi)) {
+            score += 20;
+        }
+
+        return score;
     }
 
     private boolean compareLastNames(Indi leftIndi, Indi rightIndi) {

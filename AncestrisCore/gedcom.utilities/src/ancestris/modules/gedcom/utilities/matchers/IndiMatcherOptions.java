@@ -19,7 +19,7 @@ public class IndiMatcherOptions extends MatcherOptions {
         dateinterval = registry.get("MatcherOptions.Indi.dateinterval", 365);
         checkAllNames = registry.get("MatcherOptions.Indi.checkAllNames", true);
         allFirstNamesEquals = registry.get("MatcherOptions.Indi.allFirstNamesEquals", true);
-        emptyValueValid = registry.get("MatcherOptions.Indi.emptyValueValid", false);
+        emptyValueValid = registry.get("MatcherOptions.Indi.emptyValueValid", true);
     }
     
     /**

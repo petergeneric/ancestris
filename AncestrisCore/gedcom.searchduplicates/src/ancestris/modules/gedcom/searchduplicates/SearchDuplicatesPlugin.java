@@ -111,21 +111,22 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     }
                 }
                 
-                // Sort matches by certainty then entity name
-                Collections.sort(potentialMatches, new Comparator<PotentialMatch<? extends Entity>>() {
-                    @Override
-                    public int compare(PotentialMatch<? extends Entity> e1, PotentialMatch<? extends Entity> e2) {
-                        if (e2.getCertainty() - e1.getCertainty() != 0) {
-                            return e2.getCertainty() - e1.getCertainty();
-                        }
-                        return e1.getLeft().toString(true).toLowerCase().compareTo(e2.getLeft().toString(true).toLowerCase());
-                    }
-                });
                 matchesLinkedList.addAll(potentialMatches);
                 duplicatesHashMap.put(tag, potentialMatches.size());
             }
             
-            // Display them
+                // Sort matches by certainty then entity name
+            Collections.sort(matchesLinkedList, new Comparator<PotentialMatch<? extends Entity>>() {
+                @Override
+                public int compare(PotentialMatch<? extends Entity> e1, PotentialMatch<? extends Entity> e2) {
+                    if (e2.getCertainty() - e1.getCertainty() != 0) {
+                        return e2.getCertainty() - e1.getCertainty();
+                    }
+                    return e1.getLeft().toString(true).toLowerCase().compareTo(e2.getLeft().toString(true).toLowerCase());
+                }
+            });
+
+                // Display them
             SwingUtilities.invokeLater(new Runnable() {
                 ResultPanel entityViewPanel = new ResultPanel(gedcom);
                 DialogDescriptor checkDuplicatePanelDescriptor;
