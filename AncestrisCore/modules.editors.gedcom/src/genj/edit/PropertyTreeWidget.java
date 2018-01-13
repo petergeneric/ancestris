@@ -693,6 +693,7 @@ public class PropertyTreeWidget extends DnDTree {
      * Constructor
      */
     private Renderer() {
+      setPadding(0);
       setOpaque(true);
     }
     
@@ -701,36 +702,39 @@ public class PropertyTreeWidget extends DnDTree {
      */
     public Component getTreeCellRendererComponent(JTree tree, Object object, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
 
-      // no property no luck      
-      if (!(object instanceof Property))
-        return this;
-      Property prop = (Property)object;
+        // no property no luck      
+        if (!(object instanceof Property)) {
+            return this;
+        }
+        Property prop = (Property) object;
 
-      // prepare color
-      if (defaultRenderer!=null) {
-        if (sel) {
-          setForeground(defaultRenderer.getTextSelectionColor());
-          setBackground(defaultRenderer.getBackgroundSelectionColor());
-        } else {
-          setForeground(defaultRenderer.getTextNonSelectionColor());
-          if (prop.isGuessed()){
-            setBackground(new Color(0xf0, 0xf0, 0xf0));
-            } else{
-          setBackground(defaultRenderer.getBackgroundNonSelectionColor());
+        // prepare color
+        if (defaultRenderer != null) {
+            if (sel) {
+                setForeground(defaultRenderer.getTextSelectionColor());
+                setBackground(defaultRenderer.getBackgroundSelectionColor());
+            } else {
+                setForeground(defaultRenderer.getTextNonSelectionColor());
+                if (prop.isGuessed()) {
+                    setBackground(new Color(0xf0, 0xf0, 0xf0));
+                } else {
+                    setBackground(defaultRenderer.getBackgroundNonSelectionColor());
+                }
             }
         }
-      }
 
-      // calc image        
-      ImageIcon img = prop.getImage(true);
-      if (prop.isPrivate()) 
-        img = img.getOverLayed(MetaProperty.IMG_PRIVATE);
-      setIcon(img);
+        // calc image        
+        ImageIcon img = prop.getImage(true);
+        if (prop.isPrivate()) {
+            img = img.getOverLayed(MetaProperty.IMG_PRIVATE);
+        }
+        setIcon(img);
 
-      // calc text
-      setText(prop instanceof Entity ? calcText((Entity)prop) : calcText(prop));
-      // done
-      return this;
+        // calc text
+        setText(prop instanceof Entity ? calcText((Entity) prop) : calcText(prop));
+
+        // done
+        return this;
     }
 
     private String calcText(Entity entity) {        
