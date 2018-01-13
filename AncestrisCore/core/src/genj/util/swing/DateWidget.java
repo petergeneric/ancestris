@@ -26,6 +26,7 @@ import genj.gedcom.MetaProperty;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.ChangeSupport;
+import genj.util.Resources;
 import genj.util.WordBuffer;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -52,6 +53,8 @@ public class DateWidget extends JPanel {
 
   private final static NestedBlockLayout LAYOUT = new NestedBlockLayout("<row><x pad=\"0\"/><x/><x/><x pad=\"0\"/><x pad=\"0,10,0,0\"/></row>");
 
+  private Resources resources = Resources.get(Resources.class);
+  
   /** components */
   private PopupWidget widgetCalendar;
   private TextFieldWidget widgetDay, widgetYear;
@@ -132,7 +135,7 @@ public class DateWidget extends JPanel {
     switch (new SimpleDateFormat().toPattern().charAt(0)) {
     case 'm':
     case 'M':
-      format = "mmm/dd/yyyy";
+      format = resources.getString("dateformat.tip.month"); // "mm/dd/yyyy"
       add(widgetMonth);
       add(widgetDay);
       add(widgetYear);
@@ -142,7 +145,7 @@ public class DateWidget extends JPanel {
       break;
     case 'd':
     case 'D':
-      format = "dd.mmm.yyyy";
+      format = resources.getString("dateformat.tip.day"); // "dd.mm.yyyy"
       add(widgetDay);
       add(widgetMonth);
       add(widgetYear);
@@ -151,7 +154,7 @@ public class DateWidget extends JPanel {
       widgetMonth.getTextEditor().setDocument(new TabbingDoc(widgetYear));
       break;
     default:
-      format = "yyyy-mmm-dd";
+      format = resources.getString("dateformat.tip.year"); // "yyyy-mm-dd"
       add(widgetYear);
       add(widgetMonth);
       add(widgetDay);
