@@ -257,22 +257,26 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return new ArrayList<Action>();
         }
         List<Action> actions = new ArrayList<Action>();
-        actions.add(new ChooseBlueprintAction(focusIndi, getBlueprint(focusIndi.getTag())) {
-            @Override
-            protected void commit(Entity recipient, Blueprint blueprint) {
-                tag2blueprint.put(recipient.getTag(), blueprint.getName());
-                resetBlueprints();
-                REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
-            }
-        });
-        actions.add(new ChooseBlueprintAction(focusFam, getBlueprint(focusFam.getTag())) {
-            @Override
-            protected void commit(Entity recipient, Blueprint blueprint) {
-                tag2blueprint.put(recipient.getTag(), blueprint.getName());
-                resetBlueprints();
-                REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
-            }
-        });
+        if (focusIndi != null) {
+            actions.add(new ChooseBlueprintAction(focusIndi, getBlueprint(focusIndi.getTag())) {
+                @Override
+                protected void commit(Entity recipient, Blueprint blueprint) {
+                    tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                    resetBlueprints();
+                    REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
+                }
+            });
+        }
+        if (focusFam != null) {
+            actions.add(new ChooseBlueprintAction(focusFam, getBlueprint(focusFam.getTag())) {
+                @Override
+                protected void commit(Entity recipient, Blueprint blueprint) {
+                    tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                    resetBlueprints();
+                    REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
+                }
+            });
+        }
         return actions;
     }
 
