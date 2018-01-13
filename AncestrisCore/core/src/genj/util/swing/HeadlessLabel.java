@@ -146,7 +146,7 @@ public class HeadlessLabel extends JComponent {
       width, 
       height;
     FontMetrics fm = getFontMetrics(getFont());
-    width = fm.stringWidth(txt);
+    width = fm.stringWidth(txt+" "); // FL: 2018-01-13 - add one space because in some instances (ex: long format for dates), text gets truncated a bit
     height = fm.getHeight();
     // check image
     if (icon!=null) {
