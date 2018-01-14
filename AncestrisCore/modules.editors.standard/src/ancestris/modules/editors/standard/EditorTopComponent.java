@@ -112,7 +112,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
      * @param newContext
      */
     @Override
-        public void setContextImpl(Context newContext) {
+    public void setContextImpl(Context newContext) {
         
         // Quit if context is null  
         if (newContext == null || newContext.getEntity() == null) {
