@@ -129,13 +129,7 @@ public class ExplorerHelper {
             String title = getTitleFromNodes(selNodes);
             if (title != null) {
                 Action menuTitle;
-                if (title.length() > 40) {
-                    menuTitle = CommonActions.createSeparatorAction(title.substring(0, 36) + "...");
-                    menuTitle.putValue(Action.SHORT_DESCRIPTION, title);
-                } else {
-                    menuTitle = CommonActions.createSeparatorAction(title);
-                }
-
+                menuTitle = CommonActions.createSeparatorAction(title);
                 actions.add(0, menuTitle);
                 actions.add(1, null);  // add separator
             }
@@ -179,5 +173,6 @@ public class ExplorerHelper {
             Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), source);
             createPopup(e.getComponent(), p, selNodes);
         }
+
     }
 }
