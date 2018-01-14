@@ -125,9 +125,6 @@ public class WorkerTag extends Worker {
                 return false;
             }
         }
-        if (prop.getTag().equals("CHAN")) {
-            String debug = "";
-        }
         
         return true;
     }
