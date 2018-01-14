@@ -14,6 +14,7 @@ package ancestris.modules.nav;
 import ancestris.api.editor.AncestrisEditor;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AncestrisActionProvider;
+import ancestris.gedcom.PropertyNode;
 import ancestris.modules.beans.ABluePrintBeans;
 import ancestris.modules.beans.AListBean;
 import ancestris.view.ExplorerHelper;
@@ -22,6 +23,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import java.awt.event.ActionEvent;
@@ -46,65 +48,58 @@ import org.openide.util.NbBundle;
 import org.openide.nodes.Node;
 
 
-public final class FamilyPanel extends JPanel implements AncestrisActionProvider {
+public final class FamilyPanel extends JPanel implements AncestrisActionProvider, GedcomListener {
 
     private final static Registry REGISTRY = Registry.get(FamilyPanel.class);
     
-    //private final static String EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.empty");
     private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
     private final static String HUSBAND_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.husband.empty");
-    //private final static String CHILD_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.child.empty");
     private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
     private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
     private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
+
+    
     private Context context;
+    private boolean sticky = false;
     private Indi focusIndi;
     private Fam focusFam;
-    private final EntitiesPanel childrenPanel;
-    private final EntitiesPanel oFamsPanel;
-    private final EntitiesPanel siblingsPanel;
-    private final EntitiesPanel eventsPanel;
+    private EntitiesPanel childrenPanel = null;
+    private EntitiesPanel oFamsPanel = null;
+    private EntitiesPanel siblingsPanel = null;
+    private EntitiesPanel eventsPanel = null;
+    private EntitiesPanel relativesPanel = null;
+
     /** the blueprints we're using */
     private final Map<String, String> tag2blueprint = new HashMap<String, String>();
 
+    
+    
+    
+    
     /** Creates new form FamilyPanel */
     public FamilyPanel() {
         initComponents();
-        
         jScrollPane1.getVerticalScrollBar().setUnitIncrement(16);
+        jScrollPane2.getVerticalScrollBar().setUnitIncrement(16);
+        jScrollPane3.getVerticalScrollBar().setUnitIncrement(16);
+    }
 
-        // Add contextual popup menu
-        new ExplorerHelper(husband).setPopupAllowed(true);
-        new ExplorerHelper(wife).setPopupAllowed(true);
-        new ExplorerHelper(husbFather).setPopupAllowed(true);
-        new ExplorerHelper(husbMother).setPopupAllowed(true);
-        new ExplorerHelper(familySpouse).setPopupAllowed(true);
-
-        // Add mouse listeners for clics and double-clics
-        husband.addMouseListener(new ABeanHandler(false));
-        wife.addMouseListener(new SpouseHandler(husband));
-        husbFather.addMouseListener(new ParentHandler(husband, PropertySex.MALE));
-        husbMother.addMouseListener(new ParentHandler(husband, PropertySex.FEMALE));
-        familySpouse.addMouseListener(new ABeanHandler(false));
-
+    public void init() {
+        
         // Load saved blueprints for this view
         for (String tag : Gedcom.ENTITIES) {
             tag2blueprint.put(tag, REGISTRY.get("blueprint." + tag, ""));
         }
 
-        // Set panels' blueprints
-        resetBlueprints();
-        husband.setEmptyBluePrint(HUSBAND_EMPTY_BP);
-        husband.setAntialiasing(true);
-        wife.setEmptyBluePrint(WIFE_EMPTY_BP);
-        wife.setAntialiasing(true);
-        husbFather.setEmptyBluePrint(FATHER_EMPTY_BP);
-        husbFather.setAntialiasing(true);
-        husbMother.setEmptyBluePrint(MOTHER_EMPTY_BP);
-        husbMother.setAntialiasing(true);
-        familySpouse.setEmptyBluePrint(FAMS_EMPTY_BP);
-        familySpouse.setAntialiasing(true);
+        // Set main panels' blueprints
+        enableBlueprint(husband, new ABeanHandler(false), HUSBAND_EMPTY_BP);
+        enableBlueprint(wife, new SpouseHandler(husband), WIFE_EMPTY_BP);
+        enableBlueprint(husbFather, new ParentHandler(husband, PropertySex.MALE), FATHER_EMPTY_BP);
+        enableBlueprint(husbMother, new ParentHandler(husband, PropertySex.FEMALE), MOTHER_EMPTY_BP);
+        enableBlueprint(familySpouse, new ABeanHandler(false), FAMS_EMPTY_BP);
+        enableBlueprint(familyParent, new ABeanHandler(false), FAMS_EMPTY_BP);
 
+        // Other blueprints
         // Childs
         childrenPanel = new EntitiesPanel(jScrollPane1) {
 
@@ -161,7 +156,28 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         };
         eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
         
+        // Events
+        relativesPanel = new EntitiesPanel(jsRelatives) {
+
+            @Override
+            public Property[] getEntities(Property rootProperty) {
+                if (rootProperty != null && rootProperty instanceof Indi) {
+                    ArrayList<Property> result = new ArrayList<Property>(5);
+                    for (Property p : rootProperty.getProperties()) {
+                        if (p instanceof PropertyEvent) {
+                            result.add(p);
+                        }
+                    }
+                    return result.toArray(new Property[]{});
+                }
+                return null;
+            }
+        };
+        
+        resetBlueprints();
+        
     }
+    
     
     public void resetBlueprints() {
         husband.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
@@ -169,10 +185,45 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         husbFather.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
         husbMother.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
         familySpouse.setBlueprint(Gedcom.FAM, getBlueprint("FAM").getHTML());  // NOI18N
+        familyParent.setBlueprint(Gedcom.FAM, getBlueprint("FAM").getHTML());  // NOI18N
         refresh();
     }
 
+    private void enableBlueprint(ABluePrintBeans bp, ABeanHandler bh, String defaultBP) {
+        // Set mouse listener
+        bp.addMouseListener(bh);
+        
+        // Init blueprint
+        bp.setEmptyBluePrint(defaultBP);
+        bp.setAntialiasing(true);
+        
+        // Set helper
+        new ExplorerHelper(bp).setPopupAllowed(true);
+        
+    }
+
+    private void setPanel(EntitiesPanel panel) {
+        for (Component c : panel.getComponents()) {
+            if (c instanceof ABluePrintBeans) {
+                ABluePrintBeans bean = (ABluePrintBeans) c;
+                bean.addMouseListener(new ABeanHandler(false));
+                
+                // Set tooltip
+                bean.setToolTipText(NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText"));
+
+                // Set helper
+                new ExplorerHelper(bean).setPopupAllowed(true);
+            }
+        }
+    }
+
+    
     public void setContext(Context context) {
+        if (sticky) {
+            sticky = false;
+            return;
+        }
+        
         if (context == null || context.getGedcom() == null) {
             return;
         }
@@ -214,6 +265,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return;
         }
         refresh();
+
+        
     }
 
     private void refresh() {
@@ -225,30 +278,38 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         if (focusFam == null && focusIndi != null && focusIndi.getNoOfFams() > 0) {
             focusFam = focusIndi.getFamiliesWhereSpouse()[0];
         }
+        
+        // Main indi, his/her father and his/her Mother
         husband.setContext(focusIndi);
         husbFather.setContext(focusIndi.getBiologicalFather());
         husbMother.setContext(focusIndi.getBiologicalMother());
-        
         familySpouse.setContext(focusFam);
+        
+        // Spouse of main indi
         if (focusFam == null) {
             wife.setContext(null);
         } else {
             wife.setContext(focusFam.getOtherSpouse(focusIndi));
         }
+        
+        // OTHER SPOUSES
+        oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty());
+        
+        // CHILDREN tab : Family entity of main indi and spouse and their children
         childrenPanel.update(familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),null);
-        setTooltip(childrenPanel);
 
+        // SIBLINGS tab : Siblings of indi based on family of father and mother
+        siblingsPanel.update(husband.getProperty(), null);
         Fam famChild = ((Indi) husband.getProperty()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
-
-        siblingsPanel.update(husband.getProperty(), null);
-        setTooltip(siblingsPanel);
-
-        oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty());
-        setTooltip(oFamsPanel);
-
+        
+        // EVENTS tab
         eventsPanel.update(husband.getProperty(), null);
 
+        // Enable panels' blueprints
+        setPanel(oFamsPanel);
+        setPanel(childrenPanel);
+        setPanel(siblingsPanel);
     }
 
     
@@ -256,8 +317,17 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         if (!hasFocus) {
             return new ArrayList<Action>();
         }
+
+        Property prop = null;
+        if (nodes != null && nodes.length > 0 && nodes[0] instanceof PropertyNode) {
+            prop = ((PropertyNode) nodes[0]).getProperty();
+            if (prop != null) {
+                prop = prop.getEntity();
+            }
+        }
+        
         List<Action> actions = new ArrayList<Action>();
-        if (focusIndi != null) {
+        if (focusIndi != null && prop instanceof Indi) {
             actions.add(new ChooseBlueprintAction(focusIndi, getBlueprint(focusIndi.getTag())) {
                 @Override
                 protected void commit(Entity recipient, Blueprint blueprint) {
@@ -267,7 +337,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                 }
             });
         }
-        if (focusFam != null) {
+        if (focusFam != null && prop instanceof Fam) {
             actions.add(new ChooseBlueprintAction(focusFam, getBlueprint(focusFam.getTag())) {
                 @Override
                 protected void commit(Entity recipient, Blueprint blueprint) {
@@ -319,9 +389,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         jPanel8 = new javax.swing.JPanel();
         jScrollPane3 = new javax.swing.JScrollPane();
         familyParent = new ancestris.modules.beans.ABluePrintBeans();
-        relativesPanel = new javax.swing.JPanel();
         eventsTab = new javax.swing.JPanel();
         jsEvents = new javax.swing.JScrollPane();
+        relativesTab = new javax.swing.JPanel();
+        jsRelatives = new javax.swing.JScrollPane();
 
         setPreferredSize(new java.awt.Dimension(622, 500));
         setRequestFocusEnabled(false);
@@ -545,22 +616,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
 
-        relativesPanel.setBackground(java.awt.Color.white);
-        relativesPanel.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText")); // NOI18N
-
-        javax.swing.GroupLayout relativesPanelLayout = new javax.swing.GroupLayout(relativesPanel);
-        relativesPanel.setLayout(relativesPanelLayout);
-        relativesPanelLayout.setHorizontalGroup(
-            relativesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 610, Short.MAX_VALUE)
-        );
-        relativesPanelLayout.setVerticalGroup(
-            relativesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 140, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.relativesPanel.TabConstraints.tabTitle"), relativesPanel); // NOI18N
-
         eventsTab.setBackground(java.awt.Color.white);
 
         jsEvents.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -582,6 +637,25 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.eventsTab.TabConstraints.tabTitle"), eventsTab); // NOI18N
+
+        relativesTab.setBackground(java.awt.Color.white);
+        relativesTab.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText")); // NOI18N
+
+        jsRelatives.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        jsRelatives.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+
+        javax.swing.GroupLayout relativesTabLayout = new javax.swing.GroupLayout(relativesTab);
+        relativesTab.setLayout(relativesTabLayout);
+        relativesTabLayout.setHorizontalGroup(
+            relativesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jsRelatives, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+        );
+        relativesTabLayout.setVerticalGroup(
+            relativesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jsRelatives, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.relativesTab.TabConstraints.tabTitle"), relativesTab); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -640,9 +714,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JScrollPane jsEvents;
+    private javax.swing.JScrollPane jsRelatives;
     private javax.swing.JPanel motherPanel;
     private javax.swing.JPanel otherSpousePanel;
-    private javax.swing.JPanel relativesPanel;
+    private javax.swing.JPanel relativesTab;
     private javax.swing.JPanel spousePanel;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
@@ -679,15 +754,39 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         return true;
     }
 
-    private void setTooltip(EntitiesPanel panel) {
-        for (Component c : panel.getComponents()) {
-            if (c instanceof ABluePrintBeans) {
-                ABluePrintBeans bean = (ABluePrintBeans) c;
-                bean.setToolTipText(NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText"));
-            }
-        }
+    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+        refresh();
     }
 
+    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        refresh();
+    }
+
+    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        refresh();
+    }
+
+    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        refresh();
+    }
+
+    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        refresh();
+    }
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private class ABeanHandler extends FilteredMouseAdapter {
 
         private boolean editOnClick = false;
@@ -715,18 +814,41 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         }
 
         @Override
+        public void mousePressed(MouseEvent evt) {
+            if (evt != null && evt.getButton() == MouseEvent.BUTTON3) {
+                Object src = evt.getSource();
+                if (src != null && (src instanceof ABluePrintBeans)) {
+                    ABluePrintBeans bean = (ABluePrintBeans) src;
+                    Property prop = bean.getProperty();
+                    if (prop != null) {
+                        sticky = true;
+                        SelectionDispatcher.fireSelection(evt, new Context(prop));
+                    }
+                }
+            }
+        }
+
+        
+        @Override
         public void mouseClickedFiltered(java.awt.event.MouseEvent evt) {
-            if (evt.getButton() != MouseEvent.BUTTON1 || evt.getID() != MouseEvent.MOUSE_CLICKED) {
+            
+            // Return is it is not a mouse click or not a normal click (left-click)
+            if (evt.getID() != MouseEvent.MOUSE_CLICKED || evt.getButton() != MouseEvent.BUTTON1) {
                 return;
             }
+
+            // Return if no source
             Object src = evt.getSource();
             if (src == null) {
                 return;
             }
+            
+            // Get bean clicked
             ABluePrintBeans bean = null;
             if (src instanceof ABluePrintBeans) {
                 bean = (ABluePrintBeans) src;
             }
+            
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
                 SelectionDispatcher.muteSelection(true);
                 try {
@@ -749,6 +871,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                 // FIXME: test click count necessaire?
                 Property prop = bean.getProperty();
                 if (prop instanceof Entity) {
+                    sticky = false;
                     SelectionDispatcher.fireSelection(new Context(prop));
                 }
             }
@@ -810,30 +933,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         }
     }
 
-//    private class ChildHandler extends ABeanHandler {
-//
-//        private final ABluePrintBeans parentBean;
-//
-//        /**
-//         *
-//         * @param parentBean May be an amC Bean or one of the parents IndiBean
-//         */
-//        public ChildHandler(ABluePrintBeans parentBean) {
-//            super();
-//            this.parentBean = parentBean;
-//        }
-//
-//        @Override
-//        public ActionListener getCreateAction() {
-//            Indi property = null;
-//            if (parentBean != null) {
-//                property = (Indi) parentBean.getProperty();
-//            }
-//            return AncestrisEditor.findEditor(property).getCreateChildAction(property);
-//        }
-//    }
-    
-    
     
     
     private abstract class EntitiesPanel extends AListBean {

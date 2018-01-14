@@ -28,7 +28,7 @@ autostore = false)
 @RetainLocation(AncestrisDockModes.NAV)
 public final class NavigatorTopComponent extends GenjViewTopComponent {
 
-    private static final String PREFERRED_ID = "NavigatorTopComponent";
+    private static final String PREFERRED_ID = "NavigatorSimpleTopComponent";
     private static NavigatorTopComponent factory;
     private static ViewFactory viewfactory = new NavigatorViewFactory();
 
