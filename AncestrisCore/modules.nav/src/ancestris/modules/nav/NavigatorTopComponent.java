@@ -15,6 +15,7 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
+import genj.gedcom.Gedcom;
 import java.awt.Image;
 import javax.swing.JScrollPane;
 import org.openide.util.ImageUtilities;
@@ -28,10 +29,11 @@ import org.openide.windows.RetainLocation;
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class NavigatorTopComponent extends AncestrisTopComponent {
 
-    private static final String PREFERRED_ID = "AncestrisNavigator";  // NOI18N
+    private static final String PREFERRED_ID = "NavigatorExtendedTopComponent";  // NOI18N
     private static NavigatorTopComponent factory;
-    FamilyPanel familyPanel = new FamilyPanel();
-    JScrollPane familyScrolPane = new JScrollPane(familyPanel);
+    private Gedcom gedcom = null;
+    FamilyPanel familyPanel = null;
+    JScrollPane familyScrolPane = null;
 
     @Override
     public boolean createPanel() {
@@ -66,8 +68,21 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
         if (context == null) {
             return;
         }
+        if (familyPanel == null) {
+            familyPanel = new FamilyPanel();
+            familyScrolPane = new JScrollPane(familyPanel);
+            setPanel(familyScrolPane);
+            familyPanel.init();
+            gedcom = context.getGedcom();
+            gedcom.addGedcomListener(familyPanel);
+        }
         familyPanel.setContext(context);
-        setPanel(familyScrolPane);
         repaint();
+    }
+    
+    public void componentClosed() {
+        if (gedcom != null && familyPanel != null) {
+            gedcom.removeGedcomListener(familyPanel);
+        }
     }
 }
