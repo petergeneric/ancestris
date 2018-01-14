@@ -208,7 +208,6 @@ public class GedcomVersionConverter {
         // Go through invalid tags
         while (!invalidPropsInvalidTags.isEmpty()) {
             Property prop = (Property) ((LinkedList) invalidPropsInvalidTags).removeFirst();
-            System.out.println("***DEBUG prop = "+prop);
             String entityTag = prop.getEntity().getTag();
             String tag = prop.getTag();
             String newTag = tag.substring(1, tag.length());
