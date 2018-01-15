@@ -82,7 +82,9 @@
         <copy file="${harness.dir}/launchers/${app.exe.prefix}app.exe" tofile="${build.launcher.dir}/bin/${app.name}.exe" overwrite="true"/>
         <copy file="${harness.dir}/launchers/${app.exe.prefix}app_w.exe" tofile="${build.launcher.dir}/bin/${app.name}_w.exe" failonerror="false" overwrite="true"/>
 
-        <copy file="${harness.dir}/launchers/app.sh" tofile="${build.launcher.dir}/bin/${app.name}"/>
+<!--        <copy file="${harness.dir}/launchers/app.sh" tofile="${build.launcher.dir}/bin/${app.name}"/>-->
+        <!-- overide app.sh to capitalize first letter in APPNAME for MAC OS -->
+        <copy file="nbproject/app.sh" tofile="${build.launcher.dir}/bin/${app.name}"/>
         <copy file="nbproject/app.conf" tofile="${build.launcher.dir}/etc/${app.name}.conf">
             <filterchain>
                 <replacestring from="$${branding.token}" to="${branding.token}"/>
