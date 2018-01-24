@@ -86,6 +86,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.FileChooserBuilder;
 import org.openide.util.lookup.ServiceProvider;
 
 import java.io.File;
@@ -196,7 +197,7 @@ public class ReportLinesCirc extends Report {
         initUserOptions();
 
         // ask for file
-        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true);
+        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true, FileChooserBuilder.getPdfFilter().getExtensions()[0]);
         if (file == null) {
             return null;
         }
