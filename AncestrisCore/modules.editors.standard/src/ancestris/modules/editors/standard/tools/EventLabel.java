@@ -27,6 +27,7 @@ import org.openide.util.NbBundle;
 public class EventLabel extends JLabel {
 
     private String tag = "";
+    private String tableLabel = "";  // default label of the JLabel, the one which appears in the table
     private String shortLabel = "";
     private String longLabel = "";
     
@@ -36,16 +37,25 @@ public class EventLabel extends JLabel {
         if (property instanceof Indi) {
             this.shortLabel = NbBundle.getMessage(getClass(), "IndiEventNameShort");
             this.longLabel = NbBundle.getMessage(getClass(), "IndiEventNameLong");
+            this.tableLabel = this.shortLabel;
         } else {
             String str = property.getPropertyName();
+            
+            // Short label : only take first word or property name
             if (str.contains(" ")) {
-                this.shortLabel = str.substring(0, str.indexOf(" ")); // only take first word
-            } else {
-                this.shortLabel = str;
+                str = str.substring(0, str.indexOf(" ")); 
             }
+            this.shortLabel = str;
 
+            // Table label : replace shortlabel by type if even has a informed type
+            if (tag.equals("EVEN")) {
+                String type = property.getPropertyValue("TYPE");
+                str = type.isEmpty() ? str : type;
+            }
+            this.tableLabel = str;
+
+            // Long label
             WordBuffer buffer = new WordBuffer(" - ");
-
             buffer.append(shortLabel);
 
             Property date = property.getProperty("DATE");
@@ -59,7 +69,6 @@ public class EventLabel extends JLabel {
                 PropertyPlace pPlace = (PropertyPlace) place;
                 buffer.append(pPlace.getCity());
             }
-
             this.longLabel = buffer.toString();
         }
         
@@ -68,6 +77,10 @@ public class EventLabel extends JLabel {
 
     public String getTag() {
         return tag;
+    }
+
+    public String getTableLabel() {
+        return tableLabel;
     }
 
     public String getShortLabel() {

@@ -4586,7 +4586,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
             if (value != null) {
                 setIcon(((EventLabel) value).getIcon());
-                setText(((EventLabel) value).getShortLabel());
+                setText(((EventLabel) value).getTableLabel());
             }
         return this;
         }
