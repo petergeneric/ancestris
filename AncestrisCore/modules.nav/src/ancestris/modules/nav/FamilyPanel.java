@@ -391,7 +391,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                     tag2blueprint.put(blueprintTag, blueprint.getName());
                     resetBlueprints();
                     REGISTRY.put("blueprint." + blueprintTag, blueprint.getName());
-                    sticky = false;
                 }
             });
         }
@@ -402,10 +401,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                     tag2blueprint.put(blueprintTag, blueprint.getName());
                     resetBlueprints();
                     REGISTRY.put("blueprint." + blueprintTag, blueprint.getName());
-                    sticky = false;
                 }
             });
         }
+        sticky = false;
         return actions;
     }
 
