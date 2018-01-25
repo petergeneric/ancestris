@@ -48,6 +48,6 @@ public class FamMatcherOptions extends MatcherOptions {
      */
     public void setEmptyValueValid(boolean emptyValueValid) {
         this.emptyValueValid = emptyValueValid;
-        registry.put("MatcherOptions.Fam.checkAllNames", emptyValueValid);
+        registry.put("MatcherOptions.Fam.emptyValueValid", emptyValueValid);
     }
 }
