@@ -60,15 +60,17 @@ public class BlueprintManager {
     private final static String DEFAULT = "default";
 
     private final static String[][] DEFAULTS = {
-        {"INDI", DEFAULT, "complete", "classic", "verbose", "colorful", "professional", "simple", "pastel", "light", "small", "small_picture"},
-        {"FAM", DEFAULT, "complete", "classic", "simple", "pastel", "light", "small"},
+        {"INDI", DEFAULT, "complete", "classic", "verbose", "colorful", "professional", "simple", "pastel", "light", "small", "small_picture", 
+                           "navindi", "navspouse", "navparent", "navindiline", "navevent"},
+        {"FAM", DEFAULT, "complete", "classic", "simple", "pastel", "light", "small",
+                           "navfamindi", "navfamparent"},
         {"OBJE", DEFAULT, "complete", "55"},
         {"NOTE", DEFAULT, "complete"},
         {"SOUR", DEFAULT, "complete"},
         {"SUBM", DEFAULT, "complete"},
         {"REPO", DEFAULT, "complete"}
     };
-
+    
     /*package*/ final static Logger LOG = Logger.getLogger("ancestris.renderer");
 
     /**
@@ -281,7 +283,7 @@ public class BlueprintManager {
      */
     public Blueprint getBlueprint(String tag, String name) {
         // patch name if default
-        if (name.length() == 0) {
+        if (name == null || name.length() == 0) {
             name = DEFAULT;
         }
         // look through global blueprints for that type

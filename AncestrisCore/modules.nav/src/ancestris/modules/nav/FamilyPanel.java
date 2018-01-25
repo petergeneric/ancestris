@@ -39,6 +39,7 @@ import genj.renderer.BlueprintManager;
 import genj.renderer.ChooseBlueprintAction;
 import genj.util.Registry;
 import java.awt.Component;
+import java.awt.Container;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,24 +53,51 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
     private final static Registry REGISTRY = Registry.get(FamilyPanel.class);
     
-    private final static String WIFE_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty");
-    private final static String HUSBAND_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.husband.empty");
-    private final static String FATHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty");
-    private final static String MOTHER_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty");
-    private final static String FAMS_EMPTY_BP = org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty");
+    private final static String BEG_EMPTY = "<p align=center>";
+    private final static String END_EMPTY = "</p>";
+    private final static String HUSBAND_EMPTY_BP = BEG_EMPTY + org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.husband.empty") + END_EMPTY;
+    private final static String WIFE_EMPTY_BP = BEG_EMPTY + org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.wife.empty") + END_EMPTY;
+    private final static String FATHER_EMPTY_BP = BEG_EMPTY + org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.father.empty") + END_EMPTY;
+    private final static String MOTHER_EMPTY_BP = BEG_EMPTY + org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.mother.empty") + END_EMPTY;
+    private final static String FAMS_EMPTY_BP = BEG_EMPTY + org.openide.util.NbBundle.getMessage(FamilyPanel.class, "blueprint.fams.empty") + END_EMPTY;
+
+    private final static String HUSBAND_BP = "navindi";
+    private final static String WIFE_BP = "navspouse";
+    private final static String PARENT_BP = "navparent";
+    private final static String INDILINE_BP = "navindiline";
+    private final static String EVENT_BP = "navevent";
+    private final static String FAMI_BP = "navfamindi";
+    private final static String FAMP_BP = "navfamparent";
+    
+    private final static String[] NAV_TAGS = { HUSBAND_BP, WIFE_BP, PARENT_BP, INDILINE_BP, EVENT_BP, FAMI_BP, FAMP_BP };
 
     
     private Context context;
     private boolean sticky = false;
+    private Component selectedPanel = null;
     private Indi focusIndi;
     private Fam focusFam;
-    private EntitiesPanel childrenPanel = null;
     private EntitiesPanel oFamsPanel = null;
+    private int famIndex = 0;
+    private EntitiesPanel childrenPanel = null;
     private EntitiesPanel siblingsPanel = null;
     private EntitiesPanel eventsPanel = null;
-    private EntitiesPanel relativesPanel = null;
 
-    /** the blueprints we're using */
+    /**
+     * The blueprints we're using
+     * 
+     * - husband : indi (default Nav_Indi)
+     * - wife : indi (default Nav_Spouse)
+     * - husbFather : indi (default Nav_Parents)
+     * - husbMother : indi (default Nav_Parents)
+     * - oFamsPanel : indi (default Nav_Indi_Line)
+     * - familySpouse : fam (default Default)
+     * - childrenPanel : indi (default Nav_Indi_Line)
+     * - familyParent : fam (default Default)
+     * - siblingsPanel : indi (default Nav_Indi_Line)
+     * - eventsPanel : indi (default Nav_Event)
+     * 
+     */
     private final Map<String, String> tag2blueprint = new HashMap<String, String>();
 
     
@@ -86,12 +114,12 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
     public void init() {
         
-        // Load saved blueprints for this view
-        for (String tag : Gedcom.ENTITIES) {
-            tag2blueprint.put(tag, REGISTRY.get("blueprint." + tag, ""));
+        // Load saved blueprints NAMES in the view registry for each panel ; default to default panel tag
+        for (String tag : NAV_TAGS) {
+            tag2blueprint.put(tag, REGISTRY.get("blueprint." + tag, tag));
         }
-
-        // Set main panels' blueprints
+        
+        // Init main panels
         enableBlueprint(husband, new ABeanHandler(false), HUSBAND_EMPTY_BP);
         enableBlueprint(wife, new SpouseHandler(husband), WIFE_EMPTY_BP);
         enableBlueprint(husbFather, new ParentHandler(husband, PropertySex.MALE), FATHER_EMPTY_BP);
@@ -99,10 +127,9 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         enableBlueprint(familySpouse, new ABeanHandler(false), FAMS_EMPTY_BP);
         enableBlueprint(familyParent, new ABeanHandler(false), FAMS_EMPTY_BP);
 
-        // Other blueprints
+        // Init other panels
         // Childs
         childrenPanel = new EntitiesPanel(jScrollPane1) {
-
             @Override
             public Entity[] getEntities(Property rootProperty) {
                 if (rootProperty != null && rootProperty instanceof Fam) {
@@ -114,11 +141,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         // other families
         oFamsPanel = new EntitiesPanel(jScrollPane2) {
-
             @Override
             public Entity[] getEntities(Property rootProperty) {
                 if (rootProperty != null && rootProperty instanceof Indi) {
-                    return ((Indi) rootProperty).getFamiliesWhereSpouse();
+                    return ((Indi) rootProperty).getPartners();
                 }
                 return null;
             }
@@ -127,7 +153,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         // Siblings
         siblingsPanel = new EntitiesPanel(jScrollPane3) {
-
             @Override
             public Entity[] getEntities(Property rootProperty) {
                 if (rootProperty != null && rootProperty instanceof Indi) {
@@ -139,7 +164,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         // Events
         eventsPanel = new EntitiesPanel(jsEvents) {
-
             @Override
             public Property[] getEntities(Property rootProperty) {
                 if (rootProperty != null && rootProperty instanceof Indi) {
@@ -154,41 +178,11 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                 return null;
             }
         };
-        eventsPanel.setBlueprint("", "<i><name path=.></i>&nbsp;:&nbsp;<prop path=.:DATE img=no>&nbsp;(<prop path=.:PLAC>)");  // NOI18N
-        
-        // Events
-        relativesPanel = new EntitiesPanel(jsRelatives) {
 
-            @Override
-            public Property[] getEntities(Property rootProperty) {
-                if (rootProperty != null && rootProperty instanceof Indi) {
-                    ArrayList<Property> result = new ArrayList<Property>(5);
-                    for (Property p : rootProperty.getProperties()) {
-                        if (p instanceof PropertyEvent) {
-                            result.add(p);
-                        }
-                    }
-                    return result.toArray(new Property[]{});
-                }
-                return null;
-            }
-        };
-        
+        // Set bueprint and display data
         resetBlueprints();
-        
     }
     
-    
-    public void resetBlueprints() {
-        husband.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
-        wife.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
-        husbFather.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
-        husbMother.setBlueprint(Gedcom.INDI, getBlueprint("INDI").getHTML());  // NOI18N
-        familySpouse.setBlueprint(Gedcom.FAM, getBlueprint("FAM").getHTML());  // NOI18N
-        familyParent.setBlueprint(Gedcom.FAM, getBlueprint("FAM").getHTML());  // NOI18N
-        refresh();
-    }
-
     private void enableBlueprint(ABluePrintBeans bp, ABeanHandler bh, String defaultBP) {
         // Set mouse listener
         bp.addMouseListener(bh);
@@ -209,7 +203,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                 bean.addMouseListener(new ABeanHandler(false));
                 
                 // Set tooltip
-                bean.setToolTipText(NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText"));
+                bean.setToolTipText(NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText"));
 
                 // Set helper
                 new ExplorerHelper(bean).setPopupAllowed(true);
@@ -218,9 +212,33 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     }
 
     
+    
+    public void resetBlueprints() {
+        husband.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, HUSBAND_BP).getHTML());
+        wife.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, WIFE_BP).getHTML());
+        husbFather.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, PARENT_BP).getHTML());
+        husbMother.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, PARENT_BP).getHTML());
+        familySpouse.setBlueprint(Gedcom.FAM, getBlueprint(Gedcom.FAM, FAMI_BP).getHTML());
+        familyParent.setBlueprint(Gedcom.FAM, getBlueprint(Gedcom.FAM, FAMP_BP).getHTML());
+        
+        oFamsPanel.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, INDILINE_BP).getHTML());
+        childrenPanel.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, INDILINE_BP).getHTML());
+        siblingsPanel.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, INDILINE_BP).getHTML());
+        eventsPanel.setBlueprint("", getBlueprint(Gedcom.INDI, EVENT_BP).getHTML());  // empty tag will correspond to property tag
+        refresh();
+    }
+
+    /**
+     * Get blueprint from blueprint manager to be used for given type
+     */
+    private Blueprint getBlueprint(String entityTag, String BPtag) {
+        return BlueprintManager.getInstance().getBlueprint(entityTag, tag2blueprint.get(BPtag));
+    }
+    
+    
     public void setContext(Context context) {
         if (sticky) {
-            sticky = false;
+            //sticky = false;
             return;
         }
         
@@ -235,6 +253,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return;
         }
 
+        famIndex = 0;
         this.context = context;
         if (entity instanceof Fam) {
             Fam family = (Fam) entity;
@@ -275,8 +294,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return;
         }
         
-        if (focusFam == null && focusIndi != null && focusIndi.getNoOfFams() > 0) {
-            focusFam = focusIndi.getFamiliesWhereSpouse()[0];
+        if (focusIndi != null && focusIndi.getNoOfFams() > 0) {
+            focusFam = focusIndi.getFamiliesWhereSpouse()[famIndex];
         }
         
         // Main indi, his/her father and his/her Mother
@@ -293,7 +312,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         }
         
         // OTHER SPOUSES
-        oFamsPanel.update(husband.getProperty(), familySpouse == null ? null : familySpouse.getProperty());
+        oFamsPanel.update(husband.getProperty(), focusFam != null ? focusFam.getOtherSpouse(focusIndi) : null);
+        oFamsPanel.setEnabled(((Indi) husband.getProperty()).getNoOfFams() > 0);
         
         // CHILDREN tab : Family entity of main indi and spouse and their children
         childrenPanel.update(familySpouse.getProperty() == null ? null : (Fam) (familySpouse.getProperty().getEntity()),null);
@@ -310,14 +330,50 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         setPanel(oFamsPanel);
         setPanel(childrenPanel);
         setPanel(siblingsPanel);
+        setPanel(eventsPanel);
     }
 
-    
+
+    /**
+     * Action for blueprint modification depends on which panel has the focus
+     * 
+     * @param hasFocus
+     * @param nodes
+     * @return 
+     */
     public List<Action> getActions(boolean hasFocus, Node[] nodes) {
         if (!hasFocus) {
             return new ArrayList<Action>();
         }
-
+        
+        // Get blueprint used from selected panel clicked
+        String bp = "";
+        if (selectedPanel == null) {
+            return null;
+        } else if (selectedPanel.equals(indiPanel)) {
+            bp = HUSBAND_BP;
+        } else if (selectedPanel.equals(spousePanel)) {
+            bp = WIFE_BP;
+        } else if (selectedPanel.equals(fatherPanel)) {
+            bp = PARENT_BP;
+        } else if (selectedPanel.equals(motherPanel)) {
+            bp = PARENT_BP;
+        } else if (selectedPanel.equals(oFamsPanel)) {
+            bp = INDILINE_BP;
+        } else if (selectedPanel.equals(famSpousePanel)) {
+            bp = FAMI_BP;
+        } else if (selectedPanel.equals(childrenPanel)) {
+            bp = INDILINE_BP;
+        } else if (selectedPanel.equals(famParentPanel)) {
+            bp = FAMP_BP;
+        } else if (selectedPanel.equals(siblingsPanel)) {
+            bp = INDILINE_BP;
+        } else if (selectedPanel.equals(eventsPanel)) {
+            bp = EVENT_BP;
+        }
+        final String blueprintTag = bp;
+        
+        // Get property clicked
         Property prop = null;
         if (nodes != null && nodes.length > 0 && nodes[0] instanceof PropertyNode) {
             prop = ((PropertyNode) nodes[0]).getProperty();
@@ -326,36 +382,33 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             }
         }
         
+        // Generate the action
         List<Action> actions = new ArrayList<Action>();
-        if (focusIndi != null && prop instanceof Indi) {
-            actions.add(new ChooseBlueprintAction(focusIndi, getBlueprint(focusIndi.getTag())) {
+        if (prop != null && prop instanceof Indi) {
+            actions.add(new ChooseBlueprintAction((Entity)prop, getBlueprint(Gedcom.INDI, blueprintTag)) {
                 @Override
                 protected void commit(Entity recipient, Blueprint blueprint) {
-                    tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                    tag2blueprint.put(blueprintTag, blueprint.getName());
                     resetBlueprints();
-                    REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
+                    REGISTRY.put("blueprint." + blueprintTag, blueprint.getName());
+                    sticky = false;
                 }
             });
         }
-        if (focusFam != null && prop instanceof Fam) {
-            actions.add(new ChooseBlueprintAction(focusFam, getBlueprint(focusFam.getTag())) {
+        if (prop != null && prop instanceof Fam) {
+            actions.add(new ChooseBlueprintAction((Entity)prop, getBlueprint(Gedcom.FAM, blueprintTag)) {
                 @Override
                 protected void commit(Entity recipient, Blueprint blueprint) {
-                    tag2blueprint.put(recipient.getTag(), blueprint.getName());
+                    tag2blueprint.put(blueprintTag, blueprint.getName());
                     resetBlueprints();
-                    REGISTRY.put("blueprint." + blueprint.getTag(), blueprint.getName());
+                    REGISTRY.put("blueprint." + blueprintTag, blueprint.getName());
+                    sticky = false;
                 }
             });
         }
         return actions;
     }
 
-    /**
-     * Get blueprint used for given type
-     */
-    private Blueprint getBlueprint(String tag) {
-        return BlueprintManager.getInstance().getBlueprint(tag, tag2blueprint.get(tag));
-    }
 
     
 
@@ -373,31 +426,30 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         husbFather = new ancestris.modules.beans.ABluePrintBeans();
         motherPanel = new javax.swing.JPanel();
         husbMother = new ancestris.modules.beans.ABluePrintBeans();
-        indiPanel = new javax.swing.JPanel();
-        husband = new ancestris.modules.beans.ABluePrintBeans();
-        jLabel3 = new javax.swing.JLabel();
-        spousePanel = new javax.swing.JPanel();
-        wife = new ancestris.modules.beans.ABluePrintBeans();
-        jLabel2 = new javax.swing.JLabel();
         otherSpousePanel = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
         jLabel1 = new javax.swing.JLabel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        indiPanel = new javax.swing.JPanel();
+        jLabel3 = new javax.swing.JLabel();
+        husband = new ancestris.modules.beans.ABluePrintBeans();
+        spousePanel = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        wife = new ancestris.modules.beans.ABluePrintBeans();
         jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
+        famSpousePanel = new javax.swing.JPanel();
         familySpouse = new ancestris.modules.beans.ABluePrintBeans();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jPanel8 = new javax.swing.JPanel();
-        jScrollPane3 = new javax.swing.JScrollPane();
+        famParentPanel = new javax.swing.JPanel();
         familyParent = new ancestris.modules.beans.ABluePrintBeans();
+        jScrollPane3 = new javax.swing.JScrollPane();
         eventsTab = new javax.swing.JPanel();
         jsEvents = new javax.swing.JScrollPane();
-        relativesTab = new javax.swing.JPanel();
-        jsRelatives = new javax.swing.JScrollPane();
 
-        setPreferredSize(new java.awt.Dimension(622, 500));
+        setPreferredSize(new java.awt.Dimension(400, 400));
         setRequestFocusEnabled(false);
 
         fatherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.fatherPanel.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
+        fatherPanel.setPreferredSize(new java.awt.Dimension(145, 121));
 
         husbFather.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         husbFather.setMinimumSize(new java.awt.Dimension(0, 80));
@@ -418,14 +470,15 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         fatherPanel.setLayout(fatherPanelLayout);
         fatherPanelLayout.setHorizontalGroup(
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 293, Short.MAX_VALUE)
+            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 112, Short.MAX_VALUE)
         );
         fatherPanelLayout.setVerticalGroup(
             fatherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+            .addComponent(husbFather, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
         );
 
         motherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.motherPanel.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
+        motherPanel.setPreferredSize(new java.awt.Dimension(145, 121));
 
         husbMother.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         husbMother.setMinimumSize(new java.awt.Dimension(0, 80));
@@ -439,23 +492,52 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
         husbMotherLayout.setVerticalGroup(
             husbMotherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 94, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout motherPanelLayout = new javax.swing.GroupLayout(motherPanel);
         motherPanel.setLayout(motherPanelLayout);
         motherPanelLayout.setHorizontalGroup(
             motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 287, Short.MAX_VALUE)
+            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 113, Short.MAX_VALUE)
         );
         motherPanelLayout.setVerticalGroup(
             motherPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+            .addComponent(husbMother, javax.swing.GroupLayout.DEFAULT_SIZE, 80, Short.MAX_VALUE)
+        );
+
+        otherSpousePanel.setPreferredSize(new java.awt.Dimension(145, 121));
+
+        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel1.text")); // NOI18N
+
+        jScrollPane2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jScrollPane2.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2));
+
+        javax.swing.GroupLayout otherSpousePanelLayout = new javax.swing.GroupLayout(otherSpousePanel);
+        otherSpousePanel.setLayout(otherSpousePanelLayout);
+        otherSpousePanelLayout.setHorizontalGroup(
+            otherSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2)
+            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        otherSpousePanelLayout.setVerticalGroup(
+            otherSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(otherSpousePanelLayout.createSequentialGroup()
+                .addComponent(jLabel1)
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE))
         );
 
         indiPanel.setBorder(null);
+        indiPanel.setPreferredSize(new java.awt.Dimension(256, 150));
 
-        husband.setBorder(javax.swing.BorderFactory.createEtchedBorder(new java.awt.Color(51, 102, 255), null));
+        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
+
+        husband.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         husband.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
 
         javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
@@ -466,12 +548,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 115, Short.MAX_VALUE)
         );
-
-        jLabel3.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
 
         javax.swing.GroupLayout indiPanelLayout = new javax.swing.GroupLayout(indiPanel);
         indiPanel.setLayout(indiPanelLayout);
@@ -489,8 +567,13 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
 
         spousePanel.setBorder(null);
+        spousePanel.setPreferredSize(new java.awt.Dimension(165, 150));
 
-        wife.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
+
+        wife.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         wife.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         wife.setMinimumSize(new java.awt.Dimension(0, 40));
         wife.setPreferredSize(new java.awt.Dimension(256, 60));
@@ -503,18 +586,14 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 87, Short.MAX_VALUE)
+            .addGap(0, 115, Short.MAX_VALUE)
         );
-
-        jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
 
         javax.swing.GroupLayout spousePanelLayout = new javax.swing.GroupLayout(spousePanel);
         spousePanel.setLayout(spousePanelLayout);
         spousePanelLayout.setHorizontalGroup(
             spousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(wife, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE)
+            .addComponent(wife, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
             .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         spousePanelLayout.setVerticalGroup(
@@ -522,99 +601,82 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             .addGroup(spousePanelLayout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addGap(2, 2, 2)
-                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE)
+                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
-        );
-
-        jScrollPane2.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-
-        jLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel1.text")); // NOI18N
-
-        javax.swing.GroupLayout otherSpousePanelLayout = new javax.swing.GroupLayout(otherSpousePanel);
-        otherSpousePanel.setLayout(otherSpousePanelLayout);
-        otherSpousePanelLayout.setHorizontalGroup(
-            otherSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2)
-            .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        otherSpousePanelLayout.setVerticalGroup(
-            otherSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(otherSpousePanelLayout.createSequentialGroup()
-                .addComponent(jLabel1)
-                .addGap(2, 2, 2)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jTabbedPane1.setBorder(null);
         jTabbedPane1.setFont(new java.awt.Font("Dialog", 1, 14)); // NOI18N
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(388, 200));
 
         familySpouse.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        familySpouse.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "ClicEntTootlTipText")); // NOI18N
+        familySpouse.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout familySpouseLayout = new javax.swing.GroupLayout(familySpouse);
         familySpouse.setLayout(familySpouseLayout);
         familySpouseLayout.setHorizontalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 608, Short.MAX_VALUE)
+            .addGap(0, 373, Short.MAX_VALUE)
         );
         familySpouseLayout.setVerticalGroup(
             familySpouseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 31, Short.MAX_VALUE)
+            .addGap(0, 45, Short.MAX_VALUE)
         );
 
         jScrollPane1.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         jScrollPane1.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
-            .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+        javax.swing.GroupLayout famSpousePanelLayout = new javax.swing.GroupLayout(famSpousePanel);
+        famSpousePanel.setLayout(famSpousePanelLayout);
+        famSpousePanelLayout.setHorizontalGroup(
+            famSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
+            .addComponent(familySpouse, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
         );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+        famSpousePanelLayout.setVerticalGroup(
+            famSpousePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(famSpousePanelLayout.createSequentialGroup()
+                .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel1.TabConstraints.tabTitle"), jPanel1); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.famSpousePanel.TabConstraints.tabTitle"), famSpousePanel); // NOI18N
 
         familyParent.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        familyParent.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         familyParent.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout familyParentLayout = new javax.swing.GroupLayout(familyParent);
         familyParent.setLayout(familyParentLayout);
         familyParentLayout.setHorizontalGroup(
             familyParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 608, Short.MAX_VALUE)
+            .addGap(0, 373, Short.MAX_VALUE)
         );
         familyParentLayout.setVerticalGroup(
             familyParentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 31, Short.MAX_VALUE)
+            .addGap(0, 45, Short.MAX_VALUE)
         );
 
-        javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
-        jPanel8.setLayout(jPanel8Layout);
-        jPanel8Layout.setHorizontalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familyParent, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
-            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
+        jScrollPane3.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        javax.swing.GroupLayout famParentPanelLayout = new javax.swing.GroupLayout(famParentPanel);
+        famParentPanel.setLayout(famParentPanelLayout);
+        famParentPanelLayout.setHorizontalGroup(
+            famParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(familyParent, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+            .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE)
         );
-        jPanel8Layout.setVerticalGroup(
-            jPanel8Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel8Layout.createSequentialGroup()
-                .addComponent(familyParent, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+        famParentPanelLayout.setVerticalGroup(
+            famParentPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(famParentPanelLayout.createSequentialGroup()
+                .addComponent(familyParent, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
         );
 
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jPanel8.TabConstraints.tabTitle"), jPanel8); // NOI18N
+        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.famParentPanel.TabConstraints.tabTitle"), famParentPanel); // NOI18N
 
         eventsTab.setBackground(java.awt.Color.white);
 
@@ -625,37 +687,18 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         eventsTab.setLayout(eventsTabLayout);
         eventsTabLayout.setHorizontalGroup(
             eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 610, Short.MAX_VALUE)
+            .addGap(0, 375, Short.MAX_VALUE)
             .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jsEvents, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE))
+                .addComponent(jsEvents, javax.swing.GroupLayout.DEFAULT_SIZE, 375, Short.MAX_VALUE))
         );
         eventsTabLayout.setVerticalGroup(
             eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 140, Short.MAX_VALUE)
+            .addGap(0, 150, Short.MAX_VALUE)
             .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))
+                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.eventsTab.TabConstraints.tabTitle"), eventsTab); // NOI18N
-
-        relativesTab.setBackground(java.awt.Color.white);
-        relativesTab.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "ClicTootlTipText")); // NOI18N
-
-        jsRelatives.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        jsRelatives.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-
-        javax.swing.GroupLayout relativesTabLayout = new javax.swing.GroupLayout(relativesTab);
-        relativesTab.setLayout(relativesTabLayout);
-        relativesTabLayout.setHorizontalGroup(
-            relativesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jsRelatives, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
-        );
-        relativesTabLayout.setVerticalGroup(
-            relativesTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jsRelatives, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)
-        );
-
-        jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.relativesTab.TabConstraints.tabTitle"), relativesTab); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -664,16 +707,18 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 124, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 125, Short.MAX_VALUE))
+                            .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 255, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(otherSpousePanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jTabbedPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(otherSpousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                            .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -681,22 +726,26 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(otherSpousePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(motherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                            .addComponent(fatherPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(otherSpousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
+                        .addGap(9, 9, 9)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
+                    .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel eventsTab;
+    private javax.swing.JPanel famParentPanel;
+    private javax.swing.JPanel famSpousePanel;
     private ancestris.modules.beans.ABluePrintBeans familyParent;
     private ancestris.modules.beans.ABluePrintBeans familySpouse;
     private javax.swing.JPanel fatherPanel;
@@ -707,17 +756,13 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel8;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JScrollPane jsEvents;
-    private javax.swing.JScrollPane jsRelatives;
     private javax.swing.JPanel motherPanel;
     private javax.swing.JPanel otherSpousePanel;
-    private javax.swing.JPanel relativesTab;
     private javax.swing.JPanel spousePanel;
     private ancestris.modules.beans.ABluePrintBeans wife;
     // End of variables declaration//GEN-END:variables
@@ -822,6 +867,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                     Property prop = bean.getProperty();
                     if (prop != null) {
                         sticky = true;
+                        selectedPanel = bean.getParent();
                         SelectionDispatcher.fireSelection(evt, new Context(prop));
                     }
                 }
@@ -850,8 +896,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             }
             
             if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
-                SelectionDispatcher.muteSelection(true);
                 try {
+                    sticky = true;
                     // Double click on someone = edit it (with an AncestrisEditor, not an Editor)
                     if (bean != null && bean.getProperty() != null) {                                       
                         AncestrisEditor editor = AncestrisEditor.findEditor(bean.getProperty());
@@ -864,13 +910,28 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                     }
                     refresh();
                 } finally {
-                    SelectionDispatcher.muteSelection(false);
+                    sticky = false;
                 }
             // Click on someone = show it     
-            } else if (evt.getClickCount() == 1) {                                                          
+            } else if (evt.getClickCount() == 1) {
                 // FIXME: test click count necessaire?
-                Property prop = bean.getProperty();
-                if (prop instanceof Entity) {
+                Container c = bean.getParent();
+                if (c != null) {
+                    Property prop = bean.getProperty();
+                    if (prop instanceof Entity) {
+                        // In case of selection of another spouse, change context back to main indi and only change spouse index
+                        if (c.equals(oFamsPanel) && prop instanceof Indi) {
+                            Indi spouse = (Indi) prop; // other spouse clicked
+                            Fam[] fams = focusIndi.getFamiliesWhereSpouse();
+                            for (int idx = 0; idx < fams.length; idx++) {
+                                if (fams[idx].getOtherSpouse(focusIndi).equals(spouse)) {
+                                    famIndex = idx;
+                                    refresh();
+                                    return;
+                                }
+                            }
+                        }
+                    }
                     sticky = false;
                     SelectionDispatcher.fireSelection(new Context(prop));
                 }
@@ -939,8 +1000,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         public EntitiesPanel(JScrollPane pane) {
             super();
-            setBlueprint(Gedcom.INDI, "<body bgcolor=#ffffe3>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.INDI.cell"));  // NOI18N
-            setBlueprint(Gedcom.FAM, "<body bgcolor=#f1f1ff>" + NbBundle.getMessage(FamilyPanel.class, "blueprint.FAM.cell"));  // NOI18N
             setBackground(java.awt.Color.white);
             setLayout(new javax.swing.BoxLayout(this, javax.swing.BoxLayout.PAGE_AXIS));
             pane.setViewportView(this);
@@ -950,6 +1009,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         public void update(Property rootProperty, Property exclude) {
             removeAll();
+            // This call should remove all anonymous listeners
+            // https://stackoverflow.com/questions/8727752/does-disposing-of-container-remove-all-registered-listeners
             repaint();
             if (rootProperty != null) {
                 add(getEntities(rootProperty), exclude, new ABeanHandler());
