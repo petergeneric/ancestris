@@ -342,14 +342,17 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
      * @return 
      */
     public List<Action> getActions(boolean hasFocus, Node[] nodes) {
+
+        List<Action> actions = new ArrayList<Action>();
+        
         if (!hasFocus) {
-            return new ArrayList<Action>();
+            return actions;
         }
         
         // Get blueprint used from selected panel clicked
         String bp = "";
         if (selectedPanel == null) {
-            return null;
+            return actions;
         } else if (selectedPanel.equals(indiPanel)) {
             bp = HUSBAND_BP;
         } else if (selectedPanel.equals(spousePanel)) {
@@ -383,7 +386,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         }
         
         // Generate the action
-        List<Action> actions = new ArrayList<Action>();
         if (prop != null && prop instanceof Indi) {
             actions.add(new ChooseBlueprintAction((Entity)prop, getBlueprint(Gedcom.INDI, blueprintTag)) {
                 @Override
