@@ -16,6 +16,7 @@ import genj.util.Registry;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
@@ -60,14 +61,19 @@ public abstract class DialogManager {
     // p.ex via action[0].setEnable(...)
     //
     public static ADialog create(String title, JComponent content) {
-        return new ADialog(title, content);
+        return create(title, content, true);
     }
-
+    
     public static ADialog create(String title, JComponent[] content) {
+        return create(title, content, true);
+    }
+    
+    public static ADialog create(String title, JComponent[] content, boolean modal) {
         // assemble content into Box (don't use Box here because
         // Box extends Container in pre JDK 1.4)
         JPanel box = new JPanel();
         box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
+        box.setBorder(BorderFactory.createEmptyBorder(3, 3, 3, 3));
         for (int i = 0; i < content.length; i++) {
             if (content[i] == null) {
                 continue;
@@ -76,9 +82,16 @@ public abstract class DialogManager {
             content[i].setAlignmentX(0F);
 
         }
-        return create(title, box);
+        return create(title, box, modal);
     }
 
+    public static ADialog create(String title, JComponent content, boolean modal) {
+        return new ADialog(title, content, modal);
+    }
+
+
+    
+    
     public static InputLine create(String title, String text, String value) {
         return new InputLine(title, text, value);
     }
@@ -295,6 +308,11 @@ param text
         public ADialog(String title, JComponent content) {
             super();
             descriptor = new DialogDescriptor(content, title);
+        }
+
+        public ADialog(String title, JComponent content, boolean modal) {
+            super();
+            descriptor = new DialogDescriptor(content, title, modal, null);
         }
 
         @Override
