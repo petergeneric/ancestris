@@ -16,6 +16,8 @@ import genj.util.Registry;
 import java.awt.Dialog;
 import java.awt.Dimension;
 import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JComponent;
@@ -312,7 +314,15 @@ param text
 
         public ADialog(String title, JComponent content, boolean modal) {
             super();
-            descriptor = new DialogDescriptor(content, title, modal, null);
+            ActionListener al = new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    if (dialogId != null) {
+                        Registry.get(DialogManager.class).put(dialogId + ".dialog", dialog.getSize());
+                    }
+                }
+            };
+            descriptor = new DialogDescriptor(content, title, modal, al);
         }
 
         @Override

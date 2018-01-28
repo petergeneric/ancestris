@@ -397,15 +397,6 @@ public abstract class GedcomMgr {
                             .setDialogId("cc.open.warnings")
                             .setOptions(hasHeaderWarnings ? new Object[]{updatePropertiesButton, NotifyDescriptor.CLOSED_OPTION} : new Object[]{NotifyDescriptor.CLOSED_OPTION})
                             .show();
-//                    NotifyDescriptor nd = new DialogDescriptor(
-//                            new JScrollPane(new ContextListWidget(warnings)), 
-//                            RES.getString("cc.open.warnings", context.getGedcom().getName()),
-//                            false,
-//                            hasHeaderWarnings ? new Object[]{updatePropertiesButton, NotifyDescriptor.CLOSED_OPTION} : new Object[]{NotifyDescriptor.CLOSED_OPTION},
-//                            null,
-//                            DialogDescriptor.DEFAULT_ALIGN,
-//                            null, null);
-//                    DialogDisplayer.getDefault().notify(nd);
                 }
             } catch (GedcomIOException ex) {
                 // Tell the user about it
