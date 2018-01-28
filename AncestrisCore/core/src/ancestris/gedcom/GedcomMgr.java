@@ -13,6 +13,7 @@ package ancestris.gedcom;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
+import ancestris.core.resources.Images;
 import ancestris.util.ProgressListener;
 import ancestris.util.TimingUtility;
 import ancestris.util.swing.DialogManager;
@@ -51,10 +52,10 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JScrollPane;
 import org.apache.commons.io.FileUtils;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -389,15 +390,22 @@ public abstract class GedcomMgr {
                     });
                     
                     boolean hasHeaderWarnings = !bag.isEmpty();
-                    NotifyDescriptor nd = new DialogDescriptor(
-                            new JScrollPane(new ContextListWidget(warnings)), 
-                            RES.getString("cc.open.warnings", context.getGedcom().getName()),
-                            false,
-                            hasHeaderWarnings ? new Object[]{updatePropertiesButton, NotifyDescriptor.CLOSED_OPTION} : new Object[]{NotifyDescriptor.CLOSED_OPTION},
-                            null,
-                            DialogDescriptor.DEFAULT_ALIGN,
-                            null, null);
-                    DialogDisplayer.getDefault().notify(nd);
+                    JScrollPane panel = new JScrollPane(new ContextListWidget(warnings));
+                    JLabel label = new JLabel(RES.getString("cc.open.warnings.tooltip"));
+                    label.setIcon(Images.imgWng);
+                    DialogManager.create(RES.getString("cc.open.warnings", context.getGedcom().getName()), new JComponent[] {panel, label}, false)
+                            .setDialogId("cc.open.warnings")
+                            .setOptions(hasHeaderWarnings ? new Object[]{updatePropertiesButton, NotifyDescriptor.CLOSED_OPTION} : new Object[]{NotifyDescriptor.CLOSED_OPTION})
+                            .show();
+//                    NotifyDescriptor nd = new DialogDescriptor(
+//                            new JScrollPane(new ContextListWidget(warnings)), 
+//                            RES.getString("cc.open.warnings", context.getGedcom().getName()),
+//                            false,
+//                            hasHeaderWarnings ? new Object[]{updatePropertiesButton, NotifyDescriptor.CLOSED_OPTION} : new Object[]{NotifyDescriptor.CLOSED_OPTION},
+//                            null,
+//                            DialogDescriptor.DEFAULT_ALIGN,
+//                            null, null);
+//                    DialogDisplayer.getDefault().notify(nd);
                 }
             } catch (GedcomIOException ex) {
                 // Tell the user about it

@@ -57,6 +57,7 @@ final public class Images {
     public static ImageIcon imgZip = new ImageIcon(Images.class,"images/Zip");
     public static ImageIcon imgAlm = new ImageIcon(Images.class,"images/Alm");
     
+    public static ImageIcon imgWng = new ImageIcon(Images.class,"images/Warning");
     
     
   /**
