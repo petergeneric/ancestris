@@ -63,7 +63,7 @@ public abstract class DialogManager {
     // p.ex via action[0].setEnable(...)
     //
     public static ADialog create(String title, JComponent content) {
-        return create(title, content, true);
+        return new ADialog(title, content);
     }
     
     public static ADialog create(String title, JComponent[] content) {
@@ -320,6 +320,7 @@ param text
                     if (dialogId != null) {
                         Registry.get(DialogManager.class).put(dialogId + ".dialog", dialog.getSize());
                     }
+                    cancel();
                 }
             };
             descriptor = new DialogDescriptor(content, title, modal, al);
