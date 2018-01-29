@@ -101,7 +101,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
             // Recheck with the user
             Object rc = DialogManager.create(getText(), getDialogContent())
               .setOptions(new Object[]{confirmButton,DialogManager.CANCEL_OPTION})
-              //.setDialogId("")
+              .setDialogId("confirm.proceed")
               .show();
             if (rc != confirmButton) {
                 return;
