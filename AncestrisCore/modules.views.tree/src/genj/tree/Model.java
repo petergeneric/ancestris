@@ -32,6 +32,7 @@ import genj.gedcom.PropertyXRef;
 import gj.layout.LayoutException;
 import gj.layout.tree.TreeLayout;
 import gj.model.Node;
+import java.awt.Cursor;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -47,6 +48,7 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.openide.windows.WindowManager;
 
 /**
  * Model of our tree
@@ -555,47 +557,52 @@ import java.util.concurrent.CopyOnWriteArrayList;
    */
   private void update() {
     
-    // clear old
-    arcs.clear();
-    nodes.clear();
-    entities2nodes.clear();
-    bounds.setFrame(0,0,0,0);
-    
-    // nothing to do if no root set
-    if (root==null) {
-      fireStructureChanged();
-      return;
-    }
+      WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-    // parse and layout    
-    try {
-      // make sure families only when root is not family
-      boolean isFams = isFamilies || root instanceof Fam;
-      // parse its descendants
-      Parser descendants = Parser.getInstance(false, isFams, this, style.tm);
-      bounds.add(layout(descendants.parse(root), true));
-      // parse its ancestors 
-      bounds.add(layout(descendants.align(Parser.getInstance(true, isFams, this, style.tm).parse(root)), false));
-    } catch (LayoutException e) {
-      e.printStackTrace();
-      root = null;
-      update();
-      return;
-    }
-    
-    // create gridcache
-    cache = new GridCache(
-      bounds, 3*style.tm.calcMax()
-    );
-    Iterator it = nodes.iterator();
-    while (it.hasNext()) {
-      TreeNode n = (TreeNode)it.next();
-      if (n.shape!=null) cache.put(n, n.shape.getBounds(), n.pos);
-    }
-    
-    // notify
-    fireStructureChanged();
-    // done
+      // clear old
+      arcs.clear();
+      nodes.clear();
+      entities2nodes.clear();
+      bounds.setFrame(0, 0, 0, 0);
+
+      // nothing to do if no root set
+      if (root == null) {
+          fireStructureChanged();
+          WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+          return;
+      }
+
+      // parse and layout    
+      try {
+          // make sure families only when root is not family
+          boolean isFams = isFamilies || root instanceof Fam;
+          // parse its descendants
+          Parser descendants = Parser.getInstance(false, isFams, this, style.tm);
+          bounds.add(layout(descendants.parse(root), true));
+          // parse its ancestors 
+          bounds.add(layout(descendants.align(Parser.getInstance(true, isFams, this, style.tm).parse(root)), false));
+      } catch (LayoutException e) {
+          e.printStackTrace();
+          root = null;
+          update();
+          WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+          return;
+      }
+
+      // create gridcache
+      cache = new GridCache(bounds, 3 * style.tm.calcMax());
+      Iterator it = nodes.iterator();
+      while (it.hasNext()) {
+          TreeNode n = (TreeNode) it.next();
+          if (n.shape != null) {
+              cache.put(n, n.shape.getBounds(), n.pos);
+          }
+      }
+
+      // notify
+      fireStructureChanged();
+      WindowManager.getDefault().getMainWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+      // done
   }
 
   /**
