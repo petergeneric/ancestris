@@ -778,12 +778,11 @@ public abstract class GedcomDirectory {
 
         // FIXME: a reecrire plus proprement
         String ovs[] = gedcomSettings.get("openViews", (String[]) null);
-        openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, ovs));
 
+        openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, ovs));
+        
         if (openedViews.isEmpty()) {
-            openedViews.addAll(AncestrisPlugin.lookupForName(
-                    AncestrisViewInterface.class,
-                    prefs.get("openViews", (String[]) null)));
+            openedViews.addAll(AncestrisPlugin.lookupForName(AncestrisViewInterface.class, prefs.get("openViews", (String[]) null)));
         }
         if (openedViews.isEmpty()) {
             // Open default views

@@ -28,6 +28,7 @@ final public class Images {
 
   public final static ImageIcon
     imgClose        = new ImageIcon(Images.class,"images/Close"),
+    imgBigClose     = new ImageIcon(Images.class,"images/Close24"),
     imgNew          = new ImageIcon(Images.class,"images/New"),
     imgOpen         = new ImageIcon(Images.class,"images/Open"),
     imgExit         = new ImageIcon(Images.class,"images/Exit"),
@@ -37,5 +38,6 @@ final public class Images {
     imgAbout        = new ImageIcon(Images.class,"images/About"),
     imgHelp         = new ImageIcon(Images.class,"images/Help"),
     imgOnlineHelp   = new ImageIcon(Images.class,"images/OnlineHelp"),
-    imgProperties   = new ImageIcon(Images.class,"images/Properties");
+    imgProperties   = new ImageIcon(Images.class,"images/Properties"),
+    imgNext         = new ImageIcon(Images.class,"images/Next");
 }

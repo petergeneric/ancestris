@@ -137,7 +137,10 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     /** our content renderer */
     private final ContentRenderer contentRenderer;
     /** our current zoom */
-    private double zoom = 1.0D;
+    private static float MINZOOM = 0.1F;
+    private static float MAXZOOM = 1.0F;
+    private static float DEFZOOM = 0.5F;
+    private double zoom = DEFZOOM;
     private SliderWidget sliderZoom;
     /** folded state */
     private boolean isFolded = true;
@@ -180,7 +183,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         // grab styles
         styleManager = TreeStyleManager.getInstance(REGISTRY);
         style = styleManager.getStyle(REGISTRY.get("style", "default"));
-        zoom = Math.max(0.1, Math.min(1.0, REGISTRY.get("zoom", 1.0F)));  // zoom can be distinct from style.zoom
+        zoom = Math.max(MINZOOM, Math.min(MAXZOOM, REGISTRY.get("zoom", DEFZOOM)));  // zoom can be distinct from style.zoom
 
         // setup model
         model = new Model(style);
@@ -659,7 +662,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
     private void setZoom(double d) {
         Point centr = getCenter();
-        zoom = Math.max(0.1D, Math.min(1.0, d));
+        zoom = Math.max(MINZOOM, Math.min(MAXZOOM, d));
         if (getStyleManager().getPersoStyle() == style) { // only change style zoom value if style is perso
             style.zoom = zoom;
         }

@@ -14,7 +14,7 @@ package genj.edit.actions;
 
 import ancestris.api.editor.*;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.editors.gedcom.EditTopComponent;
+import ancestris.modules.editors.gedcom.GedcomTopComponent;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Indi;
@@ -54,12 +54,12 @@ public class GedcomEditorAction extends AncestrisEditor {
             contextToOpen = new Context(property);
         }
         if (contextToOpen != null) {
-            EditTopComponent editTopComponent = getCurrentEditorTopComponent(contextToOpen);
+            GedcomTopComponent editTopComponent = getCurrentEditorTopComponent(contextToOpen);
             if (editTopComponent != null) {
                 SelectionDispatcher.fireSelection(contextToOpen);
                 editTopComponent.requestActive();
             } else {
-                editTopComponent = EditTopComponent.getFactory();
+                editTopComponent = GedcomTopComponent.getFactory();
                 editTopComponent.init(contextToOpen);
                 editTopComponent.open();
                 editTopComponent.requestActive();
@@ -78,7 +78,7 @@ public class GedcomEditorAction extends AncestrisEditor {
         if (canonical) {
             return getClass().getCanonicalName();
         } else {
-            return NbBundle.getMessage(EditTopComponent.class, "OpenIDE-Module-Name");
+            return NbBundle.getMessage(GedcomTopComponent.class, "OpenIDE-Module-Name");
         }
     }
 
@@ -102,9 +102,9 @@ public class GedcomEditorAction extends AncestrisEditor {
         return new CreateSpouse(indi);
     }
 
-    private EditTopComponent getCurrentEditorTopComponent(Context context) {
-        EditTopComponent ret = null;
-        for (EditTopComponent editTopComponent : (List<EditTopComponent>) AncestrisPlugin.lookupAll(EditTopComponent.class)) {
+    private GedcomTopComponent getCurrentEditorTopComponent(Context context) {
+        GedcomTopComponent ret = null;
+        for (GedcomTopComponent editTopComponent : (List<GedcomTopComponent>) AncestrisPlugin.lookupAll(GedcomTopComponent.class)) {
             Context tmpContext = editTopComponent.getContext();
             if (tmpContext != null) {
                 if (tmpContext.getGedcom() == context.getGedcom())  {

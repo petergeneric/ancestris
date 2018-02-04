@@ -79,8 +79,8 @@ import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  * 
@@ -132,6 +132,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//ancestris.modules.treesharing//EN",
 autostore = false)
+@ServiceProvider(service = TopComponent.class)
 public class TreeSharingTopComponent extends TopComponent {
 
     // Top component elements
@@ -244,8 +245,6 @@ public class TreeSharingTopComponent extends TopComponent {
             initResults();
 
             initRefreshMembersThread();
-            
-            showWelcomeMessages();
     }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
@@ -654,12 +653,17 @@ public class TreeSharingTopComponent extends TopComponent {
     public boolean startSharingAll() {
         
         // Get pseudo and ask user to go to parameters if not set
-        
         if (isMyProfileOK()) {
             commPseudo = getPreferredPseudo();
         } else {
             return false;
         }
+        
+        // Ask user to load a gedcom file if not up
+        if (!isGedcomLoaded()) {
+            return false;
+        }
+        
 
         // Toggle the buttons to show it is set to sharing
         toggleOn();
@@ -754,19 +758,24 @@ public class TreeSharingTopComponent extends TopComponent {
     
     private boolean isMyProfileOK() {
 
+        showWelcomeMessages();
+        
         String error = "";
 
         if (getPreferredPseudo().equals("")) {
-            error = NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPseudo");;
+            error = NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPseudo");
         } else {
             error = TreeSharingOptionsPanel.getProfileError();
         }
 
         if (!error.isEmpty()) {
-            DialogManager.create("", error).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            DialogManager.create("", "error")
+                    .setOptionType(DialogManager.OK_ONLY_OPTION)
+                    .setMessageType(DialogManager.ERROR_MESSAGE).show();
             settings.displayOptionsPanel();
             return false;
         }
+        
         return true;
     }
 
@@ -774,7 +783,17 @@ public class TreeSharingTopComponent extends TopComponent {
         return TreeSharingOptionsPanel.getProfile();
     }
 
-    
+    private boolean isGedcomLoaded() {
+        if (sharedGedcoms != null && !sharedGedcoms.isEmpty()) {
+            return true;
+        }
+        DialogManager.create("", NbBundle.getMessage(TreeSharingTopComponent.class, "MSG_NoGedcomLoaded"))
+                .setOptionType(DialogManager.OK_ONLY_OPTION)
+                .setMessageType(DialogManager.ERROR_MESSAGE).show();
+        return false;
+    }
+
+
     
     
     private void dispatchShare(boolean b) {
@@ -1171,15 +1190,10 @@ public class TreeSharingTopComponent extends TopComponent {
 
     private void showWelcomeMessages() {
         if ("1".equals(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Welcome", "1"))) {
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Welcome"),
-                            new WelcomePanel()).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
-                    NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Welcome", "0");
-                    settings.displayOptionsPanel();
-                }
-            });
+            DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Welcome"),
+                    new WelcomePanel()).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+            NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Welcome", "0");
+            settings.displayOptionsPanel();
         }
     }
 

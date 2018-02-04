@@ -5,7 +5,7 @@
         <folder name="Window">
             <file name="ancestris-modules-editors-gedcom-EditAction.instance">
                 <attr name="SystemFileSystem.localizingBundle" stringvalue="ancestris.modules.editors.gedcom.Bundle"/>
-                <attr name="component" methodvalue="ancestris.modules.editors.gedcom.EditTopComponent.getFactory"/>
+                <attr name="component" methodvalue="ancestris.modules.editors.gedcom.GedcomTopComponent.getFactory"/>
                 <attr name="displayName" bundlevalue="ancestris.modules.editors.gedcom.Bundle#CTL_MENU_EditAction"/>
                 <attr name="instanceCreate" methodvalue="ancestris.view.AncestrisTopComponent.openAction"/>
             </file>

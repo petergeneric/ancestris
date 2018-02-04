@@ -76,11 +76,11 @@ public class ContentSection extends JPanel implements Constants {
         this.showSeparator = showSeparator;
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         if (createBorder)
-            setBorder( BorderFactory.createEmptyBorder(12,25,5,25) );   // top, left, bottom, right
+            setBorder( BorderFactory.createEmptyBorder(10,25,5,25) );   // top, left, bottom, right
         if (title != null) {
             JLabel lblTitle = new JLabel( title );
             lblTitle.setFont(SECTION_HEADER_FONT);
-            lblTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 6, 0));
+            lblTitle.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
             lblTitle.setForeground(Utils.getColor(COLOR_SECTION_HEADER));
             lblTitle.setAlignmentX(Component.LEFT_ALIGNMENT);
             lblTitle.setAlignmentY(Component.TOP_ALIGNMENT);

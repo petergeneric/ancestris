@@ -31,6 +31,14 @@
                     </run-dependency>
                 </dependency>
                 <dependency>
+                    <code-name-base>ancestris.api.sample</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>0.10.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
                     <code-name-base>ancestris.api.search</code-name-base>
                     <build-prerequisite/>
                     <compile-dependency/>
@@ -52,6 +60,14 @@
                     <compile-dependency/>
                     <run-dependency>
                         <specification-version>0.5.0</specification-version>
+                    </run-dependency>
+                </dependency>
+                <dependency>
+                    <code-name-base>ancestris.libs.genj</code-name-base>
+                    <build-prerequisite/>
+                    <compile-dependency/>
+                    <run-dependency>
+                        <specification-version>1.0</specification-version>
                     </run-dependency>
                 </dependency>
                 <dependency>
@@ -264,9 +280,9 @@
                 </test-type>
             </test-dependencies>
             <public-packages>
-                <package>ancestris</package>
                 <package>ancestris.app</package>
                 <package>ancestris.explorer</package>
+                <package>ancestris.tour</package>
                 <package>ancestris.util</package>
                 <package>ancestris.view</package>
             </public-packages>

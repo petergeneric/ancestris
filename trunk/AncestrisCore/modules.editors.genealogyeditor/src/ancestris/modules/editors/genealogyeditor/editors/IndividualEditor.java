@@ -1,6 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
-import ancestris.modules.editors.genealogyeditor.EditorTopComponent;
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
@@ -1101,7 +1101,7 @@ public final class IndividualEditor extends EntityEditor {
             ListSelectionModel lsm = (ListSelectionModel) lse.getSource();
             if (!lse.getValueIsAdjusting() && !lsm.isSelectionEmpty()) {
                 if (!changeListInProgress && individualEventEditorPanel.hasChanged()) {
-                    EditorTopComponent etc = EditorTopComponent.findEditorWindow(mIndividual.getGedcom());
+                    AriesTopComponent etc = AriesTopComponent.findEditorWindow(mIndividual.getGedcom());
                     if (etc != null) {
                         etc.commit();
                     }

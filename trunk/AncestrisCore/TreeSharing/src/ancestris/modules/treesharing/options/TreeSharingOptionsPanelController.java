@@ -25,7 +25,7 @@ import org.openide.util.Lookup;
         keywords = "#AdvancedOption_Keywords_TreeSharingOptions",
         keywordsCategory = "Extensions/TreeSharingOptions"
 )
-@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_TreeSharingOptions=TreeSharing", "AdvancedOption_Keywords_TreeSharingOptions=TreeSharing"})
+@org.openide.util.NbBundle.Messages({"AdvancedOption_DisplayName_TreeSharingOptions=Genealogy Search", "AdvancedOption_Keywords_TreeSharingOptions=Genealogy Search"})
 public final class TreeSharingOptionsPanelController extends OptionsPanelController {
 
     private TreeSharingOptionsPanel panel;

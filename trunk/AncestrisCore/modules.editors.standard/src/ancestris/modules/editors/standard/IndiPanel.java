@@ -2447,8 +2447,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         //        }
     }
 
-    private EditorTopComponent getEditorTopComponent() {
-        for (EditorTopComponent editorTopComponent : (List<EditorTopComponent>) AncestrisPlugin.lookupAll(EditorTopComponent.class)) {
+    private CygnusTopComponent getEditorTopComponent() {
+        for (CygnusTopComponent editorTopComponent : (List<CygnusTopComponent>) AncestrisPlugin.lookupAll(CygnusTopComponent.class)) {
             if (editorTopComponent.getEditor() != null && editorTopComponent.getEditor() == this) {
                 return editorTopComponent;
             }

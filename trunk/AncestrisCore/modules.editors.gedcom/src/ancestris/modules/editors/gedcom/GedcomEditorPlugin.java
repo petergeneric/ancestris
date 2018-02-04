@@ -21,7 +21,7 @@ public class GedcomEditorPlugin extends AncestrisPlugin {
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(3);
-        result.add(EditTopComponent.class);
+        result.add(GedcomTopComponent.class);
         return result;
 
     }

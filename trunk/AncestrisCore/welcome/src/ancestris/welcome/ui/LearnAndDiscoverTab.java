@@ -75,16 +75,17 @@ class LearnAndDiscoverTab extends AbstractTab {
         leftPanel.setOpaque(false);
         leftPanel.setBorder(BorderFactory.createEmptyBorder());
         main.add(new ContentSection( leftPanel,false));
-        leftPanel.add( new ContentSection( BundleSupport.getLabel("SectionGetStarted"), new GetStarted("WelcomePage/GettingStartedLinks")) ); // NOI18N
-        leftPanel.add( new ContentSection( BundleSupport.getLabel("SectionSample"), new SamplePanel() ) );
+        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionCreateMigrate"), new NewGedcomPanel() ) );
+        leftPanel.add( new ContentSection( new MigrateGedcomPanel()) );
 
         JPanel rightPanel = new JPanel();
         rightPanel.setLayout(new BoxLayout(rightPanel, BoxLayout.Y_AXIS));
         rightPanel.setOpaque(false);
         rightPanel.setBorder(BorderFactory.createEmptyBorder());
         main.add(new ContentSection( rightPanel,true));
-        rightPanel.add( new ContentSection( BundleSupport.getLabel("SectionDemosAndTutorials"), new GetStarted("WelcomePage/TutorialsLinks") ) ); // NOI18N
-        rightPanel.add( new ContentSection( BundleSupport.getLabel("SectionContribute"), new GetStarted("WelcomePage/ContributeLinks")) ); // NOI18N
+        rightPanel.add( new ContentSection( BundleSupport.getLabel("SectionSample"), new SamplePanel() ) );
+        rightPanel.add( new ContentSection( BundleSupport.getLabel("SectionGetStarted"), new FeaturesPanel()) ); // NOI18N
+        //rightPanel.add( new ContentSection( new GetStarted("WelcomePage/GettingStartedLinks")) ); // NOI18N
         
         add( new BottomBar(), BorderLayout.SOUTH );
     }

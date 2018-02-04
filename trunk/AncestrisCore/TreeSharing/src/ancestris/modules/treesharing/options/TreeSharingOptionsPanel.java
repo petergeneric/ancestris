@@ -16,6 +16,7 @@ import ancestris.modules.treesharing.panels.MembersPopup;
 import ancestris.modules.treesharing.panels.TechInfoPanel;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
+import static genj.util.EnvironmentChecker.getProperty;
 import java.awt.Component;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -32,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.prefs.BackingStoreException;
 import javax.imageio.ImageIO;
@@ -66,7 +68,15 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
     private final ImageIcon ALLOWED_ICON = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/allowed.png"));
     private final ImageIcon MEMBER_ICON = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/friend16.png"));
 
-    private final TreeSharingOptionsPanelController controller;
+    private final static int PSEUDO_MAXLENGTH = 15;
+    private final static String DEFPROF_LAST  = "Chevalier";
+    private final static String DEFPROF_FIRST = "Maurice";
+    private final static String DEFPROF_EMAIL = "maurice@france.fr";
+    private final static String DEFPROF_CITY = "Marnes";
+    private final static String DEFPROF_CTRY = "France";
+    private final ImageIcon DEFPROF_PHOTO = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/nophotobig.png"));
+
+
     private static String photoPath = "";
     private static File dest = null;
     private static BufferedImage targetImage = null;
@@ -91,7 +101,6 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
     private MyTableModel model2 = null;
 
     TreeSharingOptionsPanel(TreeSharingOptionsPanelController controller) {
-        this.controller = controller;
         initComponents();
         loading = false;
         this.thisPanel = this;
@@ -346,19 +355,19 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
     }//GEN-LAST:event_jLabel8MouseClicked
 
     void load() {
-        jTextField1.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", "").trim());
-        jTextField2.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", "").trim());
-        jTextField3.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", "").trim());
-        jTextField4.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", "").trim());
-        jTextField5.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", "").trim());
-        jTextField6.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim()));
+        jTextField1.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", getPseudo()).trim());
+        jTextField2.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", DEFPROF_LAST).trim());
+        jTextField3.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", DEFPROF_FIRST).trim());
+        jTextField4.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", DEFPROF_EMAIL).trim());
+        jTextField5.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", DEFPROF_CITY).trim());
+        jTextField6.setText(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", DEFPROF_CTRY.trim()));
         photoPath = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", "");
+        jLabel8.setText("");
+        jLabel8.setToolTipText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
         if (loadSavePhoto(new File(photoPath))) {
-            jLabel8.setText("");
             jLabel8.setIcon(new ImageIcon(targetImage));
         } else {
-            jLabel8.setText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
-            jLabel8.setIcon(null);
+            jLabel8.setIcon(DEFPROF_PHOTO);
         }
         jCheckBox1.setSelected(NbPreferences.forModule(TreeSharingOptionsPanel.class).getBoolean("RespectPrivacy", true));
         jComboBox1.setSelectedIndex(getMatchType() - 1);
@@ -441,11 +450,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 .showOpenDialog();
         if (file != null) {
             if (processImage(file)) {
-                jLabel8.setText("");
                 jLabel8.setIcon(new ImageIcon(targetImage));
             } else {
-                jLabel8.setText(NbBundle.getMessage(TreeSharingOptionsPanel.class, "TreeSharingOptionsPanel.jLabel8.toolTipText"));
-                jLabel8.setIcon(null);
+                jLabel8.setIcon(DEFPROF_PHOTO);
             }
         }
     }
@@ -574,16 +581,45 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
     }
 
     public static String getPseudo() {
-        return NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", "").trim();
+        String p = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Pseudo", getDefaultPseudo()).trim();
+        NbPreferences.forModule(TreeSharingOptionsPanel.class).put("Pseudo", p);  // store it right away to avoid generating another one
+        return p;
+    }
+
+    public static String getDefaultPseudo() {
+        String rawName = getProperty("user.home.ancestris", "", "").trim();
+        
+        int i = rawName.indexOf(File.separator);
+        rawName = rawName.substring(i+1);  // get rid of first "/"
+        i = rawName.indexOf(File.separator);
+        rawName = rawName.substring(i+1);  // get rid of first word
+        i = rawName.indexOf(File.separator);
+        if (i == -1) {
+            i = rawName.length();
+        }
+        rawName = rawName.substring(0, Math.min(PSEUDO_MAXLENGTH, i)).trim();
+        
+        // Generate random string if empty
+        if (rawName.isEmpty()) {
+            char[] buf = new char[PSEUDO_MAXLENGTH-3];
+            char[] symbols = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz".toCharArray();
+            Random random = new Random();
+            for (int idx = 0; idx < buf.length; ++idx) {
+                buf[idx] = symbols[random.nextInt(symbols.length)];
+            }
+            rawName = "ZZZ" + new String(buf);
+        }
+        
+        return rawName;
     }
 
     public static MemberProfile getProfile() {
         MemberProfile profile = new MemberProfile();
-        profile.lastname = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", "").trim();
-        profile.firstname = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", "").trim();
-        profile.email = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", "").trim();
-        profile.city = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", "").trim();
-        profile.country = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", "".trim());
+        profile.lastname = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Lastname", DEFPROF_LAST).trim();
+        profile.firstname = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Firstname", DEFPROF_FIRST).trim();
+        profile.email = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Email", DEFPROF_EMAIL).trim();
+        profile.city = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("City", DEFPROF_CITY).trim();
+        profile.country = NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Country", DEFPROF_CTRY.trim());
         File f = new File(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Photo", ""));
         if (loadSavePhoto(f)) {
             profile.photoBytes = getPhotoBytes(f);
@@ -603,9 +639,9 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         if (myProfile.city.isEmpty() || myProfile.country.isEmpty()) {
             return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPlace");
         }
-        if (myProfile.photoBytes == null || myProfile.photoBytes.length == 0) {
-            return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPhoto");
-        }
+//        if (myProfile.photoBytes == null || myProfile.photoBytes.length == 0) {
+//            return NbBundle.getMessage(TreeSharingOptionsPanel.class, "ERR_NullPhoto");
+//        }
         return "";
     }
 
@@ -660,13 +696,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
         for (String key : keys) {
             if (key.startsWith("memberps-")) {
-                String pseudo = key.substring(9);
+                String pseudo = key.substring(PSEUDO_MAXLENGTH);
                 if (!getPseudo().equals(pseudo)) {
                     jlist1.put(pseudo, NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
                 }
             }
             if (key.startsWith("memberip-")) {
-                jlist2.put(key.substring(9), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
+                jlist2.put(key.substring(PSEUDO_MAXLENGTH), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
             }
         }
         refreshMembersLists();
