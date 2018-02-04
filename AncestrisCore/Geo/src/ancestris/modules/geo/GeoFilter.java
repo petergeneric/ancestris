@@ -35,7 +35,7 @@ public class GeoFilter {
     
     private Gedcom gedcom;
     public String location = "";
-    public boolean showUnknown = true;
+    public boolean showUnknown = false;
     public boolean ascendants = false;
     public boolean descendants = false;
     public boolean cousins = false;
@@ -68,7 +68,7 @@ public class GeoFilter {
 
     public void load() {
         location = registry.get("GEO.geofilter.location", "");
-        showUnknown = registry.get("GEO.geofilter.showUnknown", true);
+        showUnknown = registry.get("GEO.geofilter.showUnknown", false);
         ascendants = registry.get("GEO.geofilter.ascendants", false);
         descendants = registry.get("GEO.geofilter.descendants", false);
         cousins = registry.get("GEO.geofilter.cousins", false);
