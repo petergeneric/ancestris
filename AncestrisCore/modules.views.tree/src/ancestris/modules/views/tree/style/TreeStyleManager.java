@@ -35,6 +35,10 @@ public class TreeStyleManager {
     private final static String[] STYLES = {"default", "classic", "small_picture"};
     public final static String PERSOSTYLE = "perso";
 
+    private static float MINZOOM = 0.1F;
+    private static float MAXZOOM = 1.0F;
+    private static float DEFZOOM = 0.5F;
+    
     private static TreeStyleManager instance;
     private Map<String, Style> key2style = new LinkedHashMap<String, Style>();
 
@@ -128,7 +132,7 @@ public class TreeStyleManager {
                 registry.get("antial", true),
                 registry.get("roundedrect", true),
                 tm,
-                Math.max(0.1, Math.min(1.0, registry.get("zoom", 1.0F)))
+                Math.max(MINZOOM, Math.min(MAXZOOM, registry.get("zoom", DEFZOOM)))
         );
         
         return style;

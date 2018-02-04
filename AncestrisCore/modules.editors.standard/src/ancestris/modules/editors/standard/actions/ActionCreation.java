@@ -13,7 +13,7 @@
 package ancestris.modules.editors.standard.actions;
 
 import ancestris.api.editor.Editor;
-import ancestris.modules.editors.standard.EditorTopComponent;
+import ancestris.modules.editors.standard.CygnusTopComponent;
 import ancestris.modules.editors.standard.IndiPanel;
 import ancestris.modules.editors.standard.tools.IndiCreator;
 import genj.gedcom.Context;
@@ -30,22 +30,22 @@ import javax.swing.AbstractAction;
  */
 public class ActionCreation extends AbstractAction {
 
-    private EditorTopComponent editorTopComponent;
+    private CygnusTopComponent editorTopComponent;
     private int type;
     private Indi indi;
     private Fam fam;
     private int relation;
     private ChangeSupport changes;
     
-    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Entity ent) {
+    public ActionCreation(CygnusTopComponent editorTopComponent, int type, int relation, Entity ent) {
         init(editorTopComponent, type, relation, ent, null);
     }
 
-    public ActionCreation(EditorTopComponent editorTopComponent, int type, int relation, Entity ent, Fam fam) {
+    public ActionCreation(CygnusTopComponent editorTopComponent, int type, int relation, Entity ent, Fam fam) {
         init(editorTopComponent, type, relation, ent, fam);
     }
 
-    private void init(EditorTopComponent editorTopComponent, int type, int relation, Entity ent, Fam fam) {
+    private void init(CygnusTopComponent editorTopComponent, int type, int relation, Entity ent, Fam fam) {
         this.editorTopComponent = editorTopComponent;
         this.type = type;
         this.relation = relation;

@@ -22,10 +22,10 @@ import org.openide.windows.TopComponent;
 autostore = false)
 @RetainLocation(AncestrisDockModes.EDITOR)
 @ServiceProvider(service = AncestrisViewInterface.class)
-public final class EditTopComponent extends GenjViewTopComponent implements TopComponent.Cloneable {
+public final class GedcomTopComponent extends GenjViewTopComponent implements TopComponent.Cloneable {
 
-    private static final String PREFERRED_ID = "EditTopComponent";
-    private static EditTopComponent factory;
+    private static final String PREFERRED_ID = "GedcomTopComponent";
+    private static GedcomTopComponent factory;
     private ViewFactory viewfactory = new EditViewFactory();  // should not be static
 
     public ViewFactory getViewFactory() {
@@ -37,9 +37,9 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
      * i.e. deserialization routines; otherwise you could get a non-deserialized instance.
      * To obtain the singleton instance, use {@link #findInstance}.
      */
-    public static synchronized EditTopComponent getFactory() {
+    public static synchronized GedcomTopComponent getFactory() {
         if (factory == null) {
-            factory = new EditTopComponent();
+            factory = new GedcomTopComponent();
         }
         return factory;
     }
@@ -49,7 +49,7 @@ public final class EditTopComponent extends GenjViewTopComponent implements TopC
             return null;
         }
 
-        AncestrisTopComponent topComponent = new EditTopComponent();
+        AncestrisTopComponent topComponent = new GedcomTopComponent();
         topComponent.init(getContext());
         return topComponent;
     }

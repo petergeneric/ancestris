@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.api.editor.AncestrisEditor;
-import ancestris.modules.editors.genealogyeditor.EditorTopComponent;
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
@@ -32,7 +32,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AncestrisEditor.class, position = 200)
 public class GenealogyEditorAction extends AncestrisEditor {
 
-    private ImageIcon editorIcon = new ImageIcon(EditorTopComponent.class.getResource("resources/Editor.png")); // NOI18N
+    private ImageIcon editorIcon = new ImageIcon(AriesTopComponent.class.getResource("resources/Editor.png")); // NOI18N
 
     @Override
     public boolean canEdit(Property property) {
@@ -115,7 +115,7 @@ public class GenealogyEditorAction extends AncestrisEditor {
         if (canonical) {
             return getClass().getCanonicalName();
         } else {
-            return NbBundle.getMessage(EditorTopComponent.class, "OpenIDE-Module-Name");
+            return NbBundle.getMessage(AriesTopComponent.class, "OpenIDE-Module-Name");
         }
     }
 

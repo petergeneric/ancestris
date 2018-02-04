@@ -3,11 +3,11 @@
 <filesystem>
     <folder name="Actions">
         <folder name="Help">
-            <file name="ancestris-modules-donation-ShowAction.instance">
+            <file name="ancestris-modules-donation-DonationAction.instance">
                 <attr name="instanceCreate" methodvalue="org.openide.awt.Actions.alwaysEnabled" />
-                <attr name="delegate"       newvalue="ancestris.modules.donation.ShowAction" />
-                <attr name="displayName" bundlevalue="ancestris.modules.donation.Bundle#CTL_ShowAction"/>
-               <attr name="iconBase" stringvalue="ancestris/modules/donation/ShowAction.png" />
+                <attr name="delegate"       newvalue="ancestris.modules.donation.DonationAction" />
+                <attr name="displayName" bundlevalue="ancestris.modules.donation.Bundle#CTL_DonationAction"/>
+               <attr name="iconBase" stringvalue="ancestris/modules/donation/DonationAction.png" />
             </file>
         </folder>
     </folder>
@@ -15,7 +15,7 @@
     <folder name="Menu">
         <folder name="Help">
             <file name="ShowDonationAction.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/ancestris-modules-donation-ShowAction.instance"/>
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-modules-donation-DonationAction.instance"/>
                 <attr name="position" intvalue="42"/>
             </file>
         </folder>

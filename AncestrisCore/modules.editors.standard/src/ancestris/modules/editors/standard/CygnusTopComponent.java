@@ -55,9 +55,9 @@ import org.openide.windows.TopComponent;
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.EDITOR)
-public class EditorTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
+public class CygnusTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
-    private static final String PREFERRED_ID = "AncestrisEditor";  // NOI18N
+    private static final String PREFERRED_ID = "CygnusTopComponent";  // NOI18N
     final static Logger LOG = Logger.getLogger("ancestris.cygnuseditor");
     
     // Main elements
@@ -349,7 +349,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             return null;
         }
 
-        AncestrisTopComponent topComponent = new EditorTopComponent();
+        AncestrisTopComponent topComponent = new CygnusTopComponent();
         topComponent.init(getContext());
         return topComponent;
     }

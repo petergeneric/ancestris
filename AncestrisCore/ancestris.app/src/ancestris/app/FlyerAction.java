@@ -10,7 +10,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-package ancestris.modules.donation;
+package ancestris.app;
 
 import ancestris.util.swing.DialogManager;
 import java.awt.event.ActionEvent;
@@ -21,14 +21,14 @@ import org.openide.util.NbBundle;
  *
  * @author frederic
  */
-public class ShowAction  implements ActionListener {
+public class FlyerAction  implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        String title = NbBundle.getMessage(ShowAction.class, "CTL_ShowAction");
-        DonationPanel panel = new DonationPanel();
+        FlyerPanel flyerPanel = new FlyerPanel();
+        DialogManager.create(NbBundle.getMessage(getClass(), "CTL_APropos_Flyer"), flyerPanel).setMessageType(DialogManager.PLAIN_MESSAGE)
+                .setOptionType(DialogManager.OK_ONLY_OPTION).setResizable(false).show();
         
-        DialogManager.create(title, panel).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setResizable(false).show();
     }
 
     

@@ -49,7 +49,7 @@ public class ActionAPropos extends JDialog implements ActionListener {
         jbAbout.addActionListener(new java.awt.event.ActionListener() {
 
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                displayFlyerBox();
+                new FlyerAction().actionPerformed(evt);
             }
         });
 
@@ -105,12 +105,6 @@ public class ActionAPropos extends JDialog implements ActionListener {
                 dlg.dispose();
             }
         }
-    }
-
-    private void displayFlyerBox() {
-        FlyerPanel flyerPanel = new FlyerPanel();
-        Object o = DialogManager.create(NbBundle.getMessage(getClass(), "CTL_APropos_Flyer"), flyerPanel).setMessageType(DialogManager.PLAIN_MESSAGE)
-                .setOptionType(DialogManager.OK_ONLY_OPTION).setResizable(false).show();
     }
 
     private void displayLicence() {

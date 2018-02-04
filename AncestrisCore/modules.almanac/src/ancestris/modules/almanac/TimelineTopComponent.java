@@ -28,7 +28,7 @@ import org.openide.windows.WindowManager;
  */
 @ConvertAsProperties(dtd = "-//ancestris.app//Timeline//EN",
 autostore = false)
-@RetainLocation(AncestrisDockModes.TABLE)
+@RetainLocation(AncestrisDockModes.OUTPUT)
 @ServiceProvider(service = AncestrisViewInterface.class)
 public final class TimelineTopComponent extends GenjViewTopComponent {
 

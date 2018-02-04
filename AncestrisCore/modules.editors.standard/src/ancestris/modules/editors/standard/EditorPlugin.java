@@ -31,7 +31,7 @@ public class EditorPlugin extends AncestrisPlugin {
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(1);
         if (EditorAction.class.getCanonicalName().startsWith(GedcomOptions.getInstance().getDefaultEditor())) {
-            result.add(EditorTopComponent.class);
+            result.add(CygnusTopComponent.class);
         }
         return result;
     }

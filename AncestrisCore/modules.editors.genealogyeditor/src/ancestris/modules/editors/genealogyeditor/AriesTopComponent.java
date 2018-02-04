@@ -63,10 +63,10 @@ import org.openide.windows.WindowManager;
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.EDITOR)
-public class EditorTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
+public class AriesTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
 
-    private static final String PREFERRED_ID = "GenealogyEditor";  // NOI18N
-    private static EditorTopComponent factory;
+    private static final String PREFERRED_ID = "AriesTopComponent";  // NOI18N
+    private static AriesTopComponent factory;
 
     /* package */ final static Logger LOG = Logger.getLogger("ancestris.genealogyedit");
     private final Callback callback = new Callback();
@@ -121,9 +121,9 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         return true;
     }
 
-    public static synchronized EditorTopComponent getFactory() {
+    public static synchronized AriesTopComponent getFactory() {
         if (factory == null) {
-            factory = new EditorTopComponent();
+            factory = new AriesTopComponent();
         }
         return factory;
     }
@@ -352,7 +352,7 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
             return null;
         }
 
-        AncestrisTopComponent topComponent = new EditorTopComponent();
+        AncestrisTopComponent topComponent = new AriesTopComponent();
         topComponent.init(getContext());
         return topComponent;
     }
@@ -392,11 +392,11 @@ public class EditorTopComponent extends AncestrisTopComponent implements TopComp
         }
     }
     
-    public static EditorTopComponent findEditorWindow(Gedcom gedcom) {
-        EditorTopComponent editorWindow = null;
+    public static AriesTopComponent findEditorWindow(Gedcom gedcom) {
+        AriesTopComponent editorWindow = null;
         for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
-            if (tc instanceof EditorTopComponent) {
-                EditorTopComponent gltc = (EditorTopComponent) tc;
+            if (tc instanceof AriesTopComponent) {
+                AriesTopComponent gltc = (AriesTopComponent) tc;
                 if (gltc.getGedcom() == gedcom) {
                     editorWindow = gltc;
                     break;

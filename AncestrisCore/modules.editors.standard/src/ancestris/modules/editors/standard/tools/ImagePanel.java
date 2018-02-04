@@ -75,6 +75,9 @@ public class ImagePanel extends javax.swing.JPanel {
         } else {
             image = defaultImage;
         }
+        if (image == null) {
+            return;
+        }
         final ImagePanel ip = this;
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override

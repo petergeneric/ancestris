@@ -15,7 +15,7 @@ package ancestris.modules.editors.standard.actions;
 import ancestris.api.editor.AncestrisEditor;
 import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.editors.standard.EditorTopComponent;
+import ancestris.modules.editors.standard.CygnusTopComponent;
 import ancestris.modules.editors.standard.tools.IndiCreator;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.SelectionDispatcher;
@@ -43,7 +43,7 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = AncestrisEditor.class, position = 195)
 public class EditorAction extends AncestrisEditor {
     
-    private ImageIcon editorIcon = new ImageIcon(EditorTopComponent.class.getResource("editeur_standard.png")); // NOI18N
+    private ImageIcon editorIcon = new ImageIcon(CygnusTopComponent.class.getResource("editeur_standard.png")); // NOI18N
 
     @Override
     public boolean canEdit(Property property) {
@@ -71,12 +71,12 @@ public class EditorAction extends AncestrisEditor {
             contextToOpen = new Context(property);
         }
         if (contextToOpen != null) {
-            EditorTopComponent editorTopComponent = getCurrentEditorTopComponent(contextToOpen);
+            CygnusTopComponent editorTopComponent = getCurrentEditorTopComponent(contextToOpen);
             if (editorTopComponent != null) {
                 SelectionDispatcher.fireSelection(contextToOpen);
                 editorTopComponent.requestActive();
             } else {
-                AncestrisTopComponent win = new EditorTopComponent().create(contextToOpen);
+                AncestrisTopComponent win = new CygnusTopComponent().create(contextToOpen);
                 win.open();
                 win.requestActive();
             }
@@ -93,7 +93,7 @@ public class EditorAction extends AncestrisEditor {
         if (canonical) {
             return getClass().getCanonicalName();
         } else {
-            return NbBundle.getMessage(EditorTopComponent.class, "OpenIDE-Module-Name");
+            return NbBundle.getMessage(CygnusTopComponent.class, "OpenIDE-Module-Name");
         }
     }
     
@@ -109,7 +109,7 @@ public class EditorAction extends AncestrisEditor {
 
     @Override
     public Action getCreateParentAction(Indi indi, int sex) {
-        EditorTopComponent editorTopComponent = getCurrentEditorTopComponent(new Context(indi));
+        CygnusTopComponent editorTopComponent = getCurrentEditorTopComponent(new Context(indi));
         if (editorTopComponent != null) {
             return new ActionCreation(
                         editorTopComponent, 
@@ -121,7 +121,7 @@ public class EditorAction extends AncestrisEditor {
 
     @Override
     public Action getCreateSpouseAction(Indi indi) {
-        EditorTopComponent editorTopComponent = getCurrentEditorTopComponent(new Context(indi));
+        CygnusTopComponent editorTopComponent = getCurrentEditorTopComponent(new Context(indi));
 
         Fam fam = null;
         if (editorTopComponent != null) {
@@ -146,9 +146,9 @@ public class EditorAction extends AncestrisEditor {
     
     
 
-    private EditorTopComponent getCurrentEditorTopComponent(Context context) {
-        EditorTopComponent ret = null;
-        for (EditorTopComponent editorTopComponent : (List<EditorTopComponent>) AncestrisPlugin.lookupAll(EditorTopComponent.class)) {
+    private CygnusTopComponent getCurrentEditorTopComponent(Context context) {
+        CygnusTopComponent ret = null;
+        for (CygnusTopComponent editorTopComponent : (List<CygnusTopComponent>) AncestrisPlugin.lookupAll(CygnusTopComponent.class)) {
             Editor editor = editorTopComponent.getEditor();
             if (editor != null) {
                 if (editor.getEditedEntity() == context.getEntity())  {

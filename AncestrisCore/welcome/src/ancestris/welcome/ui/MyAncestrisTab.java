@@ -76,9 +76,11 @@ class MyAncestrisTab extends AbstractTab {
         leftPanel.setOpaque(false);
         leftPanel.setBorder(BorderFactory.createEmptyBorder());
         main.add(new ContentSection( leftPanel,false));
-        leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionCreateOpen"), new NewGedcomPanel() ) );
-        leftPanel.add( new ContentSection( new OpenGedcomPanel()) );
         leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionRecentFiles" ), new RecentFilesPanel() ) );   //NOI18N
+        leftPanel.add( new ContentSection( new OpenGedcomPanel()) );
+        leftPanel.add( new ContentSection( new PreferencesPanel()) );
+        //leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionPersonalise"), new PreferencesPanel()) );
+        //leftPanel.add( new ContentSection( BundleSupport.getLabel( "SectionCreateOpen"), new NewGedcomPanel() ) );
         leftPanel.add(Box.createRigidArea(new Dimension(0, 15)));
 
         JPanel rightPanel = new JPanel();
@@ -86,8 +88,8 @@ class MyAncestrisTab extends AbstractTab {
         rightPanel.setOpaque(false);
         rightPanel.setBorder(BorderFactory.createEmptyBorder());
         main.add(new ContentSection( rightPanel,true));
-        rightPanel.add( new ContentSection( BundleSupport.getLabel( "SectionPersonalise"), new PluginsPanel(true) ) );   //NOI18N
-        rightPanel.add( new ContentSection( new PreferencesPanel()) );
+        //rightPanel.add( new ContentSection( BundleSupport.getLabel( "SectionPersonalise"), new PluginsPanel(true) ) );   //NOI18N
+        rightPanel.add(new ContentSection(BundleSupport.getLabel("SectionNewsAndTutorials"), new ArticlesAndNews(), true, true));  //NOI18N
 
         add( new BottomBar(), BorderLayout.SOUTH );
     }

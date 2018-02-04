@@ -101,27 +101,29 @@ class GeoPlacesList implements GedcomMetaListener {
     public synchronized void launchPlacesSearch(boolean force) {
         List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
 
-        // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
-        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy"); 
-        Date versionDate;
-        Date fromValidDate;
-        try {
-            versionDate = (Date)formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
-            fromValidDate = (Date)formatter.parse(FORCE_REFRESH_DATE);
-            if (versionDate.before(fromValidDate)) {
-                if (JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(), 
-                    NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesQuestion"), 
-                    NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesTitle"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-                NbPreferences.forModule(GeoPlacesList.class).clear();
-                NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
-                } else {
-                    return;
+        if (force) {
+            // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
+            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+            Date versionDate;
+            Date fromValidDate;
+            try {
+                versionDate = (Date) formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
+                fromValidDate = (Date) formatter.parse(FORCE_REFRESH_DATE);
+                if (versionDate.before(fromValidDate)) {
+                    if (JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(),
+                            NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesQuestion"),
+                            NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesTitle"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
+                        NbPreferences.forModule(GeoPlacesList.class).clear();
+                        NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
+                    } else {
+                        return;
+                    }
                 }
+            } catch (ParseException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (BackingStoreException ex) {
+                Exceptions.printStackTrace(ex);
             }
-        } catch (ParseException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (BackingStoreException ex) {
-            Exceptions.printStackTrace(ex);
         }
 
         // search the geo objects locally and else on internet
