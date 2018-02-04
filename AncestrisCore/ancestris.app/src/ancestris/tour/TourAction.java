@@ -54,6 +54,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPopupMenu;
 import javax.swing.JRootPane;
+import javax.swing.MenuElement;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
@@ -283,8 +284,18 @@ public class TourAction  implements ActionListener {
         JMenu m = getMenu(3);
         m.setPopupMenuVisible(true);
         JPopupMenu jpm = (JPopupMenu) m.getSubElements()[0];
-        JMenu subM = (JMenu) jpm.getSubElements()[4];
-        subM.setPopupMenuVisible(true);
+        MenuElement[] elts = jpm.getSubElements();
+        JMenu subM = null;
+        for (MenuElement me : elts) {
+            if (me instanceof JMenu) {
+                subM = (JMenu) me;
+                String str = subM.getText();
+                if (str != null && str.toLowerCase().contains("gedcom")) {
+                    subM.setPopupMenuVisible(true);
+                    break;
+                }
+            }
+        }
         String text = NbBundle.getMessage(getClass(), "demo.gedcomtools");
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
@@ -292,7 +303,9 @@ public class TourAction  implements ActionListener {
         Shape bubble = getBubble(true, dim, false, 20);
         TranslucentPopup popup = new TranslucentPopup(m, bubble, bgcolor, fgcolor, text, new Point(620, 270), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
-        subM.setPopupMenuVisible(false);
+        if (subM != null) {
+            subM.setPopupMenuVisible(false);
+        }
         m.setPopupMenuVisible(false);
         return stop;
     }
