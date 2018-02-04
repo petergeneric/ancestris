@@ -129,8 +129,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 }
                 @Override
                 public void removeUpdate(DocumentEvent e) {
+                    placeModified = true;
                     if (!updateOnGoing) {
-                        placeModified = true;
                         if (jtf.getText().isEmpty()) {
                             updatePlace(mPlace, index + 1);
                         }
@@ -142,8 +142,8 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                 }
                 
                 private void updateNextFields(int index) {
+                    placeModified = true;
                     if (!updateOnGoing) {
-                        placeModified = true;
                         PropertyPlace[] sameChoices = PropertyPlace.getSameChoices(getGedcom(), index, jtf.getText());
                         if (sameChoices.length > 0) {
                             updatePlace(sameChoices[0], index + 1);
