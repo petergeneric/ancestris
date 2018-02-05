@@ -8,7 +8,7 @@ import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
@@ -46,7 +46,7 @@ import org.openide.windows.WindowManager;
         autostore = false)
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
-public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomListener {
+public final class PlacesListTopComponent extends AncestrisTopComponent implements ExplorerManager.Provider, GedcomMetaListener {
 
     final static Logger LOG = Logger.getLogger("ancestris.editor");
     private genj.util.Registry registry = null;
@@ -321,41 +321,69 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         // TODO read your settings according to their version
     }
 
+    private boolean updateTable = false;
+    
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        if (!entity.getProperties(PropertyPlace.class).isEmpty()) {
-            updateGedcomPlaceTable();
+        if (!updateTable && !entity.getProperties(PropertyPlace.class).isEmpty()) {
+            updateTable = true;
         }
     }
 
     @Override
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        if (!entity.getProperties(PropertyPlace.class).isEmpty()) {
-            updateGedcomPlaceTable();
+        if (!updateTable && !entity.getProperties(PropertyPlace.class).isEmpty()) {
+            updateTable = true;
         }
     }
 
     @Override
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        if (property.getTag().equals("PLAC")) {
-            updateGedcomPlaceTable();
+        if (!updateTable && property.getTag().equals("PLAC")) {
+            updateTable = true;
         }
     }
 
     @Override
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        if (property.getTag().equals("PLAC")) {
-            updateGedcomPlaceTable();
+        if (!updateTable && property.getTag().equals("PLAC")) {
+            updateTable = true;
         }
     }
 
     @Override
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        if (property.getTag().equals("PLAC")) {
-            updateGedcomPlaceTable();
+        if (!updateTable && property.getTag().equals("PLAC")) {
+            updateTable = true;
         }
     }
 
+    @Override
+    public void gedcomHeaderChanged(Gedcom gedcom) {
+    }
+
+    @Override
+    public void gedcomWriteLockAcquired(Gedcom gedcom) {
+        updateTable = false;
+    }
+
+    @Override
+    public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
+    }
+
+    @Override
+    public void gedcomAfterUnitOfWork(Gedcom gedcom) {
+    }
+
+    @Override
+    public void gedcomWriteLockReleased(Gedcom gedcom) {
+        if (updateTable) {
+            updateGedcomPlaceTable();
+            updateTable = false;
+        }
+    }
+
+    
 
     private void commit() {
         // Is busy committing ?
@@ -383,7 +411,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         }
     }
 
-    
     private class UndoRedoListener implements ChangeListener {
 
         @Override
