@@ -72,9 +72,8 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
             familyPanel = new FamilyPanel();
             familyScrolPane = new JScrollPane(familyPanel);
             setPanel(familyScrolPane);
-            familyPanel.init();
             gedcom = context.getGedcom();
-            gedcom.addGedcomListener(familyPanel);
+            familyPanel.init(gedcom);
         }
         familyPanel.setContext(context);
         repaint();
@@ -82,7 +81,7 @@ public final class NavigatorTopComponent extends AncestrisTopComponent {
     
     public void componentClosed() {
         if (gedcom != null && familyPanel != null) {
-            gedcom.removeGedcomListener(familyPanel);
+            familyPanel.close(gedcom);
         }
     }
 }
