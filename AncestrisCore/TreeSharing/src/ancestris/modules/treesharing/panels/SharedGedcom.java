@@ -19,10 +19,9 @@ import ancestris.modules.treesharing.communication.GedcomIndi;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyChange;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -42,7 +41,7 @@ import org.openide.windows.WindowManager;
  *
  * @author frederic
  */
-public class SharedGedcom extends JInternalFrame implements GedcomListener {
+public class SharedGedcom extends JInternalFrame {
 
     private final TreeSharingTopComponent owner;
 
@@ -60,8 +59,7 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     private Set<MatchData> matchedFams = null; 
     
     private boolean busyGedcom = false;
-    private int updatesNow = 0;
-    private int updatesBefore = 0;
+    
     
     
     /**
@@ -83,13 +81,13 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         setShared(false);
         setPrivacy(respectPrivacy);
         updateStats(true);
-        gedcom.addGedcomListener(this);
+        gedcom.addGedcomListener(callback);
 
         busyGedcom = false;
     }
 
     public void close() {
-        gedcom.removeGedcomListener(this);
+        gedcom.removeGedcomListener(callback);
     }
     
     /**
@@ -554,39 +552,19 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
     
     
     // Gedcom listeners
-    @Override
-    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        updateMe(entity);
-    }
-
-    @Override
-    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        updateMe(entity);
-    }
-
-    @Override
-    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        updateMe(property);
-    }
-
-    @Override
-    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        updateMe(property);
-    }
-
-    @Override
-    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        updateMe(property);
-    }
+    private final Callback callback = new Callback();
     
-    
-    // Only run the update if not need to update have been reveived after a certain amount of time (1/10 s for instance)
-    private void updateMe(Property property) {
-        
-        // Another update is coming. Count it if it corresponds to an update which will change stats
-        if ((property.getEntity() instanceof Indi) || (property.getEntity() instanceof Fam) && !(property instanceof PropertyChange)) {
-            updatesNow++;
+    private class Callback extends GedcomListenerAdapter {
+
+        @Override
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
+            updateMe();
         }
+    }
+
+    
+    
+    private void updateMe() {
         
         // Quit if busy
         if (busyGedcom) {
@@ -600,20 +578,15 @@ public class SharedGedcom extends JInternalFrame implements GedcomListener {
         Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                // If no more updates have been coming in the last 1000 miliseconds, update stats...
-                if (updatesBefore == updatesNow) {
-                    ((Timer)e.getSource()).stop();
-                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                        @Override
-                        public void run() {
-                            updateStats(true);
-                            busyGedcom = false;
-                        }
-                    });
-                    return;
-                } else { // ... else wait
-                    updatesBefore = updatesNow;
-                }
+                ((Timer) e.getSource()).stop();
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        updateStats(true);
+                        busyGedcom = false;
+                    }
+                });
+                return;
             }
         });
         
