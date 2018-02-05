@@ -23,7 +23,7 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertySex;
 import java.awt.event.ActionEvent;
@@ -49,9 +49,11 @@ import org.openide.util.NbBundle;
 import org.openide.nodes.Node;
 
 
-public final class FamilyPanel extends JPanel implements AncestrisActionProvider, GedcomListener {
+public final class FamilyPanel extends JPanel implements AncestrisActionProvider {
 
     private final static Registry REGISTRY = Registry.get(FamilyPanel.class);
+    
+    private final Callback callback = new Callback();
     
     private final static String BEG_EMPTY = "<p align=center>";
     private final static String END_EMPTY = "</p>";
@@ -112,7 +114,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         jScrollPane3.getVerticalScrollBar().setUnitIncrement(16);
     }
 
-    public void init() {
+    public void init(Gedcom gedcom) {
         
         // Load saved blueprints NAMES in the view registry for each panel ; default to default panel tag
         for (String tag : NAV_TAGS) {
@@ -181,6 +183,15 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
 
         // Set bueprint and display data
         resetBlueprints();
+        
+        // Add gedcom listener
+        gedcom.addGedcomListener(callback);
+
+    }
+
+    public void close(Gedcom gedcom) {
+        // Remove gedcom listener
+        gedcom.removeGedcomListener(callback);
     }
     
     private void enableBlueprint(ABluePrintBeans bp, ABeanHandler bh, String defaultBP) {
@@ -800,32 +811,18 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         return true;
     }
 
-    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        refresh();
+    
+    
+    
+    
+    private class Callback extends GedcomListenerAdapter {
+
+        @Override
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
+            refresh();
+        }
     }
 
-    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        refresh();
-    }
-
-    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        refresh();
-    }
-
-    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        refresh();
-    }
-
-    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        refresh();
-    }
-
-    
-    
-    
-    
-    
-    
     
     
     
