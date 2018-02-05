@@ -161,22 +161,37 @@ class GeoPlacesList implements GedcomMetaListener {
     }
 
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+        if (updateRequired) {
+            return;
+        }
         checkReloadPlaces(entity);
     }
 
     public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+        if (updateRequired) {
+            return;
+        }
         checkReloadPlaces(entity);
     }
 
     public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+        if (updateRequired) {
+            return;
+        }
         checkReloadPlaces(property);
     }
 
     public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+        if (updateRequired) {
+            return;
+        }
         checkReloadPlaces(property);
     }
 
     public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+        if (updateRequired) {
+            return;
+        }
         checkReloadPlaces(property);
     }
 
@@ -196,30 +211,9 @@ class GeoPlacesList implements GedcomMetaListener {
         reloadPlaces();
     }
     
-    
-    @SuppressWarnings("unchecked")
-    public void notifyListeners(String change) {
-        GeoPlacesListener[] gpls = listeners.toArray(new GeoPlacesListener[listeners.size()]);
-        for (GeoPlacesListener gpl : gpls) {
-            try {
-                gpl.geoPlacesChanged(this, change);
-            } catch (Throwable t) {
-                System.out.println("exception in geoplaceslist listener " + gpl + t);
-            }
-        }
-    }
-
-    public void refreshPlaceCoord() {
-        notifyListeners(TYPEOFCHANGE_COORDINATES);
-    }
-
-    public void refreshPlaceName() {
-        notifyListeners(TYPEOFCHANGE_NAME);
-    }
-
     private void checkReloadPlaces(Property property) {
-        List<PropertyPlace> list = property.getProperties(PropertyPlace.class);
-        if (property instanceof PropertyPlace || !list.isEmpty()) {  // updating place list is required if we are modifying a place
+        List<PropertyPlace> tmpList = property.getProperties(PropertyPlace.class);
+        if (property instanceof PropertyPlace || !tmpList.isEmpty()) {  // updating place list is required if we are modifying a place
             updateRequired = true;
         } else if (property instanceof PropertyName) { // updating place list is required if we are modifying a name of an entity containing a place
             if (!property.getEntity().getProperties(PropertyPlace.class).isEmpty()) {
@@ -244,6 +238,27 @@ class GeoPlacesList implements GedcomMetaListener {
         stopListening = false;
     }
     
+    
+    @SuppressWarnings("unchecked")
+    public void notifyListeners(String change) {
+        GeoPlacesListener[] gpls = listeners.toArray(new GeoPlacesListener[listeners.size()]);
+        for (GeoPlacesListener gpl : gpls) {
+            try {
+                gpl.geoPlacesChanged(this, change);
+            } catch (Throwable t) {
+                System.out.println("exception in geoplaceslist listener " + gpl + t);
+            }
+        }
+    }
+
+    public void refreshPlaceCoord() {
+        notifyListeners(TYPEOFCHANGE_COORDINATES);
+    }
+
+    public void refreshPlaceName() {
+        notifyListeners(TYPEOFCHANGE_NAME);
+    }
+
     public boolean setPlaceDisplayFormat(PropertyPlace place) {
         boolean changed = false;
 
