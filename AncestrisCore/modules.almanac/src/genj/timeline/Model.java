@@ -26,12 +26,11 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyEvent;
-import genj.gedcom.PropertyName;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
@@ -72,7 +71,7 @@ import org.openide.windows.WindowManager;
 /**
  * A model that wraps the Gedcom information in a timeline fashion
  */
-    class Model implements GedcomListener {
+    class Model {
 
         
     private static final Logger LOG = Logger.getLogger("ancestris.chronology");
@@ -129,7 +128,8 @@ import org.openide.windows.WindowManager;
      * listeners
      */
     private List<Listener> listeners = new CopyOnWriteArrayList<Listener>();
-
+    private final Callback callback = new Callback();
+    
 
     /**
      * multi-threading
@@ -210,7 +210,7 @@ import org.openide.windows.WindowManager;
         
         // old?
         if (gedcom != null) {
-            gedcom.removeGedcomListener(this);
+            gedcom.removeGedcomListener(callback);
         }
 
         // keep
@@ -218,7 +218,7 @@ import org.openide.windows.WindowManager;
 
         // new?
         if (gedcom != null) {
-            gedcom.addGedcomListener(this);
+            gedcom.addGedcomListener(callback);
         }
 
         // create events because gedcom is different
@@ -243,8 +243,8 @@ import org.openide.windows.WindowManager;
      */
     /*package*/ void removeListener(Listener listener) {
         listeners.remove(listener);
-        if (gedcom != null) {
-            gedcom.removeGedcomListener(this);
+        if (gedcom != null && callback != null) {
+            gedcom.removeGedcomListener(callback);
         }
     }
 
@@ -1737,63 +1737,20 @@ import org.openide.windows.WindowManager;
 
     
     
-    
-    
-    @Override
-    public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
-        if (!isGedcomChanging) {
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    isGedcomChanging = true;
-                    createAndLayoutAllLayers();
-                    isGedcomChanging = false;
-                }
-            });
-        }
-    }
+    private class Callback extends GedcomListenerAdapter {
 
-    @Override
-    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-        if (!isGedcomChanging) {
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    isGedcomChanging = true;
-                    createAndLayoutAllLayers();
-                    isGedcomChanging = false;
-                }
-            });
-        }
-    }
-
-    @Override
-    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-        gedcomPropertyDeleted(gedcom, added, -1, added);
-    }
-
-    @Override
-    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-        gedcomPropertyDeleted(gedcom, property, -1, property);
-    }
-
-    @Override
-    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-        if (!isGedcomChanging) {
-            isGedcomChanging = true;
-            if (deleted instanceof PropertyDate) {
+        @Override
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
+            if (!isGedcomChanging) {
                 WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
                     @Override
                     public void run() {
+                        isGedcomChanging = true;
                         createAndLayoutAllLayers();
-                        view.centerToSelection();
+                        isGedcomChanging = false;
                     }
                 });
-            } else if (deleted instanceof PropertyName) {
-                contentEvents(property.getEntity());
-                fireDataChanged();
             }
-            isGedcomChanging = false;
         }
     }
 
