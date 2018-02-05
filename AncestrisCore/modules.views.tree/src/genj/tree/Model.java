@@ -24,7 +24,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListenerAdapter;
-import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
@@ -731,7 +730,7 @@ import org.openide.windows.WindowManager;
   /**
    * Our gedcom Callbacks 
    */
-  private class Callback extends GedcomListenerAdapter implements GedcomMetaListener {
+  private class Callback extends GedcomListenerAdapter {
     
     private Set repaint = new HashSet();
     private boolean update = false;
@@ -742,78 +741,86 @@ import org.openide.windows.WindowManager;
       repaint.clear();
     }
     
-    public void gedcomWriteLockReleased(Gedcom gedcom) {
-        
-      // we're without root we could set now?
-      if (root==null) {
-        if (added==null||!gedcom.contains(added))
-          added = gedcom.getFirstEntity(Gedcom.INDI);
-        root = added;
-        update();
-        return;
-      }
-      
-      // update necessary?
-      if (update) {
-        update();
-        return;
-      }
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
 
-      // signal repaint 
-      if (!repaint.isEmpty()) 
-        fireNodesChanged(repaint);
-   
-    }
-    
-    public void gedcomEntityAdded(Gedcom gedcom, Entity added) {
-      if (added instanceof Fam || added instanceof Indi) {
-        if ( !(this.added instanceof Indi) || added instanceof Indi)
-          this.added = added;
-      }
-    }
-  
-    public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
-      // clear root?
-      if (entity == root) 
-        root = null;
-      
-      // clear bookmarks?
-      ListIterator it = bookmarks.listIterator();
-      while (it.hasNext()) {
-        Bookmark b = (Bookmark)it.next();
-        if (entity == b.getEntity()) it.remove();
-      }
-      
-      // clear indi2fam?
-      indi2fam.keySet().remove(entity);
-      
-    }
-  
-    public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
-      gedcomPropertyChanged(gedcom, added);
-    }
-  
-    public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
-      // a reference update?
-      if (property instanceof PropertyXRef) {
-        update = true;
-        return;
-      }
-      // something visible?
-      Node node = getNode(property.getEntity());
-      if (node!=null) 
-        //fireNodesChanged(Collections.singletonList(node)); // FL: 2017-03-14 - for mass updates, this line significantly slows down performance, not necessary, add this other line instead.
-        repaint.add(getNode(property.getEntity()));
-    }
-  
-    @SuppressWarnings("unchecked")
-    public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
-      // a reference update?
-      if (deleted instanceof PropertyXRef)
-        update = true;
-      // repaint still makes sense?
-      if (root!=null)
-        repaint.add(getNode(property.getEntity()));
-    }
-  } // Callback
+            // we're without root we could set now?
+            if (root == null) {
+                if (added == null || !gedcom.contains(added)) {
+                    added = gedcom.getFirstEntity(Gedcom.INDI);
+                }
+                root = added;
+                update();
+                return;
+            }
+
+            // update necessary?
+            if (update) {
+                update();
+                return;
+            }
+
+            // signal repaint 
+            if (!repaint.isEmpty()) {
+                fireNodesChanged(repaint);   // this just does an overall repaint
+            }
+        }
+
+        public void gedcomEntityAdded(Gedcom gedcom, Entity added) {
+            if (added instanceof Fam || added instanceof Indi) {
+                if (!(this.added instanceof Indi) || added instanceof Indi) {
+                    this.added = added;
+                }
+            }
+        }
+
+        public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
+            // clear root?
+            if (entity == root) {
+                root = null;
+            }
+
+            // clear bookmarks?
+            ListIterator it = bookmarks.listIterator();
+            while (it.hasNext()) {
+                Bookmark b = (Bookmark) it.next();
+                if (entity == b.getEntity()) {
+                    it.remove();
+                }
+            }
+
+            // clear indi2fam?
+            indi2fam.keySet().remove(entity);
+
+        }
+
+        public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
+            gedcomPropertyChanged(gedcom, added);
+        }
+
+        public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
+            // a reference update?
+            if (property instanceof PropertyXRef) {
+                update = true;
+                return;
+            }
+            // something visible?
+            Node node = getNode(property.getEntity());
+            if (node != null) {
+                //fireNodesChanged(Collections.singletonList(node)); // FL: 2017-03-14 - for mass updates, this line significantly slows down performance, not necessary, add this other line instead.
+                repaint.add(getNode(property.getEntity()));
+            }
+        }
+
+        @SuppressWarnings("unchecked")
+        public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
+            // a reference update?
+            if (deleted instanceof PropertyXRef) {
+                update = true;
+            }
+            // repaint still makes sense?
+            if (root != null) {
+                repaint.add(getNode(property.getEntity()));
+            }
+        }
+    } // Callback
 } //Model
