@@ -66,7 +66,7 @@ public class TableModelRecordMarriage extends TableModelRecordAbstract {
                 value = record.getWifeLastName().toString() + " " + record.getWifeFirstName().toString();
                 break;
             case 4:
-                value = record.getFreeComment();
+                value = record.getCote() + " " + record.getFreeComment();
                 break;
             default:
                 value = super.getValueAt(row, col);

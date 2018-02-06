@@ -79,7 +79,7 @@ public class TableModelRecordDeath extends TableModelRecordAbstract {
                 value = record.getIndiBirthPlace().toString();
                 break;
             case 8:
-                value = record.getFreeComment();
+                value = record.getCote() + " " + record.getFreeComment();
                 break;
             default:
                 value = super.getValueAt(row, col);
