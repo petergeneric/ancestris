@@ -61,6 +61,7 @@ public class AlignerPanelTest {
         BufferedImage currentImage = null;
         //AlignerPanel instance = new AlignerPanel();
         
+        /*
         try {
             String fileName = "526626-309.JPG";
             File inputDirectory = new File ("D:\\Genealogie\\100PHOTO\\test");
@@ -100,7 +101,8 @@ public class AlignerPanelTest {
             System.err.println("AlignerPanel.showImage error ="+ ex.getMessage()); 
             fail(ex.getMessage());
         }
-        // TODO review the generated test code and remove the default call to fail.
+        */
+        
     }
-    
+
 }

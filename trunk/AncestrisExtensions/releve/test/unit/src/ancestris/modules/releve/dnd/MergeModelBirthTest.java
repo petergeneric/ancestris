@@ -374,10 +374,10 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("Nombre model",4,models.size());
             models.get(0).copyRecordToEntity();
             Fam family = (Fam)gedcom.getEntity("F1");
-            Indi[] children = family.getChildren();
+            Indi[] children = family.getChildren(false);   // sorted=true => classé par ordre de date de naissance , sinon par ordre de création 
             assertEquals("Nombre d'enfants",4,children.length);
-            Indi indi = children[3];
-            // je verifie que le lieu de naissance a ete renseigne avec le lieu par défaut du releve
+            Indi indi = children[3];  // je recupere le 4ieme enfant par ordre de creation
+            // je verifie que le lieu de naissance du 4ieme enfant a ete renseigne avec le lieu par défaut du releve
             assertEquals("Lieu de naissance",getRecordsInfoPlace().getValue(), indi.getBirthPlace().getValue());
             
             // je verifie les coordonnees 
