@@ -90,7 +90,7 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
                 }                
                 break;
             case 5:
-                value = record.getFreeComment();
+                value = record.getCote() + " " + record.getFreeComment();
                 break;
             default:
                 value = super.getValueAt(row, col);

@@ -84,7 +84,7 @@ public class TableModelRecordBirth extends TableModelRecordAbstract {
                 value = record.getIndiMotherLastName().toString() + " " + record.getIndiMotherFirstName().toString();
                 break;
             case 6:
-                value = record.getFreeComment();
+                value = record.getCote() + " " + record.getFreeComment();
                 break;
             default:
                 value = super.getValueAt(row, col);
