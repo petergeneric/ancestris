@@ -192,10 +192,11 @@ public class FieldDate extends Field implements Cloneable {
 
     @Override
     public FieldDate clone() {
-	    FieldDate object = null;
-        object = new FieldDate();
+        //    FieldDate object = null;
+        //object = new FieldDate();
+        FieldDate object = (FieldDate) super.clone();
         object.getPropertyDate().setValue(getPropertyDate().getValue());
-		// je renvoie le clone
-		return object;
-  	}
+        // je renvoie le clone
+        return object;
+    }
 }
