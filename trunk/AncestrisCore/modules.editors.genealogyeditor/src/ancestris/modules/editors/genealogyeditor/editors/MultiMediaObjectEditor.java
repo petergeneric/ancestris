@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.editors;
 
+import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.*;
 import genj.util.Registry;
@@ -53,6 +54,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectTabbedPane = new javax.swing.JTabbedPane();
         imagePanel = new javax.swing.JPanel();
         imageBean = new ancestris.modules.editors.genealogyeditor.beans.ImageBean();
+        removeCheckBox = new javax.swing.JCheckBox();
         notesPanel = new javax.swing.JPanel();
         noteCitationsTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel();
         multiMediaObjectReferencesPanel = new javax.swing.JPanel();
@@ -61,6 +63,7 @@ public class MultiMediaObjectEditor extends EntityEditor {
         multiMediaObjectTitleTextField = new javax.swing.JTextField();
         changeDateLabel = new javax.swing.JLabel();
         changeDateLabeldate = new javax.swing.JLabel();
+        prefMedia = new javax.swing.JCheckBox();
 
         multiMediaObjectIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("MultiMediaObjectEditor.multiMediaObjectIDLabel.text"), new Object[] {})); // NOI18N
 
@@ -70,9 +73,18 @@ public class MultiMediaObjectEditor extends EntityEditor {
 
         imagePanel.setLayout(new java.awt.BorderLayout());
 
+        imageBean.setToolTipText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.imageBean.toolTipText")); // NOI18N
         imageBean.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 imageBeanMouseClicked(evt);
+            }
+        });
+
+        removeCheckBox.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.removeCheckBox.text")); // NOI18N
+        removeCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.removeCheckBox.toolTipText")); // NOI18N
+        removeCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                removeCheckBoxActionPerformed(evt);
             }
         });
 
@@ -80,11 +92,16 @@ public class MultiMediaObjectEditor extends EntityEditor {
         imageBean.setLayout(imageBeanLayout);
         imageBeanLayout.setHorizontalGroup(
             imageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imageBeanLayout.createSequentialGroup()
+                .addContainerGap(462, Short.MAX_VALUE)
+                .addComponent(removeCheckBox)
+                .addContainerGap())
         );
         imageBeanLayout.setVerticalGroup(
             imageBeanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, imageBeanLayout.createSequentialGroup()
+                .addGap(0, 199, Short.MAX_VALUE)
+                .addComponent(removeCheckBox))
         );
 
         imagePanel.add(imageBean, java.awt.BorderLayout.CENTER);
@@ -133,6 +150,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
         changeDateLabel.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         changeDateLabel.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.changeDateLabel.text")); // NOI18N
 
+        prefMedia.setText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.prefMedia.text")); // NOI18N
+        prefMedia.setToolTipText(org.openide.util.NbBundle.getMessage(MultiMediaObjectEditor.class, "MultiMediaObjectEditor.prefMedia.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -140,6 +160,11 @@ public class MultiMediaObjectEditor extends EntityEditor {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(changeDateLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(multiMediaObjectTabbedPane)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(multiMediaObjectTitleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -147,14 +172,12 @@ public class MultiMediaObjectEditor extends EntityEditor {
                         .addGap(10, 10, 10)
                         .addComponent(multiMediaObjectIDLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(multiMediaObjectIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(changeDateLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addComponent(multiMediaObjectTabbedPane))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(prefMedia)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(multiMediaObjectIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(filler1, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -168,12 +191,14 @@ public class MultiMediaObjectEditor extends EntityEditor {
                         .addComponent(multiMediaObjectTitleLabel)
                         .addComponent(multiMediaObjectTitleTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(filler1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(5, 5, 5)
+                .addComponent(prefMedia)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(multiMediaObjectTabbedPane, javax.swing.GroupLayout.DEFAULT_SIZE, 251, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(multiMediaObjectTabbedPane, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 7, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(changeDateLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(changeDateLabel)
+                    .addComponent(changeDateLabeldate, javax.swing.GroupLayout.DEFAULT_SIZE, 18, Short.MAX_VALUE))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -212,6 +237,13 @@ public class MultiMediaObjectEditor extends EntityEditor {
 
     }//GEN-LAST:event_imageBeanMouseClicked
 
+    private void removeCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_removeCheckBoxActionPerformed
+        String title = NbBundle.getMessage(MultiMediaObjectEditor.class, "media.remove.title");
+        String text = NbBundle.getMessage(MultiMediaObjectEditor.class, "media.remove.text");
+        Object o = DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).setDialogId("ancestris.aries.error").show();
+        removeCheckBox.setSelected(o == DialogManager.YES_OPTION);
+    }//GEN-LAST:event_removeCheckBoxActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel changeDateLabel;
     private javax.swing.JLabel changeDateLabeldate;
@@ -226,7 +258,9 @@ public class MultiMediaObjectEditor extends EntityEditor {
     private javax.swing.JTextField multiMediaObjectTitleTextField;
     private ancestris.modules.editors.genealogyeditor.panels.NoteCitationsTablePanel noteCitationsTablePanel;
     private javax.swing.JPanel notesPanel;
+    private javax.swing.JCheckBox prefMedia;
     private ancestris.modules.editors.genealogyeditor.panels.ReferencesTablePanel referencesTablePanel;
+    private javax.swing.JCheckBox removeCheckBox;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -258,6 +292,11 @@ public class MultiMediaObjectEditor extends EntityEditor {
         }
 
         if (property != null) {
+            if (property.getParent() != null) {
+                int index = property.getParent().getPropertyPosition(property);
+                prefMedia.setSelected(index == 0);
+            }
+            
             if (property instanceof PropertyMedia) {
                 mMultiMediaObject = ((PropertyMedia) property).getTargetEntity();
             } else {
@@ -322,6 +361,13 @@ public class MultiMediaObjectEditor extends EntityEditor {
     @Override
     public void commit() {
         if (changes.hasChanged()) {
+            
+            if (removeCheckBox.isSelected()) {
+                Property parent = context.getProperty().getParent();
+                parent.delProperty(context.getProperty());
+                return;
+            }
+            
             if (mMultiMediaObject instanceof Media) {
                 if (mFile != null) {
                     ((Media) mMultiMediaObject).addFile(mFile);
@@ -338,11 +384,23 @@ public class MultiMediaObjectEditor extends EntityEditor {
                     propertyTitle.setValue(multiMediaObjectTitleTextField.getText().isEmpty() ? ((mFile != null) ? mFile.getName() : "") : multiMediaObjectTitleTextField.getText());
                 }
             }
+            if (prefMedia.isSelected()) {
+                Property parent = context.getProperty().getParent();
+                parent.moveProperty(context.getProperty(), 0);
+            }
         }
     }
 
     @Override
     public Entity getEditedEntity() {
         return mMultiMediaObject.getEntity();
+    }
+
+    public boolean isPreferred() {
+        return prefMedia.isSelected();
+    }
+
+    boolean isRemoved() {
+        return removeCheckBox.isSelected();
     }
 }

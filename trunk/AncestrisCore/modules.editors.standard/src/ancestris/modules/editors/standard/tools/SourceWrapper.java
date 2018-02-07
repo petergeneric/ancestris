@@ -744,8 +744,10 @@ public class SourceWrapper {
         if (sourceMediaSet == null || sourceMediaSet.isEmpty()) {
             return;
         }
+        int index = 0;
         for (MediaWrapper media : sourceMediaSet) {
-            media.update(property); 
+            media.update(index, property); 
+            index++;
         }
         for (MediaWrapper media : sourceMediaRemovedSet) {
             media.remove();

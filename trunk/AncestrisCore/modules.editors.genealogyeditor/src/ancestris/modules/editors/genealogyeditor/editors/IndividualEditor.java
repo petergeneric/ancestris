@@ -11,6 +11,7 @@ import genj.gedcom.*;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
+import java.awt.event.MouseEvent;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -228,6 +229,7 @@ public final class IndividualEditor extends EntityEditor {
         });
 
         imageBean.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+        imageBean.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.imageBean.toolTipText")); // NOI18N
         imageBean.setAlignmentX(0.0F);
         imageBean.setAlignmentY(0.0F);
         imageBean.setMinimumSize(new java.awt.Dimension(135, 180));
@@ -286,7 +288,7 @@ public final class IndividualEditor extends EntityEditor {
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)))
+                    .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         generalPanelLayout.setVerticalGroup(
             generalPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -513,12 +515,12 @@ public final class IndividualEditor extends EntityEditor {
     private void imageBeanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_imageBeanMouseClicked
         Gedcom gedcom = mIndividual.getGedcom();
 
-        if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null) {
-            gedcom.doMuteUnitOfWork(new UnitOfWork() {   // FL sept-2015 - FIXME : Why do we need a gedcom change ?
+        if ((mMultiMediaObject = mIndividual.getProperty("OBJE")) == null || (evt.getButton() == MouseEvent.BUTTON3)) {
+            gedcom.doMuteUnitOfWork(new UnitOfWork() {   
                 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar mandatory rule !?!?
+                    if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
                         mMultiMediaObject = mIndividual.getGedcom().createEntity("OBJE");
                     } else {
                         mMultiMediaObject = mIndividual.addProperty("OBJE", "");
@@ -530,21 +532,23 @@ public final class IndividualEditor extends EntityEditor {
             if (multiMediaObjectEditor.showPanel()) {
                 if (mMultiMediaObject instanceof Media) {
                     mIndividual.addMedia((Media) mMultiMediaObject);
-                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
-                    if (!correct) {
-                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
-                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
-                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                    if (multiMediaObjectEditor.isPreferred()) {
+                        boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                        if (!correct) {
+                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
+                        }
                     }
                     repaint();
                     changes.fireChangeEvent();
                 }
             } else {
-                gedcom.doMuteUnitOfWork(new UnitOfWork() {   // FL sept-2015 - FIXME : Why do we need a gedcom change ?
+                gedcom.doMuteUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) { // FL sept-2015 - FIXME : not sure this is a 5.5.1 grammar mandatory rule !?!?
+                        if (gedcom.getGrammar().getVersion().equals("5.5.1")) {
                             mIndividual.getGedcom().deleteEntity((Entity)mMultiMediaObject);
                         } else {
                             mIndividual.delProperty(mMultiMediaObject);
@@ -555,46 +559,57 @@ public final class IndividualEditor extends EntityEditor {
             }
         } else {
             for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
-                String objetFormat = null;
-                if (mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-                    if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
+//                String objetFormat = null;
+//                if (mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
+//                    if (multiMediaObject instanceof PropertyMedia) {
+//                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
+//                        if (propertyFormat != null) {
+//                            objetFormat = propertyFormat.getValue();
+//                        }
+//                    } else {
+//                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
+//                        if (propertyFormat != null) {
+//                            objetFormat = propertyFormat.getValue();
+//                        }
+//                    }
+//                } else {
+//                    if (multiMediaObject instanceof PropertyMedia) {
+//                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
+//                        if (propertyFormat != null) {
+//                            objetFormat = propertyFormat.getValue();
+//                        }
+//                    } else {
+//                        Property propertyFormat = multiMediaObject.getProperty("FORM");
+//                        if (propertyFormat != null) {
+//                            objetFormat = propertyFormat.getValue();
+//                        }
+//                    }
+//                }
+//
+//                // any kind of file
+//                if (true) { 
+//
+                MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
+                multiMediaObjectEditor.setContext(new Context(multiMediaObject));
+                if (multiMediaObjectEditor.showPanel()) {
+                    // Case of media removal vs modification
+                    if (multiMediaObjectEditor.isRemoved()) {
+                        multiMediaObject = mIndividual.getProperty("OBJE");
+                        if (multiMediaObject == null) {
+                            imageBean.setImage((File)null, mIndividual.getSex());
+                            repaint();
+                            changes.fireChangeEvent();
+                            break;
                         }
-                    } else {
-                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
-                        }
+                    } else if (multiMediaObject instanceof Media) {
+                        mIndividual.addMedia((Media) multiMediaObject);
                     }
-                } else {
-                    if (multiMediaObject instanceof PropertyMedia) {
-                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
-                        }
-                    } else {
-                        Property propertyFormat = multiMediaObject.getProperty("FORM");
-                        if (propertyFormat != null) {
-                            objetFormat = propertyFormat.getValue();
-                        }
-                    }
-                }
-
-                // any kind of file
-                if (true) { 
-
-                    MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
-                    multiMediaObjectEditor.setContext(new Context(multiMediaObject));
-                    if (multiMediaObjectEditor.showPanel()) {
-                        if (multiMediaObject instanceof Media) {
-                            mIndividual.addMedia((Media) multiMediaObject);
-                        }
+                    
+                    // Display image
+                    if (multiMediaObjectEditor.isPreferred()) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
                         }
-
                         Property multimediaFile = multiMediaObject.getProperty("FILE", true);
                         boolean correct = false;
                         if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
@@ -603,16 +618,18 @@ public final class IndividualEditor extends EntityEditor {
                             PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
                             correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
                         }
-                        repaint();
-                        changes.fireChangeEvent();
                         if (!correct) {
                             String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
                             String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
                             DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
                         }
                     }
+                    repaint();
+                    changes.fireChangeEvent();
+                } else {
                     break;
                 }
+//                }
             }
         }
     }//GEN-LAST:event_imageBeanMouseClicked

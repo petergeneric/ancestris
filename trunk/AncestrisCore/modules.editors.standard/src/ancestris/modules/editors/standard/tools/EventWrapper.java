@@ -645,8 +645,10 @@ public class EventWrapper {
         }
         
         // Media
+        int index = 0;
         for (MediaWrapper media : eventMediaSet) {
-            media.update(eventProperty);
+            media.update(index, eventProperty);
+            index++;
         }
         for (MediaWrapper media : eventMediaRemovedSet) {
             media.remove();

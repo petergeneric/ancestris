@@ -212,12 +212,13 @@ public class MediaWrapper {
      *    - Update : where it is
      * @param indi 
      */
-    public void update(Property mainProp) {
+    public void update(int index, Property mainProp) {
         // If it is a creation...
         if (hostingProperty == null) {
             Gedcom gedcom = mainProp.getGedcom();
             if (gedcom.getGrammar().equals(Grammar.V55)) {
-                putMediaCitation(mainProp.addProperty("OBJE", ""));
+                hostingProperty = mainProp.addProperty("OBJE", "");
+                putMediaCitation(hostingProperty);
             } else {
                 try {
                     if (this.targetMedia == null) {
@@ -229,32 +230,32 @@ public class MediaWrapper {
                     Exceptions.printStackTrace(ex);
                 }
             }
-            return;
+        } else {
+        
+            // ... or else a modification
+            // Case of Citation
+            if (!recordType) {
+                putMediaCitation(hostingProperty);
+            } else // Case of Media record and propertyMedia already linked
+            if (recordType && (hostingProperty instanceof PropertyMedia)) {
+                putMediaRecord(targetMedia);
+                // 2 situations : remplacement of the text of the same media or replacement of the media by another one
+                PropertyMedia pm = (PropertyMedia) hostingProperty;
+                Media tme = (Media) pm.getTargetEntity();
+                if (targetMedia.equals(tme)) { // it was just an update of the same media, quit
+                } else {
+                    Utils.replaceRef(pm, tme, targetMedia);
+                }
+            } else // Case of Media record and link not yet created (added and chosen from MediaChooser)
+            if (recordType && !(hostingProperty instanceof PropertyMedia)) {
+                putMediaRecord(targetMedia);
+                mainProp.addMedia((Media) targetMedia);
+            }
         }
         
-        // ... or else a modification
-        // Case of Citation
-        if (!recordType) {
-            putMediaCitation(hostingProperty);
-        } else 
-            
-        // Case of Media record and propertyMedia already linked
-        if (recordType && (hostingProperty instanceof PropertyMedia)) {
-            putMediaRecord(targetMedia);
-            // 2 situations : remplacement of the text of the same media or replacement of the media by another one
-            PropertyMedia pm = (PropertyMedia) hostingProperty;
-            Media tme = (Media) pm.getTargetEntity();
-            if (targetMedia.equals(tme)) { // it was just an update of the same media, quit
-            } else { 
-                Utils.replaceRef(pm, tme, targetMedia);
-            }
-        } else
-            
-        // Case of Media record and link not yet created (added and chosen from MediaChooser)
-        if (recordType &&  !(hostingProperty instanceof PropertyMedia)) {
-            putMediaRecord(targetMedia);
-            mainProp.addMedia((Media) targetMedia);
-        }
+        // Now arrange sequence (move hostingProperty to index from current index)
+        hostingProperty.getParent().moveProperty(hostingProperty, index);
+        
     }
 
     /**

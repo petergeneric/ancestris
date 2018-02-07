@@ -87,7 +87,7 @@
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="nameEditorPanel" pref="0" max="32767" attributes="0"/>
+                      <Component id="nameEditorPanel" max="32767" attributes="0"/>
                   </Group>
               </Group>
           </Group>
@@ -146,6 +146,9 @@
               <Border info="org.netbeans.modules.form.compat2.border.EtchedBorderInfo">
                 <EtchetBorder bevelType="0"/>
               </Border>
+            </Property>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="IndividualEditor.imageBean.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="alignmentX" type="float" value="0.0"/>
             <Property name="alignmentY" type="float" value="0.0"/>
