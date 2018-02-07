@@ -278,6 +278,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollPanePhotos = new javax.swing.JScrollPane();
         textAreaPhotos = new javax.swing.JTextArea();
         scrollMediaEvent = new javax.swing.JScrollBar();
+        prefMediaEventButton = new javax.swing.JButton();
         addMediaEventButton = new javax.swing.JButton();
         delMediaEventButton = new javax.swing.JButton();
         namePanel = new javax.swing.JPanel();
@@ -432,7 +433,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         );
         mediaImagePanelLayout.setVerticalGroup(
             mediaImagePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
+            .addGap(0, 83, Short.MAX_VALUE)
         );
 
         scrollPanePhotos.setPreferredSize(new java.awt.Dimension(238, 50));
@@ -456,6 +457,18 @@ public class IndiPanel extends Editor implements DocumentListener {
         scrollMediaEvent.addAdjustmentListener(new java.awt.event.AdjustmentListener() {
             public void adjustmentValueChanged(java.awt.event.AdjustmentEvent evt) {
                 scrollMediaEventAdjustmentValueChanged(evt);
+            }
+        });
+
+        prefMediaEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/star.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(prefMediaEventButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.prefMediaEventButton.text")); // NOI18N
+        prefMediaEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.prefMediaEventButton.toolTipText")); // NOI18N
+        prefMediaEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        prefMediaEventButton.setIconTextGap(0);
+        prefMediaEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        prefMediaEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prefMediaEventButtonActionPerformed(evt);
             }
         });
 
@@ -488,8 +501,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         mediaPanelLayout.setHorizontalGroup(
             mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mediaPanelLayout.createSequentialGroup()
-                .addComponent(scrollMediaEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(scrollMediaEvent, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addGap(2, 2, 2)
+                .addComponent(prefMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(addMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(delMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -503,10 +518,12 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGap(0, 0, 0)
                 .addComponent(scrollPanePhotos, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(delMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(addMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(scrollMediaEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(mediaPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(delMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(addMediaEventButton, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(scrollMediaEvent, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(prefMediaEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
 
         fatherButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/father.png"))); // NOI18N
@@ -1474,7 +1491,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(eventSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
+                .addComponent(eventSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 352, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -2028,6 +2045,23 @@ public class IndiPanel extends Editor implements DocumentListener {
         triggerSticky();
     }//GEN-LAST:event_stickyButtonActionPerformed
 
+    private void prefMediaEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prefMediaEventButtonActionPerformed
+        // make this media the first one (the preferred one)
+        if (isBusyEventMedia) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event == null) {
+            return;
+        }
+        MediaWrapper photo = event.eventMediaSet.get(event.eventMediaIndex);
+        event.eventMediaSet.remove(photo);
+        event.eventMediaSet.add(0, photo);
+        event.eventMediaIndex = 0;
+        displayEventMedia(event);
+        triggerChange();
+    }//GEN-LAST:event_prefMediaEventButtonActionPerformed
+
     
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
@@ -2141,6 +2175,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JPanel namePanel;
     private javax.swing.JLabel noteLabel;
     private javax.swing.JLabel placeLabel;
+    private javax.swing.JButton prefMediaEventButton;
     private javax.swing.JCheckBox privateCheckBox;
     private javax.swing.JButton replaceNoteEventButton;
     private javax.swing.JButton replaceSourceEventButton;
