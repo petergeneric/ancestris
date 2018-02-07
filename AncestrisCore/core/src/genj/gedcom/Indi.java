@@ -800,16 +800,6 @@ public class Indi extends Entity {
     }
 
     /**
-     * Make the given media the first media for the indi
-     */
-    public void makeMediaFirst(Property prop) {
-        if (prop.getTag().equals("OBJE") && prop.getParent().equals(this)) {
-            this.moveProperty(prop, 0);
-        }
-    }
-
-    
-    /**
      * Get sosa number starting from SOSADABOVILLE, SOSA, DABOVILLE
      * @param validOnly
      * @return 
