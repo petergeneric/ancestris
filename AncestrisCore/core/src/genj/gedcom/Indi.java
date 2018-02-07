@@ -799,6 +799,15 @@ public class Indi extends Entity {
         return null;
     }
 
+    /**
+     * Make the given media the first media for the indi
+     */
+    public void makeMediaFirst(Property prop) {
+        if (prop.getTag().equals("OBJE") && prop.getParent().equals(this)) {
+            this.moveProperty(prop, 0);
+        }
+    }
+
     
     /**
      * Get sosa number starting from SOSADABOVILLE, SOSA, DABOVILLE
@@ -831,7 +840,7 @@ public class Indi extends Entity {
 
     
     @Override
-    public PropertyComparator2 getDisplayComparator() {
+    public PropertyComparator2 getComparator() {
         return INDIComparator.getInstance();
     }
 

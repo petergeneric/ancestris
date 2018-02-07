@@ -333,7 +333,7 @@ public abstract class PropertyXRef extends Property {
             if (e == null) {
                 return "";
             } else {
-                return e.getDisplayComparator().getSortGroup(e);
+                return e.getComparator().getSortGroup(e);
             }
         }
 
@@ -359,7 +359,7 @@ public abstract class PropertyXRef extends Property {
             if (e1.getClass() != e2.getClass()) {
                 return e1.toString().compareTo(e2.toString());
             }
-            return e1.getDisplayComparator().compare(e1, e2);
+            return e1.getComparator().compare(e1, e2);
         }
     }
 

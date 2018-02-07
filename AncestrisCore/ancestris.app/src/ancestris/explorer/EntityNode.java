@@ -86,25 +86,28 @@ class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<En
         return entity;
     }
 
+    @Override
     public int compareTo(EntityNode that) {
         if (entity instanceof Indi) {
             Indi i = (Indi) entity;
             Indi o = (Indi) that.getEntity();
-            return i.getLastName().compareToIgnoreCase(o.getLastName());
+            return i.compareTo(o);
         } else if (entity instanceof Fam) {
             Fam i = (Fam) entity;
             Fam o = (Fam) that.getEntity();
-            return i.toString(false).compareToIgnoreCase(o.toString(false));
+            return i.compareTo(o);
         }
         return entity.compareTo(that.getEntity());
     }
 
+    @Override
     public Context getContext() {
         return new Context(entity);
     }
 
     private class FireNodeSelection extends AbstractAction {
 
+        @Override
         public void actionPerformed(ActionEvent e) {
             // ancestris way
             SelectionDispatcher.fireSelection(getContext());
