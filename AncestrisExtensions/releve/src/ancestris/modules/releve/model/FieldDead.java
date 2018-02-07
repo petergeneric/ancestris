@@ -63,7 +63,7 @@ public class FieldDead extends Field {
     }
 
     @Override
-    public FieldDead clone() {
+    public FieldDead clone() throws CloneNotSupportedException {
         return (FieldDead) super.clone();
     }
 

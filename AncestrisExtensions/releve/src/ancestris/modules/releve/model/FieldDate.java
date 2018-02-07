@@ -191,7 +191,7 @@ public class FieldDate extends Field implements Cloneable {
     }
 
     @Override
-    public FieldDate clone() {
+    public FieldDate clone() throws CloneNotSupportedException {
         //    FieldDate object = null;
         //object = new FieldDate();
         FieldDate object = (FieldDate) super.clone();

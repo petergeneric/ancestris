@@ -35,18 +35,23 @@ public class RecordTransferHandle extends TransferHandler {
             TableModelRecordAbstract model = (TableModelRecordAbstract) table.getModel();
             // je recupere le clone du releve
             Record record = model.getRecord(table.convertRowIndexToModel(table.getSelectedRow()));
-            Record clonedRecord = record.clone();
-            // je complete le lieu dans le releve
-            RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
-            recordsInfoPlace.setValue(model.getPlace());
-            String fileName;
-            if (dataManager.getCurrentFile() != null ) {
-                fileName = dataManager.getCurrentFile().getName();
-            } else {
-                fileName = "";
-            }
-            MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, fileName, clonedRecord);
-            return new TransferableRecord(mergeRecord, component);
+            try {
+                Record clonedRecord = record.clone();
+                // je complete le lieu dans le releve
+                RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+                recordsInfoPlace.setValue(model.getPlace());
+                String fileName;
+                if (dataManager.getCurrentFile() != null) {
+                    fileName = dataManager.getCurrentFile().getName();
+                } else {
+                    fileName = "";
+                }
+                MergeRecord mergeRecord = new MergeRecord(recordsInfoPlace, fileName, clonedRecord);
+                return new TransferableRecord(mergeRecord, component);
+            } catch (CloneNotSupportedException cnse) {
+                cnse.printStackTrace(System.err);
+                return null; 
+            }            
         } else {
             return null;
         }
