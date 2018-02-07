@@ -5,8 +5,6 @@
 package ancestris.explorer;
 
 import genj.view.ViewContext;
-import java.util.HashSet;
-import java.util.Set;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
 import org.openide.util.NbBundle;
@@ -37,9 +35,6 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     private transient ExplorerManager explorerManager = new ExplorerManager();
     private boolean forceClose=false;
     
-    private Set<EntityNode> nodesList = null;   // Used to improve performance when refreshing nodes via gedcomListener (refreshes once at UIReady)
-    private boolean charging = false;
-
     public GedcomExplorerTopComponent() {
         forceClose=false;
         initComponents();
@@ -203,24 +198,6 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     }
     
     
-    
-    public void addToList(EntityNode en) {
-        if (nodesList == null) {
-            nodesList = new HashSet<EntityNode>();
-        }
-        nodesList.add(en);
-        if (!charging) {
-            updateList();
-        }
-    }
-    
-    public void resetList() {
-        if (nodesList != null) {
-            nodesList.clear();
-        }
-        charging = false;
-    }
-    
     public void expandCollapse(boolean expand) {
         Node node = explorerManager.getRootContext();
         node = node.getChildren().getNodeAt(0);
@@ -231,20 +208,6 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
         }
     }
     
-    public void updateList() {
-        charging = true;
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-
-            @Override
-            public void run() {
-                for (EntityNode en : nodesList) {
-                    en.fireChanges();
-                }
-                resetList();
-            }
-        });
-        
-    }
     
 //    ExplorerHelper explorerHelper;
 //

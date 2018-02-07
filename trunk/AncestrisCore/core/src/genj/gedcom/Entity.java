@@ -264,17 +264,6 @@ public class Entity extends Property {
         }
     }
 
-    /**
-     * return natural ordering comparator for entities.
-     * The natural order for entities is by ID;
-     *
-     * @return
-     */
-    @Override
-    public PropertyComparator2 getComparator() {
-        return ENTITYComparator.getInstance();
-    }
-
     public void eraseAll() {
         eraseProperties(this);
     }
@@ -287,6 +276,17 @@ public class Entity extends Property {
             }
         } catch (Exception e) {
         }
+    }
+
+    /**
+     * return natural ordering comparator for entities.
+     * The natural order for entities is by ID;
+     *
+     * @return
+     */
+    @Override
+    public PropertyComparator2 getComparator() {
+        return ENTITYComparator.getInstance();
     }
 
     /**

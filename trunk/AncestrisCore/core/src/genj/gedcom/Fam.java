@@ -53,6 +53,11 @@ public class Fam extends Entity {
     /**
      * Comparator for family by husband name the wife name
      */
+    @Override
+    public PropertyComparator2 getComparator() {
+        return FAMComparator.getInstance();
+    }
+
     private static class FAMComparator extends PropertyComparator2.Default<Fam> {
 
         private static final FAMComparator INSTANCE = new FAMComparator();
@@ -74,7 +79,7 @@ public class Fam extends Entity {
             if (h == null) {
                 return "";
             } else {
-                return h.getDisplayComparator().getSortGroup(h);
+                return h.getComparator().getSortGroup(h);
             }
         }
 
@@ -97,7 +102,7 @@ public class Fam extends Entity {
             Indi i2 = f2.getHusband();
             r = compareNull(i1, i2);
             if (r == Integer.MAX_VALUE) {
-                r = i1.getDisplayComparator().compare(i1, i2);
+                r = i1.getComparator().compare(i1, i2);
             }
             if (r != 0) {
                 return r;
@@ -108,7 +113,7 @@ public class Fam extends Entity {
             i2 = f2.getWife();
             r = compareNull(i1, i2);
             if (r == Integer.MAX_VALUE) {
-                r = i1.getDisplayComparator().compare(i1, i2);
+                r = i1.getComparator().compare(i1, i2);
             }
             return r;
         }
