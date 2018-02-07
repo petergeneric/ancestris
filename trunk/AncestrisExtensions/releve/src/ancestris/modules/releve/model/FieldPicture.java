@@ -7,9 +7,9 @@ package ancestris.modules.releve.model;
 public class FieldPicture extends FieldSimpleValue {
 
     @Override
-    public FieldPicture clone() {
-		return (FieldPicture) super.clone();
-  	}
+    public FieldPicture clone() throws CloneNotSupportedException {
+        return (FieldPicture) super.clone();
+    }
 
     /**
      * Si la valeur se termine par un nombre, la comparaison commence par faire 

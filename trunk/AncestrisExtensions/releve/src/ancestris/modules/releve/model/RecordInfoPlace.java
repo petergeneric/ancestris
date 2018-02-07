@@ -27,7 +27,7 @@ public class RecordInfoPlace extends Field implements Cloneable {
 
     
     @Override
-    public RecordInfoPlace clone() {
+    public RecordInfoPlace clone() throws CloneNotSupportedException {
         return (RecordInfoPlace) super.clone();
     }
 

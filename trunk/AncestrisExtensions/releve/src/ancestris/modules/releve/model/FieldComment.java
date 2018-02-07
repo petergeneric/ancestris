@@ -7,7 +7,7 @@ package ancestris.modules.releve.model;
 public class FieldComment extends FieldSimpleValue implements Cloneable {
 
     @Override
-    public FieldComment clone() {
-		return (FieldComment) super.clone();
-  	}
+    public FieldComment clone() throws CloneNotSupportedException {
+        return (FieldComment) super.clone();
+    }
 }

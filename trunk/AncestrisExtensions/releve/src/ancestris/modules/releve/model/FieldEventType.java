@@ -46,7 +46,7 @@ public class FieldEventType extends Field {
     }
 
     @Override
-    public FieldEventType clone() {
-		return (FieldEventType) super.clone();
-  	}
+    public FieldEventType clone() throws CloneNotSupportedException {
+        return (FieldEventType) super.clone();
+    }
 }

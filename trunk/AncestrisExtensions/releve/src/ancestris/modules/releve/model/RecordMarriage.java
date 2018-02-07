@@ -103,94 +103,9 @@ public class RecordMarriage extends Record implements Cloneable{
     }
 
     @Override
-    public RecordMarriage clone() {
-	RecordMarriage object = (RecordMarriage) super.clone();
-        
-//        object.indi.firstName       = indi.firstName.clone();
-//        object.indi.lastName        = indi.lastName.clone();
-//        object.indi.sex             = indi.sex.clone();
-//        object.indi.age             = indi.age.clone();
-//        object.indi.birthDate       = indi.birthDate.clone();
-//        object.indi.birthPlace      = indi.birthPlace.clone();
-//        object.indi.occupation      = indi.occupation.clone();
-//        object.indi.residence       = indi.residence.clone();
-//        object.indi.comment         = indi.comment.clone();
-//
-//        object.indi.marriedFirstName= indi.marriedFirstName.clone();
-//        object.indi.marriedLastName = indi.marriedLastName.clone();
-//        object.indi.marriedDead      = indi.marriedDead.clone();
-//        object.indi.marriedOccupation= indi.marriedOccupation.clone();
-//        object.indi.marriedResidence = indi.marriedResidence.clone();
-//        object.indi.marriedComment   = indi.marriedComment.clone();
-//
-//        object.indi.fatherFirstName = indi.fatherFirstName.clone();
-//        object.indi.fatherLastName  = indi.fatherLastName.clone();
-//        object.indi.fatherAge       = indi.fatherAge.clone();
-//        object.indi.fatherDead      = indi.fatherDead.clone();
-//        object.indi.fatherOccupation= indi.fatherOccupation.clone();
-//        object.indi.fatherResidence = indi.fatherResidence.clone();
-//        object.indi.fatherComment   = indi.fatherComment.clone();
-//
-//        object.indi.motherFirstName = indi.motherFirstName.clone();
-//        object.indi.motherLastName  = indi.motherLastName.clone();
-//        object.indi.motherAge       = indi.motherAge.clone();
-//        object.indi.motherDead      = indi.motherDead.clone();
-//        object.indi.motherOccupation= indi.motherOccupation.clone();
-//        object.indi.motherResidence = indi.motherResidence.clone();
-//        object.indi.motherComment   = indi.motherComment.clone();
-//
-//        object.wife.firstName       = wife.firstName.clone();
-//        object.wife.lastName        = wife.lastName.clone();
-//        object.wife.sex             = wife.sex.clone();
-//        object.wife.age             = wife.age.clone();
-//        object.wife.birthDate       = wife.birthDate.clone();
-//        object.wife.birthPlace      = wife.birthPlace.clone();
-//        object.wife.occupation      = wife.occupation.clone();
-//        object.wife.residence       = wife.residence.clone();
-//        object.wife.comment         = wife.comment.clone();
-//
-//        object.wife.marriedFirstName= wife.marriedFirstName.clone();
-//        object.wife.marriedLastName = wife.marriedLastName.clone();
-//        object.wife.marriedDead      = wife.marriedDead.clone();
-//        object.wife.marriedOccupation= wife.marriedOccupation.clone();
-//        object.wife.marriedResidence = wife.marriedResidence.clone();
-//        object.wife.marriedComment   = wife.marriedComment.clone();
-//
-//        object.wife.fatherFirstName = wife.fatherFirstName.clone();
-//        object.wife.fatherLastName  = wife.fatherLastName.clone();
-//        object.wife.fatherAge       = wife.fatherAge.clone();
-//        object.wife.fatherDead      = wife.fatherDead.clone();
-//        object.wife.fatherOccupation= wife.fatherOccupation.clone();
-//        object.wife.fatherResidence = wife.fatherResidence.clone();
-//        object.wife.fatherComment   = wife.fatherComment.clone();
-//
-//        object.wife.motherFirstName = wife.motherFirstName.clone();
-//        object.wife.motherLastName  = wife.motherLastName.clone();
-//        object.wife.motherAge       = wife.motherAge.clone();
-//        object.wife.motherDead      = wife.motherDead.clone();
-//        object.wife.motherOccupation= wife.motherOccupation.clone();
-//        object.wife.motherResidence = wife.motherResidence.clone();
-//        object.wife.motherComment   = wife.motherComment.clone();
-//
-//        object.witness1FirstName   = witness1FirstName.clone();
-//        object.witness1LastName    = witness1LastName.clone();
-//        object.witness1Occupation  = witness1Occupation.clone();
-//        object.witness1Comment     = witness1Comment.clone();
-//        object.witness2FirstName   = witness2FirstName.clone();
-//        object.witness2LastName    = witness2LastName.clone();
-//        object.witness2Occupation  = witness2Occupation.clone();
-//        object.witness2Comment     = witness2Comment.clone();
-//        object.witness3FirstName   = witness3FirstName.clone();
-//        object.witness3LastName    = witness3LastName.clone();
-//        object.witness3Occupation  = witness3Occupation.clone();
-//        object.witness3Comment     = witness3Comment.clone();
-//        object.witness4FirstName   = witness4FirstName.clone();
-//        object.witness4LastName    = witness4LastName.clone();
-//        object.witness4Occupation  = witness4Occupation.clone();
-//        object.witness4Comment     = witness4Comment.clone();
-		// je renvoie le clone
-		return object;
-  	}
+    public RecordMarriage clone() throws CloneNotSupportedException {
+        return (RecordMarriage) super.clone();
+    }
 
 
 }

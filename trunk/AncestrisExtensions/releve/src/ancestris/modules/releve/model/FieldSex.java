@@ -19,7 +19,7 @@ public class FieldSex extends Field {
     private String sexAsString;
 
     @Override
-    public FieldSex clone() {
+    public FieldSex clone() throws CloneNotSupportedException {
         return (FieldSex) super.clone();
     }
 

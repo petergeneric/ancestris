@@ -8,16 +8,15 @@ import genj.gedcom.time.Delta;
  */
 public class FieldAge extends Field {
 
-    private Delta delta = new Delta(0,0,0);
+    private final Delta delta = new Delta(0,0,0);
 
     @Override
-    public FieldAge clone() {
-        FieldAge object = null;
-        object = new FieldAge();
+    public FieldAge clone() throws CloneNotSupportedException {
+        FieldAge object = new FieldAge();
         object.setValue(delta);
-		// je renvoie le clone
-		return object;
-  	}
+        // je renvoie le clone
+        return object;
+    }
 
     @Override
     public String toString() {

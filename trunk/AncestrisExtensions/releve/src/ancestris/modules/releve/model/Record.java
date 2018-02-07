@@ -334,10 +334,9 @@ public abstract class Record implements Cloneable{
     abstract public DataManager.RecordType getType();
     
     @Override
-    public Record clone() {
+    public Record clone() throws CloneNotSupportedException {
         Record object = null;
-        try {
-            object = (Record) super.clone();
+        object = (Record) super.clone();
 
         if (eventDate != null) {
             object.eventDate = eventDate.clone();
@@ -379,9 +378,6 @@ public abstract class Record implements Cloneable{
             object.witness4 = witness4.clone();
         }
 
-        } catch (CloneNotSupportedException cnse) {
-            cnse.printStackTrace(System.err);
-        }
         // je renvoie le clone
         return object;
     }

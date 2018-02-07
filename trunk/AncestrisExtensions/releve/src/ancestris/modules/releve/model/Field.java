@@ -50,16 +50,9 @@ public abstract class Field implements Comparable<Field> , Cloneable{
     }
 
     @Override
-    public Field clone() {
-	    Field object = null;
-        try {
-            object = (Field) super.clone();
-        } catch (CloneNotSupportedException cnse) {
-            cnse.printStackTrace(System.err);
-        }
-		// je renvoie le clone
-		return object;
-  	}
+    public Field clone() throws CloneNotSupportedException {
+        return (Field) super.clone();
+    }
 
     public static enum FieldType {
         title,
