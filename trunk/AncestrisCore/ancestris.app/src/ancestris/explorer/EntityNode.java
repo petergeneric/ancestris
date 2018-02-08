@@ -91,13 +91,13 @@ class EntityNode extends PropertyNode/* AbstractNode */ implements Comparable<En
         if (entity instanceof Indi) {
             Indi i = (Indi) entity;
             Indi o = (Indi) that.getEntity();
-            return i.compareTo(o);
+            return i.getDisplayComparator().compare(i, o);
         } else if (entity instanceof Fam) {
             Fam i = (Fam) entity;
             Fam o = (Fam) that.getEntity();
-            return i.compareTo(o);
+            return i.getDisplayComparator().compare(i, o);
         }
-        return entity.compareTo(that.getEntity());
+        return entity.getDisplayComparator().compare(entity, that.getEntity());
     }
 
     @Override

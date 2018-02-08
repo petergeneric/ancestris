@@ -830,7 +830,7 @@ public class Indi extends Entity {
 
     
     @Override
-    public PropertyComparator2 getComparator() {
+    public PropertyComparator2 getDisplayComparator() {
         return INDIComparator.getInstance();
     }
 
@@ -850,7 +850,7 @@ public class Indi extends Entity {
                 Property n2 = i2.getProperty("NAME", false);
                 r = compareNull(n1, n2);
                 if (r == Integer.MAX_VALUE) {
-                    r = n1.getComparator().compare(n1, n2);
+                    r = n1.getDisplayComparator().compare(n1, n2);
                 }
             }
             return r;
