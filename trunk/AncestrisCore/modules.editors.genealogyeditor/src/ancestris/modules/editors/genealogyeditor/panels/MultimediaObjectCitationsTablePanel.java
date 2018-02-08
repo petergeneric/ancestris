@@ -54,6 +54,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
         linkMMObjectButton = new javax.swing.JButton();
         editMMObjecButton = new javax.swing.JButton();
         deleteMMObjectButton = new javax.swing.JButton();
+        prefMediaEventButton = new javax.swing.JButton();
         multiMediaObjectCitationsScrollPane = new javax.swing.JScrollPane();
         multiMediaObjectCitationsTable = new ancestris.modules.editors.genealogyeditor.table.EditorTable();
 
@@ -111,6 +112,19 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
         });
         galleryToolBar.add(deleteMMObjectButton);
 
+        prefMediaEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/star.png"))); // NOI18N
+        prefMediaEventButton.setText(org.openide.util.NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTablePanel.prefMediaEventButton.text")); // NOI18N
+        prefMediaEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTablePanel.prefMediaEventButton.toolTipText")); // NOI18N
+        prefMediaEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        prefMediaEventButton.setIconTextGap(0);
+        prefMediaEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
+        prefMediaEventButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                prefMediaEventButtonActionPerformed(evt);
+            }
+        });
+        galleryToolBar.add(prefMediaEventButton);
+
         multiMediaObjectCitationsTable.setModel(multiMediaObjectCitationsTableModel);
         multiMediaObjectCitationsTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -131,7 +145,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(galleryToolBar, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(multiMediaObjectCitationsScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 26, Short.MAX_VALUE))
+                .addComponent(multiMediaObjectCitationsScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 26, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -291,6 +305,40 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_linkMMObjectButtonActionPerformed
 
+    private void prefMediaEventButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_prefMediaEventButtonActionPerformed
+        int selectedRow = multiMediaObjectCitationsTable.getSelectedRow();
+
+        if (selectedRow != -1) {
+            int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
+            final Property selectedMultimediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
+            
+            try {
+                mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        // Move properrty to 0
+                        selectedMultimediaObject.getParent().moveProperty(selectedMultimediaObject, 0);
+                    }
+                }); // end of doUnitOfWork
+
+                // Refresh list of media to display
+                multiMediaObjectCitationsTableModel.clear();
+                multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
+                int row = multiMediaObjectCitationsTableModel.getRowOf(selectedMultimediaObject);
+                multiMediaObjectCitationsTable.getSelectionModel().setSelectionInterval(row, row);
+                editMMObjecButton.setEnabled(true);
+                deleteMMObjectButton.setEnabled(true);
+                changeSupport.fireChange();
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            
+            
+            
+        }
+    }//GEN-LAST:event_prefMediaEventButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton addMMObjectButton;
     private javax.swing.JButton deleteMMObjectButton;
@@ -299,6 +347,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     private javax.swing.JButton linkMMObjectButton;
     private javax.swing.JScrollPane multiMediaObjectCitationsScrollPane;
     private ancestris.modules.editors.genealogyeditor.table.EditorTable multiMediaObjectCitationsTable;
+    private javax.swing.JButton prefMediaEventButton;
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Property> multiMediasList) {

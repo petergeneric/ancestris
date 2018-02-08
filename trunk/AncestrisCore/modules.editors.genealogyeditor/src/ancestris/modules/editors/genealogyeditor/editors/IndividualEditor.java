@@ -532,13 +532,11 @@ public final class IndividualEditor extends EntityEditor {
             if (multiMediaObjectEditor.showPanel()) {
                 if (mMultiMediaObject instanceof Media) {
                     mIndividual.addMedia((Media) mMultiMediaObject);
-                    if (multiMediaObjectEditor.isPreferred()) {
-                        boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
-                        if (!correct) {
-                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
-                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
-                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
-                        }
+                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                    if (!correct) {
+                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
                     }
                     repaint();
                     changes.fireChangeEvent();
@@ -586,50 +584,32 @@ public final class IndividualEditor extends EntityEditor {
 //                    }
 //                }
 //
-//                // any kind of file
-//                if (true) { 
-//
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                 multiMediaObjectEditor.setContext(new Context(multiMediaObject));
                 if (multiMediaObjectEditor.showPanel()) {
-                    // Case of media removal vs modification
-                    if (multiMediaObjectEditor.isRemoved()) {
-                        multiMediaObject = mIndividual.getProperty("OBJE");
-                        if (multiMediaObject == null) {
-                            imageBean.setImage((File)null, mIndividual.getSex());
-                            repaint();
-                            changes.fireChangeEvent();
-                            break;
-                        }
-                    } else if (multiMediaObject instanceof Media) {
-                        mIndividual.addMedia((Media) multiMediaObject);
-                    }
+                    mIndividual.addMedia((Media) multiMediaObject);
                     
                     // Display image
-                    if (multiMediaObjectEditor.isPreferred()) {
-                        if (multiMediaObject instanceof PropertyMedia) {
-                            multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
-                        }
-                        Property multimediaFile = multiMediaObject.getProperty("FILE", true);
-                        boolean correct = false;
-                        if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                            correct = imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
-                        } else {
-                            PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                            correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
-                        }
-                        if (!correct) {
-                            String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
-                            String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
-                            DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
-                        }
+                    if (multiMediaObject instanceof PropertyMedia) {
+                        multiMediaObject = ((PropertyMedia) multiMediaObject).getTargetEntity();
+                    }
+                    Property multimediaFile = multiMediaObject.getProperty("FILE", true);
+                    boolean correct = false;
+                    if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
+                        correct = imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
+                    } else {
+                        PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
+                        correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
+                    }
+                    if (!correct) {
+                        String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
+                        String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
+                        DialogManager.create(title, text).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).setDialogId("ancestris.aries.error").show();
                     }
                     repaint();
                     changes.fireChangeEvent();
-                } else {
-                    break;
                 }
-//                }
+                break;
             }
         }
     }//GEN-LAST:event_imageBeanMouseClicked
