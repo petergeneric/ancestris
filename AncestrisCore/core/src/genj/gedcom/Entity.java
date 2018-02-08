@@ -289,6 +289,11 @@ public class Entity extends Property {
         return ENTITYComparator.getInstance();
     }
 
+    @Override
+    public PropertyComparator2 getDisplayComparator() {
+        return ENTITYComparator.getInstance();
+    }
+
     /**
      * Entity comparator: compare by id.
      */
