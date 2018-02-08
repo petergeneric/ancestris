@@ -784,12 +784,12 @@ public class TableView extends View {
         }
 
         private void invalidate(Gedcom gedcom, final Entity entity, final TagPath path) {
+            if (!mode.getTag().equals(entity.getTag())) {
+                return;
+            }
             SwingUtilities.invokeLater(new Runnable() {
                 public void run() {
                     // an entity we're not looking at?
-                    if (!mode.getTag().equals(entity.getTag())) {
-                        return;
-                    }
                     synchronized (rows) {
                         // a path we're interested in?
                         TagPath[] paths = mode.getPaths();
@@ -803,7 +803,6 @@ public class TableView extends View {
                                 }
                             }
                         }
-                        // done
                     }
                 }
             });
