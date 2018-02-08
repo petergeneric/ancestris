@@ -210,7 +210,6 @@ public class MediaWrapper {
      *    - Creation in 55  : integrated property (BLOB not supported)
      *    - Creation in 551 : separate media entity
      *    - Update : where it is
-     * @param indi 
      */
     public void update(int index, Property mainProp) {
         // If it is a creation...
@@ -254,7 +253,9 @@ public class MediaWrapper {
         }
         
         // Now arrange sequence (move hostingProperty to index from current index)
-        hostingProperty.getParent().moveProperty(hostingProperty, index);
+        Property p = hostingProperty.getParent().getProperty("OBJE");
+        int pos = hostingProperty.getParent().getPropertyPosition(p);
+        hostingProperty.getParent().moveProperty(hostingProperty, pos + index);
         
     }
 

@@ -115,7 +115,6 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
         prefMediaEventButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/star.png"))); // NOI18N
         prefMediaEventButton.setText(org.openide.util.NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTablePanel.prefMediaEventButton.text")); // NOI18N
         prefMediaEventButton.setToolTipText(org.openide.util.NbBundle.getMessage(MultimediaObjectCitationsTablePanel.class, "MultimediaObjectCitationsTablePanel.prefMediaEventButton.toolTipText")); // NOI18N
-        prefMediaEventButton.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         prefMediaEventButton.setIconTextGap(0);
         prefMediaEventButton.setPreferredSize(new java.awt.Dimension(16, 16));
         prefMediaEventButton.addActionListener(new java.awt.event.ActionListener() {
@@ -317,8 +316,10 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        // Move properrty to 0
-                        selectedMultimediaObject.getParent().moveProperty(selectedMultimediaObject, 0);
+                        // Move properrty to first media
+                        Property p = selectedMultimediaObject.getParent().getProperty("OBJE");
+                        int pos = selectedMultimediaObject.getParent().getPropertyPosition(p);
+                        selectedMultimediaObject.getParent().moveProperty(selectedMultimediaObject, pos);
                     }
                 }); // end of doUnitOfWork
 
