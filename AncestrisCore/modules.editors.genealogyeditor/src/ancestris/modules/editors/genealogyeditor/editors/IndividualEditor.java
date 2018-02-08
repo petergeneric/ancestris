@@ -587,7 +587,9 @@ public final class IndividualEditor extends EntityEditor {
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                 multiMediaObjectEditor.setContext(new Context(multiMediaObject));
                 if (multiMediaObjectEditor.showPanel()) {
-                    mIndividual.addMedia((Media) multiMediaObject);
+                    if (multiMediaObject instanceof Media) {
+                        mIndividual.addMedia((Media) multiMediaObject);
+                    }
                     
                     // Display image
                     if (multiMediaObject instanceof PropertyMedia) {

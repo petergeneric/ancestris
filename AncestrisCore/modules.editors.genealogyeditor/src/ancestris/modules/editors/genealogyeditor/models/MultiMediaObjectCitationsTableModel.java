@@ -31,6 +31,8 @@ import org.openide.util.NbBundle;
  */
 public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
+    private final genj.util.swing.ImageIcon MINISTAR;
+    
     List<Property> multimediaObjectsRefList = new ArrayList<Property>();
     private final String[] columnsName = {
         "",
@@ -41,6 +43,7 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     };
 
     public MultiMediaObjectCitationsTableModel() {
+        this.MINISTAR = new genj.util.swing.ImageIcon(MultiMediaObjectCitationsTableModel.class, "/ancestris/modules/editors/genealogyeditor/resources/starmini.png");
     }
 
     @Override
@@ -95,6 +98,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                     }
                                     if (image != null) {
                                         imageIcon = new ImageIcon(image);
+                                        if (row == 0) {
+                                            return new genj.util.swing.ImageIcon(imageIcon).getOverLayed(MINISTAR);
+                                        }
                                     }
                                 } catch (FileNotFoundException ex) {
                                     Exceptions.printStackTrace(ex);
