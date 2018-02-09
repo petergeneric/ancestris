@@ -22,7 +22,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     private final GedcomLinkProvider gedcomLinkProvider = new GedcomLinkProvider();    
     Gedcom completionGedcom = null;
     File currentFile;
-    private int[] previousRecordIndex = new int[2];
+    private final int[] previousRecordIndex = new int[2];
     
     // options de controle
     static boolean duplicateControlEnabled = true;

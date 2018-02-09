@@ -28,13 +28,13 @@ public class CompletionProviderTest extends TestCase {
             record.setEventDate("01/01/2000");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
-            record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
-            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.getIndi().set("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setGeneralComment("generalcomment");
             
             CompletionProvider completionProvider = new CompletionProvider();
@@ -72,19 +72,19 @@ public class CompletionProviderTest extends TestCase {
             record1.setEventType("eventname");
             record1.setGeneralComment("generalcomment");
             record1.setFreeComment("photo");
-            record1.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
-            record1.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
-            record1.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
-            record1.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
-            record1.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-            record1.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "false");
-            record1.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "false", "70y");
-            record1.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "72y");
-            record1.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record1.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record1.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record1.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-
+            record1.getIndi().set("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record1.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "false");
+            record1.getIndi().setFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress","indifathercomment", "false", "70y");
+            record1.getIndi().setMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "false", "72y");
+            record1.getWife().set("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record1.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "false");
+            record1.getWife().setFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wiferFatherAddress", "wifefathercomment", "false", "70y");
+            record1.getWife().setMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "false", "72y");
+            record1.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record1.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record1.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record1.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            
             RecordMisc record2 = new RecordMisc();
             record2.setEventDate("02/01/2012");
             record2.setCote("cote");
@@ -93,19 +93,19 @@ public class CompletionProviderTest extends TestCase {
             record2.setEventType("eventname");
             record2.setGeneralComment("generalcomment");
             record2.setFreeComment("photo");
-            record2.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
-            record2.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
-            record2.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
-            record2.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
-            record2.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-            record2.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "false");
-            record2.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "false", "70y");
-            record2.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "72y");
-            record2.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record2.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record2.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record2.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-
+            record2.getIndi().set("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record2.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "false");
+            record2.getIndi().setFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "false", "70y");
+            record2.getIndi().setMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "false", "72y");
+            record2.getWife().set("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record2.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "false");
+            record2.getWife().setFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wiferFatherAddress", "wifefathercomment", "false", "70y");
+            record2.getWife().setMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "false", "72y");
+            record2.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record2.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record2.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record2.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            
             RecordMisc record3 = new RecordMisc();
             record3.setEventDate("03/01/2012");
             record3.setCote("cote");
@@ -114,19 +114,19 @@ public class CompletionProviderTest extends TestCase {
             record3.setEventType("eventname");
             record3.setGeneralComment("generalcomment");
             record3.setFreeComment("photo");
-            record3.setIndi("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indioccupation", "indiResidence", "indicomment");
-            record3.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
-            record3.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
-            record3.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
-            record3.setWife("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-            record3.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "false");
-            record3.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "false", "70y");
-            record3.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "72y");
-            record3.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record3.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record3.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record3.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-
+            record3.getIndi().set("indifirstname", "indilastname", "M", "30y", "01/01/1990", "indiplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record3.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "false");
+            record3.getIndi().setFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "false", "70y");
+            record3.getIndi().setMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "false", "72y");
+            record3.getWife().set("wifefirstname", "wifelastname", "F", "wifeage", "02/02/1992", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record3.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "false");
+            record3.getWife().setFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wiferFatherAddress", "wifefathercomment", "false", "70y");
+            record3.getWife().setMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "false", "72y");
+            record3.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record3.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record3.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record3.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addRecord(record1);
             completionProvider.addRecord(record2);
@@ -194,13 +194,13 @@ public class CompletionProviderTest extends TestCase {
             record.setEventDate("01/01/2000");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
-            record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
-            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.getIndi().set("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setGeneralComment("generalcomment");
 
             ArrayList<String> excludedFirstNameList = new ArrayList<String>();
@@ -248,9 +248,9 @@ public class CompletionProviderTest extends TestCase {
             record.setEventDate("01/01/2000");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("OneFirstName Second", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-            record.setIndiFather("Sansfamille1 second", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
-            record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
+            record.getIndi().set("OneFirstName Second", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record.getIndi().setFather("Sansfamille1 second", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
             completionProvider.addRecord(record);
 
             // je verifie que les prénoms composés sont dans l'ordre alphabétique

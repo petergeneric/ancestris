@@ -34,18 +34,19 @@ public class MergeModelMiscMarcTest extends TestCase {
             record.setCote("cote");
             record.setGeneralComment("generalcomment");
             record.setFreeComment("photo");
-            record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "01/01/1970", "indiBirthplace", "indioccupation22", "indiResidence", "indicomments");
-            record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
-            record.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
-            record.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
-            record.setWife("Motherfirstname", "WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-            record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "wifemarrieddead");
-            record.setWifeFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wifefathercomment", "wifefatherdead", "60y");
-            record.setWifeMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "wifemotherdead", "62y");
-            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "01/01/1970", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
+            record.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "indimarrieddead");
+            record.getIndi().setFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "indifatherdead", "70y");
+            record.getIndi().setMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "indimotherdead", "72y");
+            record.getWife().set("Motherfirstname", "WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "wifemarrieddead");
+            record.getWife().setFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
+            record.getWife().setMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
+            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            
         } else if (id.equals("NEW")) {
             record.setEventDate("01/03/1999");
             record.setEventType("CM");
@@ -53,18 +54,19 @@ public class MergeModelMiscMarcTest extends TestCase {
             record.setCote("cote");
             record.setGeneralComment("generalcomment");
             record.setFreeComment("photo");
-            record.setIndi("Fatherfirstname", "NEW_FATHERLASTNAME", "M", "indiage", "", "indiBirthplace", "indioccupation22", "indiResidence", "indicomments");
-            record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "indimarrieddead");
-            record.setIndiFather("indifathername", "NEW_FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "indifatherdead", "70y");
-            record.setIndiMother("indimothername", "NEW_MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "indimotherdead", "72y");
-            record.setWife("Motherfirstname", "NEW_WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeoccupation", "wifeResidence", "wifecomment");
-            record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "wifemarrieddead");
-            record.setWifeFather("wifefathername", "NEW_WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wifefathercomment", "wifefatherdead", "60y");
-            record.setWifeMother("wifemothername", "NEW_WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "wifemotherdead", "62y");
-            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.getIndi().set("Fatherfirstname", "NEW_FATHERLASTNAME", "M", "indiage", "", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
+            record.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "indimarrieddead");
+            record.getIndi().setFather("indifathername", "NEW_FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "indifatherdead", "70y");
+            record.getIndi().setMother("indimothername", "NEW_MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "indimotherdead", "72y");
+            record.getWife().set("Motherfirstname", "NEW_WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "wifemarrieddead");
+            record.getWife().setFather("wifefathername", "NEW_WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
+            record.getWife().setMother("wifemothername", "NEW_WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
+            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            
         }
         return record;
     }

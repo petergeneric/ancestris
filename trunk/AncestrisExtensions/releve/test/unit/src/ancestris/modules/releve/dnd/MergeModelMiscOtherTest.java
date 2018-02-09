@@ -40,10 +40,10 @@ public class MergeModelMiscOtherTest extends TestCase {
             miscRecord.setCote("cote");
             miscRecord.setGeneralComment("generalcomment");
             miscRecord.setFreeComment("photo");
-            miscRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
+            miscRecord.getIndi().set("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
             // intervenant 2
-            miscRecord.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherComment2");
-            miscRecord.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifecomment2", "true");
+            miscRecord.getWife().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "",  "", "", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment2");
+            miscRecord.getWife().setMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifeAddress2", "wifecomment2", "true");
 
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
@@ -138,10 +138,10 @@ public class MergeModelMiscOtherTest extends TestCase {
             miscRecord.setCote("cote");
             miscRecord.setGeneralComment("generalcomment");
             miscRecord.setFreeComment("photo");
-            miscRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
+            miscRecord.getIndi().set("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
             // je place l'epouse en premier et l'epoux en second
-            miscRecord.setWife("Motherfirstname", "MOTHERLASTNAME", "F", "", "", "", "wifeoccupation2", "wifeResidence2", "wifecomment2");
-            miscRecord.setWifeMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherComment", "true");
+            miscRecord.getWife().set("Motherfirstname", "MOTHERLASTNAME", "F", "", "", "", "", "wifeoccupation2", "wifeResidence2",  "wifeAddress2", "wifecomment2");
+            miscRecord.getWife().setMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment", "true");
             
             String fileName = "";
             MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), fileName, miscRecord);

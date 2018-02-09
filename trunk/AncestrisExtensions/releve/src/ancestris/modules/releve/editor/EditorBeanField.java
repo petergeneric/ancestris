@@ -63,7 +63,7 @@ public class EditorBeanField {
 	init(GroupId.wife,          FieldType.wifeSex,               false, false,  false, false,  false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeAge,               false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeBirthDate,         false, false,  true,  true,   false, false,  true,  true );
-	init(GroupId.wife,          FieldType.wifePlace,             false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wife,          FieldType.wifeBirthPlace,             false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeOccupation,        false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeResidence,         false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeComment,           false, false,  true,  true,   false, false,  true,  true );
@@ -258,7 +258,7 @@ public class EditorBeanField {
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
                 break;
             case indiBirthPlace:
-            case wifePlace:
+            case wifeBirthPlace:
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.BirthPlace");
                 break;
 

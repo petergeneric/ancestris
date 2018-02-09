@@ -501,7 +501,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                                 break;
 
                             case indiBirthPlace:
-                            case wifePlace:
+                            case wifeBirthPlace:
                             case indiResidence:
                             case indiMarriedResidence:
                             case indiFatherResidence:

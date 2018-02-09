@@ -23,7 +23,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
     // liste des champs contenant un lieu dans les releves
     static final Field.FieldType[] fieldTypes = {
         FieldType.indiBirthPlace, FieldType.indiResidence, FieldType.indiMarriedResidence, FieldType.indiFatherResidence, FieldType.indiMotherResidence, 
-        FieldType.wifePlace,      FieldType.wifeResidence, FieldType.wifeMarriedResidence, FieldType.wifeFatherResidence, FieldType.wifeMotherResidence
+        FieldType.wifeBirthPlace,      FieldType.wifeResidence, FieldType.wifeMarriedResidence, FieldType.wifeFatherResidence, FieldType.wifeMotherResidence
     };
     
     /**
