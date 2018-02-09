@@ -1,6 +1,7 @@
 package ancestris.modules.releve.model;
 import ancestris.modules.releve.TestUtility;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -27,13 +28,13 @@ public class DataManagerTest extends TestCase {
             record.setEventDate("01/01/2000");
             record.setCote("cote");
             record.setFreeComment("photo");
-            record.setIndi("OneFirstName", "FATHERLASTNAME_GEDCOM", "F", "", "", "indiBirthplace", "indioccupation", "indiResidence", "indicomment");
-            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME_GEDCOM", "fatherOccupation", "indiFatherResidence", "comment", "dead", "70y");
-            record.setIndiMother("Motherfirstname", "MOTHERLASTNAME_GEDCOM", "motherOccupation", "indiMotherResidence", "comment", "dead", "72y");
-            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.getIndi().set("OneFirstName", "FATHERLASTNAME_GEDCOM", "F", "", "", "indiBirthplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME_GEDCOM", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME_GEDCOM", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setGeneralComment("generalcomment");
 
             dataManager.addRecord(record);
@@ -59,7 +60,7 @@ public class DataManagerTest extends TestCase {
             assertEquals("Nombre de noms apres suppression", 0, dataManager.getCompletionProvider().getLastNames(CompletionProvider.IncludeFilter.ALL).size());
             assertEquals("Nombre de professions apres suppression", 0, dataManager.getCompletionProvider().getOccupations(CompletionProvider.IncludeFilter.ALL).size());
 
-        } catch (Exception ex) {
+        } catch (GedcomException ex) {
             fail("GedcomException " + ex.toString());
         }
     }

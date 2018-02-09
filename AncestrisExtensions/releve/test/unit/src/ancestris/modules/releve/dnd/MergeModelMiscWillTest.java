@@ -45,11 +45,11 @@ public class MergeModelMiscWillTest extends TestCase {
             willRecord.setCote("cote");
             willRecord.setGeneralComment("generalcomment");
             willRecord.setFreeComment("photo");
-            willRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordoccupation", "accordResidence", "accordcomment");
+            willRecord.getIndi().set("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
             
              // intervenant 2 héritier
-            willRecord.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherComment2");
-            willRecord.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifecomment2", "true");
+            willRecord.getWife().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment2");
+            willRecord.getWife().setMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifeAddress2", "wifecomment2", "true");
             
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));

@@ -38,9 +38,8 @@ public class ReleveFileAncestrisV2 {
      * @return
      */
     public static boolean isValidFile(File inputFile, StringBuilder sb) {
-        BufferedReader br = null;
         try {
-            br = new BufferedReader( new InputStreamReader(checkUtf8Bom(new FileInputStream(inputFile)),"UTF-8"));
+            BufferedReader br = new BufferedReader( new InputStreamReader(checkUtf8Bom(new FileInputStream(inputFile)),"UTF-8"));
             String[] fields = splitLine(br);
             if (fields == null) {
                 sb.append(fileSignature + " ").append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.EmptyFile"), inputFile.getName()));
@@ -126,7 +125,7 @@ public class ReleveFileAncestrisV2 {
         try {
             fileBuffer = loadFile(checkUtf8Bom(new FileInputStream(inputFile)));
             return fileBuffer;
-        } catch (Exception ex) {            
+        } catch (IOException ex) {            
             Exceptions.printStackTrace(ex);
             fileBuffer.append(ex.toString()).append("\n");
             return fileBuffer;
@@ -169,62 +168,62 @@ public class ReleveFileAncestrisV2 {
                         record.setCote(fields[Field.cote.ordinal()]);
                         record.setFreeComment(fields[Field.freeComment.ordinal()]);
 
-                        record.setIndi(
+                        record.getIndi().set(
                                 fields[Field.indiFirstName.ordinal()],
                                 fields[Field.indiLastName.ordinal()],
                                 fields[Field.indiSex.ordinal()],
                                 "", // pas d'age a la naissance
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
+                                "", // pas d'adresse dans ce format
                                 "", // pas de profession a la naissance
                                 "", // pas de residence a la naissance
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiComment.ordinal()]);
 
-                        record.setIndiFather(
+                        record.getIndi().setFather(
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
                                 "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
 
-                        record.setIndiMother(
+                        record.getIndi().setMother(
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
 
-                        record.setWitness1(
+                        record.getWitness1().setValue(
                                 fields[Field.witness1FirstName.ordinal()],
                                 fields[Field.witness1LastName.ordinal()],
                                 fields[Field.witness1Occupation.ordinal()],
                                 fields[Field.witness1Comment.ordinal()]);
-                        record.setWitness2(
+                        record.getWitness2().setValue(
                                 fields[Field.witness2FirstName.ordinal()],
                                 fields[Field.witness2LastName.ordinal()],
                                 fields[Field.witness2Occupation.ordinal()],
                                 fields[Field.witness2Comment.ordinal()]);
-                        record.setWitness3(
+                        record.getWitness3().setValue(
                                 fields[Field.witness3FirstName.ordinal()],
                                 fields[Field.witness3LastName.ordinal()],
                                 fields[Field.witness3Occupation.ordinal()],
                                 fields[Field.witness3Comment.ordinal()]);
-                        record.setWitness4(
+                        record.getWitness4().setValue(
                                 fields[Field.witness4FirstName.ordinal()],
                                 fields[Field.witness4LastName.ordinal()],
                                 fields[Field.witness4Occupation.ordinal()],
                                 fields[Field.witness4Comment.ordinal()]);
 
+                       
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
-//                        try {
-//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-//                        } catch ( NumberFormatException ex ) {
-//                            record.recordNo = 0;
-//                        }
                         fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("M")) {
@@ -237,109 +236,114 @@ public class ReleveFileAncestrisV2 {
 
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
 
-                        record.setIndi(
+                        record.getIndi().set(
                                 fields[Field.indiFirstName.ordinal()],
                                 fields[Field.indiLastName.ordinal()],
                                 "M",
                                 fields[Field.indiAge.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiComment.ordinal()]);
 
-                        record.setIndiMarried(
+                        record.getIndi().setMarried(
                                 fields[Field.indiMarriedFirstName.ordinal()],
                                 fields[Field.indiMarriedLastName.ordinal()],
                                 //"F",
                                 fields[Field.indiMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMarriedComment.ordinal()],
                                 fields[Field.indiMarriedDead.ordinal()]);
 
-                        record.setIndiFather(
+                        record.getIndi().setFather(
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
 
-                        record.setIndiMother(
+                        record.getIndi().setMother(
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
 
-                        record.setWife(
+                        record.getWife().set(
                                 fields[Field.wifeFirstName.ordinal()],
                                 fields[Field.wifeLastName.ordinal()],
                                 "F",
                                 fields[Field.wifeAge.ordinal()],
                                 fields[Field.wifeBirthDate.ordinal()],
                                 fields[Field.wifeBirthPlace.ordinal()],
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeComment.ordinal()]);
 
-                        record.setWifeMarried(
+                        record.getWife().setMarried(
                                 fields[Field.wifeMarriedFirstName.ordinal()],
                                 fields[Field.wifeMarriedLastName.ordinal()],
                                 //"M",
                                 fields[Field.wifeMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeMarriedComment.ordinal()],
                                 fields[Field.wifeMarriedDead.ordinal()]);
 
-                        record.setWifeFather(
+                        record.getWife().setFather(
                                 fields[Field.wifeFatherFirstName.ordinal()],
                                 fields[Field.wifeFatherLastName.ordinal()],
                                 fields[Field.wifeFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeFatherComment.ordinal()],
                                 fields[Field.wifeFatherDead.ordinal()],
                                 fields[Field.wifeFatherAge.ordinal()]);
 
-                        record.setWifeMother(
+                        record.getWife().setMother(
                                 fields[Field.wifeMotherFirstName.ordinal()],
                                 fields[Field.wifeMotherLastName.ordinal()],
                                 fields[Field.wifeMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeMotherComment.ordinal()],
                                 fields[Field.wifeMotherDead.ordinal()],
                                 fields[Field.wifeMotherAge.ordinal()]);
 
-                        record.setWitness1(
+                        record.getWitness1().setValue(
                                 fields[Field.witness1FirstName.ordinal()],
                                 fields[Field.witness1LastName.ordinal()],
                                 fields[Field.witness1Occupation.ordinal()],
                                 fields[Field.witness1Comment.ordinal()]);
-                        record.setWitness2(
+                        record.getWitness2().setValue(
                                 fields[Field.witness2FirstName.ordinal()],
                                 fields[Field.witness2LastName.ordinal()],
                                 fields[Field.witness2Occupation.ordinal()],
                                 fields[Field.witness2Comment.ordinal()]);
-                        record.setWitness3(
+                        record.getWitness3().setValue(
                                 fields[Field.witness3FirstName.ordinal()],
                                 fields[Field.witness3LastName.ordinal()],
                                 fields[Field.witness3Occupation.ordinal()],
                                 fields[Field.witness3Comment.ordinal()]);
-                        record.setWitness4(
+                        record.getWitness4().setValue(
                                 fields[Field.witness4FirstName.ordinal()],
                                 fields[Field.witness4LastName.ordinal()],
                                 fields[Field.witness4Occupation.ordinal()],
                                 fields[Field.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
-//                        try {
-//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-//                        } catch (NumberFormatException ex) {
-//                            record.recordNo = 0;
-//                        }
                         fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("D")) {
@@ -352,72 +356,71 @@ public class ReleveFileAncestrisV2 {
 
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
 
-                        record.setIndi(
+                        record.getIndi().set(
                                 fields[Field.indiFirstName.ordinal()],
                                 fields[Field.indiLastName.ordinal()],
                                 fields[Field.indiSex.ordinal()],
                                 fields[Field.indiAge.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiComment.ordinal()]);
 
-                        record.setIndiMarried(
+                        record.getIndi().setMarried(
                                 fields[Field.indiMarriedFirstName.ordinal()],
                                 fields[Field.indiMarriedLastName.ordinal()],
                                 //fields[Field.indiMarriedSex.ordinal()].equals("M") ? "F" : "M",
                                 fields[Field.indiMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMarriedComment.ordinal()],
                                 fields[Field.indiMarriedDead.ordinal()]); 
 
-                        record.setIndiFather(
+                        record.getIndi().setFather(
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
 
-                        record.setIndiMother(
+                        record.getIndi().setMother(
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
 
-                        record.setWitness1(
+                        record.getWitness1().setValue(
                                 fields[Field.witness1FirstName.ordinal()],
                                 fields[Field.witness1LastName.ordinal()],
                                 fields[Field.witness1Occupation.ordinal()],
                                 fields[Field.witness1Comment.ordinal()]);
-                        record.setWitness2(
+                        record.getWitness2().setValue(
                                 fields[Field.witness2FirstName.ordinal()],
                                 fields[Field.witness2LastName.ordinal()],
                                 fields[Field.witness2Occupation.ordinal()],
                                 fields[Field.witness2Comment.ordinal()]);
-                        record.setWitness3(
+                        record.getWitness3().setValue(
                                 fields[Field.witness3FirstName.ordinal()],
                                 fields[Field.witness3LastName.ordinal()],
                                 fields[Field.witness3Occupation.ordinal()],
                                 fields[Field.witness3Comment.ordinal()]);
-                        record.setWitness4(
+                        record.getWitness4().setValue(
                                 fields[Field.witness4FirstName.ordinal()],
                                 fields[Field.witness4LastName.ordinal()],
                                 fields[Field.witness4Occupation.ordinal()],
                                 fields[Field.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
-
-//                        try {
-//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-//                        } catch (NumberFormatException ex) {
-//                            record.recordNo = 0;
-//                        }
                         fileBuffer.addRecord(record);
 
                     } else if (fields[Field.eventType.ordinal()].equals("V")) {
@@ -432,110 +435,114 @@ public class ReleveFileAncestrisV2 {
 
                         record.setEventDate(fields[Field.eventDate.ordinal()]);
 
-                        record.setIndi(
+                        record.getIndi().set(
                                 fields[Field.indiFirstName.ordinal()],
                                 fields[Field.indiLastName.ordinal()],
                                 fields[Field.indiSex.ordinal()],
                                 fields[Field.indiAge.ordinal()],
                                 fields[Field.indiBirthDate.ordinal()],
                                 fields[Field.indiBirthPlace.ordinal()],
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiComment.ordinal()]);
 
-                        record.setIndiMarried(
+                        record.getIndi().setMarried(
                                 fields[Field.indiMarriedFirstName.ordinal()],
                                 fields[Field.indiMarriedLastName.ordinal()],
                                 //fields[Field.indiSex.ordinal()].equals("M") ? "F" : "M",
                                 fields[Field.indiMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMarriedComment.ordinal()],
                                 fields[Field.indiMarriedDead.ordinal()]);
 
-                        record.setIndiFather(
+                        record.getIndi().setFather(
                                 fields[Field.indiFatherFirstName.ordinal()],
                                 fields[Field.indiFatherLastName.ordinal()],
                                 fields[Field.indiFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiFatherComment.ordinal()],
                                 fields[Field.indiFatherDead.ordinal()],
                                 fields[Field.indiFatherAge.ordinal()]);
 
-                        record.setIndiMother(
+                        record.getIndi().setMother(
                                 fields[Field.indiMotherFirstName.ordinal()],
                                 fields[Field.indiMotherLastName.ordinal()],
                                 fields[Field.indiMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.indiMotherComment.ordinal()],
                                 fields[Field.indiMotherDead.ordinal()],
                                 fields[Field.indiMotherAge.ordinal()]);
 
-                        record.setWife(
+                        record.getWife().set(
                                 fields[Field.wifeFirstName.ordinal()],
                                 fields[Field.wifeLastName.ordinal()],
                                 fields[Field.wifeSex.ordinal()],
                                 fields[Field.wifeAge.ordinal()],
                                 fields[Field.wifeBirthDate.ordinal()],
                                 fields[Field.wifeBirthPlace.ordinal()],
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeComment.ordinal()]);  //décédé
 
-                        record.setWifeMarried(
+                        record.getWife().setMarried(
                                 fields[Field.wifeMarriedFirstName.ordinal()],
                                 fields[Field.wifeMarriedLastName.ordinal()],
                                 //fields[Field.wifeSex.ordinal()].equals("M") ? "F" : "M",
                                 fields[Field.wifeMarriedOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeMarriedComment.ordinal()],
                                 fields[Field.wifeMarriedDead.ordinal()]);
 
-                        record.setWifeFather(
+                        record.getWife().setFather(
                                 fields[Field.wifeFatherFirstName.ordinal()],
                                 fields[Field.wifeFatherLastName.ordinal()],
                                 fields[Field.wifeFatherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeFatherComment.ordinal()],
                                 fields[Field.wifeFatherDead.ordinal()],
                                 fields[Field.wifeFatherAge.ordinal()]);
 
-                        record.setWifeMother(
+                        record.getWife().setMother(
                                 fields[Field.wifeMotherFirstName.ordinal()],
                                 fields[Field.wifeMotherLastName.ordinal()],
                                 fields[Field.wifeMotherOccupation.ordinal()],
-                                "", // pas de residence dans ce format                                
+                                "", // pas de residence dans ce format
+                                "", // pas d'adresse dans ce format
                                 fields[Field.wifeMotherComment.ordinal()],
                                 fields[Field.wifeMotherDead.ordinal()],
                                 fields[Field.wifeMotherAge.ordinal()]);
 
-                        record.setWitness1(
+                        record.getWitness1().setValue(
                                 fields[Field.witness1FirstName.ordinal()],
                                 fields[Field.witness1LastName.ordinal()],
                                 fields[Field.witness1Occupation.ordinal()],
                                 fields[Field.witness1Comment.ordinal()]);
-                        record.setWitness2(
+                        record.getWitness2().setValue(
                                 fields[Field.witness2FirstName.ordinal()],
                                 fields[Field.witness2LastName.ordinal()],
                                 fields[Field.witness2Occupation.ordinal()],
                                 fields[Field.witness2Comment.ordinal()]);
-                        record.setWitness3(
+                        record.getWitness3().setValue(
                                 fields[Field.witness3FirstName.ordinal()],
                                 fields[Field.witness3LastName.ordinal()],
                                 fields[Field.witness3Occupation.ordinal()],
                                 fields[Field.witness3Comment.ordinal()]);
-                        record.setWitness4(
+                        record.getWitness4().setValue(
                                 fields[Field.witness4FirstName.ordinal()],
                                 fields[Field.witness4LastName.ordinal()],
                                 fields[Field.witness4Occupation.ordinal()],
                                 fields[Field.witness4Comment.ordinal()]);
 
                         record.setGeneralComment(fields[Field.generalComment.ordinal()]);
-
-//                        try {
-//                            record.recordNo = Integer.valueOf(fields[Field.recordNo.ordinal()]);
-//                        } catch (NumberFormatException ex) {
-//                            record.recordNo = 0;
-//                        }
                         fileBuffer.addRecord(record);                                           
                     } else {
                         fileBuffer.append(String.format(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.LineNo"), lineNumber ));
@@ -555,7 +562,7 @@ public class ReleveFileAncestrisV2 {
                     
             } // while
             br.close();
-        } catch (Exception e) {
+        } catch (IOException e) {
             fileBuffer.append(e.toString()).append("\n");
         }
 
@@ -663,25 +670,12 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // WifeMotherOccupation
                         line.appendCsvFn(""); // WifeMotherComment
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -760,25 +754,12 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeMotherOccupation().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString());
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -856,25 +837,12 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(""); // WifeMotherOccupation
                         line.appendCsvFn(""); // WifeMotherComment
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -953,25 +921,12 @@ public class ReleveFileAncestrisV2 {
                         line.appendCsvFn(record.getWifeMotherOccupation().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString());
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -979,14 +934,14 @@ public class ReleveFileAncestrisV2 {
                     line.appendCsv("\n");
                     writer.write(line.toString());
 
-                } catch (Exception e) {
+                } catch (IOException e) {
                     sb.append("Line ").append(" " ).append(e).append("\n");
                     sb.append("   ").append(line).append("\n");
                 }
             }
             writer.close();
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             sb.append(e).append("\n");
         }
         return sb;

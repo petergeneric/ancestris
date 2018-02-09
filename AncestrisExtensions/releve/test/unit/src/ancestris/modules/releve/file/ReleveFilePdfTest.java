@@ -1,13 +1,12 @@
 package ancestris.modules.releve.file;
 
+import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.PDFFormat;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -30,29 +29,9 @@ public class ReleveFilePdfTest extends TestCase {
         DataManager dataManager = new DataManager();
         dataManager.setPlace("");
 
-        RecordMisc misc = new RecordMisc();
-        misc.setEventDate("11/01/2000");
-        misc.setCote("cote");
-        misc.setParish("parish");
-        misc.setNotary("Notary");
-        misc.setEventType("eventname");
-        misc.setGeneralComment("generalcomment");
-        misc.setFreeComment("photo");
-        misc.setIndi("indifirstname", "indilastname", "M", "24y", "01/01/1980", "indiBirthPlace", "indioccupation", "indiResidence", "indicomment");
-        misc.setIndiMarried("indimarriedfirstname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indimarriedcomment", "false");
-        misc.setIndiFather("indifathername", "indifatherlastname", "indifatheroccupation", "indiFatherResidence", "indifathercomment", "false", "70y");
-        misc.setIndiMother("indimothername", "indimotherlastname", "indimotheroccupation", "indiMotherResidence", "indimothercomment", "false", "72y");
-        misc.setWife("wifefirstname", "wifelastname", "F", "22y", "02/02/1982", "wifeBirthPlace", "wifeoccupation", "wifeResidence", "wifecomment");
-        misc.setWifeMarried("wifemarriedfirstname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifemarriedcomment", "true");
-        misc.setWifeFather("wifefathername", "wifefatherlastname", "wifefatheroccupation", "wifeFatherResidence", "wifefathercomment", "true", "60y");
-        misc.setWifeMother("wifemothername", "wifemotherlastname", "wifemotheroccupation", "wifeMotherResidence", "wifemothercomment", "false", "62y");
-        misc.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-        misc.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-        misc.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-        misc.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-
+        RecordMisc misc = TestUtility.getRecordMisc();
         dataManager.addRecord(misc);
-        dataManager.addRecord(misc);
+        //dataManager.addRecord(misc);
         StringBuilder sb = ReleveFilePdf.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
         assertEquals("verify save error", 0, sb.length());
 

@@ -12,56 +12,51 @@ public class RecordDeath extends Record {
     public RecordDeath() {
         super();
         
-        getIndi().firstName       = new FieldSimpleValue();
-        getIndi().lastName        = new FieldSimpleValue();
-        getIndi().sex             = new FieldSex();
-        getIndi().age             = new FieldAge();
-        getIndi().birthDate       = new FieldDate();
-        getIndi().birthPlace      = new FieldPlace();
-        getIndi().occupation      = new FieldOccupation();
-        getIndi().residence       = new FieldPlace();
-        getIndi().comment         = new FieldComment();
+        indi.firstName       = new FieldSimpleValue();
+        indi.lastName        = new FieldSimpleValue();
+        indi.sex             = new FieldSex();
+        indi.age             = new FieldAge();
+        indi.birthDate       = new FieldDate();
+        indi.birthPlace      = new FieldPlace();
+        indi.birthAddress    = new FieldAddress();
+        indi.occupation      = new FieldOccupation();
+        indi.residence       = new FieldPlace();
+        indi.address         = new FieldAddress();
+        indi.comment         = new FieldComment();
 
-        getIndi().marriedFirstName= new FieldSimpleValue();
-        getIndi().marriedLastName = new FieldSimpleValue();
-        //getIndi().marriedSex      = new FieldSex();
-        getIndi().marriedDead     = new FieldDead();
-        getIndi().marriedOccupation = new FieldOccupation();
-        getIndi().marriedResidence  = new FieldPlace();
-        getIndi().marriedComment  = new FieldComment();
+        indi.marriedFirstName= new FieldSimpleValue();
+        indi.marriedLastName = new FieldSimpleValue();
+        //indi.marriedSex      = new FieldSex();
+        indi.marriedDead     = new FieldDead();
+        indi.marriedOccupation = new FieldOccupation();
+        indi.marriedResidence  = new FieldPlace();
+        indi.marriedAddress   = new FieldAddress();
+        indi.marriedComment  = new FieldComment();
         
-        getIndi().fatherFirstName = new FieldSimpleValue();
-        getIndi().fatherLastName  = new FieldSimpleValue();
-        getIndi().fatherAge       = new FieldAge();
-        getIndi().fatherDead      = new FieldDead();
-        getIndi().fatherOccupation= new FieldOccupation();
-        getIndi().fatherResidence = new FieldPlace();
-        getIndi().fatherComment   = new FieldComment();
+        indi.fatherFirstName = new FieldSimpleValue();
+        indi.fatherLastName  = new FieldSimpleValue();
+        indi.fatherAge       = new FieldAge();
+        indi.fatherDead      = new FieldDead();
+        indi.fatherOccupation= new FieldOccupation();
+        indi.fatherResidence = new FieldPlace();
+        indi.fatherAddress   = new FieldAddress();
+        indi.fatherComment   = new FieldComment();
         
-        getIndi().motherFirstName = new FieldSimpleValue();
-        getIndi().motherLastName  = new FieldSimpleValue();
-        getIndi().motherAge       = new FieldAge();
-        getIndi().motherDead      = new FieldDead();
-        getIndi().motherOccupation= new FieldOccupation();
-        getIndi().motherResidence = new FieldPlace();
-        getIndi().motherComment   = new FieldComment();
+        indi.motherFirstName = new FieldSimpleValue();
+        indi.motherLastName  = new FieldSimpleValue();
+        indi.motherAge       = new FieldAge();
+        indi.motherDead      = new FieldDead();
+        indi.motherOccupation= new FieldOccupation();
+        indi.motherResidence = new FieldPlace();
+        indi.motherAddress   = new FieldAddress();
+        indi.motherComment   = new FieldComment();
         
-        witness1.firstName   = new FieldSimpleValue();
-        witness1.lastName    = new FieldSimpleValue();
-        witness1.occupation  = new FieldOccupation();
-        witness1.comment     = new FieldComment();
-        witness2.firstName   = new FieldSimpleValue();
-        witness2.lastName    = new FieldSimpleValue();
-        witness2.occupation  = new FieldOccupation();
-        witness2.comment     = new FieldComment();
-        witness3.firstName   = new FieldSimpleValue();
-        witness3.lastName    = new FieldSimpleValue();
-        witness3.occupation  = new FieldOccupation();
-        witness3.comment     = new FieldComment();
-        witness4.firstName   = new FieldSimpleValue();
-        witness4.lastName    = new FieldSimpleValue();
-        witness4.occupation  = new FieldOccupation();
-        witness4.comment     = new FieldComment();
+        for(Witness witness : witnesses) {
+            witness.firstName  = new FieldSimpleValue();
+            witness.lastName   = new FieldSimpleValue();
+            witness.occupation = new FieldOccupation();
+            witness.comment    = new FieldComment();
+        }
     }
 
     @Override

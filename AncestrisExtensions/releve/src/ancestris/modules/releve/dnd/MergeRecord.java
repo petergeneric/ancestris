@@ -326,9 +326,9 @@ public class MergeRecord {
         comment = appendComment(comment, "Mère", makeIndiMotherComment());
 
         String godFather = appendValue(
-                record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
-                record.getWitness1Occupation().toString(),
-                record.getWitness1Comment().toString());
+                record.getWitness1().getFirstName().toString() + " " + record.getWitness1().getLastName().toString(),
+                record.getWitness1().getOccupation().toString(),
+                record.getWitness1().getComment().toString());
         if (!godFather.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
@@ -336,9 +336,9 @@ public class MergeRecord {
             comment += "Parrain/témoin" + ": " + godFather;
         }
         String godMother = appendValue(
-                record.getWitness2FirstName().toString() + " " + record.getWitness2LastName().toString(),
-                record.getWitness2Occupation().toString(),
-                record.getWitness2Comment().toString());
+                record.getWitness2().getFirstName().toString() + " " + record.getWitness2().getLastName().toString(),
+                record.getWitness2().getOccupation().toString(),
+                record.getWitness2().getComment().toString());
         if (!godMother.isEmpty()) {
             if (!comment.isEmpty() && comment.charAt(comment.length()-1)!= '\n') {
                 comment += "\n";
@@ -347,12 +347,12 @@ public class MergeRecord {
         }
 
         String witness = appendValue(
-                record.getWitness3FirstName().toString() + " " + record.getWitness3LastName().toString(),
-                record.getWitness3Occupation().toString(),
-                record.getWitness3Comment().toString(),
-                record.getWitness4FirstName().toString() + " " + record.getWitness4LastName().toString(),
-                record.getWitness4Occupation().toString(),
-                record.getWitness4Comment().toString());
+                record.getWitness3().getFirstName().toString() + " " + record.getWitness3().getLastName().toString(),
+                record.getWitness3().getOccupation().toString(),
+                record.getWitness3().getComment().toString(),
+                record.getWitness4().getFirstName().toString() + " " + record.getWitness4().getLastName().toString(),
+                record.getWitness4().getOccupation().toString(),
+                record.getWitness4().getComment().toString());
         comment = appendComment(comment, "Témoin(s)",witness);
 
         comment = appendComment(comment, "Commentaire général",record.getGeneralComment().toString());
@@ -567,18 +567,18 @@ public class MergeRecord {
 
      private String makeWitnessComment(  ) {
         String comment = appendValue(
-                record.getWitness1FirstName().toString() + " " + record.getWitness1LastName().toString(),
-                record.getWitness1Occupation().toString(),
-                record.getWitness1Comment().toString(),
-                record.getWitness2FirstName().toString() + " " + record.getWitness2LastName().toString(),
-                record.getWitness2Occupation().toString(),
-                record.getWitness2Comment().toString(),
-                record.getWitness3FirstName().toString() + " " + record.getWitness3LastName().toString(),
-                record.getWitness3Occupation().toString(),
-                record.getWitness3Comment().toString(),
-                record.getWitness4FirstName().toString() + " " + record.getWitness4LastName().toString(),
-                record.getWitness4Occupation().toString(),
-                record.getWitness4Comment().toString());
+                record.getWitness1().getFirstName().toString() + " " + record.getWitness1().getLastName().toString(),
+                record.getWitness1().getOccupation().toString(),
+                record.getWitness1().getComment().toString(),
+                record.getWitness2().getFirstName().toString() + " " + record.getWitness2().getLastName().toString(),
+                record.getWitness2().getOccupation().toString(),
+                record.getWitness2().getComment().toString(),
+                record.getWitness3().getFirstName().toString() + " " + record.getWitness3().getLastName().toString(),
+                record.getWitness3().getOccupation().toString(),
+                record.getWitness3().getComment().toString(),
+                record.getWitness4().getFirstName().toString() + " " + record.getWitness4().getLastName().toString(),
+                record.getWitness4().getOccupation().toString(),
+                record.getWitness4().getComment().toString());
         return comment;
     }
 

@@ -32,14 +32,14 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/2003");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiBirthPlace", "indioccupation", "indiResidence", "indicomment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherComment", "", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherComment", "dead", "72y");
-                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "marriedcomment", "dead");
-                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiBirthPlace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
+                record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
+                record.getIndi().setMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "indiMarriedAddress", "marriedcomment", "dead");
+                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
                 record.setGeneralComment("generalcomment");
             return record;
         } else {
@@ -47,13 +47,13 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/1988");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiBirthPlace", "indioccupation", "indiResidence", "indicomment");
-                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
-                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
-                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiBirthPlace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                //record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
+                //record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
+                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
                 record.setGeneralComment("generalcomment");
             return record;
         }
@@ -164,7 +164,7 @@ public class MergeModelDeathTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
             // je supprime la profession et le lieu de naissance
-            recordDeath.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "", "", "", "indicomment");
+            recordDeath.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "", "", "", "", "", "indicomment");
             
             String sourceTitle = "";
             MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, recordDeath);
@@ -310,8 +310,8 @@ public class MergeModelDeathTest extends TestCase {
                 record.setEventDate("01/01/1988");
                 record.setCote("cote");
                 record.setFreeComment("photo");
-                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "", "BEF 1981", "indiplace", "indioccupation", "indiResidence", "indicomment");
-                record.setIndiMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "");
+                record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "BEF 1981", "indiplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                record.getIndi().setMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "", "");
             String sourceTitle = "";
             MergeRecord mergeRecord = new MergeRecord(getRecordsInfoPlace(), sourceTitle, record);
 

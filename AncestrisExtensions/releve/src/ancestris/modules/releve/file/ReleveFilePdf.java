@@ -45,15 +45,6 @@ public class ReleveFilePdf {
     }
 
     
-    /**
-     * decoupe une ligne
-     * @param strLine
-     * @return fields[] ou null si la ligne n'est pas valide
-     */
-    private static String[] splitLine(BufferedReader br) throws Exception {
-            return null;
-    }
-
     // Format d'un releve
     enum Field {
         ancetris,
@@ -218,25 +209,12 @@ public class ReleveFilePdf {
                         line.appendCsvFn(""); // WifeMotherResidence
                         line.appendCsvFn(""); // WifeMotherComment
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -331,25 +309,12 @@ public class ReleveFilePdf {
                         line.appendCsvFn(record.getWifeMotherResidence().toString());
                         line.appendCsvFn(record.getWifeMotherComment().toString());
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -443,25 +408,12 @@ public class ReleveFilePdf {
                         line.appendCsvFn(""); // WifeMotherResidence
                         line.appendCsvFn(""); // WifeMotherComment
 
-                        line.appendCsvFn(record.getWitness1LastName().toString());
-                        line.appendCsvFn(record.getWitness1FirstName().toString());
-                        line.appendCsvFn(record.getWitness1Occupation().toString());
-                        line.appendCsvFn(record.getWitness1Comment().toString());
-
-                        line.appendCsvFn(record.getWitness2LastName().toString());
-                        line.appendCsvFn(record.getWitness2FirstName().toString());
-                        line.appendCsvFn(record.getWitness2Occupation().toString());
-                        line.appendCsvFn(record.getWitness2Comment().toString());
-
-                        line.appendCsvFn(record.getWitness3LastName().toString());
-                        line.appendCsvFn(record.getWitness3FirstName().toString());
-                        line.appendCsvFn(record.getWitness3Occupation().toString());
-                        line.appendCsvFn(record.getWitness3Comment().toString());
-
-                        line.appendCsvFn(record.getWitness4LastName().toString());
-                        line.appendCsvFn(record.getWitness4FirstName().toString());
-                        line.appendCsvFn(record.getWitness4Occupation().toString());
-                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for(Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                         line.appendCsvFn(record.getGeneralComment().toString());
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
@@ -637,26 +589,12 @@ public class ReleveFilePdf {
                                 record.getWifeMotherComment().toString()
                                 );
 
-
-//                        line.appendCsvFn(record.getWitness1LastName().toString());
-//                        line.appendCsvFn(record.getWitness1FirstName().toString());
-//                        line.appendCsvFn(record.getWitness1Occupation().toString());
-//                        line.appendCsvFn(record.getWitness1Comment().toString());
-//
-//                        line.appendCsvFn(record.getWitness2LastName().toString());
-//                        line.appendCsvFn(record.getWitness2FirstName().toString());
-//                        line.appendCsvFn(record.getWitness2Occupation().toString());
-//                        line.appendCsvFn(record.getWitness2Comment().toString());
-//
-//                        line.appendCsvFn(record.getWitness3LastName().toString());
-//                        line.appendCsvFn(record.getWitness3FirstName().toString());
-//                        line.appendCsvFn(record.getWitness3Occupation().toString());
-//                        line.appendCsvFn(record.getWitness3Comment().toString());
-//
-//                        line.appendCsvFn(record.getWitness4LastName().toString());
-//                        line.appendCsvFn(record.getWitness4FirstName().toString());
-//                        line.appendCsvFn(record.getWitness4Occupation().toString());
-//                        line.appendCsvFn(record.getWitness4Comment().toString());
+                        for (Record.Witness witness : record.getWitnesses()) {
+                            line.appendCsvFn(witness.getLastName().toString());
+                            line.appendCsvFn(witness.getFirstName().toString());
+                            line.appendCsvFn(witness.getOccupation().toString());
+                            line.appendCsvFn(witness.getComment().toString());
+                        }
 
                          writeValue(1,"Info:",
                                 record.getGeneralComment().toString()
@@ -664,7 +602,7 @@ public class ReleveFilePdf {
                         line.appendCsv(String.valueOf(index)); // numero d'enregistrement
                     }
 
-                } catch (Exception e) {
+                } catch (IOException e) {
                     sb.append("Line ").append(" " ).append(e).append("\n");
                     sb.append("   ").append(line).append("\n");
                 }
@@ -674,7 +612,7 @@ public class ReleveFilePdf {
             Format format = new PDFFormat();
             format.format(doc, fileOutputStream);
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             sb.append(e).append("\n");
         }
         return sb;

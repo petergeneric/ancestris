@@ -2,6 +2,7 @@ package ancestris.modules.releve.model;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.ReleveTopComponent;
+import ancestris.modules.releve.model.Record.Witness;
 import genj.gedcom.*;
 import java.util.*;
 import javax.swing.SwingUtilities;
@@ -12,14 +13,14 @@ import org.openide.util.NbPreferences;
  * @author Michels
  */
 public class CompletionProvider {
-    private FirstNameCompletionSet firstNames = new FirstNameCompletionSet();
-    private LastNameCompletionSet lastNames = new LastNameCompletionSet();
-    private OccupationCompletionSet occupations = new OccupationCompletionSet();
-    private NotaryCompletionSet notaries = new NotaryCompletionSet();
-    private PlaceCompletionSet places = new PlaceCompletionSet();
-    private CompletionSet eventTypes = new CompletionSet();
+    private final FirstNameCompletionSet firstNames = new FirstNameCompletionSet();
+    private final LastNameCompletionSet lastNames = new LastNameCompletionSet();
+    private final OccupationCompletionSet occupations = new OccupationCompletionSet();
+    private final NotaryCompletionSet notaries = new NotaryCompletionSet();
+    private final PlaceCompletionSet places = new PlaceCompletionSet();
+    private final CompletionSet eventTypes = new CompletionSet();
 
-    private HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
+    private final HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
 
     public static enum CompletionType {
         firstName,
@@ -63,10 +64,13 @@ public class CompletionProvider {
         firstNames.add(record.getWifeFatherFirstName(), FieldSex.MALE_STRING);
         firstNames.add(record.getWifeMotherFirstName(), FieldSex.FEMALE_STRING);
 
-        firstNames.add(record.getWitness1FirstName(), null);
-        firstNames.add(record.getWitness2FirstName(), null);
-        firstNames.add(record.getWitness3FirstName(), null);
-        firstNames.add(record.getWitness4FirstName(), null);
+//        firstNames.add(record.getWitness1FirstName(), null);
+//        firstNames.add(record.getWitness2FirstName(), null);
+//        firstNames.add(record.getWitness3FirstName(), null);
+//        firstNames.add(record.getWitness4FirstName(), null);
+        for(Witness witness : record.getWitnesses()) {
+           firstNames.add( witness.getFirstName(), null);
+        }
 
         // LastName
         lastNames.add(record.getIndiLastName());
@@ -79,10 +83,13 @@ public class CompletionProvider {
         lastNames.add(record.getWifeFatherLastName());
         lastNames.add(record.getWifeMotherLastName());
 
-        lastNames.add(record.getWitness1LastName());
-        lastNames.add(record.getWitness2LastName());
-        lastNames.add(record.getWitness3LastName());
-        lastNames.add(record.getWitness4LastName());
+//        lastNames.add(record.getWitness1LastName());
+//        lastNames.add(record.getWitness2LastName());
+//        lastNames.add(record.getWitness3LastName());
+//        lastNames.add(record.getWitness4LastName());
+        for(Witness witness : record.getWitnesses()) {
+           lastNames.add( witness.getLastName());
+        }
         
         // Indi Occupation
         occupations.add(record.getIndiOccupation());
@@ -95,10 +102,13 @@ public class CompletionProvider {
         occupations.add(record.getWifeFatherOccupation());
         occupations.add(record.getWifeMotherOccupation());
         // witness Occupation
-        occupations.add(record.getWitness1Occupation());
-        occupations.add(record.getWitness2Occupation());
-        occupations.add(record.getWitness3Occupation());
-        occupations.add(record.getWitness4Occupation());
+//        occupations.add(record.getWitness1Occupation());
+//        occupations.add(record.getWitness2Occupation());
+//        occupations.add(record.getWitness3Occupation());
+//        occupations.add(record.getWitness4Occupation());
+        for(Witness witness : record.getWitnesses()) {
+           occupations.add( witness.getOccupation());
+        }
 
         notaries.add(record.getNotary());
 
@@ -137,10 +147,9 @@ public class CompletionProvider {
         firstNames.remove(record.getWifeFatherFirstName(), FieldSex.MALE_STRING);
         firstNames.remove(record.getWifeMotherFirstName(), FieldSex.FEMALE_STRING);
 
-        firstNames.remove(record.getWitness1FirstName(), null);
-        firstNames.remove(record.getWitness2FirstName(), null);
-        firstNames.remove(record.getWitness3FirstName(), null);
-        firstNames.remove(record.getWitness4FirstName(), null);
+        for(Witness witness : record.getWitnesses()) {
+           firstNames.remove( witness.getFirstName(), null);
+        }
 
         // LastName
         lastNames.remove(record.getIndiLastName());
@@ -153,10 +162,9 @@ public class CompletionProvider {
         lastNames.remove(record.getWifeFatherLastName());
         lastNames.remove(record.getWifeMotherLastName());
 
-        lastNames.remove(record.getWitness1LastName());
-        lastNames.remove(record.getWitness2LastName());
-        lastNames.remove(record.getWitness3LastName());
-        lastNames.remove(record.getWitness4LastName());
+        for(Witness witness : record.getWitnesses()) {
+           lastNames.remove( witness.getLastName());
+        }
         
         // Indi Occupation
         occupations.remove(record.getIndiOccupation());
@@ -169,10 +177,9 @@ public class CompletionProvider {
         occupations.remove(record.getWifeFatherOccupation());
         occupations.remove(record.getWifeMotherOccupation());
         // witness Occupation
-        occupations.remove(record.getWitness1Occupation());
-        occupations.remove(record.getWitness2Occupation());
-        occupations.remove(record.getWitness3Occupation());
-        occupations.remove(record.getWitness4Occupation());
+        for(Witness witness : record.getWitnesses()) {
+           occupations.remove( witness.getOccupation());
+        }
 
         notaries.remove(record.getNotary());
 
