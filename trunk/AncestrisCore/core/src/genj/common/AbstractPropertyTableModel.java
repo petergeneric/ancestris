@@ -22,6 +22,7 @@ package genj.common;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
+import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyNumericValue;
@@ -37,7 +38,7 @@ import spin.Spin;
 /**
  * A default base-type for property models
  */
-public abstract class AbstractPropertyTableModel implements PropertyTableModel, GedcomListener {
+public abstract class AbstractPropertyTableModel implements PropertyTableModel, GedcomMetaListener {
   
   protected final static int 
     LEFT = SwingConstants.LEFT,
@@ -143,6 +144,42 @@ public abstract class AbstractPropertyTableModel implements PropertyTableModel, 
     // ignored
   }
 
+  /**
+   * Gedcom callback
+   */
+    public void gedcomHeaderChanged(Gedcom gedcom) {
+    // ignored
+    }
+
+  /**
+   * Gedcom callback
+   */
+    public void gedcomWriteLockAcquired(Gedcom gedcom) {
+    // ignored
+    }
+
+  /**
+   * Gedcom callback
+   */
+    public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
+    // ignored
+    }
+
+  /**
+   * Gedcom callback
+   */
+    public void gedcomAfterUnitOfWork(Gedcom gedcom) {
+    // ignored
+    }
+
+  /**
+   * Gedcom callback
+   */
+    public void gedcomWriteLockReleased(Gedcom gedcom) {
+    // ignored
+    }
+  
+  
   public String getCellValue(Property property, int row, int col) {
     return getDefaultCellValue(property, row, col);
   }

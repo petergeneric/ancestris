@@ -810,6 +810,28 @@ public class TableView extends View {
             
         }
 
+        @Override
+        public void gedcomHeaderChanged(Gedcom gedcom) {
+        }
+
+        @Override
+        public void gedcomWriteLockAcquired(Gedcom gedcom) {
+        }
+
+        @Override
+        public void gedcomBeforeUnitOfWork(Gedcom gedcom) {
+        }
+
+        @Override
+        public void gedcomAfterUnitOfWork(Gedcom gedcom) {
+        }
+
+        @Override
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
+            // Resort table in case sort columns' content changed
+            setMode(currentMode, false);
+        }
+
         
     } //Model
 
