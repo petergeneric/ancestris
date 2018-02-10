@@ -814,8 +814,11 @@ public class TableView extends View {
         public void gedcomHeaderChanged(Gedcom gedcom) {
         }
 
+        Context selectedContext = null;
+        
         @Override
         public void gedcomWriteLockAcquired(Gedcom gedcom) {
+            selectedContext = new Context(propertyTable.getSelectedRow());
         }
 
         @Override
@@ -830,6 +833,7 @@ public class TableView extends View {
         public void gedcomWriteLockReleased(Gedcom gedcom) {
             // Resort table in case sort columns' content changed
             setMode(currentMode, false);
+            propertyTable.select(selectedContext);
         }
 
         
