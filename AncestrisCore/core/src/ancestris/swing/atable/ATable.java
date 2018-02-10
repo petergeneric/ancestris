@@ -58,10 +58,7 @@ public class ATable extends JTable {
     private Collator cachedCollator = null;
 
     private Map<TableModel, ATableRowSorter<TableModel>> sorters;
-    private ATableRowSorter<TableModel> currentSorter, oldSorter;
-    private TableModel currentTableModel;
-    private RowSorterListener rowSorterListener;
-    private TableModelListener tableModelListener;
+    private ATableRowSorter<TableModel> currentSorter;
     private ATableFilterWidget filterText;
     private JPanel shortcuts;
     private List<ShortCut> shortcutsList;
@@ -85,35 +82,29 @@ public class ATable extends JTable {
     }
 
     @Override
-    public void setModel(TableModel tableModel) {
-        super.setModel(tableModel); 
+    public void setModel(final TableModel tableModel) {
+        super.setModel(tableModel);
         if (tableModel instanceof DefaultTableModel) {
             return;
         }
         if (sorters == null) {
             sorters = new HashMap<TableModel, ATableRowSorter<TableModel>>();
         }
-        oldSorter = currentSorter;
         currentSorter = sorters.get(tableModel);
         if (currentSorter == null) {                                            
-            // remove old listeners
-            if (oldSorter != null) {
-                oldSorter.removeRowSorterListener(rowSorterListener);
-            }
-            if (currentTableModel != null) {
-                currentTableModel.removeTableModelListener(tableModelListener);
-            }
-            // add new ones
             currentSorter = new ATableRowSorter<TableModel>(tableModel);
-            currentSorter.addRowSorterListener(rowSorterListener = new RowSorterListener() {
+            currentSorter.addRowSorterListener(new RowSorterListener() {
                 @Override
                 public void sorterChanged(RowSorterEvent e) {
-                    createShortcuts();
+                    // only pocess SORTED
+                    if (e.getType().toString().equals("SORTED")) {
+                        createShortcuts();
+                    }
                 }
             });
             sorters.put(tableModel, currentSorter);
             // listen to changes for generating shortcuts
-            tableModel.addTableModelListener(tableModelListener = new TableModelListener() {
+            tableModel.addTableModelListener(new TableModelListener() {
                 @Override
                 public void tableChanged(TableModelEvent e) {
                     if (e.getLastRow() == Integer.MAX_VALUE) {
@@ -128,9 +119,6 @@ public class ATable extends JTable {
         if (filterText != null) {
             filterText.setSorter(currentSorter);
         }
-        
-        // remember current model
-        currentTableModel = tableModel;
     }
 
     public void setFilterWidget(ATableFilterWidget filter) {
