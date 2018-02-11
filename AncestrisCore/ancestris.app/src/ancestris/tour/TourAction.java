@@ -68,7 +68,7 @@ import org.openide.windows.WindowManager;
  */
 public class TourAction  implements ActionListener {
 
-    private Logger LOG;
+    private boolean transluscentIsSupported = true;
     
     private final int ARROW = 80;
     private final int SMALLGAP = 20;
@@ -83,16 +83,16 @@ public class TourAction  implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        LOG = Logger.getLogger("ancestris.guided_tour");
+        Logger LOG = Logger.getLogger("ancestris.guided_tour");
         
         // Determine if the GraphicsDevice supports translucency.
         GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice graphdev = graphenv.getDefaultScreenDevice();
 
-        //If translucent windows aren't supported, just write a message
+        // Check if translucent windows are supported
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
-            LOG.info("Guided Tour : translucency not supported. It may not work...");  
-            // return; //  Showing internet tour instead...
+            LOG.info("Guided Tour : translucency not supported. Will use opaque windows instead.");  
+            transluscentIsSupported = false;
         }
         
         // Memorise welcome component to come back to it each time
@@ -663,7 +663,9 @@ public class TourAction  implements ActionListener {
             if (demo != null && demo instanceof TopComponent) {
                 ((TopComponent)demo).requestActive();
             }
-            me.setOpacity(0.90f);
+            if (transluscentIsSupported) {
+                me.setOpacity(0.90f);
+            }
             me.setVisible(true);
             return exit;
         }
