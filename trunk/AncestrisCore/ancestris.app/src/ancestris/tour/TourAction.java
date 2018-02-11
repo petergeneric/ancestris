@@ -171,6 +171,9 @@ public class TourAction  implements ActionListener {
             stop = demoChrono();
         }
         if (!stop) {
+            stop = demoTable();
+        }
+        if (!stop) {
             stop = demoSearch();
         }
 
@@ -435,6 +438,21 @@ public class TourAction  implements ActionListener {
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 330);
         TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(60, 400), dim, SMALLGAP, GAP, welcome, false);
+        boolean next = popup.showDemo();
+        if (componentToBeClosed) {
+            demo.close();
+        }
+        return next;
+    }
+    
+    
+    private boolean demoTable() {
+        TopComponent demo = getTopComponent("TableTopComponent");
+        String text = NbBundle.getMessage(getClass(), "demo.table");
+        Color bgcolor = new Color(0x005dedaa);
+        Color fgcolor = Color.BLACK;
+        Dimension dim = new Dimension(600, 450);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(10, 10), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
