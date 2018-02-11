@@ -73,7 +73,6 @@ public final class GedcomPropertiesVisualPanel7 extends JPanel {
         jPanel1.setBorder(null);
         jPanel1.setPreferredSize(new java.awt.Dimension(520, 400));
 
-        jLabel1.setFont(new java.awt.Font("Cantarell", 0, 15)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GedcomPropertiesVisualPanel7.class, "GedcomPropertiesVisualPanel7.jLabel1.text")); // NOI18N
 
         jLabel2.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
@@ -157,7 +156,7 @@ public final class GedcomPropertiesVisualPanel7 extends JPanel {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel6)
                             .addComponent(jLabel5))))
-                .addContainerGap(237, Short.MAX_VALUE))
+                .addContainerGap(206, Short.MAX_VALUE))
         );
 
         jScrollPane1.setViewportView(jPanel1);

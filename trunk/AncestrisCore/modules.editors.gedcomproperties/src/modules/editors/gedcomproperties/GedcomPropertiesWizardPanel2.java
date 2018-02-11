@@ -83,6 +83,15 @@ public class GedcomPropertiesWizardPanel2 implements WizardDescriptor.Validating
         getComponent().setEMAI((String) wiz.getProperty(SUBM + ":" + EMAI));
         getComponent().setWWW((String) wiz.getProperty(SUBM + ":" + WWW));
         getComponent().setCOPR((String) wiz.getProperty(HEADER + ":" + COPR));
+        
+        if (mode == CREATION) {
+            String name = (String) wiz.getProperty(INDI + ":" + FIRSTNAME) + " " + (String) wiz.getProperty(INDI + ":" + LASTNAME);
+            getComponent().setNAME(name);
+            String copr = (String) wiz.getProperty(HEADER + ":" + COPR);
+            if (!copr.startsWith(name)) {
+                getComponent().setCOPR(name + copr);
+            }
+        }
     }
 
     @Override

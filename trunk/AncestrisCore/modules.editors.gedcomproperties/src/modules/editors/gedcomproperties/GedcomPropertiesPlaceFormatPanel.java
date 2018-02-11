@@ -482,7 +482,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
             if (p.isEmpty()) {
                 listModel.addElement(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "GedcomPropertiesPlaceFormatPanel.emptyField"));
             } else {
-                listModel.addElement(p);
+                listModel.addElement(p.trim());
             }
         }
         

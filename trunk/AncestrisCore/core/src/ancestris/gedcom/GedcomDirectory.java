@@ -148,12 +148,20 @@ public abstract class GedcomDirectory {
         File file = null;
         boolean fileOK = false;
         while (!fileOK) {            
-            file = chooseFile(title == null ? create_title() : title, create_action(), null, defaultFilename, true);
+            file = new FileChooserBuilder(GedcomDirectory.class)
+                    .setDirectoriesOnly(true)
+                    .setDefaultBadgeProvider()
+                    .setTitle(title)
+                    .setApproveText(create_action())
+                    .setFileHiding(true)
+                    .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
+                    .showSaveDialog(false);
+            
             if (file == null) {
                 return null;
             }
             if (!file.getName().endsWith(".ged")) {
-                file = new File(file.getAbsolutePath() + ".ged");
+                file = new File(file.getAbsolutePath() + File.separator + defaultFilename + ".ged");
             }
             if (file.exists()) {
                 if (DialogManager.YES_OPTION == DialogManager.createYesNo(title == null ? create_title() : title, file_exists(file.getName())).setMessageType(DialogManager.WARNING_MESSAGE).show()) {
