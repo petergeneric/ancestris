@@ -2,6 +2,7 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.file.FileManager.Line;
 import ancestris.modules.releve.model.*;
+import ancestris.modules.releve.model.Record.RecordType;
 import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -518,7 +519,7 @@ public class ReleveFileEgmt {
      *
      * @param fileName
      */
-    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, DataManager.RecordType recordType, File fileName, boolean append) {
+    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, RecordType recordType, File fileName, boolean append) {
         StringBuilder sb = new StringBuilder();
 
         try {
@@ -575,119 +576,119 @@ public class ReleveFileEgmt {
                     }
 
 
-                    line.appendCsvFn(record.getIndiLastName().getValue());
-                    line.appendCsvFn(record.getIndiFirstName().getValue());
-                    line.appendCsvFn(record.getIndiSex().toString());
-                    line.appendCsvFn(formatAgeToAge(record.getIndiAge()));
+                    line.appendCsvFn(record.getIndi().getLastName().getValue());
+                    line.appendCsvFn(record.getIndi().getFirstName().getValue());
+                    line.appendCsvFn(record.getIndi().getSex().toString());
+                    line.appendCsvFn(formatAgeToAge(record.getIndi().getAge()));
                     if ( record instanceof RecordBirth) {
-                        line.appendCsvFn(record.getIndiBirthPlace().getDisplayValue());
+                        line.appendCsvFn(record.getIndi().getBirthPlace().getDisplayValue());
                     } else {
-                        line.appendCsvFn(record.getIndiResidence().getDisplayValue());
+                        line.appendCsvFn(record.getIndi().getResidence() .getDisplayValue());
                     }
                     
                     if ( record instanceof RecordBirth) {
-                        line.appendCsvFn(record.getIndiComment().toString());
+                        line.appendCsvFn(record.getIndi().getComment() .toString());
                     } else {
                         String birthDate = "";
-                        if ( ! record.getIndiBirthDate().isEmpty()){
-                            birthDate = "né le " + record.getIndiBirthDate();
+                        if ( ! record.getIndi().getBirthDate().isEmpty()){
+                            birthDate = "né le " + record.getIndi().getBirthDate();
                         }
 
                         if ((record instanceof RecordMarriage) 
                          || (record instanceof RecordMisc  && record.getEventType().getName().toLowerCase().equals(marriageContractEventType))) {
                             // mariage ou contrat de mariage
                             line.appendCsvFn(
-                                record.getIndiComment().toString(),
+                                record.getIndi().getComment() .toString(),
                                 birthDate,
-                                record.getIndiBirthPlace().getDisplayValue(),
-                                record.getIndiOccupation().toString(),
+                                record.getIndi().getBirthPlace().getDisplayValue(),
+                                record.getIndi().getOccupation().toString(),
                                 appendLabelValue("Ex conjoint:",
-                                        record.getIndiMarriedFirstName().toString(),
-                                        record.getIndiMarriedLastName().toString(),
-                                        record.getIndiMarriedDead().toString(),
-                                        record.getIndiMarriedOccupation().toString(),
-                                        record.getIndiMarriedResidence().getDisplayValue(),
-                                        record.getIndiMarriedComment().toString()
+                                        record.getIndi().getMarriedFirstName().toString(),
+                                        record.getIndi().getMarriedLastName().toString(),
+                                        record.getIndi().getMarriedDead().toString(),
+                                        record.getIndi().getMarriedOccupation().toString(),
+                                        record.getIndi().getMarriedResidence().getDisplayValue(),
+                                        record.getIndi().getMarriedComment().toString()
                                         )
                             );
                         } else {
                             // testament ou autre evenement
                             line.appendCsvFn(
-                                record.getIndiComment().toString(),
+                                record.getIndi().getComment() .toString(),
                                 birthDate,
-                                record.getIndiBirthPlace().getDisplayValue(),
-                                record.getIndiOccupation().toString()
+                                record.getIndi().getBirthPlace().getDisplayValue(),
+                                record.getIndi().getOccupation().toString()
                             );
                         }
 
                     }
                     
-                    line.appendCsvFn(record.getIndiFatherFirstName().toString());
-                    line.appendCsvFn(record.getIndiFatherDead().toString());
-                    line.appendCsvFn(record.getIndiFatherComment().toString(),
-                            record.getIndiFatherOccupation().toString(),
-                            record.getIndiFatherResidence() != null ? record.getIndiFatherResidence().getDisplayValue() : "",
-                            formatAgeToComment(record.getIndiFatherAge()));
-                    line.appendCsvFn(record.getIndiMotherLastName().toString());
-                    line.appendCsvFn(record.getIndiMotherFirstName().toString());
-                    line.appendCsvFn(record.getIndiMotherDead().toString());
-                    line.appendCsvFn(record.getIndiMotherComment().toString(),
-                            record.getIndiMotherOccupation().toString(),
-                            record.getIndiMotherResidence() != null ? record.getIndiMotherResidence().getDisplayValue() : "",
-                            formatAgeToComment(record.getIndiMotherAge()));
+                    line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
+                    line.appendCsvFn(record.getIndi().getFatherDead().toString());
+                    line.appendCsvFn(record.getIndi().getFatherComment().toString(),
+                            record.getIndi().getFatherOccupation().toString(),
+                            record.getIndi().getFatherResidence() != null ? record.getIndi().getFatherResidence().getDisplayValue() : "",
+                            formatAgeToComment(record.getIndi().getFatherAge()));
+                    line.appendCsvFn(record.getIndi().getMotherLastName().toString());
+                    line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
+                    line.appendCsvFn(record.getIndi().getMotherDead().toString());
+                    line.appendCsvFn(record.getIndi().getMotherComment().toString(),
+                            record.getIndi().getMotherOccupation().toString(),
+                            record.getIndi().getMotherResidence() != null ? record.getIndi().getMotherResidence().getDisplayValue() : "",
+                            formatAgeToComment(record.getIndi().getMotherAge()));
 
                     String otherParticipant = "";
                     if ((record instanceof RecordMarriage) 
                          || (record instanceof RecordMisc  && record.getEventType().getName().toLowerCase().equals(marriageContractEventType))) {
                         // mariage ou contrat de mariage
-                        line.appendCsvFn(record.getWifeLastName().toString());  //WifeLastName
-                        line.appendCsvFn(record.getWifeFirstName().toString()); //WifeFirstName
+                        line.appendCsvFn(record.getWife().getLastName().toString());  //WifeLastName
+                        line.appendCsvFn(record.getWife().getFirstName().toString()); //WifeFirstName
                         line.appendCsvFn(""); //wifeDead
-                        line.appendCsvFn(formatAgeToAge(record.getWifeAge()));  // WifeAge
-                        line.appendCsvFn(record.getWifeResidence().getDisplayValue()); //WifeResidence
+                        line.appendCsvFn(formatAgeToAge(record.getWife().getAge()));  // WifeAge
+                        line.appendCsvFn(record.getWife().getResidence().getDisplayValue()); //WifeResidence
                         
                         line.appendCsvFn(                                       //WifeComment
-                            record.getWifeComment().toString(),
-                            appendLabelValue("né le", record.getWifeBirthDate().toString()),
-                            record.getWifeBirthPlace().getDisplayValue(),
-                            record.getWifeOccupation().toString(),
+                            record.getWife().getComment().toString(),
+                            appendLabelValue("né le", record.getWife().getBirthDate().toString()),
+                            record.getWife().getBirthPlace().getDisplayValue(),
+                            record.getWife().getOccupation().toString(),
                             appendLabelValue(
                                 "Ex conjoint:",
-                                record.getWifeMarriedFirstName().toString(),
-                                record.getWifeMarriedLastName().toString(),
-                                record.getWifeMarriedDead().toString(),
-                                record.getWifeMarriedOccupation().toString(),
-                                record.getWifeMarriedResidence().getDisplayValue(),
-                                record.getWifeMarriedComment().toString()
+                                record.getWife().getMarriedFirstName().toString(),
+                                record.getWife().getMarriedLastName().toString(),
+                                record.getWife().getMarriedDead().toString(),
+                                record.getWife().getMarriedOccupation().toString(),
+                                record.getWife().getMarriedResidence().getDisplayValue(),
+                                record.getWife().getMarriedComment().toString()
                                 )
                             );
 
-                        line.appendCsvFn(record.getWifeFatherFirstName().toString());
-                        line.appendCsvFn(record.getWifeFatherDead().toString());
-                        line.appendCsvFn(record.getWifeFatherComment().toString(), 
-                            record.getWifeFatherOccupation().toString(),
-                            record.getWifeFatherResidence().getDisplayValue(),
-                            formatAgeToComment(record.getWifeFatherAge()));
-                        line.appendCsvFn(record.getWifeMotherLastName().toString());
-                        line.appendCsvFn(record.getWifeMotherFirstName().toString());
-                        line.appendCsvFn(record.getWifeMotherDead().toString());
-                        line.appendCsvFn(record.getWifeMotherComment().toString(), 
-                            record.getWifeMotherOccupation().toString(),
-                            record.getWifeMotherResidence().getDisplayValue(),
-                            formatAgeToComment(record.getWifeMotherAge()));
+                        line.appendCsvFn(record.getWife().getFatherFirstName().toString());
+                        line.appendCsvFn(record.getWife().getFatherDead().toString());
+                        line.appendCsvFn(record.getWife().getFatherComment().toString(), 
+                            record.getWife().getFatherOccupation().toString(),
+                            record.getWife().getFatherResidence().getDisplayValue(),
+                            formatAgeToComment(record.getWife().getFatherAge()));
+                        line.appendCsvFn(record.getWife().getMotherLastName().toString());
+                        line.appendCsvFn(record.getWife().getMotherFirstName().toString());
+                        line.appendCsvFn(record.getWife().getMotherDead().toString());
+                        line.appendCsvFn(record.getWife().getMotherComment().toString(), 
+                            record.getWife().getMotherOccupation().toString(),
+                            record.getWife().getMotherResidence().getDisplayValue(),
+                            formatAgeToComment(record.getWife().getMotherAge()));
 
                         line.appendCsvFn(""); // heirComment
 
                     } else  if (record instanceof RecordMisc  && record.getEventType().getName().toLowerCase().equals(willEventType)) {
                         // Testament
-                        line.appendCsvFn(record.getIndiMarriedLastName().toString()); //WifeLastName
-                        line.appendCsvFn(record.getIndiMarriedFirstName().toString()); //WifeFirstName
-                        line.appendCsvFn(record.getIndiMarriedDead().toString());   //wifeDead
+                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString()); //WifeLastName
+                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString()); //WifeFirstName
+                        line.appendCsvFn(record.getIndi().getMarriedDead().toString());   //wifeDead
                         line.appendCsvFn(""); // WifeAge
-                        line.appendCsvFn(record.getIndiMarriedResidence().getDisplayValue()); //WifeResidence
+                        line.appendCsvFn(record.getIndi().getMarriedResidence().getDisplayValue()); //WifeResidence
                         line.appendCsvFn( //WifeComment
-                            record.getIndiMarriedOccupation().toString(),
-                            record.getIndiMarriedComment().toString()
+                            record.getIndi().getMarriedOccupation().toString(),
+                            record.getIndi().getMarriedComment().toString()
                             );
 
                         line.appendCsvFn(""); //WifeFatherFirstName
@@ -701,56 +702,56 @@ public class ReleveFileEgmt {
                         // héritier
                         String heirName = appendLabelValue(
                                 "",  // label
-                                record.getWifeFirstName().toString(),
-                                record.getWifeLastName().toString()
+                                record.getWife().getFirstName().toString(),
+                                record.getWife().getLastName().toString()
                                 );
 
-                        String heirAge = formatAgeToComment(record.getWifeAge());
+                        String heirAge = formatAgeToComment(record.getWife().getAge());
                         String heirBirth = appendLabelValue(
                                 "né le ",
-                                record.getWifeBirthDate().toString(),
-                                record.getWifeBirthPlace().getDisplayValue()
+                                record.getWife().getBirthDate().toString(),
+                                record.getWife().getBirthPlace().getDisplayValue()
                                 );
 
                         String heirFather = appendLabelValue(
                                 "Père de l'héritier:" ,
-                                record.getWifeFatherFirstName().toString(),
-                                record.getWifeFatherLastName().toString(),
-                                formatAgeToComment(record.getWifeFatherAge()),
-                                record.getWifeFatherDead().toString(),
-                                record.getWifeFatherOccupation().toString(),
-                                record.getWifeFatherResidence().getDisplayValue(),
-                                record.getWifeFatherComment().toString()
+                                record.getWife().getFatherFirstName().toString(),
+                                record.getWife().getFatherLastName().toString(),
+                                formatAgeToComment(record.getWife().getFatherAge()),
+                                record.getWife().getFatherDead().toString(),
+                                record.getWife().getFatherOccupation().toString(),
+                                record.getWife().getFatherResidence().getDisplayValue(),
+                                record.getWife().getFatherComment().toString()
                                 );
 
                         String heirMother = appendLabelValue(
                                 "Mère de l'héritier:" ,
-                                record.getWifeMotherFirstName().toString(),
-                                record.getWifeMotherLastName().toString(),
-                                formatAgeToComment(record.getWifeMotherAge()),
-                                record.getWifeMotherDead().toString(),
-                                record.getWifeMotherOccupation().toString(),
-                                record.getWifeMotherResidence().getDisplayValue(),
-                                record.getWifeMotherComment().toString()
+                                record.getWife().getMotherFirstName().toString(),
+                                record.getWife().getMotherLastName().toString(),
+                                formatAgeToComment(record.getWife().getMotherAge()),
+                                record.getWife().getMotherDead().toString(),
+                                record.getWife().getMotherOccupation().toString(),
+                                record.getWife().getMotherResidence().getDisplayValue(),
+                                record.getWife().getMotherComment().toString()
                                 );
 
                         String heirMarried = appendLabelValue(
                                 "Conjoint de l'héritier:",
-                                record.getWifeMarriedFirstName().toString(),
-                                record.getWifeMarriedLastName().toString(),
-                                record.getWifeMarriedDead().toString(),
-                                record.getWifeMarriedOccupation().toString(),
-                                record.getWifeMarriedResidence().getDisplayValue(),
-                                record.getWifeMotherComment().toString()
+                                record.getWife().getMarriedFirstName().toString(),
+                                record.getWife().getMarriedLastName().toString(),
+                                record.getWife().getMarriedDead().toString(),
+                                record.getWife().getMarriedOccupation().toString(),
+                                record.getWife().getMarriedResidence().getDisplayValue(),
+                                record.getWife().getMotherComment().toString()
                                 );
 
                         line.appendCsvFn(  // heirComment
                             heirName,
                             heirAge,
                             heirBirth,
-                            record.getWifeComment().toString(),
-                            record.getWifeOccupation().toString(),
-                            record.getWifeResidence().getDisplayValue(),
+                            record.getWife().getComment().toString(),
+                            record.getWife().getOccupation().toString(),
+                            record.getWife().getResidence().getDisplayValue(),
                             heirFather,
                             heirMother,
                             heirMarried
@@ -758,14 +759,14 @@ public class ReleveFileEgmt {
 
                     } else  if (record instanceof RecordMisc ) {
                         // autre evenement
-                        line.appendCsvFn(record.getIndiMarriedLastName().toString()); //WifeLastName
-                        line.appendCsvFn(record.getIndiMarriedFirstName().toString()); //WifeFirstName
-                        line.appendCsvFn(record.getIndiMarriedDead().toString());   //wifeDead
+                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString()); //WifeLastName
+                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString()); //WifeFirstName
+                        line.appendCsvFn(record.getIndi().getMarriedDead().toString());   //wifeDead
                         line.appendCsvFn(""); // WifeAge
-                        line.appendCsvFn(record.getIndiMarriedResidence().getDisplayValue()); //WifeResidence
+                        line.appendCsvFn(record.getIndi().getMarriedResidence().getDisplayValue()); //WifeResidence
                         line.appendCsvFn( //WifeComment
-                            record.getIndiMarriedOccupation().toString(),
-                            record.getIndiMarriedComment().toString()
+                            record.getIndi().getMarriedOccupation().toString(),
+                            record.getIndi().getMarriedComment().toString()
                             );
 
                         line.appendCsvFn(""); //WifeFatherFirstName
@@ -779,56 +780,56 @@ public class ReleveFileEgmt {
                         // Participant 2
                         String participantName = appendLabelValue(
                                 "Autre intervenant:",  // label
-                                record.getWifeFirstName().toString(),
-                                record.getWifeLastName().toString()
+                                record.getWife().getFirstName().toString(),
+                                record.getWife().getLastName().toString()
                                 );
 
-                        String participantAge = formatAgeToComment(record.getWifeAge());
+                        String participantAge = formatAgeToComment(record.getWife().getAge());
                         String participantBirth = appendLabelValue(
                                 "né le",
-                                record.getWifeBirthDate().toString(),
-                                record.getWifeBirthPlace().getDisplayValue()
+                                record.getWife().getBirthDate().toString(),
+                                record.getWife().getBirthPlace().getDisplayValue()
                                 );
 
                         String participantFather = appendLabelValue(
                                 "Père de l'intervenant:" ,
-                                record.getWifeFatherFirstName().toString(),
-                                record.getWifeFatherLastName().toString(),
-                                formatAgeToComment(record.getWifeFatherAge()),
-                                record.getWifeFatherDead().toString(),
-                                record.getWifeFatherOccupation().toString(),
-                                record.getWifeFatherResidence().getDisplayValue(),
-                                record.getWifeFatherComment().toString()
+                                record.getWife().getFatherFirstName().toString(),
+                                record.getWife().getFatherLastName().toString(),
+                                formatAgeToComment(record.getWife().getFatherAge()),
+                                record.getWife().getFatherDead().toString(),
+                                record.getWife().getFatherOccupation().toString(),
+                                record.getWife().getFatherResidence().getDisplayValue(),
+                                record.getWife().getFatherComment().toString()
                                 );
 
                         String participantMother = appendLabelValue(
                                 "Mère de l'intervenant:" ,
-                                record.getWifeMotherFirstName().toString(),
-                                record.getWifeMotherLastName().toString(),
-                                formatAgeToComment(record.getWifeMotherAge()),
-                                record.getWifeMotherDead().toString(),
-                                record.getWifeMotherOccupation().toString(),
-                                record.getWifeMotherResidence().getDisplayValue(),
-                                record.getWifeMotherComment().toString()
+                                record.getWife().getMotherFirstName().toString(),
+                                record.getWife().getMotherLastName().toString(),
+                                formatAgeToComment(record.getWife().getMotherAge()),
+                                record.getWife().getMotherDead().toString(),
+                                record.getWife().getMotherOccupation().toString(),
+                                record.getWife().getMotherResidence().getDisplayValue(),
+                                record.getWife().getMotherComment().toString()
                                 );
 
                         String participantMarried = appendLabelValue(
                                 "Conjoint de l'intervenant:",
-                                record.getWifeMarriedFirstName().toString(),
-                                record.getWifeMarriedLastName().toString(),
-                                record.getWifeMarriedDead().toString(),
-                                record.getWifeMarriedOccupation().toString(),
-                                record.getWifeMarriedResidence().getDisplayValue(),
-                                record.getWifeMotherComment().toString()
+                                record.getWife().getMarriedFirstName().toString(),
+                                record.getWife().getMarriedLastName().toString(),
+                                record.getWife().getMarriedDead().toString(),
+                                record.getWife().getMarriedOccupation().toString(),
+                                record.getWife().getMarriedResidence().getDisplayValue(),
+                                record.getWife().getMotherComment().toString()
                                 );
 
                         otherParticipant = appendValue(
                             participantName,
                             participantAge,
                             participantBirth,
-                            record.getWifeComment().toString(),
-                            record.getWifeOccupation().toString(),
-                            record.getWifeResidence().getDisplayValue(),
+                            record.getWife().getComment().toString(),
+                            record.getWife().getOccupation().toString(),
+                            record.getWife().getResidence().getDisplayValue(),
                             participantFather,
                             participantMother,
                             participantMarried
@@ -837,12 +838,12 @@ public class ReleveFileEgmt {
                         line.appendCsvFn(""); // heirComment
 
                     } else  if (record instanceof RecordDeath ) {
-                        line.appendCsvFn(record.getIndiMarriedLastName().toString()); //WifeLastName
-                        line.appendCsvFn(record.getIndiMarriedFirstName().toString()); //WifeFirstName
-                        line.appendCsvFn(record.getIndiMarriedDead().toString()); //wifeDead
+                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString()); //WifeLastName
+                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString()); //WifeFirstName
+                        line.appendCsvFn(record.getIndi().getMarriedDead().toString()); //wifeDead
                         line.appendCsvFn(""); // Wifeage
                         line.appendCsvFn(""); // WifePlace
-                        line.appendCsvFn(record.getIndiMarriedComment().toString()); // WifeComment
+                        line.appendCsvFn(record.getIndi().getMarriedComment().toString()); // WifeComment
 
                         line.appendCsvFn(""); //WifeFatherFirstName
                         line.appendCsvFn(""); //WifeFatherDeath

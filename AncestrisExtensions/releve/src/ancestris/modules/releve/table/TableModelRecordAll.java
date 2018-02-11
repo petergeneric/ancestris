@@ -57,7 +57,7 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
         Record record = getRecord(row);
         switch (col) {
             case 0:
-                value = new Integer(row + 1);
+                value = row + 1;
                 break;
             case 1:
                 value = record.getEventDateProperty();
@@ -80,11 +80,11 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
                 }
                 break;
             case 3:
-                value = record.getIndiLastName().toString() + " " + record.getIndiFirstName().toString();
+                value = record.getIndi().getLastName().toString() + " " + record.getIndi().getFirstName().toString();
                 break;
             case 4:
-                if ( record.getWifeLastName() != null) {
-                    value = record.getWifeLastName().toString() + " " + record.getWifeFirstName().toString();
+                if ( record.getWife().getLastName() != null) {
+                    value = record.getWife().getLastName().toString() + " " + record.getWife().getFirstName().toString();
                 } else {
                     value = "";
                 }                

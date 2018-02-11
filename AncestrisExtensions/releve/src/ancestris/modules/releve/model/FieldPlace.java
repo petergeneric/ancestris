@@ -9,11 +9,6 @@ public class FieldPlace extends Field {
     private String place = "";
 
     @Override
-    public FieldPlace clone() throws CloneNotSupportedException {
-        return (FieldPlace) super.clone();
-    }
-
-    @Override
     public String getValue() {
         if (isEmpty()) {
             return "";

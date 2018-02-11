@@ -54,15 +54,15 @@ public class CompletionProvider {
     protected void addRecord(Record record) {
 
         // FirstName
-        firstNames.add(record.getIndiFirstName(), record.getIndiSex().getValue());
-        firstNames.add(record.getIndiMarriedFirstName(), record.getIndiSex().getOppositeString());
-        firstNames.add(record.getIndiFatherFirstName(), FieldSex.MALE_STRING);
-        firstNames.add(record.getIndiMotherFirstName(), FieldSex.FEMALE_STRING);
+        firstNames.add(record.getIndi().getFirstName(), record.getIndi().getSex().getValue());
+        firstNames.add(record.getIndi().getMarriedFirstName(), record.getIndi().getSex().getOppositeString());
+        firstNames.add(record.getIndi().getFatherFirstName(), FieldSex.MALE_STRING);
+        firstNames.add(record.getIndi().getMotherFirstName(), FieldSex.FEMALE_STRING);
 
-        firstNames.add(record.getWifeFirstName(), record.getWifeSex() != null ? record.getWifeSex().getValue() : null );
-        firstNames.add(record.getWifeMarriedFirstName(), record.getWifeSex() != null ? record.getWifeSex().getOppositeString() : null);
-        firstNames.add(record.getWifeFatherFirstName(), FieldSex.MALE_STRING);
-        firstNames.add(record.getWifeMotherFirstName(), FieldSex.FEMALE_STRING);
+        firstNames.add(record.getWife().getFirstName(), record.getWife().getSex() != null ? record.getWife().getSex().getValue() : null );
+        firstNames.add(record.getWife().getMarriedFirstName(), record.getWife().getSex() != null ? record.getWife().getSex().getOppositeString() : null);
+        firstNames.add(record.getWife().getFatherFirstName(), FieldSex.MALE_STRING);
+        firstNames.add(record.getWife().getMotherFirstName(), FieldSex.FEMALE_STRING);
 
 //        firstNames.add(record.getWitness1FirstName(), null);
 //        firstNames.add(record.getWitness2FirstName(), null);
@@ -73,15 +73,15 @@ public class CompletionProvider {
         }
 
         // LastName
-        lastNames.add(record.getIndiLastName());
-        lastNames.add(record.getIndiMarriedLastName());
-        lastNames.add(record.getIndiFatherLastName());
-        lastNames.add(record.getIndiMotherLastName());
+        lastNames.add(record.getIndi().getLastName());
+        lastNames.add(record.getIndi().getMarriedLastName());
+        lastNames.add(record.getIndi().getFatherLastName());
+        lastNames.add(record.getIndi().getMotherLastName());
 
-        lastNames.add(record.getWifeLastName());
-        lastNames.add(record.getWifeMarriedLastName());
-        lastNames.add(record.getWifeFatherLastName());
-        lastNames.add(record.getWifeMotherLastName());
+        lastNames.add(record.getWife().getLastName());
+        lastNames.add(record.getWife().getMarriedLastName());
+        lastNames.add(record.getWife().getFatherLastName());
+        lastNames.add(record.getWife().getMotherLastName());
 
 //        lastNames.add(record.getWitness1LastName());
 //        lastNames.add(record.getWitness2LastName());
@@ -92,15 +92,15 @@ public class CompletionProvider {
         }
         
         // Indi Occupation
-        occupations.add(record.getIndiOccupation());
-        occupations.add(record.getIndiMarriedOccupation());
-        occupations.add(record.getIndiFatherOccupation());
-        occupations.add(record.getIndiMotherOccupation());
+        occupations.add(record.getIndi().getOccupation());
+        occupations.add(record.getIndi().getMarriedOccupation());
+        occupations.add(record.getIndi().getFatherOccupation());
+        occupations.add(record.getIndi().getMotherOccupation());
         // Wife Occupation
-        occupations.add(record.getWifeOccupation());
-        occupations.add(record.getWifeMarriedOccupation());
-        occupations.add(record.getWifeFatherOccupation());
-        occupations.add(record.getWifeMotherOccupation());
+        occupations.add(record.getWife().getOccupation());
+        occupations.add(record.getWife().getMarriedOccupation());
+        occupations.add(record.getWife().getFatherOccupation());
+        occupations.add(record.getWife().getMotherOccupation());
         // witness Occupation
 //        occupations.add(record.getWitness1Occupation());
 //        occupations.add(record.getWitness2Occupation());
@@ -112,17 +112,17 @@ public class CompletionProvider {
 
         notaries.add(record.getNotary());
 
-        places.add(record.getIndiBirthPlace());
-        places.add(record.getIndiResidence());
-        places.add(record.getIndiMarriedResidence());
-        places.add(record.getIndiFatherResidence());
-        places.add(record.getIndiMotherResidence());
+        places.add(record.getIndi().getBirthPlace());
+        places.add(record.getIndi().getResidence() );
+        places.add(record.getIndi().getMarriedResidence());
+        places.add(record.getIndi().getFatherResidence());
+        places.add(record.getIndi().getMotherResidence());
 
-        places.add(record.getWifeBirthPlace());
-        places.add(record.getWifeResidence());
-        places.add(record.getWifeMarriedResidence());
-        places.add(record.getWifeFatherResidence());
-        places.add(record.getWifeMotherResidence());
+        places.add(record.getWife().getBirthPlace());
+        places.add(record.getWife().getResidence());
+        places.add(record.getWife().getMarriedResidence());
+        places.add(record.getWife().getFatherResidence());
+        places.add(record.getWife().getMotherResidence());
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
@@ -137,45 +137,45 @@ public class CompletionProvider {
     protected void removeRecord(final Record record) {
 
         // FirstName
-        firstNames.remove(record.getIndiFirstName(), record.getIndiSex().getValue());
-        firstNames.remove(record.getIndiMarriedFirstName(), record.getIndiSex().getOppositeString());
-        firstNames.remove(record.getIndiFatherFirstName(), FieldSex.MALE_STRING);
-        firstNames.remove(record.getIndiMotherFirstName(), FieldSex.FEMALE_STRING);
+        firstNames.remove(record.getIndi().getFirstName(), record.getIndi().getSex().getValue());
+        firstNames.remove(record.getIndi().getMarriedFirstName(), record.getIndi().getSex().getOppositeString());
+        firstNames.remove(record.getIndi().getFatherFirstName(), FieldSex.MALE_STRING);
+        firstNames.remove(record.getIndi().getMotherFirstName(), FieldSex.FEMALE_STRING);
 
-        firstNames.remove(record.getWifeFirstName(), record.getWifeSex() != null ? record.getWifeSex().getValue() : null);
-        firstNames.remove(record.getWifeMarriedFirstName(), record.getWifeSex() != null ? record.getWifeSex().getOppositeString() : null);
-        firstNames.remove(record.getWifeFatherFirstName(), FieldSex.MALE_STRING);
-        firstNames.remove(record.getWifeMotherFirstName(), FieldSex.FEMALE_STRING);
+        firstNames.remove(record.getWife().getFirstName(), record.getWife().getSex() != null ? record.getWife().getSex().getValue() : null);
+        firstNames.remove(record.getWife().getMarriedFirstName(), record.getWife().getSex() != null ? record.getWife().getSex().getOppositeString() : null);
+        firstNames.remove(record.getWife().getFatherFirstName(), FieldSex.MALE_STRING);
+        firstNames.remove(record.getWife().getMotherFirstName(), FieldSex.FEMALE_STRING);
 
         for(Witness witness : record.getWitnesses()) {
            firstNames.remove( witness.getFirstName(), null);
         }
 
         // LastName
-        lastNames.remove(record.getIndiLastName());
-        lastNames.remove(record.getIndiMarriedLastName());
-        lastNames.remove(record.getIndiFatherLastName());
-        lastNames.remove(record.getIndiMotherLastName());
+        lastNames.remove(record.getIndi().getLastName());
+        lastNames.remove(record.getIndi().getMarriedLastName());
+        lastNames.remove(record.getIndi().getFatherLastName());
+        lastNames.remove(record.getIndi().getMotherLastName());
 
-        lastNames.remove(record.getWifeLastName());
-        lastNames.remove(record.getWifeMarriedLastName());
-        lastNames.remove(record.getWifeFatherLastName());
-        lastNames.remove(record.getWifeMotherLastName());
+        lastNames.remove(record.getWife().getLastName());
+        lastNames.remove(record.getWife().getMarriedLastName());
+        lastNames.remove(record.getWife().getFatherLastName());
+        lastNames.remove(record.getWife().getMotherLastName());
 
         for(Witness witness : record.getWitnesses()) {
            lastNames.remove( witness.getLastName());
         }
         
         // Indi Occupation
-        occupations.remove(record.getIndiOccupation());
-        occupations.remove(record.getIndiMarriedOccupation());
-        occupations.remove(record.getIndiFatherOccupation());
-        occupations.remove(record.getIndiMotherOccupation());
+        occupations.remove(record.getIndi().getOccupation());
+        occupations.remove(record.getIndi().getMarriedOccupation());
+        occupations.remove(record.getIndi().getFatherOccupation());
+        occupations.remove(record.getIndi().getMotherOccupation());
         // Wife Occupation
-        occupations.remove(record.getWifeOccupation());
-        occupations.remove(record.getWifeMarriedOccupation());
-        occupations.remove(record.getWifeFatherOccupation());
-        occupations.remove(record.getWifeMotherOccupation());
+        occupations.remove(record.getWife().getOccupation());
+        occupations.remove(record.getWife().getMarriedOccupation());
+        occupations.remove(record.getWife().getFatherOccupation());
+        occupations.remove(record.getWife().getMotherOccupation());
         // witness Occupation
         for(Witness witness : record.getWitnesses()) {
            occupations.remove( witness.getOccupation());
@@ -185,17 +185,17 @@ public class CompletionProvider {
 
         // places
         //Indi places
-        places.remove(record.getIndiBirthPlace());
-        places.remove(record.getIndiResidence());
-        places.remove(record.getIndiMarriedResidence());
-        places.remove(record.getIndiFatherResidence());
-        places.remove(record.getIndiMotherResidence());
+        places.remove(record.getIndi().getBirthPlace());
+        places.remove(record.getIndi().getResidence() );
+        places.remove(record.getIndi().getMarriedResidence());
+        places.remove(record.getIndi().getFatherResidence());
+        places.remove(record.getIndi().getMotherResidence());
         // wife places
-        places.remove(record.getWifeBirthPlace());
-        places.remove(record.getWifeResidence());
-        places.remove(record.getWifeMarriedResidence());
-        places.remove(record.getWifeFatherResidence());
-        places.remove(record.getWifeMotherResidence());
+        places.remove(record.getWife().getBirthPlace());
+        places.remove(record.getWife().getResidence());
+        places.remove(record.getWife().getMarriedResidence());
+        places.remove(record.getWife().getFatherResidence());
+        places.remove(record.getWife().getMotherResidence());
 
         // EventType
         if ( record.getEventType()!= null && record.getEventType().isEmpty()== false) {
@@ -578,7 +578,6 @@ public class CompletionProvider {
                places.loadExclude();
                break;
             default:
-               return;
         }
     }
 
@@ -1001,9 +1000,9 @@ public class CompletionProvider {
     private class CompletionSet {
 
         // liste TreeMap triée sur la clé
-        private Map<String, Integer> key2references = new TreeMap<String, Integer>();
+        private final Map<String, Integer> key2references = new TreeMap<String, Integer>();
         // liste des listeners a notifier quand on change une valeur dans key2references
-        private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
+        private final List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
         private TreeSet<String> excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
         private TreeSet<String> included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
 

@@ -5,11 +5,11 @@
  */
 package ancestris.modules.releve;
 
-import ancestris.modules.releve.dnd.RecordTransferHandle;
 import ancestris.modules.releve.editor.ReleveEditor;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordModelListener;
 import ancestris.modules.releve.table.ReleveTableListener;
 import ancestris.modules.releve.table.TableModelRecordAbstract;
@@ -49,7 +49,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
     private MenuCommandProvider menuCommandProvider;
     private DataManager dataManager = null;
     private PanelType panelType = null;
-    private DataManager.RecordType recordType = null;
+    private RecordType recordType = null;
     private int currentRecordIndex = -1;
 
     private static final String dialogTitle = NbBundle.getMessage(RelevePanel.class, "DialogTitle");
@@ -286,22 +286,22 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         switch (panelType) {
             case birth:
                 jButtonNew.setToolTipText(toolTipText + " (ALT-N)");
-                recordType = DataManager.RecordType.birth;
+                recordType = RecordType.BIRTH;
                 popup.remove(menuItemReorder);
                 break;
             case marriage:
                 jButtonNew.setToolTipText(toolTipText + " (ALT-M)");
-                recordType = DataManager.RecordType.marriage;
+                recordType = RecordType.MARRIAGE;
                 popup.remove(menuItemReorder);
                 break;
             case death:
                 jButtonNew.setToolTipText(toolTipText + " (ALT-D)");
-                recordType = DataManager.RecordType.death;
+                recordType = RecordType.DEATH;
                 popup.remove(menuItemReorder);
                 break;
             case misc:
                 jButtonNew.setToolTipText(toolTipText + " (ALT-V)");
-                recordType = DataManager.RecordType.misc;
+                recordType = RecordType.MISC;
                 popup.remove(menuItemReorder);
                 break;
             default:
@@ -663,16 +663,16 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
                         options[4]);
                 switch (result) {
                     case 0:
-                        record = dataManager.createRecord(DataManager.RecordType.birth);
+                        record = dataManager.createRecord(RecordType.BIRTH);
                         break;
                     case 1:
-                        record = dataManager.createRecord(DataManager.RecordType.marriage);
+                        record = dataManager.createRecord(RecordType.MARRIAGE);
                         break;
                     case 2:
-                        record = dataManager.createRecord(DataManager.RecordType.death);
+                        record = dataManager.createRecord(RecordType.DEATH);
                         break;
                     case 3:
-                        record = dataManager.createRecord(DataManager.RecordType.misc);
+                        record = dataManager.createRecord(RecordType.MISC);
                         break;
                     default:
                         // j'abandonne la creation du releve
@@ -720,16 +720,16 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
                         options[4]);
                 switch (result) {
                     case 0:
-                        dataManager.insertRecord(DataManager.RecordType.birth, currentRecordIndex);
+                        dataManager.insertRecord(RecordType.BIRTH, currentRecordIndex);
                         break;
                     case 1:
-                        dataManager.insertRecord(DataManager.RecordType.marriage, currentRecordIndex);
+                        dataManager.insertRecord(RecordType.MARRIAGE, currentRecordIndex);
                         break;
                     case 2:
-                        dataManager.insertRecord(DataManager.RecordType.death, currentRecordIndex);
+                        dataManager.insertRecord(RecordType.DEATH, currentRecordIndex);
                         break;
                     case 3:
-                        dataManager.insertRecord(DataManager.RecordType.misc, currentRecordIndex);
+                        dataManager.insertRecord(RecordType.MISC, currentRecordIndex);
                         break;
                     default:
                         // j'abandonne la creation du releve
@@ -779,9 +779,9 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
             record.setEventCalendar(previousRecord.getEventDateCalendar());
         }
 
-        if (DataManager.getCopySecondDateEnabled() && record.getType() == DataManager.RecordType.misc) {
+        if (DataManager.getCopySecondDateEnabled() && record.getType() == RecordType.MISC) {
             // le champ secondDate est nul si le releve precedent n'est pas du type misc
-            if (previousRecord.getType() == DataManager.RecordType.misc) {
+            if (previousRecord.getType() == RecordType.MISC) {
                 record.setSecondDate(previousRecord.getEventSecondDateString());
                 record.setEventCalendar(previousRecord.getEventSecondDateCalendar());
             }
@@ -791,9 +791,9 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
             record.setFreeComment(previousRecord.getFreeComment().getValue());
         }
 
-        if (DataManager.getCopyNotaryEnabled() && record.getType() == DataManager.RecordType.misc) {
+        if (DataManager.getCopyNotaryEnabled() && record.getType() == RecordType.MISC) {
             // le champ notary est nul si le releve  precedent n'est pas du type misc
-            if (previousRecord.getType() == DataManager.RecordType.misc) {
+            if (previousRecord.getType() == RecordType.MISC) {
                 record.setNotary(previousRecord.getNotary().getValue());
             }
         }

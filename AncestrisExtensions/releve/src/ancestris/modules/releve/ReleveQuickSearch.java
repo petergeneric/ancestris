@@ -87,7 +87,7 @@ public class ReleveQuickSearch implements SearchProvider {
 
             @Override
             public void run() {
-                //System.out.println("Found record "+ record.getIndiFirstName().toString());
+                //System.out.println("Found record "+ record.getIndi().getFirstName().toString());
                 tc.requestVisible();
                 tc.showToFront();
                 tc.selectField(record, fieldType);

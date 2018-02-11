@@ -1,6 +1,6 @@
 package ancestris.modules.releve.table;
 
-import ancestris.modules.releve.dnd.ViewWrapperManager;
+import ancestris.modules.releve.merge.ViewWrapperManager;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.GedcomLink;
@@ -288,9 +288,7 @@ public class ReleveTable extends JTable {
             columnLayout += "," + columns.getColumn(c).getWidth();
         }
 
-        NbPreferences.forModule(ReleveTable.class).put(
-                ((TableModelRecordAbstract) getModel()).getModelName() + "ColumnLayout",
-                columnLayout.toString());
+        NbPreferences.forModule(ReleveTable.class).put(((TableModelRecordAbstract) getModel()).getModelName() + "ColumnLayout", columnLayout);
     }
 
     /**
@@ -376,7 +374,7 @@ public class ReleveTable extends JTable {
     // Multi columns sorting
     /////////////////////////////////////////////////////////////////////////
 
-    private List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+    private final List<RowSorter.SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
     
     public void setSortingStatus(int column, SortOrder sortOrder) {
 
@@ -449,13 +447,19 @@ public class ReleveTable extends JTable {
                 sortOrder = sortKey.getSortOrder();
 
                 if (e.isShiftDown()) {
-                    // for shift we cycle forward {NOT_SORTED, ASCENDING, DESCENDING}
-                    if (sortOrder == SortOrder.UNSORTED) {
-                        sortOrder = SortOrder.ASCENDING;
-                    } else if (sortOrder == SortOrder.ASCENDING) {
-                        sortOrder = SortOrder.DESCENDING;
-                    } else {
+                    if (null == sortOrder) {
                         sortOrder = SortOrder.UNSORTED;
+                    } else // for shift we cycle forward {NOT_SORTED, ASCENDING, DESCENDING}
+                    switch (sortOrder) {
+                        case UNSORTED:
+                            sortOrder = SortOrder.ASCENDING;
+                            break;
+                        case ASCENDING:
+                            sortOrder = SortOrder.DESCENDING;
+                            break;
+                        default:
+                            sortOrder = SortOrder.UNSORTED;
+                            break;
                     }
                 } else {
                     // inverse le sortOrder
@@ -470,7 +474,7 @@ public class ReleveTable extends JTable {
     }
     
     private class SortableHeaderRenderer implements TableCellRenderer {
-        private TableCellRenderer tableCellRenderer;
+        private final TableCellRenderer tableCellRenderer;
 
         public SortableHeaderRenderer(TableCellRenderer tableCellRenderer) {
             this.tableCellRenderer = tableCellRenderer;
@@ -509,9 +513,9 @@ public class ReleveTable extends JTable {
     }
     
     private static class Arrow implements Icon {
-        private boolean descending;
-        private int size;
-        private int priority;
+        private final boolean descending;
+        private final int size;
+        private final int priority;
 
         public Arrow(boolean descending, int size, int priority) {
             this.descending = descending;

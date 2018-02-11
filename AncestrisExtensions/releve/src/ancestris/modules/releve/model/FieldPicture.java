@@ -6,11 +6,6 @@ package ancestris.modules.releve.model;
  */
 public class FieldPicture extends FieldSimpleValue {
 
-    @Override
-    public FieldPicture clone() throws CloneNotSupportedException {
-        return (FieldPicture) super.clone();
-    }
-
     /**
      * Si la valeur se termine par un nombre, la comparaison commence par faire 
      * une comparaison alphabetique de la chaine de caracteres avant le nombre final
@@ -29,14 +24,14 @@ public class FieldPicture extends FieldSimpleValue {
     @Override
     public int compareTo(Field that) {
         String value1= this.toString();
-        int i1=0;
+        int i1;
         // je recherche le début du nombre final dans la premiere valeur
         for (i1 = value1.length() -1 ; i1 >= 0 &&  value1.charAt(i1) >= '0' && value1.charAt(i1) <= '9' ; i1--) {
         }
         i1++;
 
         String value2= that.toString();
-        int i2=0;
+        int i2;
         // je recherche le début du nombre final dans la deuxième valeur
         for (i2 = value2.length() -1 ; i2 >= 0 &&  value2.charAt(i2) >= '0' && value2.charAt(i2) <= '9' ; i2--) {
         }
@@ -48,12 +43,12 @@ public class FieldPicture extends FieldSimpleValue {
             // j'extrait la valeur numérique du nombre final de la premiere valeur
             int num1 = 0;
             if ( i1 < value1.length() ) {
-                num1 = new Integer(value1.substring(i1,value1.length())).intValue() +1;
+                num1 = new Integer(value1.substring(i1,value1.length())) +1;
             }
             // j'extrait la valeur numérique du nombre final de la deuxième valeur
             int num2 = 0;
             if ( i2 < value2.length() ) {
-                num2 = new Integer(value2.substring(i2,value2.length())).intValue() +1;
+                num2 = new Integer(value2.substring(i2,value2.length())) +1;
             }
             // je compare les valeurs numériques
             result = num1 - num2;

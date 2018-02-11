@@ -1,7 +1,5 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.model.DataManager.RecordType;
-
 /**
  *
  * @author Michel
@@ -61,7 +59,7 @@ public class RecordDeath extends Record {
 
     @Override
     public RecordType getType() {
-        return RecordType.death;
+        return RecordType.DEATH;
     }
 
     @Override

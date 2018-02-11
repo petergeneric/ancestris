@@ -2,6 +2,7 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.fo.Document;
 import genj.fo.Format;
@@ -32,7 +33,7 @@ public class ReleveFilePdfTest extends TestCase {
         RecordMisc misc = TestUtility.getRecordMisc();
         dataManager.addRecord(misc);
         //dataManager.addRecord(misc);
-        StringBuilder sb = ReleveFilePdf.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
+        StringBuilder sb = ReleveFilePdf.saveFile(dataManager, dataManager.getDataModel(), RecordType.MISC, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         file.delete();

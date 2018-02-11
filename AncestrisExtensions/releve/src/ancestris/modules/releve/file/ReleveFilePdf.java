@@ -8,12 +8,11 @@ import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.file.FileManager.Line;
-import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.FieldAge;
+import ancestris.modules.releve.model.Record.RecordType;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.PDFFormat;
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -98,7 +97,7 @@ public class ReleveFilePdf {
      *                      false : remplacer les données dans le fichier.
      * @return StringBuilder est vide s'il n'y a pas d'erreur, sinon il contient les messages d'erreur.
      */
-    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, DataManager.RecordType recordType, File fileName, boolean append) {
+    public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, RecordType recordType, File fileName, boolean append) {
 
         StringBuilder sb = new StringBuilder();
         try {
@@ -145,15 +144,15 @@ public class ReleveFilePdf {
                                 );
 
 
-                        line.appendCsvFn(record.getIndiLastName().getValue());
-                        line.appendCsvFn(record.getIndiFirstName().getValue());
-                        line.appendCsvFn(record.getIndiSex().toString());
-                        line.appendCsvFn(record.getIndiBirthPlace().toString()); // place
-                        line.appendCsvFn(record.getIndiBirthDate().toString()); // IndiBirthDate
+                        line.appendCsvFn(record.getIndi().getLastName().getValue());
+                        line.appendCsvFn(record.getIndi().getFirstName().getValue());
+                        line.appendCsvFn(record.getIndi().getSex().toString());
+                        line.appendCsvFn(record.getIndi().getBirthPlace().toString()); // place
+                        line.appendCsvFn(record.getIndi().getBirthDate().toString()); // IndiBirthDate
                         line.appendCsvFn(""); // age
                         line.appendCsvFn(""); // occupation
                         line.appendCsvFn(""); // residence
-                        line.appendCsvFn(record.getIndiComment().toString());
+                        line.appendCsvFn(record.getIndi().getComment() .toString());
 
                         line.appendCsvFn(""); // IndiMarriedLastName
                         line.appendCsvFn(""); // IndiMarriedFirstName
@@ -162,20 +161,20 @@ public class ReleveFilePdf {
                         line.appendCsvFn(""); // residence
                         line.appendCsvFn(""); // IndiMarriedComment
 
-                        line.appendCsvFn(record.getIndiFatherLastName().toString());
-                        line.appendCsvFn(record.getIndiFatherFirstName().toString());
-                        line.appendCsvFn(record.getIndiFatherAge().getValue());
-                        line.appendCsvFn(record.getIndiFatherDead().toString());
-                        line.appendCsvFn(record.getIndiFatherOccupation().toString());
-                        line.appendCsvFn(record.getIndiFatherResidence().toString());
-                        line.appendCsvFn(record.getIndiFatherComment().toString());
-                        line.appendCsvFn(record.getIndiMotherLastName().toString());
-                        line.appendCsvFn(record.getIndiMotherFirstName().toString());
-                        line.appendCsvFn(record.getIndiMotherAge().getValue());
-                        line.appendCsvFn(record.getIndiMotherDead().toString());
-                        line.appendCsvFn(record.getIndiMotherOccupation().toString());
-                        line.appendCsvFn(record.getIndiMotherResidence().toString());
-                        line.appendCsvFn(record.getIndiMotherComment().toString());
+                        line.appendCsvFn(record.getIndi().getFatherLastName().toString());
+                        line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getFatherAge().getValue());
+                        line.appendCsvFn(record.getIndi().getFatherDead().toString());
+                        line.appendCsvFn(record.getIndi().getFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getFatherResidence().toString());
+                        line.appendCsvFn(record.getIndi().getFatherComment().toString());
+                        line.appendCsvFn(record.getIndi().getMotherLastName().toString());
+                        line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getMotherAge().getValue());
+                        line.appendCsvFn(record.getIndi().getMotherDead().toString());
+                        line.appendCsvFn(record.getIndi().getMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getMotherResidence().toString());
+                        line.appendCsvFn(record.getIndi().getMotherComment().toString());
 
                         line.appendCsvFn(""); // WifeLastName
                         line.appendCsvFn(""); // WifeFirstName
@@ -244,70 +243,70 @@ public class ReleveFilePdf {
                                 );
 
 
-                        line.appendCsvFn(record.getIndiLastName().getValue());
-                        line.appendCsvFn(record.getIndiFirstName().getValue());
+                        line.appendCsvFn(record.getIndi().getLastName().getValue());
+                        line.appendCsvFn(record.getIndi().getFirstName().getValue());
                         line.appendCsvFn(""); // IndiSex
-                        line.appendCsvFn(record.getIndiBirthPlace().toString());
-                        line.appendCsvFn(record.getIndiBirthDate().toString());
-                        line.appendCsvFn(record.getIndiAge().getValue());
-                        line.appendCsvFn(record.getIndiOccupation().toString());
-                        line.appendCsvFn(record.getIndiResidence().toString());
-                        line.appendCsvFn(record.getIndiComment().toString());
+                        line.appendCsvFn(record.getIndi().getBirthPlace().toString());
+                        line.appendCsvFn(record.getIndi().getBirthDate().toString());
+                        line.appendCsvFn(record.getIndi().getAge().getValue());
+                        line.appendCsvFn(record.getIndi().getOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getResidence() .toString());
+                        line.appendCsvFn(record.getIndi().getComment() .toString());
                         
-                        line.appendCsvFn(record.getIndiMarriedLastName().toString());
-                        line.appendCsvFn(record.getIndiMarriedFirstName().toString());
-                        line.appendCsvFn(record.getIndiMarriedDead().toString());
-                        line.appendCsvFn(record.getIndiMarriedOccupation().toString());
-                        line.appendCsvFn(record.getIndiMarriedResidence().toString());
-                        line.appendCsvFn(record.getIndiMarriedComment().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedDead().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedResidence().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedComment().toString());
 
-                        line.appendCsvFn(record.getIndiFatherLastName().toString());
-                        line.appendCsvFn(record.getIndiFatherFirstName().toString());
-                        line.appendCsvFn(record.getIndiFatherAge().getValue());
-                        line.appendCsvFn(record.getIndiFatherDead().toString());
-                        line.appendCsvFn(record.getIndiFatherOccupation().toString());
-                        line.appendCsvFn(record.getIndiFatherResidence().toString());
-                        line.appendCsvFn(record.getIndiFatherComment().toString());
+                        line.appendCsvFn(record.getIndi().getFatherLastName().toString());
+                        line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getFatherAge().getValue());
+                        line.appendCsvFn(record.getIndi().getFatherDead().toString());
+                        line.appendCsvFn(record.getIndi().getFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getFatherResidence().toString());
+                        line.appendCsvFn(record.getIndi().getFatherComment().toString());
                         
-                        line.appendCsvFn(record.getIndiMotherLastName().toString());
-                        line.appendCsvFn(record.getIndiMotherFirstName().toString());
-                        line.appendCsvFn(record.getIndiMotherAge().getValue());
-                        line.appendCsvFn(record.getIndiMotherDead().toString());
-                        line.appendCsvFn(record.getIndiMotherOccupation().toString());
-                        line.appendCsvFn(record.getIndiMotherResidence().toString());
-                        line.appendCsvFn(record.getIndiMotherComment().toString());
+                        line.appendCsvFn(record.getIndi().getMotherLastName().toString());
+                        line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getMotherAge().getValue());
+                        line.appendCsvFn(record.getIndi().getMotherDead().toString());
+                        line.appendCsvFn(record.getIndi().getMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getMotherResidence().toString());
+                        line.appendCsvFn(record.getIndi().getMotherComment().toString());
                         
-                        line.appendCsvFn(record.getWifeLastName().toString());
-                        line.appendCsvFn(record.getWifeFirstName().toString());
+                        line.appendCsvFn(record.getWife().getLastName().toString());
+                        line.appendCsvFn(record.getWife().getFirstName().toString());
                         line.appendCsvFn(""); //WifeSex
-                        line.appendCsvFn(record.getWifeBirthPlace().toString());
-                        line.appendCsvFn(record.getWifeBirthDate().toString());
-                        line.appendCsvFn(record.getWifeAge().getValue());
-                        line.appendCsvFn(record.getWifeOccupation().toString());
-                        line.appendCsvFn(record.getWifeResidence().toString());
-                        line.appendCsvFn(record.getWifeComment().toString());
+                        line.appendCsvFn(record.getWife().getBirthPlace().toString());
+                        line.appendCsvFn(record.getWife().getBirthDate().toString());
+                        line.appendCsvFn(record.getWife().getAge().getValue());
+                        line.appendCsvFn(record.getWife().getOccupation().toString());
+                        line.appendCsvFn(record.getWife().getResidence().toString());
+                        line.appendCsvFn(record.getWife().getComment().toString());
                         
-                        line.appendCsvFn(record.getWifeMarriedLastName().toString());
-                        line.appendCsvFn(record.getWifeMarriedFirstName().toString());
-                        line.appendCsvFn(record.getWifeMarriedDead().toString());
-                        line.appendCsvFn(record.getWifeMarriedOccupation().toString());
-                        line.appendCsvFn(record.getWifeMarriedResidence().toString());
-                        line.appendCsvFn(record.getWifeMarriedComment().toString());
+                        line.appendCsvFn(record.getWife().getMarriedLastName().toString());
+                        line.appendCsvFn(record.getWife().getMarriedFirstName().toString());
+                        line.appendCsvFn(record.getWife().getMarriedDead().toString());
+                        line.appendCsvFn(record.getWife().getMarriedOccupation().toString());
+                        line.appendCsvFn(record.getWife().getMarriedResidence().toString());
+                        line.appendCsvFn(record.getWife().getMarriedComment().toString());
 
-                        line.appendCsvFn(record.getWifeFatherLastName().toString());
-                        line.appendCsvFn(record.getWifeFatherFirstName().toString());
-                        line.appendCsvFn(record.getWifeFatherAge().getValue());
-                        line.appendCsvFn(record.getWifeFatherDead().toString());
-                        line.appendCsvFn(record.getWifeFatherOccupation().toString());
-                        line.appendCsvFn(record.getWifeFatherResidence().toString());
-                        line.appendCsvFn(record.getWifeFatherComment().toString());
-                        line.appendCsvFn(record.getWifeMotherLastName().toString());
-                        line.appendCsvFn(record.getWifeMotherFirstName().toString());
-                        line.appendCsvFn(record.getWifeMotherAge().getValue());
-                        line.appendCsvFn(record.getWifeMotherDead().toString());
-                        line.appendCsvFn(record.getWifeMotherOccupation().toString());
-                        line.appendCsvFn(record.getWifeMotherResidence().toString());
-                        line.appendCsvFn(record.getWifeMotherComment().toString());
+                        line.appendCsvFn(record.getWife().getFatherLastName().toString());
+                        line.appendCsvFn(record.getWife().getFatherFirstName().toString());
+                        line.appendCsvFn(record.getWife().getFatherAge().getValue());
+                        line.appendCsvFn(record.getWife().getFatherDead().toString());
+                        line.appendCsvFn(record.getWife().getFatherOccupation().toString());
+                        line.appendCsvFn(record.getWife().getFatherResidence().toString());
+                        line.appendCsvFn(record.getWife().getFatherComment().toString());
+                        line.appendCsvFn(record.getWife().getMotherLastName().toString());
+                        line.appendCsvFn(record.getWife().getMotherFirstName().toString());
+                        line.appendCsvFn(record.getWife().getMotherAge().getValue());
+                        line.appendCsvFn(record.getWife().getMotherDead().toString());
+                        line.appendCsvFn(record.getWife().getMotherOccupation().toString());
+                        line.appendCsvFn(record.getWife().getMotherResidence().toString());
+                        line.appendCsvFn(record.getWife().getMotherComment().toString());
 
                         for(Record.Witness witness : record.getWitnesses()) {
                             line.appendCsvFn(witness.getLastName().toString());
@@ -344,37 +343,37 @@ public class ReleveFilePdf {
                                 );
 
 
-                        line.appendCsvFn(record.getIndiLastName().toString());
-                        line.appendCsvFn(record.getIndiFirstName().toString());
-                        line.appendCsvFn(record.getIndiSex().toString());
-                        line.appendCsvFn(record.getIndiBirthPlace().toString());
-                        line.appendCsvFn(record.getIndiBirthDate().toString());
-                        line.appendCsvFn(record.getIndiAge().getValue());
-                        line.appendCsvFn(record.getIndiOccupation().toString());
-                        line.appendCsvFn(record.getIndiResidence().toString());
-                        line.appendCsvFn(record.getIndiComment().toString());
+                        line.appendCsvFn(record.getIndi().getLastName().toString());
+                        line.appendCsvFn(record.getIndi().getFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getSex().toString());
+                        line.appendCsvFn(record.getIndi().getBirthPlace().toString());
+                        line.appendCsvFn(record.getIndi().getBirthDate().toString());
+                        line.appendCsvFn(record.getIndi().getAge().getValue());
+                        line.appendCsvFn(record.getIndi().getOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getResidence() .toString());
+                        line.appendCsvFn(record.getIndi().getComment() .toString());
 
-                        line.appendCsvFn(record.getIndiMarriedLastName().toString());
-                        line.appendCsvFn(record.getIndiMarriedFirstName().toString());
-                        line.appendCsvFn(record.getIndiMarriedDead().toString());
-                        line.appendCsvFn(record.getIndiMarriedOccupation().toString());
-                        line.appendCsvFn(record.getIndiMarriedResidence().toString());
-                        line.appendCsvFn(record.getIndiMarriedComment().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedDead().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedResidence().toString());
+                        line.appendCsvFn(record.getIndi().getMarriedComment().toString());
 
-                        line.appendCsvFn(record.getIndiFatherLastName().toString());
-                        line.appendCsvFn(record.getIndiFatherFirstName().toString());
-                        line.appendCsvFn(record.getIndiFatherAge().getValue());
-                        line.appendCsvFn(record.getIndiFatherDead().toString());
-                        line.appendCsvFn(record.getIndiFatherOccupation().toString());
-                        line.appendCsvFn(record.getIndiFatherResidence().toString());
-                        line.appendCsvFn(record.getIndiFatherComment().toString());
-                        line.appendCsvFn(record.getIndiMotherLastName().toString());
-                        line.appendCsvFn(record.getIndiMotherFirstName().toString());
-                        line.appendCsvFn(record.getIndiMotherAge().getValue());
-                        line.appendCsvFn(record.getIndiMotherDead().toString());
-                        line.appendCsvFn(record.getIndiMotherOccupation().toString());
-                        line.appendCsvFn(record.getIndiMotherResidence().toString());
-                        line.appendCsvFn(record.getIndiMotherComment().toString());
+                        line.appendCsvFn(record.getIndi().getFatherLastName().toString());
+                        line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getFatherAge().getValue());
+                        line.appendCsvFn(record.getIndi().getFatherDead().toString());
+                        line.appendCsvFn(record.getIndi().getFatherOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getFatherResidence().toString());
+                        line.appendCsvFn(record.getIndi().getFatherComment().toString());
+                        line.appendCsvFn(record.getIndi().getMotherLastName().toString());
+                        line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
+                        line.appendCsvFn(record.getIndi().getMotherAge().getValue());
+                        line.appendCsvFn(record.getIndi().getMotherDead().toString());
+                        line.appendCsvFn(record.getIndi().getMotherOccupation().toString());
+                        line.appendCsvFn(record.getIndi().getMotherResidence().toString());
+                        line.appendCsvFn(record.getIndi().getMotherComment().toString());
 
                         line.appendCsvFn(""); // WifeLastName
                         line.appendCsvFn(""); // WifeFirstName
@@ -427,9 +426,9 @@ public class ReleveFilePdf {
 //                        line.appendCsvFn(placeManager.getStateName());
 //                        line.appendCsvFn(placeManager.getCountryName());
 //                        line.appendCsvFn(record.getParish().toString());
-                        String participantNames = record.getIndiLastName().toString();
-                        if( !record.getWifeLastName().isEmpty()) {
-                            participantNames += " et " + record.getWifeLastName().toString();
+                        String participantNames = record.getIndi().getLastName().toString();
+                        if( !record.getWife().getLastName().isEmpty()) {
+                            participantNames += " et " + record.getWife().getLastName().toString();
                         }
                         writeTitle(1,
                                 record.getEventDateString(),
@@ -445,148 +444,148 @@ public class ReleveFilePdf {
                             );
 
                         writeValue(1,"Intervenant 1:",
-                                record.getIndiFirstName().toString(),
-                                record.getIndiLastName().toString()
+                                record.getIndi().getFirstName().toString(),
+                                record.getIndi().getLastName().toString()
                                 );
                         writeValue(2,"Naissance:",
-                                record.getIndiBirthDate().toString(),
-                                record.getIndiBirthPlace().toString()
+                                record.getIndi().getBirthDate().toString(),
+                                record.getIndi().getBirthPlace().toString()
                                 );
                         writeValue(2,"Age:",
-                                formatAgeToAge(record.getIndiAge())
+                                formatAgeToAge(record.getIndi().getAge())
                                 );
                         writeValue(2,"Profession:",
-                                record.getIndiOccupation().toString()
+                                record.getIndi().getOccupation().toString()
                                 );
                         writeValue(2,"Domicile:",
-                                record.getIndiResidence().toString()
+                                record.getIndi().getResidence() .toString()
                                 );
                         writeValue(2,"Info:",
-                                record.getIndiComment().toString()
+                                record.getIndi().getComment() .toString()
                                 );
 
                         writeValue(2,"Conjoint:",
-                                record.getIndiMarriedFirstName().toString(),
-                                record.getIndiMarriedLastName().toString(),
-                                record.getIndiMarriedDead().toString()
+                                record.getIndi().getMarriedFirstName().toString(),
+                                record.getIndi().getMarriedLastName().toString(),
+                                record.getIndi().getMarriedDead().toString()
                                 );
                         writeValue(3,"Profession:",
-                                record.getIndiMarriedOccupation().toString()
+                                record.getIndi().getMarriedOccupation().toString()
                                 );
                         writeValue(3,"Domicile:",
-                                record.getIndiMarriedResidence().toString()
+                                record.getIndi().getMarriedResidence().toString()
                                 );
                         writeValue(3,"Info:",
-                                record.getIndiMarriedComment().toString()
+                                record.getIndi().getMarriedComment().toString()
                                 );
 
                         writeValue(2,"Père:",
-                            record.getIndiFatherFirstName().toString(),
-                            record.getIndiFatherLastName().toString(),
-                            record.getIndiFatherDead().toString()
+                            record.getIndi().getFatherFirstName().toString(),
+                            record.getIndi().getFatherLastName().toString(),
+                            record.getIndi().getFatherDead().toString()
                             );
                         writeValue(3,"Age:",
-                                formatAgeToAge(record.getIndiFatherAge())
+                                formatAgeToAge(record.getIndi().getFatherAge())
                                 );
                         writeValue(3,"Profession:",
-                                record.getIndiFatherOccupation().toString()
+                                record.getIndi().getFatherOccupation().toString()
                                 );
                         writeValue(3,"Domicile:",
-                                record.getIndiFatherResidence().toString()
+                                record.getIndi().getFatherResidence().toString()
                                 );
                         writeValue(3,"Info:",
-                                record.getIndiFatherComment().toString()
+                                record.getIndi().getFatherComment().toString()
                                 );
 
                         writeValue(2,"Mère:",
-                            record.getIndiMotherFirstName().toString(),
-                            record.getIndiMotherLastName().toString(),
-                            record.getIndiMotherDead().toString()
+                            record.getIndi().getMotherFirstName().toString(),
+                            record.getIndi().getMotherLastName().toString(),
+                            record.getIndi().getMotherDead().toString()
                             );
                         writeValue(3,"Age:",
-                                formatAgeToAge(record.getIndiMotherAge())
+                                formatAgeToAge(record.getIndi().getMotherAge())
                                 );
                         writeValue(3,"Profession:",
-                                record.getIndiMotherOccupation().toString()
+                                record.getIndi().getMotherOccupation().toString()
                                 );
                         writeValue(3,"Domicile:",
-                                record.getIndiMotherResidence().toString()
+                                record.getIndi().getMotherResidence().toString()
                                 );
                         writeValue(3,"Info:",
-                                record.getIndiMotherComment().toString()
+                                record.getIndi().getMotherComment().toString()
                                 );
                         
                         ///////////////////////////////////////////////////////
                         writeValue(1,"Intervenant 2:",
-                                record.getWifeFirstName().toString(),
-                                record.getWifeLastName().toString()
+                                record.getWife().getFirstName().toString(),
+                                record.getWife().getLastName().toString()
                                 );
                         writeValue(2,"Naissance:",
-                                record.getWifeBirthDate().toString(),
-                                record.getWifeBirthPlace().toString()
+                                record.getWife().getBirthDate().toString(),
+                                record.getWife().getBirthPlace().toString()
                                 );
                         writeValue(2,"Age:",
-                                formatAgeToAge(record.getWifeAge())
+                                formatAgeToAge(record.getWife().getAge())
                                 );
                         writeValue(2,"Profession:",
-                                record.getWifeOccupation().toString()
+                                record.getWife().getOccupation().toString()
                                 );
                         writeValue(2,"Domicile:",
-                                record.getWifeResidence().toString()
+                                record.getWife().getResidence().toString()
                                 );
                         writeValue(2,"Info:",
-                                record.getWifeComment().toString()
+                                record.getWife().getComment().toString()
                                 );
 
                         writeValue(2,"Conjoint:",
-                                record.getWifeMarriedFirstName().toString(),
-                                record.getWifeMarriedLastName().toString(),
-                                record.getWifeMarriedDead().toString()
+                                record.getWife().getMarriedFirstName().toString(),
+                                record.getWife().getMarriedLastName().toString(),
+                                record.getWife().getMarriedDead().toString()
                                 );
                         writeValue(3,"Profession:",
-                                record.getWifeMarriedOccupation().toString()
+                                record.getWife().getMarriedOccupation().toString()
                                 );
                         writeValue(3,"Domicile:",
-                                record.getWifeMarriedResidence().toString()
+                                record.getWife().getMarriedResidence().toString()
                                 );
                         writeValue(3,"Info:",
-                                record.getWifeMarriedComment().toString()
+                                record.getWife().getMarriedComment().toString()
                                 );
 
                         writeValue(2,"Père:",
-                            record.getWifeFatherFirstName().toString(),
-                            record.getWifeFatherLastName().toString(),
-                            record.getWifeFatherDead().toString()
+                            record.getWife().getFatherFirstName().toString(),
+                            record.getWife().getFatherLastName().toString(),
+                            record.getWife().getFatherDead().toString()
                             );
                         writeValue(3,"Age:",
-                                formatAgeToAge(record.getWifeFatherAge())
+                                formatAgeToAge(record.getWife().getFatherAge())
                                 );
                         writeValue(3,"Profession:",
-                                record.getWifeFatherOccupation().toString()
+                                record.getWife().getFatherOccupation().toString()
                                 );
                         writeValue(3,"Domicile:",
-                                record.getWifeFatherResidence().toString()
+                                record.getWife().getFatherResidence().toString()
                                 );
                         writeValue(3,"Info:",
-                                record.getWifeFatherComment().toString()
+                                record.getWife().getFatherComment().toString()
                                 );
 
                         writeValue(2,"Mère:",
-                            record.getWifeMotherFirstName().toString(),
-                            record.getWifeMotherLastName().toString(),
-                            record.getWifeMotherDead().toString()
+                            record.getWife().getMotherFirstName().toString(),
+                            record.getWife().getMotherLastName().toString(),
+                            record.getWife().getMotherDead().toString()
                             );
                         writeValue(3,"Age:",
-                                formatAgeToAge(record.getWifeMotherAge())
+                                formatAgeToAge(record.getWife().getMotherAge())
                                 );
                         writeValue(3,"Profession:",
-                                record.getWifeMotherOccupation().toString()
+                                record.getWife().getMotherOccupation().toString()
                                 );
                         writeValue(3,"Domicile:",
-                                record.getWifeMotherResidence().toString()
+                                record.getWife().getMotherResidence().toString()
                                 );
                         writeValue(3,"Info:",
-                                record.getWifeMotherComment().toString()
+                                record.getWife().getMotherComment().toString()
                                 );
 
                         for (Record.Witness witness : record.getWitnesses()) {

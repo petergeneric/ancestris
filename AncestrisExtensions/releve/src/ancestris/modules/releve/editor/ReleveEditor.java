@@ -836,14 +836,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
             switch (fieldType) {
                 //je mets à jour la completion des prénoms
                 case indiFirstName :
-                    if ( record.getIndiFirstName() != null &&  !record.getIndiFirstName().isEmpty()) {
-                        record.getIndiSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndiFirstName().getValue())) ;
+                    if ( record.getIndi().getFirstName() != null &&  !record.getIndi().getFirstName().isEmpty()) {
+                        record.getIndi().getSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getIndi().getFirstName().getValue())) ;
                         refreshBeanField(FieldType.indiSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getIndiSex().getValue(), oldValue, record.getIndiSex().getValue());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getIndi().getSex().getValue(), oldValue, record.getIndi().getSex().getValue());
                     break;
                 case indiMarriedFirstName :
-                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getIndiSex().getOppositeString(), oldValue, record.getIndiSex().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getIndi().getSex().getOppositeString(), oldValue, record.getIndi().getSex().getOppositeString());
                     break;
                 case indiFatherFirstName :
                     dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
@@ -852,14 +852,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);
                     break;
                 case wifeFirstName :
-                    if ( record.getWifeFirstName() != null &&  !record.getWifeFirstName().isEmpty() ) {
-                        record.getWifeSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWifeFirstName().getValue())) ;
+                    if ( record.getWife().getFirstName() != null &&  !record.getWife().getFirstName().isEmpty() ) {
+                        record.getWife().getSex().setSex( dataManager.getCompletionProvider().getFirstNameSex(record.getWife().getFirstName().getValue())) ;
                         refreshBeanField(FieldType.wifeSex);
                     }
-                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getWifeSex().getValue(), oldValue, record.getWifeSex().getValue());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getWife().getSex().getValue(), oldValue, record.getWife().getSex().getValue());
                     break;
                 case wifeMarriedFirstName :
-                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getWifeSex().getOppositeString(), oldValue, record.getWifeSex().getOppositeString());
+                    dataManager.getCompletionProvider().updateFirstName(bean.getField(), record.getWife().getSex().getOppositeString(), oldValue, record.getWife().getSex().getOppositeString());
                     break;
                 case wifeFatherFirstName :
                     dataManager.getCompletionProvider().updateFirstName(bean.getField(), FieldSex.MALE_STRING, oldValue, FieldSex.MALE_STRING);

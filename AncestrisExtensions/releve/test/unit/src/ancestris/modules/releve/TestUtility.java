@@ -208,7 +208,7 @@ public class TestUtility extends TestCase {
         record.getIndi().setFather("indiFatherFirstname", "indiFatherLastname", "indiFatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "false", "70y");
         record.getIndi().setMother("indiMotherFirstname", "indiMotherLastname", "indiMotherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "false", "72y");
         record.getWife().set("wifeFirstname", "wifeLastname", "F", "wifeAge", "02/02/1992", "wifeBirthPlace", "wifeBirthAddress", "wifeOccupation", "wifeResidence", "wifeAddress", "wifeComment");
-        record.getWife().setMarried("wifeMarriedFirstname", "wifeMarriedLastname", "wifeMarriedOccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifeMarriedComment", "false");
+        record.getWife().setMarried("wifeMarriedFirstname", "wifeMarriedLastname", "wifeMarriedOccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifeMarriedComment", "ALIVE");
         record.getWife().setFather("wifeFatherFirstname", "wifeFatherLastname", "wifeFatherOccupation", "wifeFatherResidence", "wifeFatherAddress", "wifeFatherComment", "false", "71y");
         record.getWife().setMother("wifeMotherFirstname", "wifeMotherLastname", "wifeMotherOccupation", "wifeMotherResidence", "wifeMotherAddress", "wifeMotherComment", "false", "73y");
         record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
@@ -280,38 +280,18 @@ public class TestUtility extends TestCase {
 
     public static final Object lock = new Object();
     public static void waitForDialogClose(final java.awt.Window dialog) {
-        try {
-            Thread t = new Thread() {
-
-                @Override
-                public void run() {
-                    synchronized (lock) {
-                        while (dialog.isVisible()) {
-                            try {
-                                lock.wait();
-                            } catch (InterruptedException e) {
-                                //e.printStackTrace();
-                            }
-                        }
-                        lock.notifyAll();
-                    }
+        int visible = 1;
+        do {
+            if (dialog.isVisible()) {
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
-            };
-            t.start();
-            dialog.addWindowListener(new WindowAdapter() {
-
-                @Override
-                public void windowClosing(WindowEvent arg0) {
-                    synchronized (lock) {
-                        dialog.setVisible(false);
-                        lock.notifyAll();
-                    }
-                }
-            });
-            t.join();
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        }
+            } else {
+                break;
+            }
+        } while ( visible == 1);
     }
 
 

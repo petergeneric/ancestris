@@ -23,8 +23,9 @@ import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.modules.releve.dnd.ViewWrapperManager;
+import ancestris.modules.releve.merge.ViewWrapperManager;
 import ancestris.modules.releve.imageAligner.AlignerFrame;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
@@ -1199,13 +1200,13 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             if (jRadioButtonAll.isSelected()) {
                 FileManager.saveFile(dataManager, dataManager, file, fileFormat);
             } else if (jRadioButtonBirth.isSelected()) {
-                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.birth);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), RecordType.BIRTH);
             } else if (jRadioButtonMarriage.isSelected()) {
-                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.marriage);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), RecordType.MARRIAGE);
             } else if (jRadioButtonDeath.isSelected()) {
-                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.death);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), RecordType.DEATH);
             } else if (jRadioButtonMisc.isSelected()) {
-                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), DataManager.RecordType.misc);
+                FileManager.saveFile(dataManager, file, fileFormat, dataManager.getDataModel(), RecordType.MISC);
             }
             if (! saveResult.toString().isEmpty()) {
                 // j'affiche les erreurs rencontrées

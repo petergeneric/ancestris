@@ -4,7 +4,7 @@ package ancestris.modules.releve.model;
  *
  * @author Michel
  */
-public abstract class Field implements Comparable<Field> , Cloneable{
+public abstract class Field implements Comparable<Field>{
 
     /**
      * @return the display value
@@ -44,11 +44,6 @@ public abstract class Field implements Comparable<Field> , Cloneable{
         } else {
             return false;
         }
-    }
-
-    @Override
-    public Field clone() throws CloneNotSupportedException {
-        return (Field) super.clone();
     }
 
     public static enum FieldType {

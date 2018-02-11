@@ -3,6 +3,7 @@ package ancestris.modules.releve.file;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
@@ -133,7 +134,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         
         RecordBirth birth = TestUtility.getRecordBirth();
         dataManager.addRecord(birth);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.birth, file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.BIRTH, file, false);
         assertEquals("verify save error", sb.length(), 0);
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
@@ -187,7 +188,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         RecordMarriage marriage = TestUtility.getRecordMarriage();
         marriage.setEventDate("01/01/2000");
         dataManager.addRecord(marriage);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.marriage, file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.MARRIAGE, file, false);
         assertEquals("save result", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
@@ -240,7 +241,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         
         RecordDeath death = TestUtility.getRecordDeath();
         dataManager.addRecord(death);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.death, file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.DEATH, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
@@ -293,7 +294,7 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         
         RecordMisc record = TestUtility.getRecordMisc();
         dataManager.addRecord(record);
-        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), DataManager.RecordType.misc, file, false);
+        StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.MISC, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);

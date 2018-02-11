@@ -14,10 +14,8 @@ public class FieldEventType extends Field {
     }
 
     @Override
-    public String [] getValue() {
-        String[] value= new String[1];
-        value[0] = getName();
-        return value;
+    public String getValue() {
+        return name;
     }
 
     @Override
@@ -43,10 +41,5 @@ public class FieldEventType extends Field {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    @Override
-    public FieldEventType clone() throws CloneNotSupportedException {
-        return (FieldEventType) super.clone();
     }
 }
