@@ -495,7 +495,7 @@ public class TourAction  implements ActionListener {
                 path.curveTo(w, offset, w, hq, w - wq, 1 * hq);
             } else {
                 path.lineTo(w, offset);
-                path.lineTo(w - wq, 1 * hq);
+                path.lineTo(w - wq, hq);
             }
             shape = new Path().append(new RoundRectangle2D.Double(0, 0, w - wq, h, corners, corners));
         } else if (isLeft && !isTop) {
@@ -515,7 +515,7 @@ public class TourAction  implements ActionListener {
                 path.curveTo(w, h - offset,         w, h - 2 * hq,     w - wq, h - 2 * hq);
             } else {
                 path.lineTo(w, h - offset);
-                path.lineTo(w - wq, h - 1 * hq);
+                path.lineTo(w - wq, h - 2 * hq);
             }
             shape = new Path().append(new RoundRectangle2D.Double(0, 0, w - wq, h, corners, corners));
         }
