@@ -466,7 +466,7 @@ public class TourAction  implements ActionListener {
         String text = NbBundle.getMessage(getClass(), "demo.search");
         Color bgcolor = new Color(0x00ecc1a8);
         Color fgcolor = Color.BLACK;
-        Dimension dim = new Dimension(770, 400);
+        Dimension dim = new Dimension(800, 480);
         TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(240, 300), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
