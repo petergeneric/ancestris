@@ -348,7 +348,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x005dbcff);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 410);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 15, bgcolor, fgcolor, text, new Point(240, 330), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 15, bgcolor, fgcolor, text, new Point(240, 330), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         demo.expandCollapse(true);
         return next;
@@ -360,7 +360,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00bceca8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(700, 420);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 20, bgcolor, fgcolor, text, new Point(700, 400), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(700, 400), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -375,7 +375,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00a8cdec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(900, 500);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(350, 320), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(350, 320), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -390,7 +390,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00bea8ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 480);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(410, 330), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(410, 330), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -405,7 +405,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00ebeca8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 380);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(420, 360), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(420, 360), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -420,7 +420,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00e3a8ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 550);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 60, bgcolor, fgcolor, text, new Point(550, 250), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 60, bgcolor, fgcolor, text, new Point(550, 250), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -434,7 +434,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00a8e3ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 330);
-        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(60, 400), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, false, 20, bgcolor, fgcolor, text, new Point(60, 400), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -449,7 +449,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00ecc1a8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(770, 400);
-        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 20, bgcolor, fgcolor, text, new Point(240, 300), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, false, 20, bgcolor, fgcolor, text, new Point(240, 300), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
