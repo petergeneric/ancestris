@@ -38,6 +38,7 @@ import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.URI;
+import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
@@ -95,6 +96,7 @@ class FeaturesPanel extends JPanel implements Constants {
         public void actionPerformed(ActionEvent event) {
             
             boolean supported = true;
+            Logger LOG = Logger.getLogger("ancestris.welcome");
 
             // Determine if the GraphicsDevice supports translucency.
             GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -102,8 +104,8 @@ class FeaturesPanel extends JPanel implements Constants {
 
             //If translucent windows aren't supported, exit.
             if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
-                System.err.println("Translucency is not supported. Showing internet tour...");
-                supported = false;
+                LOG.info("Guided Tour : translucency not supported. It may not work...");  
+                //supported = false; // "Showing internet tour... " // instead ?
             }
 
             if (supported) {
