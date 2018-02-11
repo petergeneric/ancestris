@@ -468,7 +468,7 @@ public class TourAction  implements ActionListener {
      * 
      */
     
-    private Shape getBubble(boolean isLeft, Dimension d, boolean isCurved, int  offset) {
+    private Shape getBubble(boolean isLeft, boolean isTop, Dimension d, boolean isCurved, int  offset) {
         int w = d.width;
         int h = d.height;
         int wq = ARROW;
@@ -478,7 +478,7 @@ public class TourAction  implements ActionListener {
         GeneralPath path = new GeneralPath();
         Path shape = null;
         
-        if (isLeft) {
+        if (isLeft && isTop) {
             path.moveTo(wq, 2 * hq);
             if (isCurved) {
                 path.curveTo(wq, 2 * hq, 0, 2 * hq, 0, offset);
@@ -488,7 +488,7 @@ public class TourAction  implements ActionListener {
                 path.lineTo(wq, 1 * hq);
             }
             shape = new Path().append(new RoundRectangle2D.Double(wq, 0, w - wq, h, corners, corners));
-        } else {
+        } else if (!isLeft && isTop) {
             path.moveTo(w - wq, 2 * hq);
             if (isCurved) {
                 path.curveTo(w - wq, 2 * hq, w, 2 * hq, w, offset);
@@ -496,6 +496,26 @@ public class TourAction  implements ActionListener {
             } else {
                 path.lineTo(w, offset);
                 path.lineTo(w - wq, 1 * hq);
+            }
+            shape = new Path().append(new RoundRectangle2D.Double(0, 0, w - wq, h, corners, corners));
+        } else if (isLeft && !isTop) {
+            path.moveTo(wq, h - 2 * hq);
+            if (isCurved) {
+                path.curveTo(wq, h - 2 * hq, 0, h - 2 * hq, 0, h - offset);
+                path.curveTo(0, h - offset, 0, h - hq, wq, h - hq);
+            } else {
+                path.lineTo(0, h - offset);
+                path.lineTo(wq, h - 1 * hq);
+            }
+            shape = new Path().append(new RoundRectangle2D.Double(wq, 0, w - wq, h, corners, corners));
+        } else if (!isLeft && !isTop) {
+            path.moveTo(w - wq, h - hq);
+            if (isCurved) {
+                path.curveTo(w - wq, h - hq,        w, h - hq,         w, h - offset);
+                path.curveTo(w, h - offset,         w, h - 2 * hq,     w - wq, h - 2 * hq);
+            } else {
+                path.lineTo(w, h - offset);
+                path.lineTo(w - wq, h - 1 * hq);
             }
             shape = new Path().append(new RoundRectangle2D.Double(0, 0, w - wq, h, corners, corners));
         }
@@ -614,6 +634,7 @@ public class TourAction  implements ActionListener {
         private Component demo;
         private TopComponent back;
         private boolean pointerLeftParam;
+        private boolean pointerTopParam;
         private boolean isCurvedParam;
         private int pointerOffsetParam;
         private Point pParam;
@@ -665,6 +686,7 @@ public class TourAction  implements ActionListener {
             }
             
             // Set Bubble orientation and location
+            pointerTopParam = true;
             // - If not a TC and no position provided, use default one (middle of the screen)
             if (pParam == null) {
                 pParam = new Point((screenSize.width - dParam.width)/2, (screenSize.height - dParam.height)/2);  // default location, no pointer
@@ -684,6 +706,12 @@ public class TourAction  implements ActionListener {
                     gapLParam = SMALLGAP;
                     gapRParam = GAP;
                 }
+                pointerTopParam = (pParam.y <= (screenSize.height/2)); 
+                if (pointerTopParam) {                    // pointer to the top
+                } else {                                  // pointer to the bottom
+                    pParam.y -= dParam.height;
+                }
+
             }
 
             setLocation(pParam);
@@ -693,7 +721,7 @@ public class TourAction  implements ActionListener {
             if (pointerOffsetParam == -1) {
                 bubble = new Path().append(new RoundRectangle2D.Double(0, 0, dParam.width, dParam.height, 50, 50));
             } else {
-                bubble = getBubble(pointerLeftParam, dParam, isCurvedParam, pointerOffsetParam);
+                bubble = getBubble(pointerLeftParam, pointerTopParam, dParam, isCurvedParam, pointerOffsetParam);
             }
             setShape(bubble);
             
