@@ -558,8 +558,10 @@ public class TourAction  implements ActionListener {
         w.setAlwaysOnTop(true);
         w.setLocation(x, y);
         w.setSize(width, height);
-        w.setBackground(color);
-        AWTUtilities.setWindowOpacity(w, 0.3f);
+        if (transluscentIsSupported) {
+            w.setBackground(color);
+            AWTUtilities.setWindowOpacity(w, 0.3f);
+        }
         return w;
     }
 
