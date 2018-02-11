@@ -310,6 +310,11 @@ public abstract class GedcomDirectory {
      */
     public Context openGedcom(FileObject foInput) {
         
+        if (foInput == null) {
+            LOG.info("File to open no longer seems to exists");
+            return null;
+        }
+        
         // Detect Gedcom origin : 
         // - Open file header line "1 SOUR xxxx" => software = xxxx
         // -                       "2 NAME xxxx" => software = xxxx if nothing in SOUR
@@ -346,8 +351,9 @@ public abstract class GedcomDirectory {
             //Exceptions.printStackTrace(e);
             return null;
         } catch (Exception e) {
-            LOG.info(e.toString());
+            LOG.severe(e.toString());
             JOptionPane.showMessageDialog(null, e.getMessage());
+            Exceptions.printStackTrace(e);
             return null;
         }
         
