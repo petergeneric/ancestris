@@ -84,10 +84,10 @@ public class TourAction  implements ActionListener {
         GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice graphdev = graphenv.getDefaultScreenDevice();
 
-        //If translucent windows aren't supported, exit.
+        //If translucent windows aren't supported, just write a message
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
-            System.err.println("Translucency is not supported. Showing internet tour...");
-            return;
+            System.out.println("Guided Tour : translucency not supported. It may not work...");  
+            // return; //  Showing internet tour instead...
         }
         
         // Memorise welcome component to come back to it each time
