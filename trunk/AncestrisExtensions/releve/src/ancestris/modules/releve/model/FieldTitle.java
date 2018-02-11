@@ -8,11 +8,6 @@ import javax.swing.KeyStroke;
  */
 public class FieldTitle extends Field {
 
-    @Override
-    public FieldTitle clone() throws CloneNotSupportedException {
-        return (FieldTitle) super.clone();
-    }
-
     private KeyStroke keyStroke;
     private String title = "";
 

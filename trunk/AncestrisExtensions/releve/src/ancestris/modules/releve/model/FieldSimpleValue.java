@@ -6,11 +6,6 @@ package ancestris.modules.releve.model;
  */
 public class FieldSimpleValue extends Field {
 
-    @Override
-    public FieldSimpleValue clone() throws CloneNotSupportedException {
-        return (FieldSimpleValue) super.clone();
-    }
-
     private String value ="";
     @Override
     public String toString() {

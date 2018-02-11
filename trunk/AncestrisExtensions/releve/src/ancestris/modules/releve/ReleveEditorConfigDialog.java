@@ -9,7 +9,7 @@ package ancestris.modules.releve;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
-import ancestris.modules.releve.model.DataManager.RecordType;
+import ancestris.modules.releve.model.Record.RecordType;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -87,10 +87,10 @@ public class ReleveEditorConfigDialog extends javax.swing.JFrame {
     }
 
     private void initData() {
-        jTableBirth.setModel(new ConfigModel(RecordType.birth));
-        jTableMarriage.setModel(new ConfigModel(RecordType.marriage));
-        jTableDeath.setModel(new ConfigModel(RecordType.death));
-        jTableMisc.setModel(new ConfigModel(RecordType.misc));
+        jTableBirth.setModel(new ConfigModel(RecordType.BIRTH));
+        jTableMarriage.setModel(new ConfigModel(RecordType.MARRIAGE));
+        jTableDeath.setModel(new ConfigModel(RecordType.DEATH));
+        jTableMisc.setModel(new ConfigModel(RecordType.MISC));
         setVisible(true);
     }
 

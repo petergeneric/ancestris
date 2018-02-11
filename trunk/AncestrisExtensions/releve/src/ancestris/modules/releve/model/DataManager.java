@@ -4,6 +4,7 @@ import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.gedcom.GedcomFileListener;
+import ancestris.modules.releve.model.Record.RecordType;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import java.io.File;
@@ -36,9 +37,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     static boolean copyNotaryEnabled = true;
     // options de completion avec les données du fichier gedcom
     static boolean gedcomCompletion = true;
-    
-    public enum RecordType { birth, marriage, death, misc }
-    public enum ModelType { birth, marriage, death, misc, all }
+        
+    public enum ModelType { MODEL_BIRTH, MODEL_MARRIAGE, DEATH, MISC, ALL }
 
     static {
         loadOptions();
@@ -68,19 +68,19 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
         placeChanged = false;
     }
 
-    public Record createRecord(DataManager.RecordType recordType) {
+    public Record createRecord(RecordType recordType) {
         Record record;
         switch (recordType) {
-            case birth:
+            case BIRTH:
                 record = new RecordBirth();
                 break;
-            case death:
+            case DEATH:
                 record = new RecordDeath();
                 break;
-            case marriage:
+            case MARRIAGE:
                 record = new RecordMarriage();
                 break;
-            case misc:
+            case MISC:
             default:
                 record = new RecordMisc();
                 break;
@@ -139,7 +139,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
      * @param newRecord
      * @return
      */
-    public void insertRecord(DataManager.RecordType recordType, int index) {
+    public void insertRecord(RecordType recordType, int index) {
         Record newRecord = createRecord(recordType);
         dataModel.insertRecord(newRecord,index);
         completionProvider.addRecord(newRecord);

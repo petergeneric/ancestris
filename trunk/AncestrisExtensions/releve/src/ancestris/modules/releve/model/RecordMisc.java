@@ -1,6 +1,5 @@
 package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.model.DataManager.RecordType;
 
 /**
  *
@@ -101,7 +100,7 @@ public class RecordMisc extends Record {
 
     @Override
     public RecordType getType() {
-        return RecordType.misc;
+        return RecordType.MISC;
     }
 
     @Override

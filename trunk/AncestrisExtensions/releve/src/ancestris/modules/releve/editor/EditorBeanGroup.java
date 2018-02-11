@@ -1,7 +1,7 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.ReleveTopComponent;
-import ancestris.modules.releve.model.DataManager.RecordType;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field.FieldType;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -60,15 +60,15 @@ public class EditorBeanGroup {
      * visibilité par défaut des groupes et des champs
      */
     static {
-        groupMap.put(RecordType.birth,   new HashMap<GroupId,EditorBeanGroup>());
-        groupMap.put(RecordType.marriage,new HashMap<GroupId,EditorBeanGroup>());
-        groupMap.put(RecordType.death,   new HashMap<GroupId,EditorBeanGroup>());
-        groupMap.put(RecordType.misc,    new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.BIRTH,   new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.MARRIAGE,new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.DEATH,   new HashMap<GroupId,EditorBeanGroup>());
+        groupMap.put(RecordType.MISC,    new HashMap<GroupId,EditorBeanGroup>());
 
-        groupArray.put(RecordType.birth,   new ArrayList<EditorBeanGroup>());
-        groupArray.put(RecordType.marriage,new ArrayList<EditorBeanGroup>());
-        groupArray.put(RecordType.death,   new ArrayList<EditorBeanGroup>());
-        groupArray.put(RecordType.misc,    new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.BIRTH,   new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.MARRIAGE,new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.DEATH,   new ArrayList<EditorBeanGroup>());
+        groupArray.put(RecordType.MISC,    new ArrayList<EditorBeanGroup>());
 
         //   groupe               Birth        Marriage      Death       Misc
 	init(GroupId.general,     "Birth",     "Marriage",   "Death",    "Misc" ,         ks1 );
@@ -105,8 +105,8 @@ public class EditorBeanGroup {
             }
             EditorBeanGroup group;
             group = new EditorBeanGroup( id, title, ks );
-            groupMap.get(RecordType.birth).put(id, group);
-            groupArray.get(RecordType.birth).add( group);
+            groupMap.get(RecordType.BIRTH).put(id, group);
+            groupArray.get(RecordType.BIRTH).add( group);
 
             if ( marriageTitle!= null && !marriageTitle.isEmpty() ) {
                 title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+marriageTitle);
@@ -114,8 +114,8 @@ public class EditorBeanGroup {
                 title = "";
             }
             group = new EditorBeanGroup( id, title, ks );
-            groupMap.get(RecordType.marriage).put(id, group);
-            groupArray.get(RecordType.marriage).add( group);
+            groupMap.get(RecordType.MARRIAGE).put(id, group);
+            groupArray.get(RecordType.MARRIAGE).add( group);
 
             if ( deathTitle!= null && !deathTitle.isEmpty() ) {
                 title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+deathTitle);
@@ -123,8 +123,8 @@ public class EditorBeanGroup {
                 title = "";
             }
             group = new EditorBeanGroup( id, title, ks );
-            groupMap.get(RecordType.death).put(id, group);
-            groupArray.get(RecordType.death).add( group);
+            groupMap.get(RecordType.DEATH).put(id, group);
+            groupArray.get(RecordType.DEATH).add( group);
 
             if ( miscTitle!= null && !miscTitle.isEmpty() ) {
                 title = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.row."+miscTitle);
@@ -132,8 +132,8 @@ public class EditorBeanGroup {
                 title = "";
             }
             group = new EditorBeanGroup( id, title, ks );
-            groupMap.get(RecordType.misc).put(id, group);
-            groupArray.get(RecordType.misc).add( group);
+            groupMap.get(RecordType.MISC).put(id, group);
+            groupArray.get(RecordType.MISC).add( group);
     }
 
     static public void addField(RecordType recordType, GroupId groupId, EditorBeanField field) {

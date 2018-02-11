@@ -8,7 +8,7 @@ package ancestris.modules.releve.table;
 import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
-import ancestris.modules.releve.model.DataManager.RecordType;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
@@ -18,33 +18,23 @@ import genj.util.WordBuffer;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Toolkit;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.StringReader;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
-import javax.swing.UIManager;
-import javax.swing.border.Border;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.RowSorterEvent;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
@@ -202,11 +192,9 @@ public class ResultDialog extends javax.swing.JFrame {
         GroupableTableColumnModel cm = (GroupableTableColumnModel) jTableResult.getColumnModel();
 
         int col = 1;
-        for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(RecordType.misc).iterator(); groupIter.hasNext();) {
-            EditorBeanGroup beanGroup = groupIter.next();
+        for (EditorBeanGroup beanGroup : EditorBeanGroup.getGroups(RecordType.MISC)) {
             ColumnGroup columnGroup = new ColumnGroup(beanGroup.getTitle());
-            for (Iterator<EditorBeanField> fieldIter = beanGroup.getFields().iterator() ; fieldIter.hasNext() ;) {
-                EditorBeanField beanField = fieldIter.next();
+            for (EditorBeanField beanField : beanGroup.getFields()) {
                 columnGroup.add(cm.getColumn(col));
                 col++;
             }
@@ -819,7 +807,7 @@ public class ResultDialog extends javax.swing.JFrame {
             //return outputFileBuffer.getValue(row, col);
             //return outputFileBuffer.getValue(jTableResult.convertRowIndexToModel(row), col);
             if (col == 0) {
-                return Integer.valueOf(row + 1);
+                return row + 1;
             } else {
                 return outputFileBuffer.getValueAt(row, col-1);
             }

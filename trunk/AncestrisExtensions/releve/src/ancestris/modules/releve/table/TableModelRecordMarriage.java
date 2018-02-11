@@ -4,6 +4,7 @@ import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldPicture;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.RecordType;
 import javax.swing.RowFilter;
 
 /**
@@ -60,10 +61,10 @@ public class TableModelRecordMarriage extends TableModelRecordAbstract {
                 value = record.getEventDateProperty();
                 break;
             case 2:
-                value = record.getIndiLastName().toString() + " " + record.getIndiFirstName().toString();
+                value = record.getIndi().getLastName().toString() + " " + record.getIndi().getFirstName().toString();
                 break;
             case 3:
-                value = record.getWifeLastName().toString() + " " + record.getWifeFirstName().toString();
+                value = record.getWife().getLastName().toString() + " " + record.getWife().getFirstName().toString();
                 break;
             case 4:
                 value = record.getCote() + " " + record.getFreeComment();
@@ -81,11 +82,7 @@ public class TableModelRecordMarriage extends TableModelRecordAbstract {
 
             @Override
             public boolean include(Entry<? extends TableModelRecordAbstract, ? extends Integer> entry) {
-                if (getRecord(entry.getIdentifier()).getType() == DataManager.RecordType.marriage) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return getRecord(entry.getIdentifier()).getType() == RecordType.MARRIAGE;
             }
         };
     }

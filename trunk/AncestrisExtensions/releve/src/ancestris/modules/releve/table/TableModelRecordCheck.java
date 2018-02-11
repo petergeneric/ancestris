@@ -2,14 +2,13 @@ package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
-import ancestris.modules.releve.model.DataManager.RecordType;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.Record;
 import java.util.ArrayList;
-import java.util.Iterator;
 import javax.swing.table.AbstractTableModel;
 
 /**
@@ -18,9 +17,9 @@ import javax.swing.table.AbstractTableModel;
  */
 public class TableModelRecordCheck extends AbstractTableModel {
 
-   private ArrayList<FieldType> fieldTypeList = new ArrayList<FieldType>();
-   private ArrayList<String> columnNameList = new ArrayList<String>();
-   private RecordModel modelParent;
+   private final ArrayList<FieldType> fieldTypeList = new ArrayList<FieldType>();
+   private final ArrayList<String> columnNameList = new ArrayList<String>();
+   private final RecordModel modelParent;
 
    private final static Field birthField = new FieldSimpleValue();
    private final static Field marriageField = new FieldSimpleValue();
@@ -38,22 +37,12 @@ public class TableModelRecordCheck extends AbstractTableModel {
      */
     public TableModelRecordCheck(RecordModel modelAll) {
         this.modelParent = modelAll;
-        int i = 0;
-//        for (FieldType fieldType : FieldType.values() ) {
-//            fieldTypeList[i] = fieldType;
-//            columnNameList[i] = EditorBeanField.getLabel(fieldType);
-//            i++;
-//        }
-
-        for (Iterator<EditorBeanGroup> groupIter =  EditorBeanGroup.getGroups(RecordType.misc).iterator() ; groupIter.hasNext(); ) {
-                EditorBeanGroup group =groupIter.next();
-                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext(); ) {
-                    EditorBeanField editorBeanField = fieldIter.next();
-                    fieldTypeList.add(editorBeanField.getFieldType());
-                    columnNameList.add(editorBeanField.getLabel());
-                    i++;
+       for (EditorBeanGroup group : EditorBeanGroup.getGroups(RecordType.MISC)) {
+            for (EditorBeanField editorBeanField : group.getFields()) {
+                fieldTypeList.add(editorBeanField.getFieldType());
+                columnNameList.add(editorBeanField.getLabel());
             }
-        }
+       }
     }
 
     ///////////////////////////////////////////////////////////////////////////
@@ -89,13 +78,13 @@ public class TableModelRecordCheck extends AbstractTableModel {
             // si le releve est une naissance, deces, ou maraige, j'affiche une constante
             // si type de releve = misc , j'affiche le contenu du champ EventType
             switch (record.getType()) {
-                case birth:
+                case BIRTH:
                     field = birthField;
                     break;
-                case marriage:
+                case MARRIAGE:
                     field = marriageField;
                     break;
-                case death:
+                case DEATH:
                     field = deathField;
                     break;
                 default:

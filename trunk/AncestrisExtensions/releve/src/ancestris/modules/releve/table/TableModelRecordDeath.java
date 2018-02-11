@@ -1,6 +1,7 @@
 package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.model.*;
+import ancestris.modules.releve.model.Record.RecordType;
 import javax.swing.RowFilter;
 
 /**
@@ -55,28 +56,28 @@ public class TableModelRecordDeath extends TableModelRecordAbstract {
         Record record = getRecord(row);
         switch (col) {
             case 0:
-                value = new Integer(row + 1);
+                value = row + 1;
                 break;
             case 1:
-                value = record.getIndiLastName().toString() + " " + record.getIndiFirstName().toString();
+                value = record.getIndi().getLastName().toString() + " " + record.getIndi().getFirstName().toString();
                 break;
             case 2:
-                value = record.getIndiSex();
+                value = record.getIndi().getSex();
                 break;
             case 3:
                 value = record.getEventDateProperty();
                 break;
             case 4:
-                value = record.getIndiAge();
+                value = record.getIndi().getAge();
                 break;
             case 5:
-                value = record.getIndiFatherLastName().toString() + " " + record.getIndiFatherFirstName().toString();
+                value = record.getIndi().getFatherLastName().toString() + " " + record.getIndi().getFatherFirstName().toString();
                 break;
             case 6:
-                value = record.getIndiMotherLastName().toString() + " " + record.getIndiMotherFirstName().toString();
+                value = record.getIndi().getMotherLastName().toString() + " " + record.getIndi().getMotherFirstName().toString();
                 break;
             case 7:
-                value = record.getIndiBirthPlace().toString();
+                value = record.getIndi().getBirthPlace().toString();
                 break;
             case 8:
                 value = record.getCote() + " " + record.getFreeComment();
@@ -96,11 +97,7 @@ public class TableModelRecordDeath extends TableModelRecordAbstract {
 
             @Override
             public boolean include(Entry<? extends TableModelRecordAbstract, ? extends Integer> entry) {
-                if (getRecord(entry.getIdentifier()).getType() == DataManager.RecordType.death) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return getRecord(entry.getIdentifier()).getType() == RecordType.DEATH;
             }
         };
     }

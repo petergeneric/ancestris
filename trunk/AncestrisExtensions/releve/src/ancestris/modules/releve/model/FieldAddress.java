@@ -6,8 +6,4 @@ package ancestris.modules.releve.model;
  */
 public class FieldAddress extends FieldSimpleValue {
 
-    @Override
-    public FieldAddress clone() throws CloneNotSupportedException {
-        return (FieldAddress) super.clone();
-    }
 }

@@ -1,7 +1,7 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.editor.EditorBeanGroup.GroupId;
-import ancestris.modules.releve.model.DataManager.RecordType;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field.FieldType;
 
 /**
@@ -121,10 +121,10 @@ public class EditorBeanField {
             boolean deathUse, boolean deathVisible,
             boolean miscUse, boolean miscVisible
             ) {
-            EditorBeanGroup.addField( RecordType.birth,    groupId, new EditorBeanField( fieldType, birthUse, birthVisible ));
-            EditorBeanGroup.addField( RecordType.marriage, groupId, new EditorBeanField( fieldType, marriageUse, marriageVisible ));
-            EditorBeanGroup.addField( RecordType.death,    groupId, new EditorBeanField( fieldType, deathUse, deathVisible ));
-            EditorBeanGroup.addField( RecordType.misc,     groupId, new EditorBeanField( fieldType, miscUse, miscVisible ));
+            EditorBeanGroup.addField(RecordType.BIRTH,    groupId, new EditorBeanField( fieldType, birthUse, birthVisible ));
+            EditorBeanGroup.addField(RecordType.MARRIAGE, groupId, new EditorBeanField( fieldType, marriageUse, marriageVisible ));
+            EditorBeanGroup.addField(RecordType.DEATH,    groupId, new EditorBeanField( fieldType, deathUse, deathVisible ));
+            EditorBeanGroup.addField(RecordType.MISC,     groupId, new EditorBeanField( fieldType, miscUse, miscVisible ));
 
     }
 

@@ -1,6 +1,7 @@
 package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.model.*;
+import ancestris.modules.releve.model.Record.RecordType;
 import javax.swing.RowFilter;
 import javax.swing.RowFilter.Entry;
 
@@ -66,22 +67,22 @@ public class TableModelRecordBirth extends TableModelRecordAbstract {
         Object value;
         switch (col) {
             case 0:
-                value = new Integer(row + 1);
+                value = row + 1;
                 break;
             case 1:
-                value = record.getIndiLastName().toString() + " " + record.getIndiFirstName().toString();
+                value = record.getIndi().getLastName().toString() + " " + record.getIndi().getFirstName().toString();
                 break;
             case 2:
-                value = record.getIndiSex();
+                value = record.getIndi().getSex();
                 break;
             case 3:
                 value = record.getEventDateProperty();
                 break;
             case 4:
-                value = record.getIndiFatherLastName().toString() + " " + record.getIndiFatherFirstName().toString();
+                value = record.getIndi().getFatherLastName().toString() + " " + record.getIndi().getFatherFirstName().toString();
                 break;
             case 5:
-                value = record.getIndiMotherLastName().toString() + " " + record.getIndiMotherFirstName().toString();
+                value = record.getIndi().getMotherLastName().toString() + " " + record.getIndi().getMotherFirstName().toString();
                 break;
             case 6:
                 value = record.getCote() + " " + record.getFreeComment();
@@ -99,11 +100,7 @@ public class TableModelRecordBirth extends TableModelRecordAbstract {
 
             @Override
             public boolean include(Entry<? extends TableModelRecordAbstract, ? extends Integer> entry) {
-                if (getRecord(entry.getIdentifier()).getType() == DataManager.RecordType.birth) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return getRecord(entry.getIdentifier()).getType() == RecordType.BIRTH;
             }
         };
     }

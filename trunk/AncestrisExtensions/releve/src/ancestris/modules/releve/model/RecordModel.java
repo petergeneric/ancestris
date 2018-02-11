@@ -320,7 +320,7 @@ public class RecordModel {
                 if (record.getEventDateString().isEmpty()) {
                     errorMessage.append("La date de l'évènement est vide").append("\n");
                 }
-                if (record.getIndiLastName().isEmpty() && record.getIndiFirstName().isEmpty()) {
+                if (record.getIndi().getLastName().isEmpty() && record.getIndi().getFirstName().isEmpty()) {
                     errorMessage.append("Le nom et le prénom sont vides").append("\n");
                 }
             }
@@ -359,8 +359,8 @@ public class RecordModel {
 
         for(Record record : releveList) {
             if ( record.getEventDateProperty().toString().equals(referenceRecord.getEventDateProperty().toString())
-                 && record.getIndiFirstName().equals(referenceRecord.getIndiFirstName())
-                 && record.getIndiLastName().equals(referenceRecord.getIndiLastName())
+                 && record.getIndi().getFirstName().equals(referenceRecord.getIndi().getFirstName())
+                 && record.getIndi().getLastName().equals(referenceRecord.getIndi().getLastName())
                  && record != referenceRecord ) {
                  duplicate.add(record);
             }

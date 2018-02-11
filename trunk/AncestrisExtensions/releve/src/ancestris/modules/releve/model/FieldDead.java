@@ -6,8 +6,8 @@ package ancestris.modules.releve.model;
  */
 public class FieldDead extends Field {
 
-    public enum DeadState { unknown, dead, alive }
-    private DeadState value = DeadState.unknown;
+    public static enum DeadState { UNKNOWN, DEAD, ALIVE }
+    private DeadState value = DeadState.UNKNOWN;
     public static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
     public static String aliveLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Alive");
     public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Unknown");
@@ -23,27 +23,29 @@ public class FieldDead extends Field {
     @Override
     public String getValue() {
         switch (value) {
-            case dead  : return DeadState.dead.name();
-            case alive : return DeadState.alive.name();
+            case DEAD  : return DeadState.DEAD.name();
+            case ALIVE : return DeadState.ALIVE.name();
             default: return "";
         }
     }
 
     @Override
     public void setValue(Object stringValue) {
-        String inputValue = stringValue.toString().toLowerCase();
-        if ( "true".equalsIgnoreCase( inputValue)
-                || inputValue.indexOf(deadLabel.toLowerCase()) != -1
-                || inputValue.indexOf("dead") != -1
-                || inputValue.indexOf("dcd") != -1
-                || inputValue.indexOf("feu") != -1
+        String inputValue = stringValue.toString().toUpperCase();
+        if ( DeadState.DEAD.name().equals(inputValue)
+                ||"TRUE".equals( inputValue)
+                || inputValue.contains(deadLabel.toUpperCase())
+                || inputValue.contains("DCD")
+                || inputValue.contains("FEU")
                 ) {
-             value = DeadState.dead;
-        } else if (inputValue.indexOf(aliveLabel.toLowerCase()) != -1
-                || "alive".equalsIgnoreCase(stringValue.toString())) {
-             value = DeadState.alive;
+             value = DeadState.DEAD;
+        } else if (DeadState.ALIVE.name().equals(inputValue)
+                || "FALSE".equals( inputValue) 
+                || inputValue.contains(aliveLabel.toUpperCase())
+                ) {
+             value = DeadState.ALIVE;
         } else {
-            value = DeadState.unknown;
+            value = DeadState.UNKNOWN;
         }
     }
 
@@ -51,8 +53,8 @@ public class FieldDead extends Field {
     @Override
     public String toString() {
         switch (value) {
-            case dead  : return deadLabel;
-            case alive : return aliveLabel;
+            case DEAD  : return deadLabel;
+            case ALIVE : return aliveLabel;
             default: return "";
         }
     }
@@ -60,11 +62,6 @@ public class FieldDead extends Field {
     @Override
     public boolean isEmpty() {
         return false;
-    }
-
-    @Override
-    public FieldDead clone() throws CloneNotSupportedException {
-        return (FieldDead) super.clone();
     }
 
 }

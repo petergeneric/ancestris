@@ -1,8 +1,9 @@
  package ancestris.modules.releve.model;
 
-import ancestris.modules.releve.dnd.MergeQuery;
-import static ancestris.modules.releve.dnd.MergeQuery.isSameFirstName;
-import static ancestris.modules.releve.dnd.MergeQuery.isSameLastName;
+import ancestris.modules.releve.merge.MergeQuery;
+import static ancestris.modules.releve.merge.MergeQuery.isSameFirstName;
+import static ancestris.modules.releve.merge.MergeQuery.isSameLastName;
+import ancestris.modules.releve.model.Record.RecordType;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -79,13 +80,13 @@ public class GedcomLinkProvider {
             GedcomLink gedcomLink;
             // je recherche l'évènement dans le gedcom
             switch (record.getType()) {
-                case birth:
+                case BIRTH:
                     gedcomLink = findBirth(record);
                     break;
-                case marriage:
+                case MARRIAGE:
                     gedcomLink = findMarriage(record, marrDateTag );
                     break;
-                case death:
+                case DEATH:
                     gedcomLink = findDeath(record);
                     break;
                 default:  // misc
@@ -108,7 +109,7 @@ public class GedcomLinkProvider {
     private GedcomLink findBirth(Record birthRecord) {
         GedcomLink gedcomLink = new GedcomLink(birthRecord);
         
-        PropertyDate recordBirthDate = birthRecord.getIndiBirthDate().getPropertyDate();
+        PropertyDate recordBirthDate = birthRecord.getIndi().getBirthDate().getPropertyDate();
         if ( !recordBirthDate.isComparable() ) {
             recordBirthDate = birthRecord.getEventDateProperty();   
         } 
@@ -139,21 +140,21 @@ public class GedcomLinkProvider {
             }
 
             // meme sexe de l'enfant
-            if (birthRecord.getIndiSex().getSex() != FieldSex.UNKNOWN
+            if (birthRecord.getIndi().getSex().getSex() != FieldSex.UNKNOWN
                     && indi.getSex() != PropertySex.UNKNOWN
-                    && birthRecord.getIndiSex().getSex() != indi.getSex()) {
+                    && birthRecord.getIndi().getSex().getSex() != indi.getSex()) {
                 continue;
             }
 
             // meme nom de l'enfant
             if (!birthRecord.getIndi().getLastName().isEmpty()
-                    && !MergeQuery.isSameLastName(birthRecord.getIndiLastName().getValue(), indi.getLastName())) {
+                    && !MergeQuery.isSameLastName(birthRecord.getIndi().getLastName().getValue(), indi.getLastName())) {
                 continue;
             }
 
             // meme prenom de l'enfant
             if (!birthRecord.getIndi().getFirstName().isEmpty()
-                    && !MergeQuery.isSameFirstName(birthRecord.getIndiFirstName().getValue(), indi.getFirstName())) {
+                    && !MergeQuery.isSameFirstName(birthRecord.getIndi().getFirstName().getValue(), indi.getFirstName())) {
                 continue;
             }
             
@@ -199,21 +200,21 @@ public class GedcomLinkProvider {
             }
 
             // meme sexe de l'enfant
-            if (deathRecord.getIndiSex().getSex() != FieldSex.UNKNOWN
+            if (deathRecord.getIndi().getSex().getSex() != FieldSex.UNKNOWN
                     && indi.getSex() != PropertySex.UNKNOWN
-                    && deathRecord.getIndiSex().getSex() != indi.getSex()) {
+                    && deathRecord.getIndi().getSex().getSex() != indi.getSex()) {
                 continue;
             }
 
             // meme nom de l'enfant
             if (!deathRecord.getIndi().getLastName().isEmpty()
-                    && !MergeQuery.isSameLastName(deathRecord.getIndiLastName().getValue(), indi.getLastName())) {
+                    && !MergeQuery.isSameLastName(deathRecord.getIndi().getLastName().getValue(), indi.getLastName())) {
                 continue;
             }
 
             // meme prenom de l'enfant
             if (!deathRecord.getIndi().getFirstName().isEmpty()
-                    && !MergeQuery.isSameFirstName(deathRecord.getIndiFirstName().getValue(), indi.getFirstName())) {
+                    && !MergeQuery.isSameFirstName(deathRecord.getIndi().getFirstName().getValue(), indi.getFirstName())) {
                 continue;
             }
 
@@ -276,14 +277,14 @@ public class GedcomLinkProvider {
             if (husband != null) {
 
                 // meme nom de l'epoux
-                if (!marriageRecord.getIndiLastName().isEmpty()
-                        && !isSameLastName(marriageRecord.getIndiLastName().getValue(), husband.getLastName())) {
+                if (!marriageRecord.getIndi().getLastName().isEmpty()
+                        && !isSameLastName(marriageRecord.getIndi().getLastName().getValue(), husband.getLastName())) {
                     continue;
                 }
 
                 //meme prénom de l'epoux
                 if (!marriageRecord.getIndi().getFirstName().isEmpty()
-                        && !isSameFirstName(marriageRecord.getIndiFirstName().getValue(), husband.getFirstName())) {
+                        && !isSameFirstName(marriageRecord.getIndi().getFirstName().getValue(), husband.getFirstName())) {
                     continue;
                 }
 
@@ -292,12 +293,12 @@ public class GedcomLinkProvider {
             if (wife != null) {
                 // meme nom de l'epouse
                 if (!marriageRecord.getWife().getLastName().isEmpty()
-                        && !isSameLastName(marriageRecord.getWifeLastName().getValue(), wife.getLastName())) {
+                        && !isSameLastName(marriageRecord.getWife().getLastName().getValue(), wife.getLastName())) {
                     continue;
                 }
                 //meme prénom de l'epouse
                 if (!marriageRecord.getWife().getFirstName().isEmpty()
-                        && !isSameFirstName(marriageRecord.getWifeFirstName().getValue(), wife.getFirstName())) {
+                        && !isSameFirstName(marriageRecord.getWife().getFirstName().getValue(), wife.getFirstName())) {
                     continue;
                 }
 
@@ -366,21 +367,21 @@ public class GedcomLinkProvider {
                     }
 
                     // meme sexe de l'individu
-                    if (miscRecord.getIndiSex().getSex() != FieldSex.UNKNOWN
+                    if (miscRecord.getIndi().getSex().getSex() != FieldSex.UNKNOWN
                             && indi.getSex() != PropertySex.UNKNOWN
-                            && miscRecord.getIndiSex().getSex() != indi.getSex()) {
+                            && miscRecord.getIndi().getSex().getSex() != indi.getSex()) {
                         continue;
                     }
 
                     // meme nom de l'individu
                     if (!miscRecord.getIndi().getLastName().isEmpty()
-                            && !MergeQuery.isSameLastName(miscRecord.getIndiLastName().getValue(), indi.getLastName())) {
+                            && !MergeQuery.isSameLastName(miscRecord.getIndi().getLastName().getValue(), indi.getLastName())) {
                         continue;
                     }
 
                     // meme prenom de l'individu
                     if (!miscRecord.getIndi().getFirstName().isEmpty()
-                            && !MergeQuery.isSameFirstName(miscRecord.getIndiFirstName().getValue(), indi.getFirstName())) {
+                            && !MergeQuery.isSameFirstName(miscRecord.getIndi().getFirstName().getValue(), indi.getFirstName())) {
                         continue;
                     }
 

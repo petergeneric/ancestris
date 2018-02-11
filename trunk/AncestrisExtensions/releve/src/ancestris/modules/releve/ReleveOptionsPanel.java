@@ -115,7 +115,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonConfigEditor = new javax.swing.JButton();
         jLabelFiller = new javax.swing.JLabel();
         browserOptionsPanel = new ancestris.modules.releve.imageBrowser.BrowserOptionsPanel();
-        mergeOptionPanel = new ancestris.modules.releve.dnd.MergeOptionPanel();
+        mergeOptionPanel = new ancestris.modules.releve.merge.MergeOptionPanel();
         jLabelFiller1 = new javax.swing.JLabel();
 
         setForeground(new java.awt.Color(200, 45, 45));
@@ -346,7 +346,7 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
     private javax.swing.JPanel jPanelEditor;
     private javax.swing.JPanel jPanelExludeCompletion;
     private javax.swing.JScrollPane jScrollPane1;
-    private ancestris.modules.releve.dnd.MergeOptionPanel mergeOptionPanel;
+    private ancestris.modules.releve.merge.MergeOptionPanel mergeOptionPanel;
     // End of variables declaration//GEN-END:variables
 
 

@@ -3,6 +3,7 @@ package ancestris.modules.releve.file;
 import ancestris.modules.releve.model.PlaceManager;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.ReleveTopComponent;
+import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordModel;
 import java.io.BufferedReader;
 import java.io.File;
@@ -82,7 +83,7 @@ public class FileManager {
      * @param fileFormat format du fichier 
      * @param models  liste des modeles a enregistrer
      */
-    public static StringBuilder saveFile( PlaceManager placeManager, File saveFile, FileFormat fileFormat , RecordModel recordModel, DataManager.RecordType recordType ) {
+    public static StringBuilder saveFile( PlaceManager placeManager, File saveFile, FileFormat fileFormat , RecordModel recordModel, RecordType recordType ) {
         StringBuilder sb = new StringBuilder();
         if (saveFile != null) {
             // j'enregistre le répertoire du fichier

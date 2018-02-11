@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
  *
  * @author Michel
  */
-public class FieldDate extends Field implements Cloneable {
-    static private Pattern jjmmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{1,2})/([0-9]{4,4})");
-    static private Pattern mmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{4,4})");
-    static private Pattern aaaa = Pattern.compile("([0-9]{4,4})");
+public class FieldDate extends Field{
+    private static final Pattern jjmmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{1,2})/([0-9]{4,4})");
+    private static final Pattern mmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{4,4})");
+    private static final Pattern aaaa = Pattern.compile("([0-9]{4,4})");
 
     PropertyDate eventDate = new PropertyDate();
 
@@ -188,15 +188,5 @@ public class FieldDate extends Field implements Cloneable {
     @Override
     public boolean isEmpty() {
         return toString().isEmpty();
-    }
-
-    @Override
-    public FieldDate clone() throws CloneNotSupportedException {
-        //    FieldDate object = null;
-        //object = new FieldDate();
-        FieldDate object = (FieldDate) super.clone();
-        object.getPropertyDate().setValue(getPropertyDate().getValue());
-        // je renvoie le clone
-        return object;
     }
 }
