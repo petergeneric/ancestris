@@ -49,6 +49,7 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
 import java.util.Collection;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.swing.JDialog;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -67,6 +68,8 @@ import org.openide.windows.WindowManager;
  */
 public class TourAction  implements ActionListener {
 
+    private Logger LOG;
+    
     private final int ARROW = 80;
     private final int SMALLGAP = 20;
     private final int GAP = ARROW + SMALLGAP;
@@ -80,13 +83,15 @@ public class TourAction  implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         
+        LOG = Logger.getLogger("ancestris.guided_tour");
+        
         // Determine if the GraphicsDevice supports translucency.
         GraphicsEnvironment graphenv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         GraphicsDevice graphdev = graphenv.getDefaultScreenDevice();
 
         //If translucent windows aren't supported, just write a message
         if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
-            System.out.println("Guided Tour : translucency not supported. It may not work...");  
+            LOG.info("Guided Tour : translucency not supported. It may not work...");  
             // return; //  Showing internet tour instead...
         }
         
