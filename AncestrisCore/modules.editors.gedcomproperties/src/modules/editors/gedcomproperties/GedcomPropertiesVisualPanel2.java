@@ -14,8 +14,10 @@ package modules.editors.gedcomproperties;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
 import java.awt.Dimension;
+import java.awt.event.KeyEvent;
 import java.util.Calendar;
 import javax.swing.JPanel;
+import javax.swing.KeyStroke;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import static modules.editors.gedcomproperties.Constants.SUBM_ADDR;
@@ -55,6 +57,11 @@ public final class GedcomPropertiesVisualPanel2 extends JPanel implements Consta
         jTextField9.getDocument().addDocumentListener(this);
         jTextField10.getDocument().addDocumentListener(this);
         jTextField11.getDocument().addDocumentListener(this);
+        
+        KeyStroke enterStroke = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+        jButton1.getInputMap().put(enterStroke, "none");
+        jButton2.getInputMap().put(enterStroke, "none");
+
         }
 
     @Override

@@ -94,6 +94,7 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             gedcom.createEntity(Gedcom.SUBM);
             gedcom.getSubmitter();
             firstIndi = (Indi) gedcom.createEntity(Gedcom.INDI);
+            firstIndi.addDefaultProperties();
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
             return null;
@@ -124,14 +125,14 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
             // Save gedcom as new gedcom. User will be asked to name a filename and to save.
             // Function NewGedcom in GedcomDirectory will reopen it with default views, automatically
             String filename = prop_HEAD.getProperty(FILE).getDisplayValue();
-            GedcomDirectory.getDefault().newGedcom(gedcom, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_create") + " '" + filename + "'", filename, false);
-            return new Context(firstIndi);
-            
-        } else {
-            DialogManager.create(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreatedTitle"), 
-                    NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreated")).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
-            return null;
-        }
+            Context newContext = GedcomDirectory.getDefault().newGedcom(gedcom, NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "TITLE_chooseDir", filename), filename, false);
+            if (newContext != null) {
+                return new Context(firstIndi);
+            }
+        } 
+        DialogManager.create(NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreatedTitle"),
+                NbBundle.getMessage(GedcomPropertiesWizardIterator.class, "MSG_GedcomNotCreated")).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
+        return null;
     }
 
     /**

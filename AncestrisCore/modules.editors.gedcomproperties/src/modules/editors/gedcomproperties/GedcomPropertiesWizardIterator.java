@@ -50,16 +50,19 @@ public final class GedcomPropertiesWizardIterator implements WizardDescriptor.It
     private List<WizardDescriptor.Panel<WizardDescriptor>> getPanels() {
         if (panels == null) {
             panels = new ArrayList<WizardDescriptor.Panel<WizardDescriptor>>();
-            panels.add(new GedcomPropertiesWizardPanel1());
-            panels.add(new GedcomPropertiesWizardPanel2());
-            panels.add(new GedcomPropertiesWizardPanel3());
-            panels.add(new GedcomPropertiesWizardPanel4());
             if (mode == UPDATE) {
+                panels.add(new GedcomPropertiesWizardPanel1());
+                panels.add(new GedcomPropertiesWizardPanel2());
+                panels.add(new GedcomPropertiesWizardPanel3());
+                panels.add(new GedcomPropertiesWizardPanel4());
                 panels.add(new GedcomPropertiesWizardPanel5());
+                panels.add(new GedcomPropertiesWizardPanel6());
             }
-            panels.add(new GedcomPropertiesWizardPanel6());
             if (mode == CREATION) {
                 panels.add(new GedcomPropertiesWizardPanel7());
+                panels.add(new GedcomPropertiesWizardPanel2());
+                panels.add(new GedcomPropertiesWizardPanel4());
+                panels.add(new GedcomPropertiesWizardPanel1());
             }
             String[] steps = new String[panels.size()];
             for (int i = 0; i < panels.size(); i++) {

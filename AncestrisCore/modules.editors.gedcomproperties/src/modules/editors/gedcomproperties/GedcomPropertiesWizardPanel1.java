@@ -72,6 +72,11 @@ public class GedcomPropertiesWizardPanel1 implements WizardDescriptor.Validating
         
         getComponent().setFILE((String) wiz.getProperty(HEADER + ":" + FILE));
         getComponent().setNOTE((String) wiz.getProperty(HEADER + ":" + NOTE));
+
+        if (mode == CREATION) {
+            String name = (String) wiz.getProperty(INDI + ":" + LASTNAME);
+            getComponent().setFILE(name);
+        }
     }
 
     @Override
