@@ -104,7 +104,7 @@ class FeaturesPanel extends JPanel implements Constants {
 
             //If translucent windows aren't supported, exit.
             if (!graphdev.isWindowTranslucencySupported(GraphicsDevice.WindowTranslucency.TRANSLUCENT)) {
-                LOG.info("Guided Tour : translucency not supported. It may not work...");  
+                LOG.info("Guided Tour : translucency not supported. Will use opaque windows instead.");  
                 //supported = false; // "Showing internet tour... " // instead ?
             }
 
