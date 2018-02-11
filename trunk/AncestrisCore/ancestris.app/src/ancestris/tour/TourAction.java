@@ -210,7 +210,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = Color.BLACK;
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(500, 300);
-        TranslucentPopup popup = new TranslucentPopup(null, null, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(null, true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
         return popup.showDemo();
     }
 
@@ -219,7 +219,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = Color.BLACK;
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(500, 420);
-        TranslucentPopup popup = new TranslucentPopup(null, null, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, true);
+        TranslucentPopup popup = new TranslucentPopup(null, true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, true);
         return popup.showDemo();
     }
 
@@ -236,7 +236,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 440);
-        TranslucentPopup popup = new TranslucentPopup(null, null, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(null, true, true, -1, bgcolor, fgcolor, text, null, dim, SMALLGAP, SMALLGAP, welcome, false);
         return popup.showDemo();
     }
 
@@ -246,10 +246,9 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(780, 480);
-        Shape bubble = getBubble(true, dim, false, 0);
         Window w = getWindow(bgcolor, Color.RED, 0, 50, 400, 80, 3, 3);
         w.setVisible(true);
-        TranslucentPopup popup = new TranslucentPopup(mb, bubble, bgcolor, fgcolor, text, new Point(340, 130), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(mb, true, false, 0, bgcolor, fgcolor, text, new Point(340, 130), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
         w.setVisible(false);
         return stop;
@@ -261,9 +260,8 @@ public class TourAction  implements ActionListener {
         String text = NbBundle.getMessage(getClass(), "demo.menuview");
         Color bgcolor = new Color(0x00027b69);
         Color fgcolor = Color.WHITE;
-        Dimension dim = new Dimension(680, 220);
-        Shape bubble = getBubble(true, dim, false, 20);
-        TranslucentPopup popup = new TranslucentPopup(m, bubble, bgcolor, fgcolor, text, new Point(380, 260), dim, GAP, SMALLGAP, welcome, false);
+        Dimension dim = new Dimension(680, 240);
+        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(380, 260), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
         m.setPopupMenuVisible(false);
         return stop;
@@ -277,8 +275,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x004f027b);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 360);
-        Shape bubble = getBubble(true, dim, false, 20);
-        TranslucentPopup popup = new TranslucentPopup(m, bubble, bgcolor, fgcolor, text, new Point(370, 170), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(370, 170), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
         m.setPopupMenuVisible(false);
         return stop;
@@ -305,8 +302,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x000036ff);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(590, 380);
-        Shape bubble = getBubble(true, dim, false, 20);
-        TranslucentPopup popup = new TranslucentPopup(m, bubble, bgcolor, fgcolor, text, new Point(620, 270), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(620, 270), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
         if (subM != null) {
             subM.setPopupMenuVisible(false);
@@ -323,8 +319,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00643600);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 400);
-        Shape bubble = getBubble(true, dim, false, 20);
-        TranslucentPopup popup = new TranslucentPopup(m, bubble, bgcolor, fgcolor, text, new Point(150, 230), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(150, 230), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
         m.setPopupMenuVisible(false);
         return stop;
@@ -339,8 +334,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00004909);
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(680, 380);
-        Shape bubble = getBubble(true, dim, false, 20);
-        TranslucentPopup popup = new TranslucentPopup(m, bubble, bgcolor, fgcolor, text, new Point(450, 180), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(m, true, false, 20, bgcolor, fgcolor, text, new Point(450, 180), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
         m.setPopupMenuVisible(false);
         return stop;
@@ -354,8 +348,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x005dbcff);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 410);
-        Shape bubble = getBubble(true, dim, true, 15);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(240, 330), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 15, bgcolor, fgcolor, text, new Point(240, 330), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         demo.expandCollapse(true);
         return next;
@@ -366,9 +359,8 @@ public class TourAction  implements ActionListener {
         String text = NbBundle.getMessage(getClass(), "demo.tree");
         Color bgcolor = new Color(0x00bceca8);
         Color fgcolor = Color.BLACK;
-        Dimension dim = new Dimension(700, 400);
-        Shape bubble = getBubble(true, dim, true, 20);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(700, 400), dim, GAP, SMALLGAP, welcome, false);
+        Dimension dim = new Dimension(700, 420);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 20, bgcolor, fgcolor, text, new Point(700, 400), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -383,8 +375,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00a8cdec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(900, 500);
-        Shape bubble = getBubble(false, dim, true, 20);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(350, 320), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(350, 320), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -399,8 +390,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00bea8ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 480);
-        Shape bubble = getBubble(false, dim, true, 20);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(410, 330), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(410, 330), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -415,8 +405,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00ebeca8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 380);
-        Shape bubble = getBubble(false, dim, true, 20);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(420, 360), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(420, 360), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -431,8 +420,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00e3a8ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(800, 550);
-        Shape bubble = getBubble(true, dim, true, 60);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(550, 250), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 60, bgcolor, fgcolor, text, new Point(550, 250), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -446,8 +434,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00a8e3ec);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(650, 330);
-        Shape bubble = getBubble(false, dim, true, 20);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(60, 400), dim, SMALLGAP, GAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, false, true, 20, bgcolor, fgcolor, text, new Point(60, 400), dim, SMALLGAP, GAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -462,8 +449,7 @@ public class TourAction  implements ActionListener {
         Color bgcolor = new Color(0x00ecc1a8);
         Color fgcolor = Color.BLACK;
         Dimension dim = new Dimension(770, 400);
-        Shape bubble = getBubble(true, dim, true, 20);
-        TranslucentPopup popup = new TranslucentPopup(demo, bubble, bgcolor, fgcolor, text, new Point(240, 300), dim, GAP, SMALLGAP, welcome, false);
+        TranslucentPopup popup = new TranslucentPopup(demo, true, true, 20, bgcolor, fgcolor, text, new Point(240, 300), dim, GAP, SMALLGAP, welcome, false);
         boolean next = popup.showDemo();
         if (componentToBeClosed) {
             demo.close();
@@ -620,24 +606,105 @@ public class TourAction  implements ActionListener {
     
     private class TranslucentPopup extends JDialog implements KeyListener {
 
+        private final JDialog me;
+        private boolean exit = true;
+        private TourPanel panel;
+        private Dimension screenSize;
+        
         private Component demo;
         private TopComponent back;
-        private boolean exit = true;
-        private final JDialog me;
-        private TourPanel panel;
+        private boolean pointerLeftParam;
+        private boolean isCurvedParam;
+        private int pointerOffsetParam;
+        private Point pParam;
+        private Dimension dParam;
+        private Color bgcolorParam;
+        private Color fgcolorParam;
+        private String textParam;
+        private int gapLParam;
+        private int gapRParam;
+        private boolean endParam;
         
-        public TranslucentPopup(Component demo, Shape shape, Color bgcolor, Color fgcolor, String text, Point p, Dimension d, int gapL, int gapR, final TopComponent back, boolean end) {
+        public TranslucentPopup(Component demo, boolean isLeft, boolean isCurved, int  offset, Color bgcolor, Color fgcolor, String text, Point p, Dimension d, int gapL, int gapR, final TopComponent back, boolean end) {
             super();
             me = this;
             this.demo = demo;
             this.back = back;
+            this.pParam = p;
+            this.dParam = d;
+            this.pointerLeftParam = isLeft;
+            this.isCurvedParam = isCurved;
+            this.pointerOffsetParam = offset;
+            this.bgcolorParam = bgcolor;
+            this.fgcolorParam = fgcolor;
+            this.textParam = text;
+            this.gapLParam = gapL;
+            this.gapRParam = gapR;
+            this.endParam = end;
+            this.screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
 
             // Set dialog
             setModal(true);
             setUndecorated(true);
+            setDefaultCloseOperation(DO_NOTHING_ON_CLOSE); 
+            setUndecorated(true);
             setResizable(false);
+            addKeyListener(this);
+        }
+        
+        public boolean showDemo() {
+            Point pTC = null;
+            Dimension dTC = null;
+            boolean isTC = false;
+            
+            // Show demo panel
+            if (demo != null && demo instanceof TopComponent) {
+                ((TopComponent)demo).requestActive();
+                isTC = true;
+            }
+            
+            // Set Bubble orientation and location
+            // - If not a TC and no position provided, use default one (middle of the screen)
+            if (pParam == null) {
+                pParam = new Point((screenSize.width - dParam.width)/2, (screenSize.height - dParam.height)/2);  // default location, no pointer
+            } else 
+            // - If TC, overwrite provided orientation and position
+            if (isTC) {
+                pTC = demo.getLocationOnScreen();
+                dTC = new Dimension(demo.getBounds().width, demo.getBounds().height);
+                pParam.x = pTC.x + dTC.width / 2; // middle of component
+                pParam.y = pTC.y + dTC.height / 2; // middle of component
+                pointerLeftParam = (pParam.x <= (screenSize.width/2)); 
+                if (pointerLeftParam) {                   // pointer to the left
+                    gapLParam = GAP;
+                    gapRParam = SMALLGAP;
+                } else {                                  // pointer to the right
+                    pParam.x -= dParam.width;
+                    gapLParam = SMALLGAP;
+                    gapRParam = GAP;
+                }
+            }
+
+            setLocation(pParam);
+            
+            // Set Bubble shape
+            Shape bubble = null;
+            if (pointerOffsetParam == -1) {
+                bubble = new Path().append(new RoundRectangle2D.Double(0, 0, dParam.width, dParam.height, 50, 50));
+            } else {
+                bubble = getBubble(pointerLeftParam, dParam, isCurvedParam, pointerOffsetParam);
+            }
+            setShape(bubble);
+            
+            // Make it transparent if supported
+            if (transluscentIsSupported) {
+                me.setOpacity(0.90f);
+            }
+            
+            // Show bubble
             numDemo++;
-            panel = new TourPanel(numDemo, text, bgcolor, fgcolor, gapL, gapR, end) {
+            panel = new TourPanel(numDemo, textParam, bgcolorParam, fgcolorParam, gapLParam, gapRParam, endParam) {
                 @Override
                 public void closeDemo(boolean set) {
                     me.dispose();
@@ -647,27 +714,7 @@ public class TourAction  implements ActionListener {
             };
             getContentPane().add(panel);
             pack();
-            setLocationRelativeTo(demo);
-            if (p == null) {
-                Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-                p = new Point((screenSize.width - d.width)/2, (screenSize.height - d.height)/2);
-            }
-            setLocation(p);
-            setSize(d);
-            if (shape == null) {
-                shape = new Path().append(new RoundRectangle2D.Double(0, 0, d.width, d.height, 50, 50));
-            }
-            setShape(shape);
-            addKeyListener(this);
-        }
-        
-        public boolean showDemo() {
-            if (demo != null && demo instanceof TopComponent) {
-                ((TopComponent)demo).requestActive();
-            }
-            if (transluscentIsSupported) {
-                me.setOpacity(0.90f);
-            }
+            setSize(dParam);
             me.setVisible(true);
             return exit;
         }
