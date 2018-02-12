@@ -253,9 +253,11 @@ public class MediaWrapper {
         }
         
         // Now arrange sequence (move hostingProperty to index from current index)
-        Property p = hostingProperty.getParent().getProperty("OBJE");
-        int pos = hostingProperty.getParent().getPropertyPosition(p);
-        hostingProperty.getParent().moveProperty(hostingProperty, pos + index);
+        if (hostingProperty != null && hostingProperty.getParent() != null) {
+            Property p = hostingProperty.getParent().getProperty("OBJE");
+            int pos = hostingProperty.getParent().getPropertyPosition(p);
+            hostingProperty.getParent().moveProperty(hostingProperty, pos + index);
+        }
         
     }
 
