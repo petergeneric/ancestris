@@ -22,6 +22,7 @@
  */
 package genj.gedcom;
 
+import ancestris.util.swing.DialogManager;
 import genj.util.Origin;
 import genj.util.ReferenceSet;
 import genj.util.Registry;
@@ -826,7 +827,15 @@ public class Gedcom implements Comparable {
      */
     public void deleteEntity(Entity which) {
 
-    // Some entities dont' have ids (event definitions for example) - for
+        // Prevent removal of last individual (causes troubles in a number of modules)
+        if (which instanceof Indi && getEntities(INDI).size() == 1) {
+            DialogManager.createError(resources.getString("error.entity.cannotdelete.title"), resources.getString("error.entity.cannotdelete.msg"))
+                    .setDialogId("error.entity.cannotdelete").show();
+            return;
+        }
+        
+        
+        // Some entities dont' have ids (event definitions for example) - for
         // all others we check the id once more
         String id = which.getId();
         if (id.length() > 0) {
