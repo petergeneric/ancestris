@@ -250,10 +250,14 @@ public class TourAction  implements ActionListener {
         Color fgcolor = Color.WHITE;
         Dimension dim = new Dimension(780, 480);
         Window w = getWindow(bgcolor, Color.RED, 0, 50, 400, 80, 3, 3);
-        w.setVisible(true);
+        if (transluscentIsSupported) {
+            w.setVisible(true);
+        }
         TranslucentPopup popup = new TranslucentPopup(mb, true, false, 0, bgcolor, fgcolor, text, new Point(340, 130), dim, GAP, SMALLGAP, welcome, false);
         boolean stop = popup.showDemo();
-        w.setVisible(false);
+        if (transluscentIsSupported) {
+            w.setVisible(false);
+        }
         return stop;
     }
     
