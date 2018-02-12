@@ -69,7 +69,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
         // Defines corresponding gedcom fields
         gedcomFields = new JComponent[2][gedcomPlaceFormat.length];
         for (int i = 0; i < gedcomPlaceFormat.length; i++) {
-            String label = gedcomPlaceFormat[i];
+            String label = gedcomPlaceFormat[i].trim();
             gedcomFields[0][i] = new JLabel(label);
             gedcomFields[1][i] = new JTextField();
         }

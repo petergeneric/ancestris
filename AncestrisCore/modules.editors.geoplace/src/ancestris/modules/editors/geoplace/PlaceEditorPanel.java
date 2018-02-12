@@ -865,6 +865,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 return;
             }
             
+            if (!searchPlaceButton.isEnabled()) {
+                searchPlaceButton.setEnabled(true);
+            }
+            
             String filter = searchPlaceTextField.getText();
             
             gedcomPlacesListModel.clear();
