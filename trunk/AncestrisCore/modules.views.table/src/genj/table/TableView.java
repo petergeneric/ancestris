@@ -833,7 +833,9 @@ public class TableView extends View {
         public void gedcomWriteLockReleased(Gedcom gedcom) {
             // Resort table in case sort columns' content changed
             setMode(currentMode, false);
-            propertyTable.select(selectedContext);
+            if (selectedContext != null) {
+                propertyTable.select(selectedContext);
+            }
         }
 
         
