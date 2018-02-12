@@ -514,6 +514,7 @@ public abstract class GedcomDirectory {
      * Ask for a file and options and seve curent context gedcom file to it
      *
      * @param context
+     * @param outputFile
      *
      * @return
      */
@@ -557,7 +558,20 @@ public abstract class GedcomDirectory {
         SaveOptionsWidget options = new SaveOptionsWidget(context.getGedcom(), theFilters.toArray(new Filter[]{}));//, (Filter[])viewManager.getViews(Filter.class, gedcomBeingSaved));
         
         if (outputFile == null) {
-            File file = chooseFile(RES.getString("cc.save.title", context.getGedcom().toString()), RES.getString("cc.save.action"), options, context.getGedcom().toString(), true);
+
+            File file = new FileChooserBuilder(GedcomDirectory.class)
+                    .setDirectoriesOnly(false)
+                    .setDefaultBadgeProvider()
+                    .setAccessory(options)
+                    .setTitle(RES.getString("cc.save.title", context.getGedcom().toString()))
+                    .setApproveText(RES.getString("cc.save.action"))
+                    .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
+                    .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                    .setAcceptAllFileFilterUsed(false)
+                    .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
+                    .setSelectedFile(context.getGedcom().getOrigin().getFile())
+                    .showSaveDialog(false);
+
             if (file == null) {
                 return false;
             }
