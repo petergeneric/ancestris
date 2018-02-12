@@ -201,6 +201,9 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     public void expandCollapse(boolean expand) {
         Node node = explorerManager.getRootContext();
         node = node.getChildren().getNodeAt(0);
+        if (node == null) {
+            return;
+        }
         if (expand) {
             ((BeanTreeView) gedcomsPane).expandNode(node);
         } else {
