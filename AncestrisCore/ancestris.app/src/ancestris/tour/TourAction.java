@@ -20,6 +20,7 @@ import ancestris.app.ActionOpen;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import com.sun.awt.AWTUtilities;
@@ -32,6 +33,7 @@ import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
@@ -47,6 +49,7 @@ import java.awt.event.KeyListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
+import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 import java.util.logging.Logger;
@@ -110,9 +113,11 @@ public class TourAction  implements ActionListener {
         // Open demo gedcom if not already open (smaller than Kennedy)
         // (remember to close it afterward if it was not open)
         boolean wasOpen = false;
+        boolean found = false;
         Collection<? extends SampleProvider> files = AncestrisPlugin.lookupAll(SampleProvider.class);
         for (SampleProvider sample : files) {
             if (sample.getName().toLowerCase().contains(DEMOFILE)) {
+                found = true;
                 List<Context> loadedContexts = GedcomDirectory.getDefault().getContexts();
                 for (Context context : loadedContexts) {
                     Gedcom gedcom = context.getGedcom();
@@ -127,6 +132,22 @@ public class TourAction  implements ActionListener {
                 }
                 break;
             }
+        }
+        
+        // If not found ask to install Bourbon example
+        if (!found) {
+            LOG.info("Guided Tour : Bourbon module not installed. Required.");  
+            String title= NbBundle.getMessage(getClass(), "error.noBourbonTitl");
+            String msg= NbBundle.getMessage(getClass(), "error.noBourbonMsg");
+            Object o = DialogManager.create(title, msg).setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).setResizable(false).show();
+            if (o.equals(DialogManager.OK_OPTION)) {
+                try {
+                    Desktop.getDesktop().browse(new URI(NbBundle.getBundle("ancestris.welcome.resources.Bundle").getString("WelcomePage/GettingStartedLinks/tour.url.target")));
+                } catch (Exception ex) {
+                }
+
+            }
+            return;
         }
         
         // Walk through demo screens
@@ -625,6 +646,9 @@ public class TourAction  implements ActionListener {
                 // If ancestris component, create from context first
                 if (tcItem instanceof AncestrisTopComponent) {
                     List<Context> contexts = GedcomDirectory.getDefault().getContexts();
+                    if (contexts.isEmpty()) {
+                        continue;
+                    }
                     Context contextToOpen = contexts.get(0);
                     for (Context c : contexts) {
                         if (c.getGedcom().getName().contains(DEMOFILE)) {
