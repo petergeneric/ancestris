@@ -84,6 +84,7 @@ public class AutoCompletion extends PlainDocument {
 
     private void resetList()  {
         refreshingList = true;
+        comboList.add(""); // add a line at the end to have room to display the horizontal scrollbar
         comboBox.setModel(new DefaultComboBoxModel(comboList.toArray(new String[comboList.size()])));
         comboBox.setPopupVisible(false);
         refreshingList = false;
@@ -149,7 +150,7 @@ public class AutoCompletion extends PlainDocument {
         }
     }
 
-    public String[] getFilteredList(String text) {
+    private String[] getFilteredList(String text) {
         List<String> list = new ArrayList<String>();
         for (String item : comboList) {
             if (item.toLowerCase().contains(text.toLowerCase())) {
