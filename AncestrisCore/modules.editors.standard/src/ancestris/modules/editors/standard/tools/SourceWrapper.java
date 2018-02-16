@@ -742,7 +742,9 @@ public class SourceWrapper {
      */
     private void putMediaItems(Property property) {
         if (sourceMediaSet == null || sourceMediaSet.isEmpty()) {
-            return;
+            if (sourceMediaRemovedSet == null || sourceMediaRemovedSet.isEmpty()) {
+                return;
+            }
         }
         int index = 0;
         for (MediaWrapper media : sourceMediaSet) {

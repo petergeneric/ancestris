@@ -670,7 +670,6 @@ public class EventWrapper {
             source.remove();
         }
         
-        
     }
 
 
