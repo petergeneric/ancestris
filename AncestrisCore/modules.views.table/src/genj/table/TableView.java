@@ -818,7 +818,10 @@ public class TableView extends View {
         
         @Override
         public void gedcomWriteLockAcquired(Gedcom gedcom) {
-            selectedContext = new Context(propertyTable.getSelectedRow());
+            Property prop = propertyTable.getSelectedRow();
+            if (prop != null) {
+                selectedContext = new Context(prop);
+            }
         }
 
         @Override
