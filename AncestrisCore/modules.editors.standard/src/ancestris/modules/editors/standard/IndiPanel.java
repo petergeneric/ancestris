@@ -2051,7 +2051,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             return;
         }
         EventWrapper event = getCurrentEvent();
-        if (event == null) {
+        if (event == null || event.eventMediaSet.isEmpty()) {
             return;
         }
         MediaWrapper photo = event.eventMediaSet.get(event.eventMediaIndex);
@@ -3070,6 +3070,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Image
         if (file != null && file.exists()) {
             photoPanel.setMedia(file, getSexImage(sex));
+            prefMediaEventButton.setEnabled(true);
         } else {
             // try to display main indi photo rather than default grey one
             if (eventSet != null && !eventSet.isEmpty() 
@@ -3087,6 +3088,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             } else {
                 photoPanel.setMedia(null, getSexImage(sex));
             }
+            prefMediaEventButton.setEnabled(false);
         }
         
         // Title
