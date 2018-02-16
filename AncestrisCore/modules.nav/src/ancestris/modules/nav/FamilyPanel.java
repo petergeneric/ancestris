@@ -922,7 +922,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                             Indi spouse = (Indi) prop; // other spouse clicked
                             Fam[] fams = focusIndi.getFamiliesWhereSpouse();
                             for (int idx = 0; idx < fams.length; idx++) {
-                                if (fams[idx].getOtherSpouse(focusIndi).equals(spouse)) {
+                                Indi os = fams[idx].getOtherSpouse(focusIndi);
+                                if (os != null && os.equals(spouse)) {
                                     famIndex = idx;
                                     refresh();
                                     return;
