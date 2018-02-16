@@ -598,17 +598,17 @@ public class Utils {
             return fams[0];
         }
         
-        // If nothing selected, return first spouse
+        // If nothing selected, returns null
         DefaultMutableTreeNode selectedNode = (DefaultMutableTreeNode) familyTree.getLastSelectedPathComponent();
         if (selectedNode == null) {
-            return fams[0];
+            return null; 
         }
         
-        // If spouse cannot be determined from selection, return first spouse
+        // If spouse cannot be determined from selection, return null
         NodeWrapper node = (NodeWrapper) selectedNode.getUserObject();
         Fam fam = node.getCurrentFamily(indi);
         if (fam == null) {
-            return fams[0];
+            return null; 
         }
         
         // Else return detected family
