@@ -33,6 +33,7 @@ import java.util.regex.Pattern;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * The import function for Heredis originated Gedcom files
@@ -134,6 +135,9 @@ public class ImportHeredis extends Import {
             return true;
         }
         if (super.process()) {
+            return true;
+        }
+        if (processJulianHeredis()) {
             return true;
         }
         if (processFrenchRepHeredis()) {
@@ -273,7 +277,6 @@ public class ImportHeredis extends Import {
      * @return 
      */
     private boolean processTagNotAllowed() throws IOException {
-        // C'est un tag DATE: on transforme les dates rep
         String tag = input.getTag();
         TagPath path = input.getPath();
         if ("SOUR:DATE".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
@@ -281,7 +284,7 @@ public class ImportHeredis extends Import {
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
         }
-        if ("OBJE:DATE".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
+        if (path.toString().endsWith("OBJE:DATE")) {  // invalid tag here and redundant information, replace with _DATE
             String result = output.writeLine(input.getLevel(), "_" + tag, input.getValue());
             console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixTagNotAllowed", input.getLine() + " ==> " + result));
             return true;
@@ -378,6 +381,21 @@ public class ImportHeredis extends Import {
     }
 
     // calendrier repub
+    private boolean processJulianHeredis() throws IOException {
+        // C'est un tag DATE: on transforme les dates rep
+        if (input.getTag().equals("DATE")) {
+            String newValue = julianCalCheck(input.getValue());
+            if (newValue != null) {
+                String result = output.writeLine(input.getLevel(), input.getTag(), newValue);
+                console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixJulianCalendar", input.getLine() + " ==> " + result));
+                return true;
+
+            }
+        }
+        return false;
+    }
+
+    // calendrier repub
     private boolean processFrenchRepHeredis() throws IOException {
         // C'est un tag DATE: on transforme les dates rep
         if (input.getTag().equals("DATE")) {
@@ -392,10 +410,41 @@ public class ImportHeredis extends Import {
         return false;
     }
 
+    private String julianCalCheck(String in) {
+        final String JULIAN_TAG = "@#DJULIAN@";
+        final Pattern julian_cal = Pattern.compile("(" + JULIAN_TAG + " )(.*)");
+        final Pattern date_value = Pattern.compile("(FROM|BEF|AFT|BET|AND|TO|ABT|CAL|EST) (.*)");
+        final Pattern date_range = Pattern.compile("(FROM|BEF|AFT|BET|AND|TO) (.*) (TO|AND) (.*)");
+
+        String result = "";
+        Matcher matcher = julian_cal.matcher(in);
+        if (matcher.matches() && (matcher.groupCount() > 1)) {
+            // C'est un cal julian, on essaie d'interpreter
+            String date_parameter = matcher.group(2);
+            Matcher m1 = date_range.matcher(date_parameter);
+            if (m1.matches()) {
+                result += m1.group(1) + " " + JULIAN_TAG + " " + m1.group(2);
+                result += " " + m1.group(3) + " " + JULIAN_TAG + " " + m1.group(4);
+                return result;
+            }
+
+            m1 = date_value.matcher(date_parameter);
+            if (m1.matches()) {
+                result += m1.group(1) + " " + JULIAN_TAG + " " + m1.group(2);
+                return result;
+            }
+            result += JULIAN_TAG + " " + matcher.group(2);
+            return result;
+        } else {
+            return null;
+        }
+    }
+
     private String frenchCalCheck(String in) {
-        final Pattern french_cal = Pattern.compile("(@#DFRENCH R@ )(.*)");
-        final Pattern date_value = Pattern.compile("(FROM|BEF|AFT|BET|INT|TO) (.*)");
-        final Pattern date_range = Pattern.compile("(FROM|BEF|AFT|BET|INT|TO) (.*) (TO|AND) (.*)");
+        final String FRENCH_TAG = "@#DFRENCH R@";
+        final Pattern french_cal = Pattern.compile("(" + FRENCH_TAG + " )(.*)");
+        final Pattern date_value = Pattern.compile("(FROM|BEF|AFT|BET|AND|TO|ABT|CAL|EST) (.*)");
+        final Pattern date_range = Pattern.compile("(FROM|BEF|AFT|BET|AND|TO) (.*) (TO|AND) (.*)");
 
         String result = "";
         Matcher matcher = french_cal.matcher(in);
@@ -404,20 +453,20 @@ public class ImportHeredis extends Import {
             String date_parameter = matcher.group(2);
             Matcher m1 = date_range.matcher(date_parameter);
             if (m1.matches()) {
-                result += m1.group(1) + " @#DFRENCH R@ "
+                result += m1.group(1) + " " + FRENCH_TAG + " " 
                         + convDateFormat(m1.group(2));
-                result += " " + m1.group(3) + " @#DFRENCH R@ "
+                result += " " + m1.group(3) + " " + FRENCH_TAG + " "
                         + convDateFormat(m1.group(4));
                 return result;
             }
 
             m1 = date_value.matcher(date_parameter);
             if (m1.matches()) {
-                result += m1.group(1) + " @#DFRENCH R@ "
+                result += m1.group(1) + " " + FRENCH_TAG + " "
                         + convDateFormat(m1.group(2));
                 return result;
             }
-            result += "@#DFRENCH R@ " + convDateFormat(matcher.group(2));
+            result += FRENCH_TAG + " " + convDateFormat(matcher.group(2));
             return result;
         } else {
             return null;
@@ -461,12 +510,14 @@ public class ImportHeredis extends Import {
         Property[] props = null;
         Property prop = null;
         Property host = null;
+        Property form = null;
         boolean moved = false;
         
         console.println(NbBundle.getMessage(ImportHeredis.class, "Import.fixMedia"));
 
-        // Keep only one RESN tag per indi
+        // Clean Indi
         for (Indi indi : gedcom.getIndis()) {
+            // Keep only one RESN tag per indi
             props = indi.getProperties("RESN");
             if (props != null && props.length > 1) {
                 for (int i = 1 ; i< props.length ; i++) {
@@ -489,6 +540,24 @@ public class ImportHeredis extends Import {
             }
         }
 
+        // Move OBJE:FORM underneath OBJE:FORM:FILE
+        List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
+        Property obje = null;
+        for (Property file : fileList) {
+            obje = file.getParent();
+            form = obje.getProperty("FORM");
+            if (form != null) {
+                if (file != null && file.getProperty("FORM") == null) {
+                    file.addProperty("FORM", form.getValue());
+                } else {
+                    obje.addProperty("_FORM", form.getValue());
+                }
+                obje.delProperty(form);
+                console.println(NbBundle.getMessage(ImportGramps.class, "Import.fixMediaForm", file.toString()));
+                hasErrors = true;
+            }
+        }
+            
         // Put FORM underneath FILE on media
         for (Media media : gedcom.getMedias()) {
             prop = media.getProperty("FORM");
