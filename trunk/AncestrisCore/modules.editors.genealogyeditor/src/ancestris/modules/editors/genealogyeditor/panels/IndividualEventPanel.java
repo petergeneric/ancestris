@@ -561,6 +561,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameLabel.setVisible(true);
+            eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
             eventNameChoiceWidget.setVisible(true);
             eventNameChoiceWidget.setEditable(true);
             eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys(mEvent.getGedcom().getCollator()));
@@ -574,9 +575,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             eventCauseTextArea.setText(mEvent.getValue());
         } else if (mIndividualAttributesTags.contains(event.getTag()) && !event.getTag().equals("RESI")) {
             eventNameLabel.setVisible(true);
+            eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
             eventNameChoiceWidget.setVisible(true);
             eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet(mEvent.getTag()).getKeys(mEvent.getGedcom().getCollator()));
-            eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
             eventNameChoiceWidget.setText(mEvent.getValue());
             eventNameChoiceWidget.setEditable(true);
 
