@@ -141,7 +141,8 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             }
         });
 
-        String memoField = registry.get("placeTableFilter", "");
+        String city = PropertyPlace.getCityTag(gedcom);
+        String memoField = registry.get("placeTableFilter", city);
         if (!memoField.isEmpty()) {
             searchPlaceComboBox.setSelectedItem(memoField);
         }

@@ -31,7 +31,7 @@ public class PlaceDisplayFormatPanel extends javax.swing.JPanel {
         this.place = place;
         this.displayFormat = place.getGedcom().getPlaceDisplayFormat();
         if (displayFormat == null) {
-            displayFormat = getDefaultPlaceDisplayFormat();
+            displayFormat = place.getGedcom().getPlaceDisplayFormatStartingWithCity();
         } else if (place.format(null).equals(place.getFirstAvailableJurisdiction())) {
             displayFormat = "0";
         }
@@ -159,15 +159,6 @@ public class PlaceDisplayFormatPanel extends javax.swing.JPanel {
             if (i < (jurisdictions.length - 1)) {
                 ret += PropertyPlace.JURISDICTION_SEPARATOR + " ";
             }
-        }
-        return ret;
-    }
-    
-    private String getDefaultPlaceDisplayFormat() {
-        String[] jurisdictions = PropertyPlace.getFormat(place.getGedcom().getPlaceFormat());
-        String ret = "";
-        for (int i = 0 ; i < jurisdictions.length ; i++) {
-            ret += i + PropertyPlace.JURISDICTION_SEPARATOR;
         }
         return ret;
     }
