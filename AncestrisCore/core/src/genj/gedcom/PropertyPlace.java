@@ -203,7 +203,7 @@ public class PropertyPlace extends PropertyChoiceValue {
         ArrayList<String> result = new ArrayList<String>(10);
         String lastToken = JURISDICTION_SEPARATOR;
         for (StringTokenizer tokens = new StringTokenizer(value, ",", true); tokens.hasMoreTokens();) {
-            String token = tokens.nextToken();
+            String token = tokens.nextToken().trim();
             if (!JURISDICTION_SEPARATOR.equals(token)) {
                 result.add(token);
             } else if (JURISDICTION_SEPARATOR.equals(lastToken)) {
@@ -464,6 +464,17 @@ public class PropertyPlace extends PropertyChoiceValue {
         return -1;
     }
 
+    public static String getCityTag(Gedcom gedcom) {
+        Set<String> cityKeys = GedcomOptions.getInstance().getPlaceHierarchyCityKeys();
+        String[] format = getFormat(gedcom);
+        for (int i = 0; i < format.length; i++) {
+            if (cityKeys.contains(format[i].toLowerCase())) {
+                return format[i];
+            }
+        }
+        return "";
+    }
+    
     /**
      * Return PropertyMap for this Place. Resolve aginst gedcom version
      *

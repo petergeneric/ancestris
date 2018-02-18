@@ -108,6 +108,8 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
      *
      */
     private void initTree() {
+        // Set default place format
+        setPlaceFormatStartingWithCity();
         gpl = GeoPlacesList.getInstance(getGedcom());
         // Launch search for locations
         if (gpl.getPlaces() == null) {
@@ -176,6 +178,17 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
     }
 
 
+    /**
+     * Set default display format starting with city
+     */
+    private void setPlaceFormatStartingWithCity() {
+        String displayFormat = "";
+        Gedcom gedcom = getGedcom();
+        displayFormat = gedcom.getPlaceDisplayFormat();
+        if (displayFormat == null) {
+            gedcom.setPlaceDisplayFormat(gedcom.getPlaceDisplayFormatStartingWithCity());
+        }
+    }
     
     /**
      * This method is called from within the constructor to initialize the form.

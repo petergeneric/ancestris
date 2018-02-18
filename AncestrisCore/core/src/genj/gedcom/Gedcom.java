@@ -1544,6 +1544,27 @@ public class Gedcom implements Comparable {
     }
 
     /**
+     * Get place display format starting with city
+     */
+    public String getPlaceDisplayFormatStartingWithCity() {
+        String displayFormat = "";
+        String city = PropertyPlace.getCityTag(this);
+        String[] jurisdictions = PropertyPlace.getFormat(this);
+        for (int i = 0; i < jurisdictions.length; i++) {
+            if (jurisdictions[i].equals(city)) {
+                displayFormat += i + PropertyPlace.JURISDICTION_SEPARATOR;
+            }
+        }
+        for (int i = 0; i < jurisdictions.length; i++) {
+            if (!jurisdictions[i].equals(city)) {
+                displayFormat += i + PropertyPlace.JURISDICTION_SEPARATOR;
+            }
+        }
+        return displayFormat;
+    }
+    
+    
+    /**
      * getter. Get Place Display Format option for this gedcom.
      * Defaults to global preferences.
      *
