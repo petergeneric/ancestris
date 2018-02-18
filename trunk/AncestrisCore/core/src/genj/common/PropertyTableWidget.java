@@ -55,6 +55,7 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
+import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -76,6 +77,8 @@ public class PropertyTableWidget extends JPanel {
     private int visibleRowCount = -1;
     private TransferHandler transferer;
     private Map<PropertyTableModel, Table.Model> tableModels;
+    private Runnable selectionRunnable = null;
+    private Context tmpCtx = null;
 
     /**
      * Constructor
@@ -98,6 +101,15 @@ public class PropertyTableWidget extends JPanel {
         // setup layout
         setLayout(new BorderLayout());
         add(BorderLayout.CENTER, new JScrollPane(table));
+        
+        // init runnable
+        selectionRunnable= new Runnable() {
+            @Override
+            public void run() {
+                SelectionDispatcher.fireSelection(tmpCtx);
+                ignoreSelection = false;
+            }
+        };
         // done
     }
 
@@ -419,13 +431,14 @@ public class PropertyTableWidget extends JPanel {
                         }
                     }
                     // FIXME: action is handled here and selection is handled in changeSelection
-                    Object cell = getValueAt(row, col);
-                    if (cell != null && cell instanceof Property) {
-                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
-                    }
+                    // => FL : 2018-02-18 - comment out the 3 lines below
+//                    Object cell = getValueAt(row, col);
+//                    if (cell != null && cell instanceof Property) {
+//                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
+//                    }
                 }
             });
-//            setShortCut(panelShortcuts);
+            //setShortCut(panelShortcuts);
 
             // done
         }
@@ -571,9 +584,6 @@ public class PropertyTableWidget extends JPanel {
         @Override
         public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
 
-            // grab before context
-            List<? extends Property> before = getContext().getProperties();
-
             // let table do its thing
             super.changeSelection(rowIndex, columnIndex, toggle, extend);
 
@@ -581,6 +591,10 @@ public class PropertyTableWidget extends JPanel {
             if (ignoreSelection) {
                 return;
             }
+            ignoreSelection = true;
+
+            // grab before context
+            List<? extends Property> before = getContext().getProperties();
 
             List<Property> properties = new ArrayList<Property>();
             ListSelectionModel rows = getSelectionModel();
@@ -612,9 +626,8 @@ public class PropertyTableWidget extends JPanel {
 
             // tell about it
             if (!properties.isEmpty()) {
-                ignoreSelection = true;
-                SelectionDispatcher.fireSelection(new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties));
-                ignoreSelection = false;
+                tmpCtx = new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties);
+                SwingUtilities.invokeLater(selectionRunnable);
             }
 
             // done
