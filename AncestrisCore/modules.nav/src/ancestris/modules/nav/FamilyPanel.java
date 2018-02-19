@@ -70,6 +70,17 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     private final static String EVENT_BP = "navevent";
     private final static String FAMI_BP = "navfamindi";
     private final static String FAMP_BP = "navfamparent";
+
+    private final String TT_START = "<html>&bull;&nbsp;";
+    private final String TT_BR = "<br>&bull;&nbsp;";
+    private final String TT_END = "</html>";
+    private final String TT_CLICKSEL = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextClickSel");
+    private final String TT_CLICKSWITCH = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextClickSwitch");
+    private final String TT_DCLICKEDTSEL = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextDClickEdtSel");
+    private final String TT_DCLICKEDT = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextDClickEdt");
+    private final String TT_DCLICKCRE = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextDClickCre");
+    private final String TT_RCLICKMENU = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextRClickMenu");
+    
     
     private final static String[] NAV_TAGS = { HUSBAND_BP, WIFE_BP, PARENT_BP, INDILINE_BP, EVENT_BP, FAMI_BP, FAMP_BP };
 
@@ -122,12 +133,12 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         }
         
         // Init main panels
-        enableBlueprint(husband, new ABeanHandler(false), HUSBAND_EMPTY_BP);
+        enableBlueprint(husband, new ABeanHandler(), HUSBAND_EMPTY_BP);
         enableBlueprint(wife, new SpouseHandler(husband), WIFE_EMPTY_BP);
         enableBlueprint(husbFather, new ParentHandler(husband, PropertySex.MALE), FATHER_EMPTY_BP);
         enableBlueprint(husbMother, new ParentHandler(husband, PropertySex.FEMALE), MOTHER_EMPTY_BP);
-        enableBlueprint(familySpouse, new ABeanHandler(false), FAMS_EMPTY_BP);
-        enableBlueprint(familyParent, new ABeanHandler(false), FAMS_EMPTY_BP);
+        enableBlueprint(familySpouse, new ABeanHandler(), FAMS_EMPTY_BP);
+        enableBlueprint(familyParent, new ABeanHandler(), FAMS_EMPTY_BP);
 
         // Init other panels
         // Childs
@@ -211,10 +222,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         for (Component c : panel.getComponents()) {
             if (c instanceof ABluePrintBeans) {
                 ABluePrintBeans bean = (ABluePrintBeans) c;
-                bean.addMouseListener(new ABeanHandler(false));
+                bean.addMouseListener(new ABeanHandler());
                 
                 // Set tooltip
-                bean.setToolTipText(NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText"));
+                setDynamicToolTipText(bean, true, false);
 
                 // Set helper
                 new ExplorerHelper(bean).setPopupAllowed(true);
@@ -249,7 +260,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     
     public void setContext(Context context) {
         if (sticky) {
-            //sticky = false;
             return;
         }
         
@@ -264,7 +274,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return;
         }
 
-        famIndex = 0;
         this.context = context;
         if (entity instanceof Fam) {
             Fam family = (Fam) entity;
@@ -282,6 +291,15 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             focusIndi = focusFam.getHusband();
             if (focusIndi == null) {
                 focusIndi = focusFam.getWife();
+            }
+            int i = 0;
+            famIndex = 0;
+            for (Fam fam : focusIndi.getFamiliesWhereSpouse()) {
+                if (fam.equals(focusFam)) {
+                    famIndex = i;
+                    break;
+                }
+                i++;
             }
         } else if (entity instanceof Indi) {
             if (((Indi) entity).equals(focusIndi)) {
@@ -311,9 +329,13 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         
         // Main indi, his/her father and his/her Mother
         husband.setContext(focusIndi);
+        setDynamicToolTipText(husband, false, true);
         husbFather.setContext(focusIndi.getBiologicalFather());
+        setDynamicToolTipText(husbFather, false, false);
         husbMother.setContext(focusIndi.getBiologicalMother());
+        setDynamicToolTipText(husbMother, false, false);
         familySpouse.setContext(focusFam);
+        setDynamicToolTipText(familySpouse, true, false);
         
         // Spouse of main indi
         if (focusFam == null) {
@@ -321,6 +343,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         } else {
             wife.setContext(focusFam.getOtherSpouse(focusIndi));
         }
+        setDynamicToolTipText(wife, false, false);
         
         // OTHER SPOUSES
         oFamsPanel.update(husband.getProperty(), focusFam != null ? focusFam.getOtherSpouse(focusIndi) : null);
@@ -333,6 +356,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         siblingsPanel.update(husband.getProperty(), null);
         Fam famChild = ((Indi) husband.getProperty()).getFamilyWhereBiologicalChild();
         familyParent.setContext(famChild);
+        setDynamicToolTipText(familyParent, true, false);
         
         // EVENTS tab
         eventsPanel.update(husband.getProperty(), null);
@@ -344,6 +368,31 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         setPanel(eventsPanel);
     }
 
+    private void setDynamicToolTipText(ABluePrintBeans bean, boolean nullIfEmpty, boolean isMain) {
+
+        boolean isEmpty = (bean.getProperty() == null);
+        
+        if (isEmpty && nullIfEmpty) {
+            bean.setToolTipText(null);
+            return;
+        }
+        
+        String tooltip = TT_START;
+        boolean isoFamsPanel = bean.getParent() != null && bean.getParent().equals(oFamsPanel);
+        
+        if (isMain) {
+            tooltip += TT_CLICKSEL + TT_BR + TT_DCLICKEDTSEL + TT_BR + TT_RCLICKMENU;
+        } else if (!nullIfEmpty && isEmpty) {
+            tooltip += TT_DCLICKCRE;
+        } else if (isoFamsPanel) {
+            tooltip += TT_CLICKSWITCH + TT_BR + TT_DCLICKEDT + TT_BR + TT_RCLICKMENU;
+        } else {
+            tooltip += TT_CLICKSEL + TT_BR + TT_DCLICKEDT + TT_BR + TT_RCLICKMENU;
+        }
+        
+        tooltip += TT_END;
+        bean.setToolTipText(tooltip);
+    }
 
     /**
      * Action for blueprint modification depends on which panel has the focus
@@ -463,7 +512,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         fatherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.fatherPanel.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
         fatherPanel.setPreferredSize(new java.awt.Dimension(145, 121));
 
-        husbFather.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         husbFather.setMinimumSize(new java.awt.Dimension(0, 80));
         husbFather.setPreferredSize(new java.awt.Dimension(256, 80));
 
@@ -492,7 +540,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         motherPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED), org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.motherPanel.border.title"), javax.swing.border.TitledBorder.CENTER, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 14))); // NOI18N
         motherPanel.setPreferredSize(new java.awt.Dimension(145, 121));
 
-        husbMother.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         husbMother.setMinimumSize(new java.awt.Dimension(0, 80));
         husbMother.setPreferredSize(new java.awt.Dimension(256, 80));
 
@@ -550,7 +597,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel3.text")); // NOI18N
 
         husband.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        husband.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
 
         javax.swing.GroupLayout husbandLayout = new javax.swing.GroupLayout(husband);
         husband.setLayout(husbandLayout);
@@ -560,7 +606,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
         husbandLayout.setVerticalGroup(
             husbandLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 115, Short.MAX_VALUE)
+            .addGap(0, 71, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout indiPanelLayout = new javax.swing.GroupLayout(indiPanel);
@@ -586,7 +632,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.jLabel2.text")); // NOI18N
 
         wife.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        wife.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         wife.setMinimumSize(new java.awt.Dimension(0, 40));
         wife.setPreferredSize(new java.awt.Dimension(256, 60));
 
@@ -598,7 +643,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
         wifeLayout.setVerticalGroup(
             wifeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 115, Short.MAX_VALUE)
+            .addGap(0, 71, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout spousePanelLayout = new javax.swing.GroupLayout(spousePanel);
@@ -613,7 +658,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             .addGroup(spousePanelLayout.createSequentialGroup()
                 .addComponent(jLabel2)
                 .addGap(2, 2, 2)
-                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, 119, Short.MAX_VALUE)
+                .addComponent(wife, javax.swing.GroupLayout.DEFAULT_SIZE, 75, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
 
@@ -622,7 +667,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         jTabbedPane1.setPreferredSize(new java.awt.Dimension(388, 200));
 
         familySpouse.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        familySpouse.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         familySpouse.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout familySpouseLayout = new javax.swing.GroupLayout(familySpouse);
@@ -651,13 +695,12 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             .addGroup(famSpousePanelLayout.createSequentialGroup()
                 .addComponent(familySpouse, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.famSpousePanel.TabConstraints.tabTitle"), famSpousePanel); // NOI18N
 
         familyParent.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        familyParent.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "GeneralTootlTipText")); // NOI18N
         familyParent.setPreferredSize(new java.awt.Dimension(256, 80));
 
         javax.swing.GroupLayout familyParentLayout = new javax.swing.GroupLayout(familyParent);
@@ -685,7 +728,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             .addGroup(famParentPanelLayout.createSequentialGroup()
                 .addComponent(familyParent, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 97, Short.MAX_VALUE))
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 91, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.famParentPanel.TabConstraints.tabTitle"), famParentPanel); // NOI18N
@@ -705,9 +748,9 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         );
         eventsTabLayout.setVerticalGroup(
             eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 150, Short.MAX_VALUE)
+            .addGap(0, 144, Short.MAX_VALUE)
             .addGroup(eventsTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 150, Short.MAX_VALUE))
+                .addComponent(jsEvents, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 144, Short.MAX_VALUE))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FamilyPanel.class, "FamilyPanel.eventsTab.TabConstraints.tabTitle"), eventsTab); // NOI18N
@@ -747,10 +790,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                         .addComponent(otherSpousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
                         .addGap(9, 9, 9)))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE)
-                    .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 138, Short.MAX_VALUE))
+                    .addComponent(indiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE)
+                    .addComponent(spousePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 94, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 181, Short.MAX_VALUE)
+                .addComponent(jTabbedPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 175, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -832,7 +875,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     
     private class ABeanHandler extends FilteredMouseAdapter {
 
-        private boolean editOnClick = false;
         private ActionListener action = new ActionListener() {
 
             @Override
@@ -845,15 +887,6 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         }
 
         private ABeanHandler() {
-            this(false);
-        }
-
-        /**
-         *
-         * @param edit true if single click mouse must launch editor
-         */
-        private ABeanHandler(boolean editOnClic) {
-            this.editOnClick = editOnClic;
         }
 
         @Override
@@ -893,7 +926,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                 bean = (ABluePrintBeans) src;
             }
             
-            if (editOnClick || MouseUtils.isDoubleClick(evt) || bean == null || bean.getProperty() == null) {
+            if (MouseUtils.isDoubleClick(evt)) {
                 try {
                     sticky = true;
                     // Double click on someone = edit it (with an AncestrisEditor, not an Editor)
@@ -911,8 +944,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
                     sticky = false;
                 }
             // Click on someone = show it     
-            } else if (evt.getClickCount() == 1) {
-                // FIXME: test click count necessaire?
+            } else if (evt.getClickCount() == 1 &&  bean != null && bean.getProperty() != null) {
                 Container c = bean.getParent();
                 if (c != null) {
                     Property prop = bean.getProperty();

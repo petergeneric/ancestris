@@ -64,11 +64,11 @@
                   </Group>
               </Group>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="indiPanel" pref="113" max="32767" attributes="2"/>
-                  <Component id="spousePanel" pref="113" max="32767" attributes="0"/>
+                  <Component id="indiPanel" pref="94" max="32767" attributes="2"/>
+                  <Component id="spousePanel" pref="94" max="32767" attributes="0"/>
               </Group>
               <EmptySpace min="-2" max="-2" attributes="0"/>
-              <Component id="jTabbedPane1" pref="181" max="32767" attributes="0"/>
+              <Component id="jTabbedPane1" pref="175" max="32767" attributes="0"/>
               <EmptySpace min="-2" max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -108,9 +108,6 @@
       <SubComponents>
         <Container class="ancestris.modules.beans.ABluePrintBeans" name="husbFather">
           <Properties>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/nav/Bundle.properties" key="GeneralTootlTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[0, 80]"/>
             </Property>
@@ -167,9 +164,6 @@
       <SubComponents>
         <Container class="ancestris.modules.beans.ABluePrintBeans" name="husbMother">
           <Properties>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/nav/Bundle.properties" key="GeneralTootlTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[0, 80]"/>
             </Property>
@@ -293,9 +287,6 @@
                 <EtchetBorder/>
               </Border>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/nav/Bundle.properties" key="GeneralTootlTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
           </Properties>
 
           <Layout>
@@ -306,7 +297,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="115" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="71" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -335,7 +326,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jLabel2" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                  <Component id="wife" pref="94" max="32767" attributes="2"/>
+                  <Component id="wife" pref="75" max="32767" attributes="2"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -360,9 +351,6 @@
                 <EtchetBorder/>
               </Border>
             </Property>
-            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/nav/Bundle.properties" key="GeneralTootlTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
-            </Property>
             <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[0, 40]"/>
             </Property>
@@ -379,7 +367,7 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="115" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="71" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>
           </Layout>
@@ -424,7 +412,7 @@
                   <Group type="102" attributes="0">
                       <Component id="familySpouse" min="-2" pref="47" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="97" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="91" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -436,9 +424,6 @@
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder/>
                   </Border>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/nav/Bundle.properties" key="GeneralTootlTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[256, 80]"/>
@@ -495,7 +480,7 @@
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="familyParent" min="-2" pref="47" max="-2" attributes="1"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane3" pref="97" max="32767" attributes="0"/>
+                      <Component id="jScrollPane3" pref="91" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -507,9 +492,6 @@
                   <Border info="org.netbeans.modules.form.compat2.border.EmptyBorderInfo">
                     <EmptyBorder/>
                   </Border>
-                </Property>
-                <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-                  <ResourceString bundle="ancestris/modules/nav/Bundle.properties" key="GeneralTootlTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                   <Dimension value="[256, 80]"/>
@@ -569,9 +551,9 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <EmptySpace min="0" pref="150" max="32767" attributes="0"/>
+                  <EmptySpace min="0" pref="144" max="32767" attributes="0"/>
                   <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
-                      <Component id="jsEvents" alignment="1" pref="150" max="32767" attributes="0"/>
+                      <Component id="jsEvents" alignment="1" pref="144" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
