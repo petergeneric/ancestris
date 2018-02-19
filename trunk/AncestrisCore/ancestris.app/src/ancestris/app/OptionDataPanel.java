@@ -539,7 +539,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
 
     private AncestrisEditor getEditorFromCanonicalName(String defaultEditor) {
         for (AncestrisEditor edt : editors) {
-            if (edt.getName(true).equals(defaultEditor)) {
+            if (edt.getName(true).startsWith(defaultEditor)) {
                 return edt;
             }
         }
