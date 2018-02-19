@@ -52,6 +52,7 @@ import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
+import org.openide.util.datatransfer.ExClipboard;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -1380,6 +1381,15 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
     }
 
+    static public Clipboard getClipboard() {
+        Clipboard c = Lookup.getDefault().lookup(ExClipboard.class);
+        if (c == null) {
+            c = java.awt.Toolkit.getDefaultToolkit().getSystemClipboard();
+        }
+        return c;
+    }
+
+    
     private class MapPopupAction extends AbstractAction {
 
         private String actionName = "";
@@ -1402,10 +1412,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         @SuppressWarnings("deprecation")
         public void actionPerformed(ActionEvent e) {
             if (actionName.equals("ACTION_MapCopyPoint")) {
-                Clipboard clipboard = GeoPlaceEditor.getClipboard();
+                Clipboard clipboard = getClipboard();
                 clipboard.setContents(new GeoToken(mpm.getGeoPoint()), null);
             } else if (topo != null) {
-                Clipboard clipboard = GeoPlaceEditor.getClipboard();
+                Clipboard clipboard = getClipboard();
                 clipboard.setContents(new GeoToken(topo), null);
             }
         }
