@@ -472,6 +472,35 @@ public class Fam extends Entity {
     }
 
     /**
+     * Meier, Magdalene (I1) & Meier, Lars (I2) ...
+     */
+    protected String getNames() {
+
+        StringBuilder result = new StringBuilder();
+
+        Indi husband = getHusband();
+        if (husband != null) {
+            result.append(husband.getName());
+        } else {
+            result.append(resources.getString("prop.event.knwontohavehappened"));
+        }
+
+        result.append(" ");
+        result.append(GedcomOptions.getInstance().getTxtMarriageSymbol());
+        result.append(" ");
+        
+        Indi wife = getWife();
+        if (wife != null) {
+            result.append(wife.getName());
+        } else {
+            result.append(resources.getString("prop.event.knwontohavehappened"));
+        }
+
+        // Done
+        return result.toString();
+    }
+
+    /**
      * Calculate fam's Marriage date
      *
      * @return date or null
