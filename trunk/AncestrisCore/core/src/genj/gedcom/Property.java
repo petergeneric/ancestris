@@ -1432,6 +1432,8 @@ public abstract class Property implements Comparable<Property> {
      *   {$T} property name(doesn't count as matched)
      *   {$D} date as fully localized string
      *   {$y} year
+     *   {$n} name (no other info)
+     *   {$N} name (with full info)
      *   {$p} place (city)
      *   {$P} place (all jurisdictions)
      *   {$v} display value
@@ -1472,6 +1474,36 @@ public abstract class Property implements Comparable<Property> {
             case 'P': {
                 prop = property.getProperty("PLAC");
                 value = (prop instanceof PropertyPlace) ? prop.getDisplayValue() : null;
+                break;
+            }
+            case 'n': {
+                prop = property;
+                if (prop instanceof PropertyXRef) {
+                    Entity entity = ((PropertyXRef) prop).getTargetEntity();
+                    if (entity instanceof Indi) {
+                        value = ((Indi) entity).getName();
+                    } else if (entity instanceof Fam) {
+                        value = ((Fam) entity).getNames();
+                    } else {
+                        value = entity.toString();
+                    }
+                } else if (prop instanceof Entity) {
+                    Entity entity = ((Entity) prop);
+                    if (entity instanceof Indi) {
+                        value = ((Indi) entity).getName();
+                    } else if (entity instanceof Fam) {
+                        value = ((Fam) entity).getNames();
+                    } else {
+                        value = entity.toString();
+                    }
+                } else {
+                    value = prop.getDisplayValue();
+                }
+                break;
+            }
+            case 'N': {
+                prop = property;
+                value = (prop instanceof PropertyXRef) ? ((PropertyXRef) prop).getTargetEntity().toString(true) : prop.getDisplayValue();
                 break;
             }
             case 'v': {

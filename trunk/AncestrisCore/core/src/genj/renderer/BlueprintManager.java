@@ -63,7 +63,7 @@ public class BlueprintManager {
         {"INDI", DEFAULT, "complete", "classic", "verbose", "colorful", "professional", "simple", "pastel", "light", "small", "small_picture", 
                            "navindi", "navspouse", "navparent", "navindiline", "navevent"},
         {"FAM", DEFAULT, "complete", "classic", "simple", "pastel", "light", "small",
-                           "navfamindi", "navfamparent"},
+                           "navfamindi", "navfamparent", "navfamline"},
         {"OBJE", DEFAULT, "complete", "55"},
         {"NOTE", DEFAULT, "complete"},
         {"SOUR", DEFAULT, "complete"},

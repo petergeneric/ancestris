@@ -989,6 +989,8 @@ public class BlueprintRenderer {
     }
     
     private String getText(Entity entity) {
+      if (attributes.get("format") != null)
+          return entity.format(attributes.get("format"));
       return entity.getId();
     }
     

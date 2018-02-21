@@ -70,6 +70,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     private final static String EVENT_BP = "navevent";
     private final static String FAMI_BP = "navfamindi";
     private final static String FAMP_BP = "navfamparent";
+    private final static String FAMLINE_BP = "navfamline";
 
     private final String TT_START = "<html>&bull;&nbsp;";
     private final String TT_BR = "<br>&bull;&nbsp;";
@@ -82,7 +83,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
     private final String TT_RCLICKMENU = NbBundle.getMessage(FamilyPanel.class, "TootlTipTextRClickMenu");
     
     
-    private final static String[] NAV_TAGS = { HUSBAND_BP, WIFE_BP, PARENT_BP, INDILINE_BP, EVENT_BP, FAMI_BP, FAMP_BP };
+    private final static String[] NAV_TAGS = { HUSBAND_BP, WIFE_BP, PARENT_BP, INDILINE_BP, EVENT_BP, FAMI_BP, FAMP_BP, FAMLINE_BP };
 
     
     private Context context;
@@ -157,7 +158,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             @Override
             public Entity[] getEntities(Property rootProperty) {
                 if (rootProperty != null && rootProperty instanceof Indi) {
-                    return ((Indi) rootProperty).getPartners();
+                    return ((Indi) rootProperty).getFamiliesWhereSpouse(); // getPartners();  // getPartners gets individuals but null if partner not identified
                 }
                 return null;
             }
@@ -243,10 +244,10 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         familySpouse.setBlueprint(Gedcom.FAM, getBlueprint(Gedcom.FAM, FAMI_BP).getHTML());
         familyParent.setBlueprint(Gedcom.FAM, getBlueprint(Gedcom.FAM, FAMP_BP).getHTML());
         
-        oFamsPanel.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, INDILINE_BP).getHTML());
+        oFamsPanel.setBlueprint(Gedcom.FAM, getBlueprint(Gedcom.FAM, FAMLINE_BP).getHTML());
         childrenPanel.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, INDILINE_BP).getHTML());
         siblingsPanel.setBlueprint(Gedcom.INDI, getBlueprint(Gedcom.INDI, INDILINE_BP).getHTML());
-        eventsPanel.setBlueprint("", getBlueprint(Gedcom.INDI, EVENT_BP).getHTML());  // empty tag will correspond to property tag
+        eventsPanel.setBlueprint("", getBlueprint(Gedcom.INDI, EVENT_BP).getHTML());  // FL: empty tag will correspond to property tag
         refresh();
     }
 
@@ -323,7 +324,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return;
         }
         
-        if (focusIndi != null && focusIndi.getNoOfFams() > 0) {
+        if (focusIndi != null && focusIndi.getNoOfFams() > 0 && focusIndi.getNoOfFams() > famIndex) {
             focusFam = focusIndi.getFamiliesWhereSpouse()[famIndex];
         }
         
@@ -346,7 +347,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         setDynamicToolTipText(wife, false, false);
         
         // OTHER SPOUSES
-        oFamsPanel.update(husband.getProperty(), focusFam != null ? focusFam.getOtherSpouse(focusIndi) : null);
+        oFamsPanel.update(husband.getProperty(), focusFam != null ? focusFam : null);
         oFamsPanel.setEnabled(((Indi) husband.getProperty()).getNoOfFams() > 0);
         
         // CHILDREN tab : Family entity of main indi and spouse and their children
@@ -422,7 +423,7 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
         } else if (selectedPanel.equals(motherPanel)) {
             bp = PARENT_BP;
         } else if (selectedPanel.equals(oFamsPanel)) {
-            bp = INDILINE_BP;
+            bp = FAMLINE_BP;
         } else if (selectedPanel.equals(famSpousePanel)) {
             bp = FAMI_BP;
         } else if (selectedPanel.equals(childrenPanel)) {
