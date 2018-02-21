@@ -2946,28 +2946,35 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
                 eventPlaceText.setCaretPosition(0);
                 
-                // Select corresponding spouse in family tree in case event is related to a family
-                Fam fam = event.getFamilyEntity();
-                if (fam != null) {
-                    Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
-                    while (e.hasMoreElements()) {
-                        DefaultMutableTreeNode node = e.nextElement();
-                        NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
-                        if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
-                            Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
-                            if (nodeFam == fam) {
-                                TreePath tp = new TreePath(node.getPath());
-                                familyTree.setSelectionPath(tp);
-                                familyTree.expandPath(tp);
-                                break;
-                            }
-                        }
-                    }
-                } else {
-                    familyTree.clearSelection();
-                }
             }
 
+            // Select corresponding spouse in family tree in case event is related to a family
+            Fam fam = event != null ? event.getFamilyEntity() : null; 
+            if (fam == null) { // case of family whitout event (MARR) => use context instead
+                Property p = context.getProperty().getEntity();
+                if (p instanceof Fam) {
+                    fam = (Fam) p;
+                }
+            }
+            if (fam != null) {
+                Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
+                while (e.hasMoreElements()) {
+                    DefaultMutableTreeNode node = e.nextElement();
+                    NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
+                    if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
+                        Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
+                        if (nodeFam == fam) {
+                            TreePath tp = new TreePath(node.getPath());
+                            familyTree.setSelectionPath(tp);
+                            familyTree.expandPath(tp);
+                            break;
+                        }
+                    }
+                }
+            } else {
+                familyTree.clearSelection();
+            }
+            
             // Media
             scrollMediaEvent.setMinimum(0);
             scrollMediaEvent.setBlockIncrement(1);

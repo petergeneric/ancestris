@@ -435,6 +435,8 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
             if ((properties == null || properties.isEmpty()) && (union != null)) {
                 properties = new ArrayList<Property>();
                 properties.add(union);
+            } else {
+                properties.add(fam.getProperty(0));
             }
             retCtx = new Context(ctx.getGedcom(), entities, properties);
         }
