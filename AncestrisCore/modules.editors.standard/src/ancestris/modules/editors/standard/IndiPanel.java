@@ -2950,7 +2950,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
             // Select corresponding spouse in family tree in case event is related to a family
             Fam fam = event != null ? event.getFamilyEntity() : null; 
-            if (fam == null) { // case of family whitout event (MARR) => use context instead
+            if (fam == null && context != null && context.getProperty() != null) { // case of family whitout event (MARR) => use context instead
                 Property p = context.getProperty().getEntity();
                 if (p instanceof Fam) {
                     fam = (Fam) p;
