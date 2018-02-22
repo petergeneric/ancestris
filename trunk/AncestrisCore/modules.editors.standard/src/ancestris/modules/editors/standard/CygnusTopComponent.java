@@ -432,11 +432,13 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
             entities.add(indi);
             List<Property> properties = (List<Property>) ctx.getProperties();
             Property union = fam.getProperty("MARR");
-            if ((properties == null || properties.isEmpty()) && (union != null)) {
+            if ((properties == null || properties.isEmpty())) {
                 properties = new ArrayList<Property>();
-                properties.add(union);
-            } else {
-                properties.add(fam.getProperty(0));
+                if (union != null) {
+                    properties.add(union);
+                } else {
+                    properties.add(fam.getProperty(0));
+                }
             }
             retCtx = new Context(ctx.getGedcom(), entities, properties);
         }
