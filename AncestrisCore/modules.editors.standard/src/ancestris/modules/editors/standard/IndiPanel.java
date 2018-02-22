@@ -2324,6 +2324,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         // Else select property if any (coming from fire Selection)
         Property propertyToDisplay = context.getProperty();
+        boolean found = false;
         if (propertyToDisplay != null && eventSet != null) {
             Property loopProp = propertyToDisplay;
             while (loopProp != null) {
@@ -2333,18 +2334,47 @@ public class IndiPanel extends Editor implements DocumentListener {
                         if (index != -1) {
                             selectEvent(getRowFromIndex(index));
                             scrollToProperty(event, propertyToDisplay);
-                            return;
+                            loopProp = null;
+                            found = true;
+                            break;
                         }
                     }
                 } // end for
-                loopProp = loopProp.getParent();
+                if (!found) {
+                    loopProp = loopProp.getParent();
+                }
             }
         }
 
         // Else select first row if eventSet not empty
-        if (eventSet != null) {
+        if (!found) {
             selectEvent(0);
         }
+        
+         // Select corresponding context line in family tree in case of FAM property
+         Fam fam = null;
+         Property p = propertyToDisplay.getEntity();
+         if (p instanceof Fam) {
+             fam = (Fam) p;
+             Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
+             while (e.hasMoreElements()) {
+                 DefaultMutableTreeNode node = e.nextElement();
+                 NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
+                 if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
+                     Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
+                     if (nodeFam == fam) {
+                         TreePath tp = new TreePath(node.getPath());
+                         familyTree.setSelectionPath(tp);
+                         familyTree.expandPath(tp);
+                         break;
+                     }
+                 }
+             }
+         } else {
+             familyTree.clearSelection();
+         }
+
+        
         
     }
     
@@ -2948,33 +2978,6 @@ public class IndiPanel extends Editor implements DocumentListener {
                 
             }
 
-            // Select corresponding spouse in family tree in case event is related to a family
-            Fam fam = event != null ? event.getFamilyEntity() : null; 
-            if (fam == null && context != null && context.getProperty() != null) { // case of family whitout event (MARR) => use context instead
-                Property p = context.getProperty().getEntity();
-                if (p instanceof Fam) {
-                    fam = (Fam) p;
-                }
-            }
-            if (fam != null) {
-                Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
-                while (e.hasMoreElements()) {
-                    DefaultMutableTreeNode node = e.nextElement();
-                    NodeWrapper nodewrapper = (NodeWrapper) node.getUserObject();
-                    if (nodewrapper != null && nodewrapper.getType() == NodeWrapper.SPOUSE) {
-                        Fam nodeFam = (Fam) nodewrapper.getCurrentFamily(indi);
-                        if (nodeFam == fam) {
-                            TreePath tp = new TreePath(node.getPath());
-                            familyTree.setSelectionPath(tp);
-                            familyTree.expandPath(tp);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                familyTree.clearSelection();
-            }
-            
             // Media
             scrollMediaEvent.setMinimum(0);
             scrollMediaEvent.setBlockIncrement(1);
