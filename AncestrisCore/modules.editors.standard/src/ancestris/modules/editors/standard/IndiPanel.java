@@ -2353,7 +2353,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
          // Select corresponding context line in family tree in case of FAM property
          Fam fam = null;
-         Property p = propertyToDisplay.getEntity();
+         Property p = propertyToDisplay != null ? propertyToDisplay.getEntity() : null;
          if (p instanceof Fam) {
              fam = (Fam) p;
              Enumeration<DefaultMutableTreeNode> e = ((DefaultMutableTreeNode) familyTree.getModel().getRoot()).depthFirstEnumeration();
