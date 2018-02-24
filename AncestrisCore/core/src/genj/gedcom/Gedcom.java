@@ -1016,6 +1016,40 @@ public class Gedcom implements Comparable {
     }
 
     /**
+     * Returns the deCujus indi lookin through SOSA tags
+     * @return decujus indi
+     */
+    public Indi getDeCujusIndi() {
+        // Get all individuals and stop when sosa 1 is found
+        Collection <Indi>entities = (Collection <Indi>) getEntities(Gedcom.INDI);
+        Property[] props = null;
+        String sosaStr = "";
+        for (Indi indi : entities) {
+            props = indi.getProperties(Indi.TAG_SOSA);
+            if (props != null) {
+                for (Property prop : props) {
+                    sosaStr = prop.getDisplayValue();
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
+                        return indi;
+                    }
+                }
+            }
+            props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
+            if (props != null) {
+                for (Property prop : props) {
+                    sosaStr = prop.getDisplayValue();
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2))) {
+                        return indi;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    /**
      * Returns a type for given tag
      */
     public static Class<? extends Entity> getEntityType(String tag) {

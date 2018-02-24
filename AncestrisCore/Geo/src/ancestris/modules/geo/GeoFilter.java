@@ -16,7 +16,6 @@ import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 import javax.swing.JComboBox;
@@ -253,45 +252,6 @@ public class GeoFilter {
         return rootIndi;
     }
     
-    /**
-     * Get root indi in two ways:
-     * - first look for sosa is number 1
-     * - if not found, return null
-     * @param gedcom
-     * @return
-     */
-    public Indi getDeCujusIndi() {
-        // Get all individuals and stop when sosa 1 is found
-        Collection <Indi>entities = (Collection <Indi>) gedcom.getEntities(Gedcom.INDI);
-        Property[] props = null;
-        String sosaStr = "";
-        for (Iterator <Indi>it = entities.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            props = indi.getProperties(Indi.TAG_SOSA);
-            if (props != null) {
-                for (int i = 0; i < props.length; i++) {
-                    Property prop = props[i];
-                    sosaStr = prop.getDisplayValue();
-                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
-                        return indi;
-                    }
-                }
-            }
-            props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
-            if (props != null) {
-                for (int i = 0; i < props.length; i++) {
-                    Property prop = props[i];
-                    sosaStr = prop.getDisplayValue();
-                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2))) {
-                        return indi;
-                    }
-                }
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Ask user for a temporary de-cujus (does not change the one in the file, just used temporarily for the filters)
      * Recalculate lists
@@ -730,5 +690,9 @@ public class GeoFilter {
 
         
         return ret;
+    }
+
+    public Indi getDeCujusIndi() {
+        return gedcom.getDeCujusIndi();
     }
 }
