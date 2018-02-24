@@ -517,6 +517,10 @@
     <folder name="Toolbars">
         <!-- attention ce ce fichier contient les toolbars par defaut (voir aussi http://wiki.netbeans.org/DevFaqHideShowToolbar-->
         <file name="Standard.xml" url="Standard.xml"/>
+        <folder name="Misc">
+            <attr name="position" intvalue="650"/>
+            <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Misc"/>
+        </folder>
         <folder name="Nav">
             <attr name="position" intvalue="800"/>
             <attr name="displayName" bundlevalue="ancestris.app.Bundle#Toolbars/Nav"/>

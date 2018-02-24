@@ -17,6 +17,7 @@ import genj.gedcom.time.PointInTime;
 import genj.gedcom.GedcomException;
 
 import ancestris.core.pluginservice.PluginInterface;
+import ancestris.modules.geo.GeoNodeObject;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.WebBookWizardAction;
@@ -30,7 +31,6 @@ import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
-import java.util.Iterator;
 
 import java.text.DecimalFormat;
 import java.util.StringTokenizer;
@@ -40,7 +40,7 @@ import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebMap extends WebSection {
@@ -67,7 +67,7 @@ public class WebMap extends WebSection {
         boolean found = false;
         for (PluginInterface sInterface : Lookup.getDefault().lookupAll(PluginInterface.class)) {
             try {
-                if (sInterface.getPluginDisplayName().equals("Geo")) {
+                if (sInterface.getPluginName().equals("ancestris.modules.geo")) {
                     found = true;
                     clazz = sInterface.getClass();
                 }
@@ -269,11 +269,9 @@ public class WebMap extends WebSection {
         geoProblems = 0;
 
         // Creates the citiesFlash records
-        for (Iterator it = wh.getCities(wh.gedcom).iterator(); it.hasNext();) {
-            String city = (String) it.next();
+        for (String city : wh.getCities(wh.gedcom)) {
             List<Property> listProps = wh.getCitiesProps(city);
-            for (Iterator<Property> p = listProps.iterator(); p.hasNext();) {
-                Property prop = p.next();
+            for (Property prop : listProps) {
                 if ((prop == null) || (prop.getValue().length() == 0)) {
                     continue;
                 }
@@ -292,8 +290,7 @@ public class WebMap extends WebSection {
 
         // Calculates max volumes for later
         int maxVolume = 0;
-        for (Iterator<String> it = citiesFlash.keySet().iterator(); it.hasNext();) {
-            String city = it.next();
+        for (String city : citiesFlash.keySet()) {
             CityFlash cityFlash = citiesFlash.get(city);
             if (cityFlash != null) {
                 Integer total = (Integer) (cityFlash.nbBirths + cityFlash.nbMarriages + cityFlash.nbDeaths + cityFlash.nbOther);
@@ -303,8 +300,7 @@ public class WebMap extends WebSection {
             }
         }
         // Calculates derived measures
-        for (Iterator it = citiesFlash.keySet().iterator(); it.hasNext();) {
-            String city = (String) it.next();
+        for (String city : citiesFlash.keySet()) {
             CityFlash cityFlash = citiesFlash.get(city);
             if (cityFlash != null) {
                 calculateMeasures(cityFlash, maxVolume);
@@ -345,7 +341,8 @@ public class WebMap extends WebSection {
             return false;
         }
         // Get location from local file
-        String code = NbPreferences.forModule(clazz).get(getPlaceAsLongString((PropertyPlace) prop, true, true), null);
+        String searchedPlace = GeoNodeObject.getPlaceToLocalFormat((PropertyPlace)prop);
+        String code = NbPreferences.forModule(clazz).get(searchedPlace, null);
         if (code == null || code.isEmpty()) {
             return false;
         }
@@ -353,9 +350,6 @@ public class WebMap extends WebSection {
         String sep = ";";
         try {
             StringTokenizer tokens = new StringTokenizer(code, sep);
-            if (tokens.hasMoreTokens()) {
-                tokens.nextToken();
-            }
             if (tokens.hasMoreTokens()) {
                 cf.lat = Double.parseDouble(tokens.nextToken());
             }
@@ -367,28 +361,6 @@ public class WebMap extends WebSection {
         return true;
 
 
-    }
-
-    // FIXME: must be taken from gedcom preference
-    //FIXME: duplicate from geo
-    public String getPlaceAsLongString(PropertyPlace place, boolean compress, boolean complete) {
-        if (place == null) {
-            return "";
-        }
-
-        String format;
-        if (complete)
-            if (compress)
-                format = "1,0,2,3,4,5,6";
-            else
-                // FIXME: should we use format.replaceall(',',', ') ?
-                format = "1, 0, 2, 3, 4, 5, 6";
-        else
-            if (compress)
-                format = "1,2,4,5,6";
-            else
-                format = "1, 2, 4, 5, 6";
-        return place.format(format);
     }
 
     /**
@@ -423,7 +395,6 @@ public class WebMap extends WebSection {
         // Get date of event
         addDate(cityFlash, wb.sectionCitiesDetails.getDate(prop));
 
-        return;
     }
 
     private void addIndividual(CityFlash cityFlash, Indi indi) {
@@ -440,7 +411,6 @@ public class WebMap extends WebSection {
         }
         counter++;
         cityFlash.names.put(wh.getLastName(indi, DEFCHAR), counter);
-        return;
     }
 
     private void addEvent(CityFlash cityFlash, String tag) {
@@ -453,7 +423,6 @@ public class WebMap extends WebSection {
         } else {
             cityFlash.nbOther++;
         }
-        return;
     }
 
     private void addDate(CityFlash cityFlash, PropertyDate pDate) {
@@ -472,7 +441,6 @@ public class WebMap extends WebSection {
         if (pDate.compareTo(cityFlash.maxDate) > 0) {
             cityFlash.maxDate = pDate;
         }
-        return;
     }
 
     /**
@@ -572,7 +540,6 @@ public class WebMap extends WebSection {
             text += trs("map_box_occbet") + " \"" + cityFlash.minDate + "\" " + trs("map_box_occand") + " \"" + cityFlash.maxDate + "\".";
         }
         cityFlash.text = text;
-        return;
     }
 
     /**
@@ -583,8 +550,7 @@ public class WebMap extends WebSection {
         for (int i = 0; i < 5; i++) {
             Integer max = 0;
             String maxname = "";
-            for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-                String name = (String) it.next();
+            for (String name : map.keySet()) {
                 Integer counter = map.get(name);
                 if (counter > max) {
                     max = counter;
@@ -625,8 +591,7 @@ public class WebMap extends WebSection {
     private void exportCitiesFlash(PrintWriter out) {
         out.println("<ls>");
 
-        for (Iterator it = citiesFlash.keySet().iterator(); it.hasNext();) {
-            String city = (String) it.next();
+        for (String city : citiesFlash.keySet()) {
             CityFlash cityFlash = citiesFlash.get(city);
             if (cityFlash != null && (wp.param_media_DispUnknownLoc.equals("1") || cityFlash.lng != -45 || cityFlash.lat != 30)) {
                 String line = "";
@@ -693,8 +658,7 @@ public class WebMap extends WebSection {
 
         // Allocate resulting density
         int i = 0;
-        for (Iterator it = citiesFlash.keySet().iterator(); it.hasNext();) {
-            String name = (String) it.next();
+        for (String name : citiesFlash.keySet()) {
             CityFlash cityFlash = citiesFlash.get(name);
             if (city[i].compareTo("1") == 0) {
                 cityFlash.density = 1;

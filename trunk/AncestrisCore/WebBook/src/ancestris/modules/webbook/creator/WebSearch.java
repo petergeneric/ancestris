@@ -19,7 +19,6 @@ import ancestris.modules.webbook.WebBookParams;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeMap;
@@ -27,7 +26,7 @@ import java.util.Map;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebSearch extends WebSection {
@@ -151,8 +150,7 @@ public class WebSearch extends WebSection {
 
         //Produce firstNames list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             String word = indi.getFirstName();
             String key = "";
             if (word != null) {
@@ -169,8 +167,7 @@ public class WebSearch extends WebSection {
 
         //Produce lastNames list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             String word = wh.getLastName(indi, DEFCHAR);
             String key = "";
             if (word != null) {
@@ -187,15 +184,13 @@ public class WebSearch extends WebSection {
 
         //Produce places list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             List<PropertyPlace> places = indi.getProperties(PropertyPlace.class);
-            for (Iterator<PropertyPlace> itp = places.iterator(); itp.hasNext();) {
-                PropertyPlace place = itp.next();
+            for (PropertyPlace place : places) {
                 if (place == null) {
                     continue;
                 }
-                String word = place.toString();
+                String word = place.getDisplayValue();
                 String key = "";
                 if (word != null) {
                     key = cleanString(word);
@@ -212,8 +207,7 @@ public class WebSearch extends WebSection {
 
         //Produce ids list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             String word = indi.getId();
             String key = "";
             if (word != null) {
@@ -230,8 +224,7 @@ public class WebSearch extends WebSection {
 
         //Produce sosa list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             String word = wh.getSosa(indi);
             String key = "";
             if (word != null) {
@@ -248,8 +241,7 @@ public class WebSearch extends WebSection {
 
         //Produce births list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             PropertyDate date = (indi == null) ? null : indi.getBirthDate();
             if ((indi == null) || (date == null)) {
                 continue;
@@ -280,8 +272,7 @@ public class WebSearch extends WebSection {
         //Produce marriages list
         table.clear();
         List<Fam> families = new ArrayList(wh.gedcom.getEntities(Gedcom.FAM));
-        for (Iterator<Fam> it = families.iterator(); it.hasNext();) {
-            Fam family = it.next();
+        for (Fam family : families) {
             PropertyDate date = (family == null) ? null : family.getMarriageDate();
             if ((family == null) || (date == null)) {
                 continue;
@@ -318,8 +309,7 @@ public class WebSearch extends WebSection {
 
         //Produce death list
         table.clear();
-        for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
-            Indi indi = it.next();
+        for (Indi indi : indis) {
             PropertyDate date = (indi == null) ? null : indi.getDeathDate();
             if ((indi == null) || (date == null)) {
                 continue;
@@ -362,14 +352,12 @@ public class WebSearch extends WebSection {
         StringBuffer list = new StringBuffer("var " + tableName + " = [");
         StringBuffer listID = new StringBuffer("var " + tableName + "ID = [");
         int cpt = 0, cptID = 0;
-        for (Iterator<String> itk = table.keySet().iterator(); itk.hasNext();) {
-            String key = itk.next();
+        for (String key : table.keySet()) {
             list.append((cpt == 0 ? "" : ",") + "\"" + key + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
             List<String> ids = table.get(key);
             cptID = 0;
-            for (Iterator<String> it = ids.iterator(); it.hasNext();) {
-                String id = it.next();
+            for (String id : ids) {
                 listID.append((cptID == 0 ? "" : "|") + id);
                 cptID++;
             }
@@ -380,7 +368,6 @@ public class WebSearch extends WebSection {
         listID.append("]");
         out.println(list.toString());
         out.println(listID.toString());
-        return;
     }
 
     /**
@@ -393,8 +380,7 @@ public class WebSearch extends WebSection {
         StringBuffer list = new StringBuffer("var ID = [");
         StringBuffer listID = new StringBuffer("var IDdisplay = [");
         int cpt = 0;
-        for (Iterator<Indi> it1 = indis.iterator(); it1.hasNext();) {
-            Indi indi = it1.next();
+        for (Indi indi : indis) {
             list.append((cpt == 0 ? "" : ",") + "\"" + indi.getId() + "\"");
             listID.append((cpt == 0 ? "" : ",") + "\"");
             listID.append(phpText(indi));
@@ -405,12 +391,11 @@ public class WebSearch extends WebSection {
         listID.append("]");
         out.println(list.toString());
         out.println(listID.toString());
-        return;
     }
 
     private String phpText(Indi indi) {
         String strPriv = wh.getPrivDisplay();
-        if (wh.isPrivate(indi)) {
+        if (hidePrivateData && wh.isPrivate(indi)) {
             return "0" + "|" + indi.getId() + "|" + getPage(indi) + "|" + strPriv + "|" + strPriv + "|" + strPriv + "|" + strPriv;
         } else {
             return getSex(indi) + "|" + indi.getId() + "|" + getPage(indi) + "|" + getName(indi) + "|" + getSosa(indi) + "|" + getBDate(indi) + "|" + getDDate(indi);
@@ -463,7 +448,7 @@ public class WebSearch extends WebSection {
             return "";
         }
         PropertyDate bdate = indi.getBirthDate();
-        String date = (indi == null) || (bdate == null) ? "" : bdate.toString().trim();
+        String date = (indi == null) || (bdate == null) ? "" : bdate.getDisplayValue().trim();
         return date;
     }
 
@@ -472,7 +457,7 @@ public class WebSearch extends WebSection {
             return "";
         }
         PropertyDate ddate = indi.getDeathDate();
-        String date = (indi == null) || (ddate == null) ? "" : ddate.toString().trim();
+        String date = (indi == null) || (ddate == null) ? "" : ddate.getDisplayValue().trim();
         return date;
     }
 

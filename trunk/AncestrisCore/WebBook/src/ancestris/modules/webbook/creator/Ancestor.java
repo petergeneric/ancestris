@@ -5,7 +5,7 @@ import java.math.BigInteger;
 
 /**
  * Ancestris - Report creating a web Book or reports
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 

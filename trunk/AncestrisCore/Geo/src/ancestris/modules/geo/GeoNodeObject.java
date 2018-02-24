@@ -126,7 +126,7 @@ public class GeoNodeObject {
 
         List<Place> placeList = new ArrayList<Place>();
         boolean foundLocally = false;
-        String searchedPlace = place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
+        String searchedPlace = getPlaceToLocalFormat(place);
         if (searchedPlace.isEmpty()) {
             searchedPlace = place.getFirstAvailableJurisdiction().trim();
         }
@@ -619,6 +619,10 @@ public class GeoNodeObject {
 
     private String dispName(String str) {
         return str == null || str.isEmpty() ? "-" : str;
+    }
+
+    public static String getPlaceToLocalFormat(PropertyPlace place) {
+        return place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
     }
 
 

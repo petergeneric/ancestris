@@ -16,6 +16,7 @@ import org.openide.DialogDisplayer;
 import org.openide.WizardDescriptor;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -26,7 +27,9 @@ import org.openide.util.NbBundle;
         displayName = "#CTL_WebBookAction",
         iconInMenu = true,
         lazy = false)
-@ActionReference(path = "Menu/Tools/Multimedia", name = "WebBookWizardAction", position = 100)
+@ActionReferences({
+    @ActionReference(path = "Menu/Tools/Multimedia", name = "WebBookWizardAction", position = 100)
+})
 public final class WebBookWizardAction extends AbstractAncestrisContextAction {
 
     private WizardDescriptor.Panel[] panels;
