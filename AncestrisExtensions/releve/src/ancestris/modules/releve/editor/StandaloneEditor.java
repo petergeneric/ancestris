@@ -251,14 +251,14 @@ public class StandaloneEditor extends javax.swing.JFrame {
             }
         }
     }
-
-    public void udpdateEditorVisibleField() {
-        panelBirth.selectRecord(panelBirth.getCurrentRecordIndex());
-        panelMarriage.selectRecord(panelMarriage.getCurrentRecordIndex());
-        panelDeath.selectRecord(panelDeath.getCurrentRecordIndex());
-        panelMisc.selectRecord(panelMisc.getCurrentRecordIndex());
-        panelAll.selectRecord(panelAll.getCurrentRecordIndex());
-    }
+//
+//    public void udpdateEditorVisibleField() {
+//        panelBirth.selectRecord(panelBirth.getCurrentRecordIndex());
+//        panelMarriage.selectRecord(panelMarriage.getCurrentRecordIndex());
+//        panelDeath.selectRecord(panelDeath.getCurrentRecordIndex());
+//        panelMisc.selectRecord(panelMisc.getCurrentRecordIndex());
+//        panelAll.selectRecord(panelAll.getCurrentRecordIndex());
+//    }
 
 
     

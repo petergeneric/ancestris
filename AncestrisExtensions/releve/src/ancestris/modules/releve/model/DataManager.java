@@ -484,7 +484,9 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     private Context getSelectedContext(){
 
         // je cherche le gedcom selectionné dans GedcomExplorerTopComponent
+        // TODO remplacer GedcomExplorerTopComponent.findInstance().getContext();
         Context context = GedcomExplorerTopComponent.findInstance().getContext();
+        //Context context = null;
         if (context!=null) {
             return context;
         } else {

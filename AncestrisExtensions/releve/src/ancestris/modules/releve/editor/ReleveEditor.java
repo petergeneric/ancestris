@@ -6,6 +6,7 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.MenuCommandProvider;
+import ancestris.modules.releve.editor.EditorConfigGroupDialog.EditorConfigListener;
 import ancestris.modules.releve.model.PlaceListener;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Field;
@@ -14,6 +15,7 @@ import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
@@ -26,25 +28,30 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Michel
  */
-public class ReleveEditor extends javax.swing.JPanel implements FocusListener, PlaceListener {
+@ServiceProvider(service=ancestris.modules.releve.editor.ReleveEditor.class)
+public class ReleveEditor extends javax.swing.JPanel implements FocusListener, PlaceListener, EditorConfigListener {
 
     private DataManager dataManager = null;
     private RecordModel recordModel = null;
@@ -94,7 +101,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
 
         });
     }
-
+    
     /**
      * Cette methode doit etre appelee apres le constructeur pour fixer le 
      * modele de données utilisé par l'editeur. 
@@ -113,10 +120,16 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
             // j'abonne l'editeur aux changements de lieu
             dataManager.addPlaceListener(this);
             jLabelPlace.setText(dataManager.getPlace().getValue());
+            
+            EditorConfigGroupDialog.addEditorConfigListener(this);
         } else {
             //TODO generer une exception
-        }
-        
+        } 
+    }
+    
+    public void componentClosed() {
+         EditorConfigGroupDialog.removeEditorConfigListener(this);
+         dataManager.removePlaceListener(this);
     }
 
      /**
@@ -256,12 +269,21 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         currentFocusedBean.replaceValue(previousField);
     }
     
-    /**
+        /**
      * affiche un relevé
      * si le relevé est nul, nettoie l'affichage
      * @param record
      */
     public void selectRecord(int recordIndex) {
+        selectRecord(recordModel.getRecord(recordIndex));        
+    }
+    
+    /**
+     * affiche un relevé
+     * si le relevé est nul, nettoie l'affichage
+     * @param record
+     */
+    private void selectRecord(Record record) {
         
         currentFocusedBean = null;
         fieldsPanel.setVisible(false);
@@ -278,7 +300,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         if (recordModel != null) {
             int lineNo = 0;
             KeyStroke keyStroke;
-            Record record = recordModel.getRecord(recordIndex);
             if (record != null) {
                 for (EditorBeanGroup group : EditorBeanGroup.getGroups(record.getType())) {
                     if (!group.isVisible()) {
@@ -286,7 +307,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     }
                     // le raccourci sera associé du premier champ du groupe qui va être créé
                     keyStroke = group.getKeystroke();
-                    addRow(lineNo, group.getTitle(), keyStroke);
+                    addRow(lineNo, group.getTitle(), keyStroke, group);
                     lineNo++;
                     for (EditorBeanField editorBeanField : group.getFields()) {
                         if (!editorBeanField.isVisible()) {
@@ -295,11 +316,6 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                         String label = editorBeanField.getLabel();
                         Bean bean;
                         switch (editorBeanField.getFieldType()) {
-                            //                    case title:
-                            //                        // label separateur de rubrique
-                            //                        keyStroke = ((FieldTitle) field).getKeyStroke();
-                            //                        break;
-                            //
                             case eventType:
                                 bean = new BeanEventType(dataManager.getCompletionProvider());
                                 break;
@@ -499,11 +515,16 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
 
     }
 
-    private void addRow(int lineNo, String label, KeyStroke keyStroke) {
+    /**
+     * ajoute une ligne de titre de groupe
+     * @param lineNo
+     * @param label
+     * @param keyStroke 
+     */
+    private void addRow(int lineNo, String label, KeyStroke keyStroke, final EditorBeanGroup group) {
 
         // j'ajoute le label étalé dans les colonnes 0 et 1
         GridBagConstraints gridBagConstraints;
-        JLabel jLabel1 = new javax.swing.JLabel();
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = lineNo;
@@ -511,15 +532,68 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.weightx = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
+        JLabel jLabel1 = new javax.swing.JLabel();
+        
+        JPanel jpanel1 = new JPanel();
+        jpanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jpanel1.setLayout(new BorderLayout());
+        
+        JButton jbutton1 = new JButton();
+        jbutton1.setText("+");
+        jbutton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+//        jbutton1.addActionListener(new java.awt.event.ActionListener() {
+//            @Override
+//            public void actionPerformed(java.awt.event.ActionEvent evt) {
+//                EditorConfigGroupDialog.showEditorConfigGroupDialog2(group);
+//            }
+//        });
+        
+        jbutton1.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent evt) {
+                EditorConfigGroupDialog.showEditorConfigGroupDialog2(group, evt);
+            }
+        });
+        
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        //jLabel1.setBorder(border);
         if (keyStroke == null) {
             jLabel1.setText(label);
         } else {
             jLabel1.setText(label + "   ( Alt-" + String.valueOf((char) keyStroke.getKeyCode()) + " )");
         }
-
-        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-        fieldsPanel.add(jLabel1, gridBagConstraints);
+        jpanel1.add(jbutton1,BorderLayout.WEST );
+        jpanel1.add(jLabel1, BorderLayout.CENTER);
+        fieldsPanel.add(jpanel1, gridBagConstraints);
+        
+        
+//        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+//        if (keyStroke == null) {
+//            jLabel1.setText(label);
+//        } else {
+//            jLabel1.setText(label + "   ( Alt-" + String.valueOf((char) keyStroke.getKeyCode()) + " )");
+//        }
+//
+//        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+//        fieldsPanel.add(jLabel1, gridBagConstraints);
+    }
+    
+    /**
+     * refraichit l'affichage de l'editeur
+     */
+    @Override
+    public void onEditorConfigChanged() {
+        // d'abord, je commite le champ en cours d'édition
+        commitCurrentFocusedBean();
+        // j'affiche les composants visibles
+        Bean bean = getBean(Record.FieldType.eventDate);
+        if(bean != null ) {
+            Record record = bean.getRecord();
+            if( record != null) {
+                selectRecord(record);
+            }
+        }
+        
 
     }
 
@@ -895,7 +969,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      * @param fieldType type du champ
      */
     public void selectFirstField() {
-        // je cherche le champ du type demandé et je lui donne le focus
+        // je cherche le premier bean 
         for(Component component : fieldsPanel.getComponents()) {
             if ( component instanceof Bean) {
                 Bean bean = ((Bean) component);

@@ -352,27 +352,6 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }
     }
 
-    /**
-     * Cette méthode est appelée par EditorBeanGroup
-     * pour afficher les champs dans l'éditeur 
-     * après avoir modifié la liste des champs visibles
-     */
-    public void udpdateEditorVisibleField() {
-        // je rafraichis l'affichage des editeurs de la fentre principale
-        panelBirth.selectRecord(panelBirth.getCurrentRecordIndex());
-        panelMarriage.selectRecord(panelMarriage.getCurrentRecordIndex());
-        panelDeath.selectRecord(panelDeath.getCurrentRecordIndex());
-        panelMisc.selectRecord(panelMisc.getCurrentRecordIndex());
-        panelAll.selectRecord(panelAll.getCurrentRecordIndex());
-        
-        // je rafraichis l'affichage des editeurs de la fentre volante
-        if ( standaloneEditor != null) {
-            standaloneEditor.udpdateEditorVisibleField();
-        }        
-    }
-
-
-
     ///////////////////////////////////////////////////////////////////////////
     //  Traite les actions du popup menu
     ///////////////////////////////////////////////////////////////////////////
