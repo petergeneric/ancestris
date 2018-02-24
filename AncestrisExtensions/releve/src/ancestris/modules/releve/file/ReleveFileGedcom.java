@@ -1,5 +1,6 @@
 package ancestris.modules.releve.file;
 
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
@@ -49,13 +50,12 @@ public class ReleveFileGedcom {
                     if (birthProperty != null) {
                         RecordBirth record = new RecordBirth();
 
-                        record.setParish("");
-                        //record.setEventDate( birthProperty.getProperty("DATE")!=null ? birthProperty.getProperty("DATE").toString() : "" );
-                        record.getEventDateProperty().setValue(birthProperty.getProperty("DATE") != null ? birthProperty.getProperty("DATE").getValue() : "");
-                        record.setCote("");
-                        record.setFreeComment("");
+                        record.setFieldValue(FieldType.parish, "");
+                        record.setFieldValue(FieldType.eventDate, birthProperty.getProperty("DATE").getValue());
+                        record.setFieldValue(FieldType.cote, "");
+                        record.setFieldValue(FieldType.freeComment,  "");
 
-                        record.getIndi().set(
+                        record.setIndi(
                                 indi.getFirstName(),
                                 indi.getLastName(),
                                 indi.getProperty("SEX") != null ? indi.getProperty("SEX").getValue() : "",
@@ -82,7 +82,7 @@ public class ReleveFileGedcom {
                                 }
                             }
                                     
-                            record.getIndi().setFather(
+                            record.setIndiFather(
                                     indi.getBiologicalFather().getFirstName(),
                                     indi.getBiologicalFather().getLastName(),
                                     occupation,
@@ -107,7 +107,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().setMother(
+                            record.setIndiMother(
                                     indi.getBiologicalMother().getFirstName(),
                                     indi.getBiologicalMother().getLastName(),
                                     occupation,
@@ -139,7 +139,7 @@ public class ReleveFileGedcom {
 //                                fields[Field.witness4Occupation.ordinal()],
 //                                fields[Field.witness4Comment.ordinal()]);
 
-                        record.setGeneralComment(indi.getProperty("NOTE") != null ? indi.getProperty("NOTE").toString() : "");
+                        record.setFieldValue(FieldType.generalComment, indi.getProperty("NOTE") != null ? indi.getProperty("NOTE").toString() : "");
                         fileBuffer.addRecord(record);
                     }
 
@@ -147,11 +147,11 @@ public class ReleveFileGedcom {
                     if (deathProperty != null) {
                         RecordDeath record = new RecordDeath();
 
-                        record.setParish("");
-                        //record.setEventDate( deathProperty.getProperty("DATE")!=null ? deathProperty.getProperty("DATE").toString() : "" );
-                        record.getEventDateProperty().setValue(deathProperty.getProperty("DATE") != null ? deathProperty.getProperty("DATE").getValue() : "");
-                        record.setCote("");
-                        record.setFreeComment("");
+                        record.setFieldValue(FieldType.parish, "");
+                        //record.setFieldValue(FieldType.eventDate,  deathProperty.getProperty("DATE")!=null ? deathProperty.getProperty("DATE").toString() : "" );
+                        record.setFieldValue(FieldType.eventDate, deathProperty.getProperty("DATE") != null ? deathProperty.getProperty("DATE").getValue() : "");
+                        record.setFieldValue(FieldType.cote, "");
+                        record.setFieldValue(FieldType.freeComment,  "");
 
                         {
                             Indi IndiTemp = indi;
@@ -166,7 +166,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().set(
+                            record.setIndi(
                                     indi.getFirstName(),
                                     indi.getLastName(),
                                     indi.getProperty("SEX") != null ? indi.getProperty("SEX").getValue() : "",
@@ -193,7 +193,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().setFather(
+                            record.setIndiFather(
                                     indi.getBiologicalFather().getFirstName(),
                                     indi.getBiologicalFather().getLastName(),
                                     occupation,
@@ -217,7 +217,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().setMother(
+                            record.setIndiMother(
                                     indi.getBiologicalMother().getFirstName(),
                                     indi.getBiologicalMother().getLastName(),
                                     occupation,
@@ -240,10 +240,10 @@ public class ReleveFileGedcom {
 
                     RecordMarriage record = new RecordMarriage();
 
-                    record.setParish("");
-                    record.getEventDateProperty().setValue(marriageDate != null ? marriageDate.getValue() : "");
-                    record.setCote("");
-                    record.setFreeComment("");
+                    record.setFieldValue(FieldType.parish, "");
+                    record.setFieldValue(FieldType.eventDate, marriageDate.getValue());
+                    record.setFieldValue(FieldType.cote, "");
+                    record.setFieldValue(FieldType.freeComment,  "");
 
                     if (husband != null) {
                         {
@@ -259,7 +259,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().set(
+                            record.setIndi(
                                     husband.getFirstName(),
                                     husband.getLastName(),
                                     husband.getPropertyValue("SEX"),
@@ -288,7 +288,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().setFather(
+                            record.setIndiFather(
                                     husbandFather.getFirstName(),
                                     husbandFather.getLastName(),
                                     occupation,
@@ -314,7 +314,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getIndi().setFather(
+                            record.setIndiFather(
                                     husbandMother.getFirstName(),
                                     husbandMother.getLastName(),
                                     occupation,
@@ -340,7 +340,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getWife().set(
+                            record.setWife(
                                     wife.getFirstName(),
                                     wife.getLastName(),
                                     wife.getPropertyValue("SEX"),
@@ -368,7 +368,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getWife().setFather(
+                            record.setWifeFather(
                                     wifeFather.getFirstName(),
                                     wifeFather.getLastName(),
                                     occupation,
@@ -394,7 +394,7 @@ public class ReleveFileGedcom {
                                     residence = IndiTemp.getProperty("OCCU").getPropertyDisplayValue("PLAC");
                                 }
                             }
-                            record.getWife().setMother(
+                            record.setWifeMother(
                                     wifeMother.getFirstName(),
                                     wifeMother.getLastName(),
                                     occupation,

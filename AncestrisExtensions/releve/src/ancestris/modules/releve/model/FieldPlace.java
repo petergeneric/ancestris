@@ -10,16 +10,12 @@ public class FieldPlace extends Field {
 
     @Override
     public String getValue() {
-        if (isEmpty()) {
-            return "";
-        } else {
-            return place;
-        }
+       return place;
     }
 
     @Override
-    public void setValue(Object value) {
-        place = value.toString();
+    public void setValue(String value) {
+        place = value;
     }
 
     @Override
@@ -32,7 +28,4 @@ public class FieldPlace extends Field {
         return place.isEmpty();
     }
 
-    public String getDisplayValue() {
-        return place;
-    }
 }

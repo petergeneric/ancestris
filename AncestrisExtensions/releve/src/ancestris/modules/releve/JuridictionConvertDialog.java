@@ -2,7 +2,7 @@
 
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record;
 import java.awt.Frame;
 import java.util.TreeMap;
@@ -21,7 +21,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
     static private final String juridictionSeparator = ",";
     
     // liste des champs contenant un lieu dans les releves
-    static final Field.FieldType[] fieldTypes = {
+    static final Record.FieldType[] fieldTypes = {
         FieldType.indiBirthPlace, FieldType.indiResidence, FieldType.indiMarriedResidence, FieldType.indiFatherResidence, FieldType.indiMotherResidence, 
         FieldType.wifeBirthPlace,      FieldType.wifeResidence, FieldType.wifeMarriedResidence, FieldType.wifeFatherResidence, FieldType.wifeMotherResidence
     };
@@ -30,6 +30,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
      * affiche la fenêtre de changer l'ordre des juridictions dans les liux des relvés
      * @param parent
      * @param dataManager
+     * @param sourceTitle
      */
     public static void show(Frame parent, DataManager dataManager, String sourceTitle) {
         final JuridictionConvertDialog dialog = new JuridictionConvertDialog(parent, dataManager);
@@ -112,7 +113,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
         for(int i=0; i < dataManager.getDataModel().getRowCount(); i++ ) {
             Record record = dataManager.getDataModel().getRecord(i);
             
-            for(Field.FieldType fieldType : fieldTypes ) {
+            for(Record.FieldType fieldType : fieldTypes ) {
                 Field fieldPlace = record.getField(fieldType);
                 if( fieldPlace == null ) {
                     continue;
@@ -120,7 +121,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
                 if( fieldPlace.isEmpty() ) {
                     continue;
                 }
-                String actualPlace = fieldPlace.getValue().toString();
+                String actualPlace = fieldPlace.getValue();
                 String[] juridictions = actualPlace.split(juridictionSeparator);
                 String convertedPlace = "";
                 for (int j = 0; j < nbJuridictions; j++) {
@@ -134,7 +135,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
                 fieldPlace.setValue(convertedPlace);
                 
                 // je remplace le lieu par sa nouvelle valeur dans la liste de complétion
-                dataManager.getCompletionProvider().updatePlaces(fieldPlace, actualPlace);
+                dataManager.getCompletionProvider().updatePlaces(fieldPlace.getValue(), actualPlace);
             }
         }
         
@@ -166,7 +167,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
             for(int i = 0; i < dataManager.getDataModel().getRowCount(); i++) {
                 Record record = dataManager.getDataModel().getRecord(i);
 
-                for (Field.FieldType fieldType : fieldTypes) {
+                for (Record.FieldType fieldType : fieldTypes) {
                     Field fieldPlace = record.getField(fieldType);
                     if (fieldPlace == null) {
                         continue;
@@ -174,7 +175,7 @@ public class JuridictionConvertDialog extends javax.swing.JDialog {
                     if (fieldPlace.isEmpty()) {
                         continue;
                     }
-                    String actualPlace = fieldPlace.getValue().toString();
+                    String actualPlace = fieldPlace.getValue();
                     String[] splitPlace = actualPlace.split(juridictionSeparator, -1);
                     if (splitPlace.length > nbJuridictions) {
                         nbJuridictions = splitPlace.length  ;

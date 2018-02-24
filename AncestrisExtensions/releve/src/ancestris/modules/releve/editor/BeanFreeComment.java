@@ -2,7 +2,6 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldPicture;
-import ancestris.modules.releve.model.FieldSimpleValue;
 import java.awt.BorderLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -22,7 +21,7 @@ import javax.swing.event.ChangeListener;
  */
 public class BeanFreeComment extends Bean {
 
-    private JTextField editor = new JTextField();
+    private final JTextField editor = new JTextField();
 
     public BeanFreeComment( ) {
         setLayout(new java.awt.BorderLayout());
@@ -68,12 +67,11 @@ public class BeanFreeComment extends Bean {
     }
 
     @Override
-    protected void replaceValueImpl(Field field) {
-       final FieldSimpleValue name = (FieldSimpleValue) field;
-        if (name == null) {
+    protected void replaceValueImpl(Field field) {       
+        if (field == null) {
             editor.setText("");
         } else {
-            editor.setText(name.toString());
+            editor.setText(field.toString());
         }
     }
 
@@ -82,11 +80,10 @@ public class BeanFreeComment extends Bean {
      */
     @Override
     protected void commitImpl() {
-        FieldSimpleValue p = (FieldSimpleValue) getField();
-
         String value = editor.getText().trim();
+        setFieldValue(value);
         editor.setText(value);
-        p.setValue(value);
+        
     }
 
 

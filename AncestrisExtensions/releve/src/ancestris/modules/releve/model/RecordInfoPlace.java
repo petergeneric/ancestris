@@ -66,8 +66,8 @@ public class RecordInfoPlace extends Field implements Cloneable {
 
     
     @Override
-    public void setValue(Object value) {
-        String[] juridictions = value.toString().split(juridictionSeparator);
+    public void setValue(String value) {
+        String[] juridictions = value.split(juridictionSeparator, -1 );
         
         if (juridictions.length > placeFormatModel.getCityNameJuridiction() && placeFormatModel.getCityNameJuridiction() != -1) {
             cityName = juridictions[placeFormatModel.getCityNameJuridiction()];

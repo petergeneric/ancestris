@@ -3,6 +3,7 @@ package ancestris.modules.releve.merge;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Fam;
@@ -40,22 +41,22 @@ public class MergeModelMarriageTest extends TestCase {
     public static RecordMarriage createMarriageRecord(String id) {
         RecordMarriage record = new RecordMarriage();
         if ( id.equals("M1")) {
-            record.setEventDate("01/03/1999");
-            record.setCote("cote");
-            record.setGeneralComment("generalcomment");
-            record.setFreeComment("photo");
-            record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "01/01/1970", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
-            record.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "false");
-            record.getIndi().setFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "false", "70y");
-            record.getIndi().setMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "false", "72y");
-            record.getWife().set("Motherfirstname", "WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence",  "wifeAddress", "wifecomment");
-            record.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "false");
-            record.getWife().setFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "false", "60y");
-            record.getWife().setMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wifeMotherAddress", "wifemothercomment", "false", "62y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/03/1999");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "01/01/1970", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
+            record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "false");
+            record.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "false", "70y");
+            record.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "false", "72y");
+            record.setWife("Motherfirstname", "WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence",  "wifeAddress", "wifecomment");
+            record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "false");
+            record.setWifeFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "false", "60y");
+            record.setWifeMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wifeMotherAddress", "wifemothercomment", "false", "62y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
                 
         }
         
@@ -257,18 +258,18 @@ public class MergeModelMarriageTest extends TestCase {
 
             // je cree le relevé contenant le nom de la mere qui n'existe pas dans le gedcom
             RecordMarriage record = new RecordMarriage();
-            record.setEventDate("01/03/1999");
-            record.setCote("cote");
-            record.setGeneralComment("generalcomment");
-            record.setFreeComment("photo");
-            record.getIndi().set("PerePrenomAA", "PERENOM_AA", "M", "30y", "02/02/1970", "indiplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomments");
-            record.getWife().set("MerePrenomBB", "MERENOM_BB", "F", "28y", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
-            record.getWife().setFather("PerePrenom", "PERENOM_BB", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
-            record.getWife().setMother("Mere prenom CC", "MERENOM_CC", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/03/1999");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("PerePrenomAA", "PERENOM_AA", "M", "30y", "02/02/1970", "indiplace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomments");
+            record.setWife("MerePrenomBB", "MERENOM_BB", "F", "28y", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record.setWifeFather("PerePrenom", "PERENOM_BB", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
+            record.setWifeMother("Mere prenom CC", "MERENOM_CC", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlaceVilleMariage(),fileName, record);
@@ -331,8 +332,8 @@ public class MergeModelMarriageTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             RecordMarriage mariageRecord = createMarriageRecord("M1");
             // je change la date de deces du pere et de la mere
-            mariageRecord.getIndi().setFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "true", "");
-            mariageRecord.getIndi().setMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "true", "");
+            mariageRecord.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "true", "");
+            mariageRecord.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "true", "");
             String fileName = "Etat civil Paris.txt";
             String sourceTitle = "Etat civil Paris";
             MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);

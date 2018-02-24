@@ -4,6 +4,8 @@ import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
+import ancestris.modules.releve.model.Field;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordInfoPlace;
@@ -38,73 +40,73 @@ public class MergeModelBirthTest extends TestCase {
 
         if ( firstName.equals("sansfamille1")) {
             RecordBirth record = new RecordBirth();
-                record.setEventDate("01/01/2000");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
-                record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
-                record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "true", "72y");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "01/01/2000");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "true", "72y");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } if ( firstName.equals("I1")) {
             RecordBirth record = new RecordBirth();
-                record.setEventDate("02 JAN 1970");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAaddress", "indicomment");
-                record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "dead", "70y");
-                record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "02 JAN 1970");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "dead", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } else if ( firstName.equals("child1")) {
             RecordBirth record = new RecordBirth();
-                record.setEventDate("01/01/2000");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAaddress", "indicomment");
-                record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "dead", "70y");
-                record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "01/01/2000");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "dead", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } else if ( firstName.equals("child2")) {
             RecordBirth record = new RecordBirth();
-                record.setEventDate("01/01/1980");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("TwoFirstName", "FATHERLASTNAME", "M", "03 MAR 2003", "", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAaddress", "indicomment");
-                //record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherComment", "dead");
-                //record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherComment", "dead");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "01/01/1980");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("TwoFirstName", "FATHERLASTNAME", "M", "03 MAR 2003", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherComment", "dead");
+                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherComment", "dead");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } else if ( firstName.equals("child3")) {
             RecordBirth record = new RecordBirth();
-                record.setEventDate("06/07/2001");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("ThreeFirstName", "FATHERLASTNAME", "F", "", "04 JUL 2001", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
-                record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "false", "31y");
-                record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "", "30y");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "06/07/2001");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("ThreeFirstName", "FATHERLASTNAME", "F", "", "04 JUL 2001", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "false", "31y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "", "30y");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } else {
             
@@ -186,7 +188,7 @@ public class MergeModelBirthTest extends TestCase {
             
             String expected = "";
             expected +="Date de l'acte: 06/07/2001\n";
-            expected +="Nouveau né: ThreeFirstName FATHERLASTNAME, né le 04/07/2001 à indiBirthplace, indicomment\n";
+            expected +="Nouveau né: ThreeFirstName FATHERLASTNAME, né le 04/07/2001 à indiBirthplace, indioccupation, domicile indiResidence, indicomment\n";
             expected +="Père: Fatherfirstname FATHERLASTNAME, 31 années, Vivant, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 30 années, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
@@ -223,7 +225,7 @@ public class MergeModelBirthTest extends TestCase {
 
             String expected = "";
             expected +="Date de l'acte: 01/01/2000\n";
-            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indicomment\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indiOccupation, domicile indiResidence, indiComment\n";
             expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
@@ -239,7 +241,7 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
             expected ="Date de l'acte: 01/01/2000\n";
-            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indicomment\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indiOccupation, domicile indiResidence, indiComment\n";
             expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
@@ -375,14 +377,14 @@ public class MergeModelBirthTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
             RecordBirth record = createBirthRecord("I1");
+            // je renseigne la meme date de naissance
+            record.setFieldValue(FieldType.eventDate, indi.getBirthDate().getValue());            
             String fileName = "BMS Paris";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
             MergeRecord mergeRecord = new MergeRecord(data);
             
             List<MergeModel> models;
 
-            // je renseigne la meme date de naissance
-            record.getEventDateProperty().setValue(indi.getBirthDate().getValue());            
             assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
@@ -416,37 +418,37 @@ public class MergeModelBirthTest extends TestCase {
          
             // cas : indiBirthPlace = ""
             record = new RecordBirth();
-            record.setEventDate("01/01/2000");
-            record.setCote("cote");
-            record.setFreeComment("photo");
-            record.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "", "", "", "", "", "","", "indicomment");
-            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "", "70y");
-            record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setGeneralComment("generalcomment");
+            record.setFieldValue(FieldType.eventDate, "01/01/2000");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "", "", "", "","", "indicomment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "", "70y");
+            record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
 
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
             mergeRecord = new MergeRecord(data);
             
-            assertEquals("Indi Birth place=IndiFatherResidence",record.getIndi().getFatherResidence().toString(), mergeRecord.getIndi().getBirthPlace());
+            assertEquals("Indi Birth place=IndiFatherResidence",record.getFieldValue(FieldType.indiFatherResidence), mergeRecord.getIndi().getBirthPlace());
 
              // cas : indiBirthPlace = "" et indiFatherResidence = ""
             record = new RecordBirth();
-            record.setEventDate("01/01/2000");
-            record.setCote("cote");
-            record.setFreeComment("photo");
-            record.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "", "", "", "", "", "", "", "indicomment");
-            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "", "", "comment", "", "70y");
-            record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            record.setGeneralComment("generalcomment");
+            record.setFieldValue(FieldType.eventDate, "01/01/2000");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "", "", "", "", "", "indicomment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "", "", "comment", "", "70y");
+            record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
 
             data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
             mergeRecord = new MergeRecord(data);

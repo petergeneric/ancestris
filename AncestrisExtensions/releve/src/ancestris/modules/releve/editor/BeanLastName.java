@@ -4,7 +4,6 @@ import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldSimpleValue;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -17,12 +16,11 @@ import javax.swing.KeyStroke;
  * @author Michel
  */
 public class BeanLastName extends Bean implements CompletionListener {
-    private Java2sAutoTextField cLast;
+    private final Java2sAutoTextField cLast;
     CompletionProvider completionProvider;
 
     public BeanLastName(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
-        completionProvider.addLastNamesListener(this);
         setLayout(new java.awt.BorderLayout());
         cLast = new Java2sAutoTextField(completionProvider.getLastNames(IncludeFilter.INCLUDED));
         cLast.setStrict(false);        
@@ -41,12 +39,7 @@ public class BeanLastName extends Bean implements CompletionListener {
     @Override
     public void setFieldImpl() {
 
-        final FieldSimpleValue name = (FieldSimpleValue) getField();
-        if (name == null) {
-            cLast.setText("");
-        } else {
-            cLast.setText(name.toString());
-        }
+        cLast.setText(getFieldValue());
         
         // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
         resetKeyboardActions();
@@ -56,18 +49,17 @@ public class BeanLastName extends Bean implements CompletionListener {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
-                cLast.setText(name.toString());
+                cLast.setText(getFieldValue());
             }
         });
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-       final FieldSimpleValue name = (FieldSimpleValue) field;
-        if (name == null) {
+        if (field == null) {
             cLast.setText("");
         } else {
-            cLast.setText(name.toString());
+            cLast.setText(field.toString());
         }
     }
 
@@ -77,16 +69,24 @@ public class BeanLastName extends Bean implements CompletionListener {
     @Override
     protected void commitImpl() {
 
-        FieldSimpleValue fieldName = (FieldSimpleValue) getField();
-
         // je supprime les espaces aux extremites
-        String lastName = cLast.getText().trim();
+        String value = cLast.getText().trim();
 
         //last = last.toUpperCase();
-        cLast.setText(lastName);
+        cLast.setText(value);
 
         // j'enregistre la nouvelle valeur
-        fieldName.setValue( lastName);
+        setFieldValue(value);
+    }
+    
+    /**
+     * je supprime la declaration de listener
+     * avant que l'objet ne soit detruit
+     */
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        completionProvider.addLastNamesListener(this);
     }
 
     /**

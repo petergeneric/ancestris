@@ -1,6 +1,8 @@
 package ancestris.modules.releve.merge;
 
 import ancestris.modules.releve.RecordTransferHandle;
+import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.FieldDead;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -47,15 +49,15 @@ public class MergeRecordTest extends TestCase {
 
                 deathRecord = MergeModelDeathTest.createDeathRecord("sansfamille1");
                 String fileName = "";
-                deathRecord.getEventDateProperty().setValue("");
-                deathRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
+                deathRecord.setFieldValue(Record.FieldType.eventDate, "");
+                deathRecord.setFieldValue(Record.FieldType.indiBirthDate, "");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelDeathTest.getRecordsInfoPlace(), fileName, deathRecord));            
                 assertEquals("RecordDeath Date mariage ex conjoint", "",  mergeRecord.getIndi().getMarriedMarriageDate().getValue());
 
                 deathRecord = MergeModelDeathTest.createDeathRecord("sansfamille1");
-                deathRecord.getEventDateProperty().setValue("20 JAN 2000");
-                deathRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                deathRecord.getIndi().getAge().setValue("");
+                deathRecord.setFieldValue(Record.FieldType.eventDate, "20 JAN 2000");
+                deathRecord.setFieldValue(Record.FieldType.indiBirthDate, "");
+                deathRecord.setFieldValue(Record.FieldType.indiAge, "");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelDeathTest.getRecordsInfoPlace(), fileName, deathRecord)); 
                 assertEquals("RecordDeath Date mariage avec ex conjoint", "BEF 2000",  mergeRecord.getIndi().getMarriedMarriageDate().getValue());
                 assertEquals("RecordDeath Date naissance indi ", "BEF 1982",  mergeRecord.getIndi().getBirthDate().getValue());
@@ -81,24 +83,24 @@ public class MergeRecordTest extends TestCase {
                 String fileName = "";
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord)); 
                 birthDate = mergeRecord.getIndi().getFatherBirthDate();
                 assertEquals("RecordBirth Date naissance pere = null", "", birthDate.getValue());
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("20 JAN 2000");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                birthRecord.getIndi().getFatherAge().getDelta().setValue("70y");
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "20 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
+                birthRecord.setFieldValue(Record.FieldType.indiFatherAge,"70y");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord));                 
                 birthDate = mergeRecord.getIndi().getFatherBirthDate();
                 assertEquals("RecordBirth Date naissance pere = eventDate - parentAge", "CAL 1930", birthDate.getValue());
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("20 JAN 2000");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("31 JAN 2000");
-                birthRecord.getIndi().getFatherAge().getDelta().setValue("");
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "20 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"31 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiFatherAge,"");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord));                 
                 birthDate = mergeRecord.getIndi().getFatherBirthDate();
                 assertEquals("RecordBirth Date naissance pere = eventDate - minParentYearsOld", "BEF 1982", birthDate.getValue());
@@ -125,25 +127,25 @@ public class MergeRecordTest extends TestCase {
                 String fileName = "";
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                birthRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.UNKNOWN);
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
+                birthRecord.setFieldValue(Record.FieldType.indiFatherDead, "");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord));                 
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordBirth Date deces pere = null", "", deathDate.getValue());
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord)); 
-                birthRecord.getEventDateProperty().setValue("20 JAN 2000");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                birthRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.UNKNOWN);
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "20 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
+                birthRecord.setFieldValue(Record.FieldType.indiFatherDead, "");
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordBirth Date deces pere = BEF eventDate", "AFT 1999", deathDate.getValue());
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("21 JAN 2000");                
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("20 JAN 2000");
-                birthRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.DEAD);
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "21 JAN 2000");                
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"20 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiFatherDead, FieldDead.DeadState.DEAD.toString());
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord)); 
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordBirth Date deces pere = BEF eventDate", "BET 1999 AND 2000", deathDate.getValue());
@@ -156,25 +158,25 @@ public class MergeRecordTest extends TestCase {
                 String fileName = "";
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                marriageRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.UNKNOWN);
+                marriageRecord.setFieldValue(Record.FieldType.eventDate, "");
+                marriageRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
+                marriageRecord.setFieldValue(Record.FieldType.indiFatherDead, "");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord)); 
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordMarriage Date deces pere = null", "", deathDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2021");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
-                marriageRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.DEAD);
+                marriageRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2021");
+                marriageRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
+                marriageRecord.setFieldValue(Record.FieldType.indiFatherDead, FieldDead.DeadState.DEAD.toString());
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordMarriage Date deces pere = BEF eventDate", "BEF 2021", deathDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2021");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("31 JAN 2000");
-                marriageRecord.getIndi().getFatherDead().setState(FieldDead.DeadState.UNKNOWN);
+                marriageRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2021");
+                marriageRecord.setFieldValue(Record.FieldType.indiBirthDate,"31 JAN 2000");
+                marriageRecord.setFieldValue(Record.FieldType.indiFatherDead, "");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
                 deathDate = mergeRecord.getIndi().getFatherDeathDate();
                 assertEquals("RecordMarriage Date deces pere = AFT IndiBirthDate - 9 mois", "AFT 1999", deathDate.getValue());
@@ -203,25 +205,25 @@ public class MergeRecordTest extends TestCase {
                 String fileName = "";
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("1 JAN 2000");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("2 FEB 1970");
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"2 FEB 1970");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord));
                 birthDate = mergeRecord.getIndi().getBirthDate();
-                assertEquals("RecordBirth Date naissance complete != date event", birthRecord.getIndi().getBirthDate().getPropertyDate().getValue(), birthDate.getValue());
+                assertEquals("RecordBirth Date naissance complete != date event", true, birthRecord.getField(Record.FieldType.indiBirthDate).equalsProperty(birthDate));
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("1 JAN 2000");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord));
                 birthDate = mergeRecord.getIndi().getBirthDate();
-                assertEquals("RecordBirth Date naissance = date event", birthRecord.getEventDateProperty().getValue(), birthDate.getValue());
+                assertEquals("RecordBirth Date naissance = date event", true, birthRecord.getField(FieldType.eventDate).equalsProperty(birthDate));
 
                 birthRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                birthRecord.getEventDateProperty().setValue("1 JAN 2000");
-                birthRecord.getIndi().getBirthDate().getPropertyDate().setValue("2 FEB 1970");
+                birthRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                birthRecord.setFieldValue(Record.FieldType.indiBirthDate,"2 FEB 1970");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, birthRecord));
                 birthDate = mergeRecord.getIndi().getBirthDate();
-                assertEquals("RecordBirth Date naissance ", birthRecord.getIndi().getBirthDate().getPropertyDate().getValue(), birthDate.getValue());
+                assertEquals("RecordBirth Date naissance ", true, birthRecord.getField(Record.FieldType.indiBirthDate).equalsProperty(birthDate));
             }
 
             {
@@ -230,22 +232,22 @@ public class MergeRecordTest extends TestCase {
                 String fileName = "";
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("2 FEB 1970");
+                marriageRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                marriageRecord.setFieldValue(Record.FieldType.indiBirthDate,"2 FEB 1970");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
                 birthDate = mergeRecord.getIndi().getBirthDate();
-                assertEquals("RecordMarriage Date naissance ", marriageRecord.getIndi().getBirthDate().getPropertyDate().getValue(), birthDate.getValue());
+                assertEquals("RecordMarriage Date naissance ", true, marriageRecord.getField(Record.FieldType.indiBirthDate).equalsProperty(birthDate));
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
+                marriageRecord.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                marriageRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
                 birthDate = mergeRecord.getIndi().getBirthDate();
                 assertEquals("RecordMarriage naissance=mariage - minMarriageYearOld ", "BEF 1982", birthDate.getValue());
 
                 marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("BEF 1999");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("");
+                marriageRecord.setFieldValue(Record.FieldType.eventDate, "1999");
+                marriageRecord.setFieldValue(Record.FieldType.indiBirthDate,"");
                 mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
                 birthDate = mergeRecord.getIndi().getBirthDate();
                 assertEquals("RecordMarriage sDate naissance ", "BEF 1981", birthDate.getValue());
@@ -264,81 +266,81 @@ public class MergeRecordTest extends TestCase {
     public void test_getParentMariageDate() {
         try {
             {
-                RecordBirth marriageRecord;
+                RecordBirth record;
                 MergeRecord mergeRecord;
                 PropertyDate parentMarriageDate;
                 String fileName = "";
 
-                marriageRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelBirthTest.createBirthRecord("sansfamille1");
+                record.setFieldValue(FieldType.eventDate, "1 JAN 2000");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
-                assertEquals("RecordBirth Date exacte", "BEF 2000", parentMarriageDate.getValue());
+                assertEquals("Marriage Date exacte", "BEF 2000", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                marriageRecord.getEventDateProperty().setValue("BEF 1999");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelBirthTest.createBirthRecord("sansfamille1");
+                record.setFieldValue(FieldType.eventDate, "1999");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
-                assertEquals("RecordBirth Date BEF", "BEF 1999", parentMarriageDate.getValue());
+                assertEquals("Marriage Date BEF", "BEF 1999", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                marriageRecord.getEventDateProperty().setValue("AFT 2000");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelBirthTest.createBirthRecord("sansfamille1");
+                record.setFieldValue(FieldType.eventDate, "11/2002");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
-                assertEquals("RecordBirth Date AFT", "", parentMarriageDate.getValue());
+                assertEquals("Marriage Date BEF", "BEF 2002", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelBirthTest.createBirthRecord("sansfamille1");
-                marriageRecord.getEventDateProperty().setValue("BET 1998 AND 2000");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelBirthTest.createBirthRecord("sansfamille1");
+                record.setFieldValue(FieldType.eventDate, "1998");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
-                assertEquals("RecordBirth Date BET", "BEF 2000", parentMarriageDate.getValue());
+                assertEquals("Marriage Date BET", "BEF 1998", parentMarriageDate.getValue());
             }
 
             {
-                RecordMarriage marriageRecord;
+                RecordMarriage record;
                 MergeRecord mergeRecord;
                 PropertyDate parentMarriageDate;
                 String fileName = "";
 
-                marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("30 JUN 1993");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelMarriageTest.createMarriageRecord("M1");
+                record.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                record.setFieldValue(Record.FieldType.indiBirthDate,"30 JUN 1993");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
                 assertEquals("RecordMarriage Date exacte", "BEF 1982", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("1 JAN 2000");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("30 JUN 1980");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelMarriageTest.createMarriageRecord("M1");
+                record.setFieldValue(Record.FieldType.eventDate, "1 JAN 2000");
+                record.setFieldValue(Record.FieldType.indiBirthDate,"30 JUN 1980");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
                 assertEquals("RecordMarriage Date exacte", "BEF 1980", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("BET 1985 AND 2000");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("BET 1983 AND 1987");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelMarriageTest.createMarriageRecord("M1");
+                record.setFieldValue(Record.FieldType.eventDate, "2000");
+                record.setFieldValue(Record.FieldType.indiBirthDate,"1983");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
                 assertEquals("RecordMarriage Date exacte", "BEF 1982", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("ABT 2000");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("AFT 1980");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelMarriageTest.createMarriageRecord("M1");
+                record.setFieldValue(Record.FieldType.eventDate, "2000");
+                record.setFieldValue(Record.FieldType.indiBirthDate,"");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
                 assertEquals("RecordMarriage Date exacte", "BEF 1982", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("ABT 1970");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("BEF 1980");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelMarriageTest.createMarriageRecord("M1");
+                record.setFieldValue(Record.FieldType.eventDate, "1970");
+                record.setFieldValue(Record.FieldType.indiBirthDate,"");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
                 assertEquals("RecordMarriageDate exacte", "BEF 1952", parentMarriageDate.getValue());
 
-                marriageRecord = MergeModelMarriageTest.createMarriageRecord("M1");
-                marriageRecord.getEventDateProperty().setValue("BEF 1980");
-                marriageRecord.getIndi().getBirthDate().getPropertyDate().setValue("ABT 1970");
-                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, marriageRecord));
+                record = MergeModelMarriageTest.createMarriageRecord("M1");
+                record.setFieldValue(Record.FieldType.eventDate, "BEF 1980");
+                record.setFieldValue(Record.FieldType.indiBirthDate,"ABT 1970");
+                mergeRecord = new MergeRecord(RecordTransferHandle.createTransferableData(null, MergeModelMarriageTest.getRecordsInfoPlace(), fileName, record));
                 parentMarriageDate = mergeRecord.getIndi().getParentMarriageDate();
                 assertEquals("RecordMarriageDate exacte", "BEF 1962", parentMarriageDate.getValue());
             }

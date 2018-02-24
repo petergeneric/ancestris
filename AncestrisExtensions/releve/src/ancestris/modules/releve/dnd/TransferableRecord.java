@@ -1,7 +1,5 @@
 package ancestris.modules.releve.dnd;
 
-import genj.gedcom.PropertyDate;
-import genj.gedcom.time.Delta;
 import java.awt.Component;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
@@ -75,8 +73,8 @@ public class TransferableRecord  implements Transferable {
         //public FieldPlace eventPlace;
         public String cote = "";
         public String freeComment = "";
-        public PropertyDate eventDate;
-        public PropertyDate secondDate;
+        public String eventDate;
+        public String secondDate;
         public String generalComment = "";
         public String notary = "";
         public String parish = "";
@@ -92,8 +90,8 @@ public class TransferableRecord  implements Transferable {
             public String firstName = "";
             public String lastName = "";
             public String sex = "";
-            public Delta  age;
-            public PropertyDate birthDate;
+            public String age = "";
+            public String birthDate;
             public String birthPlace = "";
             public String birthAddress = "";
             public String occupation = "";
@@ -112,7 +110,7 @@ public class TransferableRecord  implements Transferable {
             public String fatherOccupation = "";
             public String fatherResidence = "";
             public String fatherAddress = "";
-            public Delta fatherAge;
+            public String fatherAge = "";
             public String fatherDead = "";
             public String fatherComment = "";
             public String motherFirstName = "";
@@ -120,7 +118,7 @@ public class TransferableRecord  implements Transferable {
             public String motherOccupation = "";
             public String motherResidence = "";
             public String motherAddress = "";
-            public Delta motherAge;
+            public String motherAge = "";
             public String motherDead = "";
             public String motherComment = "";
         }

@@ -6,11 +6,11 @@ package ancestris.modules.releve.model;
  */
 public class FieldDead extends Field {
 
-    public static enum DeadState { UNKNOWN, DEAD, ALIVE }
-    private DeadState value = DeadState.UNKNOWN;
+    public static enum DeadState { NOT_SPECIFIED, DEAD, ALIVE }
+    private DeadState value = DeadState.NOT_SPECIFIED;
     public static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Dead");
     public static String aliveLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Alive");
-    public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Unknown");
+    public static String notspecifiedLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.NotSpecified");
 
     public DeadState getState() {
         return value;
@@ -30,8 +30,8 @@ public class FieldDead extends Field {
     }
 
     @Override
-    public void setValue(Object stringValue) {
-        String inputValue = stringValue.toString().toUpperCase();
+    public void setValue(String stringValue) {
+        String inputValue = stringValue.toUpperCase();
         if ( DeadState.DEAD.name().equals(inputValue)
                 ||"TRUE".equals( inputValue)
                 || inputValue.contains(deadLabel.toUpperCase())
@@ -45,7 +45,7 @@ public class FieldDead extends Field {
                 ) {
              value = DeadState.ALIVE;
         } else {
-            value = DeadState.UNKNOWN;
+            value = DeadState.NOT_SPECIFIED;
         }
     }
 

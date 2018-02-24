@@ -3,7 +3,10 @@ package ancestris.modules.releve.merge;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
+import ancestris.modules.releve.model.Field;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Fam;
@@ -36,16 +39,16 @@ public class MergeModelMiscOtherTest extends TestCase {
             Gedcom gedcom = TestUtility.createGedcom();
 
             RecordMisc miscRecord = new RecordMisc();
-            miscRecord.setEventDate("01/03/1999");
-            miscRecord.setEventType("Accord ");
-            miscRecord.setNotary("notaire_other");
-            miscRecord.setCote("cote");
-            miscRecord.setGeneralComment("generalcomment");
-            miscRecord.setFreeComment("photo");
-            miscRecord.getIndi().set("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
+            miscRecord.setFieldValue(FieldType.eventDate, "01/03/1999");
+            miscRecord.setFieldValue(Record.FieldType.eventType, "Accord ");
+            miscRecord.setFieldValue(FieldType.notary, "notaire_other");
+            miscRecord.setFieldValue(FieldType.cote, "cote");
+            miscRecord.setFieldValue(FieldType.generalComment, "generalcomment");
+            miscRecord.setFieldValue(FieldType.freeComment,  "photo");
+            miscRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
             // intervenant 2
-            miscRecord.getWife().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "",  "", "", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment2");
-            miscRecord.getWife().setMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifeAddress2", "wifecomment2", "true");
+            miscRecord.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "",  "", "", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment2");
+            miscRecord.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifeAddress2", "wifecomment2", "true");
 
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
@@ -68,8 +71,8 @@ public class MergeModelMiscOtherTest extends TestCase {
             Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
             assertEquals("Source event","S2", gedcom.getEntity(participant1.getValue(new TagPath("INDI:EVEN:SOUR"),"").replaceAll("@", "")).getId());
-            assertEquals("Source event",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
-            assertEquals("Date event",miscRecord.getEventDateProperty().getValue(), participant1.getValue(new TagPath("INDI:EVEN:DATE"),""));
+            assertEquals("Source event",miscRecord.getFieldValue(FieldType.cote) + ", " +miscRecord.getFieldValue(FieldType.freeComment), participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
+            assertEquals("Date event",true, miscRecord.getField(FieldType.eventDate).equalsProperty(participant1.getValue(new TagPath("INDI:EVEN:DATE"),"")));
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:EVEN:PLAC"),""));
             
             assertEquals("participant1 : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), participant1.getBirthDate().getValue());
@@ -135,16 +138,16 @@ public class MergeModelMiscOtherTest extends TestCase {
 
 
             RecordMisc miscRecord = new RecordMisc();
-            miscRecord.setEventDate("01/03/1999");
-            miscRecord.setEventType("Accord ");
-            miscRecord.setNotary("notaire_other");
-            miscRecord.setCote("cote");
-            miscRecord.setGeneralComment("generalcomment");
-            miscRecord.setFreeComment("photo");
-            miscRecord.getIndi().set("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
+            miscRecord.setFieldValue(FieldType.eventDate, "01/03/1999");
+            miscRecord.setFieldValue(FieldType.eventType, "Accord ");
+            miscRecord.setFieldValue(FieldType.notary, "notaire_other");
+            miscRecord.setFieldValue(FieldType.cote, "cote");
+            miscRecord.setFieldValue(FieldType.generalComment, "generalcomment");
+            miscRecord.setFieldValue(FieldType.freeComment,  "photo");
+            miscRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
             // je place l'epouse en premier et l'epoux en second
-            miscRecord.getWife().set("Motherfirstname", "MOTHERLASTNAME", "F", "", "", "", "", "wifeoccupation2", "wifeResidence2",  "wifeAddress2", "wifecomment2");
-            miscRecord.getWife().setMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment", "true");
+            miscRecord.setWife("Motherfirstname", "MOTHERLASTNAME", "F", "", "", "", "", "wifeoccupation2", "wifeResidence2",  "wifeAddress2", "wifecomment2");
+            miscRecord.setWifeMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment", "true");
             
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, miscRecord);
@@ -171,7 +174,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
             assertEquals("Source event","", participant1.getValue(new TagPath("INDI:EVEN:SOUR:PAGE"),""));
-            assertEquals("Date event",miscRecord.getEventDateProperty().getValue(), participant1.getValue(new TagPath("INDI:EVEN:DATE"),""));
+            assertEquals("Date event", true, miscRecord.getField(FieldType.eventDate).equalsProperty( participant1.getPropertyByPath("INDI:EVEN:DATE")));
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:EVEN:PLAC"),""));
 
             assertEquals("participant1 : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), participant1.getBirthDate().getValue());

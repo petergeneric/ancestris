@@ -4,7 +4,7 @@ import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.Record;

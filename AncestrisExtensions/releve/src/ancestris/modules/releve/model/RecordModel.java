@@ -1,5 +1,6 @@
 package ancestris.modules.releve.model;
 
+import ancestris.modules.releve.model.Record.FieldType;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -235,7 +236,7 @@ public class RecordModel {
     ///////////////////////////////////////////////////////////////////////////
     // Implement Undo methods
     ///////////////////////////////////////////////////////////////////////////
-    public void notiFyFieldChanged(final Record record, final Field.FieldType fieldType, final Field field, final Object oldValue) {
+    public void notiFyFieldChanged(final Record record, final Record.FieldType fieldType, final Field field, final String oldValue) {
         final int recordIndex = getIndex(record);
 
         // keep undo
@@ -288,7 +289,7 @@ public class RecordModel {
         }
     }
 
-    public void fireRecordModelUpdated (int recordIndex, Field.FieldType filedType) {
+    public void fireRecordModelUpdated (int recordIndex, Record.FieldType filedType) {
           for (RecordModelListener listener : recordModelListeners) {
             listener.recordUpdated(recordIndex, filedType);
         }
@@ -317,10 +318,10 @@ public class RecordModel {
 
         try {
             if (record != null) {
-                if (record.getEventDateString().isEmpty()) {
+                if (record.isEmptyField(FieldType.eventDate)) {
                     errorMessage.append("La date de l'évènement est vide").append("\n");
                 }
-                if (record.getIndi().getLastName().isEmpty() && record.getIndi().getFirstName().isEmpty()) {
+                if (record.getFieldValue(FieldType.indiLastName).isEmpty() && record.getFieldValue(FieldType.indiFirstName).isEmpty()) {
                     errorMessage.append("Le nom et le prénom sont vides").append("\n");
                 }
             }
@@ -358,9 +359,9 @@ public class RecordModel {
         List<Record> duplicate = new ArrayList<Record>();
 
         for(Record record : releveList) {
-            if ( record.getEventDateProperty().toString().equals(referenceRecord.getEventDateProperty().toString())
-                 && record.getIndi().getFirstName().equals(referenceRecord.getIndi().getFirstName())
-                 && record.getIndi().getLastName().equals(referenceRecord.getIndi().getLastName())
+            if ( record.getFieldValue(FieldType.eventDate).equals(referenceRecord.getFieldValue(FieldType.eventDate))
+                 && record.getFieldValue(FieldType.indiFirstName).equals(referenceRecord.getFieldValue(FieldType.indiFirstName))
+                 && record.getFieldValue(FieldType.indiLastName).equals(referenceRecord.getFieldValue(FieldType.indiLastName))
                  && record != referenceRecord ) {
                  duplicate.add(record);
             }

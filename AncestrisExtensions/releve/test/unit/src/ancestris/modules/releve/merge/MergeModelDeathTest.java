@@ -4,6 +4,7 @@ import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeModel.MergeRow;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordInfoPlace;
@@ -31,32 +32,32 @@ public class MergeModelDeathTest extends TestCase {
 
         if ( firstName.equals("sansfamille1")) {
             RecordDeath record = new RecordDeath();
-                record.setEventDate("01/01/2003");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiBirthPlace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
-                record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
-                record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
-                record.getIndi().setMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "indiMarriedAddress", "marriedcomment", "dead");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "01/01/2003");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "indiBirthPlace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
+                record.setIndiMarried("Marriedfirstname", "MARRIEDLASTNAME", "marriedOccupation", "indiMarriedResidence", "indiMarriedAddress", "marriedcomment", "dead");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } else {
             RecordDeath record = new RecordDeath();
-                record.setEventDate("01/01/1988");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiBirthPlace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
-                //record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
-                //record.getIndi().setMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
-                record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-                record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-                record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-                record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
-                record.setGeneralComment("generalcomment");
+                record.setFieldValue(FieldType.eventDate, "01/01/1988");
+                record.setFieldValue(FieldType.cote, "cote");
+                record.setFieldValue(FieldType.freeComment,  "photo");
+                record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "8y", "BEF 1981", "indiBirthPlace", "indiBirthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "comment", "dead");
+                //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "comment", "dead");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         }
     }
@@ -110,14 +111,14 @@ public class MergeModelDeathTest extends TestCase {
 
             // conjoint
             Indi married = indi.getFamiliesWhereSpouse()[0].getWife();
-            assertEquals("marriedLastName",recordDeath.getIndi().getMarriedLastName().getValue(), married.getLastName());
-            assertEquals("marriedFirstName",recordDeath.getIndi().getMarriedFirstName().getValue(), married.getFirstName());
+            assertEquals("marriedLastName",recordDeath.getFieldValue(FieldType.indiMarriedLastName), married.getLastName());
+            assertEquals("marriedFirstName",recordDeath.getFieldValue(FieldType.indiMarriedFirstName), married.getFirstName());
             assertEquals("marriedBirth","BEF 1985", married.getBirthDate().getValue());
             assertEquals("marriedDead","BEF 2003", married.getDeathDate().getValue());
             Property marriedOccupation = married.getProperties("OCCU")[0];
-            assertEquals("marriedOccupation",recordDeath.getIndi().getMarriedOccupation().getValue(), marriedOccupation.getValue());
-            assertEquals("marriedOcccupationPlace",recordDeath.getIndi().getMarriedResidence().getValue(), marriedOccupation.getProperty("PLAC").getValue());
-            assertEquals("marriedOcccupationDate",recordDeath.getEventDateProperty().getValue(), marriedOccupation.getProperty("DATE").getValue());
+            assertEquals("marriedOccupation",recordDeath.getFieldValue(FieldType.indiMarriedOccupation), marriedOccupation.getValue());
+            assertEquals("marriedOcccupationPlace",recordDeath.getFieldValue(FieldType.indiMarriedResidence), marriedOccupation.getProperty("PLAC").getValue());
+            assertEquals("marriedOcccupationDate", true, recordDeath.getField(FieldType.eventDate).equalsProperty( marriedOccupation.getProperty("DATE")));
             assertEquals("marriedOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", marriedOccupation.getProperty("NOTE").getValue());
 
             //parents
@@ -168,7 +169,7 @@ public class MergeModelDeathTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
             // je supprime la profession et le lieu de naissance
-            recordDeath.getIndi().set("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "", "", "", "", "", "indicomment");
+            recordDeath.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "", "", "", "", "", "indicomment");
             
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, recordDeath);
@@ -208,14 +209,14 @@ public class MergeModelDeathTest extends TestCase {
 
             // conjoint
             Indi married = indi.getFamiliesWhereSpouse()[0].getWife();
-            assertEquals("marriedLastName",recordDeath.getIndi().getMarriedLastName().getValue(), married.getLastName());
-            assertEquals("marriedFirstName",recordDeath.getIndi().getMarriedFirstName().getValue(), married.getFirstName());
+            assertEquals("marriedLastName",recordDeath.getFieldValue(FieldType.indiMarriedLastName), married.getLastName());
+            assertEquals("marriedFirstName",recordDeath.getFieldValue(FieldType.indiMarriedFirstName), married.getFirstName());
             assertEquals("marriedBirth","BEF 1985", married.getBirthDate().getValue());
             assertEquals("marriedDead","BEF 2003", married.getDeathDate().getValue());
             Property marriedOccupation = married.getProperties("OCCU")[0];
-            assertEquals("marriedOccupation",recordDeath.getIndi().getMarriedOccupation().getValue(), marriedOccupation.getValue());
-            assertEquals("marriedOcccupationPlace",recordDeath.getIndi().getMarriedResidence().getValue(), marriedOccupation.getProperty("PLAC").getValue());
-            assertEquals("marriedOcccupationDate",recordDeath.getEventDateProperty().getValue(), marriedOccupation.getProperty("DATE").getValue());
+            assertEquals("marriedOccupation",recordDeath.getFieldValue(FieldType.indiMarriedOccupation), marriedOccupation.getValue());
+            assertEquals("marriedOcccupationPlace",recordDeath.getFieldValue(FieldType.indiMarriedResidence), marriedOccupation.getProperty("PLAC").getValue());
+            assertEquals("marriedOcccupationDate",true, recordDeath.getField(FieldType.eventDate).equalsProperty(marriedOccupation.getProperty("DATE")));
             assertEquals("marriedOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", marriedOccupation.getProperty("NOTE").getValue());
 
             //parents
@@ -308,16 +309,16 @@ public class MergeModelDeathTest extends TestCase {
      * test de la recherche de l'ex conjoint
      */
     @Test
-    public void testFindMarried() {
+    public void testIndiMarried() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
 
             RecordDeath record = new RecordDeath();
-                record.setEventDate("01/01/1988");
-                record.setCote("cote");
-                record.setFreeComment("photo");
-                record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "BEF 1981", "indiplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
-                record.getIndi().setMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "", "");
+            record.setFieldValue(FieldType.eventDate, "01/01/1988");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment, "photo");
+            record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "", "1970", "indiplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+            record.setIndiMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "", "");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, record);
             MergeRecord mergeRecord = new MergeRecord(data);

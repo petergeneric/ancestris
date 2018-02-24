@@ -52,7 +52,7 @@
                   <Properties>
                     <Property name="horizontalAlignment" type="int" value="0"/>
                     <Property name="horizontalTextPosition" type="int" value="0"/>
-                    <Property name="name" type="java.lang.String" value="" noResource="true"/>
+                    <Property name="name" type="java.lang.String" value="placeLabel" noResource="true"/>
                     <Property name="opaque" type="boolean" value="true"/>
                   </Properties>
                   <Constraints>

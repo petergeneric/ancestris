@@ -2,7 +2,7 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -83,37 +83,37 @@ public class ReleveFileAncestrisV2Test extends TestCase {
             data = "ANCESTRISV2;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV2.loadFile(file);
-            assertEquals("Pas de type d'acte", "Ligne 1.\nType d'acte inconnu. \n",  sb.getError().toString());
+            assertEquals("Pas de type d'acte", "Ligne 1.\nType d'acte inconnu. \n",  sb.getError());
             file.delete();
 
             data = "ANCESTRISV2;;;;;;;X;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV2.loadFile(file);
-            assertEquals("type acte=X", "Ligne 1.\nType d'acte inconnu. X\n",  sb.getError().toString());
+            assertEquals("type acte=X", "Ligne 1.\nType d'acte inconnu. X\n",  sb.getError());
             file.delete();
 
             data = "ANCESTRISV2;;;;;;;N;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV2.loadFile(file);
-            assertEquals("Naissance minimal", "",  sb.getError().toString());
+            assertEquals("Naissance minimal", "",  sb.getError());
             file.delete();
 
             data = "ANCESTRISV2;;;;;;;M;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV2.loadFile(file);
-            assertEquals("Mariage minimal", "",  sb.getError().toString());
+            assertEquals("Mariage minimal", "",  sb.getError());
             file.delete();
 
             data = "ANCESTRISV2;;;;;;;D;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV2.loadFile(file);
-            assertEquals("Deces minimal", "",  sb.getError().toString());
+            assertEquals("Deces minimal", "",  sb.getError());
             file.delete();
 
             data = "ANCESTRISV2;;;;;;;V;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;1";
             file = TestUtility.createFile(data);
             sb = ReleveFileAncestrisV2.loadFile(file);
-            assertEquals("Divers minimal", "",  sb.getError().toString());
+            assertEquals("Divers minimal", "",  sb.getError());
             file.delete();
 
         } catch (IOException ex) {
@@ -132,20 +132,20 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
         
-        RecordBirth birth = TestUtility.getRecordBirth();
-        dataManager.addRecord(birth);
+        RecordBirth record = TestUtility.getRecordBirth();
+        dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.BIRTH, file, false);
         assertEquals("verify save error", sb.length(), 0);
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
         assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getBirthCount());
-        RecordBirth birth2 = (RecordBirth) fb.getRecords().get(0);
+        RecordBirth record2 = (RecordBirth) fb.getRecords().get(0);
 
         // je compare tous les champs
         for (FieldType fieldType : FieldType.values()) {
-            if (birth.getField(fieldType) == null) {
-                assertNull(fieldType.name(), birth2.getField(fieldType));
+            if (record.getField(fieldType) == null) {
+                assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
                      || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
@@ -159,11 +159,10 @@ public class ReleveFileAncestrisV2Test extends TestCase {
                      || fieldType == FieldType.wifeMarriedAddress
                      || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress                     
                      ) {
-                    assertNotNull(fieldType.name(), birth2.getField(fieldType));
-                    assertEquals(fieldType.name(), "", birth2.getField(fieldType).toString());
+                    assertNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
                 } else {
-                    assertNotNull(fieldType.name(), birth2.getField(fieldType));
-                    assertEquals(fieldType.name(), birth.getField(fieldType).toString(), birth2.getField(fieldType).toString());
+                    assertEquals(fieldType.name(), record.getFieldValue(fieldType), record2.getFieldValue(fieldType));
                 }
             }
         }
@@ -185,21 +184,21 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
         
-        RecordMarriage marriage = TestUtility.getRecordMarriage();
-        marriage.setEventDate("01/01/2000");
-        dataManager.addRecord(marriage);
+        RecordMarriage record = TestUtility.getRecordMarriage();
+        record.setFieldValue(FieldType.eventDate, "01/01/2000");
+        dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.MARRIAGE, file, false);
         assertEquals("save result", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
-        assertEquals("load result", "", fb.getError().toString());
+        assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getMarriageCount());
-        RecordMarriage marriage2 = (RecordMarriage) fb.getRecords().get(0);
+        RecordMarriage record2 = (RecordMarriage) fb.getRecords().get(0);
 
         // je compare tous les champs
         for (FieldType fieldType : FieldType.values()) {
-            if (marriage.getField(fieldType) == null) {
-                assertNull(fieldType.name(), marriage2.getField(fieldType));
+            if (record.getField(fieldType) == null) {
+                assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
                      || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
@@ -213,11 +212,11 @@ public class ReleveFileAncestrisV2Test extends TestCase {
                      || fieldType == FieldType.wifeMarriedAddress
                      || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress  
                     ) {
-                    assertNotNull(fieldType.name(), marriage2.getField(fieldType));
-                    assertEquals(fieldType.name(), "", marriage2.getField(fieldType).toString());
+                    assertNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
                 } else {
-                    assertNotNull(fieldType.name(), marriage2.getField(fieldType));
-                    assertEquals(fieldType.name(), marriage.getField(fieldType).toString(), marriage2.getField(fieldType).toString());
+                    //assertNotNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), record.getFieldValue(fieldType), record2.getFieldValue(fieldType));
                 }
             }
         }
@@ -239,20 +238,20 @@ public class ReleveFileAncestrisV2Test extends TestCase {
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
         
-        RecordDeath death = TestUtility.getRecordDeath();
-        dataManager.addRecord(death);
+        RecordDeath record = TestUtility.getRecordDeath();
+        dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV2.saveFile(dataManager, dataManager.getDataModel(), RecordType.DEATH, file, false);
         assertEquals("verify save error", 0, sb.length());
 
         FileBuffer fb = ReleveFileAncestrisV2.loadFile(file);
-        assertEquals("load result", "", fb.getError().toString());
+        assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getDeathCount());
-        RecordDeath death2 = (RecordDeath) fb.getRecords().get(0);
+        RecordDeath record2 = (RecordDeath) fb.getRecords().get(0);
 
         // je compare tous les champs
         for (FieldType fieldType : FieldType.values()) {
-            if (death.getField(fieldType) == null) {
-                assertNull(fieldType.name(), death2.getField(fieldType));
+            if (record.getField(fieldType) == null) {
+                assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.indiResidence || fieldType == FieldType.indiMarriedResidence
                      || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
@@ -266,11 +265,11 @@ public class ReleveFileAncestrisV2Test extends TestCase {
                      || fieldType == FieldType.wifeMarriedAddress
                      || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress  
                     ) {
-                    assertNotNull(fieldType.name(), death2.getField(fieldType));
-                    assertEquals(fieldType.name(), "", death2.getField(fieldType).toString());
+                    assertNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
                 } else {
-                    assertNotNull(fieldType.name(), death2.getField(fieldType));
-                    assertEquals(fieldType.name(), death.getField(fieldType).getValue(), death2.getField(fieldType).getValue());
+                    //assertNotNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), record.getFieldValue(fieldType), record2.getFieldValue(fieldType));
                 }
             }
         }
@@ -319,11 +318,11 @@ public class ReleveFileAncestrisV2Test extends TestCase {
                      || fieldType == FieldType.wifeMarriedAddress
                      || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress  
                     ) {
-                    assertNotNull(fieldType.name(), record2.getField(fieldType));
-                    assertEquals(fieldType.name(), "", record2.getField(fieldType).toString());
-                } else { 
-                    assertNotNull(fieldType.name(), record2.getField(fieldType));
-                    assertEquals(fieldType.name(), record.getField(fieldType).toString(), record2.getField(fieldType).toString());
+                    assertNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
+                } else {
+                    //assertNotNull(fieldType.name(), record2.getField(fieldType));
+                    assertEquals(fieldType.name(), record.getFieldValue(fieldType), record2.getFieldValue(fieldType));
                 }
             }
         }

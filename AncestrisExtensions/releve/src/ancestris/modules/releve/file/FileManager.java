@@ -26,6 +26,7 @@ public class FileManager {
         FILE_TYPE_ANCESTRISV2,
         FILE_TYPE_ANCESTRISV3,
         FILE_TYPE_ANCESTRISV4,
+        FILE_TYPE_ANCESTRISV5,
         FILE_TYPE_EGMT,
         FILE_TYPE_NIMEGUE,
         FILE_TYPE_PDF
@@ -87,13 +88,12 @@ public class FileManager {
         StringBuilder sb = new StringBuilder();
         if (saveFile != null) {
             // j'enregistre le répertoire du fichier
-            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, saveFile.getParent().toString());
-
-//            if (models.length == 0) {
-//                return sb.append(java.util.ResourceBundle.getBundle("ancestris/modules/releve/file/Bundle").getString("file.NoDataToSave"));
-//            }
+            NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, saveFile.getParent());
 
             switch (fileFormat) {
+                case FILE_TYPE_ANCESTRISV5:
+                    sb.append(ReleveFileAncestrisV5.saveFile(placeManager, recordModel, recordType, saveFile, false));
+                    break;
                 case FILE_TYPE_ANCESTRISV4:
                     sb.append(ReleveFileAncestrisV4.saveFile(placeManager, recordModel, recordType, saveFile, false));
                     break;

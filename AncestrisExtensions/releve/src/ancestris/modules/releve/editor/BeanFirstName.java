@@ -4,7 +4,6 @@ import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldSimpleValue;
 import java.util.List;
 
 /**
@@ -12,12 +11,11 @@ import java.util.List;
  * @author Michel
  */
 public class BeanFirstName extends Bean implements CompletionListener {
-    private Java2sAutoTextField cFirst;
-    CompletionProvider completionProvider;
+    private final Java2sAutoTextField cFirst;
+    private final CompletionProvider completionProvider;
     
     public BeanFirstName(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
-        completionProvider.addFirstNamesListener(this);
         setLayout(new java.awt.BorderLayout());
         cFirst = new Java2sAutoTextField(completionProvider.getFirstNames(IncludeFilter.INCLUDED));
         cFirst.setStrict(false);
@@ -38,22 +36,15 @@ public class BeanFirstName extends Bean implements CompletionListener {
      */
     @Override
     public void setFieldImpl() {
-
-        final FieldSimpleValue name = (FieldSimpleValue) getField();
-        if (name == null) {
-            cFirst.setText("");
-        } else {
-            cFirst.setText(name.toString());
-        }        
+        cFirst.setText(getFieldValue());
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-       final FieldSimpleValue name = (FieldSimpleValue) field;
-        if (name == null) {
+        if (field == null) {
             cFirst.setText("");
         } else {
-            cFirst.setText(name.toString());
+            cFirst.setText(field.toString());
         }
     }
 
@@ -62,18 +53,26 @@ public class BeanFirstName extends Bean implements CompletionListener {
      */
     @Override
     protected void commitImpl() {
-        String firstName = cFirst.getText().trim();
-
-        if (!firstName.isEmpty()) {
-            firstName = Character.toString(firstName.charAt(0)).toUpperCase() + firstName.substring(1);
+        String value = cFirst.getText().trim();
+        
+        if (!value.isEmpty()) {
+            // première lettre en majuscules
+            value = Character.toString(value.charAt(0)).toUpperCase() + value.substring(1);
         }
-
-        // ... store changed value
-        FieldSimpleValue fieldName = (FieldSimpleValue) getField();
-        fieldName.setValue(firstName);
-        cFirst.setText(firstName);
+        setFieldValue(value);
+        cFirst.setText(value);
     }
 
+    /**
+     * j'ajoute la declaration de listener
+     * apres que l'objet soit créé
+     */
+    @Override
+    public void addNotify() {
+        super.addNotify();
+        completionProvider.addFirstNamesListener(this);
+    }
+    
     /**
      * je supprime la declaration de listener
      * avant que l'objet ne soit detruit
@@ -91,6 +90,6 @@ public class BeanFirstName extends Bean implements CompletionListener {
      */
     @Override
     public void includedKeyUpdated(List<String> keyList) {
-        cFirst.setDataList(keyList);
+        cFirst.setDataList(keyList);        
     }
 }

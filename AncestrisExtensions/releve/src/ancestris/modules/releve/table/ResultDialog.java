@@ -10,10 +10,10 @@ import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.Field;
+import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.table.ErrorBuffer.CheckError;
-import genj.gedcom.PropertyDate;
 import genj.util.WordBuffer;
 import java.awt.Color;
 import java.awt.Component;
@@ -274,10 +274,10 @@ public class ResultDialog extends javax.swing.JFrame {
      * Set column layout from bundle configuration
      */
     public void loadColumnLayout() {
-        String columnLayout = "";
+        
         if (jTableResult.getModel() != null) {
             // je recupere la largeur des colonnes de la session precedente
-            columnLayout = NbPreferences.forModule(ResultDialog.class).get(
+            String columnLayout = NbPreferences.forModule(ResultDialog.class).get(
                     "ResultDialogColumnLayout", "0");
             StringTokenizer tokens = new StringTokenizer(columnLayout, ",");
             int n = Integer.parseInt(tokens.nextToken());
@@ -598,8 +598,8 @@ public class ResultDialog extends javax.swing.JFrame {
                 public Component getTableCellRendererComponent(JTable table, Object value, boolean selected, boolean focs, int row, int col) {
                     setHorizontalAlignment(SwingConstants.LEFT);
                     if (value != null) {
-                        if (value instanceof PropertyDate) {
-                            setText(((PropertyDate) value).getDisplayValue());
+                        if (value instanceof FieldDate) {
+                            setText(((FieldDate) value).getDisplayValue());
                             setHorizontalAlignment(SwingConstants.RIGHT);
                         } else if (value instanceof FieldSex) {
                             setText(((FieldSex) value).toString());

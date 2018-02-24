@@ -3,6 +3,8 @@ package ancestris.modules.releve.merge;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
+import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
@@ -41,17 +43,17 @@ public class MergeModelMiscWillTest extends TestCase {
 
 
             RecordMisc willRecord = new RecordMisc();
-            willRecord.setEventDate("01/03/1999");
-            willRecord.setEventType("testament");
-            willRecord.setNotary("notaire_other");
-            willRecord.setCote("cote");
-            willRecord.setGeneralComment("generalcomment");
-            willRecord.setFreeComment("photo");
-            willRecord.getIndi().set("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
+            willRecord.setFieldValue(FieldType.eventDate, "01/03/1999");
+            willRecord.setFieldValue(Record.FieldType.eventType, "testament");
+            willRecord.setFieldValue(FieldType.notary, "notaire_other");
+            willRecord.setFieldValue(FieldType.cote, "cote");
+            willRecord.setFieldValue(FieldType.generalComment, "generalcomment");
+            willRecord.setFieldValue(FieldType.freeComment,  "photo");
+            willRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
             
              // intervenant 2 héritier
-            willRecord.getWife().set("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment2");
-            willRecord.getWife().setMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifeAddress2", "wifecomment2", "true");
+            willRecord.setWife("Fatherfirstname", "FATHERLASTNAME", "M", "", "", "", "", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment2");
+            willRecord.setWifeMarried("Motherfirstname", "MOTHERLASTNAME", "wifeoccupation2", "wifeResidence2", "wifeAddress2", "wifecomment2", "true");
             
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
@@ -74,8 +76,8 @@ public class MergeModelMiscWillTest extends TestCase {
             Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:WILL:SOUR"),""));
             assertEquals("Source event","S2", gedcom.getEntity(participant1.getValue(new TagPath("INDI:WILL:SOUR"),"").replaceAll("@", "")).getId());
-            assertEquals("Source event",willRecord.getCote().getValue() + ", " +willRecord.getFreeComment().getValue(), participant1.getValue(new TagPath("INDI:WILL:SOUR:PAGE"),""));
-            assertEquals("Date event",willRecord.getEventDateProperty().getValue(), participant1.getValue(new TagPath("INDI:WILL:DATE"),""));
+            assertEquals("Source event",willRecord.getFieldValue(Record.FieldType.cote) + ", " +willRecord.getFieldValue(Record.FieldType.freeComment), participant1.getValue(new TagPath("INDI:WILL:SOUR:PAGE"),""));
+            assertEquals("Date event", true, willRecord.getField(FieldType.eventDate).equalsProperty( participant1.getProperty(new TagPath("INDI:WILL:DATE"))));
             assertEquals("Lieu event",getRecordsInfoPlace().getValue(), participant1.getValue(new TagPath("INDI:WILL:PLAC"),""));
             
             assertEquals("participant1 : nom",mergeRecord.getIndi().getLastName(), participant1.getLastName());

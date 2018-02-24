@@ -10,7 +10,7 @@ public class FieldEventType extends Field {
     
     @Override
     public String toString() {
-        return getName();
+        return name;
     }
 
     @Override
@@ -19,8 +19,8 @@ public class FieldEventType extends Field {
     }
 
     @Override
-    public void setValue(Object value) {
-        this.setName(value.toString());
+    public void setValue(String value) {
+        name = value;
     }
 
     @Override
@@ -28,18 +28,4 @@ public class FieldEventType extends Field {
         return name.isEmpty();
     }
 
-
-    /**
-     * @return the name
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
 }

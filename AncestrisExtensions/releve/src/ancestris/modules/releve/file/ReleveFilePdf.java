@@ -7,6 +7,7 @@ import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.file.FileManager.Line;
 import ancestris.modules.releve.model.FieldAge;
 import ancestris.modules.releve.model.Record.RecordType;
@@ -79,12 +80,25 @@ public class ReleveFilePdf {
     }
 
     /**
-     * Comparateur de transposition ( ignore la casse des noms )
+     * Comparateur de transposition 
      */
     public static class RecordComparator implements Comparator<Record> {
         @Override
         public int compare(Record record1, Record record2) {
-            return record1.getEventDateProperty().compareTo(record2.getEventDateProperty());
+            if( record1.getField(FieldType.eventDate) == null) {
+                if( record2.getField(FieldType.eventDate) == null) {
+                    return 0;
+                } else {
+                    return 1;
+                }
+            } else {
+                if( record2.getField(FieldType.eventDate) == null) {
+                    return -1;
+                } else {
+                    return record1.getField(FieldType.eventDate).compareTo(record2.getField(FieldType.eventDate));
+                }
+            }
+            
         }
     }
 
@@ -100,520 +114,520 @@ public class ReleveFilePdf {
     public static StringBuilder saveFile(PlaceManager placeManager, RecordModel recordModel, RecordType recordType, File fileName, boolean append) {
 
         StringBuilder sb = new StringBuilder();
-        try {
-            //create BufferedReader to read csv file
-            //create BufferedReader to read csv file
-
-            ArrayList<Record> recordTree = new ArrayList<Record>();
-            for(int i=0; i < recordModel.getRowCount(); i++) {
-                recordTree.add(recordModel.getRecord(i));
-            }
-            //Collections.sort(recordTree, new RecordComparator());
-            
-            doc = new Document("");
-
-            // j'ajoute les autres lignes
-            for (int index = 0; index < recordTree.size(); index++) {
-                Record record = recordTree.get(index);
-                if( recordType != null && recordType != record.getType()) {
-                    continue;
-                }
-                Line line = new Line(fieldSeparator);
-                try {
-                    if ( record instanceof RecordBirth ) {
-                        line.appendCsvFn(fileSignature);
-                        line.appendCsvFn(placeManager.getCityName());
-                        line.appendCsvFn(placeManager.getCityCode());
-                        line.appendCsvFn(placeManager.getCountyName());
-                        line.appendCsvFn(placeManager.getStateName());
-                        line.appendCsvFn(placeManager.getCountryName());
-                        line.appendCsvFn(record.getParish().toString());
-                        line.appendCsvFn("N");
-                        line.appendCsvFn(""); //eventTypeTag
-                        line.appendCsvFn(""); //eventTypeName
-                        line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getCote().toString());
-                        line.appendCsvFn(record.getFreeComment().toString());
-                        line.appendCsvFn(""); // notary
-
-                        writeTitle(1,
-                                record.getEventDateString(),
-                                "Naissance",
-                                record.getCote().toString(),
-                                record.getFreeComment().toString()
-                                );
-
-
-                        line.appendCsvFn(record.getIndi().getLastName().getValue());
-                        line.appendCsvFn(record.getIndi().getFirstName().getValue());
-                        line.appendCsvFn(record.getIndi().getSex().toString());
-                        line.appendCsvFn(record.getIndi().getBirthPlace().toString()); // place
-                        line.appendCsvFn(record.getIndi().getBirthDate().toString()); // IndiBirthDate
-                        line.appendCsvFn(""); // age
-                        line.appendCsvFn(""); // occupation
-                        line.appendCsvFn(""); // residence
-                        line.appendCsvFn(record.getIndi().getComment() .toString());
-
-                        line.appendCsvFn(""); // IndiMarriedLastName
-                        line.appendCsvFn(""); // IndiMarriedFirstName
-                        line.appendCsvFn(""); // IndiMarriedDead
-                        line.appendCsvFn(""); // IndiMarriedOccupation
-                        line.appendCsvFn(""); // residence
-                        line.appendCsvFn(""); // IndiMarriedComment
-
-                        line.appendCsvFn(record.getIndi().getFatherLastName().toString());
-                        line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getFatherAge().getValue());
-                        line.appendCsvFn(record.getIndi().getFatherDead().toString());
-                        line.appendCsvFn(record.getIndi().getFatherOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getFatherResidence().toString());
-                        line.appendCsvFn(record.getIndi().getFatherComment().toString());
-                        line.appendCsvFn(record.getIndi().getMotherLastName().toString());
-                        line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getMotherAge().getValue());
-                        line.appendCsvFn(record.getIndi().getMotherDead().toString());
-                        line.appendCsvFn(record.getIndi().getMotherOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getMotherResidence().toString());
-                        line.appendCsvFn(record.getIndi().getMotherComment().toString());
-
-                        line.appendCsvFn(""); // WifeLastName
-                        line.appendCsvFn(""); // WifeFirstName
-                        line.appendCsvFn(""); // WifeSex
-                        line.appendCsvFn(""); // WifePlace
-                        line.appendCsvFn(""); // WifeBirthDate
-                        line.appendCsvFn(""); // WifeAge
-                        line.appendCsvFn(""); // WifeOccupation
-                        line.appendCsvFn(""); // WifeResidence
-                        line.appendCsvFn(""); // WifeComment
-
-                        line.appendCsvFn(""); // WifeMarriedLastName
-                        line.appendCsvFn(""); // WifeMarriedFirstName
-                        line.appendCsvFn(""); // WifeMarriedDead
-                        line.appendCsvFn(""); // WifeMarriedOccupation
-                        line.appendCsvFn(""); // WifeMarriedResidence
-                        line.appendCsvFn(""); // WifeMarriedComment
-
-                        line.appendCsvFn(""); // WifeFatherLastName
-                        line.appendCsvFn(""); // WifeFatherFirstName
-                        line.appendCsvFn(""); // WifeFatherAge
-                        line.appendCsvFn(""); // WifeFatherDead
-                        line.appendCsvFn(""); // WifeFatherOccupation
-                        line.appendCsvFn(""); // WifeFatherResidence
-                        line.appendCsvFn(""); // WifeFatherComment
-                        line.appendCsvFn(""); // WifeMotherLastName
-                        line.appendCsvFn(""); // WifeMotherFirstName
-                        line.appendCsvFn(""); // WifeMotherAge
-                        line.appendCsvFn(""); // WifeMotherDead
-                        line.appendCsvFn(""); // WifeMotherOccupation
-                        line.appendCsvFn(""); // WifeMotherResidence
-                        line.appendCsvFn(""); // WifeMotherComment
-
-                        for(Record.Witness witness : record.getWitnesses()) {
-                            line.appendCsvFn(witness.getLastName().toString());
-                            line.appendCsvFn(witness.getFirstName().toString());
-                            line.appendCsvFn(witness.getOccupation().toString());
-                            line.appendCsvFn(witness.getComment().toString());
-                        }
-
-                        line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
-
-                    } if ( record instanceof RecordMarriage ) {
-
-                        line.appendCsvFn(fileSignature);
-                        line.appendCsvFn(placeManager.getCityName());
-                        line.appendCsvFn(placeManager.getCityCode());
-                        line.appendCsvFn(placeManager.getCountyName());
-                        line.appendCsvFn(placeManager.getStateName());
-                        line.appendCsvFn(placeManager.getCountryName());
-                        line.appendCsvFn(record.getParish().toString());
-                        line.appendCsvFn("M");
-                        line.appendCsvFn(""); //eventTypeTag
-                        line.appendCsvFn(""); //eventTypeName
-                        line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getCote().toString());
-                        line.appendCsvFn(record.getFreeComment().toString());
-                        line.appendCsvFn(""); // notary
-
-                        writeTitle(1,
-                                record.getEventDateString(),
-                                "Mariage",
-                                record.getCote().toString(),
-                                record.getFreeComment().toString()
-                                );
-
-
-                        line.appendCsvFn(record.getIndi().getLastName().getValue());
-                        line.appendCsvFn(record.getIndi().getFirstName().getValue());
-                        line.appendCsvFn(""); // IndiSex
-                        line.appendCsvFn(record.getIndi().getBirthPlace().toString());
-                        line.appendCsvFn(record.getIndi().getBirthDate().toString());
-                        line.appendCsvFn(record.getIndi().getAge().getValue());
-                        line.appendCsvFn(record.getIndi().getOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getResidence() .toString());
-                        line.appendCsvFn(record.getIndi().getComment() .toString());
-                        
-                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedDead().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedResidence().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedComment().toString());
-
-                        line.appendCsvFn(record.getIndi().getFatherLastName().toString());
-                        line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getFatherAge().getValue());
-                        line.appendCsvFn(record.getIndi().getFatherDead().toString());
-                        line.appendCsvFn(record.getIndi().getFatherOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getFatherResidence().toString());
-                        line.appendCsvFn(record.getIndi().getFatherComment().toString());
-                        
-                        line.appendCsvFn(record.getIndi().getMotherLastName().toString());
-                        line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getMotherAge().getValue());
-                        line.appendCsvFn(record.getIndi().getMotherDead().toString());
-                        line.appendCsvFn(record.getIndi().getMotherOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getMotherResidence().toString());
-                        line.appendCsvFn(record.getIndi().getMotherComment().toString());
-                        
-                        line.appendCsvFn(record.getWife().getLastName().toString());
-                        line.appendCsvFn(record.getWife().getFirstName().toString());
-                        line.appendCsvFn(""); //WifeSex
-                        line.appendCsvFn(record.getWife().getBirthPlace().toString());
-                        line.appendCsvFn(record.getWife().getBirthDate().toString());
-                        line.appendCsvFn(record.getWife().getAge().getValue());
-                        line.appendCsvFn(record.getWife().getOccupation().toString());
-                        line.appendCsvFn(record.getWife().getResidence().toString());
-                        line.appendCsvFn(record.getWife().getComment().toString());
-                        
-                        line.appendCsvFn(record.getWife().getMarriedLastName().toString());
-                        line.appendCsvFn(record.getWife().getMarriedFirstName().toString());
-                        line.appendCsvFn(record.getWife().getMarriedDead().toString());
-                        line.appendCsvFn(record.getWife().getMarriedOccupation().toString());
-                        line.appendCsvFn(record.getWife().getMarriedResidence().toString());
-                        line.appendCsvFn(record.getWife().getMarriedComment().toString());
-
-                        line.appendCsvFn(record.getWife().getFatherLastName().toString());
-                        line.appendCsvFn(record.getWife().getFatherFirstName().toString());
-                        line.appendCsvFn(record.getWife().getFatherAge().getValue());
-                        line.appendCsvFn(record.getWife().getFatherDead().toString());
-                        line.appendCsvFn(record.getWife().getFatherOccupation().toString());
-                        line.appendCsvFn(record.getWife().getFatherResidence().toString());
-                        line.appendCsvFn(record.getWife().getFatherComment().toString());
-                        line.appendCsvFn(record.getWife().getMotherLastName().toString());
-                        line.appendCsvFn(record.getWife().getMotherFirstName().toString());
-                        line.appendCsvFn(record.getWife().getMotherAge().getValue());
-                        line.appendCsvFn(record.getWife().getMotherDead().toString());
-                        line.appendCsvFn(record.getWife().getMotherOccupation().toString());
-                        line.appendCsvFn(record.getWife().getMotherResidence().toString());
-                        line.appendCsvFn(record.getWife().getMotherComment().toString());
-
-                        for(Record.Witness witness : record.getWitnesses()) {
-                            line.appendCsvFn(witness.getLastName().toString());
-                            line.appendCsvFn(witness.getFirstName().toString());
-                            line.appendCsvFn(witness.getOccupation().toString());
-                            line.appendCsvFn(witness.getComment().toString());
-                        }
-
-                        line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
-
-                    } else if ( record instanceof RecordDeath ) {
-
-                        line.appendCsvFn(fileSignature);
-                        line.appendCsvFn(placeManager.getCityName());
-                        line.appendCsvFn(placeManager.getCityCode());
-                        line.appendCsvFn(placeManager.getCountyName());
-                        line.appendCsvFn(placeManager.getStateName());
-                        line.appendCsvFn(placeManager.getCountryName());
-                        line.appendCsvFn(record.getParish().toString());
-                        line.appendCsvFn("D");
-                        line.appendCsvFn(""); //eventTypeTag
-                        line.appendCsvFn(""); //eventTypeName
-                        line.appendCsvFn(record.getEventDateString());
-                        line.appendCsvFn(record.getCote().toString());
-                        line.appendCsvFn(record.getFreeComment().toString());
-                        line.appendCsvFn(""); // notary
-
-                        writeTitle(1,
-                                record.getEventDateString(),
-                                "Décés",
-                                record.getCote().toString(),
-                                record.getFreeComment().toString()
-                                );
-
-
-                        line.appendCsvFn(record.getIndi().getLastName().toString());
-                        line.appendCsvFn(record.getIndi().getFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getSex().toString());
-                        line.appendCsvFn(record.getIndi().getBirthPlace().toString());
-                        line.appendCsvFn(record.getIndi().getBirthDate().toString());
-                        line.appendCsvFn(record.getIndi().getAge().getValue());
-                        line.appendCsvFn(record.getIndi().getOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getResidence() .toString());
-                        line.appendCsvFn(record.getIndi().getComment() .toString());
-
-                        line.appendCsvFn(record.getIndi().getMarriedLastName().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedDead().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedResidence().toString());
-                        line.appendCsvFn(record.getIndi().getMarriedComment().toString());
-
-                        line.appendCsvFn(record.getIndi().getFatherLastName().toString());
-                        line.appendCsvFn(record.getIndi().getFatherFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getFatherAge().getValue());
-                        line.appendCsvFn(record.getIndi().getFatherDead().toString());
-                        line.appendCsvFn(record.getIndi().getFatherOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getFatherResidence().toString());
-                        line.appendCsvFn(record.getIndi().getFatherComment().toString());
-                        line.appendCsvFn(record.getIndi().getMotherLastName().toString());
-                        line.appendCsvFn(record.getIndi().getMotherFirstName().toString());
-                        line.appendCsvFn(record.getIndi().getMotherAge().getValue());
-                        line.appendCsvFn(record.getIndi().getMotherDead().toString());
-                        line.appendCsvFn(record.getIndi().getMotherOccupation().toString());
-                        line.appendCsvFn(record.getIndi().getMotherResidence().toString());
-                        line.appendCsvFn(record.getIndi().getMotherComment().toString());
-
-                        line.appendCsvFn(""); // WifeLastName
-                        line.appendCsvFn(""); // WifeFirstName
-                        line.appendCsvFn(""); // WifeSex
-                        line.appendCsvFn(""); // WifePlace
-                        line.appendCsvFn(""); // WifeBirthDate
-                        line.appendCsvFn(""); // WifeAge
-                        line.appendCsvFn(""); // WifeOccupation
-                        line.appendCsvFn(""); // WifeResidence
-                        line.appendCsvFn(""); // WifeComment
-
-                        line.appendCsvFn(""); // WifeMarriedLastName
-                        line.appendCsvFn(""); // WifeMarriedFirstName
-                        line.appendCsvFn(""); // WifeMarriedDead
-                        line.appendCsvFn(""); // WifeMarriedOccupation
-                        line.appendCsvFn(""); // WifeMarriedResidence
-                        line.appendCsvFn(""); // WifeMarriedComment
-
-                        line.appendCsvFn(""); // WifeFatherLastName
-                        line.appendCsvFn(""); // WifeFatherFirstName
-                        line.appendCsvFn(""); // WifeFatherAge
-                        line.appendCsvFn(""); // WifeFatherDead
-                        line.appendCsvFn(""); // WifeFatherOccupation
-                        line.appendCsvFn(""); // WifeFatherResidence
-                        line.appendCsvFn(""); // WifeFatherComment
-                        line.appendCsvFn(""); // WifeMotherLastName
-                        line.appendCsvFn(""); // WifeMotherFirstName
-                        line.appendCsvFn(""); // WifeMotherAge
-                        line.appendCsvFn(""); // WifeMotherDead
-                        line.appendCsvFn(""); // WifeMotherOccupation
-                        line.appendCsvFn(""); // WifeMotherResidence
-                        line.appendCsvFn(""); // WifeMotherComment
-
-                        for(Record.Witness witness : record.getWitnesses()) {
-                            line.appendCsvFn(witness.getLastName().toString());
-                            line.appendCsvFn(witness.getFirstName().toString());
-                            line.appendCsvFn(witness.getOccupation().toString());
-                            line.appendCsvFn(witness.getComment().toString());
-                        }
-
-                        line.appendCsvFn(record.getGeneralComment().toString());
-                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
-
-                    } else if ( record instanceof RecordMisc ) {
-
+//        try {
+//            //create BufferedReader to read csv file
+//            //create BufferedReader to read csv file
+//
+//            ArrayList<Record> recordTree = new ArrayList<Record>();
+//            for(int i=0; i < recordModel.getRowCount(); i++) {
+//                recordTree.add(recordModel.getRecord(i));
+//            }
+//            //Collections.sort(recordTree, new RecordComparator());
+//            
+//            doc = new Document("");
+//
+//            // j'ajoute les autres lignes
+//            for (int index = 0; index < recordTree.size(); index++) {
+//                Record record = recordTree.get(index);
+//                if( recordType != null && recordType != record.getType()) {
+//                    continue;
+//                }
+//                Line line = new Line(fieldSeparator);
+//                try {
+//                    if ( record instanceof RecordBirth ) {
 //                        line.appendCsvFn(fileSignature);
 //                        line.appendCsvFn(placeManager.getCityName());
 //                        line.appendCsvFn(placeManager.getCityCode());
 //                        line.appendCsvFn(placeManager.getCountyName());
 //                        line.appendCsvFn(placeManager.getStateName());
 //                        line.appendCsvFn(placeManager.getCountryName());
-//                        line.appendCsvFn(record.getParish().toString());
-                        String participantNames = record.getIndi().getLastName().toString();
-                        if( !record.getWife().getLastName().isEmpty()) {
-                            participantNames += " et " + record.getWife().getLastName().toString();
-                        }
-                        writeTitle(1,
-                                record.getEventDateString(),
-                                record.getEventType().getName(),
-                                participantNames,
-                                record.getEventSecondDateString(),
-                                record.getCote().toString(),
-                                record.getFreeComment().toString()
-                                );
-
-                        writeValue(1,"Notaire:",
-                            record.getNotary().toString()
-                            );
-
-                        writeValue(1,"Intervenant 1:",
-                                record.getIndi().getFirstName().toString(),
-                                record.getIndi().getLastName().toString()
-                                );
-                        writeValue(2,"Naissance:",
-                                record.getIndi().getBirthDate().toString(),
-                                record.getIndi().getBirthPlace().toString()
-                                );
-                        writeValue(2,"Age:",
-                                formatAgeToAge(record.getIndi().getAge())
-                                );
-                        writeValue(2,"Profession:",
-                                record.getIndi().getOccupation().toString()
-                                );
-                        writeValue(2,"Domicile:",
-                                record.getIndi().getResidence() .toString()
-                                );
-                        writeValue(2,"Info:",
-                                record.getIndi().getComment() .toString()
-                                );
-
-                        writeValue(2,"Conjoint:",
-                                record.getIndi().getMarriedFirstName().toString(),
-                                record.getIndi().getMarriedLastName().toString(),
-                                record.getIndi().getMarriedDead().toString()
-                                );
-                        writeValue(3,"Profession:",
-                                record.getIndi().getMarriedOccupation().toString()
-                                );
-                        writeValue(3,"Domicile:",
-                                record.getIndi().getMarriedResidence().toString()
-                                );
-                        writeValue(3,"Info:",
-                                record.getIndi().getMarriedComment().toString()
-                                );
-
-                        writeValue(2,"Père:",
-                            record.getIndi().getFatherFirstName().toString(),
-                            record.getIndi().getFatherLastName().toString(),
-                            record.getIndi().getFatherDead().toString()
-                            );
-                        writeValue(3,"Age:",
-                                formatAgeToAge(record.getIndi().getFatherAge())
-                                );
-                        writeValue(3,"Profession:",
-                                record.getIndi().getFatherOccupation().toString()
-                                );
-                        writeValue(3,"Domicile:",
-                                record.getIndi().getFatherResidence().toString()
-                                );
-                        writeValue(3,"Info:",
-                                record.getIndi().getFatherComment().toString()
-                                );
-
-                        writeValue(2,"Mère:",
-                            record.getIndi().getMotherFirstName().toString(),
-                            record.getIndi().getMotherLastName().toString(),
-                            record.getIndi().getMotherDead().toString()
-                            );
-                        writeValue(3,"Age:",
-                                formatAgeToAge(record.getIndi().getMotherAge())
-                                );
-                        writeValue(3,"Profession:",
-                                record.getIndi().getMotherOccupation().toString()
-                                );
-                        writeValue(3,"Domicile:",
-                                record.getIndi().getMotherResidence().toString()
-                                );
-                        writeValue(3,"Info:",
-                                record.getIndi().getMotherComment().toString()
-                                );
-                        
-                        ///////////////////////////////////////////////////////
-                        writeValue(1,"Intervenant 2:",
-                                record.getWife().getFirstName().toString(),
-                                record.getWife().getLastName().toString()
-                                );
-                        writeValue(2,"Naissance:",
-                                record.getWife().getBirthDate().toString(),
-                                record.getWife().getBirthPlace().toString()
-                                );
-                        writeValue(2,"Age:",
-                                formatAgeToAge(record.getWife().getAge())
-                                );
-                        writeValue(2,"Profession:",
-                                record.getWife().getOccupation().toString()
-                                );
-                        writeValue(2,"Domicile:",
-                                record.getWife().getResidence().toString()
-                                );
-                        writeValue(2,"Info:",
-                                record.getWife().getComment().toString()
-                                );
-
-                        writeValue(2,"Conjoint:",
-                                record.getWife().getMarriedFirstName().toString(),
-                                record.getWife().getMarriedLastName().toString(),
-                                record.getWife().getMarriedDead().toString()
-                                );
-                        writeValue(3,"Profession:",
-                                record.getWife().getMarriedOccupation().toString()
-                                );
-                        writeValue(3,"Domicile:",
-                                record.getWife().getMarriedResidence().toString()
-                                );
-                        writeValue(3,"Info:",
-                                record.getWife().getMarriedComment().toString()
-                                );
-
-                        writeValue(2,"Père:",
-                            record.getWife().getFatherFirstName().toString(),
-                            record.getWife().getFatherLastName().toString(),
-                            record.getWife().getFatherDead().toString()
-                            );
-                        writeValue(3,"Age:",
-                                formatAgeToAge(record.getWife().getFatherAge())
-                                );
-                        writeValue(3,"Profession:",
-                                record.getWife().getFatherOccupation().toString()
-                                );
-                        writeValue(3,"Domicile:",
-                                record.getWife().getFatherResidence().toString()
-                                );
-                        writeValue(3,"Info:",
-                                record.getWife().getFatherComment().toString()
-                                );
-
-                        writeValue(2,"Mère:",
-                            record.getWife().getMotherFirstName().toString(),
-                            record.getWife().getMotherLastName().toString(),
-                            record.getWife().getMotherDead().toString()
-                            );
-                        writeValue(3,"Age:",
-                                formatAgeToAge(record.getWife().getMotherAge())
-                                );
-                        writeValue(3,"Profession:",
-                                record.getWife().getMotherOccupation().toString()
-                                );
-                        writeValue(3,"Domicile:",
-                                record.getWife().getMotherResidence().toString()
-                                );
-                        writeValue(3,"Info:",
-                                record.getWife().getMotherComment().toString()
-                                );
-
-                        for (Record.Witness witness : record.getWitnesses()) {
-                            line.appendCsvFn(witness.getLastName().toString());
-                            line.appendCsvFn(witness.getFirstName().toString());
-                            line.appendCsvFn(witness.getOccupation().toString());
-                            line.appendCsvFn(witness.getComment().toString());
-                        }
-
-                         writeValue(1,"Info:",
-                                record.getGeneralComment().toString()
-                                );
-                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
-                    }
-
-                } catch (IOException e) {
-                    sb.append("Line ").append(" " ).append(e).append("\n");
-                    sb.append("   ").append(line).append("\n");
-                }
-            }
-            //writer.close();
-            FileOutputStream fileOutputStream = new FileOutputStream(fileName, append);
-            Format format = new PDFFormat();
-            format.format(doc, fileOutputStream);
-
-        } catch (IOException e) {
-            sb.append(e).append("\n");
-        }
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.parish));
+//                        line.appendCsvFn("N");
+//                        line.appendCsvFn(""); //eventTypeTag
+//                        line.appendCsvFn(""); //eventTypeName
+//                        line.appendCsvFn(record.getFieldValue(FieldType.eventDate));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.cote));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.freeComment));
+//                        line.appendCsvFn(""); // notary
+//
+//                        writeTitle(1,
+//                                record.getFieldValue(FieldType.eventDate),
+//                                "Naissance",
+//                                record.getFieldValue(Record.FieldType.cote),
+//                                record.getFieldValue(Record.FieldType.freeComment)
+//                                );
+//
+//
+//                        line.appendCsvFn(record.getIndi().getLastName().getValue());
+//                        line.appendCsvFn(record.getIndi().getFirstName().getValue());
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiSex));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiBirthPlace)); // place
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiBirthDate)); // IndiBirthDate
+//                        line.appendCsvFn(""); // age
+//                        line.appendCsvFn(""); // occupation
+//                        line.appendCsvFn(""); // residence
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiComment));
+//
+//                        line.appendCsvFn(""); // IndiMarriedLastName
+//                        line.appendCsvFn(""); // IndiMarriedFirstName
+//                        line.appendCsvFn(""); // IndiMarriedDead
+//                        line.appendCsvFn(""); // IndiMarriedOccupation
+//                        line.appendCsvFn(""); // residence
+//                        line.appendCsvFn(""); // IndiMarriedComment
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherComment));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherComment));
+//
+//                        line.appendCsvFn(""); // WifeLastName
+//                        line.appendCsvFn(""); // WifeFirstName
+//                        line.appendCsvFn(""); // WifeSex
+//                        line.appendCsvFn(""); // WifePlace
+//                        line.appendCsvFn(""); // WifeBirthDate
+//                        line.appendCsvFn(""); // WifeAge
+//                        line.appendCsvFn(""); // WifeOccupation
+//                        line.appendCsvFn(""); // WifeResidence
+//                        line.appendCsvFn(""); // WifeComment
+//
+//                        line.appendCsvFn(""); // WifeMarriedLastName
+//                        line.appendCsvFn(""); // WifeMarriedFirstName
+//                        line.appendCsvFn(""); // WifeMarriedDead
+//                        line.appendCsvFn(""); // WifeMarriedOccupation
+//                        line.appendCsvFn(""); // WifeMarriedResidence
+//                        line.appendCsvFn(""); // WifeMarriedComment
+//
+//                        line.appendCsvFn(""); // WifeFatherLastName
+//                        line.appendCsvFn(""); // WifeFatherFirstName
+//                        line.appendCsvFn(""); // WifeFatherAge
+//                        line.appendCsvFn(""); // WifeFatherDead
+//                        line.appendCsvFn(""); // WifeFatherOccupation
+//                        line.appendCsvFn(""); // WifeFatherResidence
+//                        line.appendCsvFn(""); // WifeFatherComment
+//                        line.appendCsvFn(""); // WifeMotherLastName
+//                        line.appendCsvFn(""); // WifeMotherFirstName
+//                        line.appendCsvFn(""); // WifeMotherAge
+//                        line.appendCsvFn(""); // WifeMotherDead
+//                        line.appendCsvFn(""); // WifeMotherOccupation
+//                        line.appendCsvFn(""); // WifeMotherResidence
+//                        line.appendCsvFn(""); // WifeMotherComment
+//
+//                        for(Record.Witness witness : record.getWitnesses()) {
+//                            line.appendCsvFn(witness.getLastName().toString());
+//                            line.appendCsvFn(witness.getFirstName().toString());
+//                            line.appendCsvFn(witness.getOccupation().toString());
+//                            line.appendCsvFn(witness.getFieldValue(Record.FieldType.indiComment));
+//                        }
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.generalComment));
+//                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
+//
+//                    } if ( record instanceof RecordMarriage ) {
+//
+//                        line.appendCsvFn(fileSignature);
+//                        line.appendCsvFn(placeManager.getCityName());
+//                        line.appendCsvFn(placeManager.getCityCode());
+//                        line.appendCsvFn(placeManager.getCountyName());
+//                        line.appendCsvFn(placeManager.getStateName());
+//                        line.appendCsvFn(placeManager.getCountryName());
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.parish));
+//                        line.appendCsvFn("M");
+//                        line.appendCsvFn(""); //eventTypeTag
+//                        line.appendCsvFn(""); //eventTypeName
+//                        line.appendCsvFn(record.getFieldValue(FieldType.eventDate));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.cote));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.freeComment));
+//                        line.appendCsvFn(""); // notary
+//
+//                        writeTitle(1,
+//                                record.getFieldValue(FieldType.eventDate),
+//                                "Mariage",
+//                                record.getFieldValue(Record.FieldType.cote),
+//                                record.getFieldValue(Record.FieldType.freeComment)
+//                                );
+//
+//
+//                        line.appendCsvFn(record.getIndi().getLastName().getValue());
+//                        line.appendCsvFn(record.getIndi().getFirstName().getValue());
+//                        line.appendCsvFn(""); // IndiSex
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiBirthPlace));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiBirthDate));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiOccupation));
+//                        line.appendCsvFn(record.getIndi().getResidence() .toString());
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiComment));
+//                        
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedComment));
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherComment));
+//                        
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherComment));
+//                        
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeLastName));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeFirstName));
+//                        line.appendCsvFn(""); //WifeSex
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeBirthPlace));
+//                        line.appendCsvFn(record.getWife().getBirthDate().toString());
+//                        line.appendCsvFn(record.getWife().getAge().getValue());
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeOccupation));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.wifeComment));
+//                        
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMarriedLastName));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMarriedFirstName));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMarriedDead));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMarriedOccupation));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMarriedResidence));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMarriedComment));
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.wifeFatherLastName));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeFatherFirstName));
+//                        line.appendCsvFn(record.getWife().getFatherAge().getValue());
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeFatherDead));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeFatherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeFatherResidence));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeFatherComment));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMotherLastName));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMotherFirstName));
+//                        line.appendCsvFn(record.getWife().getMotherAge().getValue());
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMotherDead));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMotherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMotherResidence));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.wifeMotherComment));
+//
+//                        for(Record.Witness witness : record.getWitnesses()) {
+//                            line.appendCsvFn(witness.getLastName().toString());
+//                            line.appendCsvFn(witness.getFirstName().toString());
+//                            line.appendCsvFn(witness.getOccupation().toString());
+//                            line.appendCsvFn(witness.getFieldValue(Record.FieldType.indiComment));
+//                        }
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.generalComment));
+//                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
+//
+//                    } else if ( record instanceof RecordDeath ) {
+//
+//                        line.appendCsvFn(fileSignature);
+//                        line.appendCsvFn(placeManager.getCityName());
+//                        line.appendCsvFn(placeManager.getCityCode());
+//                        line.appendCsvFn(placeManager.getCountyName());
+//                        line.appendCsvFn(placeManager.getStateName());
+//                        line.appendCsvFn(placeManager.getCountryName());
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.parish));
+//                        line.appendCsvFn("D");
+//                        line.appendCsvFn(""); //eventTypeTag
+//                        line.appendCsvFn(""); //eventTypeName
+//                        line.appendCsvFn(record.getFieldValue(FieldType.eventDate));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.cote));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.freeComment));
+//                        line.appendCsvFn(""); // notary
+//
+//                        writeTitle(1,
+//                                record.getFieldValue(FieldType.eventDate),
+//                                "Décés",
+//                                record.getFieldValue(Record.FieldType.cote),
+//                                record.getFieldValue(Record.FieldType.freeComment)
+//                                );
+//
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiSex));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiBirthPlace));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiBirthDate));
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiOccupation));
+//                        line.appendCsvFn(record.getIndi().getResidence() .toString());
+//                        line.appendCsvFn(record.getFieldValue(FieldType.indiComment));
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMarriedComment));
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiFatherComment));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherLastName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherFirstName));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherAge));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherDead));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherOccupation));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherResidence));
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.indiMotherComment));
+//
+//                        line.appendCsvFn(""); // WifeLastName
+//                        line.appendCsvFn(""); // WifeFirstName
+//                        line.appendCsvFn(""); // WifeSex
+//                        line.appendCsvFn(""); // WifePlace
+//                        line.appendCsvFn(""); // WifeBirthDate
+//                        line.appendCsvFn(""); // WifeAge
+//                        line.appendCsvFn(""); // WifeOccupation
+//                        line.appendCsvFn(""); // WifeResidence
+//                        line.appendCsvFn(""); // WifeComment
+//
+//                        line.appendCsvFn(""); // WifeMarriedLastName
+//                        line.appendCsvFn(""); // WifeMarriedFirstName
+//                        line.appendCsvFn(""); // WifeMarriedDead
+//                        line.appendCsvFn(""); // WifeMarriedOccupation
+//                        line.appendCsvFn(""); // WifeMarriedResidence
+//                        line.appendCsvFn(""); // WifeMarriedComment
+//
+//                        line.appendCsvFn(""); // WifeFatherLastName
+//                        line.appendCsvFn(""); // WifeFatherFirstName
+//                        line.appendCsvFn(""); // WifeFatherAge
+//                        line.appendCsvFn(""); // WifeFatherDead
+//                        line.appendCsvFn(""); // WifeFatherOccupation
+//                        line.appendCsvFn(""); // WifeFatherResidence
+//                        line.appendCsvFn(""); // WifeFatherComment
+//                        line.appendCsvFn(""); // WifeMotherLastName
+//                        line.appendCsvFn(""); // WifeMotherFirstName
+//                        line.appendCsvFn(""); // WifeMotherAge
+//                        line.appendCsvFn(""); // WifeMotherDead
+//                        line.appendCsvFn(""); // WifeMotherOccupation
+//                        line.appendCsvFn(""); // WifeMotherResidence
+//                        line.appendCsvFn(""); // WifeMotherComment
+//
+//                        for(Record.Witness witness : record.getWitnesses()) {
+//                            line.appendCsvFn(witness.getLastName().toString());
+//                            line.appendCsvFn(witness.getFirstName().toString());
+//                            line.appendCsvFn(witness.getOccupation().toString());
+//                            line.appendCsvFn(witness.getFieldValue(Record.FieldType.indiComment));
+//                        }
+//
+//                        line.appendCsvFn(record.getFieldValue(Record.FieldType.generalComment));
+//                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
+//
+//                    } else if ( record instanceof RecordMisc ) {
+//
+////                        line.appendCsvFn(fileSignature);
+////                        line.appendCsvFn(placeManager.getCityName());
+////                        line.appendCsvFn(placeManager.getCityCode());
+////                        line.appendCsvFn(placeManager.getCountyName());
+////                        line.appendCsvFn(placeManager.getStateName());
+////                        line.appendCsvFn(placeManager.getCountryName());
+////                        line.appendCsvFn(record.getFieldValue(Record.FieldType.parish));
+//                        String participantNames = record.getFieldValue(Record.FieldType.indiLastName);
+//                        if( !record.getWife().getLastName().isEmpty()) {
+//                            participantNames += " et " + record.getFieldValue(FieldType.wifeLastName);
+//                        }
+//                        writeTitle(1,
+//                                record.getFieldValue(FieldType.eventDate),
+//                                record.getFieldValue(FieldType.eventType),
+//                                participantNames,
+//                                record.getEventSecondDateString(),
+//                                record.getFieldValue(Record.FieldType.cote),
+//                                record.getFieldValue(Record.FieldType.freeComment)
+//                                );
+//
+//                        writeValue(1,"Notaire:",
+//                            record.getFieldValue(Record.FieldType.notary)
+//                            );
+//
+//                        writeValue(1,"Intervenant 1:",
+//                                record.getFieldValue(Record.FieldType.indiFirstName),
+//                                record.getFieldValue(Record.FieldType.indiLastName)
+//                                );
+//                        writeValue(2,"Naissance:",
+//                                record.getFieldValue(FieldType.indiBirthDate),
+//                                record.getFieldValue(Record.FieldType.indiBirthPlace)
+//                                );
+//                        writeValue(2,"Age:",
+//                                formatAgeToAge(record.getIndi().getAge())
+//                                );
+//                        writeValue(2,"Profession:",
+//                                record.getFieldValue(Record.FieldType.indiOccupation)
+//                                );
+//                        writeValue(2,"Domicile:",
+//                                record.getIndi().getResidence() .toString()
+//                                );
+//                        writeValue(2,"Info:",
+//                                record.getFieldValue(FieldType.indiComment)
+//                                );
+//
+//                        writeValue(2,"Conjoint:",
+//                                record.getFieldValue(Record.FieldType.indiMarriedFirstName),
+//                                record.getFieldValue(Record.FieldType.indiMarriedLastName),
+//                                record.getFieldValue(Record.FieldType.indiMarriedDead)
+//                                );
+//                        writeValue(3,"Profession:",
+//                                record.getFieldValue(Record.FieldType.indiMarriedOccupation)
+//                                );
+//                        writeValue(3,"Domicile:",
+//                                record.getFieldValue(Record.FieldType.indiMarriedResidence)
+//                                );
+//                        writeValue(3,"Info:",
+//                                record.getFieldValue(Record.FieldType.indiMarriedComment)
+//                                );
+//
+//                        writeValue(2,"Père:",
+//                            record.getFieldValue(Record.FieldType.indiFatherFirstName),
+//                            record.getFieldValue(Record.FieldType.indiFatherLastName),
+//                            record.getFieldValue(Record.FieldType.indiFatherDead)
+//                            );
+//                        writeValue(3,"Age:",
+//                                formatAgeToAge(record.getIndi().getFatherAge())
+//                                );
+//                        writeValue(3,"Profession:",
+//                                record.getFieldValue(Record.FieldType.indiFatherOccupation)
+//                                );
+//                        writeValue(3,"Domicile:",
+//                                record.getFieldValue(Record.FieldType.indiFatherResidence)
+//                                );
+//                        writeValue(3,"Info:",
+//                                record.getFieldValue(Record.FieldType.indiFatherComment)
+//                                );
+//
+//                        writeValue(2,"Mère:",
+//                            record.getFieldValue(Record.FieldType.indiMotherFirstName),
+//                            record.getFieldValue(Record.FieldType.indiMotherLastName),
+//                            record.getFieldValue(Record.FieldType.indiMotherDead)
+//                            );
+//                        writeValue(3,"Age:",
+//                                formatAgeToAge(record.getIndi().getMotherAge())
+//                                );
+//                        writeValue(3,"Profession:",
+//                                record.getFieldValue(Record.FieldType.indiMotherOccupation)
+//                                );
+//                        writeValue(3,"Domicile:",
+//                                record.getFieldValue(Record.FieldType.indiMotherResidence)
+//                                );
+//                        writeValue(3,"Info:",
+//                                record.getFieldValue(Record.FieldType.indiMotherComment)
+//                                );
+//                        
+//                        ///////////////////////////////////////////////////////
+//                        writeValue(1,"Intervenant 2:",
+//                                record.getFieldValue(FieldType.wifeFirstName),
+//                                record.getFieldValue(FieldType.wifeLastName)
+//                                );
+//                        writeValue(2,"Naissance:",
+//                                record.getWife().getBirthDate().toString(),
+//                                record.getFieldValue(FieldType.wifeBirthPlace)
+//                                );
+//                        writeValue(2,"Age:",
+//                                formatAgeToAge(record.getWife().getAge())
+//                                );
+//                        writeValue(2,"Profession:",
+//                                record.getFieldValue(FieldType.wifeOccupation)
+//                                );
+//                        writeValue(2,"Domicile:",
+//                                record.getFieldValue(FieldType.wifeResidence)
+//                                );
+//                        writeValue(2,"Info:",
+//                                record.getFieldValue(Record.FieldType.wifeComment)
+//                                );
+//
+//                        writeValue(2,"Conjoint:",
+//                                record.getFieldValue(FieldType.wifeMarriedFirstName),
+//                                record.getFieldValue(FieldType.wifeMarriedLastName),
+//                                record.getFieldValue(FieldType.wifeMarriedDead)
+//                                );
+//                        writeValue(3,"Profession:",
+//                                record.getFieldValue(FieldType.wifeMarriedOccupation)
+//                                );
+//                        writeValue(3,"Domicile:",
+//                                record.getFieldValue(FieldType.wifeMarriedResidence)
+//                                );
+//                        writeValue(3,"Info:",
+//                                record.getFieldValue(FieldType.wifeMarriedComment)
+//                                );
+//
+//                        writeValue(2,"Père:",
+//                            record.getFieldValue(FieldType.wifeFatherFirstName),
+//                            record.getFieldValue(Record.FieldType.wifeFatherLastName),
+//                            record.getFieldValue(FieldType.wifeFatherDead)
+//                            );
+//                        writeValue(3,"Age:",
+//                                formatAgeToAge(record.getWife().getFatherAge())
+//                                );
+//                        writeValue(3,"Profession:",
+//                                record.getFieldValue(FieldType.wifeFatherOccupation)
+//                                );
+//                        writeValue(3,"Domicile:",
+//                                record.getFieldValue(FieldType.wifeFatherResidence)
+//                                );
+//                        writeValue(3,"Info:",
+//                                record.getFieldValue(FieldType.wifeFatherComment)
+//                                );
+//
+//                        writeValue(2,"Mère:",
+//                            record.getFieldValue(FieldType.wifeMotherFirstName),
+//                            record.getFieldValue(FieldType.wifeMotherLastName),
+//                            record.getFieldValue(FieldType.wifeMotherDead)
+//                            );
+//                        writeValue(3,"Age:",
+//                                formatAgeToAge(record.getWife().getMotherAge())
+//                                );
+//                        writeValue(3,"Profession:",
+//                                record.getFieldValue(FieldType.wifeMotherOccupation)
+//                                );
+//                        writeValue(3,"Domicile:",
+//                                record.getFieldValue(FieldType.wifeMotherResidence)
+//                                );
+//                        writeValue(3,"Info:",
+//                                record.getFieldValue(FieldType.wifeMotherComment)
+//                                );
+//
+//                        for (Record.Witness witness : record.getWitnesses()) {
+//                            line.appendCsvFn(witness.getLastName().toString());
+//                            line.appendCsvFn(witness.getFirstName().toString());
+//                            line.appendCsvFn(witness.getOccupation().toString());
+//                            line.appendCsvFn(witness.getFieldValue(Record.FieldType.indiComment));
+//                        }
+//
+//                         writeValue(1,"Info:",
+//                                record.getFieldValue(Record.FieldType.generalComment)
+//                                );
+//                        line.appendCsv(String.valueOf(index)); // numero d'enregistrement
+//                    }
+//
+//                } catch (IOException e) {
+//                    sb.append("Line ").append(" " ).append(e).append("\n");
+//                    sb.append("   ").append(line).append("\n");
+//                }
+//            }
+//            //writer.close();
+//            FileOutputStream fileOutputStream = new FileOutputStream(fileName, append);
+//            Format format = new PDFFormat();
+//            format.format(doc, fileOutputStream);
+//
+//        } catch (IOException e) {
+//            sb.append(e).append("\n");
+//        }
         return sb;
     }
     

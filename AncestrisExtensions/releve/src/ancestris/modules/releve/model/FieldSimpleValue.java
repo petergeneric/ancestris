@@ -7,6 +7,7 @@ package ancestris.modules.releve.model;
 public class FieldSimpleValue extends Field {
 
     private String value ="";
+    
     @Override
     public String toString() {
         return value;
@@ -18,8 +19,8 @@ public class FieldSimpleValue extends Field {
     }
 
     @Override
-    public void setValue(Object value) {
-        this.value = value.toString();
+    public void setValue(String value) {
+        this.value = value;
     }
 
     @Override

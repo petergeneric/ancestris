@@ -2,9 +2,8 @@ package ancestris.modules.releve;
 
 import ancestris.modules.releve.model.Record;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.modules.releve.editor.EditorBeanField;
 import ancestris.modules.releve.editor.EditorBeanGroup;
-import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.RecordModel;
 import java.util.regex.Pattern;
@@ -73,7 +72,7 @@ public class ReleveQuickSearch implements SearchProvider {
                     String resultDisplay = lastName.toString() + " " + firstName.toString();
                                                
                     if (resultDisplay.toLowerCase().matches(".*" + resquestPattern + ".*") ) {
-                        if (!response.addResult(createAction(tc, record, lastNameFieldTypes[i]), tc.getDataManager().getCityName() + " " + resultDisplay + " , " + EditorBeanGroup.getGroup(record.getType(), lastNameFieldTypes[i]).getTitle() + " , " + record.getEventDateString() )) {
+                        if (!response.addResult(createAction(tc, record, lastNameFieldTypes[i]), tc.getDataManager().getCityName() + " " + resultDisplay + " , " + EditorBeanGroup.getGroup(record.getType(), lastNameFieldTypes[i]).getTitle() + " , " + record.getFieldValue(FieldType.eventDate) )) {
                             return;
                         }
                     }
@@ -82,12 +81,12 @@ public class ReleveQuickSearch implements SearchProvider {
         }
     }
 
-     private Runnable createAction(final ReleveTopComponent tc, final Record record, final Field.FieldType fieldType) {
+     private Runnable createAction(final ReleveTopComponent tc, final Record record, final Record.FieldType fieldType) {
         return new Runnable() {
 
             @Override
             public void run() {
-                //System.out.println("Found record "+ record.getIndi().getFirstName().toString());
+                //System.out.println("Found record "+ record.getFieldValue(Record.FieldType.indiFirstName));
                 tc.requestVisible();
                 tc.showToFront();
                 tc.selectField(record, fieldType);
