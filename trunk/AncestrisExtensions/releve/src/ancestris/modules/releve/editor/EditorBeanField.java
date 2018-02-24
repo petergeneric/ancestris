@@ -63,7 +63,7 @@ public class EditorBeanField {
 	init(GroupId.wife,          FieldType.wifeSex,               false, false,  false, false,  false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeAge,               false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeBirthDate,         false, false,  true,  true,   false, false,  true,  true );
-	init(GroupId.wife,          FieldType.wifeBirthPlace,             false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wife,          FieldType.wifeBirthPlace,        false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeOccupation,        false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeResidence,         false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeComment,           false, false,  true,  true,   false, false,  true,  true );
@@ -128,8 +128,8 @@ public class EditorBeanField {
 
     }
 
-    private FieldType fieldType ;
-    private boolean used;
+    private final FieldType fieldType ;
+    private final boolean used;
     private boolean visible;
 
     public EditorBeanField(FieldType fieldType, boolean used, boolean visible) {
@@ -151,14 +151,6 @@ public class EditorBeanField {
     public boolean isUsed() {
         return used;
     }
-
-    /**
-     * @return the visible
-     */
-    public void setUsed(boolean used) {
-        this.used = used;
-    }
-
 
     /**
      * @return the label

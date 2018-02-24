@@ -321,6 +321,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
      * sauvegarde de la configuration a la fermeture du composant
      */
     public void componentClosed() {
+        releveEditor.componentClosed();
         releveTable.componentClosed();
         if (standaloneMode == false) {
             int editorWidth = jSplitPane1.getRightComponent().getWidth();

@@ -70,7 +70,7 @@ public class EditorBeanGroup {
         groupArray.put(RecordType.DEATH,   new ArrayList<EditorBeanGroup>());
         groupArray.put(RecordType.MISC,    new ArrayList<EditorBeanGroup>());
 
-        //   groupe               Birth        Marriage      Death       Misc
+        //   groupe               birthTitle   marriageTitle deathTitle  miscTitle        keyStroke
 	init(GroupId.general,     "Birth",     "Marriage",   "Death",    "Misc" ,         ks1 );
         init(GroupId.indi,        "Child",     "Husband",    "Deceased", "Participant1" , ks2 );
         init(GroupId.indiMarried, "Married",   "ExWife",     "Married",  "Married" ,      null );
@@ -192,10 +192,8 @@ public class EditorBeanGroup {
 
     static public void savePreferences() {
         for (RecordType recordType : RecordType.values()) {
-            for (Iterator<EditorBeanGroup> groupIter = EditorBeanGroup.getGroups(recordType).iterator(); groupIter.hasNext();) {
-                EditorBeanGroup group = groupIter.next();
-                for (Iterator<EditorBeanField> fieldIter = group.getFields().iterator(); fieldIter.hasNext();) {
-                    EditorBeanField field = fieldIter.next();
+            for (EditorBeanGroup group : EditorBeanGroup.getGroups(recordType)) {
+                for (EditorBeanField field : group.getFields()) {
                     String preferenceKey = "Editor."+group.groupId.name()+"."+field.getFieldType().name()+"."+recordType.name();
                     String preferenceValue = field.isUsed()+";"+field.isVisible();
                     NbPreferences.forModule(EditorBeanGroup.class).put( preferenceKey, preferenceValue);

@@ -112,7 +112,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         jButtonFirstNameCompletion = new javax.swing.JButton();
         jButtonLastNameCompletion = new javax.swing.JButton();
         jButtonOccupationCompletion = new javax.swing.JButton();
-        jButtonConfigEditor = new javax.swing.JButton();
         jLabelFiller = new javax.swing.JLabel();
         browserOptionsPanel = new ancestris.modules.releve.imageBrowser.BrowserOptionsPanel();
         mergeOptionPanel = new ancestris.modules.releve.merge.MergeOptionPanel();
@@ -241,19 +240,6 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         gridBagConstraints.gridy = 9;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelEditor.add(jPanelExludeCompletion, gridBagConstraints);
-
-        jButtonConfigEditor.setText(org.openide.util.NbBundle.getMessage(ReleveOptionsPanel.class, "ReleveOptionsPanel.jButtonConfigEditor.text")); // NOI18N
-        jButtonConfigEditor.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonConfigEditorActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 10;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        gridBagConstraints.insets = new java.awt.Insets(4, 4, 4, 4);
-        jPanelEditor.add(jButtonConfigEditor, gridBagConstraints);
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 10;
@@ -317,17 +303,12 @@ public class ReleveOptionsPanel extends javax.swing.JPanel  {
         ReleveCompletionDialog.showFirstNameCompletionPanel();
     }//GEN-LAST:event_jButtonFirstNameCompletionActionPerformed
 
-    private void jButtonConfigEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonConfigEditorActionPerformed
-        ReleveEditorConfigDialog.showEditorConfigPanel();
-    }//GEN-LAST:event_jButtonConfigEditorActionPerformed
-
     private void jButtonOccupationCompletionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonOccupationCompletionActionPerformed
         ReleveCompletionDialog.showOccupationCompletionPanel();
     }//GEN-LAST:event_jButtonOccupationCompletionActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private ancestris.modules.releve.imageBrowser.BrowserOptionsPanel browserOptionsPanel;
-    private javax.swing.JButton jButtonConfigEditor;
     private javax.swing.JButton jButtonFirstNameCompletion;
     private javax.swing.JButton jButtonLastNameCompletion;
     private javax.swing.JButton jButtonOccupationCompletion;
