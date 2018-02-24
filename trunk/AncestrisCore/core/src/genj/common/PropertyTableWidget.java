@@ -432,10 +432,10 @@ public class PropertyTableWidget extends JPanel {
                     }
                     // FIXME: action is handled here and selection is handled in changeSelection
                     // => FL : 2018-02-18 - comment out the 3 lines below
-//                    Object cell = getValueAt(row, col);
-//                    if (cell != null && cell instanceof Property) {
-//                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
-//                    }
+                    Object cell = getValueAt(row, col);
+                    if (cell != null && cell instanceof Property) {
+                        SelectionDispatcher.fireSelection(e, new Context((Property) cell));
+                    }
                 }
             });
             //setShortCut(panelShortcuts);
