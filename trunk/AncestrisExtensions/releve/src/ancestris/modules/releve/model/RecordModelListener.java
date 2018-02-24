@@ -9,7 +9,7 @@ public interface RecordModelListener {
     void recordInserted(int firstIndex, int lastIndex);
     void recordDeleted(int firstIndex, int lastIndex);
     void recordUpdated(int firstIndex, int lastIndex);
-    void recordUpdated(int recordIndex, Field.FieldType filedType);
+    void recordUpdated(int recordIndex, Record.FieldType filedType);
     void allChanged();
 
 }

@@ -26,7 +26,7 @@ public class BeanAge extends Bean {
             String.format("^([0-9\\p{javaWhitespace}]{3})%s  ([0-9\\p{javaWhitespace}]{2})%s  ([0-9\\p{javaWhitespace}]{2})%s?$",
             yearLabel, monthLabel, dayLabel));
 
-    private JFormattedTextField tfield;
+    private final JFormattedTextField tfield;
 
     public BeanAge() {
 
@@ -76,26 +76,30 @@ public class BeanAge extends Bean {
      */
     @Override
     protected void commitImpl() {
-        FieldAge p = (FieldAge) getField();
-        String value = tfield.getText();
-        Matcher matcher = pattern.matcher(value);
+        Matcher matcher = pattern.matcher(tfield.getText());
         if (matcher.matches()) {
-            p.setValue(new Delta(
-                matcher.group(3).trim().isEmpty() ? 0 : Integer.parseInt(matcher.group(3).trim()),
-                matcher.group(2).trim().isEmpty() ? 0 : Integer.parseInt(matcher.group(2).trim()),
-                matcher.group(1).trim().isEmpty() ? 0 : Integer.parseInt(matcher.group(1).trim())
-                ));
+            String deltaValue = 
+                  (matcher.group(1).trim().isEmpty() ? "" : matcher.group(1).trim()+"y ")
+                + (matcher.group(2).trim().isEmpty() ? "" : matcher.group(2).trim()+"m " ) 
+                + (matcher.group(3).trim().isEmpty() ? "" : matcher.group(3).trim()+"d" );
+            setFieldValue(deltaValue);
         }
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-        final FieldAge property = (FieldAge) field;
-        if (property == null) {
-        //    tfield.setText("");
+        final FieldAge fieldAge = (FieldAge) field;
+        if (fieldAge != null && fieldAge instanceof  FieldAge) {
+            final FieldAge property = (FieldAge) field;
+            String txt = String.format(valueFormat,
+                    property.getDelta().getYears() == 0 ? "" : String.valueOf(property.getDelta().getYears()) ,
+                    property.getDelta().getMonths() == 0 ? "" : String.valueOf(property.getDelta().getMonths()),
+                    property.getDelta().getDays() == 0 ? "" : String.valueOf(property.getDelta().getDays())
+            );
+            tfield.setText(txt);
         } else {
-            String txt = property.toString();
-        //    tfield.setText(txt);
+            String txt = String.format(valueFormat, "   ", "  " , "  ");
+            tfield.setText(txt);
         }
     }
 }

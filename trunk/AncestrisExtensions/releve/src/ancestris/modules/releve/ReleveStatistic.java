@@ -11,8 +11,6 @@ import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
-import genj.gedcom.GedcomException;
-import genj.gedcom.time.PointInTime;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -75,13 +73,20 @@ public class ReleveStatistic extends javax.swing.JFrame {
            // je compte les releves par année
            for (int i = 0; i < nbRecord; i++) {
                Record record = dataManager.getDataModel().getRecord(i);
+               
                int year;
-               try {
-                   year = record.getEventDateProperty().getStart().getPointInTime(PointInTime.GREGORIAN).getYear();
-               } catch (GedcomException ex) {
-                   continue;
+               String value = record.getFieldValue(Record.FieldType.eventDate);
+               if ( value.isEmpty() ) {
+                   year = 0;
+               } else {
+                   int index = value.lastIndexOf("/");
+                   if (index == -1) {
+                       year = Integer.parseInt(value);
+                   } else {
+                       year = Integer.parseInt(value.substring(index + 1));
+                   }
                }
-
+               
                int[] counters = datas.get(year);
                if (counters == null) {
                    counters = new int[5];

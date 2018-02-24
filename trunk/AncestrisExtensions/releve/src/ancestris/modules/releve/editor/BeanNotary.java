@@ -4,7 +4,6 @@ import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldNotary;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -17,8 +16,8 @@ import javax.swing.KeyStroke;
  * @author Michel
  */
 public class BeanNotary extends Bean implements CompletionListener {
-    private Java2sAutoComboBox jCombobox;
-    private CompletionProvider completionProvider;
+    private final Java2sAutoComboBox jCombobox;
+    private final CompletionProvider completionProvider;
 
     public BeanNotary(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
@@ -37,13 +36,8 @@ public class BeanNotary extends Bean implements CompletionListener {
     @Override
     public void setFieldImpl() {
 
-        final FieldNotary notaryField = (FieldNotary) getField();
-        if (notaryField == null) {
-            // je n'affiche rien
-            jCombobox.getEditor().setItem("");
-        } else {
-            jCombobox.getEditor().setItem(notaryField.toString());
-        }
+        
+        jCombobox.getEditor().setItem( getFieldValue() );
         
         // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
         resetKeyboardActions();
@@ -53,19 +47,17 @@ public class BeanNotary extends Bean implements CompletionListener {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
-                jCombobox.getEditor().setItem(notaryField.toString());
+                jCombobox.getEditor().setItem( getFieldValue() );
             }
         });
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-       final FieldNotary notaryField = (FieldNotary) field;
-        if (notaryField == null) {
-            // je n'affiche rien
+        if (field == null) {
             jCombobox.getEditor().setItem("");
         } else {
-            jCombobox.getEditor().setItem(notaryField.toString());
+            jCombobox.getEditor().setItem(field.toString());
         }
     }
 
@@ -75,16 +67,14 @@ public class BeanNotary extends Bean implements CompletionListener {
     @Override
     protected void commitImpl() {
 
-        FieldNotary fieldNotary = (FieldNotary) getField();
-
         // je supprime les espaces aux extremetes
         String value = jCombobox.getEditor().getItem().toString().trim();
 
         // j'enregistre les valeurs dans la variable field
-        fieldNotary.setValue(value.trim());
+        setFieldValue(value);
 
         // j'affiche la valeur mise en forme
-        jCombobox.getEditor().setItem(fieldNotary.toString());
+        jCombobox.getEditor().setItem(value);
     }
 
     /**

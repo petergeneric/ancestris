@@ -4,7 +4,6 @@ import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldEventType;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.util.List;
@@ -18,8 +17,8 @@ import javax.swing.KeyStroke;
  */
 public class BeanEventType extends Bean implements CompletionListener {
     //private Java2sAutoTextField cListEventType;
-    private Java2sAutoComboBox cListEventType;
-    private CompletionProvider completionProvider;
+    private final Java2sAutoComboBox cListEventType;
+    private final CompletionProvider completionProvider;
 
     public BeanEventType(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
@@ -38,14 +37,14 @@ public class BeanEventType extends Bean implements CompletionListener {
     @Override
     public void setFieldImpl() {
 
-        final FieldEventType eventType = (FieldEventType) getField();
+        final Field eventType = getField();
         if (eventType == null) {
             // j'affiche le premier element de la liste pas defaut
             //cListEventType.setText(cListEventType.getDataList().get(0).toString());
             if ( cListEventType.getDataList().isEmpty()) {
                 cListEventType.getEditor().setItem("");
             } else {
-                cListEventType.getEditor().setItem(cListEventType.getDataList().get(0).toString());
+                cListEventType.getEditor().setItem(cListEventType.getDataList().get(0));
             }
         } else {
             //cListEventType.setText(eventType.toString());
@@ -68,14 +67,13 @@ public class BeanEventType extends Bean implements CompletionListener {
 
     @Override
     protected void replaceValueImpl(Field field) {
-       final FieldEventType eventType = (FieldEventType) field;
-        if (eventType == null) {
+        if (field == null) {
             // j'affiche le premier element de la liste pas defaut
             //cListEventType.setText(cListEventType.getDataList().get(0).toString());
-            cListEventType.getEditor().setItem(cListEventType.getDataList().get(0).toString());
+            cListEventType.getEditor().setItem(cListEventType.getDataList().get(0));
         } else {
             //cListEventType.setText(eventType.toString());
-            cListEventType.getEditor().setItem(eventType.toString());
+            cListEventType.getEditor().setItem(field.toString());
         }
     }
 
@@ -85,14 +83,14 @@ public class BeanEventType extends Bean implements CompletionListener {
     @Override
     protected void commitImpl() {
 
-        FieldEventType fieldEventType = (FieldEventType) getField();
+        Field fieldEventType = getField();
 
         // je supprime les espaces aux extremetes
         //String value = cListEventType.getText().trim();
         String value = cListEventType.getEditor().getItem().toString().trim();
 
         // j'enregistre les valeurs dans la variable field
-        fieldEventType.setName(value.trim());
+        fieldEventType.setValue(value.trim());
 
         // j'affiche la valeur mise en forme
         cListEventType.getEditor().setItem(fieldEventType.toString());

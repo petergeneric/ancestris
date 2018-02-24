@@ -1,12 +1,13 @@
 package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.Record.FieldType;
+import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldPicture;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
-import genj.gedcom.PropertyDate;
 import javax.swing.RowFilter;
 
 /**
@@ -23,7 +24,7 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Participant2"),
         java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.column.Picture")
     };
-    final Class<?> columnType[] = {Integer.class, PropertyDate.class, String.class, String.class, String.class, FieldPicture.class};
+    final Class<?> columnType[] = {Integer.class, FieldDate.class, String.class, String.class, String.class, FieldPicture.class};
 
     /**
      * Constructor
@@ -60,7 +61,7 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
                 value = row + 1;
                 break;
             case 1:
-                value = record.getEventDateProperty();
+                value = record.getField(FieldType.eventDate);
                 break;
             case 2:
                 {
@@ -71,8 +72,8 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
                     } else if ( record instanceof RecordDeath) {
                         value = "D";
                     } else {
-                        if (record.getEventType() != null) {
-                            value = record.getEventType().getName();
+                        if (! record.isEmptyField(FieldType.eventType)) {
+                            value = record.getFieldValue(FieldType.eventType);
                         } else {
                             value = "V";
                         }
@@ -80,17 +81,13 @@ public class TableModelRecordAll extends TableModelRecordAbstract {
                 }
                 break;
             case 3:
-                value = record.getIndi().getLastName().toString() + " " + record.getIndi().getFirstName().toString();
+                value = record.getFieldValue(FieldType.indiLastName) + " " + record.getFieldValue(FieldType.indiFirstName);
                 break;
             case 4:
-                if ( record.getWife().getLastName() != null) {
-                    value = record.getWife().getLastName().toString() + " " + record.getWife().getFirstName().toString();
-                } else {
-                    value = "";
-                }                
+                value = record.getFieldValue(FieldType.wifeLastName) + " " + record.getFieldValue(FieldType.wifeFirstName);                                
                 break;
             case 5:
-                value = record.getCote() + " " + record.getFreeComment();
+                value = record.getFieldValue(FieldType.cote) + " " + record.getFieldValue(FieldType.freeComment);
                 break;
             default:
                 value = super.getValueAt(row, col);

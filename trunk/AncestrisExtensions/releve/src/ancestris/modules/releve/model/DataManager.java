@@ -367,7 +367,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
             String oldValue = recordsInfoPlace.getValue();
             this.recordsInfoPlace.setValue(cityName, cityCode,county, state, country);
             //TODO
-            completionProvider.updatePlaces(recordsInfoPlace, oldValue);
+            completionProvider.updatePlaces(recordsInfoPlace.getValue(), oldValue);
            
            placeChanged = true;
             // je notifie les listeners

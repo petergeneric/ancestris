@@ -1,13 +1,13 @@
 package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.merge.ViewWrapperManager;
+import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
 import ancestris.modules.releve.model.GedcomLink;
 import ancestris.modules.releve.model.Record;
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
-import genj.gedcom.PropertyDate;
 import genj.util.swing.HeadlessLabel;
 import genj.util.swing.ImageIcon;
 import java.awt.Color;
@@ -312,8 +312,8 @@ public class ReleveTable extends JTable {
             }
 
             if ( value != null) {
-                if (value instanceof PropertyDate) {
-                    setText(((PropertyDate) value).getDisplayValue());
+                if (value instanceof FieldDate) {
+                    setText(((FieldDate) value).getDisplayValue());
                     setHorizontalAlignment(SwingConstants.RIGHT);
                 } else if (value instanceof FieldSex) {
                     setText(((FieldSex) value).toString());

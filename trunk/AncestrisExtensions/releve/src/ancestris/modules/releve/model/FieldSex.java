@@ -1,5 +1,7 @@
 package ancestris.modules.releve.model;
 
+import genj.gedcom.PropertySex;
+
 /**
  * Remarque : cette classe herite diretement de Property car il n'est pas possible de la
  * faire heriter de PropertySex a cause du constructeur protected PropertySex(tag)
@@ -8,6 +10,10 @@ package ancestris.modules.releve.model;
  */
 public class FieldSex extends Field {
 
+    public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Unknown");
+    public static String maleLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Male");
+    public static String femaleLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Female");
+    
     /** sexes */
     public static final int UNKNOWN = 0;
     public static final int MALE = 1;
@@ -16,48 +22,9 @@ public class FieldSex extends Field {
     public static final String MALE_STRING = "M";
     public static final String FEMALE_STRING = "F";
     private int sex = UNKNOWN;
-    private String sexAsString;
-
-    /**
-     * Accessor for Sex
-     */
-    public void setSex(int newSex) {
-        String old = getValue();
-        sexAsString = null;
-        sex = newSex;
-    }
-
-    public int getSex() {
-        return sex;
-    }
-
-    public int getOppositeInt() {
-        switch (sex) {
-            case MALE:
-                return FEMALE;
-            case FEMALE:
-                return MALE;
-            default:
-                return UNKNOWN;
-        }
-    }
-
-    public String getOppositeString() {
-        switch (sex) {
-            case MALE:
-                return FEMALE_STRING;
-            case FEMALE:
-                return MALE_STRING;
-            default:
-                return UNKNOWN_STRING;
-        }
-    }
-
+    
     @Override
     public String getValue() {
-        if (sexAsString != null) {
-            return sexAsString;
-        }
         if (sex == MALE) {
             return MALE_STRING;
         }
@@ -68,48 +35,43 @@ public class FieldSex extends Field {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(String value) {
 
-        String newValue = value.toString();
-        // Cannot parse anything longer than 1
-        if (newValue.trim().length() > 1) {
-            sexAsString = newValue;
+        String newValue = value.toUpperCase();
+        if ( maleLabel.toUpperCase().equals(newValue)
+             || "M".equals(newValue)
+            ) {
+            sex = MALE;
+        } else  if (femaleLabel.toUpperCase().equals(newValue)
+             || "F".equals(newValue)
+            ) {
+            sex = FEMALE;
         } else {
-            // zero length -> unknown
-            if (newValue.length() == 0) {
-                sexAsString = null;
-                sex = UNKNOWN;
-            } else {
-                // Female or Male ?
-                switch (newValue.charAt(0)) {
-                    case 'f':
-                    case 'F':
-                        sex = FEMALE;
-                        sexAsString = null;
-                        break;
-                    case 'm':
-                    case 'M':
-                        sex = MALE;
-                        sexAsString = null;
-                        break;
-                    case 'u':
-                    case 'U':
-                        sex = UNKNOWN;
-                        sexAsString = null;
-                        break;
-                    default:
-                        sexAsString = newValue;
-                        break;
-                }
-            }
+             sex = UNKNOWN;
         }
     }
 
     @Override
     public String toString() {
-        return getValue();
+        switch (sex) {
+            case MALE:
+                return maleLabel;
+            case FEMALE:
+                return femaleLabel;
+            default:
+                return unknownLabel;
+        }
     }
 
+    @Override
+    public boolean equalsProperty(Object that) {
+        if (that instanceof PropertySex) {
+            PropertySex propertySex = (PropertySex) that;
+            return sex == propertySex.getSex();
+        } else {
+            return false;
+        }
+    }
     @Override
     public boolean isEmpty() {
         return false;
@@ -124,4 +86,15 @@ public class FieldSex extends Field {
         }
         return UNKNOWN_STRING;
     }
+    
+    static public String getOppositeString(String inValue) {
+        if (MALE_STRING.equals(inValue)) {
+            return FEMALE_STRING;
+        } else if (FEMALE_STRING.equals(inValue)) {
+            return FEMALE_STRING;
+        } else {
+            return UNKNOWN_STRING;
+        }        
+    }
+
 }

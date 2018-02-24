@@ -35,7 +35,7 @@ public class FieldTitle extends Field {
     }
 
    @Override
-    public void setValue(Object value) {
+    public void setValue(String value) {
         
     }
 

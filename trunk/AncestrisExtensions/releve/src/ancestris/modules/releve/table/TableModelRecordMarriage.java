@@ -1,6 +1,7 @@
 package ancestris.modules.releve.table;
 
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldPicture;
 import ancestris.modules.releve.model.Record;
@@ -58,16 +59,16 @@ public class TableModelRecordMarriage extends TableModelRecordAbstract {
                 value = row + 1;
                 break;
             case 1:
-                value = record.getEventDateProperty();
+                value = record.getField(FieldType.eventDate);
                 break;
             case 2:
-                value = record.getIndi().getLastName().toString() + " " + record.getIndi().getFirstName().toString();
+                value = record.getFieldValue(FieldType.indiLastName) + " " + record.getFieldValue(FieldType.indiFirstName);
                 break;
             case 3:
-                value = record.getWife().getLastName().toString() + " " + record.getWife().getFirstName().toString();
+                value = record.getFieldValue(FieldType.wifeLastName) + " " + record.getFieldValue(FieldType.wifeFirstName);
                 break;
             case 4:
-                value = record.getCote() + " " + record.getFreeComment();
+                value = record.getFieldValue(FieldType.cote) + " " + record.getFieldValue(FieldType.freeComment);
                 break;
             default:
                 value = super.getValueAt(row, col);

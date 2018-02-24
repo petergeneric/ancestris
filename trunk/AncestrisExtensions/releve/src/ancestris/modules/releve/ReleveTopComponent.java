@@ -13,7 +13,6 @@ import ancestris.modules.releve.table.ResultDialog;
 import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.file.ReleveFileAncestrisV2;
 import ancestris.modules.releve.file.ReleveFileGedcom;
-import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.DataManager;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
@@ -325,7 +324,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      * @param record
      * @param fieldType
      */
-    void selectField(Record record, Field.FieldType fieldType) {
+    void selectField(Record record, Record.FieldType fieldType) {
         if (record instanceof RecordBirth) {
             if (panelBirth.verifyCurrentRecord()) {
                 jTabbedPane1.setSelectedComponent(panelBirth);

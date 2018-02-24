@@ -83,6 +83,14 @@ public class FieldDate extends Field{
             return "";
         }
     }
+    
+    /**
+     * retourne le date au format JJ MM AAAA (ou autres formats retournés par PropertyDate.getDisplayValue()s
+     * @return
+     */
+    public String getDisplayValue() {
+        return eventDate.getDisplayValue();
+    }
 
     /**
      * enregistre une date
@@ -94,8 +102,8 @@ public class FieldDate extends Field{
      * @param dateString
      */
     @Override
-    public void setValue(Object dateString) {
-            String inputDate = dateString.toString().trim();
+    public void setValue(String dateString) {
+            String inputDate = dateString.trim();
             Matcher matcher =  jjmmaaaa.matcher(inputDate);
             if ( matcher.matches() ) {
                 PointInTime pit = new PointInTime(
@@ -133,7 +141,8 @@ public class FieldDate extends Field{
      * @param strMonth
      * @param strYear
      * @throws NumberFormatException
-     */public void setValue(String strDay, String strMonth, String strYear) throws NumberFormatException {
+     */
+    public void setValue(String strDay, String strMonth, String strYear) throws NumberFormatException {
         try {
             int day = PointInTime.UNKNOWN;
             int month = PointInTime.UNKNOWN;
@@ -178,15 +187,55 @@ public class FieldDate extends Field{
     @Override
     public int compareTo(Field that) {
         if ( that instanceof FieldDate) {
-            return eventDate.compareTo(((FieldDate)that).getPropertyDate());
+            return eventDate.compareTo(((FieldDate)that).eventDate);
         } else {
             return -1; 
         }
         
     }
+    
+    /**
+     * 
+     * @param that  FieldDate  or PropertyDate
+     * @return 
+     */
+   @Override
+    public boolean equals(Object that) {        
+        if (that instanceof FieldDate) {
+            return this.eventDate.equals(((FieldDate)that).eventDate);
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public boolean equalsProperty(Object that) {
+        if (that instanceof PropertyDate) {
+            PropertyDate propertyDate = (PropertyDate) that;
+            PointInTime thatStart = propertyDate.getStart();
+            PointInTime thisStart = eventDate.getStart();
+            return thisStart.getDay() == thatStart.getDay()
+                    && thisStart.getMonth() == thatStart.getMonth()
+                    && thisStart.getYear() == thatStart.getYear();
+        } else if (that instanceof PointInTime) {
+            PointInTime thatStart = (PointInTime) that;
+            PointInTime thisStart = eventDate.getStart();
+            return thisStart.getDay() == thatStart.getDay()
+                    && thisStart.getMonth() == thatStart.getMonth()
+                    && thisStart.getYear() == thatStart.getYear();
+        } else {
+            return false;
+        }
+    }
+    
+    @Override
+    public int hashCode() {
+        return eventDate.hashCode();
+    }
 
     @Override
     public boolean isEmpty() {
-        return toString().isEmpty();
+        //return toString().isEmpty();
+        return !eventDate.getStart().isValid();
     }
 }

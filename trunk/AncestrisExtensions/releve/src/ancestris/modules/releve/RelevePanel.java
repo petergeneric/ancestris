@@ -7,7 +7,7 @@ package ancestris.modules.releve;
 
 import ancestris.modules.releve.editor.ReleveEditor;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.Field;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordModelListener;
@@ -258,12 +258,12 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
             }
 
             @Override
-            public void recordUpdated(int recordIndex, Field.FieldType filedType) {
+            public void recordUpdated(int recordIndex, Record.FieldType fieldType) {
                 // je mets à jour la table 
                 tableModel.fireTableRowsUpdated(recordIndex, recordIndex);
                 // je mets à jour l'editeur
                 if (recordIndex == currentRecordIndex) {
-                    releveEditor.refreshBeanField(filedType);
+                    releveEditor.refreshBeanField(fieldType);
                 }
             }
 
@@ -630,7 +630,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
     private javax.swing.JPanel tablePanel;
     // End of variables declaration//GEN-END:variables
 
-    void selectField(Field.FieldType fieldType) {
+    void selectField(Record.FieldType fieldType) {
         releveEditor.selectField(fieldType);
     }
 
@@ -771,35 +771,35 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         }
 
         if (DataManager.getCopyCoteEnabled()) {
-            record.setCote(previousRecord.getCote().getValue());
+            record.setFieldValue(FieldType.cote, previousRecord.getFieldValue(Record.FieldType.cote));
         }
 
         if (DataManager.getCopyEventDateEnabled()) {
-            record.setEventDate(previousRecord.getEventDateString());
-            record.setEventCalendar(previousRecord.getEventDateCalendar());
+            record.setFieldValue(FieldType.eventDate, previousRecord.getFieldValue(FieldType.eventDate));
+            //record.setEventCalendar(previousRecord.getEventDateCalendar());
         }
 
         if (DataManager.getCopySecondDateEnabled() && record.getType() == RecordType.MISC) {
             // le champ secondDate est nul si le releve precedent n'est pas du type misc
             if (previousRecord.getType() == RecordType.MISC) {
-                record.setSecondDate(previousRecord.getEventSecondDateString());
-                record.setEventCalendar(previousRecord.getEventSecondDateCalendar());
+                record.setFieldValue(FieldType.secondDate, previousRecord.getFieldValue(FieldType.secondDate));
+               // record.setEventCalendar(previousRecord.getEventSecondDateCalendar());
             }
         }
 
         if (DataManager.getCopyFreeCommentEnabled()) {
-            record.setFreeComment(previousRecord.getFreeComment().getValue());
+            record.setFieldValue(FieldType.freeComment,  previousRecord.getFieldValue(FieldType.freeComment));
         }
 
         if (DataManager.getCopyNotaryEnabled() && record.getType() == RecordType.MISC) {
             // le champ notary est nul si le releve  precedent n'est pas du type misc
             if (previousRecord.getType() == RecordType.MISC) {
-                record.setNotary(previousRecord.getNotary().getValue());
+                record.setFieldValue(FieldType.notary, previousRecord.getFieldValue(FieldType.notary));
             }
         }
 
         if (DataManager.getCopyParishEnabled()) {
-            record.setParish(previousRecord.getParish().getValue());
+            record.setFieldValue(FieldType.parish, previousRecord.getFieldValue(FieldType.parish));
         }
     }
 
@@ -823,7 +823,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         try {
             dataManager.showGedcomLink(state);
         } catch (Exception ex) {
-            //ex.printStackTrace();
+            ex.printStackTrace();
         }
         setCursor(Cursor.getDefaultCursor());
         // je notify lea autres panels

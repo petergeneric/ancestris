@@ -172,11 +172,10 @@ public class Java2sAutoTextField extends JTextField {
         isStrict = false;
         autoComboBox = null;
         if (list == null) {
-            throw new IllegalArgumentException("values can not be null");
+            throw new IllegalArgumentException("list can not be null");
         } else {
             dataList = list;
             init();
-            return;
         }
     }
 
@@ -185,25 +184,24 @@ public class Java2sAutoTextField extends JTextField {
         isStrict = false;
         autoComboBox = null;
         if (list == null) {
-            throw new IllegalArgumentException("values can not be null");
+            throw new IllegalArgumentException("list can not be null");
         } else {
             dataList = list;
             autoComboBox = b;
             init();
-            return;
         }
     }
 
     private void init() {
         setDocument(new AutoDocument());
         if (isStrict && dataList.size() > 0) {
-            setText(dataList.get(0).toString());
+            setText(dataList.get(0));
         }
     }
 
     private String getMatch(String s) {
         for (int i = 0; i < dataList.size(); i++) {
-            String s1 = dataList.get(i).toString();
+            String s1 = dataList.get(i);
             if (s1 != null) {
                 if (!isCaseSensitive
                         && s1.toLowerCase().startsWith(s.toLowerCase())) {
@@ -266,10 +264,10 @@ public class Java2sAutoTextField extends JTextField {
 
     public void setDataList(List<String> list) {
         if (list == null) {
-            throw new IllegalArgumentException("values can not be null");
+            throw new IllegalArgumentException("list can not be null");
         } else {
             dataList = list;
-            return;
+            //System.out.println(dataList.toString());
         }
     }
 

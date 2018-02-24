@@ -17,22 +17,13 @@ import javax.swing.KeyStroke;
  */
 public class BeanSex extends Bean {
 
-    public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Unknown");
-    public static String maleLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Male");
-    public static String femaleLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Female");
-
     private final MyCombobox jComboBox1;
 
     public BeanSex() {
         setLayout(new java.awt.BorderLayout());
         jComboBox1 = new MyCombobox();
 
-        // l'ordre des valeurs dans la combobox doit correspondre à l'ordre des
-        // valeurs predefinies dans FieldSex
-        //  UNKNOWN = 0;
-        //  MALE = 1;
-        //  FEMALE = 2;
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]{unknownLabel, maleLabel, femaleLabel }));
+        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(new String[]{FieldSex.unknownLabel, FieldSex.maleLabel, FieldSex.femaleLabel }));
         jComboBox1.addActionListener(changeSupport);
 
         add(jComboBox1, java.awt.BorderLayout.CENTER);
@@ -42,9 +33,13 @@ public class BeanSex extends Bean {
 
     @Override
     protected void setFieldImpl() {
-        final FieldSex sex = (FieldSex) getField();
-        jComboBox1.setSelectedIndex(sex.getSex());
-
+        final FieldSex fieldSex = (FieldSex) getField();
+        if(fieldSex != null ) {
+            jComboBox1.setSelectedItem(fieldSex.toString());        
+        } else {
+            jComboBox1.setSelectedItem(FieldSex.unknownLabel);
+        }
+                
          // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
         resetKeyboardActions();
         KeyStroke escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
@@ -53,23 +48,30 @@ public class BeanSex extends Bean {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
-                jComboBox1.setSelectedIndex(sex.getSex());
+                if (fieldSex != null) {
+                    jComboBox1.setSelectedItem(fieldSex.toString());
+                } else {
+                    jComboBox1.setSelectedItem(FieldSex.unknownLabel);
+                }
             }
         });
     }
 
     @Override
-    protected void commitImpl()  {
-        FieldSex sex = (FieldSex)getField();
-        sex.setSex(jComboBox1.getSelectedIndex());
+    protected void replaceValueImpl(Field field) {
+        if(field != null ) {
+            jComboBox1.setSelectedItem(field.toString());        
+        } else {
+            jComboBox1.setSelectedItem(FieldSex.unknownLabel);
+        }        
     }
 
     @Override
-    protected void replaceValueImpl(Field field) {
-        final FieldSex sex = (FieldSex) field;
-        jComboBox1.setSelectedIndex(sex.getSex());
+    protected void commitImpl()  {
+        setFieldValue(jComboBox1.getSelectedItem().toString());
     }
 
+    
     /**
      * cette combobox ignore les combinaisons de touche ALT-VK_DOWN et ALT-VK_UP
      */

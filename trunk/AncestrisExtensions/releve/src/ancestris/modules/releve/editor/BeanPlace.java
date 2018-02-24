@@ -15,8 +15,8 @@ import java.util.List;
  */
 public class BeanPlace extends Bean implements CompletionListener {
 
-    private Java2sAutoComboBox tfield;
-    CompletionProvider completionProvider;
+    private final Java2sAutoComboBox tfield;
+    private final CompletionProvider completionProvider;
     
     public BeanPlace(CompletionProvider completionProvider) {
         this.completionProvider = completionProvider;
@@ -38,26 +38,15 @@ public class BeanPlace extends Bean implements CompletionListener {
      */
     @Override
     public void setFieldImpl() {
-
-        final FieldPlace placeField = (FieldPlace) getField();
-        if (placeField == null) {
-            //tfield.setText("");
-            tfield.getEditor().setItem("");
-        } else {
-            //tfield.setText(placeField.toString());
-            tfield.getEditor().setItem(placeField.toString());
-        }
+        tfield.getEditor().setItem(getFieldValue());
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-        final FieldPlace placeField = (FieldPlace) getField();
-        if (placeField == null) {
-            //tfield.setText("");
+        if (field == null) {
             tfield.getEditor().setItem("");
         } else {
-            //tfield.setText(placeField.toString());
-            tfield.getEditor().setItem(placeField.toString());
+            tfield.getEditor().setItem(field.toString());
         }
     }
 
@@ -66,13 +55,12 @@ public class BeanPlace extends Bean implements CompletionListener {
      */
     @Override
     protected void commitImpl() {
-        FieldPlace placeField = (FieldPlace) getField();
-        String oldValue = placeField.toString();
+        String oldValue = getFieldValue();
         String value = tfield.getEditor().getItem().toString().trim();
-        placeField.setValue(value);
+        setFieldValue(value);
         // je mets a jour la liste de completion
-        completionProvider.updatePlaces(placeField, oldValue);
-        tfield.getEditor().setItem(placeField.toString());
+        completionProvider.updatePlaces(getFieldValue(), oldValue);
+        tfield.getEditor().setItem(getFieldValue());
     }
 
     
@@ -93,7 +81,12 @@ public class BeanPlace extends Bean implements CompletionListener {
      */
     @Override
     public void includedKeyUpdated(List<String> keyList) {
-        tfield.setDataList(keyList);
+        //if( keyList != null && tfield != null) {
+            tfield.setDataList(keyList);
+        //} else {
+        //    return;
+        //}
+        
     }
 
 

@@ -1,7 +1,6 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldSimpleValue;
 import java.awt.BorderLayout;
 import javax.swing.JTextField;
 
@@ -13,7 +12,7 @@ import javax.swing.JTextField;
 public class BeanSimpleValue extends Bean {
 
     /** members */
-    private JTextField tfield;
+    private final JTextField tfield;
     
     public BeanSimpleValue() {
 
@@ -31,39 +30,30 @@ public class BeanSimpleValue extends Bean {
     @Override
     public void setFieldImpl() {
 
-        final FieldSimpleValue property = (FieldSimpleValue) getField();
         removeAll();
-        if (property == null) {
-            tfield.setText("");
-            add(BorderLayout.NORTH, tfield);
-        } else {
-            String txt = property.toString();
-                tfield.setText(txt);
-                add(BorderLayout.NORTH, tfield);
-        }
+        tfield.setText(getFieldValue());
+        add(BorderLayout.NORTH, tfield);
         // not changed
         changeSupport.setChanged(false);
     }
 
+    @Override
+    protected void replaceValueImpl(Field field) {
+        if (field == null) {
+            tfield.setText("");
+        } else {
+            tfield.setText(field.toString());
+        }
+    }
+    
     /**
      * Finish editing a property through proxy
      */
     @Override
     protected void commitImpl() {
-        FieldSimpleValue p = (FieldSimpleValue) getField();
         String value = tfield.getText().trim();
-        p.setValue(value);
+        setFieldValue(value);
         tfield.setText(value);
     }
 
-    @Override
-    protected void replaceValueImpl(Field field) {
-        final FieldSimpleValue property = (FieldSimpleValue) field;
-        if (property == null) {
-            tfield.setText("");
-        } else {
-            String txt = property.toString();
-            tfield.setText(txt);
-        }
-    }
 }

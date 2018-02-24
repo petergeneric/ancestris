@@ -7,6 +7,8 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.openide.util.Exceptions;
 
 /**
@@ -174,8 +176,8 @@ public class MergeRecord {
         eventType = data.eventType;
         eventCote = data.cote;
         freeComment = data.freeComment;
-        eventDate = data.eventDate;
-        eventSecondDate = data.secondDate;
+        eventDate = parseDateString(data.eventDate);
+        eventSecondDate = parseDateString(data.secondDate);
         generalComment = data.generalComment;
         notary = data.notary;
         parish = data.parish;
@@ -184,8 +186,8 @@ public class MergeRecord {
         partipant1.m_FirstName = data.participant1.firstName;
         partipant1.m_LastName = data.participant1.lastName;
         partipant1.m_Sex = SexType.fromString(data.participant1.sex);
-        partipant1.m_Age = data.participant1.age;
-        partipant1.m_BirthDate = data.participant1.birthDate;
+        partipant1.m_Age.setValue(data.participant1.age);
+        partipant1.m_BirthDate = parseDateString(data.participant1.birthDate);
         partipant1.m_BirthPlace = data.participant1.birthPlace;
         partipant1.m_BirthAddress = data.participant1.birthAddress;
         partipant1.m_Occupation = data.participant1.occupation;
@@ -204,7 +206,7 @@ public class MergeRecord {
         partipant1.m_FatherOccupation = data.participant1.fatherOccupation;
         partipant1.m_FatherResidence = data.participant1.fatherResidence;
         partipant1.m_FatherAddress = data.participant1.fatherAddress;
-        partipant1.m_FatherAge = data.participant1.fatherAge;
+        partipant1.m_FatherAge.setValue(data.participant1.fatherAge);
         partipant1.m_FatherDead = DeadState.fromString(data.participant1.fatherDead);
         partipant1.m_FatherComment = data.participant1.fatherComment;
         partipant1.m_MotherFirstName = data.participant1.motherFirstName;
@@ -212,7 +214,7 @@ public class MergeRecord {
         partipant1.m_MotherOccupation = data.participant1.motherOccupation;
         partipant1.m_MotherResidence = data.participant1.motherResidence;
         partipant1.m_MotherAddress = data.participant1.motherAddress;
-        partipant1.m_MotherAge = data.participant1.motherAge;
+        partipant1.m_MotherAge.setValue(data.participant1.motherAge);
         partipant1.m_MotherDead = DeadState.fromString(data.participant1.motherDead);
         partipant1.m_MotherComment = data.participant1.motherComment;
 
@@ -220,8 +222,8 @@ public class MergeRecord {
         partipant2.m_FirstName = data.participant2.firstName;
         partipant2.m_LastName = data.participant2.lastName;
         partipant2.m_Sex = SexType.fromString(data.participant2.sex);
-        partipant2.m_Age = data.participant2.age;
-        partipant2.m_BirthDate = data.participant2.birthDate;
+        partipant2.m_Age.setValue(data.participant2.age);
+        partipant2.m_BirthDate = parseDateString(data.participant2.birthDate);
         partipant2.m_BirthPlace = data.participant2.birthPlace;
         partipant2.m_BirthAddress = data.participant2.birthAddress;
         partipant2.m_Occupation = data.participant2.occupation;
@@ -240,7 +242,7 @@ public class MergeRecord {
         partipant2.m_FatherOccupation = data.participant2.fatherOccupation;
         partipant2.m_FatherResidence = data.participant2.fatherResidence;
         partipant2.m_FatherAddress = data.participant2.fatherAddress;
-        partipant2.m_FatherAge = data.participant2.fatherAge;
+        partipant2.m_FatherAge.setValue(data.participant2.fatherAge);
         partipant2.m_FatherDead = DeadState.fromString(data.participant2.fatherDead);
         partipant2.m_FatherComment = data.participant2.fatherComment;
         partipant2.m_MotherFirstName = data.participant2.motherFirstName;
@@ -248,7 +250,7 @@ public class MergeRecord {
         partipant2.m_MotherOccupation = data.participant2.motherOccupation;
         partipant2.m_MotherResidence = data.participant2.motherResidence;
         partipant2.m_MotherAddress = data.participant2.motherAddress;
-        partipant2.m_MotherAge = data.participant2.motherAge;
+        partipant2.m_MotherAge.setValue(data.participant2.motherAge);
         partipant2.m_MotherDead = DeadState.fromString(data.participant2.motherDead);
         partipant2.m_MotherComment = data.participant2.motherComment;
 
@@ -271,6 +273,46 @@ public class MergeRecord {
         witness4.lastName = data.witness4.lastName;
         witness4.occupation = data.witness4.occupation;
         witness4.comment = data.witness4.comment;
+
+    }
+    
+    private static final Pattern jjmmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{1,2})/([0-9]{4,4})");
+    private static final Pattern mmaaaa = Pattern.compile("([0-9]{1,2})/([0-9]{4,4})");
+    private static final Pattern aaaa = Pattern.compile("([0-9]{4,4})");
+
+    private PropertyDate parseDateString(String dateString) {
+        PropertyDate dateResult = new PropertyDate();
+        String inputDate = dateString.trim();
+        Matcher matcher = jjmmaaaa.matcher(inputDate);
+
+        if (matcher.matches()) {
+            PointInTime pit = new PointInTime(
+                    Integer.parseInt(matcher.group(1)) - 1,
+                    Integer.parseInt(matcher.group(2)) - 1,
+                    Integer.parseInt(matcher.group(3)));
+            dateResult.setValue(dateResult.getFormat(), pit, null, null);
+        } else {
+            matcher = mmaaaa.matcher(inputDate);
+            if (matcher.matches()) {
+                PointInTime pit = new PointInTime(
+                        PointInTime.UNKNOWN,
+                        Integer.parseInt(matcher.group(1)) - 1,
+                        Integer.parseInt(matcher.group(2)));
+                dateResult.setValue(dateResult.getFormat(), pit, null, null);
+            } else {
+                matcher = aaaa.matcher(inputDate);
+                if (matcher.matches()) {
+                    PointInTime pit = new PointInTime(
+                            PointInTime.UNKNOWN,
+                            PointInTime.UNKNOWN,
+                            Integer.parseInt(matcher.group(1)));
+                    dateResult.setValue(dateResult.getFormat(), pit, null, null);
+                } else {
+                    dateResult.setValue(inputDate);
+                }
+            }
+        }
+        return dateResult; 
 
     }
 
@@ -699,11 +741,11 @@ public class MergeRecord {
 //    private String makeIndiComment(boolean showFrenchCalendarDate) {
 //        String comment = appendValue(
 //                record.getIndi().getFirstName() + " " + record.getIndi().getLastName(),
-//                record.getIndi().getAge()==null ? "" :record.getIndi().getAge().toString(),
+//                record.getIndi().getAge()==null ? "" :record.getFieldValue(FieldType.indiAge),
 //                makeParticipantBirthComment(record.getIndi().getBirthDate(), showFrenchCalendarDate, record.getIndi().getBirthPlace()),
-//                record.getIndi().getOccupation()==null ? "" : record.getIndi().getOccupation().toString(),
+//                record.getIndi().getOccupation()==null ? "" : record.getFieldValue(Record.FieldType.indiOccupation),
 //                appendPrefixValue("domicile", record.getIndi().getResidence() == null ? "" :record.getIndi().getResidence() .toString()),
-//                record.getIndi().getComment() .toString()
+//                record.getFieldValue(FieldType.indiComment)
 //                );
 //        return comment;
 //    }
@@ -711,10 +753,10 @@ public class MergeRecord {
 //    private String makeIndiMarriedComment(  ) {
 //           String comment = appendValue(
 //                record.getIndi().getMarriedFirstName() + " " + record.getIndi().getMarriedLastName() ,
-//                record.getIndi().getMarriedDead().toString(),
-//                record.getIndi().getMarriedOccupation().toString(),
-//                appendPrefixValue("domicile", record.getIndi().getMarriedResidence().toString()),
-//                record.getIndi().getMarriedComment().toString()
+//                record.getFieldValue(Record.FieldType.indiMarriedDead),
+//                record.getFieldValue(Record.FieldType.indiMarriedOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(Record.FieldType.indiMarriedResidence)),
+//                record.getFieldValue(Record.FieldType.indiMarriedComment)
 //                );
 //
 //        return comment;
@@ -723,11 +765,11 @@ public class MergeRecord {
 //    private String makeIndiFatherComment(  ) {
 //        String comment = appendValue(
 //                record.getIndi().getFatherFirstName() + " " + record.getIndi().getFatherLastName(),
-//                record.getIndi().getFatherAge().toString(),
-//                record.getIndi().getFatherDead().toString(),
-//                record.getIndi().getFatherOccupation().toString(),
-//                appendPrefixValue("domicile", record.getIndi().getFatherResidence().toString()),
-//                record.getIndi().getFatherComment().toString()
+//                record.getFieldValue(Record.FieldType.indiFatherAge),
+//                record.getFieldValue(Record.FieldType.indiFatherDead),
+//                record.getFieldValue(Record.FieldType.indiFatherOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(Record.FieldType.indiFatherResidence)),
+//                record.getFieldValue(Record.FieldType.indiFatherComment)
 //                );
 //        return comment;
 //    }
@@ -735,22 +777,22 @@ public class MergeRecord {
 //    private String makeIndiMotherComment(  ) {
 //         String comment = appendValue(
 //                record.getIndi().getMotherFirstName() + " " + record.getIndi().getMotherLastName(),
-//                record.getIndi().getMotherAge().toString(),
-//                record.getIndi().getMotherDead().toString(),
-//                record.getIndi().getMotherOccupation().toString(),
-//                appendPrefixValue("domicile", record.getIndi().getMotherResidence().toString()),
-//                record.getIndi().getMotherComment().toString()
+//                record.getFieldValue(FieldType.indiMotherAge),
+//                record.getFieldValue(Record.FieldType.indiMotherDead),
+//                record.getFieldValue(Record.FieldType.indiMotherOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(Record.FieldType.indiMotherResidence)),
+//                record.getFieldValue(Record.FieldType.indiMotherComment)
 //                );
 //        return comment;
 //    }
 //    private String makeWifeComment( boolean showFrenchCalendarDate ) {
 //        String comment = appendValue(
 //                record.getWife().getFirstName() + " " + record.getWife().getLastName(),
-//                record.getWife().getAge().toString(),
+//                record.getFieldValue(FieldType.wifeAge),
 //                makeParticipantBirthComment(record.getWife().getBirthDate(), showFrenchCalendarDate, record.getWife().getBirthPlace()),
-//                record.getWife().getOccupation().toString(),
-//                appendPrefixValue("domicile", record.getWife().getResidence().toString()),
-//                record.getWife().getComment().toString()
+//                record.getFieldValue(FieldType.wifeOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeResidence)),
+//                record.getFieldValue(Record.FieldType.wifeComment)
 //                );
 //        return comment;
 //    }
@@ -758,10 +800,10 @@ public class MergeRecord {
 //    private String makeWifeMarriedComment(  ) {
 //         String comment = appendValue(
 //                record.getWife().getMarriedFirstName() + " " + record.getWife().getMarriedLastName(),
-//                record.getWife().getMarriedDead().toString(),
-//                record.getWife().getMarriedOccupation().toString(),
-//                appendPrefixValue("domicile", record.getWife().getMarriedResidence().toString()),
-//                record.getWife().getMarriedComment().toString()
+//                record.getFieldValue(FieldType.wifeMarriedDead),
+//                record.getFieldValue(FieldType.wifeMarriedOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeMarriedResidence)),
+//                record.getFieldValue(FieldType.wifeMarriedComment)
 //                );
 //        return comment;
 //    }
@@ -769,11 +811,11 @@ public class MergeRecord {
 //    private String makeWifeFatherComment(  ) {
 //         String comment = appendValue(
 //                record.getWife().getFatherFirstName() + " " + record.getWife().getFatherLastName(),
-//                record.getWife().getFatherAge().toString(),
-//                record.getWife().getFatherDead().toString(),
-//                record.getWife().getFatherOccupation().toString(),
-//                appendPrefixValue("domicile", record.getWife().getFatherResidence().toString()),
-//                record.getWife().getFatherComment().toString()
+//                record.getFieldValue(FieldType.wifeFatherAge),
+//                record.getFieldValue(FieldType.wifeFatherDead),
+//                record.getFieldValue(FieldType.wifeFatherOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeFatherResidence)),
+//                record.getFieldValue(FieldType.wifeFatherComment)
 //                );
 //        return comment;
 //    }
@@ -781,11 +823,11 @@ public class MergeRecord {
 //    private String makeWifeMotherComment(  ) {
 //        String comment = appendValue(
 //                record.getWife().getMotherFirstName() + " " + record.getWife().getMotherLastName(),
-//                record.getWife().getMotherAge().toString(),
-//                record.getWife().getMotherDead().toString(),
-//                record.getWife().getMotherOccupation().toString(),
-//                appendPrefixValue("domicile", record.getWife().getMotherResidence().toString()),
-//                record.getWife().getMotherComment().toString()
+//                record.getFieldValue(FieldType.wifeMotherAge),
+//                record.getFieldValue(FieldType.wifeMotherDead),
+//                record.getFieldValue(FieldType.wifeMotherOccupation),
+//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeMotherResidence)),
+//                record.getFieldValue(FieldType.wifeMotherComment)
 //                );
 //        return comment;
 //    }
@@ -1470,7 +1512,7 @@ public class MergeRecord {
         private String m_FirstName;
         private String m_LastName;
         private SexType m_Sex;
-        private Delta m_Age;
+        private Delta m_Age = new Delta(0,0,0);
         private PropertyDate m_BirthDate;
         private String m_BirthPlace;
         private String m_BirthAddress;
@@ -1490,7 +1532,7 @@ public class MergeRecord {
         private String m_FatherOccupation;
         private String m_FatherResidence;
         private String m_FatherAddress;
-        private Delta m_FatherAge;
+        private Delta m_FatherAge = new Delta(0,0,0);
         private DeadState m_FatherDead;
         private String m_FatherComment;
         private String m_MotherFirstName;
@@ -1498,7 +1540,7 @@ public class MergeRecord {
         private String m_MotherOccupation;
         private String m_MotherResidence;
         private String m_MotherAddress;
-        private Delta m_MotherAge;
+        private Delta m_MotherAge  = new Delta(0,0,0);
         private DeadState m_MotherDead;
         private String m_MotherComment;
 

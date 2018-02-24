@@ -1,12 +1,9 @@
 package ancestris.modules.releve.merge;
 
 import ancestris.modules.releve.RecordTransferHandle;
-import ancestris.modules.releve.merge.MergeDialog;
-import ancestris.modules.releve.merge.MergeRecord;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
-import ancestris.modules.releve.model.FieldPlace;
-import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordInfoPlace;
@@ -57,16 +54,16 @@ public class MergeDialogTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("child2");
 
             RecordBirth record = new RecordBirth();
-            record.setEventDate("01/01/2000");
-            record.setCote("cote");
-            record.setFreeComment("photo");
-            record.getIndi().set("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "birthAddress", "occupation", "indiResidence", "indiAaddress", "comment");
-            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
-            record.getIndi().setMother("mothername", "MOTHERLASTNAME", "occupation", "indiMoatherResidence", "indiMotherAddress", "comment", "dead", "72y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/01/2000");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "birthAddress", "occupation", "indiResidence", "indiAaddress", "comment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "indiMoatherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             String sourceTitle = "";
@@ -92,16 +89,16 @@ public class MergeDialogTest extends TestCase {
             Indi indi = null;
 
             RecordBirth record = new RecordBirth();
-            record.setEventDate("01/01/2000");
-            record.setCote("cote");
-            record.setFreeComment("photo");
-            record.getIndi().set("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "birthAddress", "occupation", "indiResidence", "indiAddress", "comment");
-            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
-            record.getIndi().setMother("mothername", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/01/2000");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "", "", "place", "birthAddress", "occupation", "indiResidence", "indiAddress", "comment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
 
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
@@ -128,16 +125,16 @@ public class MergeDialogTest extends TestCase {
             Indi indi = null;
 
             RecordDeath record = new RecordDeath();
-            record.setEventDate("01/01/2003");
-            record.setCote("cote");
-            record.setFreeComment("photo");
-            record.getIndi().set("Firstname1", "FATHERLASTNAME", "M", "3y", "", "place", "birthAddress", "occupation", "indiResidence", "indiAddress", "comment");
-            record.getIndi().setFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
-            record.getIndi().setMother("mothername", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/01/2003");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Firstname1", "FATHERLASTNAME", "M", "3y", "", "place", "birthAddress", "occupation", "indiResidence", "indiAddress", "comment");
+            record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherAddress", "comment", "dead", "70y");
+            record.setIndiMother("mothername", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherAddress", "comment", "dead", "72y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");

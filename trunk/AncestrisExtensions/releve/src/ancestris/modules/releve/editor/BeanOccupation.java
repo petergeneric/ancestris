@@ -4,7 +4,6 @@ import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.FieldOccupation;
 import java.util.List;
 
 /**
@@ -12,7 +11,7 @@ import java.util.List;
  * @author Michel
  */
 public class BeanOccupation extends Bean implements CompletionListener {
-    private Java2sAutoTextField cOccupation;
+    private final Java2sAutoTextField cOccupation;
     CompletionProvider completionProvider;
 
     public BeanOccupation(CompletionProvider completionProvider) {
@@ -36,13 +35,16 @@ public class BeanOccupation extends Bean implements CompletionListener {
      */
     @Override
     public void setFieldImpl() {
+        cOccupation.setText( getFieldValue() );
+    }
 
-        final FieldOccupation occupationField = (FieldOccupation) getField();
-        if (occupationField == null) {
+    @Override
+    protected void replaceValueImpl(Field field) {
+        if (field == null) {
             cOccupation.setText("");
         } else {
-            cOccupation.setText(occupationField.toString());
-        }        
+            cOccupation.setText(field.toString());
+        }
     }
 
     /**
@@ -52,20 +54,9 @@ public class BeanOccupation extends Bean implements CompletionListener {
     protected void commitImpl() {
         String occupation = cOccupation.getText().trim();
 
-        FieldOccupation fieldOccupation = (FieldOccupation) getField();
-        fieldOccupation.setValue(occupation);
+        setFieldValue(occupation);
         // je rafraichi l'affichage du bean
         cOccupation.setText(occupation);
-    }
-
-    @Override
-    protected void replaceValueImpl(Field field) {
-        FieldOccupation occupationField = (FieldOccupation) field;
-        if (occupationField == null) {
-            cOccupation.setText("");
-        } else {
-            cOccupation.setText(occupationField.toString());
-        }  
     }
 
      /**

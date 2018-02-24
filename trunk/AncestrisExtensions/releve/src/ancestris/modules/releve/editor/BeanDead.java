@@ -17,14 +17,14 @@ import javax.swing.KeyStroke;
  */
 public class BeanDead extends Bean {
 
-    private MyCombobox jComboBox1;
+    private final MyCombobox jComboBox1;
 
     public BeanDead() {
         setLayout(new java.awt.BorderLayout());
         jComboBox1 = new MyCombobox();
         jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<String>(
                 new String[]{
-                    FieldDead.unknownLabel,
+                    FieldDead.notspecifiedLabel,
                     FieldDead.deadLabel,
                     FieldDead.aliveLabel}
         ));
@@ -37,9 +37,13 @@ public class BeanDead extends Bean {
     @Override
     protected void setFieldImpl() {
         final FieldDead dead = (FieldDead) getField();
-        jComboBox1.setSelectedItem(dead.toString());
-        
-         // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
+        if(dead != null ) {
+            jComboBox1.setSelectedItem(dead.toString());        
+        } else {
+            jComboBox1.setSelectedItem(FieldDead.notspecifiedLabel);
+        }
+                
+        // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
         resetKeyboardActions();
         KeyStroke escape = KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0);
         getInputMap(JComponent.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT).put(escape, this);
@@ -54,14 +58,16 @@ public class BeanDead extends Bean {
 
     @Override
     protected void replaceValueImpl(Field field) {
-        final FieldDead dead = (FieldDead) field;
-        jComboBox1.setSelectedItem(dead.toString());
+        if(field != null) {
+            jComboBox1.setSelectedItem(field.toString());        
+        } else {
+            jComboBox1.setSelectedItem(FieldDead.notspecifiedLabel);
+        }
     }
 
     @Override
     protected void commitImpl()  {
-        FieldDead dead = (FieldDead)getField();
-        dead.setValue(jComboBox1.getSelectedItem());
+        setFieldValue(jComboBox1.getSelectedItem().toString());
     }
 
     /**

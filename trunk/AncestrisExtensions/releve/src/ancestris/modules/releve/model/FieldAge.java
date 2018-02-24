@@ -29,9 +29,13 @@ public class FieldAge extends Field {
         return delta;
     }
 
+    /**
+     * format <year>y <month>m <day>d
+     * @param value 
+     */
     @Override
-    public void setValue(Object value) {
-        delta.setValue(value.toString());
+    public void setValue(String value) {
+        delta.setValue(value);
     }
 
     public void setValue(Delta other) {

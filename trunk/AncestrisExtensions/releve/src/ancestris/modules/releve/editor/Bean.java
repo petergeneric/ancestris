@@ -1,7 +1,6 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.Field;
-import ancestris.modules.releve.model.Field.FieldType;
 import ancestris.modules.releve.model.Record;
 import genj.util.ChangeSupport;
 import java.awt.event.ActionEvent;
@@ -19,7 +18,7 @@ import javax.swing.event.ChangeListener;
 public abstract class Bean extends JPanel {
     //protected BeanField beanField;
     private Record record;
-    private Field.FieldType fieldType;
+    private Record.FieldType fieldType;
 
     protected JComponent defaultFocus = null;
     protected ChangeSupport changeSupport = new ChangeSupport(this);
@@ -34,7 +33,7 @@ public abstract class Bean extends JPanel {
      * 
      * set property to look at
      */
-    public final Bean setContext(Record record, FieldType fieldType) {
+    public final Bean setContext(Record record, Record.FieldType fieldType) {
         this.record = record;
         this.fieldType = fieldType;
 
@@ -68,10 +67,8 @@ public abstract class Bean extends JPanel {
     protected abstract void setFieldImpl();
 
     protected void replaceValue(Field newField) {
-        if ( newField!= null ) {
             replaceValueImpl(newField);
             changeSupport.setChanged(true);
-        }
     }
 
     protected abstract void replaceValueImpl(Field field);
@@ -108,8 +105,26 @@ public abstract class Bean extends JPanel {
     /**
      * Current Property
      */
-    public final FieldType getFieldType() {
+    public final Record.FieldType getFieldType() {
         return fieldType;
+    }
+    
+    /**
+     * 
+     */
+    public final String getFieldValue() {
+        return record.getFieldValue(fieldType);
+    }
+
+    /**
+     * 
+     */
+    public final String getFieldString() {
+        return record.getFieldString(fieldType);
+    }
+
+    public final void setFieldValue(String value) {
+        record.setFieldValue(fieldType, value);
     }
 
     /**

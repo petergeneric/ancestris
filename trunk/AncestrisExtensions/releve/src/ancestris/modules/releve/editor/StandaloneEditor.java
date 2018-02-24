@@ -4,10 +4,9 @@ import ancestris.modules.releve.MenuCommandProvider;
 import ancestris.modules.releve.RelevePanel;
 import ancestris.modules.releve.imageBrowser.BrowserOptionsPanel;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
@@ -248,7 +247,7 @@ public class StandaloneEditor extends javax.swing.JFrame {
                     break;
             }
             if (browserVisible) {
-                browserPanel1.showImage(dataManager.getCityName(), record.getCote().toString(), record.getFreeComment().toString());                
+                browserPanel1.showImage(dataManager.getCityName(), record.getFieldValue(FieldType.cote), record.getFieldValue(FieldType.freeComment));                
             }
         }
     }

@@ -2,7 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.Record.RecordType;
-import ancestris.modules.releve.model.Field.FieldType;
+import ancestris.modules.releve.model.Record.FieldType;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.util.Collection;

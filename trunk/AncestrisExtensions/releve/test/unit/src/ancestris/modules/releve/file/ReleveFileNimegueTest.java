@@ -2,6 +2,7 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
@@ -128,83 +129,66 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",               record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
-        assertEquals("Cote",                    record.getCote().toString(),record2.getCote().toString());
-        assertEquals("parish",                  "",record2.getParish().toString());
-        assertEquals("Notary",                  null,record2.getNotary());
-        assertEquals("EventType",               null,record2.getEventType());
-        assertEquals("FreeComment",             record.getFreeComment().toString(),record2.getFreeComment().toString());
+        assertEquals("EventDate",               record.getFieldValue(FieldType.eventDate),record2.getFieldValue(FieldType.eventDate));
+        assertEquals("Cote",                    record.getFieldValue(FieldType.cote),record2.getFieldValue(FieldType.cote));
+        assertEquals("parish",                  "",record2.getFieldValue(FieldType.parish));
+        assertEquals("Notary",                  "",record2.getFieldValue(FieldType.notary));
+        assertEquals("EventType",               "",record2.getFieldValue(FieldType.eventType));
+        assertEquals("FreeComment",             record.getFieldValue(FieldType.freeComment),record2.getFieldValue(FieldType.freeComment));
 
-        assertEquals("IndiFirstName",           record.getIndi().getFirstName().toString(),record2.getIndi().getFirstName().toString());
-        assertEquals("IndiLastName",            record.getIndi().getLastName().toString(),record2.getIndi().getLastName().toString());
-        assertEquals("IndiSex",                 record.getIndi().getSex().toString(),record2.getIndi().getSex().toString());
-        assertEquals("IndiAge",                 null,record2.getIndi().getAge());
-        assertEquals("IndiBirthDate",           "",record2.getIndi().getBirthDate().toString());
-        assertEquals("IndiPlace",               "",record2.getIndi().getBirthPlace().toString());
-        assertEquals("IndiOccupation",          null,record2.getIndi().getOccupation());
-        assertEquals("IndiComment",             "Lieu: indiBirthPlace, indiComment",record2.getIndi().getComment() .toString());
-        assertEquals("IndiMarriedFirstName",    null,record2.getIndi().getMarriedFirstName());
-        assertEquals("IndiMarriedLastName",     null,record2.getIndi().getMarriedLastName());
-        assertEquals("IndiMarriedOccupation",   null,record2.getIndi().getMarriedOccupation());
-        assertEquals("IndiMarriedComment",      null,record2.getIndi().getMarriedComment());
-        assertEquals("IndiMarriedDead",         null,record2.getIndi().getMarriedDead());
+        assertEquals("IndiFirstName",           record.getFieldValue(FieldType.indiFirstName),record2.getFieldValue(FieldType.indiFirstName));
+        assertEquals("IndiLastName",            record.getFieldValue(FieldType.indiLastName),record2.getFieldValue(FieldType.indiLastName));
+        assertEquals("IndiSex",                 record.getFieldValue(FieldType.indiSex),record2.getFieldValue(FieldType.indiSex));
+        assertEquals("IndiAge",                 "",record2.getFieldValue(FieldType.indiAge));
+        assertEquals("IndiBirthDate",           "",record2.getFieldValue(FieldType.indiBirthDate));
+        assertEquals("IndiPlace",               "",record2.getFieldValue(FieldType.indiBirthPlace));
+        assertEquals("IndiOccupation",          "",record2.getFieldValue(FieldType.indiOccupation));
+        assertEquals("IndiComment",             "Lieu: indiBirthPlace, indiComment",record2.getFieldValue(FieldType.indiComment));
+        assertEquals("IndiMarriedFirstName",    "",record2.getFieldValue(FieldType.indiMarriedFirstName));
+        assertEquals("IndiMarriedLastName",     "",record2.getFieldValue(FieldType.indiMarriedLastName));
+        assertEquals("IndiMarriedOccupation",   "",record2.getFieldValue(FieldType.indiMarriedOccupation));
+        assertEquals("IndiMarriedComment",      "",record2.getFieldValue(FieldType.indiMarriedComment));
+        assertEquals("IndiMarriedDead",         "",record2.getFieldValue(FieldType.indiMarriedDead));
 
-        assertEquals("IndiFatherFirstName",     record.getIndi().getFatherFirstName().toString(),record2.getIndi().getFatherFirstName().toString());
-        assertEquals("IndiFatherLastName",      record.getIndi().getFatherLastName().toString(),record2.getIndi().getFatherLastName().toString());
-        assertEquals("IndiFatherAge",           "",record2.getIndi().getFatherAge().toString());
-        assertEquals("IndiFatherDead",          "",record2.getIndi().getFatherDead().toString());
-        assertEquals("IndiFatherOccupation",    record.getIndi().getFatherOccupation().toString(),record2.getIndi().getFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "70y, indiFatherResidence, indiFatherComment",record2.getIndi().getFatherComment().toString());
-        assertEquals("IndiMotherFirstName",     record.getIndi().getMotherFirstName().toString(),record2.getIndi().getMotherFirstName().toString());
-        assertEquals("IndiMotherLastName",      record.getIndi().getMotherLastName().toString(),record2.getIndi().getMotherLastName().toString());
-        assertEquals("IndiMotherAge",           "",record2.getIndi().getMotherAge().toString());
-        assertEquals("IndiMotherDead",          "",record2.getIndi().getMotherDead().toString());
-        assertEquals("IndiMotherOccupation",    record.getIndi().getMotherOccupation().toString(),record2.getIndi().getMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "72y, indiMotherResidence, indiMotherComment",record2.getIndi().getMotherComment().toString());
+        assertEquals("IndiFatherFirstName",     record.getFieldValue(FieldType.indiFatherFirstName),record2.getFieldValue(FieldType.indiFatherFirstName));
+        assertEquals("IndiFatherLastName",      record.getFieldValue(FieldType.indiFatherLastName),record2.getFieldValue(FieldType.indiFatherLastName));
+        assertEquals("IndiFatherAge",           "",record2.getFieldValue(FieldType.indiFatherAge));
+        assertEquals("IndiFatherDead",          "",record2.getFieldValue(FieldType.indiFatherDead));
+        assertEquals("IndiFatherOccupation",    record.getFieldValue(FieldType.indiFatherOccupation),record2.getFieldValue(FieldType.indiFatherOccupation));
+        assertEquals("IndiFatherComment",       "70y, indiFatherResidence, indiFatherComment",record2.getFieldValue(FieldType.indiFatherComment));
+        assertEquals("IndiMotherFirstName",     record.getFieldValue(FieldType.indiMotherFirstName),record2.getFieldValue(FieldType.indiMotherFirstName));
+        assertEquals("IndiMotherLastName",      record.getFieldValue(FieldType.indiMotherLastName),record2.getFieldValue(FieldType.indiMotherLastName));
+        assertEquals("IndiMotherAge",           "",record2.getFieldValue(FieldType.indiMotherAge));
+        assertEquals("IndiMotherDead",          "",record2.getFieldValue(FieldType.indiMotherDead));
+        assertEquals("IndiMotherOccupation",    record.getFieldValue(FieldType.indiMotherOccupation),record2.getFieldValue(FieldType.indiMotherOccupation));
+        assertEquals("IndiMotherComment",       "72y, indiMotherResidence, indiMotherComment",record2.getFieldValue(FieldType.indiMotherComment));
         
-        assertEquals("WifeFirstName",           null,record2.getWife().getFirstName());
-        assertEquals("WifeLastName",            null,record2.getWife().getLastName());
-        assertEquals("WifeSex",                 null,record2.getWife().getSex());
-        assertEquals("WifeAge",                 null,record2.getWife().getAge());
-        assertEquals("WifeBirthDate",           null,record2.getWife().getBirthDate());
-        assertEquals("WifePlace",               null,record2.getWife().getBirthPlace());
-        assertEquals("WifeOccupation",          null,record2.getWife().getOccupation());
-        assertEquals("WifeComment",             null,record2.getWife().getComment());
-        assertEquals("WifeMarriedFirstName",    null,record2.getWife().getMarriedFirstName());
-        assertEquals("WifeMarriedLastName",     null,record2.getWife().getMarriedLastName());
-        assertEquals("WifeMarriedOccupation",   null,record2.getWife().getMarriedOccupation());
-        assertEquals("WifeMarriedComment",      null,record2.getWife().getMarriedComment());
-        assertEquals("WifeMarriedDead",         null,record2.getWife().getMarriedDead());
-        assertEquals("WifeFatherFirstName",     null,record2.getWife().getFatherFirstName());
-        assertEquals("WifeFatherLastName",      null,record2.getWife().getFatherLastName());
-        assertEquals("WifeFatherAge",           null,record2.getWife().getFatherAge());
-        assertEquals("WifeFatherDead",          null,record2.getWife().getFatherDead());
-        assertEquals("WifeFatherOccupation",    null,record2.getWife().getFatherOccupation());
-        assertEquals("WifeFatherComment",       null,record2.getWife().getFatherComment());
-        assertEquals("WifeMotherFirstName",     null,record2.getWife().getMotherFirstName());
-        assertEquals("WifeMotherLastName",      null,record2.getWife().getMotherLastName());
-        assertEquals("WifeMotherAge",           null,record2.getWife().getMotherAge());
-        assertEquals("WifeMotherDead",          null,record2.getWife().getMotherDead());
-        assertEquals("WifeMotherOccupation",    null,record2.getWife().getMotherOccupation());
-        assertEquals("WifeMotherComment",       null,record2.getWife().getMotherComment());
-        
-//        assertEquals("Witness1FirstName",     record.getWitness1FirstName().toString(),record2.getWitness1FirstName().toString());
-//        assertEquals("Witness1LastName",      record.getWitness1LastName().toString(),record2.getWitness1LastName().toString());
-//        assertEquals("Witness1Occupation",    "",record2.getWitness1Occupation().toString());
-//        assertEquals("Witness1Comment",       "w1comment, w1occupation",record2.getWitness1Comment().toString());
-//        assertEquals("Witness2FirstName",     record.getWitness2FirstName().toString(),record2.getWitness2FirstName().toString());
-//        assertEquals("Witness2LastName",      record.getWitness2LastName().toString(),record2.getWitness2LastName().toString());
-//        assertEquals("Witness2Occupation",    "",record2.getWitness2Occupation().toString());
-//        assertEquals("Witness2Comment",       "w2comment, w2occupation",record2.getWitness2Comment().toString());
-//        assertEquals("Witness3FirstName",     "",record2.getWitness3FirstName().toString());
-//        assertEquals("Witness3LastName",      "",record2.getWitness3LastName().toString());
-//        assertEquals("Witness3Occupation",    "",record2.getWitness3Occupation().toString());
-//        assertEquals("Witness3Comment",       "",record2.getWitness3Comment().toString());
-//        assertEquals("Witness4FirstName",     "",record2.getWitness4FirstName().toString());
-//        assertEquals("Witness4LastName",      "",record2.getWitness4LastName().toString());
-//        assertEquals("Witness4Occupation",    "",record2.getWitness4Occupation().toString());
-//        assertEquals("Witness4Comment",       "",record2.getWitness4Comment().toString());
-
+        assertEquals("WifeFirstName",           "",record2.getFieldValue(FieldType.wifeFirstName));
+        assertEquals("WifeLastName",            "",record2.getFieldValue(FieldType.wifeLastName));
+        assertEquals("WifeSex",                 "",record2.getFieldValue(FieldType.wifeSex));
+        assertEquals("WifeAge",                 "",record2.getFieldValue(FieldType.wifeAge));
+        assertEquals("WifeBirthDate",           "",record2.getFieldValue(FieldType.wifeBirthDate));
+        assertEquals("WifePlace",               "",record2.getFieldValue(FieldType.wifeBirthPlace));
+        assertEquals("WifeOccupation",          "",record2.getFieldValue(FieldType.wifeOccupation));
+        assertEquals("WifeComment",             "",record2.getFieldValue(FieldType.wifeComment));
+        assertEquals("WifeMarriedFirstName",    "",record2.getFieldValue(FieldType.wifeMarriedFirstName));
+        assertEquals("WifeMarriedLastName",     "",record2.getFieldValue(FieldType.wifeMarriedLastName));
+        assertEquals("WifeMarriedOccupation",   "",record2.getFieldValue(FieldType.wifeMarriedOccupation));
+        assertEquals("WifeMarriedComment",      "",record2.getFieldValue(FieldType.wifeMarriedComment));
+        assertEquals("WifeMarriedDead",         "",record2.getFieldValue(FieldType.wifeMarriedDead));
+        assertEquals("WifeFatherFirstName",     "",record2.getFieldValue(FieldType.wifeFatherFirstName));
+        assertEquals("WifeFatherLastName",      "",record2.getFieldValue(FieldType.wifeFatherLastName));
+        assertEquals("WifeFatherAge",           "",record2.getFieldValue(FieldType.wifeFatherAge));
+        assertEquals("WifeFatherDead",          "",record2.getFieldValue(FieldType.wifeFatherDead));
+        assertEquals("WifeFatherOccupation",    "",record2.getFieldValue(FieldType.wifeFatherOccupation));
+        assertEquals("WifeFatherComment",       "",record2.getFieldValue(FieldType.wifeFatherComment));
+        assertEquals("WifeMotherFirstName",     "",record2.getFieldValue(FieldType.wifeMotherFirstName));
+        assertEquals("WifeMotherLastName",      "",record2.getFieldValue(FieldType.wifeMotherLastName));
+        assertEquals("WifeMotherAge",           "",record2.getFieldValue(FieldType.wifeMotherAge));
+        assertEquals("WifeMotherDead",          "",record2.getFieldValue(FieldType.wifeMotherDead));
+        assertEquals("WifeMotherOccupation",    "",record2.getFieldValue(FieldType.wifeMotherOccupation));
+        assertEquals("WifeMotherComment",       "",record2.getFieldValue(FieldType.wifeMotherComment));
+                
         assertWitnesses(record, record2);
 
         file.delete();
@@ -212,22 +196,31 @@ public class ReleveFileNimegueTest extends TestCase {
     }
     
     private void assertWitnesses(Record record, Record record2) {
-//         for(int i=0 ; i < 2; i++ ) {
-//            assertEquals("Witness "+ (i+1)+ " FirstName" , record.getWitnesses()[i].getFirstName().toString(),record2.getWitnesses()[i].getFirstName().toString());
-//            assertEquals("Witness "+ (i+1)+ " LastName",   record.getWitnesses()[i].getLastName().toString(),record2.getWitnesses()[i].getLastName().toString());
-//            assertEquals("Witness "+ (i+1)+ " Occupation", "",  record2.getWitnesses()[i].getOccupation().toString());
-//            assertEquals("Witness "+ (i+1)+ " Comment",    record.getWitnesses()[i].getComment().toString()+ ", " + record.getWitnesses()[i].getOccupation().toString(),
-//                                                           record2.getWitnesses()[i].getComment().toString());
-//        }
-//        for(int i=2 ; i < 4; i++ ) {
-//            assertEquals("Witness "+ (i+1)+ " FirstName" , "", record2.getWitnesses()[i].getFirstName().toString());
-//            assertEquals("Witness "+ (i+1)+ " LastName",   "", record2.getWitnesses()[i].getLastName().toString());
-//            assertEquals("Witness "+ (i+1)+ " Occupation", "", record2.getWitnesses()[i].getOccupation().toString());
-//            assertEquals("Witness "+ (i+1)+ " Comment",    "", record2.getWitnesses()[i].getComment().toString());
-//        }
-//        
-//        assertEquals("GeneralComment", "generalcomment, témoin: w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment",record2.getGeneralComment().toString());
-
+       
+        assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
+        assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName), record2.getFieldValue(FieldType.witness1LastName));
+        assertEquals("Witness1 " + " Occupation", "",record2.getFieldValue(FieldType.witness1Occupation));
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation) 
+                     , record2.getFieldValue(FieldType.witness1Comment));
+        
+        assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
+        assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
+        assertEquals("Witness2 " + " Occupation" , "",record2.getFieldValue(FieldType.witness2Occupation));
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation) 
+                     , record2.getFieldValue(FieldType.witness2Comment));
+         
+        assertEquals("Witness3 " + " FirstName" ,  "", record2.getFieldValue(FieldType.witness3FirstName));
+        assertEquals("Witness3 " + " LastName" ,   "", record2.getFieldValue(FieldType.witness3LastName));
+        assertEquals("Witness3 " + " Occupation",  "", record2.getFieldValue(FieldType.witness3Occupation));
+        assertEquals("Witness3 "+ " Comment",      "", record2.getFieldValue(FieldType.witness3Comment));        
+        
+        assertEquals("Witness4 " + " FirstName" ,  "", record2.getFieldValue(FieldType.witness4FirstName));
+        assertEquals("Witness4 " + " LastName" ,   "", record2.getFieldValue(FieldType.witness4LastName));
+        assertEquals("Witness4 " + " Occupation",  "", record2.getFieldValue(FieldType.witness4Occupation));
+        assertEquals("Witness4 "+ " Comment",      "", record2.getFieldValue(FieldType.witness4Comment));
+        
+        //assertEquals("GeneralComment", "generalcomment, témoin: w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment",record2.getFieldValue(FieldType.generalComment));
+     
     }
 
 
@@ -253,68 +246,90 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",      record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
-        assertEquals("Cote",           record.getCote().toString(),record2.getCote().toString());
-        assertEquals("parish",         "",record2.getParish().toString());
-        assertEquals("Notary",         null,record2.getNotary());
-        assertEquals("EventType",      null,record2.getEventType());
-        assertEquals("FreeComment",    record.getFreeComment().toString(),record2.getFreeComment().toString());
+        assertEquals("EventDate",      record.getFieldValue(FieldType.eventDate),record2.getFieldValue(FieldType.eventDate));
+        assertEquals("Cote",           record.getFieldValue(FieldType.cote),record2.getFieldValue(FieldType.cote));
+        assertEquals("parish",         "",record2.getFieldValue(FieldType.parish));
+        assertEquals("Notary",         "",record2.getFieldValue(FieldType.notary));
+        assertEquals("EventType",      "",record2.getFieldValue(FieldType.eventType));
+        assertEquals("FreeComment",    record.getFieldValue(FieldType.freeComment),record2.getFieldValue(FieldType.freeComment));
 
-        assertEquals("IndiFirstName",  record.getIndi().getFirstName().toString(),record2.getIndi().getFirstName().toString());
-        assertEquals("IndiLastName",   record.getIndi().getLastName().toString(),record2.getIndi().getLastName().toString());
-        assertEquals("IndiSex",        record.getIndi().getSex().toString(),record2.getIndi().getSex().toString());
-        assertEquals("IndiAge",        record.getIndi().getAge().toString(),record2.getIndi().getAge().toString());
-        assertEquals("IndiBirthDate",  record.getIndi().getBirthDate().toString(),record2.getIndi().getBirthDate().toString());
-        assertEquals("IndiPlace",      record.getIndi().getBirthPlace().toString(),record2.getIndi().getBirthPlace().toString());
-        assertEquals("IndiOccupation", record.getIndi().getOccupation().toString(),record2.getIndi().getOccupation().toString());
-        assertEquals("IndiComment",    record2.getIndi().getComment() .toString(),record2.getIndi().getComment() .toString());
-        assertEquals("IndiMarriedFirstName",    record.getIndi().getMarriedFirstName().toString(),record2.getIndi().getMarriedFirstName().toString());
-        assertEquals("IndiMarriedLastName",     record.getIndi().getMarriedLastName().toString(),record2.getIndi().getMarriedLastName().toString());
-        assertEquals("IndiMarriedOccupation",   "",record2.getIndi().getMarriedOccupation().toString());
-        assertEquals("IndiMarriedComment",      "Décédé, indiMarriedOccupation, indiMarriedResidence, indiMarriedComment",record2.getIndi().getMarriedComment().toString());
-        assertEquals("IndiMarriedDead",         "",record2.getIndi().getMarriedDead().toString());
+        assertEquals("IndiFirstName",  record.getFieldValue(FieldType.indiFirstName),record2.getFieldValue(FieldType.indiFirstName));
+        assertEquals("IndiLastName",   record.getFieldValue(FieldType.indiLastName),record2.getFieldValue(FieldType.indiLastName));
+        assertEquals("IndiSex",        record.getFieldValue(FieldType.indiSex),record2.getFieldValue(FieldType.indiSex));
+        assertEquals("IndiAge",        record.getFieldValue(FieldType.indiAge),record2.getFieldValue(FieldType.indiAge));
+        assertEquals("IndiBirthDate",  record.getFieldValue(FieldType.indiBirthDate),record2.getFieldValue(FieldType.indiBirthDate));
+        assertEquals("IndiPlace",      record.getFieldValue(FieldType.indiBirthPlace),record2.getFieldValue(FieldType.indiBirthPlace));
+        assertEquals("IndiOccupation", record.getFieldValue(FieldType.indiOccupation),record2.getFieldValue(FieldType.indiOccupation));
+        assertEquals("IndiComment",    record2.getFieldValue(FieldType.indiComment),record2.getFieldValue(FieldType.indiComment));
+        assertEquals("IndiMarriedFirstName",    record.getFieldValue(FieldType.indiMarriedFirstName),record2.getFieldValue(FieldType.indiMarriedFirstName));
+        assertEquals("IndiMarriedLastName",     record.getFieldValue(FieldType.indiMarriedLastName),record2.getFieldValue(FieldType.indiMarriedLastName));
+        assertEquals("IndiMarriedOccupation",   "",record2.getFieldValue(FieldType.indiMarriedOccupation));
+        assertEquals("IndiMarriedComment",      "Décédé, indiMarriedOccupation, indiMarriedResidence, indiMarriedComment",record2.getFieldValue(FieldType.indiMarriedComment));
+        assertEquals("IndiMarriedDead",         "",record2.getFieldValue(FieldType.indiMarriedDead));
 
-        assertEquals("IndiFatherFirstName",     record.getIndi().getFatherFirstName().toString(),record2.getIndi().getFatherFirstName().toString());
-        assertEquals("IndiFatherLastName",      record.getIndi().getFatherLastName().toString(),record2.getIndi().getFatherLastName().toString());
-        assertEquals("IndiFatherAge",           "",record2.getIndi().getFatherAge().toString());
-        assertEquals("IndiFatherDead",          "",record2.getIndi().getFatherDead().toString());
-        assertEquals("IndiFatherOccupation",    record.getIndi().getFatherOccupation().toString(),record2.getIndi().getFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "70y, Vivant, indiFatherResidence, indiFatherComment",record2.getIndi().getFatherComment().toString());
-        assertEquals("IndiMotherFirstName",     record.getIndi().getMotherFirstName().toString(),record2.getIndi().getMotherFirstName().toString());
-        assertEquals("IndiMotherLastName",      record.getIndi().getMotherLastName().toString(),record2.getIndi().getMotherLastName().toString());
-        assertEquals("IndiMotherAge",           "",record2.getIndi().getMotherAge().toString());
-        assertEquals("IndiMotherDead",          "",record2.getIndi().getMotherDead().toString());
-        assertEquals("IndiMotherOccupation",    record.getIndi().getMotherOccupation().toString(),record2.getIndi().getMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "72y, Vivant, indiMotherResidence, indiMotherComment",record2.getIndi().getMotherComment().toString());
+        assertEquals("IndiFatherFirstName",     record.getFieldValue(FieldType.indiFatherFirstName),record2.getFieldValue(FieldType.indiFatherFirstName));
+        assertEquals("IndiFatherLastName",      record.getFieldValue(FieldType.indiFatherLastName),record2.getFieldValue(FieldType.indiFatherLastName));
+        assertEquals("IndiFatherAge",           "",record2.getFieldValue(FieldType.indiFatherAge));
+        assertEquals("IndiFatherDead",          "",record2.getFieldValue(FieldType.indiFatherDead));
+        assertEquals("IndiFatherOccupation",    record.getFieldValue(FieldType.indiFatherOccupation),record2.getFieldValue(FieldType.indiFatherOccupation));
+        assertEquals("IndiFatherComment",       "70y, Vivant, indiFatherResidence, indiFatherComment",record2.getFieldValue(FieldType.indiFatherComment));
+        assertEquals("IndiMotherFirstName",     record.getFieldValue(FieldType.indiMotherFirstName),record2.getFieldValue(FieldType.indiMotherFirstName));
+        assertEquals("IndiMotherLastName",      record.getFieldValue(FieldType.indiMotherLastName),record2.getFieldValue(FieldType.indiMotherLastName));
+        assertEquals("IndiMotherAge",           "",record2.getFieldValue(FieldType.indiMotherAge));
+        assertEquals("IndiMotherDead",          "",record2.getFieldValue(FieldType.indiMotherDead));
+        assertEquals("IndiMotherOccupation",    record.getFieldValue(FieldType.indiMotherOccupation),record2.getFieldValue(FieldType.indiMotherOccupation));
+        assertEquals("IndiMotherComment",       "72y, Vivant, indiMotherResidence, indiMotherComment",record2.getFieldValue(FieldType.indiMotherComment));
 
-        assertEquals("WifeFirstName",           record.getWife().getFirstName().toString(),record2.getWife().getFirstName().toString());
-        assertEquals("WifeLastName",            record.getWife().getLastName().toString(),record2.getWife().getLastName().toString());
-        assertEquals("WifeSex",                 record.getWife().getSex().toString(),record2.getWife().getSex().toString());
-        assertEquals("WifeAge",                 record.getWife().getAge().toString(),record2.getWife().getAge().toString());
-        assertEquals("WifeBirthDate",           record.getWife().getBirthDate().toString(),record2.getWife().getBirthDate().toString());
-        assertEquals("WifePlace",               record.getWife().getBirthPlace().toString(),record2.getWife().getBirthPlace().toString());
-        assertEquals("WifeOccupation",          record.getWife().getOccupation().toString(),record2.getWife().getOccupation().toString());
-        assertEquals("WifeComment",             record2.getWife().getComment().toString(),record2.getWife().getComment().toString());
-        assertEquals("WifeMarriedFirstName",    record.getWife().getMarriedFirstName().toString(),record2.getWife().getMarriedFirstName().toString());
-        assertEquals("WifeMarriedLastName",     record.getWife().getMarriedLastName().toString(),record2.getWife().getMarriedLastName().toString());
-        assertEquals("WifeMarriedDead",         "",record2.getWife().getMarriedDead().toString());
-        assertEquals("WifeMarriedOccupation",   "",record2.getWife().getMarriedOccupation().toString());
-        assertEquals("WifeMarriedComment",      "Vivant, wifeMarriedOccupation, wifeMarriedResidence, wifeMarriedComment",record2.getWife().getMarriedComment().toString());
+        assertEquals("WifeFirstName",           record.getFieldValue(FieldType.wifeFirstName),record2.getFieldValue(FieldType.wifeFirstName));
+        assertEquals("WifeLastName",            record.getFieldValue(FieldType.wifeLastName),record2.getFieldValue(FieldType.wifeLastName));
+        assertEquals("WifeSex",                 record.getFieldValue(FieldType.wifeSex),record2.getFieldValue(FieldType.wifeSex));
+        assertEquals("WifeAge",                 record.getFieldValue(FieldType.wifeAge),record2.getFieldValue(FieldType.wifeAge));
+        assertEquals("WifeBirthDate",           record.getFieldValue(FieldType.wifeBirthDate),record2.getFieldValue(FieldType.wifeBirthDate));
+        assertEquals("WifePlace",               record.getFieldValue(FieldType.wifeBirthPlace),record2.getFieldValue(FieldType.wifeBirthPlace));
+        assertEquals("WifeOccupation",          record.getFieldValue(FieldType.wifeOccupation),record2.getFieldValue(FieldType.wifeOccupation));
+        assertEquals("WifeComment",             record2.getFieldValue(FieldType.wifeComment),record2.getFieldValue(FieldType.wifeComment));
+        assertEquals("WifeMarriedFirstName",    record.getFieldValue(FieldType.wifeMarriedFirstName),record2.getFieldValue(FieldType.wifeMarriedFirstName));
+        assertEquals("WifeMarriedLastName",     record.getFieldValue(FieldType.wifeMarriedLastName),record2.getFieldValue(FieldType.wifeMarriedLastName));
+        assertEquals("WifeMarriedDead",         "",record2.getFieldValue(FieldType.wifeMarriedDead));
+        assertEquals("WifeMarriedOccupation",   "",record2.getFieldValue(FieldType.wifeMarriedOccupation));
+        assertEquals("WifeMarriedComment",      "Vivant, wifeMarriedOccupation, wifeMarriedResidence, wifeMarriedComment",record2.getFieldValue(FieldType.wifeMarriedComment));
 
-        assertEquals("WifeFatherFirstName",     record.getWife().getFatherFirstName().toString(),record2.getWife().getFatherFirstName().toString());
-        assertEquals("WifeFatherLastName",      record.getWife().getFatherLastName().toString(),record2.getWife().getFatherLastName().toString());
-        assertEquals("WifeFatherAge",           "",record2.getWife().getFatherAge().toString());
-        assertEquals("WifeFatherDead",          "",record2.getWife().getFatherDead().toString());
-        assertEquals("WifeFatherOccupation",    record.getWife().getFatherOccupation().toString(),record2.getWife().getFatherOccupation().toString());
-        assertEquals("WifeFatherComment",       "71y, Vivant, wifeFatherResidence, wifeFatherComment",record2.getWife().getFatherComment().toString());
-        assertEquals("WifeMotherFirstName",     record.getWife().getMotherFirstName().toString(),record2.getWife().getMotherFirstName().toString());
-        assertEquals("WifeMotherLastName",      record.getWife().getMotherLastName().toString(),record2.getWife().getMotherLastName().toString());
-        assertEquals("WifeMotherAge",           "",record2.getWife().getMotherAge().toString());
-        assertEquals("WifeMotherDead",          "",record2.getWife().getMotherDead().toString());
-        assertEquals("WifeMotherOccupation",    record.getWife().getMotherOccupation().toString(),record2.getWife().getMotherOccupation().toString());
-        assertEquals("WifeMotherComment",       "73y, Vivant, wifeMotherResidence, wifeMotherComment",record2.getWife().getMotherComment().toString());
+        assertEquals("WifeFatherFirstName",     record.getFieldValue(FieldType.wifeFatherFirstName),record2.getFieldValue(FieldType.wifeFatherFirstName));
+        assertEquals("WifeFatherLastName",      record.getFieldValue(FieldType.wifeFatherLastName),record2.getFieldValue(FieldType.wifeFatherLastName));
+        assertEquals("WifeFatherAge",           "",record2.getFieldValue(FieldType.wifeFatherAge));
+        assertEquals("WifeFatherDead",          "",record2.getFieldValue(FieldType.wifeFatherDead));
+        assertEquals("WifeFatherOccupation",    record.getFieldValue(FieldType.wifeFatherOccupation),record2.getFieldValue(FieldType.wifeFatherOccupation));
+        assertEquals("WifeFatherComment",       "71y, Vivant, wifeFatherResidence, wifeFatherComment",record2.getFieldValue(FieldType.wifeFatherComment));
+        assertEquals("WifeMotherFirstName",     record.getFieldValue(FieldType.wifeMotherFirstName),record2.getFieldValue(FieldType.wifeMotherFirstName));
+        assertEquals("WifeMotherLastName",      record.getFieldValue(FieldType.wifeMotherLastName),record2.getFieldValue(FieldType.wifeMotherLastName));
+        assertEquals("WifeMotherAge",           "",record2.getFieldValue(FieldType.wifeMotherAge));
+        assertEquals("WifeMotherDead",          "",record2.getFieldValue(FieldType.wifeMotherDead));
+        assertEquals("WifeMotherOccupation",    record.getFieldValue(FieldType.wifeMotherOccupation),record2.getFieldValue(FieldType.wifeMotherOccupation));
+        assertEquals("WifeMotherComment",       "73y, Vivant, wifeMotherResidence, wifeMotherComment",record2.getFieldValue(FieldType.wifeMotherComment));
 
-        assertWitnesses(record, record2);
+        assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
+        assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName), record2.getFieldValue(FieldType.witness1LastName));
+        assertEquals("Witness1 " + " Occupation", "",record2.getFieldValue(FieldType.witness1Occupation));
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation) 
+                     , record2.getFieldValue(FieldType.witness1Comment));
+        
+        assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
+        assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
+        assertEquals("Witness2 " + " Occupation" , "",record2.getFieldValue(FieldType.witness2Occupation));
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation) 
+                     , record2.getFieldValue(FieldType.witness2Comment));
+         
+        assertEquals("Witness3 " + " FirstName" ,  record.getFieldValue(FieldType.witness3FirstName) , record2.getFieldValue(FieldType.witness3FirstName));
+        assertEquals("Witness3 " + " LastName" ,   record.getFieldValue(FieldType.witness3LastName),  record2.getFieldValue(FieldType.witness3LastName));
+        assertEquals("Witness3 " + " Occupation",  "",record2.getFieldValue(FieldType.witness3Occupation));
+        assertEquals("Witness3 "+ " Comment",      record.getFieldValue(FieldType.witness3Comment)+ ", " + record.getFieldValue(FieldType.witness3Occupation) 
+                     , record2.getFieldValue(FieldType.witness3Comment));     
+        
+        assertEquals("Witness4 " + " FirstName" ,  record.getFieldValue(FieldType.witness4FirstName) , record2.getFieldValue(FieldType.witness4FirstName));
+        assertEquals("Witness4 " + " LastName" ,   record.getFieldValue(FieldType.witness4LastName),  record2.getFieldValue(FieldType.witness4LastName));
+        assertEquals("Witness4 " + " Occupation",  "",record2.getFieldValue(FieldType.witness4Occupation));
+        assertEquals("Witness4 "+ " Comment",      record.getFieldValue(FieldType.witness4Comment)+ ", " + record.getFieldValue(FieldType.witness4Occupation) 
+                     , record2.getFieldValue(FieldType.witness4Comment));
 
         file.delete();
     }
@@ -341,65 +356,65 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",       record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
-        assertEquals("Cote",            record.getCote().toString(),record2.getCote().toString());
-        assertEquals("parish",          "",record2.getParish().toString());
-        assertEquals("Notary",          null,record2.getNotary());
-        assertEquals("EventType",       null,record2.getEventType());
-        assertEquals("FreeComment",    record.getFreeComment().toString(),record2.getFreeComment().toString());
+        assertEquals("EventDate",       record.getFieldValue(FieldType.eventDate),record2.getFieldValue(FieldType.eventDate));
+        assertEquals("Cote",            record.getFieldValue(FieldType.cote),record2.getFieldValue(FieldType.cote));
+        assertEquals("parish",          "",record2.getFieldValue(FieldType.parish));
+        assertEquals("Notary",          "",record2.getFieldValue(FieldType.notary));
+        assertEquals("EventType",       "",record2.getFieldValue(FieldType.eventType));
+        assertEquals("FreeComment",    record.getFieldValue(FieldType.freeComment),record2.getFieldValue(FieldType.freeComment));
 
-        assertEquals("IndiFirstName",  record.getIndi().getFirstName().toString(),record2.getIndi().getFirstName().toString());
-        assertEquals("IndiLastName",   record.getIndi().getLastName().toString(),record2.getIndi().getLastName().toString());
-        assertEquals("IndiSex",        record.getIndi().getSex().toString(),record2.getIndi().getSex().toString());
-        assertEquals("IndiAge",        record.getIndi().getAge().toString(),record2.getIndi().getAge().toString());
-        assertEquals("IndiBirthDate",  record.getIndi().getBirthDate().toString(),record2.getIndi().getBirthDate().toString());
-        assertEquals("IndiPlace",      record.getIndi().getBirthPlace().toString(),record2.getIndi().getBirthPlace().toString());
-        assertEquals("IndiOccupation", record.getIndi().getOccupation().toString(),record2.getIndi().getOccupation().toString());
-        assertEquals("IndiComment",    record2.getIndi().getComment() .toString(),record2.getIndi().getComment() .toString());
-        assertEquals("IndiMarriedFirstName",    record.getIndi().getMarriedFirstName().toString(),record2.getIndi().getMarriedFirstName().toString());
-        assertEquals("IndiMarriedLastName",     record.getIndi().getMarriedLastName().toString(),record2.getIndi().getMarriedLastName().toString());
-        assertEquals("IndiMarriedOccupation",   record.getIndi().getMarriedOccupation().toString(),record2.getIndi().getMarriedOccupation().toString());
-        assertEquals("IndiMarriedComment",      "Vivant, indiMarriedResidence, indiMarriedComment",record2.getIndi().getMarriedComment().toString());
-        assertEquals("IndiMarriedDead",         "",record2.getIndi().getMarriedDead().toString());
+        assertEquals("IndiFirstName",  record.getFieldValue(FieldType.indiFirstName),record2.getFieldValue(FieldType.indiFirstName));
+        assertEquals("IndiLastName",   record.getFieldValue(FieldType.indiLastName),record2.getFieldValue(FieldType.indiLastName));
+        assertEquals("IndiSex",        record.getFieldValue(FieldType.indiSex),record2.getFieldValue(FieldType.indiSex));
+        assertEquals("IndiAge",        record.getFieldValue(FieldType.indiAge),record2.getFieldValue(FieldType.indiAge));
+        assertEquals("IndiBirthDate",  record.getFieldValue(FieldType.indiBirthDate),record2.getFieldValue(FieldType.indiBirthDate));
+        assertEquals("IndiPlace",      record.getFieldValue(FieldType.indiBirthPlace),record2.getFieldValue(FieldType.indiBirthPlace));
+        assertEquals("IndiOccupation", record.getFieldValue(FieldType.indiOccupation),record2.getFieldValue(FieldType.indiOccupation));
+        assertEquals("IndiComment",    record2.getFieldValue(FieldType.indiComment),record2.getFieldValue(FieldType.indiComment));
+        assertEquals("IndiMarriedFirstName",    record.getFieldValue(FieldType.indiMarriedFirstName),record2.getFieldValue(FieldType.indiMarriedFirstName));
+        assertEquals("IndiMarriedLastName",     record.getFieldValue(FieldType.indiMarriedLastName),record2.getFieldValue(FieldType.indiMarriedLastName));
+        assertEquals("IndiMarriedOccupation",   record.getFieldValue(FieldType.indiMarriedOccupation),record2.getFieldValue(FieldType.indiMarriedOccupation));
+        assertEquals("IndiMarriedComment",      "Vivant, indiMarriedResidence, indiMarriedComment",record2.getFieldValue(FieldType.indiMarriedComment));
+        assertEquals("IndiMarriedDead",         "",record2.getFieldValue(FieldType.indiMarriedDead));
 
-        assertEquals("IndiFatherFirstName",     record.getIndi().getFatherFirstName().toString(),record2.getIndi().getFatherFirstName().toString());
-        assertEquals("IndiFatherLastName",      record.getIndi().getFatherLastName().toString(),record2.getIndi().getFatherLastName().toString());
-        assertEquals("IndiFatherAge",           "",record2.getIndi().getFatherAge().toString());
-        assertEquals("IndiFatherDead",          "",record2.getIndi().getFatherDead().toString());
-        assertEquals("IndiFatherOccupation",    record.getIndi().getFatherOccupation().toString(),record2.getIndi().getFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "70y, Vivant, indiFatherResidence, indiFatherComment",record2.getIndi().getFatherComment().toString());
-        assertEquals("IndiMotherFirstName",     record.getIndi().getMotherFirstName().toString(),record2.getIndi().getMotherFirstName().toString());
-        assertEquals("IndiMotherLastName",      record.getIndi().getMotherLastName().toString(),record2.getIndi().getMotherLastName().toString());
-        assertEquals("IndiMotherAge",           "",record2.getIndi().getMotherAge().toString());
-        assertEquals("IndiMotherDead",          "",record2.getIndi().getMotherDead().toString());
-        assertEquals("IndiMotherOccupation",    record.getIndi().getMotherOccupation().toString(),record2.getIndi().getMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "72y, Vivant, indiMotherResidence, indiMotherComment",record2.getIndi().getMotherComment().toString());
+        assertEquals("IndiFatherFirstName",     record.getFieldValue(FieldType.indiFatherFirstName),record2.getFieldValue(FieldType.indiFatherFirstName));
+        assertEquals("IndiFatherLastName",      record.getFieldValue(FieldType.indiFatherLastName),record2.getFieldValue(FieldType.indiFatherLastName));
+        assertEquals("IndiFatherAge",           "",record2.getFieldValue(FieldType.indiFatherAge));
+        assertEquals("IndiFatherDead",          "",record2.getFieldValue(FieldType.indiFatherDead));
+        assertEquals("IndiFatherOccupation",    record.getFieldValue(FieldType.indiFatherOccupation),record2.getFieldValue(FieldType.indiFatherOccupation));
+        assertEquals("IndiFatherComment",       "70y, Vivant, indiFatherResidence, indiFatherComment",record2.getFieldValue(FieldType.indiFatherComment));
+        assertEquals("IndiMotherFirstName",     record.getFieldValue(FieldType.indiMotherFirstName),record2.getFieldValue(FieldType.indiMotherFirstName));
+        assertEquals("IndiMotherLastName",      record.getFieldValue(FieldType.indiMotherLastName),record2.getFieldValue(FieldType.indiMotherLastName));
+        assertEquals("IndiMotherAge",           "",record2.getFieldValue(FieldType.indiMotherAge));
+        assertEquals("IndiMotherDead",          "",record2.getFieldValue(FieldType.indiMotherDead));
+        assertEquals("IndiMotherOccupation",    record.getFieldValue(FieldType.indiMotherOccupation),record2.getFieldValue(FieldType.indiMotherOccupation));
+        assertEquals("IndiMotherComment",       "72y, Vivant, indiMotherResidence, indiMotherComment",record2.getFieldValue(FieldType.indiMotherComment));
 
-        assertEquals("WifeFirstName",           null,record2.getWife().getFirstName());
-        assertEquals("WifeLastName",            null,record2.getWife().getLastName());
-        assertEquals("WifeSex",                 null,record2.getWife().getSex());
-        assertEquals("WifeAge",                 null,record2.getWife().getAge());
-        assertEquals("WifeBirthDate",           null,record2.getWife().getBirthDate());
-        assertEquals("WifePlace",               null,record2.getWife().getBirthPlace());
-        assertEquals("WifeOccupation",          null,record2.getWife().getOccupation());
-        assertEquals("WifeComment",             null,record2.getWife().getComment());
-        assertEquals("WifeMarriedFirstName",    null,record2.getWife().getMarriedFirstName());
-        assertEquals("WifeMarriedLastName",     null,record2.getWife().getMarriedLastName());
-        assertEquals("WifeMarriedOccupation",   null,record2.getWife().getMarriedOccupation());
-        assertEquals("WifeMarriedComment",      null,record2.getWife().getMarriedComment());
-        assertEquals("WifeMarriedDead",         null,record2.getWife().getMarriedDead());
-        assertEquals("WifeFatherFirstName",     null,record2.getWife().getFatherFirstName());
-        assertEquals("WifeFatherLastName",      null,record2.getWife().getFatherLastName());
-        assertEquals("WifeFatherAge",           null,record2.getWife().getFatherAge());
-        assertEquals("WifeFatherDead",          null,record2.getWife().getFatherDead());
-        assertEquals("WifeFatherOccupation",    null,record2.getWife().getFatherOccupation());
-        assertEquals("WifeFatherComment",       null,record2.getWife().getFatherComment());
-        assertEquals("WifeMotherFirstName",     null,record2.getWife().getMotherFirstName());
-        assertEquals("WifeMotherLastName",      null,record2.getWife().getMotherLastName());
-        assertEquals("WifeMotherAge",           null,record2.getWife().getMotherAge());
-        assertEquals("WifeMotherDead",          null,record2.getWife().getMotherDead());
-        assertEquals("WifeMotherOccupation",    null,record2.getWife().getMotherOccupation());
-        assertEquals("WifeMotherComment",       null,record2.getWife().getMotherComment());
+        assertEquals("WifeFirstName",           "",record2.getFieldValue(FieldType.wifeFirstName));
+        assertEquals("WifeLastName",            "",record2.getFieldValue(FieldType.wifeLastName));
+        assertEquals("WifeSex",                 "",record2.getFieldValue(FieldType.wifeSex));
+        assertEquals("WifeAge",                 "",record2.getFieldValue(FieldType.wifeAge));
+        assertEquals("WifeBirthDate",           "",record2.getFieldValue(FieldType.wifeBirthDate));
+        assertEquals("WifePlace",               "",record2.getFieldValue(FieldType.wifeBirthPlace));
+        assertEquals("WifeOccupation",          "",record2.getFieldValue(FieldType.wifeOccupation));
+        assertEquals("WifeComment",             "",record2.getFieldValue(FieldType.wifeComment));
+        assertEquals("WifeMarriedFirstName",    "",record2.getFieldValue(FieldType.wifeMarriedFirstName));
+        assertEquals("WifeMarriedLastName",     "",record2.getFieldValue(FieldType.wifeMarriedLastName));
+        assertEquals("WifeMarriedOccupation",   "",record2.getFieldValue(FieldType.wifeMarriedOccupation));
+        assertEquals("WifeMarriedComment",      "",record2.getFieldValue(FieldType.wifeMarriedComment));
+        assertEquals("WifeMarriedDead",         "",record2.getFieldValue(FieldType.wifeMarriedDead));
+        assertEquals("WifeFatherFirstName",     "",record2.getFieldValue(FieldType.wifeFatherFirstName));
+        assertEquals("WifeFatherLastName",      "",record2.getFieldValue(FieldType.wifeFatherLastName));
+        assertEquals("WifeFatherAge",           "",record2.getFieldValue(FieldType.wifeFatherAge));
+        assertEquals("WifeFatherDead",          "",record2.getFieldValue(FieldType.wifeFatherDead));
+        assertEquals("WifeFatherOccupation",    "",record2.getFieldValue(FieldType.wifeFatherOccupation));
+        assertEquals("WifeFatherComment",       "",record2.getFieldValue(FieldType.wifeFatherComment));
+        assertEquals("WifeMotherFirstName",     "",record2.getFieldValue(FieldType.wifeMotherFirstName));
+        assertEquals("WifeMotherLastName",      "",record2.getFieldValue(FieldType.wifeMotherLastName));
+        assertEquals("WifeMotherAge",           "",record2.getFieldValue(FieldType.wifeMotherAge));
+        assertEquals("WifeMotherDead",          "",record2.getFieldValue(FieldType.wifeMotherDead));
+        assertEquals("WifeMotherOccupation",    "",record2.getFieldValue(FieldType.wifeMotherOccupation));
+        assertEquals("WifeMotherComment",       "",record2.getFieldValue(FieldType.wifeMotherComment));
 
         assertWitnesses(record, record2);
 
@@ -429,68 +444,90 @@ public class ReleveFileNimegueTest extends TestCase {
 
         // je compare tous les champs
 
-        assertEquals("EventDate",      record.getEventDateProperty().toString(),record2.getEventDateProperty().toString());
-        assertEquals("Cote",           record.getCote().toString(),record2.getCote().toString());
-        assertEquals("parish",         "",record2.getParish().toString());
-        assertEquals("Notary",         "",record2.getNotary().toString());
-        assertEquals("EventType",      record.getEventType().toString(),record2.getEventType().toString());
-        assertEquals("FreeComment",    record.getFreeComment().toString(),record2.getFreeComment().toString());
+        assertEquals("EventDate",      record.getFieldValue(FieldType.eventDate),record2.getFieldValue(FieldType.eventDate));
+        assertEquals("Cote",           record.getFieldValue(FieldType.cote),record2.getFieldValue(FieldType.cote));
+        assertEquals("parish",         "",record2.getFieldValue(FieldType.parish));
+        assertEquals("Notary",         "",record2.getFieldValue(FieldType.notary));
+        assertEquals("EventType",      record.getFieldValue(FieldType.eventType),record2.getFieldValue(FieldType.eventType));
+        assertEquals("FreeComment",    record.getFieldValue(FieldType.freeComment),record2.getFieldValue(FieldType.freeComment));
 
-        assertEquals("IndiFirstName",  record.getIndi().getFirstName().toString(),record2.getIndi().getFirstName().toString());
-        assertEquals("IndiLastName",   record.getIndi().getLastName().toString(),record2.getIndi().getLastName().toString());
-        assertEquals("IndiSex",        record.getIndi().getSex().toString(),record2.getIndi().getSex().toString());
-        assertEquals("IndiAge",        record.getIndi().getAge().toString(),record2.getIndi().getAge().toString());
-        assertEquals("IndiBirthDate",  record.getIndi().getBirthDate().toString(),record2.getIndi().getBirthDate().toString());
-        assertEquals("IndiPlace",      record.getIndi().getBirthPlace().toString(),record2.getIndi().getBirthPlace().toString());
-        assertEquals("IndiOccupation", record.getIndi().getOccupation().toString(),record2.getIndi().getOccupation().toString());
-        assertEquals("IndiComment",    record2.getIndi().getComment() .toString(),record2.getIndi().getComment() .toString());
-        assertEquals("IndiMarriedFirstName",    record.getIndi().getMarriedFirstName().toString(),record2.getIndi().getMarriedFirstName().toString());
-        assertEquals("IndiMarriedLastName",     record.getIndi().getMarriedLastName().toString(),record2.getIndi().getMarriedLastName().toString());
-        assertEquals("IndiMarriedOccupation",   "",record2.getIndi().getMarriedOccupation().toString());
-        assertEquals("IndiMarriedComment",      "Décédé, indiMarriedOccupation, indiMarriedResidence, indiMarriedComment",record2.getIndi().getMarriedComment().toString());
-        assertEquals("IndiMarriedDead",         "",record2.getIndi().getMarriedDead().toString());
+        assertEquals("IndiFirstName",  record.getFieldValue(FieldType.indiFirstName),record2.getFieldValue(FieldType.indiFirstName));
+        assertEquals("IndiLastName",   record.getFieldValue(FieldType.indiLastName),record2.getFieldValue(FieldType.indiLastName));
+        assertEquals("IndiSex",        record.getFieldValue(FieldType.indiSex),record2.getFieldValue(FieldType.indiSex));
+        assertEquals("IndiAge",        record.getFieldValue(FieldType.indiAge),record2.getFieldValue(FieldType.indiAge));
+        assertEquals("IndiBirthDate",  record.getFieldValue(FieldType.indiBirthDate),record2.getFieldValue(FieldType.indiBirthDate));
+        assertEquals("IndiPlace",      record.getFieldValue(FieldType.indiBirthPlace),record2.getFieldValue(FieldType.indiBirthPlace));
+        assertEquals("IndiOccupation", record.getFieldValue(FieldType.indiOccupation),record2.getFieldValue(FieldType.indiOccupation));
+        assertEquals("IndiComment",    record2.getFieldValue(FieldType.indiComment),record2.getFieldValue(FieldType.indiComment));
+        assertEquals("IndiMarriedFirstName",    record.getFieldValue(FieldType.indiMarriedFirstName),record2.getFieldValue(FieldType.indiMarriedFirstName));
+        assertEquals("IndiMarriedLastName",     record.getFieldValue(FieldType.indiMarriedLastName),record2.getFieldValue(FieldType.indiMarriedLastName));
+        assertEquals("IndiMarriedOccupation",   "",record2.getFieldValue(FieldType.indiMarriedOccupation));
+        assertEquals("IndiMarriedComment",      "Décédé, indiMarriedOccupation, indiMarriedResidence, indiMarriedComment",record2.getFieldValue(FieldType.indiMarriedComment));
+        assertEquals("IndiMarriedDead",         "",record2.getFieldValue(FieldType.indiMarriedDead));
 
-        assertEquals("IndiFatherFirstName",     record.getIndi().getFatherFirstName().toString(),record2.getIndi().getFatherFirstName().toString());
-        assertEquals("IndiFatherLastName",      record.getIndi().getFatherLastName().toString(),record2.getIndi().getFatherLastName().toString());
-        assertEquals("IndiFatherAge",           "",record2.getIndi().getFatherAge().toString());
-        assertEquals("IndiFatherDead",          "",record2.getIndi().getFatherDead().toString());
-        assertEquals("IndiFatherOccupation",    record.getIndi().getFatherOccupation().toString(),record2.getIndi().getFatherOccupation().toString());
-        assertEquals("IndiFatherComment",       "70y, Décédé, indiFatherResidence, indiFatherComment",record2.getIndi().getFatherComment().toString());
-        assertEquals("IndiMotherFirstName",     record.getIndi().getMotherFirstName().toString(),record2.getIndi().getMotherFirstName().toString());
-        assertEquals("IndiMotherLastName",      record.getIndi().getMotherLastName().toString(),record2.getIndi().getMotherLastName().toString());
-        assertEquals("IndiMotherAge",           "",record2.getIndi().getMotherAge().toString());
-        assertEquals("IndiMotherDead",          "",record2.getIndi().getMotherDead().toString());
-        assertEquals("IndiMotherOccupation",    record.getIndi().getMotherOccupation().toString(),record2.getIndi().getMotherOccupation().toString());
-        assertEquals("IndiMotherComment",       "72y, Décédé, indiMotherResidence, indiMotherComment",record2.getIndi().getMotherComment().toString());
+        assertEquals("IndiFatherFirstName",     record.getFieldValue(FieldType.indiFatherFirstName),record2.getFieldValue(FieldType.indiFatherFirstName));
+        assertEquals("IndiFatherLastName",      record.getFieldValue(FieldType.indiFatherLastName),record2.getFieldValue(FieldType.indiFatherLastName));
+        assertEquals("IndiFatherAge",           "",record2.getFieldValue(FieldType.indiFatherAge));
+        assertEquals("IndiFatherDead",          "",record2.getFieldValue(FieldType.indiFatherDead));
+        assertEquals("IndiFatherOccupation",    record.getFieldValue(FieldType.indiFatherOccupation),record2.getFieldValue(FieldType.indiFatherOccupation));
+        assertEquals("IndiFatherComment",       "70y, Décédé, indiFatherResidence, indiFatherComment",record2.getFieldValue(FieldType.indiFatherComment));
+        assertEquals("IndiMotherFirstName",     record.getFieldValue(FieldType.indiMotherFirstName),record2.getFieldValue(FieldType.indiMotherFirstName));
+        assertEquals("IndiMotherLastName",      record.getFieldValue(FieldType.indiMotherLastName),record2.getFieldValue(FieldType.indiMotherLastName));
+        assertEquals("IndiMotherAge",           "",record2.getFieldValue(FieldType.indiMotherAge));
+        assertEquals("IndiMotherDead",          "",record2.getFieldValue(FieldType.indiMotherDead));
+        assertEquals("IndiMotherOccupation",    record.getFieldValue(FieldType.indiMotherOccupation),record2.getFieldValue(FieldType.indiMotherOccupation));
+        assertEquals("IndiMotherComment",       "72y, Décédé, indiMotherResidence, indiMotherComment",record2.getFieldValue(FieldType.indiMotherComment));
 
-        assertEquals("WifeFirstName",           record.getWife().getFirstName().toString(),record2.getWife().getFirstName().toString());
-        assertEquals("WifeLastName",            record.getWife().getLastName().toString(),record2.getWife().getLastName().toString());
-        assertEquals("WifeSex",                 record.getWife().getSex().toString(),record2.getWife().getSex().toString());
-        assertEquals("WifeAge",                 record.getWife().getAge().toString(),record2.getWife().getAge().toString());
-        assertEquals("WifeBirthDate",           record.getWife().getBirthDate().toString(),record2.getWife().getBirthDate().toString());
-        assertEquals("WifePlace",               record.getWife().getBirthPlace().toString(),record2.getWife().getBirthPlace().toString());
-        assertEquals("WifeOccupation",          record.getWife().getOccupation().toString(),record2.getWife().getOccupation().toString());
-        assertEquals("WifeComment",             record2.getWife().getComment().toString(),record2.getWife().getComment().toString());
-        assertEquals("WifeMarriedFirstName",    record.getWife().getMarriedFirstName().toString(),record2.getWife().getMarriedFirstName().toString());
-        assertEquals("WifeMarriedLastName",     record.getWife().getMarriedLastName().toString(),record2.getWife().getMarriedLastName().toString());
-        assertEquals("WifeMarriedOccupation",   "",record2.getWife().getMarriedOccupation().toString());
-        assertEquals("WifeMarriedComment",      "Décédé, wifeMarriedOccupation, wifeMarriedResidence, wifeMarriedComment",record2.getWife().getMarriedComment().toString());
-        assertEquals("WifeMarriedDead",         "",record2.getWife().getMarriedDead().toString());
+        assertEquals("WifeFirstName",           record.getFieldValue(FieldType.wifeFirstName),record2.getFieldValue(FieldType.wifeFirstName));
+        assertEquals("WifeLastName",            record.getFieldValue(FieldType.wifeLastName),record2.getFieldValue(FieldType.wifeLastName));
+        assertEquals("WifeSex",                 record.getFieldValue(FieldType.wifeSex),record2.getFieldValue(FieldType.wifeSex));
+        assertEquals("WifeAge",                 record.getFieldValue(FieldType.wifeAge),record2.getFieldValue(FieldType.wifeAge));
+        assertEquals("WifeBirthDate",           record.getFieldValue(FieldType.wifeBirthDate),record2.getFieldValue(FieldType.wifeBirthDate));
+        assertEquals("WifePlace",               record.getFieldValue(FieldType.wifeBirthPlace),record2.getFieldValue(FieldType.wifeBirthPlace));
+        assertEquals("WifeOccupation",          record.getFieldValue(FieldType.wifeOccupation),record2.getFieldValue(FieldType.wifeOccupation));
+        assertEquals("WifeComment",             record2.getFieldValue(FieldType.wifeComment),record2.getFieldValue(FieldType.wifeComment));
+        assertEquals("WifeMarriedFirstName",    record.getFieldValue(FieldType.wifeMarriedFirstName),record2.getFieldValue(FieldType.wifeMarriedFirstName));
+        assertEquals("WifeMarriedLastName",     record.getFieldValue(FieldType.wifeMarriedLastName),record2.getFieldValue(FieldType.wifeMarriedLastName));
+        assertEquals("WifeMarriedOccupation",   "",record2.getFieldValue(FieldType.wifeMarriedOccupation));
+        assertEquals("WifeMarriedComment",      "Décédé, wifeMarriedOccupation, wifeMarriedResidence, wifeMarriedComment",record2.getFieldValue(FieldType.wifeMarriedComment));
+        assertEquals("WifeMarriedDead",         "",record2.getFieldValue(FieldType.wifeMarriedDead));
 
-        assertEquals("WifeFatherFirstName",     record.getWife().getFatherFirstName().toString(),record2.getWife().getFatherFirstName().toString());
-        assertEquals("WifeFatherLastName",      record.getWife().getFatherLastName().toString(),record2.getWife().getFatherLastName().toString());
-        assertEquals("WifeFatherAge",           "",record2.getWife().getFatherAge().toString());
-        assertEquals("WifeFatherDead",          "",record2.getWife().getFatherDead().toString());
-        assertEquals("WifeFatherOccupation",    record.getWife().getFatherOccupation().toString(),record2.getWife().getFatherOccupation().toString());
-        assertEquals("WifeFatherComment",       "71y, Vivant, wifeFatherResidence, wifeFatherComment",record2.getWife().getFatherComment().toString());
-        assertEquals("WifeMotherFirstName",     record.getWife().getMotherFirstName().toString(),record2.getWife().getMotherFirstName().toString());
-        assertEquals("WifeMotherLastName",      record.getWife().getMotherLastName().toString(),record2.getWife().getMotherLastName().toString());
-        assertEquals("WifeMotherAge",           "",record2.getWife().getMotherAge().toString());
-        assertEquals("WifeMotherDead",          "",record2.getWife().getMotherDead().toString());
-        assertEquals("WifeMotherOccupation",    record.getWife().getMotherOccupation().toString(),record2.getWife().getMotherOccupation().toString());
-        assertEquals("WifeMotherComment",       "73y, Vivant, wifeMotherResidence, wifeMotherComment",record2.getWife().getMotherComment().toString());
+        assertEquals("WifeFatherFirstName",     record.getFieldValue(FieldType.wifeFatherFirstName),record2.getFieldValue(FieldType.wifeFatherFirstName));
+        assertEquals("WifeFatherLastName",      record.getFieldValue(FieldType.wifeFatherLastName),record2.getFieldValue(FieldType.wifeFatherLastName));
+        assertEquals("WifeFatherAge",           "",record2.getFieldValue(FieldType.wifeFatherAge));
+        assertEquals("WifeFatherDead",          "",record2.getFieldValue(FieldType.wifeFatherDead));
+        assertEquals("WifeFatherOccupation",    record.getFieldValue(FieldType.wifeFatherOccupation),record2.getFieldValue(FieldType.wifeFatherOccupation));
+        assertEquals("WifeFatherComment",       "71y, Vivant, wifeFatherResidence, wifeFatherComment",record2.getFieldValue(FieldType.wifeFatherComment));
+        assertEquals("WifeMotherFirstName",     record.getFieldValue(FieldType.wifeMotherFirstName),record2.getFieldValue(FieldType.wifeMotherFirstName));
+        assertEquals("WifeMotherLastName",      record.getFieldValue(FieldType.wifeMotherLastName),record2.getFieldValue(FieldType.wifeMotherLastName));
+        assertEquals("WifeMotherAge",           "",record2.getFieldValue(FieldType.wifeMotherAge));
+        assertEquals("WifeMotherDead",          "",record2.getFieldValue(FieldType.wifeMotherDead));
+        assertEquals("WifeMotherOccupation",    record.getFieldValue(FieldType.wifeMotherOccupation),record2.getFieldValue(FieldType.wifeMotherOccupation));
+        assertEquals("WifeMotherComment",       "73y, Vivant, wifeMotherResidence, wifeMotherComment",record2.getFieldValue(FieldType.wifeMotherComment));
         
-        assertWitnesses(record, record2);
+        assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
+        assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName), record2.getFieldValue(FieldType.witness1LastName));
+        assertEquals("Witness1 " + " Occupation", "",record2.getFieldValue(FieldType.witness1Occupation));
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation) 
+                     , record2.getFieldValue(FieldType.witness1Comment));
+        
+        assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
+        assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
+        assertEquals("Witness2 " + " Occupation" , "",record2.getFieldValue(FieldType.witness2Occupation));
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation) 
+                     , record2.getFieldValue(FieldType.witness2Comment));
+         
+        assertEquals("Witness3 " + " FirstName" ,  record.getFieldValue(FieldType.witness3FirstName) , record2.getFieldValue(FieldType.witness3FirstName));
+        assertEquals("Witness3 " + " LastName" ,   record.getFieldValue(FieldType.witness3LastName),  record2.getFieldValue(FieldType.witness3LastName));
+        assertEquals("Witness3 " + " Occupation",  "",record2.getFieldValue(FieldType.witness3Occupation));
+        assertEquals("Witness3 "+ " Comment",      record.getFieldValue(FieldType.witness3Comment)+ ", " + record.getFieldValue(FieldType.witness3Occupation) 
+                     , record2.getFieldValue(FieldType.witness3Comment));     
+        
+        assertEquals("Witness4 " + " FirstName" ,  record.getFieldValue(FieldType.witness4FirstName) , record2.getFieldValue(FieldType.witness4FirstName));
+        assertEquals("Witness4 " + " LastName" ,   record.getFieldValue(FieldType.witness4LastName),  record2.getFieldValue(FieldType.witness4LastName));
+        assertEquals("Witness4 " + " Occupation",  "",record2.getFieldValue(FieldType.witness4Occupation));
+        assertEquals("Witness4 "+ " Comment",      record.getFieldValue(FieldType.witness4Comment)+ ", " + record.getFieldValue(FieldType.witness4Occupation) 
+                     , record2.getFieldValue(FieldType.witness4Comment)); 
 
         file.delete();
     }

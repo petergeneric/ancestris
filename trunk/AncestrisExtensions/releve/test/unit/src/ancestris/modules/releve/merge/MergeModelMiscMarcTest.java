@@ -2,9 +2,10 @@ package ancestris.modules.releve.merge;
 
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
-import static ancestris.modules.releve.TestUtility.waitForDialogClose;
 import ancestris.modules.releve.dnd.TransferableRecord;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Fam;
@@ -31,44 +32,44 @@ public class MergeModelMiscMarcTest extends TestCase {
     public static RecordMisc createMiscMarcRecord(String id) {
         RecordMisc record = new RecordMisc();
         if (id.equals("CM1")) {
-            record.setEventDate("01/03/1999");
-            record.setEventType("Contrat de mariage");
-            record.setNotary("notaire_marc");
-            record.setCote("cote");
-            record.setGeneralComment("generalcomment");
-            record.setFreeComment("photo");
-            record.getIndi().set("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "01/01/1970", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
-            record.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "indimarrieddead");
-            record.getIndi().setFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "indifatherdead", "70y");
-            record.getIndi().setMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "indimotherdead", "72y");
-            record.getWife().set("Motherfirstname", "WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
-            record.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "wifemarrieddead");
-            record.getWife().setFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
-            record.getWife().setMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/03/1999");
+            record.setFieldValue(Record.FieldType.eventType, "Contrat de mariage");
+            record.setFieldValue(FieldType.notary, "notaire_marc");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Fatherfirstname", "FATHERLASTNAME", "M", "indiage", "01/01/1970", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
+            record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "indimarrieddead");
+            record.setIndiFather("indifathername", "FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "indifatherdead", "70y");
+            record.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "indimotherdead", "72y");
+            record.setWife("Motherfirstname", "WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "wifemarrieddead");
+            record.setWifeFather("wifefathername", "WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
+            record.setWifeMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             
         } else if (id.equals("NEW")) {
-            record.setEventDate("01/03/1999");
-            record.setEventType("CM");
-            record.setNotary("notaire_marc");
-            record.setCote("cote");
-            record.setGeneralComment("generalcomment");
-            record.setFreeComment("photo");
-            record.getIndi().set("Fatherfirstname", "NEW_FATHERLASTNAME", "M", "indiage", "", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
-            record.getIndi().setMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "indimarrieddead");
-            record.getIndi().setFather("indifathername", "NEW_FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "indifatherdead", "70y");
-            record.getIndi().setMother("indimothername", "NEW_MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "indimotherdead", "72y");
-            record.getWife().set("Motherfirstname", "NEW_WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
-            record.getWife().setMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "wifemarrieddead");
-            record.getWife().setFather("wifefathername", "NEW_WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
-            record.getWife().setMother("wifemothername", "NEW_WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
-            record.getWitness1().setValue("w1firstname", "w1lastname", "w1occupation", "w1comment");
-            record.getWitness2().setValue("w2firstname", "w2lastname", "w2occupation", "w2comment");
-            record.getWitness3().setValue("w3firstname", "w3lastname", "w3occupation", "w3comment");
-            record.getWitness4().setValue("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.eventDate, "01/03/1999");
+            record.setFieldValue(Record.FieldType.eventType, "CM");
+            record.setFieldValue(FieldType.notary, "notaire_marc");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Fatherfirstname", "NEW_FATHERLASTNAME", "M", "indiage", "", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "indiAddress", "indicomments");
+            record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "indimarrieddead");
+            record.setIndiFather("indifathername", "NEW_FATHERLASTNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "indifatherdead", "70y");
+            record.setIndiMother("indimothername", "NEW_MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "indimotherdead", "72y");
+            record.setWife("Motherfirstname", "NEW_WIFEFATHERLASTNAME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+            record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "wifemarrieddead");
+            record.setWifeFather("wifefathername", "NEW_WIFEFATHERLASTNAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "wifefatherdead", "60y");
+            record.setWifeMother("wifemothername", "NEW_WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wiferMotherAddress", "wifemothercomment", "wifemotherdead", "62y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             
         }
         return record;
@@ -115,8 +116,8 @@ public class MergeModelMiscMarcTest extends TestCase {
             Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien marc vers source","@S1@", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
             assertEquals("Source marc","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARC:SOUR"),"").replaceAll("@", "")).getId());
-            assertEquals("Source marc",miscRecord.getCote().getValue() + ", " +miscRecord.getFreeComment().getValue(), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
-            assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
+            assertEquals("Source marc",miscRecord.getFieldValue(Record.FieldType.cote) + ", " +miscRecord.getFieldValue(Record.FieldType.freeComment), fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
+            assertEquals("Date marc", true, miscRecord.getField(FieldType.eventDate).equalsProperty(fam.getProperty(new TagPath("FAM:MARC:DATE")) ));
             assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
             //assertEquals("Note marc",miscRecord.getGeneralComment().getValue(), fam.getValue(new TagPath("FAM:MARC:NOTE"),""));
 
@@ -224,7 +225,10 @@ public class MergeModelMiscMarcTest extends TestCase {
             Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien marc vers source","", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
             assertEquals("Source marc","", fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
-            assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
+            //assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
+            //assertEquals("Date marc", true, miscRecord.getField(FieldType.eventDate).sameAs(fam.getProperty(new TagPath("FAM:MARC:DATE"))));
+            assertEquals("Date marc", true, miscRecord.getField(FieldType.eventDate).equalsProperty(fam.getPropertyByPath("FAM:MARC:DATE")));
+            
             assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
             //assertEquals("Note marc",miscRecord.getGeneralComment().getValue(), fam.getValue(new TagPath("FAM:MARC:NOTE"),""));
 

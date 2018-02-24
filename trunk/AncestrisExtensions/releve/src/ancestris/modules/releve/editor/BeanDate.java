@@ -2,6 +2,7 @@ package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldDate;
+import genj.gedcom.GedcomException;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
@@ -13,6 +14,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.JTextField;
 import javax.swing.KeyStroke;
+import org.openide.util.Exceptions;
 
 
 
@@ -26,23 +28,18 @@ public class BeanDate extends Bean {
     //private final static ImageIcon PIT = new ImageIcon(PropertyBean.class, "/genj/gedcom/images/Time");
     private final static NestedBlockLayout H = new NestedBlockLayout("<row><choose/><date1/><label2/><date2/><phrase/></row>");
     private final static NestedBlockLayout V = new NestedBlockLayout("<table><row><choose/><date1/></row><row><label2/><date2/></row><row><phrase cols=\"2\"/></row></table>");
-    /** members */
-    //private PropertyDate.Format format;
-    private DateWidget date1;
-    //private DateWidget       date2;
-    //private PopupWidget choose;
-    //private JLabel label2;
-    //private TextFieldWidget phrase;
+    private DateWidget dateWidget;
+    private Calendar preferedCalendar = PointInTime.GREGORIAN;
+  
 
     public BeanDate() {
-
         setLayout(V.copy());
         setAlignmentX(0);
 
         // .. first date
-        date1 = new DateWidget();
-        date1.addChangeListener(changeSupport);
-        add(date1);
+        dateWidget = new DateWidget();
+        dateWidget.addChangeListener(changeSupport);
+        add(dateWidget);
 
         // do the layout and format
         setPreferHorizontal(false);
@@ -50,10 +47,10 @@ public class BeanDate extends Bean {
         setPreferedCalendar(PointInTime.GREGORIAN, PointInTime.FRENCHR);
 
         // setup default focus
-        defaultFocus = date1;
+        defaultFocus = dateWidget;
 
         // je configure le raccourci des touches de direction haut et bas pour increment ou decrementer la date d'un jour
-        JComponent date2 = (JComponent) date1.getComponent(0);
+        JComponent date2 = (JComponent) dateWidget.getComponent(0);
         if ( date2 instanceof JTextField) {
             // je desactive les touches haut et pas pour supprimer l'action du scrollbar parent
             date2.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
@@ -66,7 +63,7 @@ public class BeanDate extends Bean {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     // j'incremente la valeur
-                    date1.setValue(date1.getValue().add(1, 0, 0));
+                    dateWidget.setValue(dateWidget.getValue().add(1, 0, 0));
                 }
             });
 
@@ -74,15 +71,18 @@ public class BeanDate extends Bean {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     // je decremente la valeur
-                    date1.setValue(date1.getValue().add(-1, 0, 0));
+                    dateWidget.setValue(dateWidget.getValue().add(-1, 0, 0));
                 }
             });
         }
+     
     }
 
     public final void setPreferedCalendar(Calendar prefered, Calendar alternate) {
-        date1.setPreferedCalendar(prefered, alternate);
+        preferedCalendar = prefered;
+        dateWidget.setPreferedCalendar(prefered, alternate);
         //date2.setPreferedCalendar(prefered, alternate);
+        
     }
 
     public final void setPreferHorizontal(boolean set) {
@@ -101,36 +101,54 @@ public class BeanDate extends Bean {
      */
     @Override
     public void setFieldImpl() {
-
-        PropertyDate prop = ((FieldDate) getField()).getPropertyDate();
-        if (prop == null) {
-            PointInTime pit = new PointInTime();
-            date1.setValue(pit);
-//            date2.setValue(pit);
-//            phrase.setText("");
-            //setFormat(PropertyDate.FORMATS[0]);
-        } else {
-            PropertyDate date = prop;
-            date1.setValue(date.getStart());
-//            date2.setValue(date.getEnd());
-//            phrase.setText(date.getPhrase());
-            //setFormat(date.getFormat());
+        FieldDate fieldDate = (FieldDate) getField();
+        PropertyDate prop = null;
+        if( fieldDate != null) {
+            prop = fieldDate.getPropertyDate();
         }
+        PointInTime pit;
+        if (prop == null) {
+            pit = new PointInTime();
+        } else {
+            pit = prop.getStart();            
+            if (pit.getCalendar() != preferedCalendar) {
+                try {
+                    pit = pit.getPointInTime(preferedCalendar);
+                } catch (GedcomException ex) {
+                    // si ce n'est pas convertible, j'affiche la date avec son calendrier
+                    //Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        dateWidget.setValue(pit);
     }
 
     @Override
     protected void replaceValueImpl(Field field) {
-        PropertyDate prop = ((FieldDate) field).getPropertyDate();
-        if (prop == null) {
-            PointInTime pit = new PointInTime();
-            date1.setValue(pit);
-        } else {
-            PropertyDate date = prop;
-            date1.setValue(date.getStart());
+        FieldDate fieldDate = (FieldDate) field;
+        PropertyDate prop = null;
+        if( fieldDate != null) {
+            prop = fieldDate.getPropertyDate();
         }
+        PointInTime pit;
+        if (prop == null) {
+            pit = new PointInTime();
+        } else {
+            pit = prop.getStart();            
+            if (pit.getCalendar() != preferedCalendar) {
+                try {
+                    pit = pit.getPointInTime(preferedCalendar);
+                } catch (GedcomException ex) {
+                    // si ce n'est pas convertible, j'affiche la date avec son calendrier
+                    //Exceptions.printStackTrace(ex);
+                }
+            }
+        }
+        dateWidget.setValue(pit);
+        
         // je sélectionne le texte contenu dans le premier champ de la date
-        if (date1.getComponent(0) != null  && date1.getComponent(0) instanceof JTextField) {
-            ((JTextField)date1.getComponent(0)).selectAll();
+        if (dateWidget.getComponent(0) != null  && dateWidget.getComponent(0) instanceof JTextField) {
+            ((JTextField)dateWidget.getComponent(0)).selectAll();
         }
     }
 
@@ -139,71 +157,38 @@ public class BeanDate extends Bean {
      * Finish editing a property through proxy
      */
     @Override
-    protected void commitImpl() {
-        PropertyDate p = ((FieldDate) getField()).getPropertyDate();
-
-        //p.setValue(format, date1.getValue(), date2.getValue(), phrase.getText());
-        p.setValue(PropertyDate.DATE, date1.getValue(), null, "");
+    protected void commitImpl() {        
+        String result;
+        PointInTime pit = dateWidget.getValue();
+        if( pit != null) {
+            if( dateWidget.getCalendar() != PointInTime.GREGORIAN) {
+                // je convertis la  date dans le calendrier GREGORIAN
+                try {
+                    pit =  pit.getPointInTime(PointInTime.GREGORIAN);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
+                    return;
+                }
+            } 
+            
+            int  day2 = pit.getDay();
+            int month2 = pit.getMonth();        
+            int  year2 = pit.getYear();   
+            if ( year2 == PointInTime.UNKNOWN ) {
+                result = "";
+            } else if (month2 == PointInTime.UNKNOWN  ) {
+                result = String.format("%04d", year2);
+            } else if (day2 == PointInTime.UNKNOWN) {
+                result = String.format("%02d/%04d", month2 +1 , year2);
+            } else {
+                result = String.format("%02d/%02d/%04d", day2 +1 , month2+1 , year2);
+            }
+        } else {
+            result = "";
+        }
+        
+        setFieldValue(result);
 
     }
 
-    /**
-     * Setup format
-     */
-//    private void setFormat(PropertyDate.Format set) {
-//
-//        // already?
-//        if (format == set) {
-//            return;
-//        }
-//
-//        // signal
-//        changeSupport.fireChangeEvent();
-//
-//        // remember
-//        format = set;
-//
-//        // prepare chooser with 1st prefix
-//        choose.setToolTipText(format.getName());
-//        String prefix1 = format.getPrefix1Name();
-//        choose.setIcon(prefix1 == null ? PIT : null);
-//        choose.setText(prefix1 == null ? "" : prefix1);
-//
-//        // check label2/date2 visibility
-//        if (format.isRange()) {
-//            date2.setVisible(true);
-//            label2.setVisible(true);
-//            label2.setText(format.getPrefix2Name());
-//        } else {
-//            date2.setVisible(false);
-//            label2.setVisible(false);
-//        }
-//
-//        // check phrase visibility
-//        phrase.setVisible(format.usesPhrase());
-//
-//        // show
-//        revalidate();
-//        repaint();
-//    }
-
-
-//    /**
-//     * Action for format change
-//     */
-//    private class ChangeFormat extends Action2 {
-//
-//        private PropertyDate.Format formatToSet;
-//
-//        private ChangeFormat(PropertyDate.Format set) {
-//            formatToSet = set;
-//            super.setText(set.getName());
-//        }
-//
-//        @Override
-//        public void actionPerformed(ActionEvent event) {
-//            setFormat(formatToSet);
-//            date1.requestFocusInWindow();
-//        }
-//    } //ChangeFormat
 }
