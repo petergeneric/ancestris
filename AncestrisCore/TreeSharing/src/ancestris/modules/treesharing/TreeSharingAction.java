@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
+import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 
 @ActionID(
@@ -25,7 +26,10 @@ import org.openide.awt.ActionRegistration;
         iconBase = "ancestris/modules/treesharing/resources/treesharing.png",
         displayName = "#CTL_TreeSharingAction"
 )
-@ActionReference(path = "Menu/Tools", position = 40) //, separatorBefore = 93, separatorAfter = 95)
+@ActionReferences({
+    @ActionReference(path = "Toolbars/Misc", position = 100),
+    @ActionReference(path = "Menu/Tools", position = -80),
+})
 public final class TreeSharingAction implements ActionListener {
 
     @Override

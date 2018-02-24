@@ -18,7 +18,7 @@ import java.util.Calendar;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebDays extends WebSection {

@@ -72,6 +72,7 @@ public class WebBook {
 
     private Gedcom gedcom;
     public Log log;
+    private genj.util.Registry registry;
     public WebBookParams wp;
     private WebHelper wh;
     //
@@ -106,6 +107,7 @@ public class WebBook {
      */
     public WebBook(Gedcom gedcom, Log log) throws InterruptedException {
         this.gedcom = gedcom;
+        registry = gedcom.getRegistry();
         this.log = log;
         wp = new WebBookParams(gedcom);
         wh = new WebHelper(gedcom, log, wp);
@@ -257,6 +259,8 @@ public class WebBook {
         try {
             URI uri = new URI(fileStr);
             if (Desktop.isDesktopSupported()) {
+                log.write(uri.toString());
+                registry.put("localwebsite", uri.toString());
                 Desktop.getDesktop().browse(uri);
             } else {
             }

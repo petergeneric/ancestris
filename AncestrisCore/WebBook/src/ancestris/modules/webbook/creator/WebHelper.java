@@ -42,7 +42,7 @@ import org.openide.filesystems.FileUtil;
  * Tools for WebBook: - file and directory manipulation - gedcom sets - misc
  *
  *
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebHelper {
@@ -53,6 +53,7 @@ public class WebHelper {
     //
     public Indi indiDeCujus = null;
     private List<Indi> individualsList = null;
+    private List<WebMedia.Photo> photosList = null;
     private List<Source> sourcesList = null;
     private FTPRegister uploadRegister = null;
     /**
@@ -403,19 +404,56 @@ public class WebHelper {
     }
 
     /**
+     * Memorise photos list
+     */
+    public void setPhotos(List<WebMedia.Photo> photos) {
+        photosList = photos;
+    }
+    
+    /**
+     * Get photos for an entity
+     */
+    public List<WebMedia.Photo> getPhoto(Entity entity) {
+        List<WebMedia.Photo> ret = new ArrayList<WebMedia.Photo>();
+        for (WebMedia.Photo photo : photosList) {
+            if (photo.getEntity().equals(entity)) {
+                ret.add(photo);
+            }
+        }
+        return ret;
+    }
+    
+    
+    /**
      * Get title of a media
      */
     public String getTitle(PropertyFile media, String defchar) {
-        Property ptitle = media.getParent().getProperty("TITL");
-        if (ptitle != null && ptitle.toString().length() != 0) {
-            return ptitle.toString();
+        String str = "";
+        // Get TITL in case of 5.5.1 OBJE record
+        Property ptitle = media.getProperty("TITL");  
+        if (ptitle != null) {
+            str = ptitle.getDisplayValue().trim();
+            if (!str.isEmpty()) {
+                return str;
+            }
         }
+        
+        // Else get TITL in case of link OBJE
+        ptitle = media.getParent().getProperty("TITL");  
+        if (ptitle != null) {
+            str = ptitle.getDisplayValue().trim();
+            if (!str.isEmpty()) {
+                return str;
+            }
+        }
+        
+        // Else, use filename
         File file = media.getFile();
         if (file != null) {
             String filename = file.getName();
             return getCleanFileName(filename, defchar);
         }
-        String str = media.toString();
+        str = media.toString();
         return str.substring(str.lastIndexOf(File.separator) + 1);
     }
 

@@ -25,7 +25,7 @@ import java.util.Comparator;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebCitiesDetails extends WebSection {

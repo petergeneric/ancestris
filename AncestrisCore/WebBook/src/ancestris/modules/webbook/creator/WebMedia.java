@@ -15,18 +15,19 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
+import genj.gedcom.Media;
+import genj.gedcom.PropertyMedia;
 
 import java.io.File;
 import java.util.Collections;
 import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Comparator;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebMedia extends WebSection {
@@ -34,7 +35,7 @@ public class WebMedia extends WebSection {
     private final static String POPUPTAG = "popup.htm";
     private int nbPhotoPerRow = 3;
     //
-    List<PropertyFile> medias = null;
+    private List<Photo> photos = null;
 
     /**
      * Constructor
@@ -53,28 +54,36 @@ public class WebMedia extends WebSection {
         // Regular initialisation
         init(trs("TXT_Media"), "media", "media_", formatFromSize(wh.getNbIndis()), 0, 30);
 
-        // Build list of media, for medias of INDI and FAM but that are not under a SOUR.
+        // Build list of media, for photos of INDI and FAM but that are not under a SOUR.
         List<Entity> entities = new ArrayList<Entity>();
         entities.addAll(wh.gedcom.getEntities(Gedcom.INDI));
         entities.addAll(wh.gedcom.getEntities(Gedcom.FAM));
-        medias = new ArrayList<PropertyFile>();
-        List<Property> mediasOfEntity = new ArrayList<Property>();
-        for (Iterator<Entity> ite = entities.iterator(); ite.hasNext();) {
-            Entity ent = ite.next();
-            mediasOfEntity.addAll(ent.getProperties(PropertyFile.class));
-            for (Iterator<Property> itm = mediasOfEntity.iterator(); itm.hasNext();) {
-                PropertyFile media = (PropertyFile)itm.next();
-                if (!isUnderSource(media)) {
-                    medias.add(media);
+        photos = new ArrayList<Photo>();
+        List<PropertyFile> propsToAdd = new ArrayList<PropertyFile>();
+        for (Entity ent : entities) {
+            // Look for OBJE which are not underneath SOUR
+            for (Property obje : ent.getAllProperties("OBJE")) {
+                if (obje != null && !isUnderSource(obje)) {  // obje exists and is not a source
+                    if (obje instanceof PropertyMedia) {
+                        Media media = (Media) ((PropertyMedia) obje).getTargetEntity();
+                        propsToAdd = media.getProperties(PropertyFile.class);
+                    } else {
+                        propsToAdd = obje.getProperties(PropertyFile.class);
+                    }
+                    for (PropertyFile pFile : propsToAdd) {
+                        photos.add(new Photo(ent, pFile));
+                    }
                 }
             }
-            mediasOfEntity.clear();
         }
-        Collections.sort(medias, sortEntities);
+        Collections.sort(photos, sortPhotos);
 
         // Calculations
-        calcLetters(medias);
-        calcPages(medias);
+        calcLetters(photos);
+        calcPages(photos);
+        
+        // memorise photos
+        wh.setPhotos(photos);
     }
 
     /**
@@ -95,7 +104,7 @@ public class WebMedia extends WebSection {
 
         // Generate detail pages
         File dir = wh.createDir(wh.getDir().getAbsolutePath() + File.separator + sectionDir, true);
-        exportData(dir, medias);
+        exportData(dir, photos);
 
         wh.log.write(POPUPTAG + trs("EXEC_DONE"));
 
@@ -104,7 +113,7 @@ public class WebMedia extends WebSection {
     /**
      * Exports data for page
      */
-    private void exportData(File dir, List<PropertyFile> medias) {
+    private void exportData(File dir, List<Photo> photos) {
 
         // Go through items to display and produce corresponding pages
         String fileStr = "";
@@ -112,7 +121,7 @@ public class WebMedia extends WebSection {
         PrintWriter out = null;
         String mediafile = "";
         int cpt = 0;
-        int nbMedia = medias.size();
+        int nbMedia = photos.size();
         int previousPage = 0,
                 currentPage = 0,
                 nextPage = 0,
@@ -143,12 +152,11 @@ public class WebMedia extends WebSection {
 
         String file_title = "", file_entity = "", href = "", anchor = "";
         char last = ' ';
-        for (Iterator <PropertyFile>it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = it.next();
-            href = getPageForMedia(media);
-            file_entity = wrapEntity(media.getEntity());
-            file_title = wrapString(media, wh.getTitle(media, DEFCHAR));
-            anchor = htmlAnchorText(getEntityName(media.getEntity()));
+        for (Photo photo : photos) {
+            href = getPageForMedia(photo.getFile());
+            file_entity = wrapEntity(photo.getEntity());
+            file_title = wrapString(photo.getFile(), photo.getTitle());
+            anchor = htmlAnchorText(getEntityName(photo.getEntity()));
             if (anchor.length() > 0 && Character.toUpperCase(anchor.charAt(0)) != last) {
                 last = Character.toUpperCase(anchor.charAt(0));
                 String l = String.valueOf(last);
@@ -175,8 +183,7 @@ public class WebMedia extends WebSection {
         // export detailed pages
         cpt = 0;
         out = null;
-        for (Iterator<PropertyFile> it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = it.next();
+        for (Photo photo : photos) {
             cpt++;
             currentPage = ((cpt - 1) / nbPerPage) + 1;
             previousPage = (currentPage == 1) ? 1 : currentPage - 1;
@@ -197,7 +204,7 @@ public class WebMedia extends WebSection {
                 exportLinks(out, mediafile, 0, previousPage, nextPage, lastPage);
                 openTable(out);
             }
-            exportSectionDetails(out, media, dir, cpt);
+            exportSectionDetails(out, photo, dir, cpt);
             // .. next source
         }
         if (out != null) {
@@ -255,7 +262,7 @@ public class WebMedia extends WebSection {
     /**
      * Exports section details
      */
-    private void exportSectionDetails(PrintWriter out, PropertyFile media, File dir, int cpt) {
+    private void exportSectionDetails(PrintWriter out, Photo photo, File dir, int cpt) {
         //
         // Small pictures are to be retrieved from the already created pictures (by report on individual details)
         // (e.g. ../details/media/individuals/xxx.jpg)
@@ -271,11 +278,11 @@ public class WebMedia extends WebSection {
 
         // open cell
         out.println("<td class=\"thumbnail-col\" >");
-        out.println("<a name=\"" + media.hashCode() + "\"></a>");
+        out.println("<a name=\"" + photo.getFile().hashCode() + "\"></a>");
 
         // print media picture
-        Entity target = media.getEntity();
-        out.println(wrapMedia(dir, media, "", true, !wp.param_media_CopyMedia.equals("1"), true, true, "", target.getValue().trim(), true, "OBJE:NOTE", "tooltip"));
+        Entity target = photo.getEntity();
+        out.println(wrapMedia(dir, photo.getFile(), "", true, !wp.param_media_CopyMedia.equals("1"), true, true, "", target.getValue().trim(), true, "OBJE:NOTE", "tooltip"));
 
         // print entity name
         out.println(wrapEntity(target, DT_BREAK, DT_LASTFIRST, DT_ICON, DT_LINK, DT_SOSA, DT_ID));
@@ -290,9 +297,9 @@ public class WebMedia extends WebSection {
     /**
      * Comparator to sort entities
      */
-    private Comparator<Property> sortEntities = new Comparator<Property>() {
+    private Comparator<Photo> sortPhotos = new Comparator<Photo>() {
 
-        public int compare(Property p1, Property p2) {
+        public int compare(Photo p1, Photo p2) {
             if ((p1 == null) && (p2 != null)) {
                 return -1;
             }
@@ -345,13 +352,12 @@ public class WebMedia extends WebSection {
     /**
      * Calculate pages for section details
      */
-    private void calcPages(List<PropertyFile> medias) {
+    private void calcPages(List<Photo> photos) {
         String mediafile = "";
         int cpt = 0;
-        for (Iterator<PropertyFile> it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = it.next();
-            mediafile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix + "#" + media.hashCode();
-            mediaPage.put(Integer.valueOf(media.hashCode()), mediafile);
+        for (Photo photo : photos) {
+            mediafile = sectionPrefix + String.format(formatNbrs, (cpt / nbPerPage) + 1) + sectionSuffix + "#" + photo.getFile().hashCode();
+            mediaPage.put(photo.getFile().hashCode(), mediafile);
             cpt++;
         }
     }
@@ -359,14 +365,14 @@ public class WebMedia extends WebSection {
     /**
      * Provide link to id to outside caller
      */
-    public String getPageForMedia(PropertyFile media) {
-        return (media == null ? "" : mediaPage.get(Integer.valueOf(media.hashCode())));
+    public String getPageForMedia(PropertyFile pFile) {
+        return (pFile == null ? "" : mediaPage.get(pFile.hashCode()));
     }
 
     /**
      * Calculate if there is a link to the letters
      */
-    private void calcLetters(List<PropertyFile> medias) {
+    private void calcLetters(List<Photo> photos) {
 
         // Initialise to zero
         linkForLetter.put(DEFCHAR, "0");
@@ -376,9 +382,8 @@ public class WebMedia extends WebSection {
 
         // Calculate
         char letter = ' ';
-        for (Iterator<PropertyFile> it = medias.iterator(); it.hasNext();) {
-            PropertyFile media = it.next();
-            String str = htmlAnchorText(getEntityName(media.getEntity()));
+        for (Photo photo : photos) {
+            String str = htmlAnchorText(getEntityName(photo.getEntity()));
             if (str == null) {
                 continue;
             }
@@ -401,5 +406,33 @@ public class WebMedia extends WebSection {
         }
         return true;
     }
+    
+    
+    
+    public class Photo {
+        private Entity entity = null;
+        private PropertyFile pFile = null;
+        private String title = null;
+        
+        public Photo(Entity entity, PropertyFile pFile) {
+            this.entity = entity;
+            this.pFile = pFile;
+            this.title = wh.getTitle(pFile, DEFCHAR);
+        }
+        
+        public Entity getEntity() {
+            return entity;
+        }
+
+        public String getTitle() {
+            return entity.getDisplayValue() + " " + title;
+        }
+
+        public PropertyFile getFile() {
+            return pFile;
+        }
+    }
+    
+    
 } // End_of_Report
 

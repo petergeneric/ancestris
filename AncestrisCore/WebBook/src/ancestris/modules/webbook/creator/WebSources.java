@@ -18,6 +18,8 @@ import genj.gedcom.TagPath;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.WebBookVisualPanel3;
+import genj.gedcom.Media;
+import genj.gedcom.PropertyMedia;
 import java.io.File;
 import java.io.PrintWriter;
 
@@ -31,7 +33,7 @@ import org.openide.util.NbBundle;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebSources extends WebSection {
@@ -215,7 +217,22 @@ public class WebSources extends WebSection {
         // Initialises anchor, list of files and list of related entities and determine if source is private along the way
         String anchor = src.getId();
         List<PropertyFile> files = new ArrayList<PropertyFile>();              // Files of sources in SOUR and related entities for that SOUR
-        files.addAll(src.getProperties(PropertyFile.class));                   // Put first all files directly attached to SOUR entity
+        
+        // First, put all files attached to SOUR entity
+        List<PropertyFile> propsToAdd = new ArrayList<PropertyFile>();
+        for (Property obje : src.getAllProperties("OBJE")) {
+            if (obje != null) {
+                if (obje instanceof PropertyMedia) {
+                    Media media = (Media) ((PropertyMedia) obje).getTargetEntity();
+                    propsToAdd = media.getProperties(PropertyFile.class);
+                } else {
+                    propsToAdd = obje.getProperties(PropertyFile.class);
+                }
+                for (PropertyFile pFile : propsToAdd) {
+                    files.add(pFile);
+                }
+            }
+        }
 
         Property[] props = src.getProperties(PATH2XREF);
         List<Entity> list = new ArrayList<Entity>();                           // List of related entities
@@ -262,12 +279,12 @@ public class WebSources extends WebSection {
             Property pdate = prop.getProperty("DATE");
             String date = "";
             if (pdate != null) {
-                date = pdate.toString();
+                date = pdate.getDisplayValue();
             }
             Property pplace = prop.getProperty("PLAC");
             String place = "";
             if (pplace != null) {
-                place = pplace.toString().replaceAll(",", " ");
+                place = pplace.getDisplayValue().replaceAll(",", " ");
             }
             printProperty(out, prop, ", " + date + " - " + place, "srcitems2");
         }
@@ -287,10 +304,9 @@ public class WebSources extends WebSection {
         // Print pictures of SOUR entity
         if ((wp.param_media_GeneSources.equals("1")) && !files.isEmpty()) {
             out.println("<span class=\"srcitems1\">" + htmlText(trs("src_media")) + ":</span><span class=\"srcimage\">");
-            for (Iterator <PropertyFile>it = files.iterator(); it.hasNext();) {
-                PropertyFile file = it.next();
+            for (PropertyFile file : files) {
                 out.println("<span class=\"srcimage1\">");
-                out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"), true, true, "", "", true, PATH2DATATEXT.toString(), "tooltipL"));
+                out.println(wrapMedia(dir, file, "", true, !wp.param_media_CopySources.equals("1"), true, true, "", "", true, "OBJE:NOTE", "tooltipL"));
                 out.println("</span><span class=\"srcimage2\">" + SPACE + "</span>");
             }
             out.println("</span>");

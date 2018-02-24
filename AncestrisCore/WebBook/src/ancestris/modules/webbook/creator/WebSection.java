@@ -13,6 +13,7 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
+import genj.gedcom.PropertyNote;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -29,7 +30,7 @@ import java.util.TreeMap;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class WebSection {
@@ -62,7 +63,7 @@ public class WebSection {
     private String keywords = "";
     private String siteDesc = "";
     private String language = "";
-    private boolean hidePrivateData = true;
+    public boolean hidePrivateData = true;
     //
     public String includesDir = "includes";
     public String includeInit = "awb_init.php";
@@ -933,8 +934,8 @@ public class WebSection {
         }
         Collections.sort(listEvents);
 
-        for (Iterator <String>s = listEvents.iterator(); s.hasNext();) {
-            String event = s.next();   // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
+        for (String event : listEvents) {
+            // [0]date . [1]description . [2]source_id . [3]event_tag . [4]media_id . [5] notes
             String[] eventBits = event.split("\\|", -1);
             // eventIcon
             strClear += "<img src='" + themeDirLink + "ev_" + eventBits[3] + ".png" + "' alt='' />";
@@ -1048,7 +1049,7 @@ public class WebSection {
                 if ("RESI".compareTo(ev[i]) == 0) {
                     Property city = props[j].getProperty(new TagPath(".:ADDR:CITY"));
                     Property ctry = props[j].getProperty(new TagPath(".:ADDR:CTRY"));
-                    format3 = " " + ((city == null) ? "" : city.toString() + ", ") + ((ctry == null) ? "" : ctry.toString());
+                    format3 = " " + ((city == null) ? "" : city.getDisplayValue() + ", ") + ((ctry == null) ? "" : ctry.getDisplayValue());
                 }
                 String format = format1 + format2 + " : " + format3;
                 description = props[j].format(format).trim();
@@ -1071,8 +1072,8 @@ public class WebSection {
                 String media = "";
                 Property[] pMedias = props[j].getProperties("OBJE");
                 if (pMedias != null && pMedias.length > 0) {
-                    for (int k = 0; k < pMedias.length; k++) {
-                        PropertyFile pFile = (PropertyFile) pMedias[k].getProperty("FILE");
+                    for (Property pMedia : pMedias) {
+                        PropertyFile pFile = (PropertyFile) pMedia.getProperty("FILE");
                         media += wrapMedia(null, pFile, from2mediaDir, false, false, true, false, buildLinkTheme(this, themeDir) + "media.png", "", false, "OBJE:NOTE", "tooltip");
                     }
                 }
@@ -1080,8 +1081,7 @@ public class WebSection {
                 String note = "";
                 Property[] pNotes = props[j].getProperties("NOTE");
                 if (pNotes != null && pNotes.length > 0) {
-                    for (int k = 0; k < pNotes.length; k++) {
-                        Property pNote = pNotes[k];
+                    for (Property pNote : pNotes) {
                         note += wrapNote(buildLinkTheme(this, themeDir) + "note.png", pNote);
                     }
                 }
@@ -1215,15 +1215,10 @@ public class WebSection {
         // Build title
         String titleHidden = privDisplay;
         String title = "";
-        Property pProp = file.getParent().getProperty("TITL");
-        if (pProp == null || pProp.getValue().trim().isEmpty()) {
-            if (defaultTitle != null && !defaultTitle.trim().isEmpty()) {
-                title = defaultTitle;
-            } else {
-                title = wh.getTitle(file, DEFCHAR);
-            }
+        if (defaultTitle != null && !defaultTitle.trim().isEmpty()) {
+            title = defaultTitle;
         } else {
-            title = pProp.getValue();
+            title = wh.getTitle(file, DEFCHAR);
         }
 
         // Build source image
@@ -1249,7 +1244,7 @@ public class WebSection {
         String textHidden = privDisplay;
         String text = "";
         Property prop = file.getParent();
-        while (prop != null && !(prop instanceof Entity)) {
+        while (prop != null) {
             Property pText = prop.getProperty(new TagPath(textPath));
             if (pText == null) {
                 prop = prop.getParent();
@@ -1302,6 +1297,10 @@ public class WebSection {
      * Buld note bloc (assuming note record included in property)
      */
     private String wrapNote(String pictureFile, Property note) {
+        // Get note entity if a property note
+        if (note instanceof PropertyNote) {
+            note = ((PropertyNote)note).getTargetEntity();
+        }
         // Get text
         String noteText = "<i>" + ((note == null || note.getValue().trim().isEmpty()) ? "" : htmlText(note.getValue())) + "</i>";
         // display note

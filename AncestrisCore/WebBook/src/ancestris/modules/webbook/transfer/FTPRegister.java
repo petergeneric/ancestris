@@ -16,12 +16,10 @@ import java.security.MessageDigest;
 import java.util.prefs.BackingStoreException;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.windows.IOProvider;
-import org.openide.windows.InputOutput;
 
 /**
  * Ancestris
- * @author Frederic Lapeyre <frederic@lapeyre-frederic.com>
+ * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
 public class FTPRegister {
