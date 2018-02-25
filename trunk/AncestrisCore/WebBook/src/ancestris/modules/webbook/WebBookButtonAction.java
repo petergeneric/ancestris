@@ -50,6 +50,7 @@ public class WebBookButtonAction implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         Context context;
         if ((context = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
+            boolean regenerate = false;
             Gedcom gedcom = context.getGedcom();
             registry = gedcom.getRegistry();
             String latestLink = registry.get("localwebsite", "");
@@ -57,9 +58,14 @@ public class WebBookButtonAction implements ActionListener {
                 try {
                     URI uri = new URI(latestLink);
                     Desktop.getDesktop().browse(uri);
+                    return;
                 } catch (Exception ex) {
+                    regenerate = true;
                 }
             } else {
+                regenerate = true;
+            }
+            if (regenerate) {
                 new WebBookWizardAction().actionPerformed(null);
             }
         }
