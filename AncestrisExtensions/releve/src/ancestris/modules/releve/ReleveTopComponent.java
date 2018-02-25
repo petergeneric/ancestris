@@ -22,8 +22,8 @@ import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Context;
 import genj.util.EnvironmentChecker;
 import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.modules.releve.merge.ViewWrapperManager;
 import ancestris.modules.releve.imageAligner.AlignerFrame;
+import ancestris.modules.releve.dnd.RecordDropTargetListener;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.util.swing.FileChooserBuilder;
 import java.awt.Component;
@@ -241,7 +241,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         }       
 
         // j'active le DnD pour les Treeview
-        ViewWrapperManager.addTreeViewListener();  
+        RecordDropTargetListener.addTreeViewListener();  
         
     }
 
@@ -308,7 +308,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         AlignerFrame.closeAlignImage();
                 
         // j'arrete le listener des vues
-        ViewWrapperManager.removeTreeViewListener();
+        RecordDropTargetListener.removeTreeViewListener();
         
         //
         AncestrisPlugin.unregister(this);

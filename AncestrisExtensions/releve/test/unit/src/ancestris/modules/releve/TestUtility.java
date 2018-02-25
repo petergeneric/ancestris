@@ -1,5 +1,6 @@
 package ancestris.modules.releve;
 
+import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeDialog;
 import ancestris.modules.releve.merge.MergeRecord;
 import ancestris.modules.releve.model.Record;
@@ -282,8 +283,8 @@ public class TestUtility extends TestCase {
         return null;
     }
     
-    public void showMergeDialog(Gedcom gedcom, MergeRecord mergeRecord ) {
-        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, mergeRecord, true);
+    public void showMergeDialog(Gedcom gedcom, TransferableRecord.TransferableData data ) {
+        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, data, true);
         TestUtility.waitForDialogClose(dialog);
     }
             

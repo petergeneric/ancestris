@@ -1,6 +1,6 @@
 package ancestris.modules.releve.table;
 
-import ancestris.modules.releve.merge.ViewWrapperManager;
+import ancestris.modules.releve.merge.SelectionManager;
 import ancestris.modules.releve.model.FieldDate;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.FieldSimpleValue;
@@ -151,9 +151,9 @@ public class ReleveTable extends JTable {
                         Entity entity = gedcomLink.getEntity();
                         if (entity != null) {
                             if (e.getClickCount() == 2) {
-                                ViewWrapperManager.setRootAllTreeview(property);
+                                SelectionManager.setRootAllTreeview(property);
                             } else {
-                                ViewWrapperManager.showEntityAllTreeview(property);
+                                SelectionManager.showEntityAllTreeview(property);
                             }
                         }
                     }
