@@ -39,9 +39,10 @@
             <file name="CalcTopComponent.settings" url="CalcTopComponentSettings.xml"/>
         </folder>
         <folder name="Modes">
-            <folder name="ancestris-nav">
+            <folder name="ancestris-modules-calculatrice">
                 <file name="CalcTopComponent.wstcref" url="CalcTopComponentWstcref.xml"/>
             </folder>
+            <file name="ancestris-modules-calculatrice.wsmode" url="ancestris-modules-calculatrice.wsmode"/>
         </folder>
     </folder>
 </filesystem>

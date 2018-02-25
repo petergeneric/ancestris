@@ -10,6 +10,7 @@ import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
 import org.openide.util.ImageUtilities;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.windows.Mode;
 
 /**
  * Top component which displays something.
@@ -103,7 +104,17 @@ public final class CalcTopComponent extends TopComponent {
 
     @Override
     public int getPersistenceType() {
-        return TopComponent.PERSISTENCE_ALWAYS;
+        //return TopComponent.PERSISTENCE_ALWAYS;
+        return TopComponent.PERSISTENCE_NEVER;   
+    }
+
+    @Override
+    public void open() {
+         Mode m = WindowManager.getDefault().findMode ("ancestris-modules-calculatrice");
+         if (m != null) {
+            m.dockInto(this);
+         }
+         super.open();
     }
 
     @Override
@@ -120,7 +131,7 @@ public final class CalcTopComponent extends TopComponent {
     void writeProperties(java.util.Properties p) {
         // better to version settings since initial version as advocated at
         // http://wiki.apidesign.org/wiki/PropertyFiles
-        p.setProperty("version", "1.0");
+        //p.setProperty("version", "1.0");
     }
 
     Object readProperties(java.util.Properties p) {
