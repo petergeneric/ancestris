@@ -68,8 +68,7 @@ public class StatsPanel extends javax.swing.JPanel {
                     MemberProfile mp = list.get(jTable1.getModel().getValueAt(row, 1)).profile;
                     if (mp == null) return;
                     DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
-                            new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
-
+                            new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setDialogId("profilpanel").setOptionType(DialogManager.OK_ONLY_OPTION).show();
                 }
             }
         });
@@ -195,7 +194,9 @@ public class StatsPanel extends javax.swing.JPanel {
     
     class MyTableModel extends AbstractTableModel {
 
-        String[] columnNames = { 
+        private final ImageIcon NOPROFILE = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/nophotosmall.png"));
+        
+        private String[] columnNames = { 
             NbBundle.getMessage(StatsData.class, "COL_connections"), 
             NbBundle.getMessage(StatsData.class, "COL_member"), 
             NbBundle.getMessage(StatsData.class, "COL_match"),  
@@ -203,7 +204,7 @@ public class StatsPanel extends javax.swing.JPanel {
             NbBundle.getMessage(StatsData.class, "COL_endDate"),
             NbBundle.getMessage(StatsData.class, "COL_profile")
         };
-        Object[][] data;
+        private Object[][] data;
         
         private MyTableModel(Map<String, StatsData> list) {
             if (list == null || list.isEmpty()) {
@@ -218,7 +219,8 @@ public class StatsPanel extends javax.swing.JPanel {
                 data[i][2] = list.get(member).match;
                 data[i][3] = formatter.format(list.get(member).startDate);
                 data[i][4] = formatter.format(list.get(member).endDate);
-                data[i][5] = (ImageIcon) ((list.get(member).profile != null) ? TreeSharingOptionsPanel.getPhoto(1, list.get(member).profile.photoBytes) : new ImageIcon());
+                MemberProfile mpf = list.get(member).profile;
+                data[i][5] = (ImageIcon) ((mpf != null && mpf.photoBytes != null) ? TreeSharingOptionsPanel.getPhoto(1, mpf.photoBytes) : NOPROFILE);
                 i++;
             }
         }

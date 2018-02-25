@@ -194,7 +194,7 @@ public class AncestrisFriend extends JInternalFrame {
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
         DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
-                            new ProfilePanel(memberProfile, myProfile)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                            new ProfilePanel(memberProfile, myProfile)).setMessageType(DialogManager.PLAIN_MESSAGE).setDialogId("profilpanel").setOptionType(DialogManager.OK_ONLY_OPTION).show();
     }//GEN-LAST:event_jButton3ActionPerformed
 
 

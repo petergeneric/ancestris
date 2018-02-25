@@ -81,6 +81,7 @@ import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
+import org.openide.windows.WindowManager;
 
 /**
  * 
@@ -957,28 +958,33 @@ public class TreeSharingTopComponent extends TopComponent {
     
     
     public void updateStatsDisplay() {
-        if (connectionStats == null || connectionStats.isEmpty()) {
-            statsButton.setEnabled(false);
-            rcvdConnections.setText("");
-            rcvdUniqueMembers.setText("");
-            rcvdUniqueFriends.setText("");
-        } else {
-            statsButton.setEnabled(true);
-            int rcvdConnectionsNb = 0;
-            int rcvdUniqueMembersNb = 0;
-            int rcvdUniqueFriendsNb = 0;
-            for (String member : connectionStats.keySet()) {
-                StatsData stats = connectionStats.get(member);
-                rcvdConnectionsNb += stats.connections;
-                rcvdUniqueMembersNb++;
-                if (stats.match) {
-                    rcvdUniqueFriendsNb++;
+        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+            public void run() {
+                if (connectionStats == null || connectionStats.isEmpty()) {
+                    statsButton.setEnabled(false);
+                    rcvdConnections.setText("");
+                    rcvdUniqueMembers.setText("");
+                    rcvdUniqueFriends.setText("");
+                } else {
+                    statsButton.setEnabled(true);
+                    int rcvdConnectionsNb = 0;
+                    int rcvdUniqueMembersNb = 0;
+                    int rcvdUniqueFriendsNb = 0;
+                    for (String member : connectionStats.keySet()) {
+                        StatsData stats = connectionStats.get(member);
+                        rcvdConnectionsNb += stats.connections;
+                        rcvdUniqueMembersNb++;
+                        if (stats.match) {
+                            rcvdUniqueFriendsNb++;
+                        }
+                    }
+                    rcvdConnections.setText("" + rcvdConnectionsNb);
+                    rcvdUniqueMembers.setText("" + rcvdUniqueMembersNb);
+                    rcvdUniqueFriends.setText("" + rcvdUniqueFriendsNb);
                 }
             }
-            rcvdConnections.setText(""+rcvdConnectionsNb);
-            rcvdUniqueMembers.setText(""+rcvdUniqueMembersNb);
-            rcvdUniqueFriends.setText(""+rcvdUniqueFriendsNb);
-        }
+        });
+        
     }
 
     public void setResetStats() {
