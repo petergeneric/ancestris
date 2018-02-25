@@ -8,9 +8,6 @@ import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
-import java.util.Collection;
-import java.util.Iterator;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
 
@@ -204,62 +201,8 @@ public final class WebBookVisualPanel2 extends JPanel {
         if (gedcom == null) {
             return null;
         }
-        // Get all individuals and stop when sosa 1 is found
-        Collection<Indi> entities = (Collection<Indi>) gedcom.getEntities(Gedcom.INDI);
-        Property[] props = null;
-        String sosaStr = "";
-        for (Iterator<Indi> it = entities.iterator(); it.hasNext();) {
-            Indi indi = it.next();
-            props = indi.getProperties(Indi.TAG_SOSA);
-            if (props == null || props.length == 0) {
-                props = indi.getProperties(Indi.TAG_SOSADABOVILLE);
-                if (props == null) {
-                    continue;
-                }
-            }
-            for (int i = 0; i < props.length; i++) {
-                Property prop = props[i];
-                sosaStr = prop.getDisplayValue();
-                if (getNb(sosaStr) == 1) {
-                    return indi;
-                }
-            }
-        }
-
-        // If we are here, no sosa was found, take first element
-        return entities.iterator().next();
+        return gedcom.getDeCujusIndi();
     }
-
-    /**
-     * Get nb from string removing left and right letters
-     */
-    private int getNb(String str) {
-
-        if (str == null || str.isEmpty()) {
-            return 0;
-        }
-        int sosaNb = 0;
-
-        int start = 0, end = str.length()-1;
-        while (start <= end && !Character.isDigit(str.charAt(start))) {
-            start++;
-        }
-        end = start;
-        while ((end <= str.length() - 1) && Character.isDigit(str.charAt(end))) {
-            end++;
-        }
-        if (end == start) {
-            return 0;
-        } else {
-            try {
-                sosaNb = Integer.parseInt(str.substring(start, end));
-            } catch (Exception e) {
-                sosaNb = 0;
-            }
-        }
-        return sosaNb;
-    }
-
 
 
     

@@ -1029,7 +1029,7 @@ public class Gedcom implements Comparable {
             if (props != null) {
                 for (Property prop : props) {
                     sosaStr = prop.getDisplayValue();
-                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1))) {
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1)) || (getNb(sosaStr) == 1)) {
                         return indi;
                     }
                 }
@@ -1038,7 +1038,7 @@ public class Gedcom implements Comparable {
             if (props != null) {
                 for (Property prop : props) {
                     sosaStr = prop.getDisplayValue();
-                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2))) {
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2)) || (getNb(sosaStr) == 1)) {
                         return indi;
                     }
                 }
@@ -1048,6 +1048,38 @@ public class Gedcom implements Comparable {
         return null;
     }
 
+    /**
+     * Get nb from string removing left and right letters
+     */
+    private int getNb(String str) {
+
+        if (str == null || str.isEmpty()) {
+            return 0;
+        }
+        int sosaNb = 0;
+
+        int start = 0, end = str.length()-1;
+        while (start <= end && !Character.isDigit(str.charAt(start))) {
+            start++;
+        }
+        end = start;
+        while ((end <= str.length() - 1) && Character.isDigit(str.charAt(end))) {
+            end++;
+        }
+        if (end == start) {
+            return 0;
+        } else {
+            try {
+                sosaNb = Integer.parseInt(str.substring(start, end));
+            } catch (Exception e) {
+                sosaNb = 0;
+            }
+        }
+        return sosaNb;
+    }
+
+
+    
 
     /**
      * Returns a type for given tag
