@@ -696,13 +696,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
         for (String key : keys) {
             if (key.startsWith("memberps-")) {
-                String pseudo = key.substring(PSEUDO_MAXLENGTH);
+                String pseudo = key.substring(Math.min(key.length(), PSEUDO_MAXLENGTH));
                 if (!getPseudo().equals(pseudo)) {
                     jlist1.put(pseudo, NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
                 }
             }
             if (key.startsWith("memberip-")) {
-                jlist2.put(key.substring(PSEUDO_MAXLENGTH), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
+                jlist2.put(key.substring(Math.min(key.length(), PSEUDO_MAXLENGTH)), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
             }
         }
         refreshMembersLists();
