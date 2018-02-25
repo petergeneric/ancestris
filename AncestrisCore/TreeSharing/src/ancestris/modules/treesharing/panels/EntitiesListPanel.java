@@ -16,26 +16,30 @@ import ancestris.modules.treesharing.options.TreeSharingOptionsPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.KeyStroke;
 import javax.swing.plaf.basic.BasicComboBoxUI;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -47,7 +51,9 @@ public class EntitiesListPanel extends javax.swing.JPanel {
     private StringBuffer textToPaste;
     
     private final static int IMG_MEDIUM_WIDTH = 51;
+    private final static int ITEMS_PER_PAGE = 50;
 
+    private final ImageIcon DEFPROF_PHOTO = new ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/nophoto.png"));
     private final static ImageIcon nophoto = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/nophoto.png"));
     private final static ImageIcon ArrowButton = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/dropdownarrow.png"));
     private final static ImageIcon AllMembers = new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/allMembers.png"));
@@ -63,6 +69,8 @@ public class EntitiesListPanel extends javax.swing.JPanel {
     private ImageIcon[] arrayMemberIcons;
     private String[] arrayMemberStrings;
     
+    private TreeMap<String, MatchData> sortedMatches = new TreeMap<String, MatchData>();   //  String key is matchresult(asc)/mygedcomname(asc)/myEntityString(asc)
+    private int currentPage = 0;
     private boolean busy = false;
     
     /**
@@ -74,9 +82,9 @@ public class EntitiesListPanel extends javax.swing.JPanel {
 
         // Initialise with lists
         initComponents();
-        jScrollPane1.getVerticalScrollBar().setUnitIncrement(20);
-        jScrollPane1.getHorizontalScrollBar().setUnitIncrement(20);
-        jComboBox2.setUI(new BasicComboBoxUI() {
+        resultScrollPane.getVerticalScrollBar().setUnitIncrement(20);
+        resultScrollPane.getHorizontalScrollBar().setUnitIncrement(20);
+        photoOtherComboBox.setUI(new BasicComboBoxUI() {
             @Override
             protected JButton createArrowButton() {
                 return new JButton() {
@@ -97,27 +105,99 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         
         });
    
-        // Restore window size
-        restoreWindowSize();
-        
         // Set my picture
-        jLabel2.setText(TreeSharingOptionsPanel.getPseudo());
-        jLabel1.setIcon(TreeSharingOptionsPanel.getPhoto(2, TreeSharingOptionsPanel.getProfile().photoBytes));
+        pseudoMeLabel.setText(TreeSharingOptionsPanel.getPseudo());
+        ImageIcon myPhoto = TreeSharingOptionsPanel.getProfile().photoBytes == null ? DEFPROF_PHOTO : TreeSharingOptionsPanel.getPhoto(2, TreeSharingOptionsPanel.getProfile().photoBytes); 
+        photoMeLabel.setIcon(myPhoto);
         
         // Set checkboxes
         busy = true;
-        jCheckBox1.setSelected(typeOfEntity.equals(Gedcom.INDI));
-        jCheckBox2.setSelected(typeOfEntity.equals(Gedcom.FAM));
+        indiCheckBox.setSelected(typeOfEntity.equals(Gedcom.INDI));
+        famCheckBox.setSelected(typeOfEntity.equals(Gedcom.FAM));
         
-        // Build filtered list from selection
-        buildFilteredLists(0, null, null, null);
+        // Build comboboxes and select corresponding lines
+        buildFilteredLists(gedcomName, friend);
         
-        // Update panel display
-        jComboBox1.setSelectedItem(gedcomName);
-        jComboBox2.setSelectedIndex(getIndexOf(friend));
-        jComboBox3.setSelectedIndex(0);
+        // Display matches corresponding to selections
         updatePanelDisplay();
         busy = false;
+        
+        // Set keyboard keys for the buttons
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_UP, KeyEvent.CTRL_DOWN_MASK), "doFirst");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_LEFT, KeyEvent.CTRL_DOWN_MASK), "doPrevious");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_RIGHT, KeyEvent.CTRL_DOWN_MASK), "doNext");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, KeyEvent.CTRL_DOWN_MASK), "doLast");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, KeyEvent.CTRL_DOWN_MASK), "doCopy");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), "doCopy");
+        Action firstAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (firstButton.isEnabled()) {
+                    firstButton.requestFocusInWindow();
+                    firstButtonActionPerformed(e);
+                }
+            }
+        };
+        Action previousAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (previousButton.isEnabled()) {
+                    previousButton.requestFocusInWindow();
+                    previousButtonActionPerformed(e);
+                }
+            }
+        };
+        Action nextAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (nextButton.isEnabled()) {
+                    nextButton.requestFocusInWindow();
+                    nextButtonActionPerformed(e);
+                }
+            }
+        };
+        Action lastAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (lastButton.isEnabled()) {
+                    lastButton.requestFocusInWindow();
+                    lastButtonActionPerformed(e);
+                }
+            }
+        };
+        Action copyAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (copyButton.isEnabled()) {
+                    copyButton.requestFocusInWindow();
+                    copyButtonActionPerformed(e);
+                }
+            }
+        };
+        getActionMap().put("doFirst", firstAction);
+        getActionMap().put("doPrevious", previousAction);
+        getActionMap().put("doNext", nextAction);
+        getActionMap().put("doLast", lastAction);
+        getActionMap().put("doCopy", copyAction);
+
+        // Page up and Down to scroll up and down
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0), "doPageUp");
+        getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0), "doPageDown");
+        Action pageupAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resultScrollPane.getVerticalScrollBar().setValue(resultScrollPane.getVerticalScrollBar().getValue()-60);
+            }
+        };
+        getActionMap().put("doPageUp", pageupAction);
+        Action pagedownAction = new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                resultScrollPane.getVerticalScrollBar().setValue(resultScrollPane.getVerticalScrollBar().getValue()+60);
+            }
+        };
+        getActionMap().put("doPageDown", pagedownAction);
+        
     }
 
     /**
@@ -129,76 +209,132 @@ public class EntitiesListPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox();
-        jLabel3 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
-        jComboBox3 = new javax.swing.JComboBox();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        photoMeLabel = new javax.swing.JLabel();
+        pseudoMeLabel = new javax.swing.JLabel();
+        indiCheckBox = new javax.swing.JCheckBox();
+        indiPictoLabel = new javax.swing.JLabel();
+        gedcomMeComboBox = new javax.swing.JComboBox();
+        famPictoLabel = new javax.swing.JLabel();
+        famCheckBox = new javax.swing.JCheckBox();
+        pseudoOtherLabel = new javax.swing.JLabel();
+        gedcomOtherComboBox = new javax.swing.JComboBox();
+        photoOtherComboBox = new javax.swing.JComboBox();
+        resultScrollPane = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        jLabel4 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jCheckBox1 = new javax.swing.JCheckBox();
+        firstButton = new javax.swing.JButton();
+        previousButton = new javax.swing.JButton();
+        nextButton = new javax.swing.JButton();
+        lastButton = new javax.swing.JButton();
+        copyButton = new javax.swing.JButton();
+        pageLabel = new javax.swing.JLabel();
+        totalLabel = new javax.swing.JLabel();
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel1.text")); // NOI18N
-        jLabel1.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jLabel1.setOpaque(true);
+        org.openide.awt.Mnemonics.setLocalizedText(photoMeLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.photoMeLabel.text")); // NOI18N
+        photoMeLabel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        photoMeLabel.setOpaque(true);
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(pseudoMeLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.pseudoMeLabel.text")); // NOI18N
 
-        jComboBox1.addActionListener(new java.awt.event.ActionListener() {
+        org.openide.awt.Mnemonics.setLocalizedText(indiCheckBox, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.indiCheckBox.text")); // NOI18N
+        indiCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.indiCheckBox.toolTipText")); // NOI18N
+        indiCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox1ActionPerformed(evt);
+                indiCheckBoxActionPerformed(evt);
             }
         });
 
-        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel3, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel3.text")); // NOI18N
+        indiPictoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Indi.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(indiPictoLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.indiPictoLabel.text")); // NOI18N
+        indiPictoLabel.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.indiPictoLabel.toolTipText")); // NOI18N
 
-        jComboBox2.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jComboBox2.toolTipText")); // NOI18N
-        jComboBox2.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        jComboBox2.setMinimumSize(new java.awt.Dimension(51, 62));
-        jComboBox2.setPreferredSize(new java.awt.Dimension(51, 62));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        gedcomMeComboBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                gedcomMeComboBoxActionPerformed(evt);
             }
         });
 
-        jComboBox3.addActionListener(new java.awt.event.ActionListener() {
+        famPictoLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Fam.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(famPictoLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.famPictoLabel.text")); // NOI18N
+        famPictoLabel.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.famPictoLabel.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(famCheckBox, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.famCheckBox.text")); // NOI18N
+        famCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.famCheckBox.toolTipText")); // NOI18N
+        famCheckBox.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox3ActionPerformed(evt);
+                famCheckBoxActionPerformed(evt);
+            }
+        });
+
+        pseudoOtherLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        org.openide.awt.Mnemonics.setLocalizedText(pseudoOtherLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.pseudoOtherLabel.text")); // NOI18N
+
+        gedcomOtherComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                gedcomOtherComboBoxActionPerformed(evt);
+            }
+        });
+
+        photoOtherComboBox.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.photoOtherComboBox.toolTipText")); // NOI18N
+        photoOtherComboBox.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        photoOtherComboBox.setMinimumSize(new java.awt.Dimension(51, 62));
+        photoOtherComboBox.setPreferredSize(new java.awt.Dimension(51, 62));
+        photoOtherComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                photoOtherComboBoxActionPerformed(evt);
             }
         });
 
         jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
-        jScrollPane1.setViewportView(jPanel1);
+        resultScrollPane.setViewportView(jPanel1);
 
-        jLabel4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Indi.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel4.text")); // NOI18N
-        jLabel4.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel4.toolTipText")); // NOI18N
-
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Fam.png"))); // NOI18N
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel7.text")); // NOI18N
-        jLabel7.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jLabel7.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox2.text")); // NOI18N
-        jCheckBox2.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox2.toolTipText")); // NOI18N
-        jCheckBox2.addActionListener(new java.awt.event.ActionListener() {
+        firstButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/first.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(firstButton, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.firstButton.text")); // NOI18N
+        firstButton.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.firstButton.toolTipText")); // NOI18N
+        firstButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox2ActionPerformed(evt);
+                firstButtonActionPerformed(evt);
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox1.text")); // NOI18N
-        jCheckBox1.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.jCheckBox1.toolTipText")); // NOI18N
-        jCheckBox1.addActionListener(new java.awt.event.ActionListener() {
+        previousButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/previous.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(previousButton, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.previousButton.text")); // NOI18N
+        previousButton.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.previousButton.toolTipText")); // NOI18N
+        previousButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jCheckBox1ActionPerformed(evt);
+                previousButtonActionPerformed(evt);
             }
         });
+
+        nextButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/next.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(nextButton, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.nextButton.text")); // NOI18N
+        nextButton.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.nextButton.toolTipText")); // NOI18N
+        nextButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                nextButtonActionPerformed(evt);
+            }
+        });
+
+        lastButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/last.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(lastButton, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.lastButton.text")); // NOI18N
+        lastButton.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.lastButton.toolTipText")); // NOI18N
+        lastButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                lastButtonActionPerformed(evt);
+            }
+        });
+
+        copyButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/treesharing/resources/Copy.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(copyButton, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.copyButton.text")); // NOI18N
+        copyButton.setToolTipText(org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.copyButton.toolTipText")); // NOI18N
+        copyButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                copyButtonActionPerformed(evt);
+            }
+        });
+
+        org.openide.awt.Mnemonics.setLocalizedText(pageLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.pageLabel.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(totalLabel, org.openide.util.NbBundle.getMessage(EntitiesListPanel.class, "EntitiesListPanel.totalLabel.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -208,118 +344,189 @@ public class EntitiesListPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(photoMeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
+                                .addComponent(pseudoMeLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 102, Short.MAX_VALUE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                                .addComponent(jCheckBox1)
+                                .addComponent(indiCheckBox)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jLabel4))
-                            .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(indiPictoLabel))
+                            .addComponent(gedcomMeComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
+                                .addComponent(famPictoLabel)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jCheckBox2)
+                                .addComponent(famCheckBox)
                                 .addGap(33, 33, 33)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
-                            .addComponent(jComboBox3, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(pseudoOtherLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 159, Short.MAX_VALUE))
+                            .addComponent(gedcomOtherComboBox, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane1))
+                        .addComponent(photoOtherComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(resultScrollPane)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(pageLabel)
+                            .addComponent(totalLabel))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(firstButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(previousButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(nextButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lastButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(copyButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(photoMeLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(photoOtherComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
-                            .addComponent(jCheckBox2)
-                            .addComponent(jLabel7)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jLabel4))
+                            .addComponent(famCheckBox)
+                            .addComponent(famPictoLabel)
+                            .addComponent(indiCheckBox)
+                            .addComponent(indiPictoLabel))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(gedcomMeComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(gedcomOtherComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(7, 7, 7)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel2))))
+                            .addComponent(pseudoOtherLabel)
+                            .addComponent(pseudoMeLabel))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 263, Short.MAX_VALUE)
+                .addComponent(resultScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(copyButton)
+                        .addComponent(lastButton)
+                        .addComponent(nextButton)
+                        .addComponent(previousButton)
+                        .addComponent(firstButton))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(totalLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(pageLabel)))
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void photoOtherComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_photoOtherComboBoxActionPerformed
         if (!busy) {
-            updateSelections(2);
             updatePanelDisplay();
         }
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_photoOtherComboBoxActionPerformed
 
-    private void jComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox1ActionPerformed
+    private void gedcomMeComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gedcomMeComboBoxActionPerformed
         if (!busy) {
-            updateSelections(1);
             updatePanelDisplay();
         }
-    }//GEN-LAST:event_jComboBox1ActionPerformed
+    }//GEN-LAST:event_gedcomMeComboBoxActionPerformed
 
-    private void jComboBox3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox3ActionPerformed
+    private void gedcomOtherComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_gedcomOtherComboBoxActionPerformed
         if (!busy) {
-            updateSelections(3);
             updatePanelDisplay();
         }
-    }//GEN-LAST:event_jComboBox3ActionPerformed
+    }//GEN-LAST:event_gedcomOtherComboBoxActionPerformed
 
-    private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
+    private void indiCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiCheckBoxActionPerformed
         if (!busy) {
             updatePanelDisplay();
         }
-    }//GEN-LAST:event_jCheckBox1ActionPerformed
+    }//GEN-LAST:event_indiCheckBoxActionPerformed
 
-    private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
+    private void famCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_famCheckBoxActionPerformed
         if (!busy) {
             updatePanelDisplay();
         }
-    }//GEN-LAST:event_jCheckBox2ActionPerformed
+    }//GEN-LAST:event_famCheckBoxActionPerformed
+
+    private void firstButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_firstButtonActionPerformed
+        currentPage = 0;
+        displayPage();
+    }//GEN-LAST:event_firstButtonActionPerformed
+
+    private void previousButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_previousButtonActionPerformed
+        currentPage--;
+        if (currentPage < 0) {
+            currentPage = 0;
+        }
+        displayPage();
+    }//GEN-LAST:event_previousButtonActionPerformed
+
+    private void nextButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nextButtonActionPerformed
+        currentPage++;
+        if (currentPage > getMaxPageNb()) {
+            currentPage = getMaxPageNb();
+        }
+        displayPage();        
+    }//GEN-LAST:event_nextButtonActionPerformed
+
+    private void lastButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_lastButtonActionPerformed
+        currentPage = getMaxPageNb();
+        displayPage();                
+    }//GEN-LAST:event_lastButtonActionPerformed
+
+    private void copyButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_copyButtonActionPerformed
+        String str = textToPaste.toString();
+        StringSelection stringSelection = new StringSelection(str);
+        Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
+        clpbrd.setContents(stringSelection, null);
+    }//GEN-LAST:event_copyButtonActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
-    private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
-    private javax.swing.JComboBox jComboBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel7;
+    private javax.swing.JButton copyButton;
+    private javax.swing.JCheckBox famCheckBox;
+    private javax.swing.JLabel famPictoLabel;
+    private javax.swing.JButton firstButton;
+    private javax.swing.JComboBox gedcomMeComboBox;
+    private javax.swing.JComboBox gedcomOtherComboBox;
+    private javax.swing.JCheckBox indiCheckBox;
+    private javax.swing.JLabel indiPictoLabel;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JButton lastButton;
+    private javax.swing.JButton nextButton;
+    private javax.swing.JLabel pageLabel;
+    private javax.swing.JLabel photoMeLabel;
+    private javax.swing.JComboBox photoOtherComboBox;
+    private javax.swing.JButton previousButton;
+    private javax.swing.JLabel pseudoMeLabel;
+    private javax.swing.JLabel pseudoOtherLabel;
+    private javax.swing.JScrollPane resultScrollPane;
+    private javax.swing.JLabel totalLabel;
     // End of variables declaration//GEN-END:variables
 
-    private void buildFilteredLists(int listNb, String gedcomName, String friend, String memberGedcomName) {
+    /**
+     * Build comboboxes and make selections
+     * @param gedcomName
+     * @param friend
+     * @param memberGedcomName 
+     */
+    
+    private void buildFilteredLists(String gedcomName, String friend) {
 
         // Clear lists
-        if (listNb != 1) myGedcoms.clear();
-        if (listNb != 2) members.clear();
-        if (listNb != 3) memberGedcoms.clear();
+        myGedcoms.clear();
+        members.clear();
+        memberGedcoms.clear();
 
         // Add generic elements
-        if (listNb != 1) myGedcoms.add(allGedcoms);
-        if (listNb != 2) members.put(allMembers, AllMembers);
-        if (listNb != 3) memberGedcoms.add(allGedcoms);
+        myGedcoms.add(allGedcoms);
+        members.put(allMembers, AllMembers);
+        memberGedcoms.add(allGedcoms);
         
         // Fill in with filtered criteria
         String iGedcomName = "";
@@ -327,61 +534,42 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         String iMemberGedcomName = "";
         for (MatchData line : list) {
             iGedcomName = line.myEntity.getGedcom().getName();
+            if (!myGedcoms.contains(iGedcomName)) {
+                myGedcoms.add(iGedcomName);
+            }
             iFriend = line.friendGedcomEntity.friend;
-            iMemberGedcomName = line.friendGedcomEntity.gedcomName;
-            if (match("", gedcomName, friend, memberGedcomName, "", iGedcomName, iFriend, iMemberGedcomName)) {
-                if (listNb != 1) myGedcoms.add(iGedcomName);
-                if (listNb != 2) { 
-                    AncestrisFriend af = line.friendGedcomEntity.afriend;
-                    ImageIcon icon =  (af != null ? (af.getFriendProfile() != null ? TreeSharingOptionsPanel.getPhoto(2, af.getFriendProfile().photoBytes) : null) : null);
-                    if (icon == null) {
-                        icon = nophoto;
-                    }
-                    members.put(iFriend, icon);
+            if (!members.containsKey(iFriend)) {
+                AncestrisFriend af = line.friendGedcomEntity.afriend;
+                ImageIcon icon = (af != null ? (af.getFriendProfile() != null ? TreeSharingOptionsPanel.getPhoto(2, af.getFriendProfile().photoBytes) : null) : null);
+                if (icon == null) {
+                    icon = nophoto;
                 }
-                if (listNb != 3) memberGedcoms.add(iMemberGedcomName);
+                members.put(iFriend, icon);
+            }
+            iMemberGedcomName = line.friendGedcomEntity.gedcomName;
+            if (!memberGedcoms.contains(iMemberGedcomName)) {
+                memberGedcoms.add(iMemberGedcomName);
             }
         }
         
         // Overwrite arrays
-        if (listNb != 1) arrayMyGedcoms = myGedcoms.toArray(new String[myGedcoms.size()]);
-        if (listNb != 2) arrayMemberStrings = members.keySet().toArray(new String[members.keySet().size()]);
-        if (listNb != 2) arrayMemberIcons = members.values().toArray(new ImageIcon[members.values().size()]);
-        if (listNb != 3) arrayMemberGedcoms = memberGedcoms.toArray(new String[memberGedcoms.size()]);
+        arrayMyGedcoms = myGedcoms.toArray(new String[myGedcoms.size()]);
+        arrayMemberStrings = members.keySet().toArray(new String[members.keySet().size()]);
+        arrayMemberIcons = members.values().toArray(new ImageIcon[members.values().size()]);
+        arrayMemberGedcoms = memberGedcoms.toArray(new String[memberGedcoms.size()]);
 
         // update comboboxes
-        if (listNb != 1) jComboBox1.setModel(new javax.swing.DefaultComboBoxModel(arrayMyGedcoms));
-        if (listNb != 2) jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(arrayMemberIcons));
-        if (listNb != 3) jComboBox3.setModel(new javax.swing.DefaultComboBoxModel(arrayMemberGedcoms));
+        gedcomMeComboBox.setModel(new javax.swing.DefaultComboBoxModel(arrayMyGedcoms));
+        photoOtherComboBox.setModel(new javax.swing.DefaultComboBoxModel(arrayMemberIcons));
+        gedcomOtherComboBox.setModel(new javax.swing.DefaultComboBoxModel(arrayMemberGedcoms));
+        
+        // Make selecitons
+        gedcomMeComboBox.setSelectedItem(gedcomName);
+        photoOtherComboBox.setSelectedItem(members.get(friend) == null ? AllMembers : members.get(friend));
+        gedcomOtherComboBox.setSelectedItem(allGedcoms);
+        
     }
 
-    private void updateSelections(int listNb) {
-        String selection2 = arrayMemberStrings[jComboBox2.getSelectedIndex()];
-        if (listNb == 2 && jComboBox2.getSelectedIndex() == 0) {   // if all members are selected, select all on all lists
-            jComboBox1.setSelectedIndex(0);
-            jComboBox3.setSelectedIndex(0);
-        }
-        String selection1 = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
-        String selection3 = arrayMemberGedcoms[jComboBox3.getSelectedIndex()];
-        busy = true;
-        buildFilteredLists(listNb, listNb == 1 ? selection1 : null, listNb == 2 ? selection2 : null, listNb == 3 ? selection3 : null);
-        if (arrayMyGedcoms.length == 2) {
-            jComboBox1.setSelectedIndex(1);
-        } else {
-            jComboBox1.setSelectedItem(selection1);
-        }
-        if (arrayMemberStrings.length == 2) {
-            jComboBox2.setSelectedIndex(1);
-        } else {
-            jComboBox2.setSelectedIndex(getIndexOf(selection2));
-        }
-        if (arrayMemberGedcoms.length == 2) {
-            jComboBox3.setSelectedIndex(1);
-        } else {
-            jComboBox3.setSelectedItem(selection3);
-        }
-        busy = false;
-    }
 
     private boolean match(String type, String gedcomName, String friend, String memberGedcomName, String iType, String iGedcomName, String iFriend, String iMemberGedcomName) {
 
@@ -403,34 +591,25 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         return (type.equals(iType) && gn.equals(iGedcomName) && f.equals(iFriend) && mgn.equals(iMemberGedcomName));
     }
 
-    private int getIndexOf(String selection) {
-        for (int i = 0; i < arrayMemberStrings.length; i++) {
-            String item = arrayMemberStrings[i];
-            if (item.equals(selection)) {
-                return i;
-            }
-        }
-        return 0;
-    }
 
 
-
-    
+    /**
+     * Extract all matches corresponding to selections (entity type, sharedGedcom, friend's gedcom, friend)
+     */
     private void updatePanelDisplay() {
 
-        TreeMap<String, MatchData> sortedMatches = new TreeMap<String, MatchData>();   //  String key is mygedcomname(asc)/myEntityString(asc)/matchresult(asc)
-        
+        sortedMatches.clear();
         
         // Set label
-        jLabel3.setText(arrayMemberStrings[jComboBox2.getSelectedIndex()]);
+        pseudoOtherLabel.setText(arrayMemberStrings[photoOtherComboBox.getSelectedIndex()]);
 
         // Get criteria
         String type = "";
-        if (jCheckBox1.isSelected() && !jCheckBox2.isSelected()) type = Gedcom.INDI;
-        if (!jCheckBox1.isSelected() && jCheckBox2.isSelected()) type = Gedcom.FAM;
-        String gedcomName = arrayMyGedcoms[jComboBox1.getSelectedIndex()];
-        String friend = arrayMemberStrings[jComboBox2.getSelectedIndex()];
-        String memberGedcomName = arrayMemberGedcoms[jComboBox3.getSelectedIndex()];
+        if (indiCheckBox.isSelected() && !famCheckBox.isSelected()) type = Gedcom.INDI;
+        if (!indiCheckBox.isSelected() && famCheckBox.isSelected()) type = Gedcom.FAM;
+        String gedcomName = arrayMyGedcoms[gedcomMeComboBox.getSelectedIndex()];
+        String friend = arrayMemberStrings[photoOtherComboBox.getSelectedIndex()];
+        String memberGedcomName = arrayMemberGedcoms[gedcomOtherComboBox.getSelectedIndex()];
         
         // Scan list and build sorted maps
         String key = "";
@@ -444,23 +623,49 @@ public class EntitiesListPanel extends javax.swing.JPanel {
             iFriend = line.friendGedcomEntity.friend;
             iMemberGedcomName = line.friendGedcomEntity.gedcomName;
             if (match(type, gedcomName, friend, memberGedcomName, iType, iGedcomName, iFriend, iMemberGedcomName)) {
-                key = iGedcomName + "-" + line.myEntity.toString() + "-" + line.matchResult + line.friendGedcomEntity.indiLastName;
+                key = line.matchResult + "-" + line.myEntity.getGedcom().getName() + "-" + line.myEntity.getId() + "-" + iFriend+ "-" + iGedcomName + "-" + line.friendGedcomEntity.entityID;
                 sortedMatches.put(key, line);
             }
         }
         
-        // Display sortedMap
+        // Display sortedMap by page of 50
+        currentPage = 0;
+        displayPage();
+
+    }
+
+    private List<String> getPageKeys() {
+        List<String> ret = new ArrayList<String>();
+        int item = 0;
+        for (String key : sortedMatches.keySet()) {
+            if ((item / ITEMS_PER_PAGE) == currentPage) {
+                ret.add(key);
+                if (ret.size() == ITEMS_PER_PAGE) {
+                    break;
+                }
+            }
+            item++;
+        }
+        return ret;
+    }
+
+    private void displayPage() {
         textToPaste.delete(0, textToPaste.length());
         jPanel1.removeAll();
         jPanel1.repaint();
+        updateButtons();
+        if (sortedMatches.isEmpty()) {
+            return;
+        }
+        
         BoxLayout layout = new BoxLayout(jPanel1, BoxLayout.PAGE_AXIS);
         jPanel1.setLayout(layout);
         String group = "", strItem = "", str = "";
         Entity currentEntity = null;
         List<MatchData> subList = new LinkedList<MatchData>();
         int i = 0;
-        for (String k : sortedMatches.keySet()) {
-            MatchData line = sortedMatches.get(k);
+        for (String key : getPageKeys()) {
+            MatchData line = sortedMatches.get(key);
             textToPaste.append(convertToText(line));
             strItem = EntityConversion.getStringFromEntity(line.myEntity, false);
             if (!group.equals(strItem)) { // Group break
@@ -483,39 +688,12 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         }
         jPanel1.repaint();
         jPanel1.validate();
-        //jPanel1.add(Box.createVerticalGlue());
-        
     }
-
+    
     
     private void addEntityBloc(Entity currentEntity, List<MatchData> subList) {
         EntityBean bean = new EntityBean(currentEntity, subList);
         jPanel1.add(bean);
-    }
-
-    private void restoreWindowSize() {
-        int width = Integer.valueOf(NbPreferences.forModule(EntitiesListPanel.class).get("EntitiesListPanel.width", "0"));   
-        int height = Integer.valueOf(NbPreferences.forModule(EntitiesListPanel.class).get("EntitiesListPanel.height", "0"));   
-        if (width * height != 0) {
-            this.setPreferredSize(new Dimension(width, height));
-        }
-    }
-
-    private void saveWindowSize() {
-        Component c = this;
-        NbPreferences.forModule(EntitiesListPanel.class).put("EntitiesListPanel.width", "" + c.getBounds().width);   
-        NbPreferences.forModule(EntitiesListPanel.class).put("EntitiesListPanel.height", "" + c.getBounds().height);   
-    }
-
-    public void close() {
-        saveWindowSize();
-    }
-
-    public void copy() {
-        String str = textToPaste.toString();
-        StringSelection stringSelection = new StringSelection(str);
-        Clipboard clpbrd = Toolkit.getDefaultToolkit().getSystemClipboard();
-        clpbrd.setContents(stringSelection, null);
     }
 
     private StringBuffer convertToText(MatchData line) {
@@ -534,5 +712,22 @@ public class EntitiesListPanel extends javax.swing.JPanel {
         sb.append("\n");
         return sb;
     }
-    
+
+    private void updateButtons() {
+        totalLabel.setText(NbBundle.getMessage(EntitiesListPanel.class, "totalMatch", sortedMatches.size(), ITEMS_PER_PAGE));
+        pageLabel.setText(NbBundle.getMessage(EntitiesListPanel.class, "currentPage", currentPage+1, getMaxPageNb()+1));  // humans count starting from 1
+        boolean first = currentPage == 0;
+        boolean listNotEmpty = !sortedMatches.isEmpty();
+        boolean last = currentPage == getMaxPageNb();
+        copyButton.setEnabled(listNotEmpty);
+        firstButton.setEnabled(!first);
+        previousButton.setEnabled(!first);
+        nextButton.setEnabled(!last);
+        lastButton.setEnabled(!last);
+    }
+
+    private int getMaxPageNb() {
+        return sortedMatches.size() / ITEMS_PER_PAGE;
+    }
+
 }

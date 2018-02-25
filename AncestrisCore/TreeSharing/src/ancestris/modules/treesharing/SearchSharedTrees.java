@@ -57,6 +57,7 @@ public class SearchSharedTrees extends Thread {
         stopRun = true;
         owner.setRotatingIcon(false);
         owner.displaySearchedMember("");
+        owner.updateSearchStats();
     }
 
     
@@ -230,7 +231,6 @@ public class SearchSharedTrees extends Thread {
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomIndi), 
                                 member, retMatch);
                     }
-                    continue;
                 } // endfor memberEntities
             } // endfor myEntities
         } // endfor myGedcoms
@@ -266,7 +266,6 @@ public class SearchSharedTrees extends Thread {
                                 new FriendGedcomEntity(member.getMemberName(), memberGedcomFam), 
                                 member, retMatch);
                     }
-                    continue;
                 } // endfor memberEntities
             } // endfor myEntities
         } // endfor myGedcoms
@@ -295,19 +294,19 @@ public class SearchSharedTrees extends Thread {
 
         // make it easier for the formulas for myIndi (A)
         String Asx = myIndi.indiSex;
-        String Aln = myIndi.indiLastName.toLowerCase();
-        String Afn = myIndi.indiFirstName.toLowerCase();
-        String Apl1 = myIndi.indiBirthPlace.toLowerCase();
-        String Apl2 = myIndi.indiDeathPlace.toLowerCase();
+        String Aln = myIndi.indiLastName.toLowerCase().trim();
+        String Afn = myIndi.indiFirstName.toLowerCase().trim();
+        String Apl1 = myIndi.indiBirthPlace.toLowerCase().trim();
+        String Apl2 = myIndi.indiDeathPlace.toLowerCase().trim();
         int Ayr1 = Integer.valueOf(myIndi.indiBirthDate);
         int Ayr2 = Integer.valueOf(myIndi.indiDeathDate);
 
         // make it easier for the formulas for friendIndi (B)
         String Bsx = friendIndi.indiSex;
-        String Bln = friendIndi.indiLastName.toLowerCase();
-        String Bfn = friendIndi.indiFirstName.toLowerCase();
-        String Bpl1 = friendIndi.indiBirthPlace.toLowerCase();
-        String Bpl2 = friendIndi.indiDeathPlace.toLowerCase();
+        String Bln = friendIndi.indiLastName.toLowerCase().trim();
+        String Bfn = friendIndi.indiFirstName.toLowerCase().trim();
+        String Bpl1 = friendIndi.indiBirthPlace.toLowerCase().trim();
+        String Bpl2 = friendIndi.indiDeathPlace.toLowerCase().trim();
         int Byr1 = Integer.valueOf(friendIndi.indiBirthDate);
         int Byr2 = Integer.valueOf(friendIndi.indiDeathDate);
 
@@ -327,9 +326,24 @@ public class SearchSharedTrees extends Thread {
             if (Aln.equals(Bln)  // if same lastname
                     && (Apl1.length() > 1 || Apl2.length() > 1 || Bpl1.length() > 1 || Bpl2.length() > 1) // ...at least one place indicated across both, 
                     && (Ayr1 > 0 || Ayr2 > 0) && (Byr1 > 0 || Byr2 > 0)) { // ...and at least one year with non zero for each (year can always be estimated and therefore filled in by user, places cannot)
-                if (Apl1.equals(Bpl1) || Apl1.equals(Bpl2) || Apl2.equals(Bpl1) || Apl2.equals(Bpl2)) {    // a place in common, either birth or death
+                if ((Apl1.equals(Bpl1) && !Bpl1.isEmpty()) || (Apl1.equals(Bpl2) && !Bpl2.isEmpty())
+                    || (Apl2.equals(Bpl1) && !Bpl1.isEmpty()) || (Apl2.equals(Bpl2) && !Bpl2.isEmpty())) {    // a place in common, either birth or death which is not empty
+                    if (Ayr1 != 0 && Ayr2 == 0) { // make a 120 years interval from birth
+                        Ayr2 = Ayr1 + 120;
+                    }
+                    if (Byr1 != 0 && Byr2 == 0) { // make a 120 years interval from birth
+                        Byr2 = Byr1 + 120;
+                    }
+                    if (Ayr1 == 0 && Ayr2 != 0) { // make a 120 years interval from death
+                        Ayr1 = Ayr2 - 120;
+                    }
+                    if (Byr1 == 0 && Byr2 != 0) { // make a 120 years interval from death
+                        Byr1 = Byr2 - 120;
+                    }
                     if ((Ayr1 <= Byr1 && Byr1 <= Ayr2) || (Byr1 <= Ayr1 && Ayr1 <= Byr2)) {  // dates overlap
-                        return TreeSharingOptionsPanel.FLASH_MATCH;
+                        if (Afn.equals(Bfn)) {
+                            return TreeSharingOptionsPanel.FLASH_MATCH;
+                        }
                     }
                 }
             }

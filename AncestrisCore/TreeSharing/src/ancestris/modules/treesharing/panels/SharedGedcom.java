@@ -540,12 +540,12 @@ public class SharedGedcom extends JInternalFrame {
     public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity, int matchResult) {
         if (entity instanceof Indi) {
             matchedIndis.add(new MatchData(entity, friendGedcomEntity, matchResult));
-            updateStats(false);
+            //updateStats(false);
             return;
         }
         if (entity instanceof Fam) {
             matchedFams.add(new MatchData(entity, friendGedcomEntity, matchResult));
-            updateStats(false);
+            //updateStats(false);
         }
     }
     

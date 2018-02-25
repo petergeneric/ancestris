@@ -222,17 +222,17 @@ public class AncestrisFriend extends JInternalFrame {
     public void addEntity(Entity entity, FriendGedcomEntity friendGedcomEntity, int matchResult) {
         if (entity instanceof Indi) {
             matchedIndis.add(new MatchData(entity, friendGedcomEntity, matchResult));
-            updateStats();
+            //updateStats();
             return;
         }
         if (entity instanceof Fam) {
             matchedFams.add(new MatchData(entity, friendGedcomEntity, matchResult));
-            updateStats();
+            //updateStats();
             return;
         }
     }
 
-    private void updateStats() {
+    public void updateStats() {
         int nbCommonIndis = countIds(matchedIndis);
         int nbCommonFams = countIds(matchedFams);
         jButton1.setText("" + nbCommonIndis);
@@ -244,7 +244,7 @@ public class AncestrisFriend extends JInternalFrame {
     private int countIds(Set<MatchData> matchedEntities) {
         Set<String> ret = new HashSet<String>();
         for (MatchData data : matchedEntities) {
-            ret.add(data.myEntity.getId());
+            ret.add(data.friendGedcomEntity.entityID);
         }
         return ret.size();
     }

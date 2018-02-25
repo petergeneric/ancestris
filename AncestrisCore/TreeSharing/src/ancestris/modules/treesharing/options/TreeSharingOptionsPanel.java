@@ -696,13 +696,13 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
 
         for (String key : keys) {
             if (key.startsWith("memberps-")) {
-                String pseudo = key.substring(Math.min(key.length(), PSEUDO_MAXLENGTH));
+                String pseudo = key.substring(9);
                 if (!getPseudo().equals(pseudo)) {
                     jlist1.put(pseudo, NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
                 }
             }
             if (key.startsWith("memberip-")) {
-                jlist2.put(key.substring(Math.min(key.length(), PSEUDO_MAXLENGTH)), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
+                jlist2.put(key.substring(9), NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1"));
             }
         }
         refreshMembersLists();
@@ -786,7 +786,7 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
                 Point p = me.getPoint();
                 int row = table.convertRowIndexToModel(table.rowAtPoint(p));
                 String key = (String) model.getValueAt(row, 1);
-                if (model == model2 && me.getClickCount() == 2) {
+                if (model == model2 && me.isAltDown() && me.isAltGraphDown() && me.getClickCount() == 2) {
                     TechInfoPanel.openIpLocator(key);
                     return;
                 }
@@ -891,11 +891,11 @@ public final class TreeSharingOptionsPanel extends javax.swing.JPanel implements
         public PopUpMenu(TreeSharingOptionsPanel owner, Map<String, Boolean> list, String key) {
             ActionListener actionListener = new PopupActionListener(owner, list, key);
             //
-            if (list != jlist1) {
-                showItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_ShowItem", key));
-                showItem.addActionListener(actionListener);
-                add(showItem);
-            }
+//            if (list != jlist1) {
+//                showItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_ShowItem", key));
+//                showItem.addActionListener(actionListener);
+//                add(showItem);
+//            }
             //
             eraseItem = new JMenuItem(NbBundle.getMessage(TreeSharingOptionsPanel.class, "MENU_EraseItem", key));
             eraseItem.addActionListener(actionListener);
