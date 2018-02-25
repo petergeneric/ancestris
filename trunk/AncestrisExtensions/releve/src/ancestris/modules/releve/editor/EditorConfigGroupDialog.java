@@ -12,30 +12,24 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.JPopupMenu;
-import javax.swing.MenuSelectionManager;
-import javax.swing.plaf.basic.BasicCheckBoxMenuItemUI;
+import javax.swing.SwingUtilities;
 
 public class EditorConfigGroupDialog {
     
     
-    static public void  showEditorConfigGroupDialog2(EditorBeanGroup group, MouseEvent evt) {
+    static public void  showEditorConfigGroupDialog(EditorBeanGroup group, MouseEvent evt) {
         final JPopupMenu popup = new JPopupMenu();
     
-       //je cree le popupmenu        
+       //je cree lees items du popup menu     
        for(EditorBeanField field : group.getFields() ) {
            if (field.isUsed()) {
-               StayOpenCheckBoxMenuItem menuItem = new StayOpenCheckBoxMenuItem(field.getLabel());
-               menuItem.setState(field.isVisible());
+               StayOpenCheckBoxMenuItem menuItem = new StayOpenCheckBoxMenuItem(field.getLabel(), field.isVisible());
                menuItem.addActionListener(new FieldActionListener(field));
                popup.add(menuItem);
            }
        }
        popup.show(evt.getComponent(), evt.getX(), evt.getY());
     }
-    
-    void initData(EditorBeanGroup group, MouseEvent evt) {
-    }
-    
     
     static class FieldActionListener implements ActionListener {
         private final EditorBeanField field;
@@ -51,32 +45,6 @@ public class EditorConfigGroupDialog {
             EditorBeanGroup.savePreferences();
             fireEditorConfigListener();
         }        
-    }
-    
-    
-    
-    /**
-     * extension de  JCheckBoxMenuItem pour mainteni le menu popup
-     * affiché après avoir cliqué sur un item
-     */
-    static public class StayOpenCheckBoxMenuItem extends JCheckBoxMenuItem {
-
-        public StayOpenCheckBoxMenuItem(String text) {
-            super(text);
-        }
-
-        @Override
-        public void updateUI() {
-            super.updateUI();
-            setUI(new BasicCheckBoxMenuItemUI() {
-                @Override
-                protected void doClick(MenuSelectionManager msm) {
-                    //super.doClick(msm);
-                    menuItem.doClick(0);
-                }
-            });
-        }
-
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -105,8 +73,13 @@ public class EditorConfigGroupDialog {
     }
 
     static public void fireEditorConfigListener () {
-          for (EditorConfigListener listener : editorConfigListeners) {
-            listener.onEditorConfigChanged();
-        }
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                for (EditorConfigListener listener : editorConfigListeners) {
+                    listener.onEditorConfigChanged();
+                }
+            }
+        });
     }
 }
