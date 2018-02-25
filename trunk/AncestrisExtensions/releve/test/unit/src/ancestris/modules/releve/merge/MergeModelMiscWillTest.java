@@ -58,20 +58,12 @@ public class MergeModelMiscWillTest extends TestCase {
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, willRecord);
-            MergeRecord mergeRecord = new MergeRecord(data);            
+                       
 
-            Fam participant2Family;
-            Indi participant2Wife;
-            Indi participant2Husband;
-
-            //List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-            //assertEquals("Nombre model",3,models.size());           
-            //models.get(0).copyRecordToEntity();
-            
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, data, false);
             //TestUtility.waitForDialogClose(dialog);
             dialog.copyRecordToEntity();
-
+            MergeRecord mergeRecord = dialog.getMergeRecord(); 
             
             Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:WILL:SOUR"),""));

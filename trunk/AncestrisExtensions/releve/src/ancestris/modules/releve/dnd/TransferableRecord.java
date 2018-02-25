@@ -48,7 +48,11 @@ public class TransferableRecord  implements Transferable {
 
     @Override
     public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException, IOException {
-        return data;
+        if( flavor == recordFlavor) {
+            return data;
+        } else {
+            throw new UnsupportedFlavorException(flavor);
+        }        
     }
 
     /**

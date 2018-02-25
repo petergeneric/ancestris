@@ -53,8 +53,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             String fileName = "ville_misc.txt";
             MergeOptionPanel.SourceModel.getModel().add(fileName, gedcom.getEntity("SOUR", "S2").getPropertyDisplayValue("TITL"));
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, miscRecord);
-            MergeRecord mergeRecord = new MergeRecord(data);            
-
+            
             Fam participant2Family;
             Indi participant2Wife;
             Indi participant2Husband;
@@ -63,10 +62,10 @@ public class MergeModelMiscOtherTest extends TestCase {
             //assertEquals("Nombre model",3,models.size());           
             //models.get(0).copyRecordToEntity();
             
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, mergeRecord, false);
+            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, data, false);
             //TestUtility.waitForDialogClose(dialog);
             dialog.copyRecordToEntity();
-
+            MergeRecord mergeRecord = dialog.getMergeRecord();
             
             Indi participant1 = (Indi) gedcom.getEntity("I7");
             assertEquals("Lien event vers source","@S2@", participant1.getValue(new TagPath("INDI:EVEN:SOUR"),""));
@@ -150,8 +149,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             miscRecord.setWifeMarried("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation2", "fatherResidence2", "fatherAddress2", "fatherComment", "true");
             
             String fileName = "";
-            TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, miscRecord);
-            MergeRecord mergeRecord = new MergeRecord(data);            
+            TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, miscRecord);            
 
             List<MergeModel> models;
             Fam indiParentFamily;
@@ -160,11 +158,11 @@ public class MergeModelMiscOtherTest extends TestCase {
             Fam participant2Family;
             Indi participant2Husband;
             Indi participant2Wife;
-
+            MergeRecord mergeRecord = new MergeRecord(data);
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
             assertEquals("Nombre model",3,models.size());
 
-            MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, mergeRecord, false);
+            MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, data, false);
             //TestUtility.waitForDialogClose(dialog);
 
             //models.get(0).copyRecordToEntity();
