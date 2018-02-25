@@ -45,7 +45,6 @@ import genj.gedcom.Gedcom;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Frame;
 import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -60,28 +59,21 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.netbeans.api.settings.ConvertAsProperties;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.TopComponent;
-import org.openide.windows.WindowManager;
 
 /**
  * 
@@ -146,6 +138,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private static final Logger LOG = Logger.getLogger("ancestris.treesharing");
     
     // Panel elements
+    private String titleComponent = "";
     private boolean isComponentCreated = false;
     private JToolBar toolbar = null;
     private TreeSharingPanel desktopPanel = null;
@@ -173,7 +166,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private boolean isBusy = false;
     private String commPseudo = "";
     private Comm commHandler = null;
-    private Timer timer;
+    private java.util.Timer timer;
     private List<AncestrisMember> ancestrisMembers = null;          // list of all connected members
     private List<SharedGedcom> sharedGedcoms = null;                // iFrames : all open gedcoms
     private List<AncestrisFriend> ancestrisFriends = null;          // iFrames : only members with entities in common
@@ -181,9 +174,11 @@ public class TreeSharingTopComponent extends TopComponent {
 
     // Searching elements
     private SearchSharedTrees searchThread;
-    private volatile boolean refreshing;
-    private Thread refreshThread;
-    private final int REFRESH_DELAY = 150;
+    private final int PING_DELAY = 150; // seconds to check connected members
+    
+    // Swing timer to refresh toolbar members and stats
+    private javax.swing.Timer swingTimer;
+    private final int REFRESH_DELAY = 50; // seconds to refresh toolbar
 
     // Stats elements
     private JLabel rcvdConnections = null;
@@ -220,7 +215,8 @@ public class TreeSharingTopComponent extends TopComponent {
         if (instance == null) {
             instance = this;
         }
-        setName(NbBundle.getMessage(TreeSharingTopComponent.class, "CTL_TreeSharingTopComponent"));
+        titleComponent = NbBundle.getMessage(TreeSharingTopComponent.class, "CTL_TreeSharingTopComponent");
+        setName(titleComponent);
         setToolTipText(NbBundle.getMessage(TreeSharingTopComponent.class, "HINT_TreeSharingTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
         borderLayout = new BorderLayout();  // has to be border
@@ -245,7 +241,7 @@ public class TreeSharingTopComponent extends TopComponent {
             
             initResults();
 
-            initRefreshMembersThread();
+            initSwingTimerRefreshValues();
     }
         
         privacyToggle.setPrivacy(getPreferredPrivacy());
@@ -255,7 +251,7 @@ public class TreeSharingTopComponent extends TopComponent {
     private void initCommunication() {
         LOG.log(Level.FINE, "Creating communication handler.");
 
-        commHandler = new Comm(this, REFRESH_DELAY);
+        commHandler = new Comm(this, PING_DELAY);
     }
 
 
@@ -414,33 +410,66 @@ public class TreeSharingTopComponent extends TopComponent {
 
     
     
-    private void initRefreshMembersThread() {
-        LOG.log(Level.FINE, "Creating refreshing members thread.");
-
-        refreshThread = new Thread() {
-            @Override
-            public void run() {
-                refreshMembers();
+    private void initSwingTimerRefreshValues() {
+        LOG.log(Level.FINE, "Creating refreshing toolbar swing timer.");
+        
+        swingTimer = new javax.swing.Timer(REFRESH_DELAY*1000, new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                updateMembersList();
+                updateStatsDisplay();
+                toolbar.revalidate();
+                toolbar.repaint();
             }
-        };
-        refreshThread.setName("TreeSharing thread : refresh members list");
-        refreshing = true;
-        refreshThread.start();
+        });
+        swingTimer.setInitialDelay(REFRESH_DELAY*1000);
+        swingTimer.start(); 
     }
+
+    public void updateMembersList() {
+        resetAncestrisMembers();
+        final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
+        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", n));
+        // 
+        if (membersList != null) {
+            membersList.updateTable();
+            if (n > 0) {
+                membersNumber.setText(" " + n + " ");
+                instance.setDisplayName(titleComponent + " (" + n + ")");
+            } else {
+                membersNumber.setText(" ");
+                instance.setDisplayName(titleComponent);
+            }
+            rememberMembers();
+        }
+    }
+    
+    public void updateStatsDisplay() {
+        if (connectionStats == null || connectionStats.isEmpty()) {
+            statsButton.setEnabled(false);
+            rcvdConnections.setText("");
+            rcvdUniqueMembers.setText("");
+            rcvdUniqueFriends.setText("");
+        } else {
+            statsButton.setEnabled(true);
+            int rcvdConnectionsNb = 0;
+            int rcvdUniqueMembersNb = 0;
+            int rcvdUniqueFriendsNb = 0;
+            for (String member : connectionStats.keySet()) {
+                StatsData stats = connectionStats.get(member);
+                rcvdConnectionsNb += stats.connections;
+                rcvdUniqueMembersNb++;
+                if (stats.match) {
+                    rcvdUniqueFriendsNb++;
+                }
+            }
+            rcvdConnections.setText("" + rcvdConnectionsNb);
+            rcvdUniqueMembers.setText("" + rcvdUniqueMembersNb);
+            rcvdUniqueFriends.setText("" + rcvdUniqueFriendsNb);
+        }
+    }
+
 
     
-    private void refreshMembers() {
-
-        while (refreshing) {
-            try {
-                TimeUnit.SECONDS.sleep(REFRESH_DELAY);  // aligned with ping, every 150 seconds
-                updateMembersList();
-            } catch (InterruptedException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-        }
-
-    }
     
 
     public void rememberMembers() {
@@ -486,28 +515,6 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     
-    public void updateMembersList() {
-        resetAncestrisMembers();
-        final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
-        membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", n));
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                membersList.updateTable();
-                String title = NbBundle.getMessage(TreeSharingTopComponent.class, "CTL_TreeSharingTopComponent");
-                if (n > 0) {
-                    membersNumber.setText(" " + n + " ");
-                    instance.setDisplayName(title + " (" + n + ")");
-                } else {
-                    membersNumber.setText(" ");
-                    instance.setDisplayName(title);
-                }
-                rememberMembers();
-            }
-        });
-    }
-    
-
 
     
     
@@ -535,8 +542,8 @@ public class TreeSharingTopComponent extends TopComponent {
     @Override
     public void componentClosed() {
         stopSharingToggle.doClick();
+        swingTimer.stop();
         updateIcon();
-        refreshing = false;
         rememberMembers();
     }
 
@@ -885,7 +892,7 @@ public class TreeSharingTopComponent extends TopComponent {
 
     private boolean setTimer() {
         
-        // Calculte delay between bow and limit date
+        // Calculte delay between now and limit date
         Date limitDate = timerPanel.getTimerDate();
         Date currentDate = new java.util.Date();
         long delay = limitDate.getTime() - currentDate.getTime();
@@ -932,6 +939,7 @@ public class TreeSharingTopComponent extends TopComponent {
         
         // Launch thread (cannot be launched twice)
         searchThread.start();
+        
     }
 
     private void stopSearchEngine() {
@@ -956,37 +964,25 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     
-    
-    public void updateStatsDisplay() {
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            public void run() {
-                if (connectionStats == null || connectionStats.isEmpty()) {
-                    statsButton.setEnabled(false);
-                    rcvdConnections.setText("");
-                    rcvdUniqueMembers.setText("");
-                    rcvdUniqueFriends.setText("");
-                } else {
-                    statsButton.setEnabled(true);
-                    int rcvdConnectionsNb = 0;
-                    int rcvdUniqueMembersNb = 0;
-                    int rcvdUniqueFriendsNb = 0;
-                    for (String member : connectionStats.keySet()) {
-                        StatsData stats = connectionStats.get(member);
-                        rcvdConnectionsNb += stats.connections;
-                        rcvdUniqueMembersNb++;
-                        if (stats.match) {
-                            rcvdUniqueFriendsNb++;
-                        }
-                    }
-                    rcvdConnections.setText("" + rcvdConnectionsNb);
-                    rcvdUniqueMembers.setText("" + rcvdUniqueMembersNb);
-                    rcvdUniqueFriends.setText("" + rcvdUniqueFriendsNb);
-                }
+    public void updateSearchStats() {
+        if (sharedGedcoms != null) {
+            for (SharedGedcom sg : sharedGedcoms) {
+                sg.updateStats(true);
             }
-        });
-        
+        }
+        if(gedcomFriendMatches != null) {
+            for (GedcomFriendMatch match : gedcomFriendMatches) {
+                match.updateStats();
+            }
+        }
+        if (ancestrisFriends != null) {
+            for (AncestrisFriend f : ancestrisFriends) {
+                f.updateStats();
+            }
+        }
     }
 
+    
     public void setResetStats() {
         resetStats = true;
     }
@@ -1157,43 +1153,6 @@ public class TreeSharingTopComponent extends TopComponent {
         return friend;
     }
 
-
-    public void displayResultsPanel(String gedcoms, String friends, String typeOfEntity) {
-        
-        final EntitiesListPanel el = new EntitiesListPanel(gedcoms, friends, matchedResults, typeOfEntity);
-
-        JFrame frame = (JFrame)SwingUtilities.windowForComponent(this);
-        final JDialog dialog = new JDialog((Frame)null, NbBundle.getMessage(EntitiesListPanel.class, "TIP_TitleResults"), false);
-        
-        final JButton copyButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Copy.png")));
-        copyButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_CopyData"));
-        copyButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                el.copy();
-            }
-        });
-
-        final JButton closeButton = new JButton(new ImageIcon(ImageUtilities.loadImage("ancestris/modules/treesharing/resources/Close.png")));
-        closeButton.setToolTipText(NbBundle.getMessage(EntitiesListPanel.class, "TIP_Close"));
-        closeButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                el.close();
-                dialog.setVisible(false);
-                dialog.dispose();
-            }
-        });
-        
-        final JOptionPane optionPane = new JOptionPane(el);
-        optionPane.setOptions(new Object[]{ copyButton, closeButton });
-
-        dialog.setContentPane(optionPane);
-        //dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
-        dialog.pack();
-        dialog.setLocationRelativeTo(frame);
-        dialog.setVisible(true);
-
-    }
-
     private void showWelcomeMessages() {
         if ("1".equals(NbPreferences.forModule(TreeSharingOptionsPanel.class).get("Welcome", "1"))) {
             DialogManager.create(NbBundle.getMessage(getClass(), "TITL_Welcome"),
@@ -1204,5 +1163,11 @@ public class TreeSharingTopComponent extends TopComponent {
     }
 
     
+
+    public void displayResultsPanel(String gedcom, String friend, String typeOfEntity) {
+        DialogManager.create(NbBundle.getMessage(EntitiesListPanel.class, "TIP_TitleResults"), new EntitiesListPanel(gedcom, friend, matchedResults, typeOfEntity))
+                .setMessageType(DialogManager.PLAIN_MESSAGE).setDialogId(EntitiesListPanel.class).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+    }
+
 
 }
