@@ -538,20 +538,22 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         jpanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         jpanel1.setLayout(new BorderLayout());
         
-        JButton jbutton1 = new JButton();
-        jbutton1.setText("+");
+        
+        JButton jbutton1 = new JButton();        
+        jbutton1.setText("--");
+        for( EditorBeanField field : group.getFields()) {
+            if( field.isUsed() && !field.isVisible()) {
+                jbutton1.setText("+");
+                break;
+            }
+        }
         jbutton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
-//        jbutton1.addActionListener(new java.awt.event.ActionListener() {
-//            @Override
-//            public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                EditorConfigGroupDialog.showEditorConfigGroupDialog2(group);
-//            }
-//        });
+        //jbutton1.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         
         jbutton1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                EditorConfigGroupDialog.showEditorConfigGroupDialog2(group, evt);
+                EditorConfigGroupDialog.showEditorConfigGroupDialog(group, evt);
             }
         });
         
