@@ -5,11 +5,13 @@
 package ancestris.modules.webbook;
 
 import ancestris.gedcom.privacy.PrivacyPolicy;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import javax.swing.JPanel;
 import org.openide.util.NbBundle;
+import org.openide.util.Utilities;
 
 public final class WebBookVisualPanel2 extends JPanel {
 
@@ -201,7 +203,19 @@ public final class WebBookVisualPanel2 extends JPanel {
         if (gedcom == null) {
             return null;
         }
-        return gedcom.getDeCujusIndi();
+        Indi indi = gedcom.getDeCujusIndi();
+        
+        // Else select current entity
+        if (indi == null) {
+            Context context = Utilities.actionsGlobalContext().lookup(Context.class);
+            Entity ent = context.getEntity();
+            if (ent instanceof Indi) {
+                return (Indi) ent;
+            }
+        }
+        
+        // Else select first indi
+        return (Indi) gedcom.getFirstEntity(Gedcom.INDI);
     }
 
 
