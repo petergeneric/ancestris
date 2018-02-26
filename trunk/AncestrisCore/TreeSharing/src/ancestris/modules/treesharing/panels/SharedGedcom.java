@@ -273,11 +273,11 @@ public class SharedGedcom extends JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jCheckBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox1ActionPerformed
-        updateStats(false);
+        updateStats(true);
     }//GEN-LAST:event_jCheckBox1ActionPerformed
 
     private void jCheckBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox2ActionPerformed
-        updateStats(false);
+        updateStats(true);
     }//GEN-LAST:event_jCheckBox2ActionPerformed
 
     private void jLabel10MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel10MouseClicked
@@ -343,11 +343,11 @@ public class SharedGedcom extends JInternalFrame {
     }
     
     public int getNbOfPublicIndis() {
-        return nbPublicIndis;
+        return isShared() ? (isPrivacySet() ? nbPublicIndis : nbTotalIndis) : 0;
     }
     
     public int getNbOfPublicFams() {
-        return nbPublicFams;
+        return isShared() ? (isPrivacySet() ? nbPublicFams : nbTotalFams) : 0;
     }
     
     public void updateStats(boolean recalculate) {
@@ -366,8 +366,8 @@ public class SharedGedcom extends JInternalFrame {
         // Display
         jLabel6.setText(""+nbTotalIndis);
         jLabel8.setText(""+nbTotalFams);
-        jLabel7.setText(jCheckBox1.isSelected() ? (jCheckBox2.isSelected() ? ""+nbPublicIndis : ""+nbTotalIndis) : "0");
-        jLabel9.setText(jCheckBox1.isSelected() ? (jCheckBox2.isSelected() ? ""+nbPublicFams : ""+nbTotalFams) : "0");
+        jLabel7.setText(isShared() ? (isPrivacySet() ? ""+nbPublicIndis : ""+nbTotalIndis) : "0");
+        jLabel9.setText(isShared() ? (isPrivacySet() ? ""+nbPublicFams : ""+nbTotalFams) : "0");
         jButton1.setText(""+nbCommonIndis);
         jButton2.setText(""+nbCommonFams);
         jButton1.setEnabled(nbCommonIndis != 0);
@@ -380,7 +380,7 @@ public class SharedGedcom extends JInternalFrame {
 
     public final void setShared(boolean shared) {
         jCheckBox1.setSelected(shared);
-        updateStats(false);
+        updateStats(true);
     }
     
     public final boolean isShared() {
@@ -389,7 +389,7 @@ public class SharedGedcom extends JInternalFrame {
     
     public final void setPrivacy(boolean privacy) {
         jCheckBox2.setSelected(privacy);
-        updateStats(false);
+        updateStats(true);
     }
 
     private final boolean isPrivacySet() {
@@ -399,7 +399,7 @@ public class SharedGedcom extends JInternalFrame {
     public final void resetResults() {
         matchedIndis.clear();
         matchedFams.clear();
-        updateStats(false);
+        updateStats(true);
     }
 
     
@@ -521,7 +521,7 @@ public class SharedGedcom extends JInternalFrame {
     
     
     private int getNbPublicEntities(String tag) {
-        if (!isPrivacySet() || gedcom == null || gedcom.getName() == null) {
+        if (gedcom == null || gedcom.getName() == null) {
             return 0;
         }
         
