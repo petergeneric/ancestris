@@ -62,8 +62,7 @@ public class RecordDropTargetListener implements DropTargetListener {
                             Component component = (Component) evt.getNewValue();
                             // je verifie si c'est un composant géré 
                             if (verifyComponent(component)) {
-                                DropTarget dropTarget = new DropTarget(component, new RecordDropTargetListener());
-                                propertyChangeListenerCount++;
+                                DropTarget dropTarget = new DropTarget(component, new RecordDropTargetListener());                             
                             }
                         }
                     }
@@ -76,10 +75,11 @@ public class RecordDropTargetListener implements DropTargetListener {
             for (AncestrisTopComponent tc : AncestrisPlugin.lookupAll(AncestrisTopComponent.class)) {
                 if( verifyComponent(tc)) {
                     DropTarget dropTarget = new DropTarget(tc, new RecordDropTargetListener());
-                    propertyChangeListenerCount++;
                 }
             }            
-        }        
+        }
+        // je compte le nombre d'instances de ReleveTopComponent qui ont appelé cette méthode
+        propertyChangeListenerCount++;
     }
     
       

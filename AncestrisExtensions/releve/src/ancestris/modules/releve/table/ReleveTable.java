@@ -151,9 +151,9 @@ public class ReleveTable extends JTable {
                         Entity entity = gedcomLink.getEntity();
                         if (entity != null) {
                             if (e.getClickCount() == 2) {
-                                SelectionManager.setRootAllTreeview(property);
+                                SelectionManager.setRootEntity(property);
                             } else {
-                                SelectionManager.showEntityAllTreeview(property);
+                                SelectionManager.showEntity(property);
                             }
                         }
                     }

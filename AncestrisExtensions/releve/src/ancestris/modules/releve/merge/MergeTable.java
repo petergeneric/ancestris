@@ -71,15 +71,14 @@ public class MergeTable extends JTable {
                     if( objectValue instanceof Indi || objectValue instanceof Fam )  {
                      
                         Entity entity = (Entity) objectValue;
-                        if (entityActionManager != null) {
-                            if (e.getClickCount() == 2) {
-                                entityActionManager.setRoot(entity);
-                            } else {
-                                entityActionManager.show(entity);
-                            }
+                        if (e.getClickCount() == 2) {
+                            SelectionManager.setRootEntity(entity);
+                        } else {
+                            SelectionManager.showEntity(entity);
                         }
                     } else if( ((MergeModel) getModel()).getRow(row).rowType == MergeModel.RowType.EventSource) {
-                        entityActionManager.selectSource();                        
+                        entityActionManager.selectSource();  
+                        
                     }
                 }
             }        
