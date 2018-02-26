@@ -50,6 +50,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -59,6 +60,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Box;
@@ -274,6 +276,7 @@ public class TreeSharingTopComponent extends TopComponent {
             @Override
             public void actionPerformed(ActionEvent e) {
                 updateMembersList();
+                updateStatsDisplay();
                 if (commHandler != null) {
                     commHandler.sendPing();
                 }
@@ -416,15 +419,16 @@ public class TreeSharingTopComponent extends TopComponent {
         swingTimer = new javax.swing.Timer(REFRESH_DELAY*1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 updateMembersList();
+                checkDisconnection();
                 updateStatsDisplay();
-                toolbar.revalidate();
-                toolbar.repaint();
             }
         });
         swingTimer.setInitialDelay(REFRESH_DELAY*1000);
         swingTimer.start(); 
     }
 
+
+    
     public void updateMembersList() {
         resetAncestrisMembers();
         final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
@@ -466,6 +470,8 @@ public class TreeSharingTopComponent extends TopComponent {
             rcvdUniqueMembers.setText("" + rcvdUniqueMembersNb);
             rcvdUniqueFriends.setText("" + rcvdUniqueFriendsNb);
         }
+        revalidate();
+        repaint();
     }
 
 
@@ -489,7 +495,7 @@ public class TreeSharingTopComponent extends TopComponent {
         String key = "";
         boolean isAllowed = true;
 
-        // If a list exists, 
+        // If a list is found on the server, 
         for (AncestrisMember tempItem : newList) {
             if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
                 for (AncestrisMember member : ancestrisMembers) {
@@ -507,14 +513,36 @@ public class TreeSharingTopComponent extends TopComponent {
             tempItem.setAllowed(isAllowed);
         }
 
-        // Set previous list to newlist or set it if first time        
-        if (ancestrisMembers != null) {
+        // Clear existing list and add newList to previous list
+        if (ancestrisMembers == null) {
+            ancestrisMembers = new ArrayList<AncestrisMember>(); 
+        } else {
             ancestrisMembers.clear();
         }
-        ancestrisMembers = newList;
+        ancestrisMembers.addAll(newList);
     }
 
     
+    private void checkDisconnection() {
+        // If sharing is ON, and if I am no longer in the membersList (unknown disconnexion ?), and until the time left to share, restart sharing
+        boolean stillConnected = false;
+        for (AncestrisMember member : ancestrisMembers) {
+            if (member.getMemberName().equals(commPseudo)) {
+                stillConnected = true;
+            }
+        }
+        if (!stillConnected && isShareAllOn()) {
+            stopSharingAll();
+            try {
+                TimeUnit.SECONDS.sleep(1);
+            } catch (InterruptedException ex) {
+                //Exceptions.printStackTrace(ex);
+            }
+            startSharingAll();
+            LOG.log(Level.INFO, "Connection lost. Turning sharing off and back on...   " + getRegisteredEndDate());
+        }
+
+    }
 
     
     
@@ -989,8 +1017,12 @@ public class TreeSharingTopComponent extends TopComponent {
 
     
     public void displayStats() {
+        revalidate();
+        repaint();
+
         DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_StatsPanel"), 
                 new StatsPanel(connectionStats, this)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+
         if (resetStats) {
             initConnectionStats();
             updateStatsDisplay();
