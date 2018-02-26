@@ -543,9 +543,9 @@ public class WebMap extends WebSection {
         text += ".;";
 
         if (cityFlash.minDate != null && cityFlash.minDate.compareTo(cityFlash.maxDate) == 0) {
-            text += trs("map_box_occon") + " \"" + cityFlash.minDate + "\".";
+            text += trs("map_box_occon") + " \"" + cityFlash.minDate.getDisplayValue() + "\".";
         } else if (cityFlash.minDate != null && cityFlash.maxDate != null) {
-            text += trs("map_box_occbet") + " \"" + cityFlash.minDate + "\" " + trs("map_box_occand") + " \"" + cityFlash.maxDate + "\".";
+            text += trs("map_box_occbet") + " \"" + cityFlash.minDate.getDisplayValue() + "\" " + trs("map_box_occand") + " \"" + cityFlash.maxDate.getDisplayValue() + "\".";
         }
         cityFlash.text = text;
     }
