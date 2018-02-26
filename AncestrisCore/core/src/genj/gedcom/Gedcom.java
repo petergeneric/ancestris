@@ -1029,7 +1029,7 @@ public class Gedcom implements Comparable {
             if (props != null) {
                 for (Property prop : props) {
                     sosaStr = prop.getDisplayValue();
-                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 1)) || (getNb(sosaStr) == 1)) {
+                    if ("1".equals(sosaStr) || "1 ".equals(sosaStr.substring(0, 2)) || (getNb(sosaStr) == 1)) {
                         return indi;
                     }
                 }
@@ -1053,31 +1053,43 @@ public class Gedcom implements Comparable {
      */
     private int getNb(String str) {
 
+        // Get first word of string
+        if (str.indexOf(' ') > -1) {
+            str = str.substring(0, str.indexOf(' '));
+        }
+        
         if (str == null || str.isEmpty()) {
             return 0;
         }
         int sosaNb = 0;
 
+        // Get rank of first digit starting from the left
         int start = 0, end = str.length()-1;
         while (start <= end && !Character.isDigit(str.charAt(start))) {
             start++;
         }
-        end = start;
-        while ((end <= str.length() - 1) && Character.isDigit(str.charAt(end))) {
+
+        // Get rank of last digit starting from the right
+        while (start <= end && !Character.isDigit(str.charAt(end))) {
+            end--;
+        }
+        
+        // Regrow end towards the end
+        while ((end <= str.length()-1) && Character.isDigit(str.charAt(end))) {
             end++;
         }
-        if (end == start) {
-            return 0;
-        } else {
-            try {
+        
+        try {
+            if (end == start) {
+                sosaNb = Integer.parseInt(""+str.charAt(start));
+            } else {
                 sosaNb = Integer.parseInt(str.substring(start, end));
-            } catch (Exception e) {
-                sosaNb = 0;
             }
+        } catch (Exception e) {
+            sosaNb = 0;
         }
         return sosaNb;
     }
-
 
     
 
