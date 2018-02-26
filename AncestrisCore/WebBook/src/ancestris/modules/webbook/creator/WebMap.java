@@ -340,8 +340,16 @@ public class WebMap extends WebSection {
         if ((clazz == null) || !(prop instanceof PropertyPlace)) {
             return false;
         }
-        // Get location from local file
-        String searchedPlace = GeoNodeObject.getPlaceToLocalFormat((PropertyPlace)prop);
+        // Get location from gedcom itsel
+        PropertyPlace place = (PropertyPlace) prop;
+        if (place.getLongitude(true) != null && place.getLatitude(true) != null) {
+            cf.lat = place.getLatitude(true).getDoubleValue();
+            cf.lng = place.getLongitude(true).getDoubleValue();
+            return true;
+        }
+        
+        // If not found, get location from local file
+        String searchedPlace = GeoNodeObject.getPlaceToLocalFormat(place);
         String code = NbPreferences.forModule(clazz).get(searchedPlace, null);
         if (code == null || code.isEmpty()) {
             return false;
