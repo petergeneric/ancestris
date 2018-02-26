@@ -212,6 +212,8 @@ public final class WebBookVisualPanel2 extends JPanel {
             if (ent instanceof Indi) {
                 return (Indi) ent;
             }
+        } else {
+            return indi;
         }
         
         // Else select first indi
@@ -225,16 +227,19 @@ public final class WebBookVisualPanel2 extends JPanel {
     }
 
     public void setPref01(String str) {
-        if (str.isEmpty()) {
-            str = getRootIndi(gedcom).toString();
-        }
+        Indi decujus = getRootIndi(gedcom);
+        
+//        if (str.isEmpty()) {
+//            str = getRootIndi(gedcom).toString();
+//        }
         if (indis == null) {
             return;
         }
         for (int i = 0; i < indis.length; i++) {
             Indi indi = (Indi)indis[i];
-            if (indi.toString().equals(str)) {
+            if (indi.equals(decujus)) {
                 jComboBox1.setSelectedIndex(i);
+                break;
             }
         }
     }
