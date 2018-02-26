@@ -7,8 +7,6 @@ package ancestris.modules.releve.merge;
 
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Indi;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -223,39 +221,10 @@ public class MergePanel extends javax.swing.JPanel  {
         Entity proposedEntity = currentModel.getProposedEntity();
         if (proposedEntity != null) {
             // je mets l'entité  comme racine de l'arbre
-            mergeDialog.setRoot(proposedEntity);        
+            SelectionManager.setRootEntity(proposedEntity);        
             // je selectionne l'entité
-            mergeDialog.show(proposedEntity);
+            SelectionManager.showEntity(proposedEntity);
         }
-        
-//        if (currentModel.getSelectedEntity() != null) {
-//            if ((currentModel instanceof MergeModelBirth || currentModel instanceof MergeModelDeath )
-//                    && currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject != null) {
-//                
-//                Indi indi = (Indi) currentModel.getSelectedEntity();
-//                Fam family = (Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject;
-//                if (indi != null && family !=  null && indi.isDescendantOf(family) ) {
-//                    // je mets la famille comme racine de l'arbre
-//                    mergeDialog.setRoot(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
-//                    // je selectionne le nouveau né
-//                    mergeDialog.show(model.getSelectedEntity());
-//                } else {
-//                    mergeDialog.setRoot(model.getSelectedEntity());
-//                    // je selectionne sa famille
-//                    mergeDialog.show(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
-//                }
-//            } else {
-//                mergeDialog.setRoot(model.getSelectedEntity());
-//                mergeDialog.show(model.getSelectedEntity());
-//            }
-//        } else {
-//            if ( currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject instanceof Fam) {
-//                // je centre l'arbre sur la famille des parents
-//                mergeDialog.setRoot((Fam) currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
-//                // je selectionne sa famille
-//                mergeDialog.show(currentModel.getRow(MergeModel.RowType.IndiParentFamily).entityObject);
-//            }
-//        }
     }
 
     MergeModel getCurrentModel() {

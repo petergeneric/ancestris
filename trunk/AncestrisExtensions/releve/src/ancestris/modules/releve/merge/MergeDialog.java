@@ -215,29 +215,6 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     MergeRecord getMergeRecord() {
         return mergeRecord;
     }
-
-
-
-    /**
-     * affiche l'entité dans le dnd source
-     * @param entity
-     * @param setRoot positionne l'entité comme racine de l'arbre si la source de Dnd est un arbre
-     */
-    @Override
-    public void setRoot(Property property) {
-        // je declare l'entité comme racine de l'arbre
-        SelectionManager.setRoot(dndSourceComponent, property);
-    }
-    
-    /**
-     * affiche l'entité dans le dnd source
-     * @param entity
-     * @param setRoot positionne l'entité comme racine de l'arbre
-     */
-    @Override
-    public boolean show(Property property) {
-        return SelectionManager.show(dndSourceComponent, property);
-    }
     
     /**
      * sélectionne une source pour remplacer celle qui est proposée dans les propositions
@@ -284,11 +261,8 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                         Property associatedProperty2 = currentModel2.copyRecordToEntity();
                         currentModel2.copyAssociation(associatedProperty1, associatedProperty2);
                     }
-                    // j'affiche l'entité principale dans l'arbre dynamic
-                    boolean showResult = show( associatedProperty1); 
-                    if (! showResult) {
-                        setRoot(associatedProperty1);
-                    }
+                    // j'affiche l'entité principale dans l'arbre
+                    SelectionManager.setRootEntity(associatedProperty1);
                     
                 } catch (Exception throwable) {
                     // je constitue la commande pour annuler les modifications
