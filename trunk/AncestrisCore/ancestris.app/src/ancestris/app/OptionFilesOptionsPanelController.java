@@ -7,6 +7,7 @@ package ancestris.app;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 import org.netbeans.spi.options.OptionsPanelController;
 import org.openide.util.HelpCtx;
 import org.openide.util.Lookup;
@@ -32,8 +33,13 @@ public final class OptionFilesOptionsPanelController extends OptionsPanelControl
     public void applyChanges() {
         getPanel().store();
         App.setLogLevel(getPanel().getLogLevel());
-        ActionOpenDefault action = Lookup.getDefault().lookup(ActionOpenDefault.class);
-        action.putValue("Name", action.getName());
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                ActionOpenDefault action = Lookup.getDefault().lookup(ActionOpenDefault.class);
+                action.putValue("Name", action.getName());
+            }
+        });
         //changed = false;
     }
 
