@@ -2,7 +2,6 @@ package ancestris.modules.releve;
 
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeDialog;
-import ancestris.modules.releve.merge.MergeRecord;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordBirth;
@@ -40,22 +39,29 @@ public class TestUtility extends TestCase {
     public static File createFile( String data ) throws IOException  {
         File file = new File(System.getProperty("user.home") + File.separator + "ancestris.txt");
         boolean append = false;
-        FileWriter writer = writer = new FileWriter(file, append);
+        FileWriter writer = new FileWriter(file, append);
         writer.write(data);            
         writer.close();        
         return file;
 
     }
     
+    static {
+        GedcomOptions.getInstance().setUseSpacedPlaces(true);
+        GedcomOptions.getInstance().setReplaceSpaceSeparatorWithComma(true);   
+    }
+    
+    
     /**
      * creation 'un gedcom minimal
      * @return
      * @throws GedcomException
+     * @throws java.net.MalformedURLException
      */
     public static Gedcom createGedcom() throws GedcomException, MalformedURLException {
 
         // Gedcom options
-        GedcomOptions.getInstance().setUseSpacedPlaces(false);
+
         
         Gedcom gedcom;
         gedcom = new Gedcom();
@@ -86,7 +92,7 @@ public class TestUtility extends TestCase {
         wife.setSex(PropertySex.FEMALE);
 
         Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "child1");
-        child1.setName("OneFirstName", "FATHERLASTNAME");
+        child1.setName("One First Name", "FATHERLASTNAME");
         child1.setSex(PropertySex.FEMALE);
         birth = child1.addProperty("BIRT", "");
         birth.addProperty("DATE","01 JAN 2000");
@@ -97,7 +103,7 @@ public class TestUtility extends TestCase {
         placeBrest.setCoordinates("N52.09755", "E23.68775");
         
         Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
-        child2.setName("TwoFirstName", "FATHERLASTNAME");
+        child2.setName("Two First Name", "FATHERLASTNAME");
         child2.setSex(PropertySex.FEMALE);
         birth = child2.addProperty("BIRT", "");
         birth.addProperty("DATE","BEF 2004");
@@ -106,7 +112,7 @@ public class TestUtility extends TestCase {
         
 
         Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "child3");
-        child3.setName("ThreeFirstName", "FATHERLASTNAME");
+        child3.setName("Three, First, Name", "FATHERLASTNAME");
         child3.setSex(PropertySex.FEMALE);
 
         Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F1");
@@ -145,11 +151,10 @@ public class TestUtility extends TestCase {
      */
     public static Gedcom createGedcom2() throws GedcomException {
         // Gedcom options
-        GedcomOptions.getInstance().setUseSpacedPlaces(false);
         
         Gedcom gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
-
+        
         Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "I1");
         husband.setName("FatherFirstName", "FATHERLASTNAME");
         husband.setSex(PropertySex.MALE);
