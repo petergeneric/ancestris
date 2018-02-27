@@ -4,6 +4,7 @@ import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.GedcomOptions;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
@@ -183,96 +184,96 @@ public class MergeRecord {
         parish = data.parish;
 
         partipant1 = new MergeParticipant(MergeParticipantType.participant1);
-        partipant1.m_FirstName = data.participant1.firstName;
-        partipant1.m_LastName = data.participant1.lastName;
-        partipant1.m_Sex = SexType.fromString(data.participant1.sex);
+        partipant1.m_FirstName          = formatFirstName(data.participant1.firstName);
+        partipant1.m_LastName           = data.participant1.lastName;
+        partipant1.m_Sex                = SexType.fromString(data.participant1.sex);
         partipant1.m_Age.setValue(data.participant1.age);
-        partipant1.m_BirthDate = parseDateString(data.participant1.birthDate);
-        partipant1.m_BirthPlace = data.participant1.birthPlace;
-        partipant1.m_BirthAddress = data.participant1.birthAddress;
-        partipant1.m_Occupation = data.participant1.occupation;
-        partipant1.m_Residence = data.participant1.residence;
-        partipant1.m_Address = data.participant1.address;
-        partipant1.m_Comment = data.participant1.comment;
-        partipant1.m_MarriedFirstName = data.participant1.marriedFirstName;
-        partipant1.m_MarriedLastName = data.participant1.marriedLastName;
-        partipant1.m_MarriedComment = data.participant1.marriedComment;
-        partipant1.m_MarriedOccupation = data.participant1.marriedOccupation;
-        partipant1.m_MarriedResidence = data.participant1.marriedResidence;
-        partipant1.m_MarriedAddress = data.participant1.marriedAddress;
-        partipant1.m_MarriedDead = DeadState.fromString(data.participant1.marriedDead);
-        partipant1.m_FatherFirstName = data.participant1.fatherFirstName;
-        partipant1.m_FatherLastName = data.participant1.fatherLastName;
-        partipant1.m_FatherOccupation = data.participant1.fatherOccupation;
-        partipant1.m_FatherResidence = data.participant1.fatherResidence;
-        partipant1.m_FatherAddress = data.participant1.fatherAddress;
+        partipant1.m_BirthDate          = parseDateString(data.participant1.birthDate);
+        partipant1.m_BirthPlace         = data.participant1.birthPlace;
+        partipant1.m_BirthAddress       = data.participant1.birthAddress;
+        partipant1.m_Occupation         = data.participant1.occupation;
+        partipant1.m_Residence          = data.participant1.residence;
+        partipant1.m_Address            = data.participant1.address;
+        partipant1.m_Comment            = data.participant1.comment;
+        partipant1.m_MarriedFirstName   = formatFirstName(data.participant1.marriedFirstName);
+        partipant1.m_MarriedLastName    = data.participant1.marriedLastName;
+        partipant1.m_MarriedComment     = data.participant1.marriedComment;
+        partipant1.m_MarriedOccupation  = data.participant1.marriedOccupation;
+        partipant1.m_MarriedResidence   = data.participant1.marriedResidence;
+        partipant1.m_MarriedAddress     = data.participant1.marriedAddress;
+        partipant1.m_MarriedDead        = DeadState.fromString(data.participant1.marriedDead);
+        partipant1.m_FatherFirstName    = formatFirstName(data.participant1.fatherFirstName);
+        partipant1.m_FatherLastName     = data.participant1.fatherLastName;
+        partipant1.m_FatherOccupation   = data.participant1.fatherOccupation;
+        partipant1.m_FatherResidence    = data.participant1.fatherResidence;
+        partipant1.m_FatherAddress      = data.participant1.fatherAddress;
         partipant1.m_FatherAge.setValue(data.participant1.fatherAge);
-        partipant1.m_FatherDead = DeadState.fromString(data.participant1.fatherDead);
-        partipant1.m_FatherComment = data.participant1.fatherComment;
-        partipant1.m_MotherFirstName = data.participant1.motherFirstName;
-        partipant1.m_MotherLastName = data.participant1.motherLastName;
-        partipant1.m_MotherOccupation = data.participant1.motherOccupation;
-        partipant1.m_MotherResidence = data.participant1.motherResidence;
-        partipant1.m_MotherAddress = data.participant1.motherAddress;
+        partipant1.m_FatherDead         = DeadState.fromString(data.participant1.fatherDead);
+        partipant1.m_FatherComment      = data.participant1.fatherComment;
+        partipant1.m_MotherFirstName    = formatFirstName(data.participant1.motherFirstName);
+        partipant1.m_MotherLastName     = data.participant1.motherLastName;
+        partipant1.m_MotherOccupation   = data.participant1.motherOccupation;
+        partipant1.m_MotherResidence    = data.participant1.motherResidence;
+        partipant1.m_MotherAddress      = data.participant1.motherAddress;
         partipant1.m_MotherAge.setValue(data.participant1.motherAge);
-        partipant1.m_MotherDead = DeadState.fromString(data.participant1.motherDead);
-        partipant1.m_MotherComment = data.participant1.motherComment;
+        partipant1.m_MotherDead         = DeadState.fromString(data.participant1.motherDead);
+        partipant1.m_MotherComment      = data.participant1.motherComment;
 
         partipant2 = new MergeParticipant(MergeParticipantType.participant2);
-        partipant2.m_FirstName = data.participant2.firstName;
-        partipant2.m_LastName = data.participant2.lastName;
-        partipant2.m_Sex = SexType.fromString(data.participant2.sex);
+        partipant2.m_FirstName          = formatFirstName(data.participant2.firstName);
+        partipant2.m_LastName           = data.participant2.lastName;
+        partipant2.m_Sex                = SexType.fromString(data.participant2.sex);
         partipant2.m_Age.setValue(data.participant2.age);
-        partipant2.m_BirthDate = parseDateString(data.participant2.birthDate);
-        partipant2.m_BirthPlace = data.participant2.birthPlace;
-        partipant2.m_BirthAddress = data.participant2.birthAddress;
-        partipant2.m_Occupation = data.participant2.occupation;
-        partipant2.m_Residence = data.participant2.residence;
-        partipant2.m_Address = data.participant2.address;
-        partipant2.m_Comment = data.participant2.comment;
-        partipant2.m_MarriedFirstName = data.participant2.marriedFirstName;
-        partipant2.m_MarriedLastName = data.participant2.marriedLastName;
-        partipant2.m_MarriedComment = data.participant2.marriedComment;
-        partipant2.m_MarriedOccupation = data.participant2.marriedOccupation;
-        partipant2.m_MarriedResidence = data.participant2.marriedResidence;
-        partipant2.m_MarriedAddress = data.participant2.marriedAddress;
-        partipant2.m_MarriedDead = DeadState.fromString(data.participant2.marriedDead);
-        partipant2.m_FatherFirstName = data.participant2.fatherFirstName;
-        partipant2.m_FatherLastName = data.participant2.fatherLastName;
-        partipant2.m_FatherOccupation = data.participant2.fatherOccupation;
-        partipant2.m_FatherResidence = data.participant2.fatherResidence;
-        partipant2.m_FatherAddress = data.participant2.fatherAddress;
+        partipant2.m_BirthDate          = parseDateString(data.participant2.birthDate);
+        partipant2.m_BirthPlace         = data.participant2.birthPlace;
+        partipant2.m_BirthAddress       = data.participant2.birthAddress;
+        partipant2.m_Occupation         = data.participant2.occupation;
+        partipant2.m_Residence          = data.participant2.residence;
+        partipant2.m_Address            = data.participant2.address;
+        partipant2.m_Comment            = data.participant2.comment;
+        partipant2.m_MarriedFirstName   = formatFirstName(data.participant2.marriedFirstName);
+        partipant2.m_MarriedLastName    = data.participant2.marriedLastName;
+        partipant2.m_MarriedComment     = data.participant2.marriedComment;
+        partipant2.m_MarriedOccupation  = data.participant2.marriedOccupation;
+        partipant2.m_MarriedResidence   = data.participant2.marriedResidence;
+        partipant2.m_MarriedAddress     = data.participant2.marriedAddress;
+        partipant2.m_MarriedDead        = DeadState.fromString(data.participant2.marriedDead);
+        partipant2.m_FatherFirstName    = formatFirstName(data.participant2.fatherFirstName);
+        partipant2.m_FatherLastName     = data.participant2.fatherLastName;
+        partipant2.m_FatherOccupation   = data.participant2.fatherOccupation;
+        partipant2.m_FatherResidence    = data.participant2.fatherResidence;
+        partipant2.m_FatherAddress      = data.participant2.fatherAddress;
         partipant2.m_FatherAge.setValue(data.participant2.fatherAge);
-        partipant2.m_FatherDead = DeadState.fromString(data.participant2.fatherDead);
-        partipant2.m_FatherComment = data.participant2.fatherComment;
-        partipant2.m_MotherFirstName = data.participant2.motherFirstName;
-        partipant2.m_MotherLastName = data.participant2.motherLastName;
-        partipant2.m_MotherOccupation = data.participant2.motherOccupation;
-        partipant2.m_MotherResidence = data.participant2.motherResidence;
-        partipant2.m_MotherAddress = data.participant2.motherAddress;
+        partipant2.m_FatherDead         = DeadState.fromString(data.participant2.fatherDead);
+        partipant2.m_FatherComment      = data.participant2.fatherComment;
+        partipant2.m_MotherFirstName    = formatFirstName(data.participant2.motherFirstName);
+        partipant2.m_MotherLastName     = data.participant2.motherLastName;
+        partipant2.m_MotherOccupation   = data.participant2.motherOccupation;
+        partipant2.m_MotherResidence    = data.participant2.motherResidence;
+        partipant2.m_MotherAddress      = data.participant2.motherAddress;
         partipant2.m_MotherAge.setValue(data.participant2.motherAge);
-        partipant2.m_MotherDead = DeadState.fromString(data.participant2.motherDead);
-        partipant2.m_MotherComment = data.participant2.motherComment;
+        partipant2.m_MotherDead         = DeadState.fromString(data.participant2.motherDead);
+        partipant2.m_MotherComment      = data.participant2.motherComment;
 
-        witness1.firstName = data.witness1.firstName;
-        witness1.lastName = data.witness1.lastName;
+        witness1.firstName  = formatFirstName(data.witness1.firstName);
+        witness1.lastName   = data.witness1.lastName;
         witness1.occupation = data.witness1.occupation;
-        witness1.comment = data.witness1.comment;
+        witness1.comment    = data.witness1.comment;
 
-        witness2.firstName = data.witness2.firstName;
-        witness2.lastName = data.witness2.lastName;
+        witness2.firstName  = formatFirstName(data.witness2.firstName);
+        witness2.lastName   = data.witness2.lastName;
         witness2.occupation = data.witness2.occupation;
-        witness2.comment = data.witness2.comment;
+        witness2.comment    = data.witness2.comment;
 
-        witness3.firstName = data.witness3.firstName;
-        witness3.lastName = data.witness3.lastName;
+        witness3.firstName  = formatFirstName(data.witness3.firstName);
+        witness3.lastName   = data.witness3.lastName;
         witness3.occupation = data.witness3.occupation;
-        witness3.comment = data.witness3.comment;
+        witness3.comment    = data.witness3.comment;
 
-        witness4.firstName = data.witness4.firstName;
-        witness4.lastName = data.witness4.lastName;
+        witness4.firstName  = formatFirstName(data.witness4.firstName);
+        witness4.lastName   = data.witness4.lastName;
         witness4.occupation = data.witness4.occupation;
-        witness4.comment = data.witness4.comment;
+        witness4.comment    = data.witness4.comment;
 
     }
     
@@ -476,6 +477,18 @@ public class MergeRecord {
 
     PropertyDate getInsinuationDate() {
         return eventSecondDate;
+    }
+    
+    private String formatFirstName(String namePiece) {
+        //return firstName.replaceAll(" *, *", GedcomOptions.getInstance().replaceSpaceSeparatorWithComma() ? ", " : " ");  
+        if (namePiece.isEmpty()) {
+            return "";
+        }
+        String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
+        if (GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()) {
+            result = result.replaceAll(" +", ",");
+        }
+        return result.replaceAll(",", ", ");
     }
 
     String formatDateDDMMYYYY(PropertyDate dateProperty) {

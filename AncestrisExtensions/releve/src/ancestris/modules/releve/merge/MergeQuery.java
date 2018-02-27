@@ -1599,32 +1599,42 @@ public class MergeQuery {
      * @param str2
      * @return
      */
-    static public boolean isSameLastName(String str1, String str2) {
-        boolean result = false;
-
-        if( str1 != null && ! str1.isEmpty()) {
-            String[] names1 = str1.split(",");
-            String[] names2 = str2.split(",");
-
-            for( String name1 : names1) {
-                String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(name1);
-                for( String name2 : names2) {
-                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(name2)));
-                    if (result) {
-                        break;
-                    }
-                }
-                if (result) {
-                    break;
-                }
-            }
+    static public boolean isSameLastName(String str1, String str2) {        
+//        boolean result = false;
+//        if( str1 != null && ! str1.isEmpty()) {
+//            String[] names1 = str1.split(",");
+//            String[] names2 = str2.split(",");
+//
+//            for( String name1 : names1) {
+//                String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(name1);
+//                for( String name2 : names2) {
+//                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(name2)));
+//                    if (result) {
+//                        break;
+//                    }
+//                }
+//                if (result) {
+//                    break;
+//                }
+//            }
+//        } else {
+//            // 
+//            return true;
+//        }
+//        return result;
+        
+        if (str1 != null && !str1.isEmpty()) {
+            //TODO comparer avec tous les noms similaires
+            String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(str1);
+            return dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(str2)));
         } else {
-            // 
             return true;
         }
-        return result;
+
         //return dm.encode(str1).equals(dm.encode(str2));
         //return str1.equals(str2);
+        
+        
     }
 
     /**
@@ -1636,30 +1646,36 @@ public class MergeQuery {
     public static boolean isSameFirstName(String str1, String str2) {
         //return dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str1)).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
         //return str1.equals(str2);
-        boolean result = false;
-
-        if( str1 != null && ! str1.isEmpty()) {
-            String[] names1 = str1.split(",");
-            String[] names2 = str2.split(",");
-
-            for( String name1 : names1) {
-                String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(name1);
-                for( String name2 : names2) {
-                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(name2)));
-                    if( result) {
-                        break;
-                    }                        
-                }
-                if (result) {
-                    break;
-                }
-            }
-        } else {
-            // 
-            return true;
-        }
-        return result;
+//        boolean result = false;
+//
+//        if( str1 != null && ! str1.isEmpty()) {
+//            String[] names1 = str1.split(",");
+//            String[] names2 = str2.split(",");
+//
+//            for( String name1 : names1) {
+//                String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(name1);
+//                for( String name2 : names2) {
+//                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(name2)));
+//                    if( result) {
+//                        break;
+//                    }                        
+//                }
+//                if (result) {
+//                    break;
+//                }
+//            }
+//        } else {
+//            // 
+//            return true;
+//        }
+//        return result;
         
+        if (str1 != null && !str1.isEmpty()) {
+            String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(str1);
+            return dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
+        } else {
+            return true;
+        }        
     }
 
     /**

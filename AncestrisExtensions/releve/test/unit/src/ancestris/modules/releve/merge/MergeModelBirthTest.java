@@ -4,7 +4,6 @@ import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
-import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordBirth;
@@ -71,7 +70,7 @@ public class MergeModelBirthTest extends TestCase {
                 record.setFieldValue(FieldType.eventDate, "01/01/2000");
                 record.setFieldValue(FieldType.cote, "cote");
                 record.setFieldValue(FieldType.freeComment,  "photo");
-                record.setIndi("OneFirstName", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndi("One First Name", "FATHERLASTNAME", "F", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
                 record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "dead", "70y");
                 record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "dead", "72y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
@@ -85,7 +84,7 @@ public class MergeModelBirthTest extends TestCase {
                 record.setFieldValue(FieldType.eventDate, "01/01/1980");
                 record.setFieldValue(FieldType.cote, "cote");
                 record.setFieldValue(FieldType.freeComment,  "photo");
-                record.setIndi("TwoFirstName", "FATHERLASTNAME", "M", "03 MAR 2003", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndi("Two First Name", "FATHERLASTNAME", "M", "03 MAR 2003", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
                 //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherComment", "dead");
                 //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherComment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
@@ -99,7 +98,7 @@ public class MergeModelBirthTest extends TestCase {
                 record.setFieldValue(FieldType.eventDate, "06/07/2001");
                 record.setFieldValue(FieldType.cote, "cote");
                 record.setFieldValue(FieldType.freeComment,  "photo");
-                record.setIndi("ThreeFirstName", "FATHERLASTNAME", "F", "", "04 JUL 2001", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
+                record.setIndi("Three, First, Name", "FATHERLASTNAME", "F", "", "04 JUL 2001", "indiBirthplace", "birthAddress", "indioccupation", "indiResidence", "indiAddress", "indicomment");
                 record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "false", "31y");
                 record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "", "30y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
@@ -188,7 +187,7 @@ public class MergeModelBirthTest extends TestCase {
             
             String expected = "";
             expected +="Date de l'acte: 06/07/2001\n";
-            expected +="Nouveau né: ThreeFirstName FATHERLASTNAME, né le 04/07/2001 à indiBirthplace, indioccupation, domicile indiResidence, indicomment\n";
+            expected +="Nouveau né: Three, First, Name FATHERLASTNAME, né le 04/07/2001 à indiBirthplace, indioccupation, domicile indiResidence, indicomment\n";
             expected +="Père: Fatherfirstname FATHERLASTNAME, 31 années, Vivant, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 30 années, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
