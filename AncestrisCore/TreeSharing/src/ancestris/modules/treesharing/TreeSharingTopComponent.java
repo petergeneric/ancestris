@@ -69,6 +69,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JToolBar;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.netbeans.api.settings.ConvertAsProperties;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
@@ -435,14 +436,22 @@ public class TreeSharingTopComponent extends TopComponent {
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", n));
         // 
         if (membersList != null) {
+            final String nb;
+            final String name;
             membersList.updateTable();
             if (n > 0) {
-                membersNumber.setText(" " + n + " ");
-                instance.setDisplayName(titleComponent + " (" + n + ")");
+                nb = " " + n + " ";
+                name = titleComponent + " (" + n + ")";
             } else {
-                membersNumber.setText(" ");
-                instance.setDisplayName(titleComponent);
+                nb = " ";
+                name = titleComponent;
             }
+            SwingUtilities.invokeLater(new Runnable() {
+                public void run() {
+                    membersNumber.setText(nb);
+                    instance.setDisplayName(name);
+                }
+            });
             rememberMembers();
         }
     }
@@ -788,7 +797,12 @@ public class TreeSharingTopComponent extends TopComponent {
         for (SharedGedcom sg : sharedGedcoms) {
             atLeastAFlagIsOn |= sg.isShared();
         }
-        instance.setIcon(ImageUtilities.loadImage(isShareAllOn() && atLeastAFlagIsOn ? ICON_PATH_ON : ICON_PATH, true));
+        final boolean flag = atLeastAFlagIsOn;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                instance.setIcon(ImageUtilities.loadImage(isShareAllOn() && flag ? ICON_PATH_ON : ICON_PATH, true));
+            }
+        });
     }
     
     
