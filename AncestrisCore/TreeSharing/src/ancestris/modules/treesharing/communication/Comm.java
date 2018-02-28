@@ -18,6 +18,7 @@ import ancestris.util.swing.DialogManager;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.ObjectInputStream;
@@ -148,7 +149,8 @@ public class Comm {
     private static String TAG_PPORTA = "pportaddress";
 
     // Command and Packets size
-    private int COMM_PACKET_SIZE = 10000;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
+    private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
+                    // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
     private double COMM_COMPRESSING_FACTOR = 1.3;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private int COMM_CMD_SIZE = 5;
     private int COMM_CMD_PFX_SIZE = 2;
@@ -1244,6 +1246,9 @@ public class Comm {
             ObjectInputStream is = new ObjectInputStream(new GZIPInputStream(byteStream));
             object = is.readObject();
             is.close();
+        } catch (EOFException ex) {
+            LOG.log(Level.FINE, "Receiving message. Problem of different packet size between sender and receiver. Please update your version of Ancestris.");
+            Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         } catch (ClassNotFoundException ex) {
