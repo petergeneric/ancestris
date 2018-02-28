@@ -831,7 +831,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
      */
     protected void saveFile() {
         if ( currentFile != null) {
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, currentFile, FileManager.FileFormat.FILE_TYPE_ANCESTRISV5);
             if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications
                 dataManager.resetDirty();
@@ -888,7 +888,7 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             // afin de pouvoir le ré-utiliser meme si l'enregistrement s'est mal passé.
             NbPreferences.forModule(ReleveTopComponent.class).put(FILE_DIRECTORY, file.getParent());
             // j'enregistre les données dans le fichier
-            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, file, FileManager.FileFormat.FILE_TYPE_ANCESTRISV4);
+            StringBuilder saveResult = FileManager.saveFile(dataManager, dataManager, file, FileManager.FileFormat.FILE_TYPE_ANCESTRISV5);
 
              if (saveResult.toString().isEmpty()) {
                 // je met a zero l'indicateur des modifications

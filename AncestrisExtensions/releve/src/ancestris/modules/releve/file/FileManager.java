@@ -49,7 +49,9 @@ public class FileManager {
         }
         StringBuilder sb  = new StringBuilder();
         FileBuffer buffer = null;
-        if (ReleveFileAncestrisV4.isValidFile(inputFile, sb.append('\n'))) {
+        if (ReleveFileAncestrisV5.isValidFile(inputFile, sb.append('\n'))) {
+            buffer = ReleveFileAncestrisV5.loadFile(inputFile);
+        } else if (ReleveFileAncestrisV4.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileAncestrisV4.loadFile(inputFile);
         } else if (ReleveFileEgmt.isValidFile(inputFile, sb.append('\n'))) {
             buffer = ReleveFileEgmt.loadFile(inputFile);
@@ -92,10 +94,8 @@ public class FileManager {
 
             switch (fileFormat) {
                 case FILE_TYPE_ANCESTRISV5:
+                default:
                     sb.append(ReleveFileAncestrisV5.saveFile(placeManager, recordModel, recordType, saveFile, false));
-                    break;
-                case FILE_TYPE_ANCESTRISV4:
-                    sb.append(ReleveFileAncestrisV4.saveFile(placeManager, recordModel, recordType, saveFile, false));
                     break;
                 case FILE_TYPE_EGMT:
                     sb.append(ReleveFileEgmt.saveFile(placeManager, recordModel, recordType, saveFile, false));

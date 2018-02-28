@@ -31,8 +31,10 @@ public class EditorBeanField {
 	init(GroupId.indi,          FieldType.indiAge,               false, false,  true,  true,   true,  true,   true,  true );
 	init(GroupId.indi,          FieldType.indiBirthDate,         true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indi,          FieldType.indiBirthPlace,        true,  true,   true,  true,   true,  true,   true,  true );
+	init(GroupId.indi,          FieldType.indiBirthAddress,      true,  true,   true,  false,  true,  false,  true,  false);
 	init(GroupId.indi,          FieldType.indiOccupation,        false, false,  true,  true,   true,  true,   true,  true );
 	init(GroupId.indi,          FieldType.indiResidence,         false, false,  true,  true,   true,  true,   true,  true );
+	init(GroupId.indi,          FieldType.indiAddress,           false, false,  true,  true,   true,  true,   true,  true );
 	init(GroupId.indi,          FieldType.indiComment,           true,  true,   true,  true,   true,  true,   true,  true );
 
 	init(GroupId.indiMarried,   FieldType.indiMarriedLastName,   false, false,  true,  true,   true,  true,   true,  true );
@@ -40,6 +42,7 @@ public class EditorBeanField {
 	init(GroupId.indiMarried,   FieldType.indiMarriedDead,       false, false,  true,  true,   true,  true,   true,  true );
 	init(GroupId.indiMarried,   FieldType.indiMarriedOccupation, false, false,  true,  true,   true,  true,   true,  true );
 	init(GroupId.indiMarried,   FieldType.indiMarriedResidence,  false, false,  true,  true,   true,  true,   true,  true );
+	init(GroupId.indiMarried,   FieldType.indiMarriedAddress,    true,  false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.indiMarried,   FieldType.indiMarriedComment,    false, false,  true,  true,   true,  true,   true,  true );
 
 	init(GroupId.indiFather,    FieldType.indiFatherLastName,    true,  true,   true,  true,   true,  true,   true,  true );
@@ -48,6 +51,7 @@ public class EditorBeanField {
 	init(GroupId.indiFather,    FieldType.indiFatherDead,        true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherOccupation,  true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiFather,    FieldType.indiFatherResidence,   true,  true,   true,  true,   true,  true,   true,  true );
+	init(GroupId.indiFather,    FieldType.indiFatherAddress,     true,  false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.indiFather,    FieldType.indiFatherComment,     true,  true,   true,  true,   true,  true,   true,  true );
 
 	init(GroupId.indiMother,    FieldType.indiMotherLastName,    true,  true,   true,  true,   true,  true,   true,  true );
@@ -56,6 +60,7 @@ public class EditorBeanField {
 	init(GroupId.indiMother,    FieldType.indiMotherDead,        false, false,  true,  true,   true,  true,   true,  true );
 	init(GroupId.indiMother,    FieldType.indiMotherOccupation,  true,  true,   true,  true,   true,  true,   true,  true );
 	init(GroupId.indiMother,    FieldType.indiMotherResidence,   true,  true,   true,  true,   true,  true,   true,  true );
+	init(GroupId.indiMother,    FieldType.indiMotherAddress,     true,  false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.indiMother,    FieldType.indiMotherComment,     true,  true,   true,  true,   true,  true,   true,  true );
 
 	init(GroupId.wife,          FieldType.wifeLastName,          false, false,  true,  true,   false, false,  true,  true );
@@ -64,8 +69,10 @@ public class EditorBeanField {
 	init(GroupId.wife,          FieldType.wifeAge,               false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeBirthDate,         false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeBirthPlace,        false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wife,          FieldType.wifeBirthAddress,      false, false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.wife,          FieldType.wifeOccupation,        false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wife,          FieldType.wifeResidence,         false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wife,          FieldType.wifeAddress,           false, false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.wife,          FieldType.wifeComment,           false, false,  true,  true,   false, false,  true,  true );
 
 	init(GroupId.wifeMarried,   FieldType.wifeMarriedLastName,   false, false,  true,  true,   false, false,  true,  true );
@@ -73,6 +80,7 @@ public class EditorBeanField {
 	init(GroupId.wifeMarried,   FieldType.wifeMarriedDead,       false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wifeMarried,   FieldType.wifeMarriedOccupation, false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wifeMarried,   FieldType.wifeMarriedResidence,  false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wifeMarried,   FieldType.wifeMarriedAddress,    false, false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.wifeMarried,   FieldType.wifeMarriedComment,    false, false,  true,  true,   false, false,  true,  true );
 
 	init(GroupId.wifeFather,    FieldType.wifeFatherLastName,    false, false,  true,  true,   false, false,  true,  true );
@@ -81,6 +89,7 @@ public class EditorBeanField {
 	init(GroupId.wifeFather,    FieldType.wifeFatherDead,        false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wifeFather,    FieldType.wifeFatherOccupation,  false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wifeFather,    FieldType.wifeFatherResidence,   false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wifeFather,    FieldType.wifeFatherAddress,     false, false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.wifeFather,    FieldType.wifeFatherComment,     false, false,  true,  true,   false, false,  true,  true );
 
 	init(GroupId.wifeMother,    FieldType.wifeMotherLastName,    false, false,  true,  true,   false, false,  true,  true );
@@ -89,6 +98,7 @@ public class EditorBeanField {
 	init(GroupId.wifeMother,    FieldType.wifeMotherDead,        false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wifeMother,    FieldType.wifeMotherOccupation,  false, false,  true,  true,   false, false,  true,  true );
 	init(GroupId.wifeMother,    FieldType.wifeMotherResidence,   false, false,  true,  true,   false, false,  true,  true );
+	init(GroupId.wifeMother,    FieldType.wifeMotherAddress,     false, false,  true,  false,  true,  false,  true,  false);
 	init(GroupId.wifeMother,    FieldType.wifeMotherComment,     false, false,  true,  true,   false, false,  true,  true );
 
 	init(GroupId.witness1,      FieldType.witness1LastName,      true,  true,   true,  true,   true,  true,   true,  true );
@@ -254,6 +264,11 @@ public class EditorBeanField {
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.BirthPlace");
                 break;
 
+            case indiBirthAddress:
+            case wifeBirthAddress:
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.BirthAddress");
+                break;
+    
             case indiResidence:
             case indiMarriedResidence:
             case indiFatherResidence:
@@ -263,6 +278,17 @@ public class EditorBeanField {
             case wifeFatherResidence:
             case wifeMotherResidence:
                 label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Residence");
+                break;
+
+            case indiAddress:
+            case indiMarriedAddress:
+            case indiFatherAddress:
+            case indiMotherAddress:
+            case wifeAddress:
+            case wifeMarriedAddress:
+            case wifeFatherAddress:
+            case wifeMotherAddress:
+                label = java.util.ResourceBundle.getBundle("ancestris/modules/releve/model/Bundle").getString("model.label.Address");
                 break;
 
             case indiAge:
