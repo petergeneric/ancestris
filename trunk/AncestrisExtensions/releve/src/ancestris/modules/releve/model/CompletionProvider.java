@@ -281,8 +281,8 @@ public class CompletionProvider {
         
         // j'ajoute les prénoms, noms, professions et lieux du Gedcom dans les
         // listes de completion
-        for ( Indi indi : gedcom.getIndis()) {
-            firstNames.add(indi.getFirstName(), FieldSex.convertValue(indi.getSex()), false );
+        for ( Indi indi : gedcom.getIndis()) {            
+            firstNames.add(indi.getFirstName().replaceAll(",", ""), FieldSex.convertValue(indi.getSex()), false );
         }
 
         for ( String lastName : PropertyName.getLastNames(gedcom, false)) {
