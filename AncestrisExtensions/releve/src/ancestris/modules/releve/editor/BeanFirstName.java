@@ -53,7 +53,7 @@ public class BeanFirstName extends Bean implements CompletionListener {
      */
     @Override
     protected void commitImpl() {
-        String value = cFirst.getText().trim();
+        String value = cFirst.getText().trim().replaceAll(",", "");
         
         if (!value.isEmpty()) {
             // première lettre en majuscules
