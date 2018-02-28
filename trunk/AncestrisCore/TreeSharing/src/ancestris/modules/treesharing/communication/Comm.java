@@ -761,7 +761,7 @@ public class Comm {
         String senderIP = null;
         int senderPort = 0;
         byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
-        DatagramPacket packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
+        DatagramPacket packetReceived;
         
         byte[] contentMemberBytes = null;
         String contentMemberStr = null;
@@ -781,6 +781,7 @@ public class Comm {
             while (sharing) {
                 
                 // Listen to incoming calls indefinitely
+                packetReceived = new DatagramPacket(bytesReceived, bytesReceived.length);
                 socket.setSoTimeout(0);
                 socket.receive(packetReceived);
                 
