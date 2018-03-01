@@ -152,9 +152,9 @@ public class Comm {
     private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
                     // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
     private double COMM_COMPRESSING_FACTOR = 1.0;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
-    private int COMM_CMD_SIZE = 5;
+    private String FMT_IDX = "%04d"; // size 4
     private int COMM_CMD_PFX_SIZE = 2;
-    private String FMT_IDX = "%04d";
+    private int COMM_CMD_SIZE = 6;    // = 2 + size 4
     private int COMM_PACKET_NB = 10000;
     private static String STR_DELIMITER = " ";
     private int REQUEST_TIMEOUT = 3;        // wait for that many seconds before calling timout 
