@@ -187,9 +187,9 @@ public class MergeModelBirthTest extends TestCase {
             
             String expected = "";
             expected +="Date de l'acte: 06/07/2001\n";
-            expected +="Nouveau né: Three, First, Name FATHERLASTNAME, né le 04/07/2001 à indiBirthplace, indioccupation, domicile indiResidence, indicomment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 31 années, Vivant, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 30 années, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
+            expected +="Nouveau né: Three, First, Name FATHERLASTNAME, né le 04/07/2001 à birthAddress, indiBirthplace, indioccupation, domicile indiAddress, indiResidence, indicomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 31 années, Vivant, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 30 années, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
@@ -224,9 +224,9 @@ public class MergeModelBirthTest extends TestCase {
 
             String expected = "";
             expected +="Date de l'acte: 01/01/2000\n";
-            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indiOccupation, domicile indiResidence, indiComment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à birthAddress, indiBirthplace, indiOccupation, domicile indiAddress, indiResidence, indiComment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
@@ -240,9 +240,9 @@ public class MergeModelBirthTest extends TestCase {
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
             expected ="Date de l'acte: 01/01/2000\n";
-            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à indiBirthplace, indiOccupation, domicile indiResidence, indiComment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à birthAddress, indiBirthplace, indiOccupation, domicile indiAddress, indiResidence, indiComment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";

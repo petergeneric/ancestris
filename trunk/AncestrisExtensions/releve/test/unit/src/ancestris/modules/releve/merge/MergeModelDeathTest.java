@@ -93,10 +93,10 @@ public class MergeModelDeathTest extends TestCase {
             assertEquals("indiDeathPlace",mergeRecord.getIndi().getResidence(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
             assertEquals("indiDeathComment",
                     "Date de l'acte: 01/01/2003\n"
-                    + "Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à indiBirthPlace, indioccupation, domicile indiResidence, indicomment\n"
-                    + "Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n"
-                    + "Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n"
-                    + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n"
+                    + "Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à birthAddress, indiBirthPlace, indioccupation, domicile indiAddress, indiResidence, indicomment\n"
+                    + "Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedAddress, indiMarriedResidence, marriedcomment\n"
+                    + "Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n"
+                    + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n"
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
                     + "Cote: cote, photo",
@@ -118,6 +118,7 @@ public class MergeModelDeathTest extends TestCase {
             Property marriedOccupation = married.getProperties("OCCU")[0];
             assertEquals("marriedOccupation",recordDeath.getFieldValue(FieldType.indiMarriedOccupation), marriedOccupation.getValue());
             assertEquals("marriedOcccupationPlace",recordDeath.getFieldValue(FieldType.indiMarriedResidence), marriedOccupation.getProperty("PLAC").getValue());
+            assertEquals("marriedOcccupationAddress",recordDeath.getFieldValue(FieldType.indiMarriedAddress), marriedOccupation.getProperty("ADDR").getValue());
             assertEquals("marriedOcccupationDate", true, recordDeath.getField(FieldType.eventDate).equalsProperty( marriedOccupation.getProperty("DATE")));
             assertEquals("marriedOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", marriedOccupation.getProperty("NOTE").getValue());
 
@@ -136,6 +137,7 @@ public class MergeModelDeathTest extends TestCase {
             Property fatherOccupation = father.getProperties("OCCU")[0];
             assertEquals("fatherOccupation",mergeRecord.getIndi().getFatherOccupation(), fatherOccupation.getValue());
             assertEquals("fatherOcccupationPlace",mergeRecord.getIndi().getFatherResidence(), fatherOccupation.getProperty("PLAC").getValue());
+            assertEquals("fatherOcccupationAddress",mergeRecord.getIndi().getFatherAddress(), fatherOccupation.getProperty("ADDR").getValue());
             assertEquals("fatherOcccupationDate",mergeRecord.getEventDate().getValue(), fatherOccupation.getProperty("DATE").getValue());
             assertEquals("fatherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", fatherOccupation.getProperty("NOTE").getValue());
 
@@ -147,6 +149,7 @@ public class MergeModelDeathTest extends TestCase {
             Property motherOccupation = mother.getProperties("OCCU")[0];
             assertEquals("motherOccupation",mergeRecord.getIndi().getMotherOccupation(), motherOccupation.getValue());
             assertEquals("motherOcccupationPlace",mergeRecord.getIndi().getMotherResidence(), motherOccupation.getProperty("PLAC").getValue());
+            assertEquals("motherOcccupationAddress",mergeRecord.getIndi().getMotherAddress(), motherOccupation.getProperty("ADDR").getValue());
             assertEquals("motherOcccupationDate",mergeRecord.getEventDate().getValue(), motherOccupation.getProperty("DATE").getValue());
             assertEquals("motherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", motherOccupation.getProperty("NOTE").getValue());
 
@@ -192,9 +195,9 @@ public class MergeModelDeathTest extends TestCase {
             assertEquals("indiDeathComment",
                     "Date de l'acte: 01/01/2003\n"
                     + "Défunt: sansfamille1 FATHERLASTNAME, 3 années, indicomment\n"
-                    + "Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n"
-                    + "Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n"
-                    + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n"
+                    + "Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedAddress, indiMarriedResidence, marriedcomment\n"
+                    + "Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n"
+                    + "Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n"
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
                     + "Cote: cote, photo",
@@ -216,6 +219,7 @@ public class MergeModelDeathTest extends TestCase {
             Property marriedOccupation = married.getProperties("OCCU")[0];
             assertEquals("marriedOccupation",recordDeath.getFieldValue(FieldType.indiMarriedOccupation), marriedOccupation.getValue());
             assertEquals("marriedOcccupationPlace",recordDeath.getFieldValue(FieldType.indiMarriedResidence), marriedOccupation.getProperty("PLAC").getValue());
+            assertEquals("marriedOcccupationAddress",recordDeath.getFieldValue(FieldType.indiMarriedAddress), marriedOccupation.getProperty("ADDR").getValue());
             assertEquals("marriedOcccupationDate",true, recordDeath.getField(FieldType.eventDate).equalsProperty(marriedOccupation.getProperty("DATE")));
             assertEquals("marriedOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", marriedOccupation.getProperty("NOTE").getValue());
 
@@ -234,6 +238,7 @@ public class MergeModelDeathTest extends TestCase {
             Property fatherOccupation = father.getProperties("OCCU")[0];
             assertEquals("fatherOccupation",mergeRecord.getIndi().getFatherOccupation(), fatherOccupation.getValue());
             assertEquals("fatherOcccupationPlace",mergeRecord.getIndi().getFatherResidence(), fatherOccupation.getProperty("PLAC").getValue());
+            assertEquals("fatherOcccupationAddress",mergeRecord.getIndi().getFatherAddress(), fatherOccupation.getProperty("ADDR").getValue());
             assertEquals("fatherOcccupationDate",mergeRecord.getEventDate().getValue(), fatherOccupation.getProperty("DATE").getValue());
             assertEquals("fatherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", fatherOccupation.getProperty("NOTE").getValue());
 
@@ -245,6 +250,7 @@ public class MergeModelDeathTest extends TestCase {
             Property motherOccupation = mother.getProperties("OCCU")[0];
             assertEquals("motherOccupation",mergeRecord.getIndi().getMotherOccupation(), motherOccupation.getValue());
             assertEquals("motherOcccupationPlace",mergeRecord.getIndi().getMotherResidence(), motherOccupation.getProperty("PLAC").getValue());
+            assertEquals("motherOcccupationAddress",mergeRecord.getIndi().getMotherAddress(), motherOccupation.getProperty("ADDR").getValue());
             assertEquals("motherOcccupationDate",mergeRecord.getEventDate().getValue(), motherOccupation.getProperty("DATE").getValue());
             assertEquals("motherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", motherOccupation.getProperty("NOTE").getValue());
 
@@ -274,10 +280,10 @@ public class MergeModelDeathTest extends TestCase {
 
             String expected = "";
             expected +="Date de l'acte: 01/01/2003\n";
-            expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à indiBirthPlace, indioccupation, domicile indiResidence, indicomment\n";
-            expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
+            expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à birthAddress, indiBirthPlace, indioccupation, domicile indiAddress, indiResidence, indicomment\n";
+            expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedAddress, indiMarriedResidence, marriedcomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
             expected +="Cote: cote, photo";
@@ -289,10 +295,10 @@ public class MergeModelDeathTest extends TestCase {
             assertEquals("Nombre model",1,models.size());
             models.get(0).copyRecordToEntity();
             expected ="Date de l'acte: 01/01/2003\n";
-            expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à indiBirthPlace, indioccupation, domicile indiResidence, indicomment\n";
-            expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedResidence, marriedcomment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherResidence, indiMotherComment\n";
+            expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à birthAddress, indiBirthPlace, indioccupation, domicile indiAddress, indiResidence, indicomment\n";
+            expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedAddress, indiMarriedResidence, marriedcomment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
             expected +="Cote: cote, photo\n";

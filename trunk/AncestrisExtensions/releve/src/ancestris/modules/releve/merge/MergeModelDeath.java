@@ -496,9 +496,10 @@ class MergeModelDeath extends MergeModel {
         
         resultProperty = currentIndi;
 
-        // je cree la propriete de naissance si elle n'existait pas
+        // je copie les informations de naissance
         if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.IndiBirthPlace) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
             Property birthProperty = currentIndi.getProperty("BIRT");
+            // je cree la propriete de naissance si elle n'existait pas        
             if (birthProperty == null) {
                 birthProperty = currentIndi.addProperty("BIRT", "");
             }
@@ -506,18 +507,18 @@ class MergeModelDeath extends MergeModel {
             // je copie la date de naissance du releve dans l'individu
             if (isChecked(RowType.IndiBirthDate)) {
                 // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
-                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), "", record);
+                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), "", "", record);
             }
 
             // je copie le lieu de naissance
             if (isChecked(RowType.IndiBirthPlace)) {
-                copyPlace(record.getIndi().getBirthPlace(), birthProperty);
+                copyPlace(record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), birthProperty);
             }
         }
 
         // je copie la profession et la residence de l'individu
         if (isChecked(RowType.IndiOccupation)) {
-            copyOccupation(currentIndi, record.getIndi().getOccupation(), record.getIndi().getResidence(), false, record);
+            copyOccupation(currentIndi, record.getIndi().getOccupation(), record.getIndi().getResidence(), record.getIndi().getAddress(), false, record);
         }
 
         // je cree la propriete de deces si elle n'existait pas
@@ -537,7 +538,7 @@ class MergeModelDeath extends MergeModel {
             }
 
             // je copie le lieu de l'acte de deces
-            copyPlace(record.getIndi().getDeathPlace(),  deathProperty);
+            copyPlace(record.getIndi().getDeathPlace(), record.getIndi().getAddress(), deathProperty);
             
             // je copie la source du deces du releve dans l'individu
             if (isChecked(RowType.EventSource) || isChecked(RowType.EventPage) ) {

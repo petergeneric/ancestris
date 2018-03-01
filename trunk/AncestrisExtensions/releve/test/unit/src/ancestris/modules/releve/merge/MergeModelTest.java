@@ -75,13 +75,14 @@ public class MergeModelTest extends TestCase {
 
             MergeModelBirth mergeModel = new MergeModelBirth(mergeRecord, gedcom);
 
-            mergeModel.copyOccupation(indi, mergeRecord.getIndi().getFatherOccupation(), mergeRecord.getIndi().getFatherResidence(), true, mergeRecord);
+            mergeModel.copyOccupation(indi, mergeRecord.getIndi().getFatherOccupation(), mergeRecord.getIndi().getFatherResidence(), mergeRecord.getIndi().getFatherAddress(), true, mergeRecord);
             
             assertEquals("Nombre de profession", 2, indi.getProperties("OCCU").length);
             Property occupationProperty = indi.getProperties("OCCU")[0];
             assertEquals("Profession de l'individu", mergeRecord.getIndi().getFatherOccupation(), occupationProperty.getDisplayValue());
             assertEquals("Date de la profession", mergeRecord.getEventDate().getDisplayValue(), occupationProperty.getProperty("DATE").getDisplayValue());
             assertEquals("Lieu de la profession", mergeRecord.getIndi().getFatherResidence(), occupationProperty.getProperty("PLAC").getDisplayValue());
+            assertEquals("Adresse de la profession", mergeRecord.getIndi().getFatherAddress(), occupationProperty.getProperty("ADDR").getDisplayValue());
             assertEquals("Note de la profession", false, occupationProperty.getProperty("NOTE").getDisplayValue().isEmpty());
 
         } catch (Exception ex) {

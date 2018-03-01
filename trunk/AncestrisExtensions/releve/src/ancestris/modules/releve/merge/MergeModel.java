@@ -923,7 +923,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la date de naissance du pere de l'epoux
             if (isChecked(RowType.IndiFatherBirthDate)) {
-                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", record);
+                copyBirthDate(father, getRow(RowType.IndiFatherBirthDate), "", "", record);
             }
 
             //je copie la date de décès du pere de l'epoux
@@ -933,7 +933,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             
             // je copie la profession du pere
             if (isChecked(RowType.IndiFatherOccupation)) {
-                copyOccupation(father, participant.getFatherOccupation(), participant.getFatherResidence(), true, record);
+                copyOccupation(father, participant.getFatherOccupation(), participant.getFatherResidence(), participant.getFatherAddress(), true, record);
             }
         }
 
@@ -959,7 +959,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la date de naissance de la mere de l'epoux
             if (isChecked(RowType.IndiMotherBirthDate)) {
-                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", record);
+                copyBirthDate(mother, getRow(RowType.IndiMotherBirthDate), "", "", record);
             }
 
             // je copie la date de décès de la mere de l'epoux
@@ -969,7 +969,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la profession de la mere de l'epoux
             if (isChecked(RowType.IndiMotherOccupation)) {
-                copyOccupation(mother, participant.getMotherOccupation(), participant.getMotherResidence(), true, record);
+                copyOccupation(mother, participant.getMotherOccupation(), participant.getMotherResidence(), participant.getMotherAddress(), true, record);
             }
         }
     }
@@ -996,7 +996,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la date, le lieu et commentaire de naissance de l'ex conjoint
             if (isChecked(RowType.IndiMarriedBirthDate)) {
-                copyBirthDate(exSpouse, getRow(RowType.IndiMarriedBirthDate), "", record);
+                copyBirthDate(exSpouse, getRow(RowType.IndiMarriedBirthDate), "", "", record);
             }
 
             // je copie la date, le lieu et commentaire de deces de l'ex conjoint
@@ -1006,7 +1006,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la profession de l'ex conjoint
             if (isChecked(RowType.IndiMarriedOccupation)) {
-                copyOccupation(exSpouse, participant.getMarriedOccupation(), participant.getMarriedResidence(), true, record);
+                copyOccupation(exSpouse, participant.getMarriedOccupation(), participant.getMarriedResidence(), participant.getMarriedAddress(), true, record);
             }
 
             // je copie la famille avec l'ex conjoint
@@ -1052,7 +1052,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la date de naissance du pere de l'epouse
             if (isChecked(RowType.WifeFatherBirthDate)) {
-                copyBirthDate(father, getRow(RowType.WifeFatherBirthDate), "", record);
+                copyBirthDate(father, getRow(RowType.WifeFatherBirthDate), "", "", record);
             }
 
             //je copie la date de décès du pere de l'epouse
@@ -1062,7 +1062,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la profession du pere de l'epouse
             if (isChecked(RowType.WifeFatherOccupation)) {
-                copyOccupation(father, participant.getFatherOccupation(), participant.getFatherResidence(), true, record);
+                copyOccupation(father, participant.getFatherOccupation(), participant.getFatherResidence(), participant.getFatherAddress(), true, record);
             }
         }
 
@@ -1087,9 +1087,9 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                 }
             }
 
-            // je copie la date de naissance de la mere e l'epouse
+            // je copie la date de naissance de la mere de l'epouse
             if (isChecked(RowType.WifeMotherBirthDate)) {
-                copyBirthDate(mother, getRow(RowType.WifeMotherBirthDate), "", record);
+                copyBirthDate(mother, getRow(RowType.WifeMotherBirthDate), "", "", record);
             }
 
             // je copie la date de décès de la mere de l'epouse
@@ -1099,7 +1099,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie la profession de la mere de l'epouse
             if (isChecked(RowType.WifeMotherOccupation)) {
-                copyOccupation(mother, participant.getMotherOccupation(), participant.getMotherResidence(), true, record);
+                copyOccupation(mother, participant.getMotherOccupation(), participant.getMotherResidence(), participant.getMotherAddress(), true, record);
             }
         }
 
@@ -1109,9 +1109,10 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * ajoute un lieu a une propriete
      *
      * @param place          juridictions du lieu à ajouter 
+     * @param address          adresse
      * @param eventProperty  propriete dans laquelle est ajoutée le lieu
      */
-    protected void copyPlace(String place, Property eventProperty) {
+    protected void copyPlace(String place, String address, Property eventProperty) {
         PropertyPlace propertyPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
         if (propertyPlace == null) {
             // je cree le lieu .
@@ -1136,6 +1137,16 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     break;
                 }                    
             }
+        }
+        
+       // j'ajoute l'adresse 
+       if( !address.isEmpty() ) {
+            Property propertyAddress = eventProperty.getProperty("ADDR");
+            if (propertyAddress == null) {
+                // je cree l'adresse
+                propertyAddress = eventProperty.addProperty("ADDR", "");
+            } 
+            propertyAddress.setValue(address);
         }
     }
 
@@ -1186,7 +1197,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie le lieu de l'évènement
             if (isChecked(RowType.EventPlace)) {
-                copyPlace(record.getEventPlace(), eventProperty);
+                copyPlace(record.getEventPlace(), "", eventProperty);
             }
 
             // je copie le commentaire de l'évènement
@@ -1245,7 +1256,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
             // je copie le lieu de l'insinuation
             if (isChecked(RowType.EventInsinuationPlace)) {
-                copyPlace(record.getEventPlace(), insinuationProperty);                  
+                copyPlace(record.getEventPlace(), "", insinuationProperty);                  
             }
 
             // je copie le commentaire de l'insinuation
@@ -1389,7 +1400,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param place lieu de naissance
      * @param record releve servant a renseigner la note
      */
-    protected void copyBirthDate(Indi indi, MergeRow mergeRow, String place, MergeRecord record) {
+    protected void copyBirthDate(Indi indi, MergeRow mergeRow, String place, String address, MergeRecord record) {
         Property birthProperty = indi.getProperty("BIRT");
         if (birthProperty == null) {
             birthProperty = indi.addProperty("BIRT", "");
@@ -1401,7 +1412,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
 
         // j'ajoute le lieu
         if (!place.isEmpty()) {
-            copyPlace(place, birthProperty);
+            copyPlace(place, address, birthProperty);
         }
 
         // j'ajoute une note indiquant l'origine de la date de naissance
@@ -1468,7 +1479,7 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
      * @param occupationDate date du releve
      * @param record releve servant a renseigner la note de la profession
      */
-    protected void copyOccupation(Indi indi, String occupation, String residence, boolean createResidence, MergeRecord record) throws GedcomException {
+    protected void copyOccupation(Indi indi, String occupation, String residence, String address, boolean createResidence, MergeRecord record) throws GedcomException {
         PropertyDate occupationDate = record.getEventDate();
         // je cherche si l'individu a deja un tag OCCU a la meme date
         Property occupationProperty = null;
@@ -1486,9 +1497,9 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             date.setValue(occupationDate.getValue());
             // j'ajoute le lieu
             if (!residence.isEmpty()) {
-                copyPlace(residence, occupationProperty);
+                copyPlace(residence, address, occupationProperty);
             }
-
+            
             // j'ajoute une note indiquant la source
             copyReferenceNote(occupationProperty, record);
         }
