@@ -366,6 +366,7 @@ public class Comm {
     public boolean registerMe(String pseudo) {
 
         LOG.log(Level.INFO, "***");
+        LOG.log(Level.INFO, "Communication packet size is "+COMM_PACKET_SIZE);
         try {
             // Create our unique socket
             socket = new DatagramSocket();
