@@ -151,7 +151,7 @@ public class Comm {
     // Command and Packets size
     private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
                     // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
-    private double COMM_COMPRESSING_FACTOR = 1.0;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
+    private double COMM_COMPRESSING_FACTOR = 1.5;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private String FMT_IDX = "%03d"; // size 3
     private int COMM_CMD_PFX_SIZE = 2;
     private int COMM_CMD_SIZE = 5;    // = 2 + size 3 (changes here means changing on the server as well)
@@ -600,7 +600,6 @@ public class Comm {
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             try {
                 // Ask member for list of something
-                // FIXME : possible bug if object size > limit (case of common indi or fam lastnames)
                 sendCommand(commandIndexed, owner.getRegisteredPseudo() + STR_DELIMITER, (iPacket == 0 ? object : null), member.getIPAddress(), Integer.valueOf(member.getPortAddress()));
             
                 // Expect answer back and get shared entities in return (wait for response from the other thread...)
@@ -800,7 +799,7 @@ public class Comm {
                 contentMemberBytes = extractBytes(Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE, bytesReceived.length), STR_DELIMITER.getBytes()[0]);
                 contentMemberStr = new String(contentMemberBytes);
                 
-                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress + " with packet of size ("+ packetReceived.getLength() + ").");
+                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress + " with packet of size ("+ packetReceived.getLength() + " bytes).");
 
                 //
                 // PROCESS COMMANDS FROM SERVER
@@ -897,7 +896,6 @@ public class Comm {
 
                 // Case of CMD_TSTAT command (following my GSTAT message to another member, he/she returns his/her nb of entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TSTAT)) {
-                    LOG.log(Level.FINE, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     ExpectedResponse er = getExpectedResponse(response);
                     if (er != null) {
@@ -937,7 +935,6 @@ public class Comm {
 
                 // Case of CMD_TILxx command (following my GILxx message to another member, he/she returns his/her shared entities. Take them.
                 if (command.substring(0, COMM_CMD_PFX_SIZE).equals(CMD_TILxx)) {
-                    LOG.log(Level.FINE, "...Packet size is " + packetReceived.getLength() + " bytes");
                     // Make sure there is a pending call expecting something from the ipaddress and port received
                     ExpectedResponse er = getExpectedResponse(response);
                     if (er != null) {
@@ -1205,7 +1202,16 @@ public class Comm {
 
         // Send whole msg
         if (!command.equals(CMD_PONGG)) {   // no need to log this PONGG message as it is sent every few minutes to the server
-            LOG.log(Level.FINE, "Sending command " + command + " with " + string + " and object of size (" + (object != null ?  msgBytes.length : 0) + ") to " + ipAddress + ":" + portAddress);
+            int s = (object != null ?  msgBytes.length : 0);
+            LOG.log(Level.INFO, "Sending command " + command + " with " + string + " and object of size (" + s + " bytes) to " + ipAddress + ":" + portAddress);
+            // FIXME : likely bug if object size > limit 
+            if (s > COMM_PACKET_SIZE) {
+                LOG.log(Level.SEVERE, "/!\\ Cannot send command " + command + " with " + string + " : object is of size (" + s + " bytes) which is larger than maximum packet size of " + COMM_PACKET_SIZE);
+                LOG.log(Level.SEVERE, "/!\\ Please ask development team to increase compression factor currently set to " + COMM_COMPRESSING_FACTOR);
+                // do not send package.
+                return;
+            }
+            
         }
         sendObject(msgBytes, ipAddress, portAddress);
     }
@@ -1248,7 +1254,7 @@ public class Comm {
             object = is.readObject();
             is.close();
         } catch (EOFException ex) {
-            LOG.log(Level.FINE, "Receiving message. Problem of different packet size between sender and receiver. Please update your version of Ancestris.");
+            LOG.log(Level.SEVERE, "Receiving message. Packet size was probably larger than the maximum packet size and therefore has been truncated, or packets have different sizes between the sender and the receiver. Please update your version of Ancestris or contact the Ancestris support.");
             Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
@@ -1332,6 +1338,7 @@ public class Comm {
         Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);
+        LOG.log(Level.FINE, "......Compressing " + masterSet.size() + " strings in " + nbPackets + " packets.");
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<String>());
         }
@@ -1349,6 +1356,7 @@ public class Comm {
         Map<Integer, Set<GedcomIndi>> packets = new HashMap<Integer, Set<GedcomIndi>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);
+        LOG.log(Level.FINE, "......Compressing " + masterSet.size() + " indis in " + nbPackets + " packets.");
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomIndi>());
         }
@@ -1366,6 +1374,7 @@ public class Comm {
         Map<Integer, Set<GedcomFam>> packets = new HashMap<Integer, Set<GedcomFam>>();
         byte[] masterPacket = wrapObject(masterSet);
         int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);
+        LOG.log(Level.FINE, "......Compressing " + masterSet.size() + " fams in " + nbPackets + " packets.");
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomFam>());
         }
