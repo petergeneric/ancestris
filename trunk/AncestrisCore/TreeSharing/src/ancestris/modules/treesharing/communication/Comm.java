@@ -151,11 +151,11 @@ public class Comm {
     // Command and Packets size
     private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
                     // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
-    private double COMM_COMPRESSING_FACTOR = 1.3;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
+    private double COMM_COMPRESSING_FACTOR = 1.0;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private int COMM_CMD_SIZE = 5;
     private int COMM_CMD_PFX_SIZE = 2;
-    private String FMT_IDX = "%03d";
-    private int COMM_PACKET_NB = 1000;
+    private String FMT_IDX = "%04d";
+    private int COMM_PACKET_NB = 10000;
     private static String STR_DELIMITER = " ";
     private int REQUEST_TIMEOUT = 3;        // wait for that many seconds before calling timout 
     private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
@@ -800,7 +800,7 @@ public class Comm {
                 contentMemberBytes = extractBytes(Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE, bytesReceived.length), STR_DELIMITER.getBytes()[0]);
                 contentMemberStr = new String(contentMemberBytes);
                 
-                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress);
+                LOG.log(Level.FINE, "...Incoming " + command + " command received from " + senderAddress + " with packet of size ("+ packetReceived.getLength() + ").");
 
                 //
                 // PROCESS COMMANDS FROM SERVER
@@ -1205,7 +1205,7 @@ public class Comm {
 
         // Send whole msg
         if (!command.equals(CMD_PONGG)) {   // no need to log this PONGG message as it is sent every few minutes to the server
-            LOG.log(Level.FINE, "Sending command " + command + " with " + string + (object != null ? " and object of size " + msgBytes.length : "") + " to " + ipAddress + ":" + portAddress);
+            LOG.log(Level.FINE, "Sending command " + command + " with " + string + " and object of size (" + (object != null ?  msgBytes.length : 0) + ") to " + ipAddress + ":" + portAddress);
         }
         sendObject(msgBytes, ipAddress, portAddress);
     }
@@ -1331,7 +1331,7 @@ public class Comm {
     private Map<Integer, Set<String>> buildPacketsOfString(Set<String> masterSet) {
         Map<Integer, Set<String>> packets = new HashMap<Integer, Set<String>>();
         byte[] masterPacket = wrapObject(masterSet);
-        int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<String>());
         }
@@ -1348,7 +1348,7 @@ public class Comm {
     private Map<Integer, Set<GedcomIndi>> buildPacketsOfIndis(Set<GedcomIndi> masterSet) {
         Map<Integer, Set<GedcomIndi>> packets = new HashMap<Integer, Set<GedcomIndi>>();
         byte[] masterPacket = wrapObject(masterSet);
-        int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomIndi>());
         }
@@ -1365,7 +1365,7 @@ public class Comm {
     private Map<Integer, Set<GedcomFam>> buildPacketsOfFams(Set<GedcomFam> masterSet) {
         Map<Integer, Set<GedcomFam>> packets = new HashMap<Integer, Set<GedcomFam>>();
         byte[] masterPacket = wrapObject(masterSet);
-        int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);   // + 15% and +1 to round up and have some margin because packets will not all be of same size and are not as compressed when split than together
+        int nbPackets = (int) (Math.min(COMM_PACKET_NB, (masterPacket.length * COMM_COMPRESSING_FACTOR) / COMM_PACKET_SIZE) + 1);
         for (Integer i = 0; i < nbPackets; i++) {
             packets.put(i, new HashSet<GedcomFam>());
         }
