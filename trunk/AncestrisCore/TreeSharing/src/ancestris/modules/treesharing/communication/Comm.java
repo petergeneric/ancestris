@@ -157,7 +157,7 @@ public class Comm {
     private int COMM_CMD_SIZE = 5;    // = 2 + size 3 (changes here means changing on the server as well)
     private int COMM_PACKET_NB = 1000;
     private static String STR_DELIMITER = " ";
-    private int REQUEST_TIMEOUT = 3;        // wait for that many seconds before calling timout 
+    private int REQUEST_TIMEOUT = 2;        // wait for that many seconds before calling timout on each packet
     private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
     private int COMM_RESPONSE_DELAY = 50;   // in milliseconds for the waiting loop
 
