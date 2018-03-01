@@ -143,7 +143,6 @@ public class App {
                 Handler handler = new FileHandler(LOGFILE.getAbsolutePath(), AppOptions.getMaxLogSizeKB() * 1024, 1, true);
                 handler.setLevel(Level.ALL);
                 handler.setFormatter(formatter);
-                LOG.addHandler(handler);
                 Logger.getLogger("ancestris").addHandler(handler);
 
                 // Log is up
