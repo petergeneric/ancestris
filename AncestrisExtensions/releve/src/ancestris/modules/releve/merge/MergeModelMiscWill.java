@@ -481,12 +481,12 @@ class MergeModelMiscWill extends MergeModel {
             // je copie la date de naissance du releve dans l'individu
             if (isChecked(RowType.IndiBirthDate)) {
                 // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
-                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), "", record);
+                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), record);
             }
 
             // je copie le lieu de naissance
             if (isChecked(RowType.IndiBirthPlace)) {
-                copyPlace(record.getIndi().getBirthPlace(), birthProperty);
+                copyPlace(record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), birthProperty);
             }
         }
 
@@ -497,7 +497,7 @@ class MergeModelMiscWill extends MergeModel {
         
         // je copie la profession de l'individu
         if (isChecked(RowType.IndiOccupation)) {
-            copyOccupation(currentIndi, record.getIndi().getOccupation(), record.getIndi().getResidence(), true, record);
+            copyOccupation(currentIndi, record.getIndi().getOccupation(), record.getIndi().getResidence(), record.getIndi().getAddress(), true, record);
         }
                 
         // je cree la propriete de testament 

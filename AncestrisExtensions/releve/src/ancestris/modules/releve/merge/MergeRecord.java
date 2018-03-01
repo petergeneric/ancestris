@@ -750,100 +750,6 @@ public class MergeRecord {
         return comment;
     }
 
-    //
-//    private String makeIndiComment(boolean showFrenchCalendarDate) {
-//        String comment = appendValue(
-//                record.getIndi().getFirstName() + " " + record.getIndi().getLastName(),
-//                record.getIndi().getAge()==null ? "" :record.getFieldValue(FieldType.indiAge),
-//                makeParticipantBirthComment(record.getIndi().getBirthDate(), showFrenchCalendarDate, record.getIndi().getBirthPlace()),
-//                record.getIndi().getOccupation()==null ? "" : record.getFieldValue(Record.FieldType.indiOccupation),
-//                appendPrefixValue("domicile", record.getIndi().getResidence() == null ? "" :record.getIndi().getResidence() .toString()),
-//                record.getFieldValue(FieldType.indiComment)
-//                );
-//        return comment;
-//    }
-//
-//    private String makeIndiMarriedComment(  ) {
-//           String comment = appendValue(
-//                record.getIndi().getMarriedFirstName() + " " + record.getIndi().getMarriedLastName() ,
-//                record.getFieldValue(Record.FieldType.indiMarriedDead),
-//                record.getFieldValue(Record.FieldType.indiMarriedOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(Record.FieldType.indiMarriedResidence)),
-//                record.getFieldValue(Record.FieldType.indiMarriedComment)
-//                );
-//
-//        return comment;
-//    }
-//
-//    private String makeIndiFatherComment(  ) {
-//        String comment = appendValue(
-//                record.getIndi().getFatherFirstName() + " " + record.getIndi().getFatherLastName(),
-//                record.getFieldValue(Record.FieldType.indiFatherAge),
-//                record.getFieldValue(Record.FieldType.indiFatherDead),
-//                record.getFieldValue(Record.FieldType.indiFatherOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(Record.FieldType.indiFatherResidence)),
-//                record.getFieldValue(Record.FieldType.indiFatherComment)
-//                );
-//        return comment;
-//    }
-//
-//    private String makeIndiMotherComment(  ) {
-//         String comment = appendValue(
-//                record.getIndi().getMotherFirstName() + " " + record.getIndi().getMotherLastName(),
-//                record.getFieldValue(FieldType.indiMotherAge),
-//                record.getFieldValue(Record.FieldType.indiMotherDead),
-//                record.getFieldValue(Record.FieldType.indiMotherOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(Record.FieldType.indiMotherResidence)),
-//                record.getFieldValue(Record.FieldType.indiMotherComment)
-//                );
-//        return comment;
-//    }
-//    private String makeWifeComment( boolean showFrenchCalendarDate ) {
-//        String comment = appendValue(
-//                record.getWife().getFirstName() + " " + record.getWife().getLastName(),
-//                record.getFieldValue(FieldType.wifeAge),
-//                makeParticipantBirthComment(record.getWife().getBirthDate(), showFrenchCalendarDate, record.getWife().getBirthPlace()),
-//                record.getFieldValue(FieldType.wifeOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeResidence)),
-//                record.getFieldValue(Record.FieldType.wifeComment)
-//                );
-//        return comment;
-//    }
-//
-//    private String makeWifeMarriedComment(  ) {
-//         String comment = appendValue(
-//                record.getWife().getMarriedFirstName() + " " + record.getWife().getMarriedLastName(),
-//                record.getFieldValue(FieldType.wifeMarriedDead),
-//                record.getFieldValue(FieldType.wifeMarriedOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeMarriedResidence)),
-//                record.getFieldValue(FieldType.wifeMarriedComment)
-//                );
-//        return comment;
-//    }
-//
-//    private String makeWifeFatherComment(  ) {
-//         String comment = appendValue(
-//                record.getWife().getFatherFirstName() + " " + record.getWife().getFatherLastName(),
-//                record.getFieldValue(FieldType.wifeFatherAge),
-//                record.getFieldValue(FieldType.wifeFatherDead),
-//                record.getFieldValue(FieldType.wifeFatherOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeFatherResidence)),
-//                record.getFieldValue(FieldType.wifeFatherComment)
-//                );
-//        return comment;
-//    }
-//
-//    private String makeWifeMotherComment(  ) {
-//        String comment = appendValue(
-//                record.getWife().getMotherFirstName() + " " + record.getWife().getMotherLastName(),
-//                record.getFieldValue(FieldType.wifeMotherAge),
-//                record.getFieldValue(FieldType.wifeMotherDead),
-//                record.getFieldValue(FieldType.wifeMotherOccupation),
-//                appendPrefixValue("domicile", record.getFieldValue(FieldType.wifeMotherResidence)),
-//                record.getFieldValue(FieldType.wifeMotherComment)
-//                );
-//        return comment;
-//    }
     private String makeWitnessComment() {
         String comment = appendValue(
                 witness1.getFirstName() + " " + witness1.getLastName(),
@@ -932,7 +838,7 @@ public class MergeRecord {
         StringBuilder sb = new StringBuilder();
         for (String otherValue : otherValues) {
             // j'ajoute les valeurs supplémentaires séparées par des virgules
-            if (!otherValue.trim().isEmpty()) {
+            if (otherValue != null && !otherValue.trim().isEmpty()) {
                 // je concantene les valeurs en inserant une virgule dans
                 // si la valeur précedente n'est pas vide
                 if (sb.length() > 0) {
@@ -1519,7 +1425,7 @@ public class MergeRecord {
      */
     protected class MergeParticipant {
 
-        MergeParticipantType participantType;
+        final private MergeParticipantType participantType;
         //Record.Participant participant;
 
         private String m_FirstName;
@@ -1641,11 +1547,13 @@ public class MergeRecord {
                 }
             }
         }
+        
+        String getBirthAddress() {
+                return m_BirthAddress;
+        }
 
         /**
-         * retourne le lieu de naissance . Si c'est un acte de naissance et si
-         * IndiBirthPlace est vide retourne IndiFatherResidence ou, à défaut,
-         * EventPlace
+         * retourne la residence de l'individu ou, à défaut, EventPlace
          *
          * @return
          */
@@ -1688,6 +1596,10 @@ public class MergeRecord {
                 // n'est pas renseignée pour les naissances
                 return "";
             }
+        }
+        
+        String getAddress() {
+            return m_Residence;            
         }
 
         //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -1778,6 +1690,10 @@ public class MergeRecord {
             return m_MarriedResidence;
         }
 
+        String getMarriedAddress() {
+            return m_MarriedAddress;
+        }
+       
         //  indi father ////////////////////////////////////////////////////////////
         PropertyDate getParentMarriageDate() throws Exception {
             if (computedParentMarriageDate == null) {
@@ -1818,6 +1734,10 @@ public class MergeRecord {
 
         String getFatherResidence() {
             return m_FatherResidence;
+        }
+
+        String getFatherAddress() {
+            return m_FatherAddress;
         }
 
         String getFatherOccupationWithDate() {
@@ -1894,6 +1814,10 @@ public class MergeRecord {
         String getMotherResidence() {
             return m_MotherResidence;
         }
+        
+        String getMotherAddress() {
+            return m_MotherAddress;
+        }
 
         private String makeParticipantBirthComment(boolean showFrenchCalendarDate) {
             String comment = "";
@@ -1912,13 +1836,25 @@ public class MergeRecord {
                 }
             }
 
-            if (m_BirthPlace != null && !m_BirthPlace.isEmpty()) {
-                if (comment.isEmpty()) {
-                    comment = "né à" + " " + m_BirthPlace;
-                } else {
-                    comment += " " + "à" + " " + m_BirthPlace;
-                }
-            }
+//            if (m_BirthPlace != null && !m_BirthPlace.isEmpty()) {
+//                if (comment.isEmpty()) {
+//                    comment = "né à" + " " + m_BirthPlace;
+//                } else {
+//                    comment += " " + "à" + " " + m_BirthPlace;
+//                }
+//            }
+//            
+//            if (m_BirthAddress != null && !m_BirthAddress.isEmpty()) {
+//                if (comment.isEmpty()) {
+//                    comment = "adresse" + " " + m_BirthAddress;
+//                } else {
+//                    comment += ", " + m_BirthAddress;
+//                }
+//            }
+//            
+            comment += appendPrefixValue(
+                    comment.isEmpty() ? "né à"  :  " " + "à" ,
+                    m_BirthAddress, m_BirthPlace);
             return comment;
         }
 
@@ -1927,7 +1863,7 @@ public class MergeRecord {
                     m_Age == null || isEmpty(m_Age) ? "" : m_Age.toString(),
                     makeParticipantBirthComment(showFrenchCalendarDate),
                     m_Occupation,
-                    appendPrefixValue("domicile", m_Residence == null ? "" : m_Residence),
+                    appendPrefixValue("domicile", m_Address, m_Residence),
                     m_Comment
             );
             return comment;
@@ -1938,7 +1874,7 @@ public class MergeRecord {
                     m_MarriedFirstName + " " + m_MarriedLastName,
                     m_MarriedDead.toString(),
                     m_MarriedOccupation,
-                    appendPrefixValue("domicile", m_MarriedResidence),
+                    appendPrefixValue("domicile", m_MarriedAddress, m_MarriedResidence),
                     m_MarriedComment
             );
 
@@ -1951,7 +1887,7 @@ public class MergeRecord {
                     m_FatherAge == null || isEmpty(m_FatherAge) ? "" : m_FatherAge.toString(),
                     m_FatherDead.toString(),
                     m_FatherOccupation,
-                    appendPrefixValue("domicile", m_FatherResidence),
+                    appendPrefixValue("domicile", m_FatherAddress, m_FatherResidence),
                     m_FatherComment
             );
             return comment;
@@ -1963,7 +1899,7 @@ public class MergeRecord {
                     m_MotherAge == null || isEmpty(m_MotherAge) ? "" : m_MotherAge.toString(),
                     m_MotherDead.toString(),
                     m_MotherOccupation,
-                    appendPrefixValue("domicile", m_MotherResidence),
+                    appendPrefixValue("domicile", m_MotherAddress, m_MotherResidence),
                     m_MotherComment
             );
             return comment;

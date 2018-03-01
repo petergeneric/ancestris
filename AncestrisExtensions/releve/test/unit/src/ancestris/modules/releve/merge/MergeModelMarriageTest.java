@@ -95,7 +95,7 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Source mariage","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
-            assertEquals("Note mariage",1355, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
+            assertEquals("Note mariage",1534, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
 
             assertEquals("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
             // le lieu et commentaire ne sont pas modifiés car la date de naissance du releve n'est pas plus precise
@@ -183,14 +183,14 @@ public class MergeModelMarriageTest extends TestCase {
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
             assertEquals("Note mariage",
                 "Date de l'acte: 01/03/1999"+"\n"
-                +"Epoux: Fatherfirstname FATHERLASTNAME, né le 01/01/1970 à indiBirthplace, indioccupation22, domicile indiResidence, indicomments"+"\n"
-                +"Ex conjoint époux: indimarriedname indimarriedlastname, Vivant, indimarriedoccupation, domicile indiMarriedResidence, indimarriedcomment"+"\n"
-                +"Père époux: indifathername FATHERLASTNAME, 70 années, Vivant, indifatheroccupation, domicile indiFatherResidence, indifathercomment"+"\n"
-                +"Mère époux: indimothername MOTHERLASTNAME, 72 années, Vivant, indimotheroccupation, domicile indiMotherResidence, indimothercomment"+"\n"
-                +"Epouse: Motherfirstname WIFEFATHERLASTNAME, né le 03/03/1973 à wifeplace, wifeoccupation, domicile wifeResidence, wifecomment"+"\n"
-                +"Ex conjoint épouse: wifemarriedname wifemarriedlastname, Vivant, wifemarriedoccupation, domicile wifeMarriedResidence, wifemarriedcomment"+"\n"
-                +"Père épouse: wifefathername WIFEFATHERLASTNAME, 60 années, Vivant, wifefatheroccupation, domicile wiferFatherResidence, wifefathercomment"+"\n"
-                +"Mère épouse: wifemothername WIFEMOTHERLASTNAME, 62 années, Vivant, wifemotheroccupation, domicile wifeMotherResidence, wifemothercomment"+"\n"
+                +"Epoux: Fatherfirstname FATHERLASTNAME, né le 01/01/1970 à indiBirthAddress, indiBirthplace, indioccupation22, domicile indiAddress, indiResidence, indicomments"+"\n"
+                +"Ex conjoint époux: indimarriedname indimarriedlastname, Vivant, indimarriedoccupation, domicile indiMarriedAddress, indiMarriedResidence, indimarriedcomment"+"\n"
+                +"Père époux: indifathername FATHERLASTNAME, 70 années, Vivant, indifatheroccupation, domicile indiFatherAddress, indiFatherResidence, indifathercomment"+"\n"
+                +"Mère époux: indimothername MOTHERLASTNAME, 72 années, Vivant, indimotheroccupation, domicile indiMotherAddress, indiMotherResidence, indimothercomment"+"\n"
+                +"Epouse: Motherfirstname WIFEFATHERLASTNAME, né le 03/03/1973 à wifeBirthAddress, wifeplace, wifeoccupation, domicile wifeAddress, wifeResidence, wifecomment"+"\n"
+                +"Ex conjoint épouse: wifemarriedname wifemarriedlastname, Vivant, wifemarriedoccupation, domicile wifeMarriedAddress, wifeMarriedResidence, wifemarriedcomment"+"\n"
+                +"Père épouse: wifefathername WIFEFATHERLASTNAME, 60 années, Vivant, wifefatheroccupation, domicile wiferFatherAddress, wiferFatherResidence, wifefathercomment"+"\n"
+                +"Mère épouse: wifemothername WIFEMOTHERLASTNAME, 62 années, Vivant, wifemotheroccupation, domicile wifeMotherAddress, wifeMotherResidence, wifemothercomment"+"\n"
                 +"Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment"+"\n"
                 +"Commentaire général: generalcomment"+"\n"
                 +"Cote: cote, photo",
@@ -290,7 +290,7 @@ public class MergeModelMarriageTest extends TestCase {
             Fam fam = (Fam) gedcom.getEntity("F30");
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
-            assertEquals("Note mariage",GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()? 779 : 777, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
+            assertEquals("Note mariage",GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()? 877 : 879, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
 
             assertNotSame("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
             assertEquals("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));

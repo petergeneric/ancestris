@@ -544,7 +544,7 @@ class MergeModelMiscOther extends MergeModel {
                 currentIndi.setName(mainParticipant.getFirstName(), currentIndi.getLastName());
             }
 
-            // je copie le sex du releve dans l'individu
+            // je copie le sexe du releve dans l'individu
             if (isChecked(RowType.IndiSex)) {
                 currentIndi.setSex(mainParticipant.getSex());
             }
@@ -557,7 +557,7 @@ class MergeModelMiscOther extends MergeModel {
             // je copie la date et le lieu de naissance du releve dans l'individu
             if (isChecked(RowType.IndiBirthDate)) {
                 // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
-                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), mainParticipant.getBirthPlace(), record);
+                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), mainParticipant.getBirthPlace(), mainParticipant.getBirthAddress(), record);
             }
         }
         
@@ -568,7 +568,7 @@ class MergeModelMiscOther extends MergeModel {
 
         // je copie la profession de l'individu
         if (isChecked(RowType.IndiOccupation)) {
-            copyOccupation(currentIndi, mainParticipant.getOccupation(), mainParticipant.getResidence(), true, record);
+            copyOccupation(currentIndi, mainParticipant.getOccupation(), mainParticipant.getResidence(), mainParticipant.getAddress(), true, record);
         }
 
         // je copie l'evenement uniquement pour le participant1
