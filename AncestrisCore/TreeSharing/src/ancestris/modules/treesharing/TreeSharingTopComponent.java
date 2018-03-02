@@ -1035,7 +1035,7 @@ public class TreeSharingTopComponent extends TopComponent {
         repaint();
 
         DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_StatsPanel"), 
-                new StatsPanel(connectionStats, this)).setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                new StatsPanel(connectionStats, this)).setMessageType(DialogManager.PLAIN_MESSAGE).setDialogId(StatsPanel.class).setOptionType(DialogManager.OK_ONLY_OPTION).show();
 
         if (resetStats) {
             initConnectionStats();
