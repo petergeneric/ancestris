@@ -151,7 +151,7 @@ public class Comm {
     // Command and Packets size
     private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
                     // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
-    private double COMM_COMPRESSING_FACTOR = 1.5;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
+    private double COMM_COMPRESSING_FACTOR = 1.8;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private String FMT_IDX = "%03d"; // size 3
     private int COMM_CMD_PFX_SIZE = 2;
     private int COMM_CMD_SIZE = 5;    // = 2 + size 3 (changes here means changing on the server as well)
@@ -1207,7 +1207,7 @@ public class Comm {
             // FIXME : likely bug if object size > limit 
             if (s > COMM_PACKET_SIZE) {
                 LOG.log(Level.SEVERE, "/!\\ Cannot send command " + command + " with " + string + " : object is of size (" + s + " bytes) which is larger than maximum packet size of " + COMM_PACKET_SIZE);
-                LOG.log(Level.SEVERE, "/!\\ Please ask development team to increase compression factor currently set to " + COMM_COMPRESSING_FACTOR);
+                LOG.log(Level.SEVERE, "     Please ask development team to increase compression factor currently set to " + COMM_COMPRESSING_FACTOR);
                 // do not send package.
                 return;
             }
