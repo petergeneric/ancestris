@@ -591,7 +591,6 @@ public class PropertyTableWidget extends JPanel {
             if (ignoreSelection) {
                 return;
             }
-            ignoreSelection = true;
 
             // grab before context
             List<? extends Property> before = getContext().getProperties();
@@ -625,9 +624,16 @@ public class PropertyTableWidget extends JPanel {
             }
 
             // tell about it
-            if (!properties.isEmpty()) {
-                tmpCtx = new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties);
+            if (properties.size() == 1) {
+                ignoreSelection = true;
+                if (tmpCtx == null) {
+                    tmpCtx = new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties);
+                } else {
+                    tmpCtx.setProperties(properties);
+                }
                 SwingUtilities.invokeLater(selectionRunnable);
+            } else {
+                ignoreSelection = false;
             }
 
             // done

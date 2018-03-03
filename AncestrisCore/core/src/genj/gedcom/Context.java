@@ -160,6 +160,16 @@ public class Context {
   }
 
   /**
+   * Set properties
+   */
+  public void setProperties(List<Property> properties) {
+      this.entities.clear();
+      this.entities.add(properties.get(0).getEntity());
+      this.properties.clear();
+      this.properties.addAll(properties);
+  }
+
+  /**
    * A context minus the given property
    */
   public Context remove(Property property) {
