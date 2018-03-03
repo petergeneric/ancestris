@@ -137,8 +137,8 @@
             <DATE default="0"/>
             <PLAC default="0"/>
         </RELI>
-        <CAST hide="2" type="PropertySimpleValue" img="Caste" super="INDI:RELI"/>
-        <DSCR hide="2" type="PropertyChoiceValue" img="Description" super="INDI:RELI"/>
+        <CAST type="PropertySimpleValue" img="Caste" super="INDI:RELI"/>
+        <DSCR type="PropertyChoiceValue" img="Description" super="INDI:RELI"/>
         <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI"/>
         <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
         <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI"/>
