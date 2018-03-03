@@ -1219,7 +1219,7 @@ public class Comm {
             if (!abort) {
                 Set<String> set = (Set<String>) object;
                 Set<String> subSet = new HashSet<String>();  
-                int factor = s / COMM_PACKET_SIZE + 2;  // at least divide size by 2 to start
+                int factor = 2 * s / COMM_PACKET_SIZE + 3;  
                 int limit = set.size() / factor;
                 int index = 0;
                 byte[] tmpBytes = null;
