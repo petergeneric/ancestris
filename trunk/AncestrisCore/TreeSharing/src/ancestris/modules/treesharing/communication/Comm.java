@@ -157,7 +157,7 @@ public class Comm {
     private int COMM_CMD_SIZE = 5;    // = 2 + size 3 (changes here means changing on the server as well)
     private int COMM_PACKET_NB = 1000;
     private static String STR_DELIMITER = " ";
-    private int REQUEST_TIMEOUT = 2;        // wait for that many seconds before calling timout on each packet
+    private int REQUEST_TIMEOUT = 3;        // wait for that many seconds before calling timout on each packet
     private int COMM_NB_FAILS = 6;          // give up after this nb of "no response"
     private int COMM_RESPONSE_DELAY = 50;   // in milliseconds for the waiting loop
 
@@ -596,7 +596,7 @@ public class Comm {
         boolean retry = true;
         int nbNoResponses = 0; // nb of consecutive no responses
         LOG.log(Level.FINE, "Calling member " + member.getMemberName() + " with " + command);
-        while (iPacket < COMM_PACKET_NB && nbNoResponses < COMM_NB_FAILS) {  // stop at the last packet or after 10 consecutive retry/skips
+        while (iPacket < COMM_PACKET_NB && nbNoResponses < COMM_NB_FAILS) {  // stop at the last packet or after nb consecutive retry/skips
             String commandIndexed = command + String.format(FMT_IDX, iPacket);
             try {
                 // Ask member for list of something
@@ -762,7 +762,7 @@ public class Comm {
         String senderAddress = null;
         String senderIP = null;
         int senderPort = 0;
-        byte[] bytesReceived = new byte[COMM_PACKET_SIZE];
+        byte[] bytesReceived = new byte[COMM_PACKET_SIZE*7];   // receiving packet can be much larger than garanteed size
         DatagramPacket packetReceived;
         
         byte[] contentMemberBytes = null;
@@ -1154,8 +1154,8 @@ public class Comm {
                 
             }
         } catch (Exception ex) {
-            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_CommunicationError"), ex.getMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
-            //Exceptions.printStackTrace(ex);
+            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_CommunicationError"), ex.getLocalizedMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            Exceptions.printStackTrace(ex);
         }
 
     }
@@ -1184,38 +1184,77 @@ public class Comm {
         String contentStr = command + string; 
         byte[] contentBytes = contentStr.getBytes(Charset.forName(COMM_CHARSET));
         
-        // Return just this if no object
+        // Return just this if no object else add wrapped object
         if (object == null) {
             msgBytes = contentBytes;
         } else {
-            // ...else add wrapped object
-            try {
-                ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-                byteStream.write(contentBytes);
-                byteStream.write(wrapObject(object));
-                msgBytes = byteStream.toByteArray();
-
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-            }
+            msgBytes = getWrappedObject(contentBytes, object);
         }
 
-        // Send whole msg
-        if (!command.equals(CMD_PONGG)) {   // no need to log this PONGG message as it is sent every few minutes to the server
-            int s = (object != null ?  msgBytes.length : 0);
-            LOG.log(Level.INFO, "Sending command " + command + " with " + string + " and object of size (" + s + " bytes) to " + ipAddress + ":" + portAddress);
-            // FIXME : likely bug if object size > limit 
-            if (s > COMM_PACKET_SIZE) {
-                LOG.log(Level.SEVERE, "/!\\ Cannot send command " + command + " with " + string + " : object is of size (" + s + " bytes) which is larger than maximum packet size of " + COMM_PACKET_SIZE);
-                LOG.log(Level.SEVERE, "     Please ask development team to increase compression factor currently set to " + COMM_COMPRESSING_FACTOR);
-                // do not send package.
+        // abort if msgBytes failed
+        if (msgBytes == null) {   
+            LOG.log(Level.SEVERE, "Sending command " + command + " with " + string + " to " + ipAddress + ":" + portAddress + " => Cannot wrap message. Abort communication.");
+            return;
+            }
+        
+        // no need to log this PONGG message as it is sent every few minutes to the server
+        if (!command.equals(CMD_PONGG)) {   
+            LOG.log(Level.INFO, "Sending command " + command + " with " + string + " and object of size (" + msgBytes.length + " bytes) to " + ipAddress + ":" + portAddress);
+            }
+        
+        // Truncate package if object is too bug
+        int s = msgBytes.length;
+        if (s > COMM_PACKET_SIZE) {
+            LOG.log(Level.SEVERE, ".../!\\ Object of size (" + s + " bytes) is larger than maximum packet size of " + COMM_PACKET_SIZE);
+            // truncate object if object is a set of strings (packet has not been optimised in this case)
+            if (object instanceof Set) { // reduce object size by a factor of factor, and add strings until object reaches maximum size
+                Set<String> set = (Set<String>) object;
+                Set<String> subSet = new HashSet<String>();
+                int factor = s / COMM_PACKET_SIZE + 2;  // at least divide size by 2 to start
+                int limit = set.size() / factor;
+                int index = 0;
+                byte[] tmpBytes = null;
+                for (String str : set) {
+                    subSet.add(str);
+                    if (index > limit) {
+                        // check packet size and continue adding by lots of 10 strings until it reaches max size
+                        tmpBytes = getWrappedObject(contentBytes, subSet);
+                        s = tmpBytes.length;
+                        if (s < COMM_PACKET_SIZE) {
+                            msgBytes = tmpBytes;
+                            limit += 10;
+                        } else {
+                            LOG.log(Level.SEVERE, "...You are the caller : number of common names has been truncated to first " + (limit - 10) + " names instead of " + set.size() + ".");
+                            break;  // use msgBytes
+                        }
+                    }
+                    index++;
+                }
+            } else {
+                LOG.log(Level.SEVERE, "...You are the receiver : compression factor is currently set to " + COMM_COMPRESSING_FACTOR + " and should be increased by the developpers.");
+                LOG.log(Level.SEVERE, "...=> Abort communication.");
                 return;
             }
-            
         }
+        
+        // Send msg with object
         sendObject(msgBytes, ipAddress, portAddress);
     }
     
+    
+    private byte[] getWrappedObject(byte[] contentBytes, Object object) {
+        byte[] ret = null;
+        try {
+            ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+            byteStream.write(contentBytes);
+            byteStream.write(wrapObject(object));
+            ret = byteStream.toByteArray();
+        } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return ret;
+    }
     
 
     /**
