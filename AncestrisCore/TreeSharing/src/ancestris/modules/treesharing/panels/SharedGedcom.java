@@ -474,7 +474,7 @@ public class SharedGedcom extends JInternalFrame {
             Indi indi = (Indi) entity;
             if (indi != null) {
                 String str = indi.getLastName();
-                if (str != null && commonIndiLastnames.contains(str.trim())) {
+                if (str != null && commonIndiLastnames != null && commonIndiLastnames.contains(str.trim())) {
                     GedcomIndi gedcomIndi = EntityConversion.indiToGedcomIndi(indi);   // I'd rather have no code in the GedcomIndi object for bandwidth and size reasons and have the code here
                     ret.add(gedcomIndi);
                 }
@@ -494,7 +494,7 @@ public class SharedGedcom extends JInternalFrame {
         List<Entity> entities = getPublicEntities(Gedcom.FAM);
         for (Entity entity : entities) {
             Fam fam = (Fam) entity;
-            if (commonFamLastnames.contains(getLastName(fam))) {
+            if (commonFamLastnames != null && commonFamLastnames.contains(getLastName(fam))) {
                 GedcomFam gedcomFam = EntityConversion.famToGedcomFam(fam);   // I'd rather have no code in the GedcomFam object for bandwidth and size reasons and have the code here
                 ret.add(gedcomFam);
             }
