@@ -335,7 +335,7 @@ public class ReleveTable extends JTable {
             
             if ( col == 0) {
                 GedcomLink gedcomLink = (GedcomLink) table.getModel().getValueAt(table.convertRowIndexToModel(row), -1);
-                if (gedcomLink != null && gedcomLink.getCompareResult()== GedcomLink.CompareResult.EQUAL) {
+                if (gedcomLink != null ) {
                     gedcomLinked = true;
                 }
             }

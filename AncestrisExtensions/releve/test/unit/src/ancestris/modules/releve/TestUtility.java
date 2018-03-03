@@ -15,6 +15,7 @@ import genj.gedcom.GedcomOptions;
 import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
@@ -66,7 +67,7 @@ public class TestUtility extends TestCase {
         Gedcom gedcom;
         gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
-        Property birth;
+        
         
         Source source1 = (Source) gedcom.createEntity(Gedcom.SOUR, "S1");
         source1.addProperty("TITL", "BMS Paris");
@@ -76,71 +77,79 @@ public class TestUtility extends TestCase {
         source3.addProperty("TITL", "Etat civil Brest");
 
 
-        Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "I1");
-        husband.setName("Fatherfirstname", "FATHERLASTNAME");
-        husband.setSex(PropertySex.MALE);
-        birth = husband.addProperty("BIRT","" );
-        birth.addProperty("DATE","01 JAN 1970", 1);
-        birth.addProperty("PLAC","Paris,75000,,state,country,", 2);
-        birth.addProperty("SOUR","@S1@",3);
-        husband.addProperty("OCCU", "I1occupation");
-        PropertyPlace placeParis = (PropertyPlace) birth.getProperty("PLAC");
-        placeParis.setCoordinates("N48.8534", "E2.3486");
+        {
+            Property birth;
+            Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "I1");
 
-        Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "Wife2");
-        wife.setName("Motherfirstname", "MOTHERLASTNAME");
-        wife.setSex(PropertySex.FEMALE);
+            husband.setName("Fatherfirstname", "FATHERLASTNAME");
+            husband.setSex(PropertySex.MALE);
+            birth = husband.addProperty("BIRT", "");
+            birth.addProperty("DATE", "01 JAN 1970", 1);
+            birth.addProperty("PLAC", "Paris,75000,,state,country,", 2);
+            birth.addProperty("SOUR", "@S1@", 3);
+            husband.addProperty("OCCU", "I1occupation");
+            PropertyPlace placeParis = (PropertyPlace) birth.getProperty("PLAC");
+            placeParis.setCoordinates("N48.8534", "E2.3486");
 
-        Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "child1");
-        child1.setName("One First Name", "FATHERLASTNAME");
-        child1.setSex(PropertySex.FEMALE);
-        birth = child1.addProperty("BIRT", "");
-        birth.addProperty("DATE","01 JAN 2000");
-        birth.addProperty("PLAC","Brest");
-        birth.addProperty("SOUR","@S2@");
+            Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "Wife2");
+            wife.setName("Motherfirstname", "MOTHERLASTNAME");
+            wife.setSex(PropertySex.FEMALE);
 
-        PropertyPlace placeBrest = (PropertyPlace) birth.getProperty("PLAC");
-        placeBrest.setCoordinates("N52.09755", "E23.68775");
-        
-        Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
-        child2.setName("Two First Name", "FATHERLASTNAME");
-        child2.setSex(PropertySex.FEMALE);
-        birth = child2.addProperty("BIRT", "");
-        birth.addProperty("DATE","BEF 2004");
-        birth.addProperty("PLAC","Brest");
-        //Property sourcexref = birth.addProperty("SOUR","@S2@");
-        
+            Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "child1");
+            child1.setName("One First Name", "FATHERLASTNAME");
+            child1.setSex(PropertySex.FEMALE);
+            birth = child1.addProperty("BIRT", "");
+            birth.addProperty("DATE", "01 JAN 2000");
+            birth.addProperty("PLAC", "Brest");
+            birth.addProperty("SOUR", "@S2@");
 
-        Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "child3");
-        child3.setName("Three, First, Name", "FATHERLASTNAME");
-        child3.setSex(PropertySex.FEMALE);
+            PropertyPlace placeBrest = (PropertyPlace) birth.getProperty("PLAC");
+            placeBrest.setCoordinates("N52.09755", "E23.68775");
 
-        Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F1");
-        family.setHusband(husband);
-        family.setWife(wife);
-        family.addChild(child1);
-        family.addChild(child2);
-        family.addChild(child3);
+            Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
+            child2.setName("Two First Name", "FATHERLASTNAME");
+            child2.setSex(PropertySex.FEMALE);
+            birth = child2.addProperty("BIRT", "");
+            birth.addProperty("DATE", "BEF 2004");
+            birth.addProperty("PLAC", "Brest");
+            //Property sourcexref = birth.addProperty("SOUR","@S2@");
 
-        Indi cousin = (Indi) gedcom.createEntity(Gedcom.INDI, "I10");
-        cousin.setName("cousin", "FATHERLASTNAME");
-        cousin.setSex(PropertySex.MALE);
-        birth = cousin.addProperty("BIRT","" );
-        birth.addProperty("DATE","02 FEB 1972", 1);
-        birth.addProperty("PLAC","Paris", 2);
-        birth.addProperty("SOUR","@S1@",3);
-        
-        Indi sansfamille1 = (Indi) gedcom.createEntity(Gedcom.INDI, "sansfamille1");
-        sansfamille1.setName("sansfamille1", "FATHERLASTNAME");
-        sansfamille1.setSex(PropertySex.MALE);
-        birth = sansfamille1.addProperty("BIRT","" );
-        birth.addProperty("DATE","01 JAN 2000");
-        
-        // je complete les referecences entre les entités et sources
-        for(Property property : gedcom.getProperties(new TagPath("INDI:BIRT:SOUR"))) {
-            ((PropertyXRef)property).link();
+            Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "child3");
+            child3.setName("Three, First, Name", "FATHERLASTNAME");
+            child3.setSex(PropertySex.FEMALE);
+
+            Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F1");
+            family.setHusband(husband);
+            family.setWife(wife);
+            family.addChild(child1);
+            family.addChild(child2);
+            family.addChild(child3);
         }
+        
+        {            
+            Indi cousin = (Indi) gedcom.createEntity(Gedcom.INDI, "I10");
+            cousin.setName("cousin", "FATHERLASTNAME");
+            cousin.setSex(PropertySex.MALE);
+            Property birth = cousin.addProperty("BIRT", "");
+            birth.addProperty("DATE", "02 FEB 1972", 1);
+            birth.addProperty("PLAC", "Paris", 2);
+            birth.addProperty("SOUR", "@S1@", 3);
 
+            Indi sansfamille1 = (Indi) gedcom.createEntity(Gedcom.INDI, "sansfamille1");
+            sansfamille1.setName("sansfamille1", "FATHERLASTNAME");
+            sansfamille1.setSex(PropertySex.MALE);
+            birth = sansfamille1.addProperty("BIRT", "");
+            birth.addProperty("DATE", "01 JAN 2000");
+
+            // je complete les referecences entre les entités et sources
+            for (Property property : gedcom.getProperties(new TagPath("INDI:BIRT:SOUR"))) {
+                ((PropertyXRef) property).link();
+            }
+        }
+        
+
+
+        
         return gedcom;
     }
 
@@ -149,44 +158,62 @@ public class TestUtility extends TestCase {
      * @return
      * @throws GedcomException
      */
-    public static Gedcom createGedcom2() throws GedcomException {
+    public static Gedcom createGedcomF2() throws GedcomException {
         // Gedcom options
         
         Gedcom gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
         
-        Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "I1");
-        husband.setName("FatherFirstName", "FATHERLASTNAME");
-        husband.setSex(PropertySex.MALE);
-        husband.addProperty("OCCU", "profession1");
-        husband.addProperty("PLAC","Brest");
+        Source source1 = (Source) gedcom.createEntity(Gedcom.SOUR, "S1");
+        source1.addProperty("TITL", "BMS Paris");
+        
+        {
+            // famille 2
+            Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "F2husband");
+            husband.setName("Jupiter", "PLANET");
+            husband.setSex(PropertySex.MALE);
+            Property birth = husband.addProperty("BIRT", "");
+            birth.addProperty("DATE", "01 JAN 1950", 1);
+            birth.addProperty("PLAC", "Paris,75000,,state,country,", 2);
+            birth.addProperty("SOUR", "@S1@", 3);
+            husband.addProperty("OCCU", "I1occupation");
+            PropertyPlace placeParis = (PropertyPlace) birth.getProperty("PLAC");
+            placeParis.setCoordinates("N48.8534", "E2.3486");
 
-
-        Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "I2");
-        wife.setName("MotherFirstName", "MOTHERLASTNAME");
-        wife.setSex(PropertySex.FEMALE);
-        wife.addProperty("OCCU", "profession mere");
-        wife.addProperty("PLAC","indiMotherResidence");
-
-        Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "I3");
-        child1.setName("firstname1", "FATHERLASTNAME");
-        child1.setSex(PropertySex.FEMALE);
-        child1.addProperty("OCCU", "profession1");
-
-        Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "I4");
-        child2.setName("firstname2", "FATHERLASTNAME");
-        child2.setSex(PropertySex.FEMALE);
-
-        Indi child3 = (Indi) gedcom.createEntity(Gedcom.INDI, "I5");
-        child2.setName("firstname2", "FATHERLASTNAME");
-        child2.setSex(PropertySex.FEMALE);
-
-        Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F1");
-        family.setHusband(husband);
-        family.setWife(wife);
-        family.addChild(child1);
-        family.addChild(child2);
-        family.addChild(child3);
+            Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "F2Wife");
+            wife.setName("Venus", "GALAXY");
+            wife.setSex(PropertySex.FEMALE);
+            husband.addProperty("OCCU", "F2Wifeoccupation");
+            
+            Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "F2child1");
+            child1.setName("Mercure", "PLANET");
+            child1.setSex(PropertySex.MALE);
+            birth = child1.addProperty("BIRT", "");
+            birth.addProperty("DATE", "01 APR 1980");
+            birth.addProperty("PLAC", "Brest");
+            birth.addProperty("SOUR", "@S2@");
+            
+            Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "F2child2");
+            child2.setName("Janus", "PLANET");
+            child2.setSex(PropertySex.FEMALE);
+            birth = child1.addProperty("BIRT", "");
+            birth.addProperty("DATE", "01 SEP 1982");
+            birth.addProperty("PLAC", "Brest");
+            birth.addProperty("SOUR", "@S2@");
+            
+            Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F2");
+            family.setHusband(husband);
+            family.setWife(wife);
+            PropertyDate marriage = family.getMarriageDate(true);  // create=true
+            marriage.setValue("05 FEB 1979");
+            
+            // je complete les referecences entre les entités et sources
+//            for (Property property : gedcom.getProperties(new TagPath("INDI:BIRT:SOUR"))) {
+//                ((PropertyXRef) property).link();
+//            }
+            
+            
+        }
         return gedcom;
     }
     
@@ -269,6 +296,44 @@ public class TestUtility extends TestCase {
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         return record;
     }   
+    
+    public static Record getRecordBirthF2() {
+        RecordBirth record = new RecordBirth();
+                record.setFieldValue(Record.FieldType.eventDate, "01/04/1980");
+                record.setFieldValue(Record.FieldType.cote, "cote");
+                record.setFieldValue(Record.FieldType.freeComment,  "photo");
+                record.setIndi("Mercure", "PLANET", "M", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndiFather("Jupiter", "PLANET", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
+                record.setIndiMother("Venus", "GALAXY", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "true", "72y");
+                record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+                record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+                record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+                record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                record.setFieldValue(Record.FieldType.generalComment, "generalcomment");
+        return record;
+    }
+    
+    public static RecordMarriage getRecordMarriageF2() {
+        RecordMarriage record = new RecordMarriage();
+        record.setFieldValue(FieldType.eventDate, "05/02/1979");
+        record.setFieldValue(FieldType.cote, "cote");
+        record.setFieldValue(FieldType.freeComment,  "photo");
+        record.setFieldValue(FieldType.generalComment, "general comment");
+        record.setIndi("Jupiter", "PLANET", "M", "30y", "01/02/1990", "indiBirthPlace", "indiBirthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+        record.setIndiMarried("indiMarriedFirstname", "indiMarriedLastname", "indiMarriedOccupation", "indiMarriedResidence", "indiMarriedAddress", "indiMarriedComment", "DEAD");
+        record.setIndiFather("indiFatherFirstname", "PLANET", "indiFatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "false", "70y");
+        record.setIndiMother("indiMotherFirstname", "ASTRE", "indiMotherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "false", "72y");
+        record.setWife("Venus", "GALAXY", "19y", "wifeAge", "02/02/1992", "wifeBirthPlace", "wifeBirthAddress", "wifeOccupation", "wifeResidence", "wifeAddress", "wifeComment");
+        record.setWifeMarried("wifeMarriedFirstname", "wifeMarriedLastname", "wifeMarriedOccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifeMarriedComment", "ALIVE");
+        record.setWifeFather("wifeFatherFirstname", "GALAXY", "wifeFatherOccupation", "wifeFatherResidence", "wifeFatherAddress", "wifeFatherComment", "false", "71y");
+        record.setWifeMother("wifeMotherFirstname", "COMET", "wifeMotherOccupation", "wifeMotherResidence", "wifeMotherAddress", "wifeMotherComment", "false", "73y");
+        record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+        record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+        record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+        record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+        return record;
+    }
+
         
     protected static Component getComponentByName(Component parent, String name) {
 

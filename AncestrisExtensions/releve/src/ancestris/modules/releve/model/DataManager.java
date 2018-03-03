@@ -525,7 +525,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     }
     
     public GedcomLink getGedcomLink(Record record) {
-        return gedcomLinkProvider.getgedcomLink(record);
+        return gedcomLinkProvider.getGedcomLink(record);
     }
     
 }
