@@ -31,56 +31,13 @@ public class GedcomLink {
         return property;
     }
 
-    /**
-     * @return the compareResult
-     */
-    public CompareResult getCompareResult() {
-        return compareResult;
-    }
-
-    /**
-     * @param record the record to set
-     */
-    public void setRecord(Record record) {
+    public GedcomLink(Record record, Entity entity, Property property) {
         this.record = record;
-    }
-
-    /**
-     * @param entity the entity to set
-     */
-    public void setEntity(Entity entity) {
-        this.entity = entity;
-    }
-
-    /**
-     * @param property the property to set
-     */
-    public void setProperty(Property property) {
+        this.entity= entity;
         this.property = property;
     }
-
-    /**
-     * @param compareResult the compareResult to set
-     */
-    public void setCompareResult(CompareResult compareResult) {
-        this.compareResult = compareResult;
-    }
-    static public enum CompareResult {
-        EQUAL,
-        COMPATIBLE,
-        CONFLIT,
-        NOT_APPLICABLE
-    }
-    
-    public GedcomLink(Record record) {
-        this.record = record;
-        entity= null;
-        property = null;
-        compareResult = CompareResult.NOT_APPLICABLE;
-    }
-    
-    private Record record;
-    private Entity entity;
-    private Property property;
-    private CompareResult compareResult;
+        
+    private final Record record;
+    private final Entity entity;
+    private final Property property;
 }

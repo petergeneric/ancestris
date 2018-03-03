@@ -45,7 +45,7 @@ public class DataManagerTest extends TestCase {
             assertEquals("Nombre de professions apres ajout", 7, dataManager.getCompletionProvider().getOccupations(CompletionProvider.IncludeFilter.ALL).size());
             assertEquals("Nombre de lieux apres ajout", 4, dataManager.getCompletionProvider().getPlaces(CompletionProvider.IncludeFilter.ALL).size());
 
-            Gedcom gedcom = TestUtility.createGedcom2();
+            Gedcom gedcom = TestUtility.createGedcomF2();
             
 //            File file = new File("D:/Genealogie/GED/test1.ged");
 //            boolean exis = file.exists();
