@@ -65,10 +65,11 @@ public class StatsPanel extends javax.swing.JPanel {
                 int row = jTable1.rowAtPoint(evt.getPoint());
                 int col = jTable1.columnAtPoint(evt.getPoint());
                 if (row >= 0 && col == 5) {
+                    String pseudo = jTable1.getModel().getValueAt(row, 1).toString();
                     MemberProfile mp = list.get(jTable1.getModel().getValueAt(row, 1)).profile;
                     if (mp == null) return;
-                    DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel"),
-                            new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setDialogId("profilpanel").setOptionType(DialogManager.OK_ONLY_OPTION).show();
+                    DialogManager.create(NbBundle.getMessage(StatsPanel.class, "TITL_ProfilePanel", pseudo),
+                            new ProfilePanel(mp, owner.getMyProfile())).setMessageType(DialogManager.PLAIN_MESSAGE).setResizable(false).setDialogId("profilpanel").setOptionType(DialogManager.OK_ONLY_OPTION).show();
                 }
             }
         });
