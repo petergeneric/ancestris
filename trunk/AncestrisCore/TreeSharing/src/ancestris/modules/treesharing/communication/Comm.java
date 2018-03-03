@@ -151,7 +151,7 @@ public class Comm {
     // Command and Packets size
     private int COMM_PACKET_SIZE = 1400;   // max size of UDP packet seems to be 16384 (on my box), sometimes 8192 (on François' box for instance)
                     // Here it says 1400 : https://stackoverflow.com/questions/9203403/java-datagrampacket-udp-maximum-send-recv-buffer-size
-    private double COMM_COMPRESSING_FACTOR = 1.8;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
+    private double COMM_COMPRESSING_FACTOR = 2;   // estimated maximum compressing factor of GZIP in order to calculate the size under the above limit
     private String FMT_IDX = "%03d"; // size 3
     private int COMM_CMD_PFX_SIZE = 2;
     private int COMM_CMD_SIZE = 5;    // = 2 + size 3 (changes here means changing on the server as well)
@@ -1205,11 +1205,20 @@ public class Comm {
         // Truncate package if object is too bug
         int s = msgBytes.length;
         if (s > COMM_PACKET_SIZE) {
-            LOG.log(Level.SEVERE, ".../!\\ Object of size (" + s + " bytes) is larger than maximum packet size of " + COMM_PACKET_SIZE);
+            LOG.log(Level.SEVERE, "./!\\ Object of size (" + s + " bytes) is larger than maximum packet size of " + COMM_PACKET_SIZE);
+            // test class of object
+            boolean abort = true;
+            if (object instanceof Set) {
+                Set<Object> testSet = (Set<Object>) object;
+                if (testSet.iterator().next() instanceof String) {
+                    abort = false;
+                }
+            }
             // truncate object if object is a set of strings (packet has not been optimised in this case)
-            if (object instanceof Set) { // reduce object size by a factor of factor, and add strings until object reaches maximum size
+            // reduce object size by a factor of factor, and add strings until object reaches maximum size
+            if (!abort) {
                 Set<String> set = (Set<String>) object;
-                Set<String> subSet = new HashSet<String>();
+                Set<String> subSet = new HashSet<String>();  
                 int factor = s / COMM_PACKET_SIZE + 2;  // at least divide size by 2 to start
                 int limit = set.size() / factor;
                 int index = 0;
@@ -1224,15 +1233,16 @@ public class Comm {
                             msgBytes = tmpBytes;
                             limit += 10;
                         } else {
-                            LOG.log(Level.SEVERE, "...You are the caller : number of common names has been truncated to first " + (limit - 10) + " names instead of " + set.size() + ".");
+                            LOG.log(Level.SEVERE, ".You are the caller : number of common names has been truncated to first " + (limit - 10) + " names instead of " + set.size() + ".");
+                            LOG.log(Level.SEVERE, ".Packet size is now (" + msgBytes.length + ") bytes.");
                             break;  // use msgBytes
                         }
                     }
                     index++;
                 }
             } else {
-                LOG.log(Level.SEVERE, "...You are the receiver : compression factor is currently set to " + COMM_COMPRESSING_FACTOR + " and should be increased by the developpers.");
-                LOG.log(Level.SEVERE, "...=> Abort communication.");
+                LOG.log(Level.SEVERE, ".You are the receiver : compression factor is currently set to " + COMM_COMPRESSING_FACTOR + " and should be increased by the developpers.");
+                LOG.log(Level.SEVERE, ".=> Abort communication.");
                 return;
             }
         }
