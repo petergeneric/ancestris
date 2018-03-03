@@ -23,8 +23,10 @@ import ancestris.modules.console.Console;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyAlias;
 import genj.gedcom.PropertyAssociation;
 import genj.io.GedcomReader;
 import genj.io.GedcomReaderContext;
@@ -38,6 +40,7 @@ import java.util.List;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import spin.Spin;
 
@@ -205,6 +208,25 @@ public class GeneanetExport {
                     rela = prop.getValue();
                     if (rela.equals("Relation")) {
                         prop.setValue("unmarried");
+                    }
+                }
+            }
+            
+        }
+        
+        // Convert ALIA to NAME
+        for (Entity entity : gedcom.getIndis()) {
+            props = entity.getProperties("ALIA");
+            for (Property p : props) {
+                Property parent = p.getParent();
+                if (p != null && !(p instanceof PropertyAlias)) {
+                    int pos = parent.getPropertyPosition(p);
+                    String value = p.getValue();
+                    parent.delProperty(p);
+                    try {
+                        parent.addProperty("NAME", value, pos);
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
                     }
                 }
             }
