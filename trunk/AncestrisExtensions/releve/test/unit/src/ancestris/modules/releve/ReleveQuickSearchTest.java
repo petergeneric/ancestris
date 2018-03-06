@@ -2,6 +2,7 @@ package ancestris.modules.releve;
 
 import ancestris.modules.releve.editor.EditorBeanGroup;
 import ancestris.modules.releve.model.Record;
+import java.text.Normalizer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,22 +41,42 @@ public class ReleveQuickSearchTest {
         m_tc = null;
     }
 
+    
     @Test
     public void testEvaluate1() throws Exception {
         // j'ajoute un relevé
-        m_tc.getDataManager().addRecord(TestUtility.getRecordBirth());
-
+        Record record = TestUtility.getRecordBirth();
+        m_tc.getDataManager().addRecord(record);
         ResultsModel rm = ResultsModel.getInstance();
-        // je lance la recherche        
-        org.openide.util.Task task = CommandEvaluator.evaluate("indiFirstname", rm);
+        
+        // je lance la recherche    
+        String request = "indiFirstname";
+        org.openide.util.Task task = CommandEvaluator.evaluate(request, rm);
         RequestProcessor.getDefault().post(task);
+        
         // j'attends la fin de la recherche
         task.waitFinished();
+        
         // je vérifie le résultat
         assertEquals("Nombre de résultats", 1, rm.getSize());
         assertEquals("Category", "Releve", rm.getContent().get(0).getCategory().getDisplayName());
         assertEquals("Releve", "ReleveQuickSearch", rm.getContent().get(0).getCategory().getProviders().get(0).getClass().getSimpleName());
-        assertEquals("DisplayName", "<html>indiLastname <b>indiFirstname</b>, Enfant, 01/01/2000", rm.getContent().get(0).getItems().get(0).getDisplayName());
+        
+        String expected = String.format("<html>%s %s, %s, %s %s",  // nom  prénom , enfant , date  ville
+                record.getFieldValue(Record.FieldType.indiLastName),
+                record.getFieldValue(Record.FieldType.indiFirstName),
+                EditorBeanGroup.getGroup(record.getType(), Record.FieldType.indiFirstName).getTitle(), 
+                record.getFieldValue(Record.FieldType.eventDate),
+                m_tc.getDataManager().getCityName()
+        );
+        expected = expected.trim();
+        String displayName = rm.getContent().get(0).getItems().get(0).getDisplayName();
+        for(String word : request.split(" ") ) {
+            word = "<b>"+word.toLowerCase()+"</b>";
+            assertEquals("DisplayName word "+word , true, displayName.toLowerCase().contains(word)); 
+        }
+        assertEquals("DisplayName without <b>", expected, displayName.replace("<b>","").replace("</b>", "")); 
+        
     }
     
     @Test
@@ -68,7 +89,8 @@ public class ReleveQuickSearchTest {
 
         ResultsModel rm = ResultsModel.getInstance();
         // je lance la recherche        
-        org.openide.util.Task task = CommandEvaluator.evaluate("ETE", rm);
+        String request = "ETE";
+        org.openide.util.Task task = CommandEvaluator.evaluate(request, rm);
         RequestProcessor.getDefault().post(task);
         // j'attends la fin de la recherche
         task.waitFinished();
@@ -76,15 +98,59 @@ public class ReleveQuickSearchTest {
         assertEquals("Nombre de résultats", 1, rm.getSize());
         assertEquals("Category", "Releve", rm.getContent().get(0).getCategory().getDisplayName());
         assertEquals("Releve", "ReleveQuickSearch", rm.getContent().get(0).getCategory().getProviders().get(0).getClass().getSimpleName());
-        //assertEquals("DisplayName", "<html> indiLastname <b>indiFirstname</b> , Enfant , 01/01/2000", rm.getContent().get(0).getItems().get(0).getDisplayName());
-        String format = "<html><b>%s</b> %s, %s, %s %s" ; // nom , prénom , enfant , date  ville
-        String expected = String.format(format, 
+        
+        String expected = String.format("<html>%s %s, %s, %s %s",  // nom  prénom , enfant , date  ville
                 record.getFieldValue(Record.FieldType.indiLastName),
                 record.getFieldValue(Record.FieldType.indiFirstName),
                 EditorBeanGroup.getGroup(record.getType(), Record.FieldType.indiFirstName).getTitle(), 
                 record.getFieldValue(Record.FieldType.eventDate),
                 m_tc.getDataManager().getCityName()
         );
-        assertEquals("DisplayName", expected, rm.getContent().get(0).getItems().get(0).getDisplayName());                       
+        expected = expected.trim();
+        String displayName = rm.getContent().get(0).getItems().get(0).getDisplayName();
+        for(String word : request.split(" ") ) {
+            word = "<b>"+word.toLowerCase()+"</b>";
+            assertEquals("DisplayName word "+word , true, Normalizer.normalize(displayName.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").contains(word)); 
+        }
+        assertEquals("DisplayName without <b>", expected, displayName.replace("<b>","").replace("</b>", ""));                     
     }
+    
+    @Test
+    public void testEvaluateAvecEspace() throws Exception {
+        // j'ajoute un relevé
+        Record record = TestUtility.getRecordBirth();
+        m_tc.getDataManager().setPlace("ville", "", "", "", "");
+        m_tc.getDataManager().addRecord(record);
+
+        ResultsModel rm = ResultsModel.getInstance();
+        
+        // je lance la recherche    
+        String request= "ndiLast   indifi name";
+        org.openide.util.Task task = CommandEvaluator.evaluate(request, rm);
+        RequestProcessor.getDefault().post(task);
+        
+        // j'attends la fin de la recherche
+        task.waitFinished();
+        
+        // je vérifie le résultat
+        assertEquals("Nombre de résultats", 1, rm.getSize());
+        assertEquals("Category", "Releve", rm.getContent().get(0).getCategory().getDisplayName());
+        assertEquals("Releve", "ReleveQuickSearch", rm.getContent().get(0).getCategory().getProviders().get(0).getClass().getSimpleName());
+        
+        String expected = String.format("<html>%s %s, %s, %s %s",  // nom  prénom , enfant , date  ville
+                record.getFieldValue(Record.FieldType.indiLastName),
+                record.getFieldValue(Record.FieldType.indiFirstName),
+                EditorBeanGroup.getGroup(record.getType(), Record.FieldType.indiFirstName).getTitle(), 
+                record.getFieldValue(Record.FieldType.eventDate),
+                m_tc.getDataManager().getCityName()
+        );
+        String displayName = rm.getContent().get(0).getItems().get(0).getDisplayName();
+        for(String word : request.split(" +") ) {
+            word = "<b>"+word.toLowerCase()+"</b>";
+            assertEquals("DisplayName word "+word , true, displayName.toLowerCase().contains(word)); 
+        }
+        assertEquals("DisplayName without <b>", expected, displayName.replace("<b>","").replace("</b>", "")); 
+        
+    }
+    
 }
