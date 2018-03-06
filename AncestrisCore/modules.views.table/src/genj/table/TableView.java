@@ -784,7 +784,7 @@ public class TableView extends View {
         }
 
         private void invalidate(Gedcom gedcom, final Entity entity, final TagPath path) {
-            if (!mode.getTag().equals(entity.getTag())) {
+            if (mode == null || entity == null || !mode.getTag().equals(entity.getTag())) {
                 return;
             }
             SwingUtilities.invokeLater(new Runnable() {
