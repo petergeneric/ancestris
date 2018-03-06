@@ -7,6 +7,7 @@ import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.RecordModel;
 import java.text.Normalizer;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.netbeans.spi.quicksearch.SearchProvider;
 import org.netbeans.spi.quicksearch.SearchRequest;
@@ -43,10 +44,8 @@ public class ReleveQuickSearch implements SearchProvider {
     public void evaluate(SearchRequest request, SearchResponse response) {
         synchronized (this) {
             
-            //Pattern espacePattern = Pattern.compile(" +");
-            //String resquestPattern = espacePattern.matcher(request.getText().toLowerCase()).replaceAll(".+");
-            //resquestPattern = Normalizer.normalize(resquestPattern, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");
-            String resquestPattern = Normalizer.normalize(request.getText().toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");        
+            String resquestPattern = request.getText().replace("(", "\\(").replace(")", "\\)").trim();
+            resquestPattern = Normalizer.normalize(resquestPattern.toLowerCase(), Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");        
         
             // je cherche dans toutes les instances de ReleveTopComponent
             for (ReleveTopComponent tc : AncestrisPlugin.lookupAll(ReleveTopComponent.class)) {
@@ -66,9 +65,9 @@ public class ReleveQuickSearch implements SearchProvider {
      * 
      * Formatage de la réponse :
      * Quicksearch formate la réponse en HTML pour mettre en gras la chaîne trouvée
-     * si elle est exactement la mêm que que la chaine cherchée (ce qui n'est pas 
+     * si elle est exactement la même que que la chaine cherchée (ce qui n'est pas 
      * le cas quand elle contient des accents) 
-     * Mais si la réponse commence par <html> , ce mécanieme est désactivé et 
+     * Mais si la réponse commence par <html> , ce mécanisme est désactivé et 
      * permet de mettre en gras soi meme la chaine de son choix
      * 
      * https://github.com/apache/incubator-netbeans/blob/master/spi.quicksearch/src/org/netbeans/modules/quicksearch/ResultsModel.java
@@ -79,7 +78,13 @@ public class ReleveQuickSearch implements SearchProvider {
      */
     // 
 
-    private void searchInModel(ReleveTopComponent tc, String resquestPattern, SearchResponse response ) {
+    private void searchInModel(ReleveTopComponent tc, String resquest, SearchResponse response ) {
+        // S'il y a plusieurs mots séparés par des espaces dans la requete, 
+        // j'ajoute de parenthèses autour chaque mots pour que la recherche
+        // regexp retourne les positions des mots trouvés dans le résultat
+        // qui seront utilisées pour positionner les caractères en gras
+        String resquestPattern = ".*("+resquest.replaceAll(" +", ").+(")+").*";
+
         RecordModel model = tc.getDataManager().getDataModel();
         
         for (int indexRecord=0; indexRecord < model.getRowCount(); indexRecord++) {
@@ -90,34 +95,49 @@ public class ReleveQuickSearch implements SearchProvider {
                 Field firstName = record.getField(firstNameFieldTypes[i]);             
                 if (lastName != null && firstName != null ) {
                     String resultDisplay = lastName.toString() + " " + firstName.toString();
-                    String resultSearch  = Normalizer.normalize(resultDisplay, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();  
-                    if (resultSearch.matches(".*" + resquestPattern + ".*") ) {
-                        int start = resultSearch.indexOf(resquestPattern);
-                        int end = start+ resquestPattern.length();
-                        // je construit la réponse en commençant par <html>
-                        StringBuilder sbDisplay = new StringBuilder("<html>");
-                        if( start > 0) {
-                            sbDisplay.append(resultDisplay.substring(0, start));                            
+                    String resultSearch  = Normalizer.normalize(resultDisplay, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase(); 
+                    
+                    Pattern pattern = Pattern.compile(resquestPattern);
+                    Matcher matcher = pattern.matcher(resultSearch);
+                    if (matcher.matches()) {
+                        int nb = matcher.groupCount();
+                        if( nb >= 1) {
+                            // je construit la réponse en commençant par <html>
+                            // pour desactiver la mise ne gras automatique
+                            StringBuilder sbDisplay = new StringBuilder("<html>");
+                            if (matcher.start(1) > 0) {
+                                // j'ajoute les caractères situés entre le début du résultat et le premier groupe
+                                sbDisplay.append(resultDisplay.substring(0, matcher.start(1) ));
+                            }
+                            for (int j = 1; j <= nb; j++) {
+                                // je mets en gras les caractères du groupe
+                                sbDisplay.append("<b>").append(resultDisplay.substring(matcher.start(j), matcher.end(j))).append("</b>");
+                                
+                                if(j <nb ) {
+                                    // j'ajoute les caractères présents entre le groupe et le groupe suivant
+                                    sbDisplay.append(resultDisplay.substring(matcher.end(j), matcher.start(j+1)));                                    
+                                } else {
+                                    // c'est le dernier groupe trouvé
+                                    if (matcher.end(j) < resultDisplay.length() - 1) {
+                                        // j'ajoute les caractères présents entre le dernier groupe et la fin du resultat
+                                        sbDisplay.append(resultDisplay.substring(matcher.end(j) ));
+                                    }
+                                }
+                            }  
+                            // j'ajoute le role de l'individu dans le relevé
+                            sbDisplay.append(", ").append(EditorBeanGroup.getGroup(record.getType(), lastNameFieldTypes[i]).getTitle());
+                            // j'ajoute la date du relevé
+                            sbDisplay.append(", ").append(record.getFieldValue(FieldType.eventDate));
+                            if (!tc.getDataManager().getCityName().isEmpty()) {
+                                // j'ajoute le lieu du relevé (ville) s'il n'est pas vide 
+                                sbDisplay.append(" ").append(tc.getDataManager().getCityName());
+                            }
+                            if (!response.addResult(createAction(tc, record, lastNameFieldTypes[i]), sbDisplay.toString() ) ) {
+                                // j'arrete la recherche si la dernière réponse n'est pas acceptée
+                                return;
+                            }
                         }
-                        // je mets en gras la chaine trouvée 
-                        sbDisplay.append("<b>").append(resultDisplay.substring(start, end)).append("</b>");
-                        if(end < resultDisplay.length() -1) {
-                           sbDisplay.append(resultDisplay.substring(end));
-                        }
-                        // j'ajoute le role de l'individu dans le relevé
-                        sbDisplay.append(", ").append(EditorBeanGroup.getGroup(record.getType(), lastNameFieldTypes[i]).getTitle());
-                        // j'ajoute la date du relevé
-                        sbDisplay.append(", ").append(record.getFieldValue(FieldType.eventDate));
-                        // j'ajoute le lieu du relevé (ville)
-                        if( !tc.getDataManager().getCityName().isEmpty()) {
-                            sbDisplay.append(" ").append(tc.getDataManager().getCityName());
-                        }
-                        
-                        if (!response.addResult(createAction(tc, record, lastNameFieldTypes[i]), sbDisplay.toString() ) ) {
-                            // j'arrete la recherche si la dernière réponse n'est pas acceptée
-                            return;
-                        }
-                    }
+                    }                  
                 }
             }
         }
