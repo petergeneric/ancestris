@@ -1,9 +1,8 @@
 package ancestris.modules.releve.model;
 
-import ancestris.explorer.GedcomExplorerTopComponent;
 import ancestris.gedcom.GedcomDirectory;
-import ancestris.modules.releve.file.FileBuffer;
 import ancestris.gedcom.GedcomFileListener;
+import ancestris.modules.releve.file.FileBuffer;
 import ancestris.modules.releve.model.Record.RecordType;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -485,8 +484,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
 
         // je cherche le gedcom selectionné dans GedcomExplorerTopComponent
         // TODO remplacer GedcomExplorerTopComponent.findInstance().getContext();
-        Context context = GedcomExplorerTopComponent.findInstance().getContext();
-        //Context context = null;
+        //Context context = GedcomExplorerTopComponent.findInstance().getContext();
+        Context context = null;
         if (context!=null) {
             return context;
         } else {
