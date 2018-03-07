@@ -1590,16 +1590,11 @@ public class MergeRecord {
         }
 
         String getResidence() {
-            if (m_Residence != null) {
-                return m_Residence;
-            } else {
-                // n'est pas renseignée pour les naissances
-                return "";
-            }
+            return m_Residence;
         }
         
         String getAddress() {
-            return m_Residence;            
+            return m_Address;            
         }
 
         //  conjoint (ou ancien conjoint) //////////////////////////////////////////
@@ -1755,19 +1750,11 @@ public class MergeRecord {
         }
 
         String getMotherFirstName() {
-            if (m_MotherFirstName == null) {
-                return "";
-            } else {
-                return m_MotherFirstName;
-            }
+            return m_MotherFirstName;
         }
 
         String getMotherLastName() {
-            if (m_MotherLastName == null) {
-                return "";
-            } else {
                 return m_MotherLastName;
-            }
         }
 
         PropertyDate getMotherBirthDate() throws Exception {
@@ -1789,11 +1776,7 @@ public class MergeRecord {
         }
 
         String getMotherOccupation() {
-            if (m_MotherOccupation == null) {
-                return "";
-            } else {
-                return m_MotherOccupation;
-            }
+            return m_MotherOccupation;
         }
 
         String getMotherOccupationWithDate() {
@@ -1836,22 +1819,6 @@ public class MergeRecord {
                 }
             }
 
-//            if (m_BirthPlace != null && !m_BirthPlace.isEmpty()) {
-//                if (comment.isEmpty()) {
-//                    comment = "né à" + " " + m_BirthPlace;
-//                } else {
-//                    comment += " " + "à" + " " + m_BirthPlace;
-//                }
-//            }
-//            
-//            if (m_BirthAddress != null && !m_BirthAddress.isEmpty()) {
-//                if (comment.isEmpty()) {
-//                    comment = "adresse" + " " + m_BirthAddress;
-//                } else {
-//                    comment += ", " + m_BirthAddress;
-//                }
-//            }
-//            
             comment += appendPrefixValue(
                     comment.isEmpty() ? "né à"  :  " " + "à" ,
                     m_BirthAddress, m_BirthPlace);

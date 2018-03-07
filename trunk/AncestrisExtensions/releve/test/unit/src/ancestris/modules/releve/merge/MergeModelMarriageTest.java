@@ -3,6 +3,7 @@ package ancestris.modules.releve.merge;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
+import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMarriage;
@@ -59,11 +60,29 @@ public class MergeModelMarriageTest extends TestCase {
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
                 
+        } else if ( id.equals("IndiWithoutAddress")) {
+            record.setFieldValue(FieldType.eventDate, "01/03/1999");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("Fatherfirstname", "PREMIER", "M", "indiage", "01/01/1970", "indiBirthplace", "indiBirthAddress", "indioccupation22", "indiResidence", "", "indicomments");
+            record.setIndiMarried("indimarriedname", "indimarriedlastname", "indimarriedoccupation", "indiMarriedResidence", "indiMarriedAddress", "indimarriedcomment", "false");
+            record.setIndiFather("indifathername", "PREMIER", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "false", "70y");
+            record.setIndiMother("indimothername", "MOTHERLASTNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "false", "72y");
+            record.setWife("Motherfirstname", "DEUXIEME", "F", "wifeage", "03/03/1973", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence",  "wifeAddress", "wifecomment");
+            record.setWifeMarried("wifemarriedname", "wifemarriedlastname", "wifemarriedoccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifemarriedcomment", "false");
+            record.setWifeFather("wifefathername", "DEUXIEME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "false", "60y");
+            record.setWifeMother("wifemothername", "WIFEMOTHERLASTNAME", "wifemotheroccupation", "wifeMotherResidence", "wifeMotherAddress", "wifemothercomment", "false", "62y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+                
         }
         
         return record;        
     }
-
+    
     /**
      * 
      */
@@ -157,6 +176,100 @@ public class MergeModelMarriageTest extends TestCase {
         }
     }
 
+/**
+     * 
+     */
+    @Test
+    public void testAddMarriageWithoutIndiAddress() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            String fileName = "releve paris.txt";
+            String sourceTitle = "BMS Paris";
+            MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
+            Record record = createMarriageRecord("IndiWithoutAddress");
+            TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlaceVilleMariage(),fileName, record);
+            MergeRecord mergeRecord = new MergeRecord(data);
+                        
+            List<MergeModel> models;
+            Fam indiParentFamily;
+            Indi indiFather;
+            Indi indiMother;
+            Fam wifeParentFamily;
+            Indi wifeFather;
+            Indi wifeMother;
+
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
+            assertEquals("Nombre model",1,models.size());
+            Property result = models.get(0).copyRecordToEntity();
+
+            Fam fam = (Fam) gedcom.getEntity(result.getEntity().getId());
+            assertEquals("Lien mariage vers source","@S1@", fam.getValue(new TagPath("FAM:MARR:SOUR"),""));
+            assertEquals("Source mariage","S1", gedcom.getEntity(fam.getValue(new TagPath("FAM:MARR:SOUR"),"").replaceAll("@", "")).getId());
+            assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
+            assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
+            //assertEquals("Note mariage",1534, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
+
+            assertEquals("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
+            // le lieu et commentaire ne sont pas modifiés car la date de naissance du releve n'est pas plus precise
+            assertEquals("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            //assertEquals("Indi : Note naissance","", fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+
+            assertEquals("Indi : Profession",1, fam.getHusband().getProperties(new TagPath("INDI:OCCU")).length);
+            Property occupation = fam.getHusband().getProperties(new TagPath("INDI:OCCU"))[0];
+            assertEquals("Indi : Profession",mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
+            assertEquals("Indi : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
+            assertEquals("Indi : Lieu Profession",mergeRecord.getIndi().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("Indi : Adresse Profession",mergeRecord.getIndi().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
+            assertEquals("Indi : Note Profession","Profession indiquée dans l'acte de mariage de Fatherfirstname PREMIER et Motherfirstname DEUXIEME le 01/03/1999 (ville_mariage)",
+                    occupation.getValue(new TagPath("OCCU:NOTE"),""));
+
+            indiParentFamily = fam.getHusband().getFamilyWhereBiologicalChild();
+            assertNotSame("Mari parent mariage date inchangé",mergeRecord.getIndi().getParentMarriageDate().getValue(),  indiParentFamily.getMarriageDate().getValue());
+            assertEquals("Mari parent mariage comment",true,  indiParentFamily.getValue(new TagPath("FAM:MARR:NOTE"),"").contains(mergeRecord.getEventPlaceCityName()));
+            indiFather = indiParentFamily.getHusband();
+            assertEquals("Mari pere nom",mergeRecord.getIndi().getFatherLastName(), indiFather.getLastName());
+            assertEquals("Mari pere prenom",mergeRecord.getIndi().getFatherFirstName(),  indiFather.getFirstName());
+            assertEquals("Mari pere profession",mergeRecord.getIndi().getFatherOccupation(),  indiFather.getProperty("OCCU").getValue());
+            indiMother = indiParentFamily.getWife();
+            assertEquals("Mari mere nom",mergeRecord.getIndi().getMotherLastName(), indiMother.getLastName());
+            assertEquals("Mari mere prenom",mergeRecord.getIndi().getMotherFirstName(),  indiMother.getFirstName());
+            assertEquals("Mari mere profession",mergeRecord.getIndi().getMotherOccupation(),  indiMother.getProperty("OCCU").getValue());
+
+            assertEquals("Wife : Date naissance",mergeRecord.getWife().getBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
+            assertEquals("Wife : lieu naissance",mergeRecord.getWife().getBirthPlace(), fam.getWife().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("Wife : Note naissance",
+                    "Date de naissance 3 mar 1973 déduite de l'acte de mariage de Fatherfirstname PREMIER et Motherfirstname DEUXIEME le 01/03/1999 (ville_mariage)",
+                    fam.getWife().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+
+            assertEquals("Wife : Date naissance",mergeRecord.getWife().getBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
+            assertEquals("Wife : Profession",1, fam.getWife().getProperties(new TagPath("INDI:OCCU")).length);
+            occupation = fam.getWife().getProperties(new TagPath("INDI:OCCU"))[0];
+            assertEquals("Wife : Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
+            assertEquals("Wife : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
+            assertEquals("Wife : Lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("Wife : Adresse Profession",mergeRecord.getWife().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
+            assertEquals("Wife : Note Profession",
+                    "Profession indiquée dans l'acte de mariage de Fatherfirstname PREMIER et Motherfirstname DEUXIEME le 01/03/1999 (ville_mariage)",
+                    occupation.getValue(new TagPath("OCCU:NOTE"),""));
+
+            wifeParentFamily = fam.getWife().getFamilyWhereBiologicalChild();
+            assertEquals("Femme parent mariage date",mergeRecord.getWife().getParentMarriageDate().getValue(),  wifeParentFamily.getMarriageDate().getValue());
+            assertEquals("Femme parent mariage comment",true,  wifeParentFamily.getValue(new TagPath("FAM:MARR:NOTE"),"").contains(mergeRecord.getEventPlaceCityName()));
+            wifeFather = wifeParentFamily.getHusband();
+            assertEquals("Femme pere nom",mergeRecord.getWife().getFatherLastName(), wifeFather.getLastName());
+            assertEquals("Femme pere prenom",mergeRecord.getWife().getFatherFirstName(),  wifeFather.getFirstName());
+            assertEquals("Femme pere profession",mergeRecord.getWife().getFatherOccupation(),  wifeFather.getProperty("OCCU").getValue());
+            wifeMother = wifeParentFamily.getWife();
+            assertEquals("Femme mere nom",mergeRecord.getWife().getMotherLastName(), wifeMother.getLastName());
+            assertEquals("Femme mere prenom",mergeRecord.getWife().getMotherFirstName(),  wifeMother.getFirstName());
+            assertEquals("Femme mere profession",mergeRecord.getWife().getMotherOccupation(),  wifeMother.getProperty("OCCU").getValue());
+
+
+        } catch (Exception ex) {
+            fail(ex.getMessage());
+        }
+    }
+    
     /**
      * testSaveDataComment
      */
