@@ -124,8 +124,9 @@ public class ReleveQuickSearchTest {
 
         ResultsModel rm = ResultsModel.getInstance();
         
-        // je lance la recherche    
-        String request= "ndiLast   indifi name";
+        // je lance la recherche (denier mot avec un caractère de moins 
+        // pour vérifier que le dernier caractère est bien copié dans le résultat
+        String request= "ndiLast   indifi nam";
         org.openide.util.Task task = CommandEvaluator.evaluate(request, rm);
         RequestProcessor.getDefault().post(task);
         

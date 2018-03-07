@@ -107,20 +107,20 @@ public class ReleveQuickSearch implements SearchProvider {
                             StringBuilder sbDisplay = new StringBuilder("<html>");
                             if (matcher.start(1) > 0) {
                                 // j'ajoute les caractères situés entre le début du résultat et le premier groupe
-                                sbDisplay.append(resultDisplay.substring(0, matcher.start(1) ));
+                                sbDisplay.append( resultDisplay.substring(0, matcher.start(1)) );
                             }
                             for (int j = 1; j <= nb; j++) {
                                 // je mets en gras les caractères du groupe
-                                sbDisplay.append("<b>").append(resultDisplay.substring(matcher.start(j), matcher.end(j))).append("</b>");
+                                sbDisplay.append("<b>").append( resultDisplay.substring(matcher.start(j), matcher.end(j)) ).append("</b>");
                                 
                                 if(j <nb ) {
                                     // j'ajoute les caractères présents entre le groupe et le groupe suivant
-                                    sbDisplay.append(resultDisplay.substring(matcher.end(j), matcher.start(j+1)));                                    
+                                    sbDisplay.append( resultDisplay.substring(matcher.end(j), matcher.start(j+1)) );                                    
                                 } else {
                                     // c'est le dernier groupe trouvé
-                                    if (matcher.end(j) < resultDisplay.length() - 1) {
+                                    if (matcher.end(j) < resultDisplay.length() ) {
                                         // j'ajoute les caractères présents entre le dernier groupe et la fin du resultat
-                                        sbDisplay.append(resultDisplay.substring(matcher.end(j) ));
+                                        sbDisplay.append( resultDisplay.substring(matcher.end(j)) );
                                     }
                                 }
                             }  
