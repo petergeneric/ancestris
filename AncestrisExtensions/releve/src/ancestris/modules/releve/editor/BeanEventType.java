@@ -36,20 +36,8 @@ public class BeanEventType extends Bean implements CompletionListener {
      */
     @Override
     public void setFieldImpl() {
-
-        final Field eventType = getField();
-        if (eventType == null) {
-            // j'affiche le premier element de la liste pas defaut
-            //cListEventType.setText(cListEventType.getDataList().get(0).toString());
-            if ( cListEventType.getDataList().isEmpty()) {
-                cListEventType.getEditor().setItem("");
-            } else {
-                cListEventType.getEditor().setItem(cListEventType.getDataList().get(0));
-            }
-        } else {
-            //cListEventType.setText(eventType.toString());
-            cListEventType.getEditor().setItem(eventType.toString());
-        }
+        final String value = getFieldValue();
+        cListEventType.getEditor().setItem(value);
         
         // je configure le raccourci de la touche ESCAPE pour annuler la saisie en cours
         resetKeyboardActions();
@@ -59,8 +47,7 @@ public class BeanEventType extends Bean implements CompletionListener {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 // restaure la valeur
-                //cListEventType.setText(eventType.toString());
-                cListEventType.getEditor().setItem(eventType.toString());
+                cListEventType.getEditor().setItem(value);
             }
         });
     }
@@ -68,11 +55,8 @@ public class BeanEventType extends Bean implements CompletionListener {
     @Override
     protected void replaceValueImpl(Field field) {
         if (field == null) {
-            // j'affiche le premier element de la liste pas defaut
-            //cListEventType.setText(cListEventType.getDataList().get(0).toString());
-            cListEventType.getEditor().setItem(cListEventType.getDataList().get(0));
+            cListEventType.getEditor().setItem("");
         } else {
-            //cListEventType.setText(eventType.toString());
             cListEventType.getEditor().setItem(field.toString());
         }
     }
@@ -82,18 +66,12 @@ public class BeanEventType extends Bean implements CompletionListener {
      */
     @Override
     protected void commitImpl() {
-
-        Field fieldEventType = getField();
-
         // je supprime les espaces aux extremetes
-        //String value = cListEventType.getText().trim();
         String value = cListEventType.getEditor().getItem().toString().trim();
-
         // j'enregistre les valeurs dans la variable field
-        fieldEventType.setValue(value.trim());
-
+         setFieldValue(value);  
         // j'affiche la valeur mise en forme
-        cListEventType.getEditor().setItem(fieldEventType.toString());
+        cListEventType.getEditor().setItem(value);
     }
 
     /**
