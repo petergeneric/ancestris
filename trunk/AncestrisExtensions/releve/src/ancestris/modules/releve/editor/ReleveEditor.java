@@ -548,6 +548,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
             }
         }
         jbutton1.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jbutton1.setFocusable(false);
         //jbutton1.setBorder(javax.swing.BorderFactory.createEmptyBorder());
         
         jbutton1.addMouseListener(new java.awt.event.MouseAdapter() {
