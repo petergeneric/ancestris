@@ -1,5 +1,6 @@
 package ancestris.modules.releve.editor;
 
+import ancestris.modules.releve.utils.Java2sAutoTextField;
 import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;

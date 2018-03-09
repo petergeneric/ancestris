@@ -1,4 +1,4 @@
-package ancestris.modules.releve.editor;
+package ancestris.modules.releve.utils;
 
 /* From http://java.sun.com/docs/books/tutorial/index.html */
 

@@ -1,4 +1,4 @@
-package ancestris.modules.releve.editor;
+package ancestris.modules.releve.utils;
 
 import java.util.List;
 import javax.swing.DefaultComboBoxModel;
@@ -116,6 +116,6 @@ public class Java2sAutoComboBox extends JComboBox<String> {
             super.fireActionEvent();
         }
     }
-    private AutoTextFieldEditor autoTextFieldEditor;
+    private final AutoTextFieldEditor autoTextFieldEditor;
     private boolean isFired;
 }
