@@ -6,6 +6,7 @@ package ancestris.modules.releve.editor;
  * @author michel
  */
 
+import ancestris.modules.releve.model.Record;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,14 +18,14 @@ import javax.swing.SwingUtilities;
 public class EditorConfigGroupDialog {
     
     
-    static public void  showEditorConfigGroupDialog(EditorBeanGroup group, MouseEvent evt) {
+    static public void  showEditorConfigGroupDialog(final Record.RecordType recordType, final EditorBeanGroup group, final MouseEvent evt) {
         final JPopupMenu popup = new JPopupMenu();
     
        //je cree lees items du popup menu     
        for(EditorBeanField field : group.getFields() ) {
            if (field.isUsed()) {
-               StayOpenCheckBoxMenuItem menuItem = new StayOpenCheckBoxMenuItem(field.getLabel(), field.isVisible());
-               menuItem.addActionListener(new FieldActionListener(field));
+               JCheckBoxMenuItem menuItem = new JCheckBoxMenuItem(field.getLabel(), field.isVisible());
+               menuItem.addActionListener(new FieldActionListener(recordType, field));
                popup.add(menuItem);
            }
        }
@@ -32,8 +33,10 @@ public class EditorConfigGroupDialog {
     }
     
     static class FieldActionListener implements ActionListener {
+        private final Record.RecordType recordType;
         private final EditorBeanField field;
-        FieldActionListener( EditorBeanField field) {
+        FieldActionListener( Record.RecordType recordType, EditorBeanField field) {
+            this.recordType = recordType;
             this.field = field;
         }
         @Override
@@ -43,17 +46,17 @@ public class EditorConfigGroupDialog {
             field.setVisible(menuItem.isSelected());
             // j'enregistre les modifcations
             EditorBeanGroup.savePreferences();
-            fireEditorConfigListener();
+            fireEditorConfigListener( recordType);
         }        
     }
     
     ///////////////////////////////////////////////////////////////////////////
     /**
-     * gestion des listener pour propages la modifcation de la configuration 
+     * gestion des listener pour propager la modifcation de la configuration 
      * à toutes les instances de l'editeur. 
      */
     static protected interface EditorConfigListener {
-        void onEditorConfigChanged();
+        void onEditorConfigChanged(Record.RecordType recordType);
     }
     
     static private final ArrayList<EditorConfigListener> editorConfigListeners = new ArrayList<EditorConfigListener>(1);
@@ -72,12 +75,12 @@ public class EditorConfigGroupDialog {
         editorConfigListeners.remove(listener);
     }
 
-    static public void fireEditorConfigListener () {
+    static public void fireEditorConfigListener (final Record.RecordType recordType) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 for (EditorConfigListener listener : editorConfigListeners) {
-                    listener.onEditorConfigChanged();
+                    listener.onEditorConfigChanged(recordType);
                 }
             }
         });

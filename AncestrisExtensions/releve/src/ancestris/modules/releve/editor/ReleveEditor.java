@@ -57,6 +57,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
     private RecordModel recordModel = null;
     private MenuCommandProvider menuCommandeProvider = null;
     private Bean currentFocusedBean = null;
+    private Record currentRecord = null;
     private final ArrayList<KeyStroke> recordKeyStrokeList = new ArrayList<KeyStroke>();
     
     public ReleveEditor() {
@@ -284,7 +285,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      * @param record
      */
     private void selectRecord(Record record) {
-        
+        currentRecord = record;
         currentFocusedBean = null;
         fieldsPanel.setVisible(false);
         fieldsPanel.setFocusTraversalPolicyProvider(true);
@@ -307,7 +308,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     }
                     // le raccourci sera associé du premier champ du groupe qui va être créé
                     keyStroke = group.getKeystroke();
-                    addRow(lineNo, group.getTitle(), keyStroke, group);
+                    addRow(lineNo, group.getTitle(), keyStroke, record.getType(), group);
                     lineNo++;
                     for (EditorBeanField editorBeanField : group.getFields()) {
                         if (!editorBeanField.isVisible()) {
@@ -521,7 +522,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
      * @param label
      * @param keyStroke 
      */
-    private void addRow(int lineNo, String label, KeyStroke keyStroke, final EditorBeanGroup group) {
+    private void addRow(int lineNo, String label, KeyStroke keyStroke, final Record.RecordType recordType, final EditorBeanGroup group) {
 
         // j'ajoute le label étalé dans les colonnes 0 et 1
         GridBagConstraints gridBagConstraints;
@@ -554,7 +555,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         jbutton1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent evt) {
-                EditorConfigGroupDialog.showEditorConfigGroupDialog(group, evt);
+                EditorConfigGroupDialog.showEditorConfigGroupDialog(recordType, group, evt);
             }
         });
         
@@ -569,34 +570,22 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
         jpanel1.add(jLabel1, BorderLayout.CENTER);
         fieldsPanel.add(jpanel1, gridBagConstraints);
         
-        
-//        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-//        if (keyStroke == null) {
-//            jLabel1.setText(label);
-//        } else {
-//            jLabel1.setText(label + "   ( Alt-" + String.valueOf((char) keyStroke.getKeyCode()) + " )");
-//        }
-//
-//        jLabel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
-//        fieldsPanel.add(jLabel1, gridBagConstraints);
     }
     
+    ///////////////////////////////////////////////////////////////////////////
+    // Implement EditorConfigListener
+    ////////////////////////////////////////////////////////////////////////////
     /**
      * refraichit l'affichage de l'editeur
      */
     @Override
-    public void onEditorConfigChanged() {
-        // d'abord, je commite le champ en cours d'édition
-        commitCurrentFocusedBean();
-        // j'affiche les composants visibles
-        Bean bean = getBean(Record.FieldType.eventDate);
-        if(bean != null ) {
-            Record record = bean.getRecord();
-            if( record != null) {
-                selectRecord(record);
-            }
+    public void onEditorConfigChanged(Record.RecordType recordType) {
+        if( currentRecord != null && currentRecord.getType() == recordType) {
+            // d'abord, je commite le champ en cours d'édition
+            commitCurrentFocusedBean();
+            // j'affiche à nouveau tous les beans visibles
+            selectRecord(currentRecord);
         }
-        
 
     }
 
