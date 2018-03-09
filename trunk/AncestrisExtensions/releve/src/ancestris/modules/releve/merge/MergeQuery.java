@@ -2,7 +2,6 @@ package ancestris.modules.releve.merge;
 
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipant;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
-import ancestris.modules.releve.model.FieldSex;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -1188,7 +1187,7 @@ public class MergeQuery {
             }
 
             // meme sexe de l'individu
-            if (participant.getSex() != FieldSex.UNKNOWN
+            if (participant.getSex() != PropertySex.UNKNOWN
                     && indi.getSex() != PropertySex.UNKNOWN
                     && participant.getSex() != indi.getSex()) {
                 continue;
@@ -1389,7 +1388,7 @@ public class MergeQuery {
             for (Indi child : selectedFamily.getChildren()) {
 
                 // meme sexe de l'enfant
-                if (birthRecord.getIndi().getSex() != FieldSex.UNKNOWN
+                if (birthRecord.getIndi().getSex() != PropertySex.UNKNOWN
                         && child.getSex() != PropertySex.UNKNOWN
                         && birthRecord.getIndi().getSex() != child.getSex()) {
                     continue;
