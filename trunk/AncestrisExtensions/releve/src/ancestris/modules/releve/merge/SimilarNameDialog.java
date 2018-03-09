@@ -6,7 +6,7 @@
 
 package ancestris.modules.releve.merge;
 
-import ancestris.modules.releve.editor.Java2sAutoTextField;
+import ancestris.modules.releve.utils.Java2sAutoTextField;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
