@@ -48,6 +48,7 @@ import java.util.TreeMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 
 /**
  * The object-representation of a Gedom file
@@ -1788,22 +1789,33 @@ public class Gedcom implements Comparable {
      * Free up memory
      */
     public void eraseAll() {
-        //freeUpMemory();
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                freeUpMemory();
+            }
+        });
+         
     }
     
+    private void eraseProperties(Property parent) {
+        try {
+            for (Property child : parent.getProperties()) {
+                eraseProperties(child);
+            }
+            parent.eraseAll();
+            parent = null;
+        } catch (Exception e) {
+        }
+    }
+
     private void freeUpMemory() {
         
-        // Large content :
         // LinkedList<Entity> allEntities
-        try {
-            for (Iterator<Entity> it = allEntities.iterator(); it.hasNext();) {
-                Entity entity = (Entity) it.next();
-                entity.eraseAll();
-                it.remove();
-            }
-        } catch (Exception ex) {
-            return;
+        for (Entity ent : allEntities) {
+            eraseProperties(ent);
+            ent.eraseAll();
         }
+        allEntities.clear();
         
         // Map<String, Integer> propertyTag2valueCount  
         for (Iterator<Map.Entry<String, Integer>> it = propertyTag2valueCount.entrySet().iterator(); it.hasNext();) {
@@ -1813,7 +1825,7 @@ public class Gedcom implements Comparable {
 
         // Map<String, Map<String, Entity>> tag2id2entity
         for (Iterator<Map.Entry<String, Map<String, Entity>>> it = tag2id2entity.entrySet().iterator(); it.hasNext();) {
-            Map<String, Entity> map = (Map<String, Entity>) it.next().getValue();
+            Map<String, Entity> map = it.next().getValue();
             for (Iterator<Map.Entry<String, Entity>> it2 = map.entrySet().iterator(); it2.hasNext();) {
                 it2.next();
                 it2.remove();
@@ -1823,7 +1835,7 @@ public class Gedcom implements Comparable {
         
         // Map<String, ReferenceSet<String, Property>> tags2refsets
         for (Iterator<Map.Entry<String, ReferenceSet<String, Property>>> it = tags2refsets.entrySet().iterator(); it.hasNext();) {
-            ReferenceSet<String, Property> refset = (ReferenceSet<String, Property>) it.next().getValue();
+            ReferenceSet<String, Property> refset = it.next().getValue();
             refset.eraseAll();
             refset = null;
             it.remove();
@@ -1867,6 +1879,8 @@ public class Gedcom implements Comparable {
         password = null;
         noName = null;
         
+        // Signal need for garbage collection
+        System.gc();
     }
 
     

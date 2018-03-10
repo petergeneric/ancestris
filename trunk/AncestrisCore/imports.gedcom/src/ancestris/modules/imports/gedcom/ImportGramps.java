@@ -127,7 +127,9 @@ public class ImportGramps extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= processEntities(gedcom);
+        incrementProgress();
         ret |= processCONC(gedcom);
+        incrementProgress();
         ret |= super.convertAssociations(gedcom);    // check
         return ret;
     }

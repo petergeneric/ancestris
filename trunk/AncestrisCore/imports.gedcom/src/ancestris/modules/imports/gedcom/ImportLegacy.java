@@ -489,7 +489,9 @@ public class ImportLegacy extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = fixNames(gedcom);
         ret |= fixOther(gedcom);
+        incrementProgress();
         ret |= fixPlaces(gedcom);
+        incrementProgress();
         return ret;
     }
 

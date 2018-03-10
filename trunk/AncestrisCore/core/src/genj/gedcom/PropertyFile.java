@@ -36,8 +36,8 @@ public class PropertyFile extends Property {
   /** the file-name */
   private String  file;
 
-  /** whether file-name is relative or absolute */
-  private boolean isRelativeChecked = false;
+  /** whether file-name should be relative or absolute */
+  private boolean forceRelative = true;
   
   /**
    * need tag-argument constructor for all properties
@@ -54,31 +54,38 @@ public class PropertyFile extends Property {
     return true;
   }
 
-  /**
-   * Returns this property's value
-   */
-  public String getValue() {
+    /**
+     * Returns the filepath of this file:
+     * - if force relative, make it relative 
+     * - if not, return as is
+     *
+     * @return
+     */
+    @Override
+    public String getValue() {
 
-    if (file==null)
-      return "";
+        if (file == null) {
+            return "";
+        }
 
-    // we're checking the value for relative here because
-    // in setValue() the parent might not be set yet so
-    // getGedcom() wouldn't work there
-    if (!isRelativeChecked) {
-      Gedcom gedcom = getGedcom();
-      if (gedcom!=null) {
-        String relative = gedcom.getOrigin().calcRelativeLocation(file);
-        if (relative !=null)
-          file = relative;
-        isRelativeChecked = true;
-      }
+        // Force relative value :
+        // we're checking the value for relative here because
+        // in setValue() the parent might not be set yet so
+        // getGedcom() wouldn't work there
+        if (forceRelative) {
+            Gedcom gedcom = getGedcom();
+            if (gedcom != null) {
+                String relative = gedcom.getOrigin().calcRelativeLocation(file);
+                if (relative != null) {
+                    file = relative;
+                }
+            }
+        }
+        return file;
     }
-    return file;
-  }
 
   /**
-   * Sets this property's value
+   * Sets this filepath as relative
    */
   public synchronized void setValue(String value) {
 
@@ -86,15 +93,26 @@ public class PropertyFile extends Property {
 
     // Remember the value
     file = value.replace('\\','/');
-    isRelativeChecked = false;
+    forceRelative = true; // force recalc of relative path in the getValue()
     
     // 20030518 don't automatically update TITL/FORM
     // will be prompted in ProxyFile
-    
+
     // Remember the change
     propagatePropertyChanged(this, old);
     
     // done    
+  }
+  
+  /**
+   * Sets this filepath as it is entered (ex: used to keep absolute path)
+   */
+  public synchronized void setValueAsIs(String value) {
+
+    String old = getValue();
+    file = value.replace('\\','/');
+    forceRelative = false; // prevent recalc of relative path in the getValue() called during propagation (this will leave value unchanged)
+    propagatePropertyChanged(this, old);
   }
   
   /**

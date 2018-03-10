@@ -121,6 +121,7 @@ public abstract class Property implements Comparable<Property> {
      */
     /*package*/ void propagatePropertyChanged(Property property, String oldValue) {
         if (parent != null) {
+            String debug = property.getValue();
             parent.propagatePropertyChanged(property, oldValue);
         }
     }
@@ -433,6 +434,17 @@ public abstract class Property implements Comparable<Property> {
         // done
     }
 
+    public void eraseAll() {
+        if (children != null) {
+            children.clear();
+        }
+        children = null;
+        parent = null;
+        image = null;
+        imageErr = null;
+        tag = null;
+    }
+    
     /**
      * Move contained properties
      */

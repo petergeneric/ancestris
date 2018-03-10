@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.*;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -164,8 +165,19 @@ public class GedcomWriter implements IGedcomWriter {
      * Returns current write state as string
      */
     public String getState() {
-        return line + " Lines & " + entity + " Entities";
+        String lStr = NumberFormat.getIntegerInstance().format(line);
+        String eStr = NumberFormat.getIntegerInstance().format(entity);
+        return getTaskName() + " : " + RESOURCES.getString("progress.read.entities", "" + lStr, eStr);
     }
+
+    @Override
+    public String getTaskName() {
+        if (gedcom != null) {
+            return RESOURCES.getString("writer.title", gedcom.getName());
+        }
+        return"";
+    }
+
 
     /**
      * Sets filters to use for checking whether to write
@@ -318,10 +330,6 @@ public class GedcomWriter implements IGedcomWriter {
     private void writeTail() throws IOException {
         // Tailer
         writeLine("0 TRLR");
-    }
-
-    public String getTaskName() {
-        return RESOURCES.getString("writer.title", gedcom.getName());
     }
 
     @Override

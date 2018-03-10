@@ -127,6 +127,7 @@ public class ImportGeneatique extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= fixOther(gedcom);
+        incrementProgress();
         ret |= super.convertAssociations(gedcom);
         return ret;
     }

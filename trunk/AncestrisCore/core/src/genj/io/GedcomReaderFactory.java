@@ -40,6 +40,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -154,12 +155,15 @@ public class GedcomReaderFactory {
         public String getState() {
             switch (state) {
                 case READHEADER:
-                    return RESOURCES.getString("progress.read.header");
+                    return getTaskName() + " : " + RESOURCES.getString("progress.read.header");
                 case READENTITIES:
                 default:
-                    return RESOURCES.getString("progress.read.entities", "" + reader.getLines(), "" + entity);
+                    String lStr = NumberFormat.getIntegerInstance().format(reader.getLines());
+                    String eStr = NumberFormat.getIntegerInstance().format(entity);
+                    return getTaskName() + " : " + RESOURCES.getString("progress.read.entities", "" + lStr, eStr);
                 case LINKING:
-                    return RESOURCES.getString("progress.read.linking");
+                    String task = getTaskName();
+                    return task.isEmpty() ? "" :  task + " : " + RESOURCES.getString("progress.read.linking");
             }
         }
 
@@ -442,8 +446,12 @@ public class GedcomReaderFactory {
             }
         }
 
+        @Override
         public String getTaskName() {
-            return RESOURCES.getString("reader.title", gedcom != null ? gedcom.getName() : "no gedcom");
+            if (gedcom != null) {
+                return RESOURCES.getString("reader.title", gedcom.getName());
+            }
+            return "";
         }
 
         /**

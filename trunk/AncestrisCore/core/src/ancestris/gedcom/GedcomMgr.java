@@ -83,6 +83,7 @@ public abstract class GedcomMgr {
     final static Resources RES = Resources.get(GedcomMgr.class);
     final static Registry REGISTRY = Registry.get(GedcomMgr.class);
     
+    private static boolean quiet = false;
     private boolean copyMediaInError = false;
 
     /**
@@ -102,6 +103,10 @@ public abstract class GedcomMgr {
 
     public abstract Context setGedcom(Gedcom gedcom);
 
+    public abstract void setQuiet(boolean set);
+    
+    public abstract boolean isQuiet();
+    
     /**
      * Handle GedcomFileEvents (notify listeners)
      */
@@ -155,6 +160,9 @@ public abstract class GedcomMgr {
 
     public Origin saveGedcomAs(Context context, SaveOptionsWidget options, FileObject output) {
         Gedcom gedcom = context.getGedcom();
+        if (options == null) {
+            options = new SaveOptionsWidget(gedcom);
+        }
 
         // Remember some previous values before setting them
         String prevPassword = gedcom.getPassword();
@@ -327,6 +335,16 @@ public abstract class GedcomMgr {
     
     
     private static class DefaultGedcomMgrImpl extends GedcomMgr {
+        
+        @Override
+        public void setQuiet(boolean set) {
+            quiet = set;
+        }
+
+        @Override
+        public boolean isQuiet() {
+            return quiet;
+        }
 
         @Override
         public Context openGedcom(final FileObject input) {
@@ -374,7 +392,7 @@ public abstract class GedcomMgr {
                 } else {
                     return null;
                 }
-                if (!warnings.isEmpty()) {
+                if (!warnings.isEmpty() && !quiet) {
                     JButton updatePropertiesButton = new JButton(RES.getString("cc.open.fixWarnings"));
                     updatePropertiesButton.addActionListener(new ActionListener(){
                         @Override
