@@ -811,9 +811,9 @@ import org.openide.windows.WindowManager;
             Context ctx = new Context(gedcom, Collections.singletonList((Entity) tree.getRoot()), selection);
             if (!selection.isEmpty()) {
                 SelectionDispatcher.fireSelection(ctx);
-            }
-            if (ctx.getProperties().size() != 1) {
-                setContextImpl(ctx, false);
+                if (ctx.getProperties().size() != 1) {
+                    setContextImpl(ctx, false);
+                }
             }
         }
 
