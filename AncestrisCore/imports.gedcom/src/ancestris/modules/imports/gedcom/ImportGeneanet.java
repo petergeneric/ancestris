@@ -66,6 +66,7 @@ public class ImportGeneanet extends Import {
         boolean ret = super.fixGedcom(gedcom);
         ret |= super.convertAssociations(gedcom);
         ret |= fixOther(gedcom);
+        incrementProgress();
         return ret;
     }
 

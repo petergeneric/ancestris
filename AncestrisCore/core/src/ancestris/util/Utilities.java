@@ -48,7 +48,7 @@ import org.openide.windows.TopComponent;
 public class Utilities {
 
     // static methods only
-    private Utilities() {
+    public Utilities() {
     }
 
     public static String getClassName(Object o) {

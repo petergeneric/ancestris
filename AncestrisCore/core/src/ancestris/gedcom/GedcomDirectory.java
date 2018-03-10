@@ -41,6 +41,7 @@ import java.net.MalformedURLException;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -284,24 +285,6 @@ public abstract class GedcomDirectory {
      *              - "Ancestris will create a copy 'filename_ancestris.ged', modify it and save it to ....."
      *              - "OK to proceed ?" else cancel operation.
      *          - Run corresponding import
-     *              - Fix header and lines (progress bar) 
-     *              - Open Gedcom normally (progress bar). There should be no errror message.
-     *              - Fix gedcom (it will need to be reopen afterwards to take into account all modifications, therefore it needs to be saved) (progress bar)
-     *              - Save gedcom with temporary name without asking user anything
-     *              - Open Gedcom normally (progress bar) - this is done withing the saveas function already.
-     *          - Popup user 
-     *              - "File coming from "xxxx" has been correctly opened and saved to 'filename_ancestris.ged'"
-     *              - "The following number of entities have been imported:
-     *              - "    xxxx individuals,
-     *              - "    xxxx families,
-     *              - "    xxxx notes,
-     *              - "    xxxx media,
-     *              - "    xxxx sources,
-     *              - "    xxxx repositories,
-     *              - "    xxxx submitters.
-     *              - "All the data has been kept but some modifications had to be made to be 100% Gedcom compatible."
-     *              - "Do you want to see them ?" Yes, No.
-     *              - if Yes, display console.
      *      - Else
      *          - Open Gedcom normally (progress bar)
      * 
@@ -343,7 +326,9 @@ public abstract class GedcomDirectory {
                     }
                 }
             } finally {
-                input.close();
+                if (input != null) { 
+                    input.close();
+                }
             }
         } catch (GedcomFormatException e) {
             String l = ""+e.getLine();
@@ -392,60 +377,33 @@ public abstract class GedcomDirectory {
         software = identifiedImport.toString();
         String dirname = foInput.getParent().getPath() + System.getProperty("file.separator"); // System.getProperty("java.io.tmpdir") + System.getProperty("file.separator");
         String tmpFileName = foInput.getName()+"_ancestris.ged";
-        LOG.info("Opening a non Ancestris file from " + software + ". Using corresponding import module.");
+        LOG.info("Opening a non Ancestris file from " + software + ". Asking confirmation to user to use the corresponding import module or not.");
         String message = identifiedImport.isGeneric() ? RES.getString("cc.importGenericGedcom?", foInput.getNameExt(), tmpFileName, dirname) : RES.getString("cc.importGedcom?", foInput.getNameExt(), software, tmpFileName, dirname);
-        Object rc = DialogManager.create(RES.getString("cc.open.title"), message).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
-        if (rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
+        JButton convertButton = new JButton(RES.getString("cc.button.convert"));
+        JButton asisButton = new JButton(RES.getString("cc.button.asis"));
+        JButton cancelButton = new JButton(RES.getString("cc.button.cancel"));
+        Object[] options = new Object[] { convertButton, asisButton, cancelButton };
+        Object rc = DialogManager.create(RES.getString("cc.open.title"), message).setMessageType(DialogManager.WARNING_MESSAGE).setOptions(options).show();
+        if (rc == cancelButton || rc == DialogManager.CANCEL_OPTION || rc == DialogManager.CLOSED_OPTION) {
             return null;
         }
-        LOG.info("Conversion of file from " + software + " confirmed by user.");
+        if (rc == asisButton) {
+            LOG.info("Conversion of file from " + software + " not confirmed by user. Opening file as is.");
+            return openAncestrisGedcom(foInput);
+        }
         
         // Run corresponding import
-        // - Fix header and lines (progress bar) 
-        identifiedImport.setTabName(NbBundle.getMessage(Import.class, "OpenIDE-Module-Name") + " - " + identifiedImport.toString());
-        File inputFile = new File(foInput.getPath());
-        File outFile = new File(dirname + tmpFileName);
-        boolean fixedOk = identifiedImport.run(inputFile, outFile);
-        if (!fixedOk) {
-            return null;  // error messages have been displayed already
-        }
-        // - Open Gedcom normally (progress bar). There should be no errror message.
-        Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outFile));
-        if (context == null) {
-            return null;  // error messages have been displayed already
-        }
+        LOG.info("Conversion of file from " + software + " confirmed by user.");
+        identifiedImport.launch(new File(foInput.getPath()), new File(dirname + tmpFileName));
         
-        // - Fix gedcom (it will need to be reopen afterwards to take into account all modifications, therefore it needs to be saved) (progress bar)
-        Gedcom importedGedcom = context.getGedcom();
-        importedGedcom.setName(inputFile.getName());
-        identifiedImport.fixGedcom(importedGedcom);
-        identifiedImport.complete();
-
-        // - Save gedcom with temporary name without asking user anything
-        LOG.info("Conversion of file from " + software + " done. Saving to temp file " + dirname + tmpFileName + ".");
-        GedcomDirectory.getDefault().saveAsGedcom(context, outFile);
-        // - Nothing to do (new file should be opened)
-
-        // Popup user conversion stats
-        rc = DialogManager.create(RES.getString("cc.open.title"), 
-                RES.getString("cc.importResults?", foInput.getNameExt(), software, 
-                        identifiedImport.getIndisNb(), identifiedImport.getFamsNb(), identifiedImport.getNotesNb(), identifiedImport.getObjesNb(),
-                        identifiedImport.getSoursNb(), identifiedImport.getReposNb(), identifiedImport.getSubmsNb(), identifiedImport.getChangesNb()))
-                .setMessageType(DialogManager.INFORMATION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
-        if (rc == DialogManager.YES_OPTION) {
-            identifiedImport.showDetails();
-        }
-
         return null;
     }
     
     
     
-    
-    
     /**
      * 
-     * Open Gedcom normally (witout any correction) : assumes input file is an Ancestris gedcom file.
+     * Open Gedcom normally (without any correction) : assumes input file is an Ancestris gedcom file.
      * 
      *      Opens a Gedcom FileObject.
      * 
@@ -479,8 +437,10 @@ public abstract class GedcomDirectory {
             }
             registerGedcom(gdao);
             context = gdao.getContext();
-            openDefaultViews(context);
-            SelectionDispatcher.fireSelection(context);
+            if (!GedcomMgr.getDefault().isQuiet()) {
+                openDefaultViews(context);
+                SelectionDispatcher.fireSelection(context);
+            }
             return gdao.getContext();
         } catch (Exception e) {
             LOG.info(e.toString());
@@ -525,7 +485,7 @@ public abstract class GedcomDirectory {
         }
 
         // ask everyone to commit their data
-        //XXX: we should move this to GedcomMgr. we must have a close look to filters if data ar to be committed
+        //XXX: we should move this to GedcomMgr. we must have a close look to filters if data are to be committed
         GedcomMgr.getDefault().commitRequested(context);
 
         // .. choose file

@@ -54,6 +54,7 @@ public class PropertyReader {
   protected String tag;
   protected String xref;
   protected String value;
+  protected String bit = "";
   
   /** input */
   protected BufferedReader in;
@@ -246,7 +247,6 @@ public class PropertyReader {
           while (cont) {
               nextLine = in.readLine();
               if (nextLine != null) {
-                  String bit = "";
                   if (!nextLine.trim().isEmpty()) {
                       int i = nextLine.indexOf(' ');
                       if (i != -1) {

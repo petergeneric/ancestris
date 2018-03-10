@@ -100,6 +100,7 @@ public class ImportMacFamilyTree extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= processEntities(gedcom);
+        incrementProgress();
         return ret;
     }
 

@@ -48,7 +48,7 @@ public class GedcomMediaConverter {
             String name = f.getName();
             String newValue = property2PathMap.get(pFile) + name;
             if (!newValue.equals(oldValue)) {
-                pFile.setValue(newValue);
+                pFile.setValueAsIs(newValue);
                 nbOfMediaChanges++;
             }
         }

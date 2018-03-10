@@ -42,6 +42,15 @@ public class Context {
       && this.properties.equals(that.properties);
   }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 41 * hash + (this.gedcom != null ? this.gedcom.hashCode() : 0);
+        hash = 41 * hash + (this.entities != null ? this.entities.hashCode() : 0);
+        hash = 41 * hash + (this.properties != null ? this.properties.hashCode() : 0);
+        return hash;
+    }
+
   /**
    * Returns true if gedcom is not null and is equal to that.gedcom
    * @param that

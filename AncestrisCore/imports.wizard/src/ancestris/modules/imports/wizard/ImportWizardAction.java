@@ -1,18 +1,12 @@
 package ancestris.modules.imports.wizard;
 
 import ancestris.api.imports.Import;
-import ancestris.gedcom.GedcomDirectory;
-import ancestris.util.swing.DialogManager;
-import genj.gedcom.Context;
-import genj.gedcom.Gedcom;
-import genj.util.Resources;
 import java.awt.Component;
 import java.awt.Dialog;
 import java.io.File;
 import java.text.MessageFormat;
 import javax.swing.JComponent;
 import org.openide.*;
-import org.openide.filesystems.FileUtil;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CallableSystemAction;
@@ -44,35 +38,9 @@ public final class ImportWizardAction extends CallableSystemAction {
             if (importMethod == null) {
                 return;
             }
-            importMethod.setTabName(NbBundle.getMessage(ImportWizardAction.class, "OpenIDE-Module-Name") + " - " + importMethod.toString());
             File inputFile = importPanel.getInputFile();
             File outFile = new File(inputFile.getParent() + System.getProperty("file.separator") + inputFile.getName().replaceFirst("[.][^.]+$", "") +"_ancestris.ged");   // System.getProperty("java.io.tmpdir") + System.getProperty("file.separator")
-            // Import file fixing most issues
-            if (importMethod.run(inputFile, outFile) == true) {
-                Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outFile));
-                if (context != null) {
-                    // If imported correctly, fix remaining gedcom issues
-                    Gedcom importedGedcom = context.getGedcom();
-                    importedGedcom.setName(inputFile.getName());
-                    importMethod.fixGedcom(importedGedcom);
-                    importMethod.complete();
-                    
-                    // Save as a new file
-                    GedcomDirectory.getDefault().saveAsGedcom(context, outFile);
-                    
-                    // Popup results
-                    Resources RES = Resources.get(GedcomDirectory.class);
-                    Object rc = DialogManager.create(RES.getString("cc.open.title"),
-                            RES.getString("cc.importResults?", inputFile.getName(), importMethod.toString(),
-                                    importMethod.getIndisNb(), importMethod.getFamsNb(), importMethod.getNotesNb(), importMethod.getObjesNb(),
-                                    importMethod.getSoursNb(), importMethod.getReposNb(), importMethod.getSubmsNb(), importMethod.getChangesNb()))
-                            .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
-                    if (rc == DialogManager.YES_OPTION) {
-                        importMethod.showDetails();
-                    }
-                }
-                //outFile.delete();
-            }
+            importMethod.launch(inputFile, outFile);
         }
     }
 

@@ -19,29 +19,41 @@ import org.openide.util.Lookup;
  */
 public interface ProgressListener {
 
-  /**
-   * notificaton that a long running process has started
-   * @param process
-   */
-  public void processStarted(Trackable process);
+    /**
+     * notificaton that a long running process has started
+     *
+     * @param process
+     */
+    public void processStarted(Trackable process);
 
-  /**
-   * notificaton that a long running process has finished
-   * @param process
-   */
-  public void processStopped(Trackable process);
-  
-  public class Dispatcher{
-    public static void processStarted(Trackable process) {
-        for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
-            listener.processStarted(process);
-        }
-    }
+    /**
+     * notificaton that a long running process has finished
+     *
+     * @param process
+     */
+    public void processStopped(Trackable process);
 
-    public static void processStopped(Trackable process) {
-        for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
-            listener.processStopped(process);
+    public void processStopAll();
+
+    public class Dispatcher {
+
+        public static void processStarted(Trackable process) {
+            for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
+                listener.processStarted(process);
+            }
         }
+
+        public static void processStopped(Trackable process) {
+            for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
+                listener.processStopped(process);
+            }
+        }
+
+        public static void processStopAll() {
+            for (ProgressListener listener : Lookup.getDefault().lookupAll(ProgressListener.class)) {
+                listener.processStopAll();
+            }
+        }
+
     }
-  }
 }

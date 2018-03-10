@@ -113,6 +113,7 @@ public class ImportMyHeritage extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= fixOther(gedcom);
+        incrementProgress();
         return ret;
     }
 

@@ -105,6 +105,7 @@ public class ImportAncestrologie extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= processEntities(gedcom);
+        incrementProgress();
         ret |= super.convertAssociations(gedcom);
         return ret;
     }

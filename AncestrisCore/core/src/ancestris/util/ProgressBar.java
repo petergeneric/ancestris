@@ -26,7 +26,7 @@ import org.openide.util.lookup.ServiceProvider;
  *
  * @author daniel + frederic
  */
-@ServiceProvider(service=ProgressListener.class)
+@ServiceProvider(service = ProgressListener.class)
 public class ProgressBar implements ProgressListener {
 
     Map<Trackable, ProcessData> map = new HashMap<Trackable, ProcessData>();   // separate processes data are necessary in case multiple trackables run at the same time
@@ -37,7 +37,7 @@ public class ProgressBar implements ProgressListener {
     @Override
     public void processStarted(Trackable process) {
         final Trackable track = process;
-        
+
         ProcessData data = map.get(process);
         if (data == null) {
             data = new ProcessData();
@@ -53,17 +53,18 @@ public class ProgressBar implements ProgressListener {
         }
 
         // prepare timer
-        data.timer = new Timer(10, new ActionListener() {
+        data.timer = new Timer(200, new ActionListener() {
 
             @Override
             public void actionPerformed(ActionEvent e) {
                 ProcessData data = map.get(track);
                 if (data == null) {
-                    ((Timer)e.getSource()).stop();
+                    ((Timer) e.getSource()).stop();
                     return;
                 }
                 // update progress bar
                 try {
+                    data.handle.setDisplayName(track.getState());
                     data.handle.progress(track.getState(), track.getProgress());
                 } catch (IllegalArgumentException ex) {
                     // NoOp : le trackable envoie des process decroissants
@@ -90,13 +91,19 @@ public class ProgressBar implements ProgressListener {
         // it's not realy necessary to count all the way to the limit, finish can be called earlier.
         // however it has to be called at the end of the processing.
         data.handle.finish();
+        map.remove(process);
     }
-    
-    
-    
-    
-    
+
+    @Override
+    public void processStopAll() {
+        for (Trackable p : map.keySet()) {
+            p.cancelTrackable();
+            processStopped(p);
+        }
+    }
+
     private class ProcessData {
+
         public ProgressHandle handle;
         public Timer timer;
     }

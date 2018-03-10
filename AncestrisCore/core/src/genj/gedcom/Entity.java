@@ -265,17 +265,10 @@ public class Entity extends Property {
     }
 
     public void eraseAll() {
-        eraseProperties(this);
-    }
-
-    private void eraseProperties(Property parent) {
-        try {
-            for (Property child : parent.getProperties()) {
-                eraseProperties(child);
-                parent.delProperty(child);
-            }
-        } catch (Exception e) {
-        }
+        super.eraseAll();
+        this.gedcom = null;
+        this.id = null;
+        this.value = null;
     }
 
     /**

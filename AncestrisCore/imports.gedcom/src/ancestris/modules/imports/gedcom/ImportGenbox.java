@@ -95,8 +95,10 @@ public class ImportGenbox extends Import {
     @Override
     public boolean fixGedcom(Gedcom gedcom) {
         fixFAMC(gedcom);
+        incrementProgress();
         fixCONC(gedcom);
-        return super.fixGedcom(gedcom); //To change body of generated methods, choose Tools | Templates.
+        incrementProgress();
+        return super.fixGedcom(gedcom);
 
     }
     

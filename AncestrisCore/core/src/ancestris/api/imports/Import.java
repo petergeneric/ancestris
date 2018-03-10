@@ -11,7 +11,12 @@
 package ancestris.api.imports;
 
 import ancestris.core.TextOptions;
+import ancestris.gedcom.GedcomDirectory;
+import ancestris.gedcom.GedcomMgr;
 import ancestris.modules.console.Console;
+import ancestris.util.ProgressListener;
+import ancestris.util.swing.DialogManager;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -26,19 +31,26 @@ import genj.gedcom.TagPath;
 import genj.io.GedcomFileReader;
 import genj.io.GedcomFileWriter;
 import genj.io.GedcomFormatException;
+import genj.util.Origin;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.LineNumberReader;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.Callable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.openide.filesystems.FileUtil;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
+import spin.Spin;
 
 /**
  * The import function foreign gedcom. This abstract class must be used to
@@ -56,7 +68,7 @@ import org.openide.util.NbBundle;
  * user to save the new gedcom as a new file.
  *
  */
-public abstract class Import {
+public abstract class Import implements ImportRunner {
     
     protected static String EOL = System.getProperty("line.separator");
     
@@ -113,12 +125,21 @@ public abstract class Import {
     /**
      * our files
      */
+    private String tabName = "";
     public GedcomFileReader input;
     public GedcomFileWriter output;
     protected Console console;
     public int nbChanges = 0;
-    private Object GedcomUtilities;
 
+    /**
+     * Process
+     */
+    private boolean cancelProcess = false;
+    private final static int READLINES = 0, CONVERTLINES = 1, CONVERTGEDCOM = 2;
+    private int nbOfFileLines = 0;
+    private int state = 0;
+    private int progress;
+    private boolean cancel = false;
     
     /**
      * Constructor
@@ -141,9 +162,166 @@ public abstract class Import {
      */
     protected abstract String getImportComment();
 
+    
+    
     public void setTabName(String tabName) {
         console = new Console(tabName);
     }
+    
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Overall launch panel and process
+    //
+    public void launch(File inputFile, File outputFile) {
+        cancel = false;
+        cancelProcess = false;
+        ImportPanel importPanel = new ImportPanel(new Callable() {
+            @Override
+            public Object call() throws Exception {
+                cancelProcess();
+                return null;
+            }
+        });
+        String title = NbBundle.getMessage(Import.class, "Import.progress.importing", inputFile.getName());
+        DialogManager dialog = DialogManager.create(title, importPanel, false).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(new Object[] {}).setResizable(false);
+        dialog.show();
+
+        // Prepare console window
+        setTabName(NbBundle.getMessage(Import.class, "OpenIDE-Module-Name") + " - " + toString());
+        
+        // Fix header and lines
+        ImportRunner importTask = (ImportRunner) Spin.off(ImportFactory.createImport(this));
+        ProgressListener.Dispatcher.processStarted(importTask);
+        boolean taskOk = importTask.run(inputFile, outputFile);
+        ProgressListener.Dispatcher.processStopped(importTask);
+        if (cancelProcess || !taskOk) {
+            dialog.cancel();
+            return;
+        }
+        importPanel.increment();
+        
+        
+        // Open Gedcom normally. Avoid potential error message by being quiet.
+        GedcomMgr.getDefault().setQuiet(true);
+        Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outputFile));
+        GedcomMgr.getDefault().setQuiet(false);
+        if (cancelProcess || context == null) {
+            dialog.cancel();
+            return;
+        }
+        importPanel.increment();
+        
+        
+        // Fix gedcom (it will need to be reopen afterwards to take into account all modifications, therefore it needs to be saved)
+        final Gedcom importedGedcom = context.getGedcom();
+        importedGedcom.setName(inputFile.getName());
+        ProgressListener.Dispatcher.processStarted(importTask);
+        importTask.fixGedcom(importedGedcom);
+        importTask.complete();
+        ProgressListener.Dispatcher.processStopped(importTask);
+        importPanel.increment();
+        if (cancelProcess) {
+            dialog.cancel();
+            return;
+        }
+
+        // Save gedcom as new name
+        Origin o = GedcomMgr.getDefault().saveGedcomAs(context, null, FileUtil.toFileObject(outputFile));
+        GedcomDirectory.getDefault().closeGedcom(context);
+        if (cancelProcess || o == null) {
+            dialog.cancel();
+            return;
+        }
+        importPanel.increment();
+
+        // Reopen it
+        GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(o.getFile()));
+        if (cancelProcess) {
+            dialog.cancel();
+            return;
+        }
+        importPanel.requestFocusInWindow();
+        importPanel.increment();
+        
+        // Ask user if he wants to see conversion stats
+        dialog.cancel();
+        Object rc = DialogManager.create(NbBundle.getMessage(Import.class, "Import.completed"), 
+                NbBundle.getMessage(Import.class, "cc.importResults?", inputFile.getName(), toString(), 
+                        getIndisNb(), getFamsNb(), getNotesNb(), getObjesNb(),
+                        getSoursNb(), getReposNb(), getSubmsNb(), getChangesNb()))
+                .setMessageType(DialogManager.INFORMATION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
+        if (rc == DialogManager.YES_OPTION) {
+            showDetails();
+        }
+
+        
+    }
+
+    public void cancelProcess() {
+        ProgressListener.Dispatcher.processStopAll();
+        cancelProcess = true;
+    }
+
+
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Trackable methods
+    //
+    @Override
+    public void cancelTrackable() {
+        cancel = true;
+    }
+
+    @Override
+    public int getProgress() {
+
+        switch (state) {
+            case READLINES:
+            case CONVERTLINES:
+                if (nbOfFileLines == 0 || input == null) {
+                    return 1;
+                }
+                progress = (state * 50 * nbOfFileLines + input.getLines()) / nbOfFileLines;
+                return progress;
+                
+            case CONVERTGEDCOM:
+                return progress;
+            default:
+                return 1;
+        }
+    }
+
+    /**
+     * Returns current read state as explanatory string
+     * @return 
+     */
+    @Override
+    public String getState() {
+        switch (state) {
+            case READLINES:
+                return NbBundle.getMessage(Import.class, "Import.progress.readlines", tabName);
+            case CONVERTLINES:
+                return NbBundle.getMessage(Import.class, "Import.progress.convertlines", tabName);
+            case CONVERTGEDCOM:
+            default:
+                return NbBundle.getMessage(Import.class, "Import.progress.convertgedcom", tabName);
+        }
+    }
+
+    @Override
+    public String getTaskName() {
+        return NbBundle.getMessage(Import.class, "Import.progress.importing", tabName);
+    }
+
+    
+    public void incrementProgress() {
+        progress += 10;
+        if (progress > 100) {
+            progress = 90;
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////
+
 
     /**
      * This runs the first 3 steps of the import process. This method is a file filter.
@@ -153,7 +331,21 @@ public abstract class Import {
      * @return true if conversion is successful
      */
     public boolean run(File fileIn, File fileOut) {
+        this.tabName = fileIn.getName();
         init();
+        
+        // Get nb of file lines of file
+        state = READLINES;
+        try {
+            FileReader in = new FileReader(fileIn);
+            LineNumberReader count = new LineNumberReader(in);
+            while (count.skip(Long.MAX_VALUE) > 0) {
+                // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
+            }
+            nbOfFileLines = (count.getLineNumber() + 1) / 50;   // 2 (we will read twice) * nblines / 100  (percent)
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+        }
         
         // Read pass. No writing is made
         try {
@@ -165,7 +357,7 @@ public abstract class Import {
                  * stream. it returns an empty String if two newlines appear in
                  * a row.
                  */
-                while ((input.getNextLine(true)) != null) {
+                while (!cancel && (input.getNextLine(true)) != null) {
                     firstPass();
                 }
             } finally {
@@ -188,6 +380,8 @@ public abstract class Import {
         }
 
         // maintenant on effectue toutes les transformations
+        state++;
+        
         try {
             output = new GedcomFileWriter(fileOut, input.getCharset(), getEOL(fileIn));
         } catch (IOException e1) {
@@ -201,7 +395,7 @@ public abstract class Import {
             console.println("=============================");
             input = GedcomFileReader.create(fileIn);
             try {
-                while (input.getNextLine(true) != null) {
+                while (!cancel && input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
                         output.writeLine(input);
                         output.writeLine(1, "NOTE", getImportComment());
@@ -358,6 +552,8 @@ public abstract class Import {
      */
     protected void finalise() throws IOException {
         addMissingEntities();
+        state = CONVERTGEDCOM;
+        progress = 1;
     }
 
     /**
@@ -369,6 +565,7 @@ public abstract class Import {
      * @param gedcom
      * @return
      */
+    @Override
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = fixNames(gedcom);
         ret |= fixPlaces(gedcom);
@@ -381,6 +578,7 @@ public abstract class Import {
      * This is called from the import method.
      */
     public void complete() {
+        progress = 100;
         console.println(NbBundle.getMessage(Import.class, "Import.completed"));
         console.println("=============================");
         //console.show();
@@ -677,7 +875,16 @@ public abstract class Import {
         
         console.println(NbBundle.getMessage(Import.class, "Import.fixNames"));
 
-        for (Indi indi : gedcom.getIndis()) {
+        Collection<Indi> indis = gedcom.getIndis();
+        int increment = indis.size() / 10 +  1;
+        int counter = 0;
+        for (Indi indi : indis) {
+            // increment progress
+            counter++;
+            if (counter % increment == 0 && progress < 100) {
+                progress++;
+            }
+            
             rawName = indi.getProperty("NAME", false);
             if (rawName instanceof PropertyName) {
                 propName = (PropertyName) rawName;
@@ -715,9 +922,22 @@ public abstract class Import {
         
         console.println(NbBundle.getMessage(Import.class, "Import.fixPlaces"));
 
+        int nbLocs = PropertyPlace.getFormat(gedcom.getPlaceFormat()).length;
         List<PropertyPlace> places = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
+        int increment = places.size() / 10;
+        int counter = 0;
         for (PropertyPlace place : places) {
+            // increment progress
+            counter++;
+            if (counter % increment == 0 && progress < 100) {
+                progress++;
+            }
+            
             locs = place.getJurisdictions();
+            // If nb of jurisdictions of correct length, set it and return true
+            if (locs.length == nbLocs) {
+                continue;
+            }
             if (!place.setJurisdictions(gedcom, locs)) {
                 hasErrors = true;
                 nbChanges++;
@@ -758,10 +978,18 @@ public abstract class Import {
         console.println(NbBundle.getMessage(Import.class, "Import.convertingAssos"));
 
         List<Property> list = new ArrayList<Property>();
-        for (Entity entity : gedcom.getEntities()) {
+        for (Entity entity : gedcom.getIndis()) {
             getPropertiesRecursively(list, "ASSO", entity);
         }
+        int increment = list.size() / 10;
+        int counter = 0;
         for (Property prop : list) {
+            // increment progress
+            counter++;
+            if (counter % increment == 0 && progress < 100) {
+                progress++;
+            }
+            
             // Skip PropertyAssociation
             if (prop instanceof PropertyAssociation) {
                 continue;
@@ -946,7 +1174,6 @@ public abstract class Import {
         }
         return place_format;
     }
-
 
     private class ImportEnt {
         protected boolean seen = false;
