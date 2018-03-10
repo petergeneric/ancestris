@@ -168,7 +168,6 @@ public class ExplorerHelper {
 
         @Override
         protected void showPopup(MouseEvent e) {
-            Component c = e.getComponent();
             Node[] selNodes = manager.getSelectedNodes();
             Point p = SwingUtilities.convertPoint(e.getComponent(), e.getPoint(), source);
             createPopup(e.getComponent(), p, selNodes);
