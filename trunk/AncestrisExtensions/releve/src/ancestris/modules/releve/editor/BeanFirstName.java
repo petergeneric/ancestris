@@ -1,28 +1,23 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.utils.Java2sAutoTextField;
-import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
-import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import java.util.List;
 
 /**
  *
  * @author Michel
  */
-public class BeanFirstName extends Bean implements CompletionListener {
+public class BeanFirstName extends Bean {
     private final Java2sAutoTextField cFirst;
-    private final CompletionProvider completionProvider;
     
-    public BeanFirstName(CompletionProvider completionProvider) {
-        this.completionProvider = completionProvider;
+    public BeanFirstName(CompletionProvider.CompletionSource completionSource) {
         setLayout(new java.awt.BorderLayout());
-        cFirst = new Java2sAutoTextField(completionProvider.getFirstNames(IncludeFilter.INCLUDED));
+        cFirst = new Java2sAutoTextField(completionSource.getIncluded());
         cFirst.setStrict(false);
         cFirst.setCaseSensitive(false);
         cFirst.setUpperAllFirstChar(true);
-        cFirst.setLocale(completionProvider.getLocale()); 
+        cFirst.setLocale(completionSource.getLocale()); 
         cFirst.addChangeListener(changeSupport);
         
         // Layout the bean
@@ -64,33 +59,4 @@ public class BeanFirstName extends Bean implements CompletionListener {
         cFirst.setText(value);
     }
 
-    /**
-     * j'ajoute la declaration de listener
-     * apres que l'objet soit créé
-     */
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        completionProvider.addFirstNamesListener(this);
-    }
-    
-    /**
-     * je supprime la declaration de listener
-     * avant que l'objet ne soit detruit
-     */
-    @Override
-    public void removeNotify() {
-        completionProvider.removeFirstNamesListener(this);
-        super.removeNotify();
-    }
-
-    /**
-     * Implemente CompletionListener
-     * copie la nouvelle liste de completion
-     * @param keyList
-     */
-    @Override
-    public void includedKeyUpdated(List<String> keyList) {
-        cFirst.setDataList(keyList);        
-    }
 }

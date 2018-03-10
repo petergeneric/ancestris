@@ -13,7 +13,6 @@ import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.FieldSex;
 import ancestris.modules.releve.model.RecordModel;
 import ancestris.modules.releve.model.Record;
-import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -318,7 +317,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                         Bean bean;
                         switch (editorBeanField.getFieldType()) {
                             case eventType:
-                                bean = new BeanEventType(dataManager.getCompletionProvider());
+                                bean = new BeanEventType(dataManager.getCompletionProvider().getEventTypes());
                                 break;
 
                             case indiBirthDate:
@@ -342,15 +341,15 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                             case witness3LastName:
                             case witness4LastName:
                                 // j'affiche le bean d'edition du nom
-                                bean = new BeanLastName(dataManager.getCompletionProvider());
+                                bean = new BeanLastName(dataManager.getCompletionProvider().getLastNames());
                                 break;
                             case indiFatherLastName:
                                 label += " (Alt-X)";
-                                bean = new BeanLastName(dataManager.getCompletionProvider());
+                                bean = new BeanLastName(dataManager.getCompletionProvider().getLastNames());
                                 break;
                             case wifeFatherLastName:
                                 label += " (Alt-Y)";
-                                bean = new BeanLastName(dataManager.getCompletionProvider());
+                                bean = new BeanLastName(dataManager.getCompletionProvider().getLastNames());
                                 break;
 
                             case indiFirstName:
@@ -365,7 +364,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                             case witness2FirstName:
                             case witness3FirstName:
                             case witness4FirstName:
-                                bean = new BeanFirstName(dataManager.getCompletionProvider());
+                                bean = new BeanFirstName(dataManager.getCompletionProvider().getFirstNames());
                                 break;
 
                             case indiSex:
@@ -409,7 +408,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                             case witness2Occupation:
                             case witness3Occupation:
                             case witness4Occupation:
-                                bean = new BeanOccupation(dataManager.getCompletionProvider());
+                                bean = new BeanOccupation(dataManager.getCompletionProvider().getOccupations());
                                 break;
 
                             case indiBirthPlace:
@@ -422,7 +421,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                             case wifeMarriedResidence:
                             case wifeFatherResidence:
                             case wifeMotherResidence:
-                                bean = new BeanPlace(dataManager.getCompletionProvider());
+                                bean = new BeanPlace(dataManager.getCompletionProvider().getPlaces());
                                 break;
 
                             case indiComment:
@@ -449,7 +448,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                                 break;
 
                             case notary:
-                                bean = new BeanNotary(dataManager.getCompletionProvider());
+                                bean = new BeanNotary(dataManager.getCompletionProvider().getNotaries());
                                 break;
                         }
 
@@ -721,7 +720,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     case witness2FirstName :
                     case witness3FirstName :
                     case witness4FirstName :
-                        completionList = dataManager.getCompletionProvider().getFirstNames(IncludeFilter.INCLUDED);
+                        completionList = dataManager.getCompletionProvider().getFirstNames().getIncluded();
                         break;
                     case indiLastName :
                     case indiMarriedLastName :
@@ -735,7 +734,7 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     case witness2LastName :
                     case witness3LastName :
                     case witness4LastName :
-                        completionList = dataManager.getCompletionProvider().getLastNames(IncludeFilter.INCLUDED);
+                        completionList = dataManager.getCompletionProvider().getLastNames().getIncluded();
                         break;
                     case indiOccupation:
                     case indiMarriedOccupation:
@@ -749,18 +748,14 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                     case witness2Occupation:
                     case witness3Occupation:
                     case witness4Occupation:
-                        completionList = dataManager.getCompletionProvider().getOccupations(IncludeFilter.INCLUDED);
+                        completionList = dataManager.getCompletionProvider().getOccupations().getIncluded();
                         break;
                     case eventType:
-                        completionList = dataManager.getCompletionProvider().getEventTypes(IncludeFilter.INCLUDED);
+                        completionList = dataManager.getCompletionProvider().getEventTypes().getIncluded();
                         break;
                     case notary:
-                        completionList = dataManager.getCompletionProvider().getNotaries(IncludeFilter.INCLUDED);
+                        completionList = dataManager.getCompletionProvider().getNotaries().getIncluded();
                         break;
-//                    case indiPlace:
-//                    case wifePlace:
-//                        completionList = dataManager.getCompletionProvider().getPlaces();
-//                        break;
                 }
 
                 //je verifie si c'est une nouvelle valeur
@@ -875,10 +870,21 @@ public class ReleveEditor extends javax.swing.JPanel implements FocusListener, P
                 case notary:
                     dataManager.getCompletionProvider().updateNotary(bean.getFieldValue(), oldValue);
                     break;
+                case indiBirthPlace:
+                case wifeBirthPlace:
+                case indiResidence:
+                case indiMarriedResidence:
+                case indiFatherResidence:
+                case indiMotherResidence:
+                case wifeResidence:
+                case wifeMarriedResidence:
+                case wifeFatherResidence:
+                case wifeMotherResidence:
+                    dataManager.getCompletionProvider().updatePlaces(bean.getFieldValue(), oldValue);
+                    break;
+                
             }
             
-            //
-
             // Si l'utilisateur vient de changer la date ou le nom de l'individu
             // je vérifie s'il y a un nouveau doublon.
             // et j'affiche un message d'avertissement si un doublon existe

@@ -234,39 +234,13 @@ public class RecordModel {
     }
     
     ///////////////////////////////////////////////////////////////////////////
-    // Implement Undo methods
-    ///////////////////////////////////////////////////////////////////////////
-    public void notiFyFieldChanged(final Record record, final Record.FieldType fieldType, final Field field, final String oldValue) {
-        final int recordIndex = getIndex(record);
-
-        // keep undo
-        lock.addChange(new Undo() {
-
-            @Override
-            Record undo() {
-                field.setValue(oldValue);
-                fireRecordModelUpdated(recordIndex, fieldType);
-                return record;
-            }
-        });
-        fireRecordModelUpdated(recordIndex, fieldType);
-    }
-
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Manager VerificationListener
+    // Manager RecordModelListener
     ///////////////////////////////////////////////////////////////////////////
 
-    /**
-     * @param validationListeners the validationListeners to set
-     */
     public void addRecordModelListener(RecordModelListener listener) {
         recordModelListeners.add(listener);
     }
 
-    /**
-     * @param validationListeners the validationListeners to set
-     */
     public void removeRecordModelListener(RecordModelListener listener) {
         recordModelListeners.remove(listener);
     }
@@ -294,7 +268,6 @@ public class RecordModel {
             listener.recordUpdated(recordIndex, filedType);
         }
     }
-
     
     public void fireAllChanged () {
           for (RecordModelListener listener : recordModelListeners) {
@@ -303,7 +276,7 @@ public class RecordModel {
     }
 
     ///////////////////////////////////////////////////////////////////////////
-    // Manager VerificationListener
+    // Controle divers des releves
     ///////////////////////////////////////////////////////////////////////////
    
     /**
@@ -331,24 +304,7 @@ public class RecordModel {
 
         return errorMessage.toString();
     }
-
-    ///////////////////////////////////////////////////////////////////////////
-    // Undo
-    ///////////////////////////////////////////////////////////////////////////
-
-    private static boolean undoEnabled = true;
-
-    //private Object writeSemaphore = new Object();
-    private final Lock lock = new Lock();
-
     
-    /**
-     * @param undoEnabled the undoEnabled to set
-     */
-    public static void setUndoEnabled(boolean value) {
-        undoEnabled = value;
-    }
-
     /**
      * retourne la liste des releves qui ont lea même date, même nom et même prénom
      * de l'individu du releve donné en parametre.
@@ -367,6 +323,42 @@ public class RecordModel {
             }
         }
         return duplicate.toArray(new Record[0]);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Implement Undo methods
+    ///////////////////////////////////////////////////////////////////////////
+    public void notiFyFieldChanged(final Record record, final Record.FieldType fieldType, final Field field, final String oldValue) {
+        final int recordIndex = getIndex(record);
+
+        // keep undo
+        lock.addChange(new Undo() {
+
+            @Override
+            Record undo() {
+                field.setValue(oldValue);
+                fireRecordModelUpdated(recordIndex, fieldType);
+                return record;
+            }
+        });
+        fireRecordModelUpdated(recordIndex, fieldType);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Undo
+    ///////////////////////////////////////////////////////////////////////////
+
+    private static boolean undoEnabled = true;
+
+    //private Object writeSemaphore = new Object();
+    private final Lock lock = new Lock();
+
+    
+    /**
+     * @param undoEnabled the undoEnabled to set
+     */
+    public static void setUndoEnabled(boolean value) {
+        undoEnabled = value;
     }
 
     public Record undo() {

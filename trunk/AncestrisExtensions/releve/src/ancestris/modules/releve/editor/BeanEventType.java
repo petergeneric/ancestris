@@ -1,13 +1,10 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.utils.Java2sAutoComboBox;
-import ancestris.modules.releve.model.CompletionListener;
-import ancestris.modules.releve.model.CompletionProvider;
-import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
+import ancestris.modules.releve.model.CompletionProvider.CompletionSource;
 import ancestris.modules.releve.model.Field;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -16,16 +13,13 @@ import javax.swing.KeyStroke;
  *
  * @author Michel
  */
-public class BeanEventType extends Bean implements CompletionListener {
+public class BeanEventType extends Bean {
     //private Java2sAutoTextField cListEventType;
     private final Java2sAutoComboBox cListEventType;
-    private final CompletionProvider completionProvider;
 
-    public BeanEventType(CompletionProvider completionProvider) {
-        this.completionProvider = completionProvider;
-        completionProvider.addEventTypesListener(this);
+    public BeanEventType(CompletionSource completionSource) {
         setLayout(new java.awt.BorderLayout());
-        cListEventType = new Java2sAutoComboBox(completionProvider.getEventTypes(IncludeFilter.INCLUDED));
+        cListEventType = new Java2sAutoComboBox(completionSource.getIncluded());
         cListEventType.setStrict(false);        
         cListEventType.addChangeListener(changeSupport);
         add(cListEventType, java.awt.BorderLayout.CENTER);
@@ -75,24 +69,4 @@ public class BeanEventType extends Bean implements CompletionListener {
         cListEventType.getEditor().setItem(value);
     }
 
-    /**
-     * je supprime la declaration de listener
-     * avant que l'objet ne soit detruit
-     */
-    @Override
-    public void removeNotify() {
-        completionProvider.removeEventTypesListener(this);
-        super.removeNotify();
-    }
-
-    /**
-     * Implemente CompletionListener
-     * copie la nouvelle liste de completion
-     * @param keyList
-     */
-    @Override
-    public void includedKeyUpdated(List<String> keyList) {
-        cListEventType.setDataList(keyList);
-    }
-
-}
+ }

@@ -1,13 +1,10 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.utils.Java2sAutoTextField;
-import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
-import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
-import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
@@ -16,18 +13,16 @@ import javax.swing.KeyStroke;
  *
  * @author Michel
  */
-public class BeanLastName extends Bean implements CompletionListener {
+public class BeanLastName extends Bean  {
     private final Java2sAutoTextField cLast;
-    CompletionProvider completionProvider;
-
-    public BeanLastName(CompletionProvider completionProvider) {
-        this.completionProvider = completionProvider;
+    
+    public BeanLastName(CompletionProvider.CompletionSource completionSource) {
         setLayout(new java.awt.BorderLayout());
-        cLast = new Java2sAutoTextField(completionProvider.getLastNames(IncludeFilter.INCLUDED));
+        cLast = new Java2sAutoTextField(completionSource.getIncluded());
         cLast.setStrict(false);        
         cLast.setCaseSensitive(false);
         cLast.setUpperAllChar(true);
-        cLast.setLocale(completionProvider.getLocale()); //Locale.UK
+        cLast.setLocale(completionSource.getLocale()); //Locale.UK
         cLast.addChangeListener(changeSupport);
         // Layout the bean
         add(cLast, java.awt.BorderLayout.CENTER);
@@ -80,33 +75,4 @@ public class BeanLastName extends Bean implements CompletionListener {
         setFieldValue(value);
     }
     
-    /**
-     * je supprime la declaration de listener
-     * avant que l'objet ne soit detruit
-     */
-    @Override
-    public void addNotify() {
-        super.addNotify();
-        completionProvider.addLastNamesListener(this);
-    }
-
-    /**
-     * je supprime la declaration de listener
-     * avant que l'objet ne soit detruit
-     */
-    @Override
-    public void removeNotify() {
-        completionProvider.removeLastNamesListener(this);
-        super.removeNotify();
-    }
-
-    /**
-     * Implemente CompletionListener
-     * copie la nouvelle liste de completion
-     * @param keyList
-     */
-    @Override
-    public void includedKeyUpdated(List<String> keyList) {
-        cLast.setDataList(keyList);
-    }
 }

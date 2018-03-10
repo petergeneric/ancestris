@@ -9,7 +9,6 @@ package ancestris.modules.releve;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.model.CompletionProvider;
 import ancestris.modules.releve.model.CompletionProvider.CompletionType;
-import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.DataManager;
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -92,17 +91,17 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         switch( completionType ) {
             case firstName:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.firstName");
-               valueList = dataManager.getCompletionProvider().getFirstNames(IncludeFilter.ALL);
+               valueList = dataManager.getCompletionProvider().getFirstNames().getAll();
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             case lastName:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.lastName");
-               valueList = dataManager.getCompletionProvider().getLastNames(IncludeFilter.ALL);
+               valueList = dataManager.getCompletionProvider().getLastNames().getAll();
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             case occupation:
                columnTitle = NbBundle.getMessage(ReleveCompletionDialog.class, "ReleveCompletionDialog.occupation");
-               valueList = dataManager.getCompletionProvider().getOccupations(IncludeFilter.ALL);
+               valueList = dataManager.getCompletionProvider().getOccupations().getAll();
                excludeList = CompletionProvider.loadExcludeCompletion(completionType);
                break;
             default:
@@ -128,9 +127,8 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         }
         
         // je copie les valeurs dans le modele de la JTable
-        for (Iterator<Entry<String,Boolean>> it = lastNameMap.entrySet().iterator(); it.hasNext(); ) {
-           Entry<String,Boolean> entry = it.next();
-           model.add(entry.getKey(), entry.getValue());
+        for (Entry<String,Boolean> entry : lastNameMap.entrySet()) {
+            model.add(entry.getKey(), entry.getValue());
         }
         jTableExclude.setModel(model);
         // je trie la table
@@ -301,19 +299,6 @@ public class ReleveCompletionDialog extends javax.swing.JFrame {
         StringSelection sel = new StringSelection(clipboardStr.toString());
         CLIPBOARD.setContents(sel, sel);
     }//GEN-LAST:event_jButtonCopyToClipboardActionPerformed
-
-    /**
-    * @param args the command line arguments
-    */
-//    public static void main(String args[]) {
-//        java.awt.EventQueue.invokeLater(new Runnable() {
-//
-//            public void run() {
-//                new ReleveCompletionPanel().setVisible(true);
-//            }
-//        });
-//    }
-
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel comment;

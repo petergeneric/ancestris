@@ -353,6 +353,14 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
     public int getCurrentRecordIndex() {
         return currentRecordIndex;
     }
+    
+    /**
+     * retounr le nombre de lignes de la table
+     * @return 
+     */
+    public int getRowCount() {
+        return releveTable.getRowCount();
+    }
 
     /**
      * sélectionne une ligne en fonction du numéro de ligne de la table

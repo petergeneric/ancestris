@@ -40,10 +40,10 @@ public class DataManagerTest extends TestCase {
 
             dataManager.addRecord(record);
            // je verifie que les données ont bien été supprimées
-            assertEquals("Nombre de prenoms apres ajout", 7, dataManager.getCompletionProvider().getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms apres ajout", 6, dataManager.getCompletionProvider().getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions apres ajout", 7, dataManager.getCompletionProvider().getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de lieux apres ajout", 4, dataManager.getCompletionProvider().getPlaces(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de prenoms apres ajout", 7, dataManager.getCompletionProvider().getFirstNames().getAll().size());
+            assertEquals("Nombre de noms apres ajout", 6, dataManager.getCompletionProvider().getLastNames().getAll().size());
+            assertEquals("Nombre de professions apres ajout", 7, dataManager.getCompletionProvider().getOccupations().getAll().size());
+            assertEquals("Nombre de lieux apres ajout", 4, dataManager.getCompletionProvider().getPlaces().getAll().size());
 
             Gedcom gedcom = TestUtility.createGedcomF2();
             
@@ -63,22 +63,22 @@ public class DataManagerTest extends TestCase {
             
             dataManager.addGedcomCompletion(gedcom);
 
-            assertEquals("Nombre de prenoms apres ajout gedcom", 7+4, dataManager.getCompletionProvider().getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms apres ajout gedcom", 6+2, dataManager.getCompletionProvider().getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions apres ajout gedcom", 7+2, dataManager.getCompletionProvider().getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-            //assertEquals("Nombre de lieux apres ajout gedcom", 4+1, dataManager.getCompletionProvider().getPlaces(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de prenoms apres ajout gedcom", 7+4, dataManager.getCompletionProvider().getFirstNames().getAll().size());
+            assertEquals("Nombre de noms apres ajout gedcom", 6+2, dataManager.getCompletionProvider().getLastNames().getAll().size());
+            assertEquals("Nombre de professions apres ajout gedcom", 7+2, dataManager.getCompletionProvider().getOccupations().getAll().size());
+            //assertEquals("Nombre de lieux apres ajout gedcom", 4+1, dataManager.getCompletionProvider().getPlaces().getAll().size());
 
             dataManager.removeGedcomCompletion();
-            assertEquals("Nombre de prenoms apres suppression gedcom", 7, dataManager.getCompletionProvider().getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms apres suppression gedcom", 6, dataManager.getCompletionProvider().getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions apres suppression gedcom", 7, dataManager.getCompletionProvider().getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de lieuxapres suppression gedcom", 4, dataManager.getCompletionProvider().getPlaces(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de prenoms apres suppression gedcom", 7, dataManager.getCompletionProvider().getFirstNames().getAll().size());
+            assertEquals("Nombre de noms apres suppression gedcom", 6, dataManager.getCompletionProvider().getLastNames().getAll().size());
+            assertEquals("Nombre de professions apres suppression gedcom", 7, dataManager.getCompletionProvider().getOccupations().getAll().size());
+            assertEquals("Nombre de lieuxapres suppression gedcom", 4, dataManager.getCompletionProvider().getPlaces().getAll().size());
 
             dataManager.removeRecord(record);
-            assertEquals("Nombre de prenoms apres suppression record", 0, dataManager.getCompletionProvider().getFirstNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de noms apres suppression record", 0, dataManager.getCompletionProvider().getLastNames(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de professions apres suppression record", 0, dataManager.getCompletionProvider().getOccupations(CompletionProvider.IncludeFilter.ALL).size());
-            assertEquals("Nombre de lieux apres suppression record", 0, dataManager.getCompletionProvider().getPlaces(CompletionProvider.IncludeFilter.ALL).size());
+            assertEquals("Nombre de prenoms apres suppression record", 0, dataManager.getCompletionProvider().getFirstNames().getAll().size());
+            assertEquals("Nombre de noms apres suppression record", 0, dataManager.getCompletionProvider().getLastNames().getAll().size());
+            assertEquals("Nombre de professions apres suppression record", 0, dataManager.getCompletionProvider().getOccupations().getAll().size());
+            assertEquals("Nombre de lieux apres suppression record", 0, dataManager.getCompletionProvider().getPlaces().getAll().size());
 
         } catch (GedcomException ex) {
             fail("GedcomException " + ex.toString());

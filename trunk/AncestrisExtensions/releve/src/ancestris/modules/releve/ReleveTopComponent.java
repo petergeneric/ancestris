@@ -659,9 +659,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                         panelAll.selectRow(0);
                     }
 
-                    // je selectionne le premier onglet
-                    jTabbedPane1.setSelectedComponent(panelBirth);
-                    
+                    // je selectionne le premier onglet non vide
+                    RelevePanel selectedPanel = panelBirth; 
+                    if(panelBirth.getRowCount() != 0) {
+                        selectedPanel = panelBirth; 
+                    } else if(panelMarriage.getRowCount() != 0) {
+                        selectedPanel = panelMarriage; 
+                    } else if(panelDeath.getRowCount() != 0) {
+                        selectedPanel = panelDeath; 
+                    } else if(panelMisc.getRowCount() != 0) {
+                        selectedPanel = panelMisc; 
+                    }
+                    jTabbedPane1.setSelectedComponent(selectedPanel);
+                                        
                     if ( append == false ) {
                         // je memorise le nom du fichier seulement en mode "replace"
                         setCurrentFile(releveFile);

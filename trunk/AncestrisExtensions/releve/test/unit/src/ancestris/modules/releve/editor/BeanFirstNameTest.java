@@ -75,7 +75,7 @@ public class BeanFirstNameTest {
      */
     @Test
     public void testSetFieldImpl() {
-        BeanFirstName instance = new BeanFirstName( dataManager.getCompletionProvider() );
+        BeanFirstName instance = new BeanFirstName( dataManager.getCompletionProvider().getFirstNames() );
         instance.setContext(record, Record.FieldType.indiFirstName);
         field.setValue("jean");
         instance.replaceValue( field );        
