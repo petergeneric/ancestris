@@ -98,9 +98,18 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
             return;
         }
         Registry gedcomSettings = gedcom.getRegistry();
-
-        ((WebBookVisualPanel5) getComponent()).setPref01(gedcomSettings.get(WebBookParams.WB_PREFIX + ".localWebDir", ""));
-        ((WebBookVisualPanel5) getComponent()).setPref02(gedcomSettings.get(WebBookParams.WB_PREFIX + ".logFile", ""));
+        
+        String localWebDir = gedcomSettings.get(WebBookParams.WB_PREFIX + ".localWebDir", "");
+        if (localWebDir.isEmpty()) {
+            localWebDir = System.getProperty("netbeans.user") + File.separator + "WebBook";
+        }
+        ((WebBookVisualPanel5) getComponent()).setPref01(localWebDir);
+        
+        String logFile = gedcomSettings.get(WebBookParams.WB_PREFIX + ".logFile", "");
+        if (logFile.isEmpty()) {
+            logFile = localWebDir + File.separator + "webbookLog.txt";
+        }
+        ((WebBookVisualPanel5) getComponent()).setPref02(logFile);
         component.setComponents();
     }
 
@@ -127,6 +136,7 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
         if (name.trim().isEmpty()) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_LocalWebDir"), null);
         }
+        new File(name).mkdirs();
         // Check if file exists
         File file = new File(name);
         if (!file.exists()) {

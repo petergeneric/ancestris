@@ -146,7 +146,15 @@ public final class WebBookVisualPanel5 extends JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        String tmpDir = jTextField1.getText();
         chooseFileDir(jTextField1, true);
+        String tmpDir2 = jTextField1.getText();
+        String tmpFile = jTextField2.getText();
+        if (tmpFile.startsWith(tmpDir)) {
+            int index = tmpDir.length();
+            String logFile = tmpFile.substring(index);
+            jTextField2.setText(tmpDir2 + logFile);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
