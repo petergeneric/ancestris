@@ -3,9 +3,9 @@ package ancestris.modules.releve.model;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.modules.releve.ReleveTopComponent;
 import ancestris.modules.releve.model.Record.FieldType;
+import ancestris.modules.releve.utils.CompareString;
 import genj.gedcom.*;
 import java.util.*;
-import javax.swing.SwingUtilities;
 import org.openide.util.NbPreferences;
 
 /**
@@ -13,26 +13,22 @@ import org.openide.util.NbPreferences;
  * @author Michels
  */
 public class CompletionProvider {
-    private final FirstNameCompletionSet firstNames = new FirstNameCompletionSet();
-    private final LastNameCompletionSet lastNames = new LastNameCompletionSet();
-    private final OccupationCompletionSet occupations = new OccupationCompletionSet();
-    private final NotaryCompletionSet notaries = new NotaryCompletionSet();
-    private final PlaceCompletionSet places = new PlaceCompletionSet();
-    private final CompletionSet eventTypes = new CompletionSet();
+    private final CompletionSet firstNames = new CompletionSet(CompletionType.firstName);
+    private final CompletionSet lastNames = new CompletionSet(CompletionType.lastName);
+    private final CompletionSet occupations = new CompletionSet(CompletionType.occupation);
+    private final CompletionSet notaries = new CompletionSet(CompletionType.notary);
+    private final CompletionSet places = new CompletionSet(CompletionType.place);
+    private final CompletionSet eventTypes = new CompletionSet(CompletionType.eventType);
 
     private final HashMap<String, Integer> firstNameSex = new HashMap<String, Integer>();
 
     public static enum CompletionType {
+        eventType,
         firstName,
         lastName,
+        notary,
         occupation,
         place
-    }
-
-    public static enum IncludeFilter {
-        ALL,
-        EXCLUDED,
-        INCLUDED
     }
 
     // Register in ancestris lookup for GedcomFileListener
@@ -52,22 +48,32 @@ public class CompletionProvider {
      * @param record
      */
     protected void addRecord(Record record) {
+        // EventType
+        eventTypes.add(record.getFieldValue(FieldType.eventType));
 
         // FirstName
-        firstNames.add(record.getFieldValue(FieldType.indiFirstName), record.getFieldValue(FieldType.indiSex));
-        firstNames.add(record.getFieldValue(FieldType.indiMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.indiSex)));
-        firstNames.add(record.getFieldValue(FieldType.indiFatherFirstName), FieldSex.MALE_STRING);
-        firstNames.add(record.getFieldValue(FieldType.indiMotherFirstName), FieldSex.FEMALE_STRING);
+        firstNames.add(record.getFieldValue(FieldType.indiFirstName));
+        firstNames.add(record.getFieldValue(FieldType.indiMarriedFirstName));
+        firstNames.add(record.getFieldValue(FieldType.indiFatherFirstName));
+        firstNames.add(record.getFieldValue(FieldType.indiMotherFirstName));
+        addFirstNameSex(record.getFieldValue(FieldType.indiFirstName), record.getFieldValue(FieldType.indiSex));
+        addFirstNameSex(record.getFieldValue(FieldType.indiMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.indiSex)));
+        addFirstNameSex(record.getFieldValue(FieldType.indiFatherFirstName), FieldSex.MALE_STRING);
+        addFirstNameSex(record.getFieldValue(FieldType.indiMotherFirstName), FieldSex.FEMALE_STRING);
 
-        firstNames.add(record.getFieldValue(FieldType.wifeFirstName), record.getFieldValue(FieldType.wifeSex) );
-        firstNames.add(record.getFieldValue(FieldType.wifeMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.wifeSex)));
-        firstNames.add(record.getFieldValue(FieldType.wifeFatherFirstName), FieldSex.MALE_STRING);
-        firstNames.add(record.getFieldValue(FieldType.wifeMotherFirstName), FieldSex.FEMALE_STRING);
-
-        firstNames.add(record.getFieldValue(FieldType.witness1FirstName), null);
-        firstNames.add(record.getFieldValue(FieldType.witness2FirstName), null);
-        firstNames.add(record.getFieldValue(FieldType.witness3FirstName), null);
-        firstNames.add(record.getFieldValue(FieldType.witness4FirstName), null);
+        firstNames.add(record.getFieldValue(FieldType.wifeFirstName));
+        firstNames.add(record.getFieldValue(FieldType.wifeMarriedFirstName));
+        firstNames.add(record.getFieldValue(FieldType.wifeFatherFirstName));
+        firstNames.add(record.getFieldValue(FieldType.wifeMotherFirstName));
+        addFirstNameSex(record.getFieldValue(FieldType.wifeFirstName), record.getFieldValue(FieldType.wifeSex));
+        addFirstNameSex(record.getFieldValue(FieldType.wifeMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.wifeSex)));
+        addFirstNameSex(record.getFieldValue(FieldType.wifeFatherFirstName), FieldSex.MALE_STRING);
+        addFirstNameSex(record.getFieldValue(FieldType.wifeMotherFirstName), FieldSex.FEMALE_STRING);
+        
+        firstNames.add(record.getFieldValue(FieldType.witness1FirstName));
+        firstNames.add(record.getFieldValue(FieldType.witness2FirstName));
+        firstNames.add(record.getFieldValue(FieldType.witness3FirstName));
+        firstNames.add(record.getFieldValue(FieldType.witness4FirstName));
 
 
         // LastName
@@ -117,10 +123,6 @@ public class CompletionProvider {
         places.add(record.getFieldValue(FieldType.wifeFatherResidence));
         places.add(record.getFieldValue(FieldType.wifeMotherResidence));
 
-        // EventType
-        if ( record.getFieldValue(FieldType.eventType).isEmpty()== false) {
-            eventTypes.add(record.getFieldValue(FieldType.eventType));
-        }
     }
 
     /**
@@ -128,22 +130,32 @@ public class CompletionProvider {
      * @param record
      */
     protected void removeRecord(final Record record) {
-
+        // EventType
+        eventTypes.remove(record.getFieldValue(FieldType.eventType));
+        
         // FirstName
-        firstNames.remove(record.getFieldValue(FieldType.indiFirstName), record.getFieldValue(FieldType.indiSex));
-        firstNames.remove(record.getFieldValue(FieldType.indiMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.indiSex)));
-        firstNames.remove(record.getFieldValue(FieldType.indiFatherFirstName), FieldSex.MALE_STRING);
-        firstNames.remove(record.getFieldValue(FieldType.indiMotherFirstName), FieldSex.FEMALE_STRING);
-
-        firstNames.remove(record.getFieldValue(FieldType.wifeFirstName), record.getFieldValue(FieldType.wifeSex));
-        firstNames.remove(record.getFieldValue(FieldType.wifeMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.wifeSex)));
-        firstNames.remove(record.getFieldValue(FieldType.wifeFatherFirstName), FieldSex.MALE_STRING);
-        firstNames.remove(record.getFieldValue(FieldType.wifeMotherFirstName), FieldSex.FEMALE_STRING);
-
-        firstNames.remove(record.getFieldValue(FieldType.witness1FirstName), null);
-        firstNames.remove(record.getFieldValue(FieldType.witness2FirstName), null);
-        firstNames.remove(record.getFieldValue(FieldType.witness3FirstName), null);
-        firstNames.remove(record.getFieldValue(FieldType.witness4FirstName), null);
+        firstNames.remove(record.getFieldValue(FieldType.indiFirstName));
+        firstNames.remove(record.getFieldValue(FieldType.indiMarriedFirstName));
+        firstNames.remove(record.getFieldValue(FieldType.indiFatherFirstName));
+        firstNames.remove(record.getFieldValue(FieldType.indiMotherFirstName));
+        removeFirstNameSex(record.getFieldValue(FieldType.indiFirstName), record.getFieldValue(FieldType.indiSex));
+        removeFirstNameSex(record.getFieldValue(FieldType.indiMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.indiSex)));
+        removeFirstNameSex(record.getFieldValue(FieldType.indiFatherFirstName), FieldSex.MALE_STRING);
+        removeFirstNameSex(record.getFieldValue(FieldType.indiMotherFirstName), FieldSex.FEMALE_STRING);
+        
+        firstNames.remove(record.getFieldValue(FieldType.wifeFirstName));
+        firstNames.remove(record.getFieldValue(FieldType.wifeMarriedFirstName));
+        firstNames.remove(record.getFieldValue(FieldType.wifeFatherFirstName));
+        firstNames.remove(record.getFieldValue(FieldType.wifeMotherFirstName));
+        removeFirstNameSex(record.getFieldValue(FieldType.wifeFirstName), record.getFieldValue(FieldType.wifeSex));
+        removeFirstNameSex(record.getFieldValue(FieldType.wifeMarriedFirstName), FieldSex.getOppositeString(record.getFieldValue(FieldType.wifeSex)));
+        removeFirstNameSex(record.getFieldValue(FieldType.wifeFatherFirstName), FieldSex.MALE_STRING);
+        removeFirstNameSex(record.getFieldValue(FieldType.wifeMotherFirstName), FieldSex.FEMALE_STRING);
+        
+        firstNames.remove(record.getFieldValue(FieldType.witness1FirstName));
+        firstNames.remove(record.getFieldValue(FieldType.witness2FirstName));
+        firstNames.remove(record.getFieldValue(FieldType.witness3FirstName));
+        firstNames.remove(record.getFieldValue(FieldType.witness4FirstName));
 
         // LastName
         lastNames.remove(record.getFieldValue(FieldType.indiLastName));
@@ -193,11 +205,6 @@ public class CompletionProvider {
         places.remove(record.getFieldValue(FieldType.wifeFatherResidence));
         places.remove(record.getFieldValue(FieldType.wifeMotherResidence));
 
-        // EventType
-        if ( ! record.getFieldValue(FieldType.eventType).isEmpty()) {
-            eventTypes.remove(record.getFieldValue(FieldType.eventType));
-        } else {
-        }
     }
 
     /**
@@ -218,15 +225,8 @@ public class CompletionProvider {
      * @param firstName
      * @param sex
      */
-    public void updateFirstNameSex(String oldFirstName, String oldSex, String firstName, String sex) {
-        if (oldFirstName != null && ! oldFirstName.isEmpty() && oldSex != null ) {
-            int count = firstNameSex.containsKey(oldFirstName) ? firstNameSex.get(oldFirstName) : 0;
-            if (oldSex.equals(FieldSex.MALE_STRING)) {
-                firstNameSex.put(oldFirstName, count - 1);
-            } else  if (oldSex.equals(FieldSex.FEMALE_STRING)) {
-                firstNameSex.put(oldFirstName, count + 1);
-            }
-        }
+    public void addFirstNameSex(String firstName, String sex) {
+
         if (firstName != null && ! firstName.isEmpty() && sex != null) {
             int count = firstNameSex.containsKey(firstName) ? firstNameSex.get(firstName) : 0;
             if (sex.equals(FieldSex.MALE_STRING)) {
@@ -235,6 +235,17 @@ public class CompletionProvider {
                 firstNameSex.put(firstName, count - 1);
             }
         }
+    }
+    
+    public void removeFirstNameSex(String oldFirstName, String oldSex) {
+        if (oldFirstName != null && ! oldFirstName.isEmpty() && oldSex != null ) {
+            int count = firstNameSex.containsKey(oldFirstName) ? firstNameSex.get(oldFirstName) : 0;
+            if (oldSex.equals(FieldSex.MALE_STRING)) {
+                firstNameSex.put(oldFirstName, count - 1);
+            } else  if (oldSex.equals(FieldSex.FEMALE_STRING)) {
+                firstNameSex.put(oldFirstName, count + 1);
+            }
+        }        
     }
 
     /**
@@ -281,24 +292,22 @@ public class CompletionProvider {
         
         // j'ajoute les prénoms, noms, professions et lieux du Gedcom dans les
         // listes de completion
-        for ( Indi indi : gedcom.getIndis()) {            
-            firstNames.add(indi.getFirstName().replaceAll(",", ""), FieldSex.convertValue(indi.getSex()), false );
+        for ( Indi indi : gedcom.getIndis()) {
+            String firstName = indi.getFirstName().replaceAll(",", "");
+            firstNames.add( firstName );
+            addFirstNameSex(firstName, FieldSex.convertValue(indi.getSex()));
         }
 
         for ( String lastName : PropertyName.getLastNames(gedcom, false)) {
-            lastNames.add(lastName, false);
+            lastNames.add(lastName);
         }
         for ( String occupation : PropertyChoiceValue.getChoices(gedcom, "OCCU", false)) {
-            occupations.add(occupation, false);
+            occupations.add(occupation);
         }
         for ( String place : PropertyChoiceValue.getChoices(gedcom, "PLAC", false)) {
-            places.add(place, false);
+            places.add(place);
         }
 
-        firstNames.fireIncludedUpdateListener();
-        lastNames.fireIncludedUpdateListener();
-        occupations.fireIncludedUpdateListener();
-        places.fireIncludedUpdateListener();
     }
     
     ///////////////////////////////////////////////////////////////////////////
@@ -308,131 +317,45 @@ public class CompletionProvider {
     /**
      * retourne les prénoms triées par ordre alphabétique
      */
-    public List<String> getFirstNames(IncludeFilter filter) {
-       return firstNames.getKeys(filter);
+    public CompletionSource getFirstNames() {
+       return firstNames;
     }
 
     /**
      * retourne les noms triées par ordre alphabétique
      */
-    public List<String> getLastNames(IncludeFilter filter) {
-        return lastNames.getKeys(filter);
+    public CompletionSource getLastNames() {
+        return lastNames;
     }
 
     /**
      * retourne les professions triées par ordre alphabétique
      */
-    public List<String> getOccupations(IncludeFilter filter) {
-       return occupations.getKeys(filter);
+    public CompletionSource getOccupations() {
+       return occupations;
     }
 
     /**
      * retourne les professions triées par ordre alphabétique
      */
-    public List<String> getNotaries(IncludeFilter filter) {
-       return notaries.getKeys(filter);
+    public CompletionSource getNotaries() {
+       return notaries;
     }
 
     /**
      * retourne les tags des types d'evenement triées par ordre alphabétique
      */
-    public List<String> getEventTypes(IncludeFilter filter) {
-        return eventTypes.getKeys(filter);
+    public CompletionSource getEventTypes() {
+        return eventTypes;
     }
 
     /**
      * retourne les lieux triées par ordre alphabétique
      */
-    public List<String> getPlaces(IncludeFilter filter) {
-        return places.getKeys(filter);
+    public CompletionSource getPlaces() {
+        return places;
     }
 
-    public Locale getLocale() {
-        return locale;
-    }
-
-    /**
-     * ajoute un listener
-     */
-    public void addFirstNamesListener(CompletionListener listener) {
-       firstNames.addListener(listener);
-    }
-
-    /**
-     * supprime un listner
-     */
-    public void removeFirstNamesListener(CompletionListener listener) {
-       firstNames.removeListener(listener);
-    }
-
-    /**
-     * ajoute un listener
-     */
-    public void addLastNamesListener(CompletionListener listener) {
-       lastNames.addListener(listener);
-    }
-
-    /**
-     * supprime un listner
-     */
-    public void removeLastNamesListener(CompletionListener listener) {
-       lastNames.removeListener(listener);
-    }
-
-    /**
-     * ajoute un listener
-     */
-    public void addOccupationsListener(CompletionListener listener) {
-       occupations.addListener(listener);
-    }
-
-    /**
-     * supprime un listner
-     */
-    public void removeOccupationsListener(CompletionListener listener) {
-       occupations.removeListener(listener);
-    }
-
-    /**
-     * ajoute un listener
-     */
-    public void addNotariesListener(CompletionListener listener) {
-       notaries.addListener(listener);
-    }
-
-    /**
-     * supprime un listner
-     */
-    public void removeNotariesListener(CompletionListener listener) {
-       notaries.removeListener(listener);
-    }
-    /**
-     * ajoute un listener
-     */
-    public void addEventTypesListener(CompletionListener listener) {
-       eventTypes.addListener(listener);
-    }
-
-    /**
-     * supprime un listner
-     */
-    public void removeEventTypesListener(CompletionListener listener) {
-       eventTypes.removeListener(listener);
-    }
-
-    /**
-     * ajoute un listener
-     */
-    public void addPlacesListener(CompletionListener listener) {
-       places.addListener(listener);
-    }
-
-    /**
-     * supprime un listner
-     */
-    public void removePlacesListener(CompletionListener listener) {
-       places.removeListener(listener);
-    }
 
     /**
      * met a jour la liste de completion firstNames
@@ -441,8 +364,10 @@ public class CompletionProvider {
      * @param oldFirstName
      */
     public void updateFirstName( String firstName, String sex, String oldFirstName, String oldSex) {
-        firstNames.remove(oldFirstName, oldSex);
-        firstNames.add(firstName, sex);
+        firstNames.remove(oldFirstName);
+        removeFirstNameSex(oldFirstName, oldSex);
+        firstNames.add(firstName);
+        addFirstNameSex(firstName, sex);
     }
 
     /**
@@ -557,7 +482,7 @@ public class CompletionProvider {
     }
 
     /**
-     * refraichit la liste des valeurs exclure en rechargeant la liste à partir
+     * refraichit la liste des valeurs exclues en rechargeant la liste à partir
      * des preferences du module
      */
     public void refreshExcludeCompletion(CompletionType completionType) {
@@ -577,466 +502,114 @@ public class CompletionProvider {
             default:
         }
     }
-
-    /**
-     * Liste contenant les prenoms avec les "Field" ou ils sont utilises
-     */
-    private class FirstNameCompletionSet extends CompletionSet {
-        public FirstNameCompletionSet() {
-            loadExclude();
-        }
-
-        /**
-         * charge les valeurs a exclure
-         */
-        private void loadExclude() {
-            setExclude(loadExcludeCompletion(CompletionType.firstName));
-            fireIncludedUpdateListener();
-        }
-        
-        
-        public void add(String firstName, String sex, boolean fireListeners) {
-            super.add(firstName, fireListeners);
-            updateFirstNameSex(null, null, firstName, sex);
-        }
-
-        /**
-         * ajoute le prenom dans la liste de completion
-         * et met a jour le sexe correspondant au prénom
-         * @param firstNameField
-         * @param sexField
-         */
-        public void add( String firstName, String sex) {
-            super.add(firstName, true);
-            updateFirstNameSex(null, null, firstName, sex);
-        }
-        
-        public void remove(String firstName, String sex, boolean fireListeners) {
-            super.remove(firstName, fireListeners );
-            updateFirstNameSex(firstName, sex, null, null);
-        }
-
-        private void remove(String firstName, String sex) {
-            remove(firstName, sex, true);            
-        }
-
-        @Override
-        public void removeAll() {
-            super.removeAll();
-        }
-    }
-
-
-    /**
-     * Liste contenant les noms avec les "Field" ou ils sont utilises
-     */
-    private class LastNameCompletionSet extends CompletionSet {
-
-        public LastNameCompletionSet() {
-            loadExclude();
-        }
-        
-        /**
-         * charge les valeurs a exclure
-         */
-        private void loadExclude() {
-            setExclude(loadExcludeCompletion(CompletionType.lastName));
-            fireIncludedUpdateListener();
-        }
-        
-        public void add(String lastName, boolean fireListeners) {
-            super.add(lastName, fireListeners);
-        }
-
-        public void add(String lastName) {
-            super.add(lastName, true);
-        }
-
-        private void remove(String lastName, boolean fireListeners) {
-            super.remove(lastName, fireListeners);
-        }
-
-        private void remove(String lastName) {
-            super.remove(lastName, true);
-        }
-
-        @Override
-        public void removeAll() {
-            super.removeAll();
-        }
-    }
-
-
-    /**
-     * Liste contenant les lieux avec les "Field" ou ils sont utilises
-     */
-    private class OccupationCompletionSet extends CompletionSet {
-
-        public OccupationCompletionSet() {
-            loadExclude();
-        }
-
-        /**
-         * charge les valeurs a exclure
-         */
-        private void loadExclude() {
-            setExclude(loadExcludeCompletion(CompletionType.occupation));
-            fireIncludedUpdateListener();
-        }
-
-        public void add(String occupation, boolean fireListeners) {
-            super.add(occupation, fireListeners);
-        }
-
-        public void add(String occupation) {
-            super.add(occupation, true);
-        }
-
-        private void remove(String occupation, boolean fireListeners) {
-            super.remove(occupation, fireListeners);
-        }
-
-        private void remove(String occupation) {
-            super.remove(occupation, true);
-        }
-
-        @Override
-        public void removeAll() {
-            super.removeAll();
-        }
+    
+    static public interface CompletionSource {
+        public List<String> getAll();
+        public List<String> getExcluded();
+        public List<String> getIncluded();  
+        public Locale getLocale();
     }
 
     /**
-     * Liste contenant les notaires avec les "Field" ou ils sont utilises
+     * ajout de la methote put() pour vérifier que l'élement n'existe pas déjà 
+     * puis trier les elements au fur et à mesure q'ils qu'ils sont ajoutés . 
+     * 
+     * Environ 5 fois plus rapide que :
+     *    if( ! list.contains(key) )
+     *      list.add(key)
+     *      Collection.sort(list)
+     *      index = list.indexOf(key)
+     *  
      */
-    private class NotaryCompletionSet extends CompletionSet {
-
-        public NotaryCompletionSet() {
+    static class SortedList extends ArrayList<String> {
+        private static final int INSERTIONSORT_THRESHOLD = 7;
+        
+        public int put(String  newElement ) {
+            int index = insert(newElement, 0, this.size());            
+            return index;
         }
-
-        public void add(String notary) {
-            super.add(notary, true);
-        }
-
-        private void remove(String notary, boolean fireListeners) {
-            super.remove(notary, fireListeners);
-        }
-
-        private void remove(String notary) {
-            super.remove(notary, true);
-        }
-
-        @Override
-        public void removeAll() {
-            super.removeAll();
-        }
+        
+        private int insert(String newElement, int low, int high ) {
+            int lentgh = high - low;
+            if (lentgh >= INSERTIONSORT_THRESHOLD) {
+                // il y a 7 élements ou plus dans la liste  
+                // recherche par dichotomie (appels recursifs)
+                // voir l'algo dans le source de java.util.Arrays.mergeSort(...)
+                int mid = (low + high) >>> 1;
+                int result = CompareString.compareStringUTF8(this.get(mid), newElement);
+                if( result > 0) {
+                    return insert(newElement, low, mid);
+                } else if (result < 0) {                
+                    return insert(newElement, mid, high);
+                } else {
+                    return -1;
+                }
+            } else if (lentgh == 0) {
+                 //il n'y a pas d'element dans la liste 
+                this.add(newElement);
+                return 0;
+                
+            } else {
+                // il y a moins de 7 éléments dans la liste
+                // recherche lineaire 
+                int index;
+                for (index=low; index<high; index++) {
+                    int result = CompareString.compareStringUTF8(this.get(index), newElement);
+                    if( result < 0) {
+                        //newElement est plus grand : 
+                    } else if (result > 0) {
+                        //newElement est plus petit
+                        this.add(index, newElement);
+                        return index;
+                    } else {
+                        //newElement est égal : l'élement est déjà dasn la liste
+                        return -1;
+                    }
+                }
+                if( index >= this.size() ) {
+                    this.add(newElement); 
+                    return index;
+                } else {
+                    this.add(index,newElement);    
+                    return index;
+                }
+            }                                  
+        }      
     }
-
-
-    /**
-     * Liste contenant les lieux avec les "Field" ou ils sont utilises
-     */
-    private class PlaceCompletionSet extends CompletionSet {
-        public PlaceCompletionSet() {
-            loadExclude();
-        }
-
-        /**
-         * charge les valeurs a exclure
-         */
-        private void loadExclude() {
-            setExclude(loadExcludeCompletion(CompletionType.place));
-            fireIncludedUpdateListener();
-        }
-
-        public void add(String place, boolean fireListeners) {
-            super.add(place, fireListeners);
-        }
-
-        public void add(String place) {
-            super.add(place, true);
-        }
-
-         private void remove(String place, boolean fireListeners) {
-            super.remove(place, fireListeners);
-        }
-
-        private void remove(String place) {
-            super.remove(place, true);
-        }
-
-        @Override
-        public void removeAll() {
-            super.removeAll();
-        }
-    }
-
 
     /**
      * Liste des valeurs avec les "Field" de référence
      */
-//    private class CompletionSet<REF> {
-//
-//        // liste TreeMap triée sur la clé
-//        private Map<String, Set<REF>> key2references = new TreeMap<String, Set<REF>>();
-//        // liste des listeners a notifier quand on change une valeur dans key2references
-//        private List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
-//        private TreeSet<String> excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-//        private TreeSet<String> included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-//
-//
-//        /**
-//         * Constructor - uses a TreeMap that keeps
-//         * keys sorted by their natural order
-//         */
-//        public CompletionSet() {
-//        }
-//
-//        /**
-//         * Returns the references for a given key
-//         */
-//        public Set<REF> getReferences(String key) {
-//            // null is ignored
-//            if (key == null) {
-//                return new HashSet<REF>();
-//            }
-//            // lookup
-//            Set<REF> references = key2references.get(key);
-//            if (references == null) {
-//                return new HashSet<REF>();
-//            }
-//            // return references
-//            return references;
-//        }
-//
-//        /**
-//         * Returns the number of reference for given key
-//         */
-//        public int getSize(String key) {
-//            // null is ignored
-//            if (key == null) {
-//                return 0;
-//            }
-//            // lookup
-//            Set<REF> references = key2references.get(key);
-//            if (references == null) {
-//                return 0;
-//            }
-//            // done
-//            return references.size();
-//        }
-//
-//        /**
-//         * Add a key and its reference
-//         * @return whether the reference was actually added (could have been known already)
-//         */
-//        private boolean add(String key, REF reference) {
-//            return add(key, reference, true);
-//        }
-//
-//        /**
-//         * Add a key and its reference
-//         * @return whether the reference was actually added (could have been known already)
-//         */
-//        private boolean add(String key, REF reference, boolean fireListeners) {
-//            if (key == null || key.equals("")) {
-//                return false;
-//            }
-//            // je verifie si une reference de cette valeur existe déjà dans key2references
-//            Set<REF> references = key2references.get(key);
-//            if (references == null) {
-//                // j'ajoute une reference dans key2references
-//                references = new HashSet<REF>();
-//                key2references.put(key, references);
-//            }
-//
-//            // j'ajoute la valeur dans la reference
-//            boolean addedInReference  = references.add(reference);
-//            if (addedInReference) {
-//                if ( !excluded.contains(key) && !included.contains(key))  {
-//                    // j'ajoute la valeur dans included
-//                    boolean added = included.add(key);
-//                    if (added) {
-//                        if (fireListeners) {
-//                            fireIncludedUpdateListener();
-//                        }
-//                    }
-//                }
-//            }
-//
-//            return addedInReference;
-//        }
-//
-//        /**
-//         * initialise les valeurs inclues et exclues
-//         * @param newExcluded
-//         */
-//        protected void setExclude(List<String> newExcluded) {
-//            excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-//            excluded.addAll(newExcluded);
-//            included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-//            for (String key : key2references.keySet()) {
-//                if (!excluded.contains(key)) {
-//                    included.add(key);
-//                }
-//            }
-//        }
-//
-//        private boolean remove(String key, REF reference) {
-//            return remove(key, reference, true);
-//
-//        }
-//
-//        /**
-//         * Remove a reference for given key
-//         */
-//        private boolean remove(String key, REF reference, boolean fireListeners) {
-//            if (key == null || key.equals("")) {
-//                return false;
-//            }
-//            // je verifie si la valeur existe dans key2references
-//            Set<REF> references = key2references.get(key);
-//            if (references == null) {
-//                return false;
-//            }
-//            // remove
-//            boolean removedFromFreference = references.remove(reference);
-//            if (removedFromFreference) {
-//                // remove value
-//                if (references.isEmpty()) {
-//                    // s'il n'y a plus aucune reference pour cette valeur
-//                    // je la supprime de key2references et de includeds
-//                    key2references.remove(key);
-//                    boolean removedFromIncluded = included.remove(key);
-//                    if ( removedFromIncluded ) {
-//                        if(fireListeners) {
-//                            fireIncludedUpdateListener();
-//                        }
-//                    }
-//
-//                }
-//            }
-//
-//            return removedFromFreference;
-//        }
-//
-//        protected void removeAll() {
-//            key2references.clear();
-//        }
-//
-//        /**
-//         * retourne la liste des valeurs dans l'ordre alphabetique
-//         */
-//        public List<String> getKeys(IncludeFilter filter) {
-//            switch (filter) {
-//                case EXCLUDED :
-//                    return new ArrayList<String>(excluded);
-//                case INCLUDED:
-//                    return new ArrayList<String>(included);
-//                default:
-//                    return new ArrayList<String>(key2references.keySet());
-//            }
-//        }
-//
-//        /**
-//         * ajoute un listener de la liste de completion
-//         */
-//        protected void addListener(CompletionListener listener) {
-//            keysListener.add(listener);
-//        }
-//
-//        /**
-//         * supprime un listener de la liste de completion
-//         */
-//        protected void removeListener(CompletionListener listener) {
-//            keysListener.remove(listener);
-//        }
-//
-//        /**
-//         * notify les listeners d'une mise a jour des items iindluded
-//         */
-//        protected void fireIncludedUpdateListener() {
-//            final List<String> keys = new ArrayList<String>(included);
-//            SwingUtilities.invokeLater(new Runnable() {
-//
-//                @Override
-//                public void run() {
-//                    for (CompletionListener listener : keysListener) {
-//                        listener.includedKeyUpdated(keys);
-//                    }
-//                }
-//            });
-//
-//        }
-//    }
-
-    /**
-     * Liste des valeurs avec les "Field" de référence
-     */
-    private class CompletionSet {
-
+    private class CompletionSet implements CompletionSource {
+        CompletionType completionType;
+        
         // liste TreeMap triée sur la clé
         private final Map<String, Integer> key2references = new TreeMap<String, Integer>();
-        // liste des listeners a notifier quand on change une valeur dans key2references
-        private final List<CompletionListener> keysListener = new ArrayList<CompletionListener>();
-        private TreeSet<String> excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-        private TreeSet<String> included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-
-
+        private final TreeSet<String> excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+        private final SortedList  included = new SortedList();
+       
+        
         /**
          * Constructor - uses a TreeMap that keeps
          * keys sorted by their natural order
          */
-        public CompletionSet() {
+        public CompletionSet(CompletionType completionType) {
+            this.completionType = completionType;
+            loadExclude();
         }
-
+        
         /**
-         * Returns the references for a given key
+         * charge les valeurs a exclure
          */
-        public int getReferences(String key) {
-            // null is ignored
-            if (key == null) {
-                return 0;
-            }
-            // lookup
-            Integer references = key2references.get(key);
-            if (references == null) {
-                return 0;
-            }
-            // return references
-            return references;
+        private void loadExclude() {
+            setExclude(loadExcludeCompletion(completionType));
         }
-
-        /**
-         * Returns the number of reference for given key
-         */
-        public int getSize(String key) {
-            // null is ignored
-            if (key == null) {
-                return 0;
-            }
-            // lookup
-            Integer  references = key2references.get(key);
-            if (references == null) {
-                return 0;
-            }
-            // done
-            return references;
-        }
-
+        
         /**
          * Add a key and its reference
          * @return whether the reference was actually added (could have been known already)
          */
         private boolean add(String key) {
-            return add(key, true);
-        }
-
-        /**
-         * Add a key and its reference
-         * @return whether the reference was actually added (could have been known already)
-         */
-        private boolean add(String key, boolean fireListeners) {
             if (key == null || key.equals("")) {
                 return false;
             }
@@ -1047,16 +620,9 @@ public class CompletionProvider {
                 // j'ajoute une reference dans key2references
                 references = 1;
                 key2references.put(key, references);
-
-                // j'ajoute la valeur dans la reference
-                if (!excluded.contains(key) && !included.contains(key)) {
+                if (!excluded.contains(key) ) {
                     // j'ajoute la valeur dans included
-                    boolean added = included.add(key);
-                    if (added) {
-                        if (fireListeners) {
-                            fireIncludedUpdateListener();
-                        }
-                    }
+                    included.put(key);
                 }
                 addedInReference = true;
 
@@ -1069,29 +635,9 @@ public class CompletionProvider {
         }
 
         /**
-         * initialise les valeurs inclues et exclues
-         * @param newExcluded
-         */
-        protected void setExclude(List<String> newExcluded) {
-            excluded = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-            excluded.addAll(newExcluded);
-            included = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-            for (String key : key2references.keySet()) {
-                if (!excluded.contains(key)) {
-                    included.add(key);
-                }
-            }
-        }
-
-        private boolean remove(String key) {
-            return remove(key,true);
-
-        }
-
-        /**
          * Remove a reference for given key
          */
-        private boolean remove(String key, boolean fireListeners) {
+        private boolean remove(String key) {
             if (key == null || key.equals("")) {
                 return false;
             }
@@ -1104,14 +650,10 @@ public class CompletionProvider {
             boolean removedFromFreference;
             if (references  <= 1 ) {
                 // s'il n'y a plus aucune reference pour cette valeur
-                // je la supprime de key2references et de includeds
+                // je la supprime de key2references 
                 key2references.remove(key);
-                boolean removedFromIncluded = included.remove(key);
-                if (removedFromIncluded) {
-                    if (fireListeners) {
-                        fireIncludedUpdateListener();
-                    }
-                }
+                // je la supprime de included
+                included.remove(key);
                 removedFromFreference = true;
             } else {
                 key2references.put(key,references -1);
@@ -1123,51 +665,49 @@ public class CompletionProvider {
 
         protected void removeAll() {
             key2references.clear();
+            included.clear();
         }
 
         /**
-         * retourne la liste des valeurs dans l'ordre alphabetique
+         * initialise les valeurs inclues et exclues
+         * @param newExcluded
          */
-        public List<String> getKeys(IncludeFilter filter) {
-            switch (filter) {
-                case EXCLUDED :
-                    return new ArrayList<String>(excluded);
-                case INCLUDED:
-                    return new ArrayList<String>(included);
-                default:
-                    return new ArrayList<String>(key2references.keySet());
+        protected void setExclude(List<String> newExcluded) {
+            // je charge la nouvelle le liste des valeurs à exclure
+            excluded.clear();
+            excluded.addAll(newExcluded);
+            // je reconstitue la liste included
+            included.clear();
+            for (String key : key2references.keySet()) {
+                if (!excluded.contains(key)) {
+                    included.put(key);
+                }
             }
         }
 
-        /**
-         * ajoute un listener de la liste de completion
-         */
-        protected void addListener(CompletionListener listener) {
-            keysListener.add(listener);
+        
+        ////////////////////////////////////////////////////////////////////////
+        // implements CompletionSource
+        ////////////////////////////////////////////////////////////////////////
+        @Override
+        public List<String> getAll() {
+            return new ArrayList<String>(key2references.keySet());
+        }
+        
+        @Override
+        public List<String> getExcluded() {
+            return new ArrayList<String>(excluded);
+        }
+                
+        @Override
+        public List<String> getIncluded() {
+            return included;
         }
 
-        /**
-         * supprime un listener de la liste de completion
-         */
-        protected void removeListener(CompletionListener listener) {
-            keysListener.remove(listener);
+        @Override
+        public Locale getLocale() {
+            return locale;
         }
 
-        /**
-         * notify les listeners d'une mise a jour des items included
-         */
-        protected void fireIncludedUpdateListener() {
-            final List<String> keys = new ArrayList<String>(included);
-            SwingUtilities.invokeLater(new Runnable() {
-
-                @Override
-                public void run() {
-                    for (CompletionListener listener : keysListener) {
-                        listener.includedKeyUpdated(keys);
-                    }
-                }
-            });
-
-        }
     }
 }

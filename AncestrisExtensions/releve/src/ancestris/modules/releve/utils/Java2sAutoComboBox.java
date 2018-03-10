@@ -8,44 +8,16 @@ import javax.swing.plaf.basic.BasicComboBoxEditor;
 
 public class Java2sAutoComboBox extends JComboBox<String> {
 
-    private class AutoTextFieldEditor extends BasicComboBoxEditor {
+    private final AutoTextFieldEditor autoTextFieldEditor;    
 
-        private Java2sAutoTextField getAutoTextFieldEditor() {
-            return (Java2sAutoTextField) editor;
-        }
-
-        AutoTextFieldEditor(List<String> list) {
-            editor = new Java2sAutoTextField(list, Java2sAutoComboBox.this);
-        }
-
-        @Override
-        public void setItem(Object anObject) {
-            if (anObject == null) {
-                editor.setText("");
-            } else {
-                editor.setText(anObject.toString());
-            }
-        }
-    }
-
-    public Java2sAutoComboBox(List<String> list) {
-        isFired = false;
-        autoTextFieldEditor = new AutoTextFieldEditor(list);
+    public Java2sAutoComboBox(List<String> stringList) {
+        autoTextFieldEditor = new AutoTextFieldEditor(stringList, this);
         setEditable(true);
-        setModel(new DefaultComboBoxModel<String>(list.toArray(new String[list.size()])) {
-
-            @Override
-            protected void fireContentsChanged(Object obj, int i, int j) {
-                if (!isFired) {
-                    super.fireContentsChanged(obj, i, j);
-                }
-            }
-        });
+        setModel(new StringListModel(stringList));
         setEditor(autoTextFieldEditor);
         setPrototypeDisplayValue("AAAAAAAAAAA");
-        //revalidate();
     }
-
+    
     /**
      * Add change listener
      */
@@ -60,8 +32,16 @@ public class Java2sAutoComboBox extends JComboBox<String> {
         autoTextFieldEditor.getAutoTextFieldEditor().removeChangeListener(l);
     }
 
+    /*
+     * Java2sAutoComboBox Parameters 
+     */
+
     public boolean isCaseSensitive() {
         return autoTextFieldEditor.getAutoTextFieldEditor().isCaseSensitive();
+    }
+
+    public boolean isStrict() {
+        return autoTextFieldEditor.getAutoTextFieldEditor().isStrict();
     }
 
     public void setCaseSensitive(boolean flag) {
@@ -76,46 +56,70 @@ public class Java2sAutoComboBox extends JComboBox<String> {
         autoTextFieldEditor.getAutoTextFieldEditor().setUpperAllChar(flag);
     }
 
-    public boolean isStrict() {
-        return autoTextFieldEditor.getAutoTextFieldEditor().isStrict();
-    }
-
     public void setStrict(boolean flag) {
         autoTextFieldEditor.getAutoTextFieldEditor().setStrict(flag);
     }
 
-    public List<String> getDataList() {
-        return autoTextFieldEditor.getAutoTextFieldEditor().getDataList();
-    }
-
-    public void setDataList(List<String> list) {
-        isFired = true;
-        Object selectedObject = getEditor().getItem();
-        autoTextFieldEditor.getAutoTextFieldEditor().setDataList(list);
-        setModel(new DefaultComboBoxModel<String>(list.toArray(new String[list.size()])));
-        setSelectedItem(selectedObject);
-        isFired = false;
-    }
-
     protected void setSelectedValue(Object obj) {
-        if (isFired) {
-            return;
-        } else {
-            isFired = true;
-            setSelectedItem(obj);
-            //fireItemStateChanged(new ItemEvent(this, 701, selectedItemReminder,
-            //    1));
-            isFired = false;
-            return;
-        }
+        setSelectedItem(obj);
     }
 
-    @Override
-    protected void fireActionEvent() {
-        if (!isFired) {
-            super.fireActionEvent();
+
+    ////////////////////////////////////////////////////////////////////////////
+    // class StringListModel
+    ////////////////////////////////////////////////////////////////////////////
+    
+    static class StringListModel extends DefaultComboBoxModel<String> {
+
+        private final List<String> strings;
+
+        public StringListModel(List<String> stringList) {
+            super();
+            strings = stringList;
+        }
+
+        public String getSelectedString() {
+            return (String) getSelectedItem();
+        }
+
+        @Override
+        public String getElementAt(int index) {
+            return strings.get(index);
+        }
+
+        @Override
+        public int getSize() {
+            return strings.size();
+        }
+
+        @Override
+        public int getIndexOf(Object element) {
+            return strings.indexOf(element);
+        }
+
+    } 
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // class AutoTextFieldEditor
+    ////////////////////////////////////////////////////////////////////////////
+    
+    static private class AutoTextFieldEditor extends BasicComboBoxEditor {
+
+        private Java2sAutoTextField getAutoTextFieldEditor() {
+            return (Java2sAutoTextField) editor;
+        }
+
+        AutoTextFieldEditor(List<String> list,  Java2sAutoComboBox comboBox) {
+            editor = new Java2sAutoTextField(list, comboBox);
+        }
+
+        @Override
+        public void setItem(Object anObject) {
+            if (anObject == null) {
+                editor.setText("");
+            } else {
+                editor.setText(anObject.toString());
+            }
         }
     }
-    private final AutoTextFieldEditor autoTextFieldEditor;
-    private boolean isFired;
 }

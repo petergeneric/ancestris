@@ -1,29 +1,24 @@
 package ancestris.modules.releve.editor;
 
 import ancestris.modules.releve.utils.Java2sAutoTextField;
-import ancestris.modules.releve.model.CompletionListener;
 import ancestris.modules.releve.model.CompletionProvider;
-import ancestris.modules.releve.model.CompletionProvider.IncludeFilter;
 import ancestris.modules.releve.model.Field;
-import java.util.List;
 
 /**
  *
  * @author Michel
  */
-public class BeanOccupation extends Bean implements CompletionListener {
+public class BeanOccupation extends Bean {
     private final Java2sAutoTextField cOccupation;
     CompletionProvider completionProvider;
 
-    public BeanOccupation(CompletionProvider completionProvider) {
-        this.completionProvider = completionProvider;
-        completionProvider.addOccupationsListener(this);
+    public BeanOccupation(CompletionProvider.CompletionSource completionSource) {
         setLayout(new java.awt.BorderLayout());
-        cOccupation = new Java2sAutoTextField(completionProvider.getOccupations(IncludeFilter.INCLUDED));
+        cOccupation = new Java2sAutoTextField(completionSource.getIncluded());
         cOccupation.setStrict(false);
         cOccupation.setCaseSensitive(false);
         cOccupation.setUpperFirstChar(true);
-        cOccupation.setLocale(completionProvider.getLocale());
+        cOccupation.setLocale(completionSource.getLocale());
         cOccupation.addChangeListener(changeSupport);
         
         add(cOccupation, java.awt.BorderLayout.CENTER);
@@ -60,23 +55,4 @@ public class BeanOccupation extends Bean implements CompletionListener {
         cOccupation.setText(occupation);
     }
 
-     /**
-     * je supprime la declaration de listener
-     * avant que l'objet ne soit detruit
-     */
-    @Override
-    public void removeNotify() {
-        completionProvider.removeOccupationsListener(this);
-        super.removeNotify();
-    }
-
-    /**
-     * Implemente CompletionListener
-     * copie la nouvelle liste de completion
-     * @param keyList
-     */
-    @Override
-    public void includedKeyUpdated(List<String> keyList) {
-        cOccupation.setDataList(keyList);
-    }
 }
