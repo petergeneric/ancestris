@@ -66,6 +66,8 @@ public class WelcomeOptions {
     private static final String PROP_LAST_ACTIVE_TAB = "lastActiveTab";
     private static final String PROP_START_COUNTER = "startCounter";
     
+    private static final int INITIAL_START_LIMIT = 3;
+    
     private PropertyChangeSupport propSupport;
     
     /** Creates a new instance of WelcomeOptions */
@@ -117,13 +119,18 @@ public class WelcomeOptions {
         return prefs().getInt(PROP_LAST_ACTIVE_TAB, -1);
     }
     
+    public boolean isFirstStarts() {
+        int i = prefs().getInt(PROP_START_COUNTER, -1) + 1;
+        return i <= INITIAL_START_LIMIT;
+    }
+    
     public boolean isSecondStart() {
         return prefs().getInt(PROP_START_COUNTER, -1) == 2;
     }
     
     public void incrementStartCounter() {
         int count = prefs().getInt(PROP_START_COUNTER, 0) + 1;
-        if( count > 3 )
+        if( count > INITIAL_START_LIMIT )
             return; //we're just interested in the first and second start so don't bother any more then
         prefs().putInt( PROP_START_COUNTER, count );
     }

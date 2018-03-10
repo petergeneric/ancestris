@@ -22,6 +22,8 @@ package ancestris.welcome.ui;
 import ancestris.app.FlyerAction;
 import ancestris.modules.donation.DonationAction;
 import ancestris.tour.TourAction;
+import ancestris.util.swing.DialogManager;
+import ancestris.welcome.WelcomeOptions;
 import ancestris.welcome.content.BundleSupport;
 import static ancestris.welcome.content.BundleSupport.BUNDLE_NAME;
 import ancestris.welcome.content.Constants;
@@ -42,6 +44,7 @@ import java.util.logging.Logger;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
 
@@ -63,6 +66,20 @@ class FeaturesPanel extends JPanel implements Constants {
         addShowFlyer(BundleSupport.getLabel("Tour"), ICON2, new ShowTour());
         addShowFlyer(BundleSupport.getLabel("Asso"), ICON3, new ShowAsso());
         addShowFlyer(BundleSupport.getLabel("Donation"), ICON4, new DonationAction());
+
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                if (WelcomeOptions.getDefault().isFirstStarts()) {
+                    String title = NbBundle.getMessage(WelcomeOptions.class, "LBL_Tab_Title");
+                    String question = BundleSupport.getLabel("TourQuestion");
+                    Object o = DialogManager.create(title, question)
+                            .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
+                    if (o.equals(DialogManager.OK_OPTION)) {
+                        new ShowTour().actionPerformed(null);
+                    }
+                }
+            }
+        });
     }
 
     private void addShowFlyer(String label, Image icon, final ActionListener action) {
