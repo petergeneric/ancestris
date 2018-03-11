@@ -39,7 +39,7 @@ import org.openide.util.LookupEvent;
  * Create an association between a property (the existing target) and an individual (a source to be chosen or created)
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateAssociation")
-@ActionRegistration(displayName = "#create.association")
+@ActionRegistration(displayName = "#add.association")
 @ActionReferences(value = {
     @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateAssociation extends CreateRelationship {
@@ -53,7 +53,7 @@ public class CreateAssociation extends CreateRelationship {
 
     /** constructor */
     public CreateAssociation(Property target) {
-        super(resources.getString("create.association"), Gedcom.INDI);
+        super(resources.getString("add.association"), Gedcom.INDI);
         setContextProperties(target);
         contextChanged();
     }
@@ -77,7 +77,7 @@ public class CreateAssociation extends CreateRelationship {
 
     /** description of what this does */
     public String getDescription() {
-        return resources.getString("create.association.with", Gedcom.getName(target.getTag()), target.getEntity().toString());
+        return resources.getString("add.association.with", Gedcom.getName(target.getTag()), target.getEntity().toString());
     }
 
     /** perform the change */

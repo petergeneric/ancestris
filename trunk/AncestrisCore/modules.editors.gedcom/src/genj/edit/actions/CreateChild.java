@@ -32,17 +32,15 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle;
 
 /**
  * Create a child of a family or person
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateChild")
-@ActionRegistration(displayName = "#create.child",
+@ActionRegistration(displayName = "#add.child",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
-@NbBundle.Messages("create.child=Add Child")
+    @ActionReference(position=500,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateChild extends CreateRelationship {
 
     /** the parent or family we're creating a child for */
@@ -58,18 +56,18 @@ public class CreateChild extends CreateRelationship {
     public CreateChild(Entity entity, int sex) {
         super(calcText(sex), Gedcom.INDI);
         this.sex = sex;
-        setImage(sex != PropertySex.FEMALE ? PropertyChild.IMG_MALE : PropertyChild.IMG_FEMALE);
+        setImage(sex == PropertySex.MALE ? PropertyChild.IMG_MALE : sex == PropertySex.FEMALE ? PropertyChild.IMG_FEMALE : PropertyChild.IMG_UNKNOWN);
         setContextProperties(entity);
         contextChanged();
     }
 
     private static String calcText(int sex) {
         if (sex == PropertySex.FEMALE) {
-            return resources.getString("create.daughter");
+            return resources.getString("add.daughter");
         } else if (sex == PropertySex.MALE) {
-            return resources.getString("create.son");
+            return resources.getString("add.son");
         } else {
-            return resources.getString("create.child");
+            return resources.getString("add.child");
         }
     }
 
@@ -93,10 +91,10 @@ public class CreateChild extends CreateRelationship {
     public String getDescription() {
         // "Child of Meier, Sven (I1)"
         if (parentOrFamily instanceof Indi) {
-            return resources.getString("create.child.of", parentOrFamily);
+            return resources.getString("add.child.of", parentOrFamily);
         }
         // "Child in Meier, Sven (I1) + Radovcic Sandra (I2) (F1)"
-        return resources.getString("create.child.in", parentOrFamily);
+        return resources.getString("add.child.in", parentOrFamily);
     }
 
     /** a warning in case the target indi is already a child of another family */

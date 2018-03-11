@@ -38,10 +38,10 @@ import org.openide.util.LookupEvent;
  * Create an alias between records of two individuals indicating that the person is the same
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateAlias")
-@ActionRegistration(displayName = "#create.alias",
+@ActionRegistration(displayName = "#add.alias",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=910,separatorBefore=900,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateAlias extends CreateRelationship {
   
   private Indi source;
@@ -53,7 +53,7 @@ public class CreateAlias extends CreateRelationship {
 
   /** constructor */
   public CreateAlias(Indi source) {
-        super(resources.getString("create.alias"), Gedcom.INDI);
+        super(resources.getString("add.alias"), Gedcom.INDI);
         setContextProperties(source);
         contextChanged();
   }
@@ -84,7 +84,7 @@ public class CreateAlias extends CreateRelationship {
     /** description of what this does */
     @Override
   public String getDescription() {
-    return resources.getString("create.alias.of", source.toString() );
+    return resources.getString("add.alias.of", source.toString() );
   }
 
   /** perform the change */
