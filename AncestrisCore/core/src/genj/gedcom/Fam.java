@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import org.openide.util.Exceptions;
 
 /**
  * Class for encapsulating a family with parents and children
@@ -36,6 +37,10 @@ public class Fam extends Entity {
 
     private final static TagPath SORT_SIBLINGS = new TagPath("CHIL:*:..:BIRT:DATE");
 
+    
+    public final static String TAG_PREF = "_PREF";
+
+    
     /** comparator for CHIL nodes - by child's birth date and position if necessary */
     private class CHILComparator extends PropertyComparator {
 
@@ -581,4 +586,33 @@ public class Fam extends Entity {
 
     }
 
+    /**
+     * Set as the preferred family for a couple
+     * In case set is true : add PREF tag
+     * In case set is false : remove PREF tag
+     * @param set
+     */
+    public void setPreferred(boolean set) {
+        
+        Property pref = getProperty(TAG_PREF);
+        if (pref != null && !set) {
+            delProperty(pref);
+        } else if (pref == null && set) {
+            try {
+                addProperty(TAG_PREF, "", 0);
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+        }
+    }
+
+    /**
+     * Accessor
+     * @return 
+     */
+    public boolean isPreferred() {
+        return getProperty(TAG_PREF) != null;
+    }
+    
+    
 } //Fam

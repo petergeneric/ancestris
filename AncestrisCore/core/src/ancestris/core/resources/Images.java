@@ -59,6 +59,7 @@ final public class Images {
     
     public static ImageIcon imgWng = new ImageIcon(Images.class,"images/Warning");
     
+    public static ImageIcon imgPref = new ImageIcon(Images.class,"images/Pref");
     
   /**
    * Static class only
