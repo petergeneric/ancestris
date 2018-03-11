@@ -61,7 +61,7 @@ public class EventLabel extends JLabel {
             Property date = property.getProperty("DATE");
             if (date != null) {
                 PropertyDate pDate = (PropertyDate) date;
-                buffer.append(pDate.getStart().getValue());
+                buffer.append(pDate.getDisplayValue());
             }
 
             Property place = property.getProperty("PLAC");
