@@ -431,28 +431,34 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
     }
     
     /**
-     * ajoute une ligne dans le modele pour comparer un champ de type String
-     * (nom , prénom, commentaire )
+     * ajoute une ligne dans le modele pour comparer le sexe
      *
      * @param rowType
      * @param label
      * @param recordValue
      * @param entityValue
      */
-    void addRowSex(RowType rowType,int recordValue, int entityValue) {
+    void addRowSex(RowType rowType,int recordValue, int entityValue, Entity proposedEntity) {
         MergeRow mergeRow = new MergeRow(rowType);
         mergeRowList.put(mergeRow);
         mergeRow.rowType = rowType;
         mergeRow.label = getRowTypeLabel(rowType);
-        mergeRow.recordValue = PropertySex.getLabelForSex(recordValue);
-        mergeRow.entityValue = PropertySex.getLabelForSex(entityValue);
+        mergeRow.recordValue = PropertySex.getLabelForSex(recordValue); // affiche "inconnu" si recordValue = UNKNOWN
+        mergeRow.entityValue = proposedEntity == null ?                 // affiche "" si entityValue = UNKNOWN et si proposedEntity = null
+                                MergeRecord.SexType.getLabelForSex(entityValue) 
+                                : PropertySex.getLabelForSex(entityValue);
         mergeRow.setEntityObject(null);
         if (isRowParentApplicable(rowType)) {
 
             if (recordValue == PropertySex.UNKNOWN) {
                 if (entityValue == PropertySex.UNKNOWN) {
-                    mergeRow.merge = false;
-                    mergeRow.compareResult = CompareResult.EQUAL;
+                    if( proposedEntity == null) {
+                        mergeRow.merge = true;
+                        mergeRow.compareResult = CompareResult.COMPATIBLE;
+                    } else {
+                        mergeRow.merge = false;
+                        mergeRow.compareResult = CompareResult.EQUAL;
+                    }
                 } else {
                     mergeRow.merge = false;
                     mergeRow.compareResult = CompareResult.COMPATIBLE;

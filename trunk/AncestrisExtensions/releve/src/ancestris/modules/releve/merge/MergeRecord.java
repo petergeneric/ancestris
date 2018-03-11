@@ -44,15 +44,16 @@ public class MergeRecord {
         EVEN
     }
 
-    public static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/merge/Bundle").getString("MergeModel.DeadState.Dead");
-    public static String aliveLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/merge/Bundle").getString("MergeModel.DeadState.Alive");
-    public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/merge/Bundle").getString("MergeModel.DeadState.Unknown");
-
+    
     protected static enum DeadState {
         UNKNOWN,
         DEAD,
         ALIVE;
 
+        public static String deadLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/merge/Bundle").getString("MergeModel.DeadState.Dead");
+        public static String aliveLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/merge/Bundle").getString("MergeModel.DeadState.Alive");
+        public static String unknownLabel = java.util.ResourceBundle.getBundle("ancestris/modules/releve/merge/Bundle").getString("MergeModel.DeadState.Unknown");
+        
         public static DeadState fromString(String value) {
             DeadState death = UNKNOWN;
             if (DeadState.DEAD.name().equals(value)) {
@@ -94,7 +95,18 @@ public class MergeRecord {
         public int getSex() {
             return sex;
         }
-            
+        
+        public static String getLabelForSex(int value) {
+            switch(value) {
+                case PropertySex.MALE:
+                case PropertySex.FEMALE:
+                    return PropertySex.getLabelForSex(value);
+                default:
+                    return ""; 
+                
+            }
+        }
+        
     }
 
     public enum MergeParticipantType {

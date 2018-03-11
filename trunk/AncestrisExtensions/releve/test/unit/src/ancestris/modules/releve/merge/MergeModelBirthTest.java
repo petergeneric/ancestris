@@ -541,7 +541,7 @@ public class MergeModelBirthTest  {
             models.get(0).copyRecordToEntity();
             assertEquals("record.inidSex = M , indi.sex = U ,resultat= M", PropertySex.MALE,indi.getSex());
 
-
+            
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail(ex.getMessage());
