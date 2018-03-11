@@ -35,21 +35,20 @@ import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
-import org.openide.util.NbBundle;
 
 /**
  * knows how to create a sibling for an individual
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSibling")
-@ActionRegistration(displayName = "#create.sibling",
+@ActionRegistration(displayName = "#add.sibling",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
-@NbBundle.Messages("create.sibling=Add Sibling")
+    @ActionReference(position=300,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateSibling extends CreateRelationship {
 
     private final static ImageIcon IMG_BROTHER = new ImageIcon(CreateParent.class, "Brother.png");
     private final static ImageIcon IMG_SISTER = new ImageIcon(CreateParent.class, "Sister.png");
+    private final static ImageIcon IMG_SIBLING = new ImageIcon(CreateParent.class, "Sibling.png");
     private Indi sibling;
     private int sex = PropertySex.UNKNOWN;
 
@@ -62,18 +61,18 @@ public class CreateSibling extends CreateRelationship {
     public CreateSibling(Indi sibling, int sex) {
         super(calcName(sex), Gedcom.INDI);
         this.sex = sex;
-        setImage(sex != PropertySex.FEMALE ? IMG_BROTHER : IMG_SISTER);
+        setImage(sex == PropertySex.MALE ? IMG_BROTHER : sex == PropertySex.FEMALE ? IMG_SISTER : IMG_SIBLING);
         setContextProperties(sibling);
         contextChanged();
     }
 
     private static String calcName(int sex) {
         if (sex == PropertySex.FEMALE) {
-            return resources.getString("create.sister");
+            return resources.getString("add.sister");
         } else if (sex == PropertySex.MALE) {
-            return resources.getString("create.brother");
+            return resources.getString("add.brother");
         } else {
-            return resources.getString("create.sibling");
+            return resources.getString("add.sibling");
         }
     }
 
@@ -96,7 +95,7 @@ public class CreateSibling extends CreateRelationship {
     @Override
     public String getDescription() {
         // "Sibling of Meier, Nils (I1)"
-        return resources.getString("create.sibling.of", sibling);
+        return resources.getString("add.sibling.of", sibling);
     }
 
     /** do the change */

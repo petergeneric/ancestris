@@ -29,23 +29,41 @@
                 <folder name="AddIndiOrFam">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddIndiOrFam"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddIndiOrFam.short"/>
+                    <attr name="iconBase" stringvalue="genj/gedcom/images/Fam.png"/>
                     <attr name="position" intvalue="500"/>
                 </folder>
                 <folder name="AddOther">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddOther"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/AddOther.short"/>
+                    <attr name="iconBase" stringvalue="genj/gedcom/images/Media.png"/>
                     <attr name="position" intvalue="510"/>
                 </folder>
+                <folder name="CreateOther">
+                    <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/CreateOther"/>
+                    <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/CreateOther.short"/>
+                    <attr name="iconBase" stringvalue="ancestris/core/resources/images/Create.png"/>
+                    <attr name="position" intvalue="515"/>
+                </folder>
+                <file name="Separator.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="520"/>
+                </file>
                 <folder name="Navigate">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Navigate"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Navigate.short"/>
-                    <attr name="position" intvalue="520"/>
+                    <attr name="iconBase" stringvalue="ancestris/core/resources/images/Navigate.png"/>
+                    <attr name="position" intvalue="525"/>
                 </folder>
                 <folder name="Tools">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools.short"/>
+                    <attr name="iconBase" stringvalue="ancestris/core/resources/images/Tools.png"/>
                     <attr name="position" intvalue="530"/>
                 </folder>
+                <file name="Separator1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="535"/>
+                </file>
             </folder>
         </folder>
     </folder>

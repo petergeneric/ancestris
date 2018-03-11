@@ -13,6 +13,7 @@ package ancestris.util;
 
 import ancestris.core.actions.CommonActions;
 import ancestris.core.actions.SubMenuAction;
+import genj.util.swing.ImageIcon;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -22,6 +23,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataFolder;
 import org.openide.loaders.DataObject;
+import org.openide.util.ImageUtilities;
 import org.openide.util.lookup.Lookups;
 
 /**
@@ -87,6 +89,10 @@ public class AUtilities {
                     Object tip = childFo.getAttribute("shortDescription");
                     if (tip != null){
                         a.setTip(tip.toString());
+                    }
+                    Object iconResource = childFo.getAttribute("iconBase");
+                    if (iconResource != null) {
+                        a.setImage(new ImageIcon(ImageUtilities.loadImage(iconResource.toString())));
                     }
                     a.addActions(subActions);
                     actions.add(a);

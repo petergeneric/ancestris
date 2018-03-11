@@ -41,10 +41,10 @@ import org.openide.awt.ActionRegistration;
  * Create a child of a family or person
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateParent")
-@ActionRegistration(displayName = "#create.parent",
+@ActionRegistration(displayName = "#add.parent",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=200,separatorBefore=190, path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateParent extends CreateRelationship {
 
     private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");
@@ -55,7 +55,7 @@ public class CreateParent extends CreateRelationship {
     private int sex = -1;
 
     public CreateParent() {
-        super(resources.getString("create.parent"), Gedcom.INDI);
+        super(resources.getString("add.parent"), Gedcom.INDI);
         setImage(IMG);
 //XXX:        setImageText(IMG, resources.getString("create.parent"));
     }
@@ -117,7 +117,7 @@ public class CreateParent extends CreateRelationship {
             setTip(resources.getString("link", getDescription()));
         } else {
             setEnabled(false);
-            setTip(resources.getString("create.parent"));
+            setTip(resources.getString("add.parent"));
         }
     }
 
@@ -126,10 +126,10 @@ public class CreateParent extends CreateRelationship {
     public String getDescription() {
         // "Parent of Meier, Nils (I1)"
         if (child != null) {
-            return resources.getString("create.parent.of", child);
+            return resources.getString("add.parent.of", child);
         }
         // "Parent in Meier, Sven (I1) + Radovcic Sandra (I2) (F1)"
-        return resources.getString("create.parent.in", family);
+        return resources.getString("add.parent.in", family);
     }
 
     /** a warning in case the target indi is already a child of another family */

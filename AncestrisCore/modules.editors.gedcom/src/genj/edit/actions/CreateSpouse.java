@@ -27,6 +27,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.util.swing.ImageIcon;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
@@ -36,13 +37,14 @@ import org.openide.awt.ActionRegistration;
  * Action that knows how to create a spouse for an individual
  */
 @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSpouse")
-@ActionRegistration(displayName = "#create.spouse",
+@ActionRegistration(displayName = "#add.spouse",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=400,separatorBefore=390,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateSpouse extends CreateRelationship {
 
     private Indi spouse;
+    private final static ImageIcon IMG_SPOUSE = new ImageIcon(CreateParent.class, "Spouse.png");
 
     /** constructor */
     public CreateSpouse() {
@@ -51,8 +53,8 @@ public class CreateSpouse extends CreateRelationship {
 
     /** constructor */
     public CreateSpouse(Indi spouse) {
-        super(resources.getString("create.spouse"), Gedcom.INDI);
-        setImage(Indi.IMG_UNKNOWN);
+        super(resources.getString("add.spouse"), Gedcom.INDI);
+        setImage(IMG_SPOUSE);
         setContextProperties(spouse);
         contextChanged();
     }
@@ -88,7 +90,7 @@ public class CreateSpouse extends CreateRelationship {
         }
         //int n = spouse.getNoOfFams();
         if (n > 0) {
-            return resources.getString("create.spouse.warning", spouse.toString(), "" + n);
+            return resources.getString("add.spouse.warning", spouse.toString(), "" + n);
         }
         return null;
     }
@@ -97,7 +99,7 @@ public class CreateSpouse extends CreateRelationship {
     @Override
     public String getDescription() {
         // "Spouse of Meier, Nils" or "Spouse"
-        return resources.getString("create.spouse.of", spouse);
+        return resources.getString("add.spouse.of", spouse);
     }
 
     /** do it - add a target spouse (might be new) to our well known spouse */
