@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
 @ActionID(category = "Edit", id = "ancestris.core.actions.Swivel")
 @ActionRegistration(displayName = "Swivel",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1100)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1105)})
 @NbBundle.Messages({"xref.swivel=Swivel..."})
 public class Swivel extends AbstractAncestrisContextAction {
 
@@ -66,7 +66,7 @@ public class Swivel extends AbstractAncestrisContextAction {
     @Override
     protected void contextChanged() {
         super.contextChanged();
-        if (xref != null) {
+        if (xref != null && xref.getTargetEntity() != null) {
             IMAGE = xref.getTargetEntity().getImage(false);
             super.setImage(IMAGE.getOverLayed(MetaProperty.IMG_LINK));
         }
