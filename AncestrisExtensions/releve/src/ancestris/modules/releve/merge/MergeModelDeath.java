@@ -323,7 +323,7 @@ class MergeModelDeath extends MergeModel {
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
-            addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex());
+            addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex(), currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.IndiDeathDate, record.getIndi().getDeathDate() , currentIndi.getDeathDate());
@@ -334,9 +334,9 @@ class MergeModelDeath extends MergeModel {
         } else {
             // selectedIndi est nul
             // j'affiche le nom
-            addRow(RowType.IndiLastName, record.getIndi().getLastName(), "");
+            addRow(RowType.IndiLastName, record.getIndi().getLastName(), "", null);
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
-            addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN);
+            addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN, null);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
             addRow(RowType.IndiDeathDate, record.getIndi().getDeathDate() , null);

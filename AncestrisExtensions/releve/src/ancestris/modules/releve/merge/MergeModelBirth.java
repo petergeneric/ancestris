@@ -195,7 +195,7 @@ class MergeModelBirth extends MergeModel {
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
-            addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex());
+            addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex(), currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
@@ -207,7 +207,7 @@ class MergeModelBirth extends MergeModel {
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), "");
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
-            addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN);
+            addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN, currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
             addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
