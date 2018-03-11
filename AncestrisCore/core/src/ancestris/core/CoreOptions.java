@@ -62,7 +62,7 @@ public class CoreOptions {
 
     /** option - whether to split jurisdictions into their components when editing places */
     public boolean isSplitJurisdictions() {
-        return appOptions.get("isSplitJurisdictions", false);
+        return appOptions.get("isSplitJurisdictions", true);
     }
 
     public void setSplitJurisdictions(boolean isSplitJurisdictions) {
