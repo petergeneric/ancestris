@@ -43,11 +43,16 @@ public class CompareString {
             char c2 = str2.charAt(k);
             // je compare sans normalisation
             if (c1 != c2) {
-                c1 = utf8Map[c1];
-                c2 = utf8Map[c2];
-                // je compare avec normalisation
-                if (c1 != c2) {
-                    return c1 - c2;
+                if((c1 >> 8) == 0  && ( c2 >> 8 ) == 0) {
+                    // je compare avec normalisation si les carateres sont parmi les 256 premiers caractères
+                    c1 = utf8Map[c1];
+                    c2 = utf8Map[c2];                    
+                    if (c1 != c2) {
+                        return c1 - c2;
+                    }
+                } else {
+                    // je retourne la difference sans normalisation
+                    return c1 - c2; 
                 }
             }
             k++;
