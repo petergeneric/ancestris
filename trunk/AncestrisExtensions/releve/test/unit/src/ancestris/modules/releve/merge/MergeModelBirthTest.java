@@ -6,6 +6,7 @@ import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import genj.gedcom.Fam;
@@ -13,21 +14,22 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import genj.util.ReferenceSet;
-import java.util.List;
 import java.util.Set;
-import junit.framework.TestCase;
+import java.util.List;
 import org.junit.Test;
+import static org.junit.Assert.*;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author Michel
  */
-public class MergeModelBirthTest extends TestCase {
+public class MergeModelBirthTest  {
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
@@ -298,6 +300,7 @@ public class MergeModelBirthTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("child2");
+            int indiSex = indi.getSex();
             List<MergeModel> models;
             
             RecordBirth record= createBirthRecord("child2");
@@ -315,7 +318,7 @@ public class MergeModelBirthTest extends TestCase {
             models.get(0).copyRecordToEntity();
             assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
             assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
-            assertEquals("IndiSex",mergeRecord.getIndi().getSex(), indi.getSex());
+            assertEquals("IndiSex un changed",  indiSex, indi.getSex());
             assertNotSame("IndiBirthDate",mergeRecord.getEventDate().getValue(), indi.getBirthDate().getValue());
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
 //            for(Property prop : sourceLink) {
@@ -487,6 +490,64 @@ public class MergeModelBirthTest extends TestCase {
             fail(ex.getMessage());
         }
     }
+    
+    
+    /**
+     * test_RecordBirth_copyRecordToEntity_Date
+     */
+    @Test
+    public void test_RecordBirth_copyRecordToEntity_Sex() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            Indi indi = (Indi)gedcom.getEntity("sansfamille1");
+            RecordInfoPlace infoPlace = getRecordsInfoPlace();
+            String fileName = "";
+            Record record = createBirthRecord("sansfamille1");
+            TransferableRecord.TransferableData data;
+            MergeRecord mergeRecord ;
+            List<MergeModel> models;
+                    
+            record.setFieldValue(FieldType.indiSex, "F");
+            data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
+            mergeRecord = new MergeRecord(data);
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
+            assertEquals("Nombre model",2,models.size());
+            models.get(0).copyRecordToEntity();
+            assertEquals("record.inidSex = F , indi.sex = M, resultat=M", PropertySex.MALE, indi.getSex());
+
+            record.setFieldValue(FieldType.indiSex, "");
+            data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
+            mergeRecord = new MergeRecord(data);
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
+            assertEquals("record.inidSex = U , indi.sex = M resultat= M", PropertySex.MALE, indi.getSex());
+
+            record.setFieldValue(FieldType.indiSex, "");
+            indi.setSex(PropertySex.UNKNOWN);
+            data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
+            mergeRecord = new MergeRecord(data);
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
+            assertEquals("record.inidSex = U , indi.sex = U , resultat= U", PropertySex.UNKNOWN,indi.getSex());
+
+            record.setFieldValue(FieldType.indiSex, "M");
+            indi.setSex(PropertySex.UNKNOWN);
+            data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
+            mergeRecord = new MergeRecord(data);
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);  
+            assertEquals("Nombre model",1,models.size());
+            models.get(0).copyRecordToEntity();
+            assertEquals("record.inidSex = M , indi.sex = U ,resultat= M", PropertySex.MALE,indi.getSex());
+
+
+        } catch (Exception ex) {
+            Exceptions.printStackTrace(ex);
+            fail(ex.getMessage());
+        }
+    }
+    
 
 
 }

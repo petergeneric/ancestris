@@ -341,17 +341,17 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiLastName,   record.getIndi().getLastName(),  husband.getLastName(), husband);
             addRow(RowType.IndiFirstName,  record.getIndi().getFirstName(), husband.getFirstName());
             addRow(RowType.IndiBirthDate,  record.getIndi().getBirthDate(), husband.getBirthDate(false));
-            addRow(RowType.IndiBirthPlace,      record.getIndi().getBirthPlace(),     husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(),  husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(),  MergeQuery.findOccupation(husband, record.getEventDate()));
-            addRow(RowType.IndiDeathDate, record.getIndi().getDeathDate(), husband.getDeathDate());            
+            addRow(RowType.IndiDeathDate,  record.getIndi().getDeathDate(), husband.getDeathDate());            
         } else {
             // j'affiche les informations de l'epoux
             addRow(RowType.IndiLastName,   record.getIndi().getLastName(),  "", null);
             addRow(RowType.IndiFirstName,  record.getIndi().getFirstName(), "");
             addRow(RowType.IndiBirthDate,  record.getIndi().getBirthDate(), null);
-            addRow(RowType.IndiBirthPlace,      record.getIndi().getBirthPlace(),     "");
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(),     "");
             addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(), "");
-            addRow(RowType.IndiDeathDate, record.getIndi().getDeathDate(), null);            
+            addRow(RowType.IndiDeathDate,  record.getIndi().getDeathDate(), null);            
         }
 
     }

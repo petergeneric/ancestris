@@ -8,6 +8,7 @@ import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
+import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -353,8 +354,8 @@ public class TestUtility extends TestCase {
         return null;
     }
     
-    public void showMergeDialog(Gedcom gedcom, TransferableRecord.TransferableData data ) {
-        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, data, true);
+    public static void showMergeDialog(Gedcom gedcom, Entity entity, TransferableRecord.TransferableData data ) {
+        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, entity, data, true);
         TestUtility.waitForDialogClose(dialog);
     }
             
