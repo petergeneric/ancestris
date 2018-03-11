@@ -7,7 +7,6 @@ import ancestris.modules.editors.standard.CygnusTopComponent;
 import ancestris.modules.releve.merge.MergeDialog;
 import ancestris.modules.views.tree.TreeTopComponent;
 import ancestris.view.AncestrisTopComponent;
-import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -61,8 +60,9 @@ public class RecordDropTargetListener implements DropTargetListener {
                         if (evt.getNewValue() instanceof Component) {
                             Component component = (Component) evt.getNewValue();
                             // je verifie si c'est un composant géré 
-                            if (verifyComponent(component)) {
-                                DropTarget dropTarget = new DropTarget(component, new RecordDropTargetListener());                             
+                            Component droppableCoponent = getDroppableComponent(component);
+                            if (droppableCoponent != null) {
+                                DropTarget dropTarget = new DropTarget(droppableCoponent, new RecordDropTargetListener());
                             }
                         }
                     }
@@ -72,9 +72,10 @@ public class RecordDropTargetListener implements DropTargetListener {
             WindowManager.getDefault().getRegistry().addPropertyChangeListener(propertyChangeListener);
             
             // j'active le drag and drop pour toutes les vues déjà ouvertes
-            for (AncestrisTopComponent tc : AncestrisPlugin.lookupAll(AncestrisTopComponent.class)) {
-                if( verifyComponent(tc)) {
-                    DropTarget dropTarget = new DropTarget(tc, new RecordDropTargetListener());
+            for (AncestrisTopComponent component : AncestrisPlugin.lookupAll(AncestrisTopComponent.class)) {
+                Component droppableCoponent = getDroppableComponent(component);
+                if (droppableCoponent != null) {
+                    DropTarget dropTarget = new DropTarget(droppableCoponent, new RecordDropTargetListener());
                 }
             }            
         }
@@ -100,9 +101,28 @@ public class RecordDropTargetListener implements DropTargetListener {
      * @param component
      * @return 
      */
-    public static boolean verifyComponent(Component component) {
+    public static Component getDroppableComponent(Component component) {
+        Component result = null;
+        if (component instanceof TreeTopComponent) {            
+            result = ((TreeTopComponent) component).getView();
+        } else if (component instanceof GedcomTopComponent) {
+            result = component;
+        } else if (component instanceof CygnusTopComponent) {
+            result = component;
+        } else if (component instanceof AriesTopComponent) {
+            result = component;
+        }
+        return result;
+    }
+    
+    /**
+     * verifie la classe des composantn ou un lreleve peut être déposé
+     * @param component
+     * @return 
+     */
+    public static boolean verifyDroppableComponent(Component component) {
         boolean result = false;
-        if (component instanceof TreeTopComponent) {
+        if (component instanceof TreeView) {            
             result = true;
         } else if (component instanceof GedcomTopComponent) {
             result = true;
@@ -121,7 +141,7 @@ public class RecordDropTargetListener implements DropTargetListener {
     
     @Override
     public void dragEnter(DropTargetDragEvent dropTargetDragEvent) {
-        if (verifyComponent(dropTargetDragEvent.getDropTargetContext().getComponent())) {
+        if (verifyDroppableComponent(dropTargetDragEvent.getDropTargetContext().getComponent())) {
             dropTargetDragEvent.acceptDrag(DnDConstants.ACTION_COPY);
         } else {
             dropTargetDragEvent.rejectDrag();
@@ -134,7 +154,7 @@ public class RecordDropTargetListener implements DropTargetListener {
 
     @Override
     public void dragOver(DropTargetDragEvent dropTargetDragEvent) {
-        if (verifyComponent(dropTargetDragEvent.getDropTargetContext().getComponent())) {
+        if (verifyDroppableComponent(dropTargetDragEvent.getDropTargetContext().getComponent())) {
             dropTargetDragEvent.acceptDrag(dropTargetDragEvent.getSourceActions());
         } else {
             dropTargetDragEvent.rejectDrag();
@@ -150,14 +170,24 @@ public class RecordDropTargetListener implements DropTargetListener {
         Entity entity = null;
         Gedcom gedcom = null;
         Component component = dropTargetDropEvent.getDropTargetContext().getComponent();
-        if (component instanceof AncestrisViewInterface) {
-            gedcom = ((AncestrisViewInterface) component).getGedcom();
-        }
-        if (component instanceof TreeTopComponent) {
-            if (((TreeTopComponent) component).getView() instanceof TreeView) {
-                Point location = dropTargetDropEvent.getLocation();
-                entity = ((TreeView) ((TreeTopComponent) component).getView()).getEntityAt(location);
-            }
+
+        if (component instanceof TreeView) {
+            TreeView view = (TreeView) component;
+            Point location = dropTargetDropEvent.getLocation();
+            entity = view.getEntityAt(location);
+            gedcom = view.getGedcom();
+        } else if (component instanceof GedcomTopComponent) {
+            GedcomTopComponent gedcomTopComponent = (GedcomTopComponent) component;
+            entity = null;
+            gedcom = gedcomTopComponent.getGedcom();
+        } else if (component instanceof AriesTopComponent) {
+            AriesTopComponent ariesTopComponent = (AriesTopComponent)component;
+            entity = null;
+            gedcom = ariesTopComponent.getGedcom();
+        } else if (component instanceof CygnusTopComponent) {
+            CygnusTopComponent cygnusTopComponent = (CygnusTopComponent) component;
+            entity = null;
+            gedcom = cygnusTopComponent.getGedcom();
         }
         if (entity == null || entity instanceof Indi || entity instanceof Fam) {
             Transferable t = dropTargetDropEvent.getTransferable();
