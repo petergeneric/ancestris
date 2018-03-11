@@ -196,6 +196,7 @@ public class GeneanetExport {
         Property[] props = null;
         Property prop = null;
         String rela = null;
+        List<Property> propList = null;
         
         console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingOther"));
 
@@ -214,8 +215,9 @@ public class GeneanetExport {
             
         }
         
-        // Convert ALIA to NAME
+        // Conversion for indis 
         for (Entity entity : gedcom.getIndis()) {
+            // Convert ALIA to NAME
             props = entity.getProperties("ALIA");
             for (Property p : props) {
                 Property parent = p.getParent();
@@ -225,6 +227,22 @@ public class GeneanetExport {
                     parent.delProperty(p);
                     try {
                         parent.addProperty("NAME", value, pos);
+                    } catch (GedcomException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+            }
+            
+            // Convert NSFX to NICK
+            propList = entity.getAllProperties("NSFX");
+            for (Property p : propList) {
+                Property parent = p.getParent();
+                if (p != null) {
+                    int pos = parent.getPropertyPosition(p);
+                    String value = p.getValue();
+                    parent.delProperty(p);
+                    try {
+                        parent.addProperty("NICK", value, pos);
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
