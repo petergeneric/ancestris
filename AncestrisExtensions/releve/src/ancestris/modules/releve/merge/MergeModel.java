@@ -256,6 +256,13 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         mergeRow.compareResult = !recordValue.equals(entityValue) ? CompareResult.CONFLIT : CompareResult.EQUAL;
                     }
 
+                } else if (rowType == RowType.IndiSex
+                        || rowType == RowType.WifeSex
+                        ) {
+                        // devrait être traité dans l'autre addRow
+                        mergeRow.merge = false;
+                        mergeRow.compareResult = CompareResult.CONFLIT;
+
                 } else if (rowType == RowType.EventComment) {
                     // merge actif si le commentaire existant dans l'entité ne contient pas deja le commentaire du relevé.
                     mergeRow.merge = !entityValue.contains(recordValue);
@@ -421,6 +428,59 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
             mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
         }
         mergeRow.merge_initial = mergeRow.merge;
+    }
+    
+    /**
+     * ajoute une ligne dans le modele pour comparer un champ de type String
+     * (nom , prénom, commentaire )
+     *
+     * @param rowType
+     * @param label
+     * @param recordValue
+     * @param entityValue
+     */
+    void addRowSex(RowType rowType,int recordValue, int entityValue) {
+        MergeRow mergeRow = new MergeRow(rowType);
+        mergeRowList.put(mergeRow);
+        mergeRow.rowType = rowType;
+        mergeRow.label = getRowTypeLabel(rowType);
+        mergeRow.recordValue = PropertySex.getLabelForSex(recordValue);
+        mergeRow.entityValue = PropertySex.getLabelForSex(entityValue);
+        mergeRow.setEntityObject(null);
+        if (isRowParentApplicable(rowType)) {
+
+            if (recordValue == PropertySex.UNKNOWN) {
+                if (entityValue == PropertySex.UNKNOWN) {
+                    mergeRow.merge = false;
+                    mergeRow.compareResult = CompareResult.EQUAL;
+                } else {
+                    mergeRow.merge = false;
+                    mergeRow.compareResult = CompareResult.COMPATIBLE;
+                }
+            } else {
+                if (entityValue == PropertySex.UNKNOWN) {
+                    mergeRow.merge = true;
+                    mergeRow.compareResult = CompareResult.COMPATIBLE;
+                } else {
+                    // dans tous les cas marge=false 
+                    // car si même valeur  pas besoin de merge, si valeur differente je laisse l'utisateur décider de changer la valeur dans le gedcom                
+                    mergeRow.merge = false;
+                    mergeRow.compareResult = recordValue != entityValue ? CompareResult.CONFLIT : CompareResult.EQUAL;
+                }
+            }
+        } else {
+            // ligne parent NOT_APPLICABLE
+            mergeRow.merge = false;
+            mergeRow.compareResult = CompareResult.NOT_APPLICABLE;
+        }
+
+        // j'incremente le compteur de champs egaux
+        if (mergeRow.compareResult == CompareResult.EQUAL){
+            nbMatch++;
+        }
+        nbMatchMax++;
+        mergeRow.merge_initial = mergeRow.merge;
+
     }
 
     /**

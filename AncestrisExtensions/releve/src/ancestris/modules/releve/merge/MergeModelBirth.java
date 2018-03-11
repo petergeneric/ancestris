@@ -7,6 +7,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertySex;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import java.text.MessageFormat;
@@ -180,8 +181,9 @@ class MergeModelBirth extends MergeModel {
         addRowIndi();
 
         // j'affiche la famille de l'enfant
-        addRow(RowType.IndiParentFamily, null);
-        addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
+        //addRow(RowType.IndiParentFamily, null);
+        //addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
+        addRowParents(null);
 
         // j'affiche les parents
         addRowFather(father);
@@ -193,7 +195,7 @@ class MergeModelBirth extends MergeModel {
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
-            addRow(RowType.IndiSex, record.getIndi().getSexString(), currentIndi.getPropertyValue("SEX"));
+            addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex());
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
@@ -205,7 +207,7 @@ class MergeModelBirth extends MergeModel {
             // j'affiche le nom
             addRow(RowType.IndiLastName, record.getIndi().getLastName(), "");
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
-            addRow(RowType.IndiSex, record.getIndi().getSexString(), "");
+            addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
             addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
             addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");

@@ -6,6 +6,7 @@ import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertySex;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import java.util.regex.Matcher;
@@ -74,33 +75,26 @@ public class MergeRecord {
             }
         }
     }
-
-    protected static enum SexType {
-        U,
-        M,
-        F;
-
-        public static SexType fromString(String value) {
-            SexType sex = U;
-            if (SexType.M.name().equals(value)) {
-                sex = SexType.M;
-            } else if (value.equals(SexType.F.name())) {
-                sex = SexType.F;
+    protected static class SexType {
+        int sex = PropertySex.UNKNOWN;
+        
+        public static SexType fromString(String value) {            
+            return new SexType(value);
+        }
+        
+        public SexType(String value) {
+            sex = PropertySex.UNKNOWN;
+            if ("M".equals(value)) {
+                sex = PropertySex.MALE;
+            } else if ("F".equals(value)) {
+                sex = PropertySex.FEMALE;
             }
-            return sex;
         }
 
         public int getSex() {
-            switch (this) {
-                case M:
-                    return 1;
-                case F:
-                    return 2;
-                default:
-                    return 0;
-            }
+            return sex;
         }
-
+            
     }
 
     public enum MergeParticipantType {
@@ -145,8 +139,8 @@ public class MergeRecord {
         recordInfoPlace.setCountyName(data.countyName);
         recordInfoPlace.setStateName(data.stateName);
         recordInfoPlace.setCountryName(data.countryName);
-
         
+       
         if (data.recordType.equals(RecordType.BIRTH.name())) {
             recordType = RecordType.BIRTH;
             eventTypeTag = EventTypeTag.BIRT;
@@ -1490,10 +1484,6 @@ public class MergeRecord {
 
         int getSex() {
             return m_Sex.getSex();
-        }
-
-        String getSexString() {
-            return m_Sex.name();
         }
 
         PropertyDate getBirthDate() {

@@ -387,7 +387,7 @@ class MergeModelMiscOther extends MergeModel {
             // j'affiche les informations de l'individu
             addRow(RowType.IndiLastName, mainParticipant.getLastName(), currentIndi.getLastName(), currentIndi);
             addRow(RowType.IndiFirstName, mainParticipant.getFirstName(), currentIndi.getFirstName());
-            addRow(RowType.IndiSex, mainParticipant.getSexString(), currentIndi.getPropertyValue("SEX"));
+            addRowSex(RowType.IndiSex, mainParticipant.getSex(), currentIndi.getSex());
             addRow(RowType.IndiBirthDate, mainParticipant.getBirthDate() , currentIndi.getBirthDate());
             addRow(RowType.IndiBirthPlace, mainParticipant.getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
             addRow(RowType.IndiDeathDate, mainParticipant.getDeathDate() , currentIndi.getDeathDate());
@@ -397,7 +397,7 @@ class MergeModelMiscOther extends MergeModel {
             // selectedIndi est nul
             addRow(RowType.IndiLastName, mainParticipant.getLastName(), "");
             addRow(RowType.IndiFirstName, mainParticipant.getFirstName(), "");
-            addRow(RowType.IndiSex, mainParticipant.getSexString(), "");
+            addRowSex(RowType.IndiSex, mainParticipant.getSex(), PropertySex.UNKNOWN);
             addRow(RowType.IndiBirthDate, mainParticipant.getBirthDate() , null);
             addRow(RowType.IndiBirthPlace, mainParticipant.getBirthPlace(), "");
             addRow(RowType.IndiDeathDate, mainParticipant.getDeathDate() , null);
