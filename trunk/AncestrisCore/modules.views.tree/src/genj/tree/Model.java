@@ -507,20 +507,34 @@ import org.openide.windows.WindowManager;
    * The current family of individual
    */
   /*package*/ Fam getFamily(Indi indi, Fam fams[], boolean next) {
-    // only one?
-    if (fams.length>0) {
-      // lookup map
-      Fam fam = indi2fam.get(indi);
-      if (fam==null) fam = fams[0];
-      for (int f=0;f<fams.length;f++) {
-        if (fams[f]==fam) 
-          return fams[(f+(next?1:0))%fams.length];
+      // only one?
+      if (fams.length > 0) {
+          // Identify first preferred fam
+          Fam preferredFam = fams[0];
+          for (Fam f : fams) {
+              if (f.isPreferred()) {
+                  preferredFam = f;
+              }
+          }
+          
+          // Lookup map and if not already mapped, use preferredFam
+          Fam fam = indi2fam.get(indi);
+          if (fam == null) {
+              fam = preferredFam;
+          }
+          
+          // If next fam required (in circular loop), return it 
+          for (int f = 0; f < fams.length; f++) {
+              if (fams[f] == fam) {
+                  return fams[(f + (next ? 1 : 0)) % fams.length];
+              }
+          }
+          
+          // If fam returned is not valid, remove it from map
+          indi2fam.remove(indi);
       }
-      // invalid fam
-      indi2fam.remove(indi);
-    }
-    // done
-    return fams[0];
+      // done
+      return fams[0];
   }
   
   /**
@@ -667,6 +681,7 @@ import org.openide.windows.WindowManager;
     /**
      * perform 
      */
+    @Override
     public void run() {
       indi2fam.put(indi, fam);
       boolean on = TreeView.isAutoScroll();
@@ -793,6 +808,7 @@ import org.openide.windows.WindowManager;
 
         }
 
+        @Override
         public void gedcomPropertyAdded(Gedcom gedcom, Property property, int pos, Property added) {
             gedcomPropertyChanged(gedcom, added);
         }
@@ -800,6 +816,20 @@ import org.openide.windows.WindowManager;
         public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
             // a reference update?
             if (property instanceof PropertyXRef) {
+                update = true;
+                return;
+            }
+            // a family preference change ?
+            if (property.getTag().equals(Fam.TAG_PREF)) {
+                Fam fam = (Fam) property.getEntity();
+                Indi husb = fam.getHusband();
+                if (husb != null) {
+                    indi2fam.keySet().remove(husb);
+                }
+                Indi wife = fam.getWife();
+                if (wife != null) {
+                    indi2fam.keySet().remove(wife);
+                }
                 update = true;
                 return;
             }
@@ -812,6 +842,7 @@ import org.openide.windows.WindowManager;
         }
 
         @SuppressWarnings("unchecked")
+        @Override
         public void gedcomPropertyDeleted(Gedcom gedcom, Property property, int pos, Property deleted) {
             // a reference update?
             if (deleted instanceof PropertyXRef) {
