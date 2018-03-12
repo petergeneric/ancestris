@@ -173,7 +173,7 @@ public class FileChooserBuilder {
     public static String[] imgExtensions = {"png", "jpg", "jpeg", "gif", "tiff", "bmp", "svg"};
     public static String[] sndExtensions = {"mp3", "wav", "ogg", "flac"};
     public static String[] vidExtensions = {"mp4", "flv", "ogg", "avi", "mov", "mpeg"};
-    public static String[] pdfExtensions = {"pdf"};
+    public static String[] pdfExtensions = {"pdf", "ps" };
     public static String[] txtExtensions = {"txt"};
     public static String[] docExtensions = {"txt", "doc", "odt"};
     public static String[] csvExtensions = {"csv"};
