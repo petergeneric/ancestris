@@ -36,7 +36,7 @@ import org.openide.util.LookupEvent;
 @ActionID(category = "Edit", id = "ancestris.core.actions.Prefer")
 @ActionRegistration(displayName = "#xref.preferon",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1110)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = 1115)})
 public class Prefer extends AbstractAncestrisContextAction {
 
     protected final static Resources RESOURCES = Resources.get(Prefer.class);
