@@ -59,7 +59,7 @@ public class ReportLinesFan extends Report {
      */
     public File start(Indi indi) {
 
-        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true, FileChooserBuilder.getPdfFilter().getExtensions()[0]);
+        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true, FileChooserBuilder.getPdfFilter().getExtensions()[1]);
         if (file == null) {
             return null;
         }
