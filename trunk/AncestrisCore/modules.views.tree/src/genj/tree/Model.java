@@ -32,6 +32,7 @@ import gj.layout.LayoutException;
 import gj.layout.tree.TreeLayout;
 import gj.model.Node;
 import java.awt.Cursor;
+import java.awt.Point;
 
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -102,6 +103,12 @@ import org.openide.windows.WindowManager;
   /** the root we've used */
   private Entity root;
 
+  /** visible fallback nodes to recenter on, in case of tree change */
+  private List<Entity> fallbackEntities = new ArrayList<Entity>();
+
+  /** calling view - used to calcultae center of view on restructure of model */
+  private TreeView view = null;
+
   /** metrics */
   //private TreeMetrics metrics = new TreeMetrics( 66, 40, 80, 7, 10 );
   
@@ -115,7 +122,8 @@ import org.openide.windows.WindowManager;
   /**
    * Constructor
    */
-  public Model(Style style) {
+  public Model(TreeView view, Style style) {
+      this.view = view;
       this.style = style;
   }
   
@@ -222,6 +230,7 @@ import org.openide.windows.WindowManager;
   public void setFamilies(boolean set) {
     if (isFamilies==set) return;
     isFamilies = set;
+    getCenteredEntities();
     update();
   } 
   
@@ -661,6 +670,51 @@ import org.openide.windows.WindowManager;
     }
   }
   
+  
+    private void getCenteredEntities() {
+        Point p = view.getCenter();
+        if (p == null) {
+            return;
+        }
+        int x = p.x;
+        int y = p.y;
+        int s = 0;
+        Entity entity = null;
+        while (entity == null) {
+            entity = getEntityAt(x, y - s);
+            s += 10;
+            if ((y - s) < bounds.y) {
+                break;
+            }
+        }
+        if (entity == null) {
+            return; // not found, so leave past result unchanged
+        }
+
+        // We have found one so clear past results
+        fallbackEntities.clear();
+        fallbackEntities.add(entity);
+        if (entity instanceof Fam) {
+            fallbackEntities.add(entity);
+            Fam fam = (Fam) entity;
+            Indi husb = fam.getHusband();
+            if (husb != null) {
+                fallbackEntities.add(husb);
+            }
+            Indi wife = fam.getWife();
+            if (wife != null) {
+                fallbackEntities.add(wife);
+            }
+        }
+    }
+
+    
+    public List<Entity> getDefaultEntities() {
+        return fallbackEntities;
+    }
+  
+  
+  
   /**
    * NextFamily
    */
@@ -684,14 +738,9 @@ import org.openide.windows.WindowManager;
     @Override
     public void run() {
       indi2fam.put(indi, fam);
-      boolean on = TreeView.isAutoScroll();
-      if (on) {
-          TreeView.setAutoScroll(false);
-      }
+      fallbackEntities.clear();
+      fallbackEntities.add(indi);
       update();
-      if (on) {
-          TreeView.setAutoScroll(true);
-      }
     }
     /**
      * access
@@ -726,8 +775,11 @@ import org.openide.windows.WindowManager;
     /**
      * perform 
      */
+    @Override
     public void run() {
       if (!set.remove(indi.getId())) set.add(indi.getId());
+      fallbackEntities.clear();
+      fallbackEntities.add(indi);
       update();
     }
 

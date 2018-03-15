@@ -77,6 +77,8 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.Point2D;
@@ -87,6 +89,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -110,7 +114,6 @@ import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
 import org.openide.util.Utilities;
-import org.openide.windows.WindowManager;
 
 /**
  * TreeView
@@ -168,6 +171,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private JButton rootMenu;
     // set goto menu
     private JButton gotoMenu;
+    private boolean forceCenterCurrentAtOpening = true;
 
     /**
      * Constructor
@@ -186,7 +190,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         zoom = Math.max(MINZOOM, Math.min(MAXZOOM, REGISTRY.get("zoom", DEFZOOM)));  // zoom can be distinct from style.zoom
 
         // setup model
-        model = new Model(style);
+        model = new Model(this, style);
         model.setVertical(REGISTRY.get("vertical", true));
         model.setFamilies(REGISTRY.get("families", true));
         model.setHideAncestorsIDs(REGISTRY.get("hide.ancestors", new ArrayList<String>()));
@@ -207,14 +211,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         add(overview);
         add(scroll);
         
-        // Centers on selected entity at opening (does not seem to always have an effect)
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            @Override
-            public void run() {
-                gotoMenu.doClick();
-            }
-        });
-        
+        setCenteringPolicy();
         
         // done
     }
@@ -231,6 +228,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         super.addNotify();
         // Used only for Filter interface
         AncestrisPlugin.register(this);
+        forceCenterCurrentAtOpening = true;
     }
 
     /**
@@ -238,6 +236,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
      */
     @Override
     public void removeNotify() {
+        forceCenterCurrentAtOpening = true;
         AncestrisPlugin.unregister(this);
         // done
         super.removeNotify();
@@ -292,7 +291,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             
     // TreeView Preferences
     public static boolean isAutoScroll() {
-        return REGISTRY.get("auto.scroll", true);
+        return REGISTRY.get("auto.scroll", false);
     }
 
     public static void setAutoScroll(boolean autoScroll) {
@@ -590,21 +589,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         return true;
     }
     
-//    /**
-//     * Show current entity, show root if failed
-//     */
-//    /* package */ public boolean show(Entity entity, boolean fallbackRoot) {
-//        // try to show
-//        if (show(context.getEntity())) {
-//            return true;
-//        }
-//        // otherwise try root
-//        if (fallbackRoot) {
-//            return show(getRoot());
-//        }
-//        return false;
-//    }
-//
     /**
      * Scroll to given position
      */
@@ -625,39 +609,47 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         }
     }
 
-    private Point getCenter(){
+    public Point getCenter(){
+        if (scroll == null) return null;
         JViewport v = scroll.getViewport();
         return view2model(new Point(
                 v.getViewPosition().x+v.getExtentSize().width/2,
                 v.getViewPosition().y+v.getExtentSize().height/2));
     }
-    /**
-     * Scroll to current entity
-     */
-    private void scrollToCurrent() {
-        scrollToCurrent(false);
-    }
 
     /**
-     * Scroll to current entity
+     * Scroll to current or default entity
+     * 1/ if autoscroll is ON, center on current entty and only fallback to default if not in the model
+     * 2/ if autoscroll is OFF, center on default entity
      */
-    private void scrollToCurrent(boolean force) {
+    private void scrollToCurrent(boolean forceCentering, boolean forceCurrent) {
 
-        Entity current = context.getEntity();
-        if (current == null) {
-            return;
+        if (forceCurrent || isAutoScroll()) {
+            Entity current = context.getEntity();
+            if (current != null) {
+                // Node for it? 
+                TreeNode node = model.getNode(current);
+                if (node != null) {
+                    scrollTo(node.pos, forceCurrent);
+                    return;
+                }
+            }
         }
-
-        // Node for it?
-        TreeNode node = model.getNode(current);
+        
+        // Null or not in model, so scroll to default
+        TreeNode node = null;
+        for (Entity entity : model.getDefaultEntities()) {
+            node = model.getNode(entity);
+            if (node != null) {
+                break;
+            }
+        }
+        // if null, exit
         if (node == null) {
-            return;
+            return; // node default, give up
         }
-
-        // scroll
-        scrollTo(node.pos, force);
-
-        // done    
+        
+        scrollTo(node.pos, forceCentering);
     }
 
     private void setZoom(double d) {
@@ -668,7 +660,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         }
         content.invalidate();
         if (isAutoScroll()){
-            scrollToCurrent();
+            scrollToCurrent(false, false);
         } else {
             scrollTo(centr, true);
         }
@@ -712,22 +704,22 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         toolbar.addSeparator();
 
         // center and rebuild root
-        rootMenu = createDropDownButton(Images.imgView,null); 
-        Action def1 = new ActionRootContext(rootMenu);
-        Action def2 = new ActionChooseRoot(rootMenu);
-        rootMenu.putClientProperty(
-                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def1, def2}, org.openide.util.Lookup.EMPTY));
-        rootMenu.setAction(def1);
-        
         gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
-        def1 = new ActionGotoContext(gotoMenu);
-        def2 = new ActionGotoRoot(gotoMenu);
+        Action def1 = new ActionGotoContext(gotoMenu);
+        Action def2 = new ActionGotoRoot(gotoMenu);
         gotoMenu.putClientProperty(
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
                 Utilities.actionsToPopup(new Action[]{def1,def2}, org.openide.util.Lookup.EMPTY));
         gotoMenu.setAction(def1);
 
+        rootMenu = createDropDownButton(Images.imgView,null); 
+        def1 = new ActionRootContext(rootMenu);
+        def2 = new ActionChooseRoot(rootMenu);
+        rootMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{def1, def2}, org.openide.util.Lookup.EMPTY));
+        rootMenu.setAction(def1);
+        
         toolbar.add(gotoMenu);
         toolbar.add(rootMenu);
 
@@ -885,6 +877,26 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         return actions;
     }
 
+    // Centers on selected entity at opening (does not seem to always have an effect.
+    // It's because of Window resize : if a TopComponent opens after this one, this one should recenter
+    private void setCenteringPolicy() {
+
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                scrollToCurrent(false, forceCenterCurrentAtOpening);
+            }
+        });
+        Timer timer = new Timer("once");
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                forceCenterCurrentAtOpening = false;
+            }
+        };
+        timer.schedule(task, 3000L);
+    }
+
     /**
      * Overview
      */
@@ -1008,6 +1020,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
                 @Override
                 public void mouseClickedFiltered(MouseEvent me) {
                     Content.this.mouseClicked(me);
+                }
+                
+                @Override
+                public void mouseEntered(MouseEvent e) {
+                    ///forceCenterAtOpening = false;
                 }
             };
             addMouseListener(mouseAdapter);
@@ -1149,7 +1166,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             // still shuffle a repaint
             repaint();
             // scrolling should work now
-            scrollToCurrent();
+            scrollToCurrent(true, false);
             // update button
             famAndSpouseAction.updateButton();
 
@@ -1384,7 +1401,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         @Override
         public void actionPerformed(ActionEvent event) {
             model.setVertical(!model.isVertical());
-            scrollToCurrent();
+            scrollToCurrent(false, false);
         }
     } //ActionOrientation
 
@@ -1419,7 +1436,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         public void actionPerformed(ActionEvent event) {
             model.setFamilies(!model.isFamilies());
             updateButton();
-            scrollToCurrent();
+            scrollToCurrent(true, false);
         }
     } //ActionFamsAndSpouses
 
@@ -1442,7 +1459,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         @Override
         public void actionPerformed(ActionEvent event) {
             model.setFoldSymbols(!model.isFoldSymbols());
-            scrollToCurrent();
+            scrollToCurrent(true, false);
         }
     } //ActionFolding
 
@@ -1472,7 +1489,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             isFolded = !isFolded;
             super.setImage(isFolded ? Images.imgUnfoldAll : Images.imgFoldAll);
             super.setTip(RESOURCES.getString(isFolded ? "unfoldall.tip" : "foldall.tip", model.getMaxGenerations()));
-            scrollToCurrent();
+            scrollToCurrent(true, false);
         }
     } //ActionFolding
 
@@ -1851,7 +1868,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
         @Override
         protected void actionPerformedImpl(final ActionEvent event) {
-            TreeView.this.scrollToCurrent(true);
+            TreeView.this.scrollToCurrent(true, true);
             if (bMenu.getAction() != this)
                 bMenu.setAction( this );
         }
