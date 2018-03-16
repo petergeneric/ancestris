@@ -105,8 +105,8 @@ public class RecordDropTargetListener implements DropTargetListener {
         Component result = null;
         if (component instanceof TreeTopComponent) {            
             result = ((TreeTopComponent) component).getView();
-        } else if (component instanceof GedcomTopComponent) {
-            result = component;
+        } else if (component instanceof GedcomTopComponent) {            
+            result = component;            
         } else if (component instanceof CygnusTopComponent) {
             result = component;
         } else if (component instanceof AriesTopComponent) {
@@ -178,15 +178,21 @@ public class RecordDropTargetListener implements DropTargetListener {
             gedcom = view.getGedcom();
         } else if (component instanceof GedcomTopComponent) {
             GedcomTopComponent gedcomTopComponent = (GedcomTopComponent) component;
+            // il faudrait demander à Frederic de rendre public le package  genj.edit  dans le projet Editeur Gedcom
+            // pour pouvoir recupérer l'entité
             entity = null;
             gedcom = gedcomTopComponent.getGedcom();
         } else if (component instanceof AriesTopComponent) {
             AriesTopComponent ariesTopComponent = (AriesTopComponent)component;
-            entity = null;
+            if (ariesTopComponent.getContext() != null ) {
+                entity = ariesTopComponent.getContext().getEntity();
+            }
             gedcom = ariesTopComponent.getGedcom();
         } else if (component instanceof CygnusTopComponent) {
             CygnusTopComponent cygnusTopComponent = (CygnusTopComponent) component;
-            entity = null;
+            if (cygnusTopComponent.getContext() != null ) {
+                entity = cygnusTopComponent.getContext().getEntity();
+            }
             gedcom = cygnusTopComponent.getGedcom();
         }
         if (entity == null || entity instanceof Indi || entity instanceof Fam) {
