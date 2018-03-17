@@ -1880,7 +1880,7 @@ public class Gedcom implements Comparable {
         noName = null;
         
         // Signal need for garbage collection
-        System.gc();
+        //System.gc();
     }
 
     
