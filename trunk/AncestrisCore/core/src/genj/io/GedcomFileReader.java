@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.Charset;
+import org.openide.util.Exceptions;
 
 /**
  *
@@ -41,6 +42,7 @@ public class GedcomFileReader extends PropertyReader {
             sniffer = new GedcomEncodingSniffer(new BufferedInputStream(new FileInputStream(fileIn)));
             charset = sniffer.getCharset();
         } catch (IOException ex) {
+            Exceptions.printStackTrace(ex);
             return null;
         }
         GedcomFileReader reader = new GedcomFileReader(new InputStreamReader(sniffer, charset));
