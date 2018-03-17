@@ -146,6 +146,7 @@
             </module-dependencies>
             <public-packages>
                 <package>ancestris.modules.editors.gedcom</package>
+                <package>genj.edit</package>
                 <package>genj.edit.actions</package>
             </public-packages>
         </data>

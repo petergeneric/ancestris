@@ -45,7 +45,7 @@ import org.openide.util.LookupEvent;
 @ActionRegistration(displayName = "#swap.spouses",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1108)})
 public class SwapSpouses extends AbstractChange {
 
     /** fam */
