@@ -110,6 +110,7 @@ import org.openide.awt.DropDownButtonFactory;
 import static org.openide.awt.DropDownButtonFactory.createDropDownButton;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.nodes.Node;
+import org.openide.util.ImageUtilities;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
 import org.openide.util.NbBundle;
@@ -147,8 +148,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private SliderWidget sliderZoom;
     /** folded state */
     private boolean isFolded = true;
-    /** fam and spouse button */
+    
+    /** some buttons that will need to be updated */
     private ActionFamsAndSpouses famAndSpouseAction;
+    private ActionGotoContext gotoContext;
+    private ActionGotoRoot gotoRoot;
 
     
     /** our styles */
@@ -704,24 +708,24 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         toolbar.addSeparator();
 
         // center and rebuild root
-        gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
-        Action def1 = new ActionGotoContext(gotoMenu);
-        Action def2 = new ActionGotoRoot(gotoMenu);
-        gotoMenu.putClientProperty(
-                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
-                Utilities.actionsToPopup(new Action[]{def1,def2}, org.openide.util.Lookup.EMPTY));
-        gotoMenu.setAction(def1);
-
         rootMenu = createDropDownButton(Images.imgView,null); 
-        def1 = new ActionRootContext(rootMenu);
-        def2 = new ActionChooseRoot(rootMenu);
+        Action def1 = new ActionRootContext(rootMenu);
+        Action def2 = new ActionChooseRoot(rootMenu);
         rootMenu.putClientProperty(
                 DropDownButtonFactory.PROP_DROP_DOWN_MENU,
                 Utilities.actionsToPopup(new Action[]{def1, def2}, org.openide.util.Lookup.EMPTY));
         rootMenu.setAction(def1);
         
-        toolbar.add(gotoMenu);
+        gotoMenu = createDropDownButton(Images.imgGotoRoot, null);
+        gotoContext = new ActionGotoContext(gotoMenu);
+        gotoRoot = new ActionGotoRoot(gotoMenu);
+        gotoMenu.putClientProperty(
+                DropDownButtonFactory.PROP_DROP_DOWN_MENU,
+                Utilities.actionsToPopup(new Action[]{gotoContext,gotoRoot}, org.openide.util.Lookup.EMPTY));
+        gotoMenu.setAction(gotoContext);
+
         toolbar.add(rootMenu);
+        toolbar.add(gotoMenu);
 
         // bookmarks
         PopupWidget pb = new PopupWidget("", BOOKMARK_ICON) {
@@ -1169,6 +1173,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             scrollToCurrent(true, false);
             // update button
             famAndSpouseAction.updateButton();
+            gotoContext.updateButton();
 
         }
 
@@ -1831,6 +1836,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
         private Entity entity;
         private JButton bMenu = null;
+        private boolean isContextPresent = false;
 
         public ActionGotoContext() {
             this(null);
@@ -1838,15 +1844,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         public ActionGotoContext(JButton b) {
             super();
             bMenu = b;
-            Entity e = null;
-            Context c = TreeView.this.context;
-            if (c != null)
-                e = c.getEntity();
-            if (e == null)
-                e = TreeView.this.getRoot();
-            setTip(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(true)));
-            setText(RESOURCES.getString("goto.context.tip",e==null?"":e.toString(true)));
-            setImage(Images.imgGotoRoot);
+            setImage(Images.imgGotoContext);
         }
 
         @Override
@@ -1859,18 +1857,41 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
                     entity = prop.getGedcom().getFirstEntity(Gedcom.INDI);
                 }
             }
-            if (entity != null){
-                setTip(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true)));
-                setText(NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true)));
-            }
+            updateButton();
             super.contextChanged();
         }
 
         @Override
         protected void actionPerformedImpl(final ActionEvent event) {
+            if (!isContextPresent) {
+                return;
+            }
             TreeView.this.scrollToCurrent(true, true);
-            if (bMenu.getAction() != this)
+            if (bMenu.getAction() != this) {
                 bMenu.setAction( this );
+            }
+        }
+        
+        // Goto entity must not be null and it must be present in the tree
+        public void updateButton() {
+            String label = "";
+            if (entity != null && model.getNode(entity) != null) {
+                if (bMenu.getAction() != this) {
+                    bMenu.setAction(this);
+                }
+                label = NbBundle.getMessage(ActionGotoContext.class, "goto.context.tip",entity.toString(true));
+                setImage(Images.imgGotoContext);
+                isContextPresent = true;
+            } else {
+                if (bMenu.getAction() == this) {
+                    bMenu.setAction(gotoRoot);
+                }
+                label = NbBundle.getMessage(ActionGotoContext.class, "goto.contextnotintree.tip", entity != null ? entity.toString(true) : "");
+                setImage(ImageUtilities.createDisabledIcon((Icon) Images.imgGotoContext));
+                isContextPresent = false;
+            }
+            setTip(label);
+            setText(label);
         }
     }
 
