@@ -671,7 +671,7 @@ import org.openide.windows.WindowManager;
   }
   
   
-    private void getCenteredEntities() {
+    public void getCenteredEntities() {
         Point p = view.getCenter();
         if (p == null) {
             return;
@@ -679,11 +679,17 @@ import org.openide.windows.WindowManager;
         int x = p.x;
         int y = p.y;
         int s = 0;
+        int inc = +10;
         Entity entity = null;
         while (entity == null) {
             entity = getEntityAt(x, y - s);
-            s += 10;
+            s += inc;
             if ((y - s) < bounds.y) {
+                inc = -10;
+                y = p.y;
+                s = 0;
+            }
+            if ((y - s) > (bounds.y + bounds.height)) {
                 break;
             }
         }
