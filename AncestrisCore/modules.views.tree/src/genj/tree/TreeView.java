@@ -431,6 +431,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         if (set == null || style.equals(set)) {
             return;
         }
+        // remember position of centered entity
+        model.getCenteredEntities();
+
         // remember
         style = set;
         // reset zoom to new style zoom
