@@ -321,6 +321,14 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         populate(toolbar);
     }
 
+  /**
+     * Current gedcom
+     * @return
+     */
+    public Gedcom getGedcom() {
+        return gedcom;
+    }    
+    
 //  /**
 //   * ContextMenu
 //   */
