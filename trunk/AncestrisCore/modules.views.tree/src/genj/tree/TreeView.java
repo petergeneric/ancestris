@@ -1840,7 +1840,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             }
 
             setImageText(IMAGE.getOverLayed(entity.getImage(false)),
-                    NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for", Gedcom.getName(entity.getTag())));
+                    NbBundle.getMessage(ChooseBlueprintAction.class, "blueprint.select.for", Gedcom.getName(entity.getTag(), true)));
             super.contextChanged();
         }
 
