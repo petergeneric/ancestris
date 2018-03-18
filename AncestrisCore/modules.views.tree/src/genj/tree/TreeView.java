@@ -65,6 +65,7 @@ import genj.util.swing.ViewPortOverview;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import ancestris.swing.ToolBar;
+import genj.gedcom.GedcomListenerAdapter;
 import genj.tree.Model.NextFamily;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -154,6 +155,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     private ActionGotoContext gotoContext;
     private ActionGotoRoot gotoRoot;
 
+    /** Gedcom listeners for familyandspouse button */
+    private Callback callback = null; 
     
     /** our styles */
     private TreeStyleManager styleManager;
@@ -244,6 +247,9 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         AncestrisPlugin.unregister(this);
         // done
         super.removeNotify();
+        if (callback != null && context.getGedcom() != null) {
+            context.getGedcom().removeGedcomListener(callback);
+        }
     }
     
     public void writeProperties(){
@@ -540,6 +546,11 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         }
         if (context.getGedcom() != null && !newContext.getGedcom().equals(context.getGedcom())) {
             return;
+        }
+        // install action listener
+        if (callback == null && context.getGedcom() != null) {
+            callback = new Callback();
+            context.getGedcom().addGedcomListener(callback);
         }
         // ignored?
         if (ignoreContextChange) {
@@ -904,6 +915,41 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         timer.schedule(task, 3000L);
     }
 
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    /**
+     * Force family mode view in case some famlily related entities are created
+     */
+    private class Callback extends GedcomListenerAdapter {
+
+        private boolean isFamModified = false;
+
+        @Override
+        public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
+            isFamModified = (entity instanceof Fam);
+        }
+
+        @Override
+        public void gedcomWriteLockReleased(Gedcom gedcom) {
+            if (isFamModified) {  // force family mode
+                model.setFamilies(true);
+                famAndSpouseAction.setImage(Images.imgDontFams);
+                famAndSpouseAction.setTip("<html>" + RESOURCES.getString("familiesnot.tip") + "</html>");
+                isFamModified = false;
+            }
+        }
+    }
+        
+    
     /**
      * Overview
      */
@@ -1437,9 +1483,6 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             updateButton();
         }
 
-        /**
-         * @see genj.util.swing.AbstractAncestrisAction#execute()
-         */
         @Override
         public void actionPerformed(ActionEvent event) {
             model.setFamilies(!model.isFamilies());
