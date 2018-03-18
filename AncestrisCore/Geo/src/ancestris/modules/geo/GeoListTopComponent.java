@@ -276,17 +276,20 @@ public final class GeoListTopComponent extends AncestrisTopComponent implements 
             final Node node = kids[i];
             ((BeanTreeView) jScrollPane1).collapseNode(node);
             GeoNodeObject obj = node.getLookup().lookup(GeoNodeObject.class);
-            if (obj == gno) {
+            if (obj.toDisplayString().equals(gno.toDisplayString())) { // found
                 ((MyBeanTreeView) jScrollPane1).setScrollOnExpand(true);
                 ((MyBeanTreeView) jScrollPane1).expandNode(node);
                 try {
-                    mgr.setSelectedNodes(new Node[]{node});
+                    mgr.setSelectedNodes(new Node[]{kids[kids.length-1]}); // select last node
+                    mgr.setSelectedNodes(new Node[]{node}); // then select found node so that expanded lines can be seen
                 } catch (PropertyVetoException ex) {
                     // nothing
                 }
+                break;
             }
         }
     }
+    
 
     /**
      * Subclass BeanTreeView to be able to use the setScrollOnExpand function
