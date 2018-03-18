@@ -46,6 +46,7 @@ import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -1126,7 +1127,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return geoFilter.getSelectedIndi().toString(true);
     }
 
-    public void showListAtLocation(GeoNodeObject gno) {
+    public void showListAtLocation(final GeoNodeObject gno) {
+        int delay = 0;
         GeoListTopComponent theList = null;
         for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
             if (tc instanceof GeoListTopComponent) {
@@ -1139,13 +1141,27 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         if (theList == null) {
             theList = new GeoListTopComponent();
+            delay = 1000;
         }
         if (!theList.isInitialised()) {
             theList.init(getContext());
             theList.open();
         }
         theList.requestActive();
-        theList.showLocation(gno);
+        final GeoListTopComponent tmpList = theList;
+        final int d = delay;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                if (d != 0) {
+                    try {
+                        Thread.sleep(d);
+                    } catch (InterruptedException ex) {
+                        Exceptions.printStackTrace(ex);
+                    }
+                }
+                tmpList.showLocation(gno);
+            }
+        });
     }
 
     public String getFilterName() {
