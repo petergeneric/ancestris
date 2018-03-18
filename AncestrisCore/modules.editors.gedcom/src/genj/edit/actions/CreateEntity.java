@@ -30,6 +30,7 @@ import genj.util.swing.NestedBlockLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -84,6 +85,7 @@ public class CreateEntity extends AbstractChange {
             }
         });
 
+        result.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
         result.add(getConfirmComponent());
         result.add(check);
         result.add(requestID);
@@ -102,7 +104,7 @@ public class CreateEntity extends AbstractChange {
         // This entity will not be connected ... 
         String detail = resources.getString("confirm.new.unrelated");
         // done
-        return about + '\n' + detail;
+        return about + '\n' + '\n' + detail;
     }
 
     /**
