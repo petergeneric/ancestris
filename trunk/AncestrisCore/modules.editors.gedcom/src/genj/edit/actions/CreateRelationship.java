@@ -32,6 +32,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import javax.swing.BorderFactory;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
@@ -93,12 +94,13 @@ public abstract class CreateRelationship extends AbstractChange {
                 : resources.getString("confirm.use", new Object[]{existing.getId(), getGedcom()}));
 
         // relationship detail
+        result.append(" ");  // line break
         result.append(resources.getString("confirm.new.related", getDescription()));
 
         // A warning already?
         String warning = getWarning(existing);
         if (warning != null) {
-            result.append("**** " + warning);
+            result.append("\n\n*/!\\* " + warning);
         }
 
         // combine
@@ -124,7 +126,7 @@ public abstract class CreateRelationship extends AbstractChange {
     protected JPanel getDialogContent() {
 
         JPanel result = new JPanel(new NestedBlockLayout("<col><row><select wx=\"1\"/></row><row><text wx=\"1\" wy=\"1\"/></row><row><check/><text/></row></col>"));
-
+        
         // create selector
         final SelectEntityWidget select = new SelectEntityWidget(getGedcom(), targetType, SelectEntityWidget.NEW);
         existing = select.getSelection();
@@ -146,6 +148,7 @@ public abstract class CreateRelationship extends AbstractChange {
         });
 
         // wrap it up
+        result.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
         result.add(select);
         result.add(getConfirmComponent());
         result.add(checkID);
