@@ -115,6 +115,7 @@ public class ExplorerHelper {
         // Get actions from selected context
         if (selNodes.length > 0) {
             actions.addAll(Arrays.asList(NodeOp.findActions(selNodes)));
+            actions.add(null); // add separator
         }
 
         // Get actions from any action providers in lookups
@@ -152,7 +153,7 @@ public class ExplorerHelper {
                 result = prop.getPropertyName() + ": " + result;
             }
             if (result.isEmpty() && prop instanceof Entity) {
-                result = ((Entity) prop).toString(false);
+                result = ((Entity) prop).toString(true);
             }
             if (result.isEmpty()) {
                 result = prop.getEntity().toString(false) + " (" + prop.getPropertyName() + ")";

@@ -29,6 +29,7 @@ import genj.util.swing.NestedBlockLayout;
 import java.awt.event.ActionEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
@@ -106,6 +107,7 @@ public abstract class ChooseBlueprintAction extends AbstractAncestrisAction {
         ));
 
         ButtonHelper bh = new ButtonHelper();
+        content.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
         content.add(new JLabel(RESOURCES.getString("blueprint.select.for", Gedcom.getName(recipient.getTag(), true))));
         content.add(new JScrollPane(blueprints));
         content.add(bh.create(add));
