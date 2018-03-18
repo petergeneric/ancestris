@@ -45,7 +45,6 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.awt.StatusDisplayer;
 import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
@@ -711,7 +710,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         isBusyRecalc = true;
         String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.inprogress");
-        StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+        jActiveFilters.setToolTipText(msg);
+        //StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
         geoPoints.clear();
         boolean filterIsOn = false;
         if (markers != null) {
@@ -730,12 +730,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
             displayMarkers();
             jActiveFilters.setVisible(filterIsOn);
-            StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
+            jActiveFilters.setToolTipText(msg);
+            //StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
             if (geoPoints.size() < markers.length) {
                 msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
                 msg += geoFilter.getShortDescription();
-                StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+                jActiveFilters.setToolTipText(msg);
+                //StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
             }
         }
         hoverPanel.setVisible(false); 
