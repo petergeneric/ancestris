@@ -15,6 +15,7 @@ package ancestris.modules.editors.standard;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
+import ancestris.gedcom.PropertyNode;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -36,6 +37,7 @@ import genj.gedcom.UnitOfWork;
 import java.awt.BorderLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -45,6 +47,9 @@ import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.openide.awt.UndoRedo;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -121,6 +126,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
 
         // Adjust context
         newContext = adjustContext(newContext);
+        setManagerContext(newContext.getEntity());
         
         // Quit if context is the same  
         if (newContext.equals(this.context)) {
@@ -175,7 +181,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         
         // Fill in editor with new context
         editor.setContext(newContext);
-        
+
         // Redisplay editor in panel
         if (editorContainer != null) {
             editorContainer.setViewportView(editor);
@@ -341,6 +347,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         // Redisplay context from scratch
         Context ctx = editor.getContext();
         editor.setContext(ctx);
+        setManagerContext(ctx.getEntity());
     }
 
     
@@ -558,6 +565,21 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         }
         return retCtx != null ? retCtx : ctx;
     }
+
+    // Force content of manager lookup to be on the individual, not the families or sub-properties
+    private void setManagerContext(Entity entity) {
+        if (entity == null || entity.getGedcom() == null) {
+            return;
+        }
+        try {
+            Children children = PropertyNode.getChildren(new Context(entity));
+            getExplorerManager().setRootContext(new AbstractNode(children));
+            getExplorerManager().setSelectedNodes(children.getNodes());
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+    }
     
     
     
@@ -591,6 +613,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
                 // Reset context
                 Context ctx = editor.getContext();
                 editor.setContext(adjustContext(ctx));
+                setManagerContext(ctx.getEntity());
             }
         }
     }
