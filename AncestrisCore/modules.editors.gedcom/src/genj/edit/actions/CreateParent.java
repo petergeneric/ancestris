@@ -44,49 +44,59 @@ import org.openide.awt.ActionRegistration;
 @ActionRegistration(displayName = "#add.parent",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(position=200,separatorBefore=190, path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=210, path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateParent extends CreateRelationship {
 
     private final static ImageIcon IMG = new ImageIcon(CreateParent.class, "Parents.png");
+    private final static ImageIcon IMG_FA = new ImageIcon(CreateParent.class, "Father.png");
+    private final static ImageIcon IMG_MO = new ImageIcon(CreateParent.class, "Mother.png");
+
     /** the child and family we're creating a parent for */
     private Entity entity;
     private Indi child;
     private Fam family;
-    private int sex = -1;
+    private int sex = PropertySex.UNKNOWN;
 
     public CreateParent() {
         super(resources.getString("add.parent"), Gedcom.INDI);
-        setImage(IMG);
-//XXX:        setImageText(IMG, resources.getString("create.parent"));
     }
 
-    /** constructor */
+    /** constructor
+     * @param entity */
     public CreateParent(Entity entity) {
-        this(entity, -1);
+        this(entity, PropertySex.UNKNOWN);
     }
 
     public CreateParent(Entity entity, int sex) {
-        this();
-//        setImageText(IMG, resources.getString("create.parent"));
+        super(calcName(sex), Gedcom.INDI);
         this.entity = entity;
-//FIXME: sex not used?        initialize(entity, sex);
+        this.sex = sex;
+        setImage(sex == PropertySex.MALE ? IMG_FA : sex == PropertySex.FEMALE ? IMG_MO : IMG);
         initialize(entity, sex);
         contextChanged();
     }
 
+    private static String calcName(int sex) {
+        if (sex == PropertySex.FEMALE) {
+            return resources.getString("add.mother");
+        } else if (sex == PropertySex.MALE) {
+            return resources.getString("add.father");
+        } else {
+            return resources.getString("add.parent");
+        }
+    }
+    
     private boolean initialize(Entity entity, int sex) {
-        boolean success = false;
 
         if (entity == null) {
             return false;
         }
+        
         if (entity instanceof Fam) {
             family = (Fam) entity;
             this.child = null;
             this.sex = sex;
-            if (family.getNoOfSpouses() < 2) {
-                success = true;
-            }
+            return family.acceptSpouse(sex);
         }
         if (entity instanceof Indi) {
             child = (Indi) entity;
@@ -95,15 +105,17 @@ public class CreateParent extends CreateRelationship {
 
             // check if the child already is part of a family without spouse
             Fam[] fams = child.getFamiliesWhereChild();
-            for (int f = 0; f < fams.length; f++) {
-                if (fams[f].getNoOfSpouses() < 2) {
-                    family = fams[f];
-                    break;
+            if (fams.length == 0) {
+                return true;
+            }
+            for (Fam fam : fams) {
+                if (fam.acceptSpouse(sex)) {
+                    family = fam;
+                    return true;
                 }
             }
-            success = true;
         }
-        return success;
+        return false;
     }
 
     @Override
@@ -121,18 +133,21 @@ public class CreateParent extends CreateRelationship {
         }
     }
 
-    /** description of what this'll do */
+    /** description of what this'll do
+     * @return  */
     @Override
     public String getDescription() {
         // "Parent of Meier, Nils (I1)"
         if (child != null) {
-            return resources.getString("add.parent.of", child);
+            return resources.getString(sex == PropertySex.MALE ? "add.father.of" : sex == PropertySex.FEMALE ? "add.mother.of" : "add.parent.of", child);
         }
         // "Parent in Meier, Sven (I1) + Radovcic Sandra (I2) (F1)"
-        return resources.getString("add.parent.in", family);
+        return resources.getString(sex == PropertySex.MALE ? "add.father.in" : sex == PropertySex.FEMALE ? "add.mother.in" : "add.parent.in", family);
     }
 
-    /** a warning in case the target indi is already a child of another family */
+    /** a warning in case the target indi is already a child of another family
+     * @param indi
+     * @return  */
     @Override
     public String getWarning(Entity indi) {
 
@@ -148,7 +163,11 @@ public class CreateParent extends CreateRelationship {
 
     }
 
-    /** change impl */
+    /** change impl
+     * @param parent
+     * @param parentIsNew
+     * @return
+     * @throws genj.gedcom.GedcomException  */
     @Override
     protected Property change(Entity parent, boolean parentIsNew) throws GedcomException {
 
@@ -156,16 +175,19 @@ public class CreateParent extends CreateRelationship {
         Gedcom ged = parent.getGedcom();
         PropertyXRef FAMS;
 
-        if (parentIsNew && sex >= 0) {
-            ((Indi) parent).setSex(sex);
-        }
 
         // know the family already?
         if (family != null) {
 
+            if (parentIsNew && sex > 0) { // if sex is known, change it before calling setSpouse
+                ((Indi) parent).setSex(sex);
+            }
             FAMS = family.setSpouse((Indi) parent).getTarget();
             Indi other = family.getOtherSpouse((Indi) parent);
             lastname = other != null ? other.getLastName() : "";
+            if (parentIsNew && sex == 0) { // if sex was unknown, leave it unknown, user had the choice to not leave unknown in the drop down menu
+                ((Indi) parent).setSex(sex);
+            }
 
         } else { // need new family
 
@@ -177,8 +199,15 @@ public class CreateParent extends CreateRelationship {
             family.addChild(child);
             family.addDefaultProperties();
 
+            if (parentIsNew && sex > 0) { // if sex is known, change it before calling setSpouse
+                ((Indi) parent).setSex(sex);
+            }
+
             // set spouse
             FAMS = family.setSpouse((Indi) parent).getTarget();
+            if (parentIsNew && sex == 0) { // if sex was unknown, leave it unknown, user had the choice to not leave unknown in the drop down menu
+                ((Indi) parent).setSex(sex);
+            }
 
             // 20040619 adding missing spouse automatically now
             // 20050405 whether we created a new family or the family didn't have all parents
@@ -190,7 +219,6 @@ public class CreateParent extends CreateRelationship {
                     spouse.setName("", lastname);
                 }
             }
-
         }
 
         // set name of parent if new

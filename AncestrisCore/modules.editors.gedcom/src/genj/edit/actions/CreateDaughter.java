@@ -32,7 +32,7 @@ import org.openide.awt.ActionRegistration;
 @ActionRegistration(displayName = "#add.daughter",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(position=520,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=505,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateDaughter extends CreateChild {
 
     /** constructor */

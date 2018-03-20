@@ -32,7 +32,7 @@ import org.openide.awt.ActionRegistration;
 @ActionRegistration(displayName = "#add.sister",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(position=320,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=305,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateSister extends CreateSibling {
 
     /** constructor */

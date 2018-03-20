@@ -3,17 +3,22 @@
  */
 package genj.edit.actions;
 
+import ancestris.view.SelectionDispatcher;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.SwingUtilities;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
+import org.openide.util.Exceptions;
 
 /**
  * Knows how to create cross-references to other entities, namely NOTE, OBJE, SUBM, SOUR, ... and
@@ -113,9 +118,24 @@ public class CreateXReference extends CreateRelationship {
         } catch (GedcomException e) {
             source.delProperty(xref);
             xref = null;
+            Exceptions.printStackTrace(e);
             throw e;
         }
+        
 
+        // Add parents if target is new
+        if (targetIsNew) {
+            final Property prop = xref.getTarget();
+            SwingUtilities.invokeLater(new Runnable() {
+                @Override
+                public void run() {
+                    new CreateParent(prop.getEntity(), PropertySex.MALE).actionPerformed(null);
+                    SelectionDispatcher.fireSelection(new Context(prop));
+                    new CreateParent(prop.getEntity(), PropertySex.FEMALE).actionPerformed(null);
+                }
+            });
+        }
+        
         //  focus stays with owner
         return targetIsNew ? xref.getTarget() : xref;
 
@@ -128,6 +148,12 @@ public class CreateXReference extends CreateRelationship {
         return xref;
     }
 
+    
+    
+    
+    
+    
+    
     @ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.AddXRefFamc")
     @ActionRegistration(displayName = "add.fam",
         lazy = false)

@@ -807,21 +807,69 @@ import org.openide.windows.WindowManager;
     
     private Set repaint = new HashSet();
     private boolean update = false;
-    private Entity added;
+    private Entity added;  // first added indi (or fam otherwise) in a block unit of change
+    private boolean isFamAdded = false;
+
     
+    @Override
     public void gedcomWriteLockAcquired(Gedcom gedcom) {
       added = null;
       repaint.clear();
     }
     
+    @Override
         public void gedcomWriteLockReleased(Gedcom gedcom) {
 
-            // we're without root we could set now?
+            if (isFamAdded) {  // force family mode
+                setFamilies(true);
+                view.forceFamilies(true);
+                isFamAdded = false;
+            }
+            
+            // if added entity (only the first one) is an indi that is not ancestor or descendant of root, it will not be visible. Signal user or change root.
+            if (root != null && added != null && added instanceof Indi) {
+                Indi addedIndi = (Indi) added;
+                Entity newRoot = null;
+                if (!isDirectOf(addedIndi, root)) {
+                    Fam[] fams = addedIndi.getFamiliesWhereChild();
+                    if (fams != null && fams.length != 0) {
+                        newRoot = fams[0];
+                    } else {
+                        Indi[] children = addedIndi.getChildren();
+                        if (children != null && children.length != 0) {
+                            newRoot = children[0];
+                        } else {
+                            // give up, entity is isolated
+                        }
+                    }
+                    
+                }
+                if (newRoot != null) {
+                    root = newRoot;
+                    view.setRoot(root);
+                    update();
+                    return;
+                }
+            }
+            
+            // if we're without root, which one to pick ? => centered or else first entity
             if (root == null) {
                 if (added == null || !gedcom.contains(added)) {
-                    added = gedcom.getFirstEntity(Gedcom.INDI);
+                    getCenteredEntities();
+                    boolean found = false;
+                    for (Entity ent : fallbackEntities) {
+                        if (ent != null && gedcom.contains(ent)) {
+                            added = ent;
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        added = gedcom.getFirstEntity(Gedcom.INDI);
+                    }
                 }
                 root = added;
+                view.setRoot(root);
                 update();
                 return;
             }
@@ -838,14 +886,19 @@ import org.openide.windows.WindowManager;
             }
         }
 
+    @Override
         public void gedcomEntityAdded(Gedcom gedcom, Entity added) {
             if (added instanceof Fam || added instanceof Indi) {
-                if (!(this.added instanceof Indi) || added instanceof Indi) {
-                    this.added = added;
+                if (!(this.added instanceof Indi) && added instanceof Indi) {
+                    this.added = added; // first indi seen
+                }
+                if (!isFamAdded) {
+                    isFamAdded = (added instanceof Fam);
                 }
             }
         }
 
+    @Override
         public void gedcomEntityDeleted(Gedcom gedcom, Entity entity) {
             // clear root?
             if (entity == root) {
@@ -871,6 +924,7 @@ import org.openide.windows.WindowManager;
             gedcomPropertyChanged(gedcom, added);
         }
 
+    @Override
         public void gedcomPropertyChanged(Gedcom gedcom, Property property) {
             // a reference update?
             if (property instanceof PropertyXRef) {
@@ -911,5 +965,16 @@ import org.openide.windows.WindowManager;
                 repaint.add(getNode(property.getEntity()));
             }
         }
+
+        private boolean isDirectOf(Indi addedIndi, Entity root) {
+            if (root instanceof Indi) {
+                return (addedIndi.isAncestorOf((Indi) root) || addedIndi.isDescendantOf((Indi) root));
+            }
+            if (root instanceof Fam) {
+                return (addedIndi.isAncestorOf((Fam) root) && !addedIndi.isDescendantOf((Fam) root));
+            }
+            return false;
+        }
+        
     } // Callback
 } //Model
