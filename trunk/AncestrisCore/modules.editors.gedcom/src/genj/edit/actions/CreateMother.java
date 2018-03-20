@@ -28,16 +28,16 @@ import org.openide.awt.ActionRegistration;
 /**
  * Create a child of a family or person
  */
-@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateSon")
-@ActionRegistration(displayName = "#add.son",
+@ActionID(category = "Edit/Gedcom", id = "genj.edit.actions.CreateMother")
+@ActionRegistration(displayName = "#add.mother",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(position=500,separatorBefore=490,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
-public class CreateSon extends CreateChild {
+    @ActionReference(position=205,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+public class CreateMother extends CreateParent {
 
     /** constructor */
-    public CreateSon() {
-        super(null, PropertySex.MALE);
+    public CreateMother() {
+        super(null, PropertySex.FEMALE);
     }
 
 }

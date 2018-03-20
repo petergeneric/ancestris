@@ -40,7 +40,7 @@ public class Fam extends Entity {
     
     public final static String TAG_PREF = "_PREF";
 
-    
+
     /** comparator for CHIL nodes - by child's birth date and position if necessary */
     private class CHILComparator extends PropertyComparator {
 
@@ -377,6 +377,30 @@ public class Fam extends Entity {
         return pw;
     }
 
+    
+    public boolean acceptSpouse(int sex) {
+        // already 2 spouses, false
+        if (getNoOfSpouses() == 2) {
+            return false;
+        }
+
+        // if a husband already there of Male sex and sex is female, false
+        Indi husb = getHusband();
+        if (husb != null && husb.getSex() == PropertySex.MALE && sex != PropertySex.FEMALE) {
+            return false;
+        }
+        
+        // if a wife already there of Female sex and sex is not male, false
+        Indi wife = getWife();
+        if (wife != null && wife.getSex() == PropertySex.FEMALE && sex != PropertySex.MALE) {
+            return false;
+        }
+        
+        return true;
+    }
+    
+    
+    
     /**
      * Sets one of the spouses
      *
@@ -405,6 +429,9 @@ public class Fam extends Entity {
             case PropertySex.MALE:
                 // overwrite husband
                 HUSBorWIFE = setHusband(spouse);
+                if (wife != null && wife.getSex() != PropertySex.FEMALE) {
+                    wife.setSex(PropertySex.FEMALE);
+                }
                 // keep old husband as wife if necessary
                 if (husband != null) {
                     setWife(husband);
@@ -413,6 +440,9 @@ public class Fam extends Entity {
             case PropertySex.FEMALE:
                 // overwrite wife
                 HUSBorWIFE = setWife(spouse);
+                if (husband != null && husband.getSex() != PropertySex.MALE) {
+                    husband.setSex(PropertySex.MALE);
+                }
                 // keep old wife as husband if necessary
                 if (wife != null) {
                     setHusband(wife);

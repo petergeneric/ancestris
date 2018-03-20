@@ -43,7 +43,7 @@ import org.openide.awt.ActionRegistration;
 @ActionRegistration(displayName = "#add.sibling",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(position=300,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=310,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateSibling extends CreateRelationship {
 
     private final static ImageIcon IMG_BROTHER = new ImageIcon(CreateParent.class, "Brother.png");
@@ -95,7 +95,7 @@ public class CreateSibling extends CreateRelationship {
     @Override
     public String getDescription() {
         // "Sibling of Meier, Nils (I1)"
-        return resources.getString("add.sibling.of", sibling);
+        return resources.getString(sex == PropertySex.MALE ? "add.brother.of" : sex == PropertySex.FEMALE ? "add.sister.of" : "add.sibling.of", sibling);
     }
 
     /** do the change */

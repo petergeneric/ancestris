@@ -40,7 +40,7 @@ import org.openide.awt.ActionRegistration;
 @ActionRegistration(displayName = "#add.child",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(position=500,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
+    @ActionReference(position=510,path = "Ancestris/Actions/GedcomProperty/AddIndiOrFam")})
 public class CreateChild extends CreateRelationship {
 
     /** the parent or family we're creating a child for */
@@ -91,10 +91,10 @@ public class CreateChild extends CreateRelationship {
     public String getDescription() {
         // "Child of Meier, Sven (I1)"
         if (parentOrFamily instanceof Indi) {
-            return resources.getString("add.child.of", parentOrFamily);
+            return resources.getString(sex == PropertySex.MALE ? "add.son.of" : sex == PropertySex.FEMALE ? "add.daughter.of" : "add.child.of", parentOrFamily);
         }
         // "Child in Meier, Sven (I1) + Radovcic Sandra (I2) (F1)"
-        return resources.getString("add.child.in", parentOrFamily);
+        return resources.getString(sex == PropertySex.MALE ? "add.son.in" : sex == PropertySex.FEMALE ? "add.daughter.in" : "add.child.in", parentOrFamily);
     }
 
     /** a warning in case the target indi is already a child of another family */
