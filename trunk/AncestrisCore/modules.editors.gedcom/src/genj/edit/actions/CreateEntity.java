@@ -27,6 +27,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.util.swing.NestedBlockLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Action;
@@ -85,11 +86,14 @@ public class CreateEntity extends AbstractChange {
             }
         });
 
-        result.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+        result.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         result.add(getConfirmComponent());
         result.add(check);
         result.add(requestID);
 
+        // Setpreferred size
+        result.setPreferredSize(new Dimension(520, 220));
+        
         // done
         return result;
     }
@@ -104,7 +108,7 @@ public class CreateEntity extends AbstractChange {
         // This entity will not be connected ... 
         String detail = resources.getString("confirm.new.unrelated");
         // done
-        return about + '\n' + '\n' + detail;
+        return about + "<br>" + "<br>" + detail;
     }
 
     /**

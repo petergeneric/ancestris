@@ -30,12 +30,10 @@ import genj.gedcom.UnitOfWork;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
-import genj.util.swing.TextAreaWidget;
 import java.awt.event.ActionEvent;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 /**
  * ActionChange - change the gedcom information
@@ -47,7 +45,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
     private Context selection;
     /** image *new* */
     protected final static ImageIcon imgNew = Images.imgNew;
-    private JTextArea confirm;
+    private JLabel confirm;
 
     /**
      * Returns the confirmation message - null if none
@@ -56,6 +54,11 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
         return null;
     }
 
+    protected String getHTMLMessage() {
+        return "<html>" + getConfirmMessage() + "</html>";
+    }
+    
+    
     /**
      * Return the dialog content to show to the user
      */
@@ -67,12 +70,9 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
 
     protected JComponent getConfirmComponent() {
         if (confirm == null) {
-            confirm = new TextAreaWidget(getConfirmMessage(), 7, 40);
-            confirm.setWrapStyleWord(true);
-            confirm.setLineWrap(true);
-            confirm.setEditable(false);
+            confirm = new JLabel(getHTMLMessage());
         }
-        return new JScrollPane(confirm);
+        return confirm; //new JScrollPane(confirm);
     }
 
     /**
@@ -81,7 +81,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
     protected void refresh() {
         // might be no confirmation showing
         if (confirm != null) {
-            confirm.setText(getConfirmMessage());
+            confirm.setText(getHTMLMessage());
         }
     }
 
@@ -94,14 +94,14 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
         confirm = null;
 
         // prepare confirmation message for user
-        String msg = getConfirmMessage();
+        String msg = getHTMLMessage();
         if (msg != null) {
             String confirmButton = resources.getString("confirm.proceed", getText());
 
             // Recheck with the user
             Object rc = DialogManager.create(getText(), getDialogContent())
               .setOptions(new Object[]{confirmButton,DialogManager.CANCEL_OPTION})
-              .setDialogId("confirm.proceed")
+              .setDialogId("confirm.proceed."+super.getClass())
               .show();
             if (rc != confirmButton) {
                 return;

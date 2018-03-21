@@ -99,7 +99,7 @@ public class DelProperty extends AbstractChange {
     protected String getConfirmMessage() {
         StringBuilder txt = new StringBuilder();
         txt.append(resources.getString("confirm.del.props", candidates.size()));
-        txt.append("\n");
+        txt.append("<br>");
         int i = 0;
         for (Property prop : candidates) {
             if (i++ > 16) {
@@ -107,7 +107,7 @@ public class DelProperty extends AbstractChange {
                 break;
             }
             txt.append(prop.toString());
-            txt.append("\n");
+            txt.append("<br>");
         }
         return txt.toString();
     }

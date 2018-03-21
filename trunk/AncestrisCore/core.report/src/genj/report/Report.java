@@ -419,7 +419,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      */
     public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag) {
 
-        String explanation = COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag));
+        String explanation = "<html>" + COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag)) + "<br>&nbsp;</html>";
         
         SelectEntityWidget select = new SelectEntityWidget(gedcom, tag, null);
 
