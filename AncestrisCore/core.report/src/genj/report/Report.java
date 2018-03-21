@@ -419,6 +419,8 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      */
     public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag) {
 
+        String explanation = COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag));
+        
         SelectEntityWidget select = new SelectEntityWidget(gedcom, tag, null);
 
         // preselect something?
@@ -428,9 +430,10 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         }
 
         // show it
-        if (DialogManager.create(getName(), new JComponent[]{new JLabel(msg), select})
+        if (DialogManager.create(getName(), new JComponent[]{new JLabel(explanation), new JLabel(msg), select})
                 .setMessageType(DialogManager.QUESTION_MESSAGE)
                 .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .setDialogId("report.entityfromuser")
                 .show() != DialogManager.OK_OPTION) {
             return null;
         }
@@ -468,6 +471,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         if (DialogManager.create(getName(), new JComponent[]{new JLabel(msg), choice})
                 .setMessageType(DialogManager.QUESTION_MESSAGE)
                 .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .setDialogId("report.valuefromuser")
                 .show() != DialogManager.OK_OPTION) {
             return null;
         }
@@ -503,6 +507,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         if (DialogManager.create(getName(), new JComponent[]{new JLabel(msg), choice})
                 .setMessageType(DialogManager.QUESTION_MESSAGE)
                 .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .setDialogId("report.valuefromuser")
                 .show() != DialogManager.OK_OPTION) {
             return null;
         }
@@ -592,6 +597,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         Object result = DialogManager.create(getName(), msg)
                 .setMessageType(DialogManager.QUESTION_MESSAGE)
                 .setOptionType(OPTION_TYPE[option])
+                .setDialogId("report.optionsfromuser")
                 .show();
         return result == DialogManager.OK_OPTION || result == DialogManager.YES_OPTION;
     }
