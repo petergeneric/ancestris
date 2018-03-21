@@ -106,7 +106,7 @@ public class MergePanel extends javax.swing.JPanel  {
 
         // j'ajoute les modeles avec un radio bouton pour chaque modele
         buttonGroupChoiceModel=new javax.swing.ButtonGroup();
-
+                
         int position = 0;
         for(int i= 0; i< models.size(); i++) {
             MergeModel mergeModel = models.get(i);
@@ -137,7 +137,13 @@ public class MergePanel extends javax.swing.JPanel  {
             radioButton0.doClick();
             //selectModel(models.get(0));
         } else {
-            setVisible(false);
+            // s'il n'y a aucune proposition, j'affiche un message d'information dans le premier panneau
+            if ( participantType == MergeParticipantType.participant1 ) {
+                jLabel1.setText("<html>"+NbBundle.getMessage(MergePanel.class, "MergePanel.title.NoProposition")+"</html>");                             
+            } else {
+                setVisible(false);            
+            }
+
         }
         this.revalidate();
         this.repaint();
