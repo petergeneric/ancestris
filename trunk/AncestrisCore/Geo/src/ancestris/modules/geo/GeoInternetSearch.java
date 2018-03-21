@@ -47,7 +47,6 @@ class GeoInternetSearch {
         this.placesProps = placesProps;
     }
 
-    @SuppressWarnings("unchecked")
     public synchronized void executeSearch(Gedcom gedcom, final boolean force) {
 
         // return if busy with this gedcom already
@@ -63,8 +62,9 @@ class GeoInternetSearch {
         final SortedMap<String, GeoNodeObject> listOfCities = new TreeMap<String, GeoNodeObject>(sortString); // pointer from propertyplace to objects, to group events by location
         
         // the progress bar
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces"), new Cancellable() {
-
+        String paramMsg = NbBundle.getMessage(GeoInternetSearch.class, force ? "TXT_SearchPlacesWeb" : "TXT_SearchPlacesLocal");
+        String processMsg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces", placesProps.size(), paramMsg);
+        final ProgressHandle ph = ProgressHandleFactory.createHandle(processMsg, new Cancellable() {
             public boolean cancel() {
                 return handleCancel();
             }
@@ -140,6 +140,7 @@ class GeoInternetSearch {
                     gedcomSearchingList.remove(placesProps.get(0).getGedcom());
                 }
                 isBusy = false;
+                callback();
             }
         });
 
@@ -175,4 +176,7 @@ class GeoInternetSearch {
         }
     };
 
+    
+    public void callback() {
+    }
 }
