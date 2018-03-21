@@ -165,6 +165,12 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
 
         // je recupere les modeles contenant les entites compatibles avec le relevé
         mergeModelList = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showAllParents);
+        
+        if ( mergeModelList.isEmpty() ) {
+            // je désactive le bouton OK s'il n'y a pas de proposition
+            jButtonOK.setEnabled(false);
+        }        
+
         // j'affiche les modeles et selectionne le premier modele de la liste
         // (j'affiche le panel1 en dernier pour que le partipant 1 soit selectionné dans l'arbre)
         mergePanel2.initData( mergeModelList, selectedEntity, this, MergeParticipantType.participant2);
