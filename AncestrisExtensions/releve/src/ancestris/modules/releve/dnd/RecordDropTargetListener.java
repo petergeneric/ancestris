@@ -7,6 +7,7 @@ import ancestris.modules.editors.standard.CygnusTopComponent;
 import ancestris.modules.releve.merge.MergeDialog;
 import ancestris.modules.views.tree.TreeTopComponent;
 import ancestris.view.AncestrisTopComponent;
+import genj.edit.EditView;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -106,7 +107,7 @@ public class RecordDropTargetListener implements DropTargetListener {
         if (component instanceof TreeTopComponent) {            
             result = ((TreeTopComponent) component).getView();
         } else if (component instanceof GedcomTopComponent) {            
-            result = component;            
+            result = ((GedcomTopComponent) component).getView();          
         } else if (component instanceof CygnusTopComponent) {
             result = component;
         } else if (component instanceof AriesTopComponent) {
@@ -124,7 +125,7 @@ public class RecordDropTargetListener implements DropTargetListener {
         boolean result = false;
         if (component instanceof TreeView) {            
             result = true;
-        } else if (component instanceof GedcomTopComponent) {
+        } else if (component instanceof EditView) {
             result = true;
         } else if (component instanceof CygnusTopComponent) {
             result = true;
@@ -176,12 +177,10 @@ public class RecordDropTargetListener implements DropTargetListener {
             Point location = dropTargetDropEvent.getLocation();
             entity = view.getEntityAt(location);
             gedcom = view.getGedcom();
-        } else if (component instanceof GedcomTopComponent) {
-            GedcomTopComponent gedcomTopComponent = (GedcomTopComponent) component;
-            // il faudrait demander à Frederic de rendre public le package  genj.edit  dans le projet Editeur Gedcom
-            // pour pouvoir recupérer l'entité
-            entity = null;
-            gedcom = gedcomTopComponent.getGedcom();
+        } else if (component instanceof EditView) {
+            EditView view = (EditView) component;
+            entity = view.getEntity();
+            gedcom = view.getGedcom();
         } else if (component instanceof AriesTopComponent) {
             AriesTopComponent ariesTopComponent = (AriesTopComponent)component;
             if (ariesTopComponent.getContext() != null ) {
