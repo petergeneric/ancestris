@@ -15,20 +15,16 @@ import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import java.util.prefs.BackingStoreException;
-import javax.swing.JOptionPane;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
-import org.openide.windows.WindowManager;
 
 /**
  *
@@ -36,7 +32,8 @@ import org.openide.windows.WindowManager;
  */
 class GeoPlacesList implements GedcomMetaListener {
 
-    private static final String FORCE_REFRESH_DATE = "03-05-2015";
+    private static final String NO_DATE = "01-01-1900"; 
+    private static final String FORCE_REFRESH_DATE = "03-05-2015";  // date of last format change
     
     public static String TYPEOFCHANGE_GEDCOM = "gedcom";
     public static String TYPEOFCHANGE_COORDINATES = "coord";
@@ -95,39 +92,87 @@ class GeoPlacesList implements GedcomMetaListener {
     }
 
     /**
-     * Launch places search over the net for the list of cities of Gedcom file
+     * Launch places search locally or over the net for the list of cities of Gedcom file
+     * force : force search over the net, otherwise only in the local file
+     * 
      */
-    @SuppressWarnings("unchecked")
-    public synchronized void launchPlacesSearch(boolean force) {
-        List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
+    public synchronized void launchPlacesSearch(final boolean force) {
+        
+        // Get gedcom cities and check it is not empty
+        // If empty, popup explaining that the Geo module only works if places are provided
+        final List<PropertyPlace> placesProps = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
+        if (placesProps.isEmpty()) { 
+            DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "ANOMALY_Title"), NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNone"))
+                    .setDialogId("geo.refresh.noplace").setOptionType(DialogManager.OK_ONLY_OPTION).show();
+            return;
+        }
 
-        if (force) {
-            // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
-            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-            Date versionDate;
-            Date fromValidDate;
+        // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
+        // If 1/1/1900, this is a first time use or with no saved locations file, then skip warning
+        // If another date, erase local file
+        String paramDate = NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", NO_DATE);
+        if (!paramDate.equals(NO_DATE)) {
             try {
-                versionDate = (Date) formatter.parse(NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", "01-01-1900"));
-                fromValidDate = (Date) formatter.parse(FORCE_REFRESH_DATE);
+                DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+                Date versionDate = (Date) formatter.parse(paramDate);
+                Date fromValidDate = (Date) formatter.parse(FORCE_REFRESH_DATE);
                 if (versionDate.before(fromValidDate)) {
-                    if (JOptionPane.showConfirmDialog(WindowManager.getDefault().getMainWindow(),
-                            NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesQuestion"),
-                            NbBundle.getMessage(GeoPlacesList.class, "TXT_eraseLocalPlacesTitle"), JOptionPane.OK_CANCEL_OPTION) == JOptionPane.OK_OPTION) {
-                        NbPreferences.forModule(GeoPlacesList.class).clear();
-                        NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
-                    } else {
-                        return;
-                    }
+                    NbPreferences.forModule(GeoPlacesList.class).clear();
+                    NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
                 }
-            } catch (ParseException ex) {
-                Exceptions.printStackTrace(ex);
-            } catch (BackingStoreException ex) {
+            } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);
             }
         }
-
-        // search the geo objects locally and else on internet
-        new GeoInternetSearch(this, placesProps).executeSearch(gedcom, force);
+        
+        // Let ancestris do the search (separate thread) through the geo objects locally and else on internet if force is on 
+        final GeoPlacesList gpl = this;
+        GeoInternetSearch gis = new GeoInternetSearch(this, placesProps) {
+            @Override
+            public void callback() {
+                // We are back from the search (local or internet):
+                // In case search was not done on Internet (force is off) then check the result and recommend an internet search is necessary . 
+                // Popup question to user and redo the search forcing internet search, if user accepts the recommendantion
+                // An internet search is recommended if local file is empty or if most places (50%) are unfound
+                // No need to check for empty local file : if it is the case, all places will be unfound
+                if (!force) {
+                    boolean reforce = false;
+                    String msg = "";
+                    
+                    // determine proper message depending on the situation
+                    if (getPlaces() == null) {
+                        msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesAborted");
+                    } else if (getPlaces().length > 0) {
+                        int countUnknown = 0;
+                        for (GeoNodeObject node : getPlaces()) {
+                            if (node.isUnknown()) {
+                                countUnknown++;
+                            }
+                        }
+                        if (countUnknown == getPlaces().length) {
+                            msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesNoCoord"); 
+                        } else if (countUnknown * 100 / getPlaces().length > 50) { // more than 50% of places with unknown coordinates
+                            msg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlacesMissingCoord"); // "Nombreux lieux sans coordonnées. Rafraichir ?"
+                        }
+                    }
+                    
+                    // Display message
+                    if (!msg.isEmpty()) {
+                        Object o = DialogManager.create(NbBundle.getMessage(GeoInternetSearch.class, "ANOMALY_Title"), msg).setDialogId("geo.refresh.coord").setOptionType(DialogManager.YES_NO_OPTION).show();
+                        if (o.equals(DialogManager.OK_OPTION)) {
+                            reforce = true;
+                        }
+                    }
+                    
+                    // Re-Run search with force on if necessary (with no callback this time)
+                    if (reforce) {
+                        new GeoInternetSearch(gpl, placesProps).executeSearch(gedcom, true);
+                    }
+                }
+            }
+        };
+        gis.executeSearch(gedcom, force);
+        
     }
 
     public void setPlaces(GeoNodeObject[] result) {
