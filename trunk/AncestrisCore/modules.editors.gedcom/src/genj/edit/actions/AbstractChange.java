@@ -31,6 +31,7 @@ import genj.util.Resources;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.NestedBlockLayout;
 import java.awt.event.ActionEvent;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -64,6 +65,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
      */
     protected JPanel getDialogContent() {
         JPanel result = new JPanel(new NestedBlockLayout("<col><text wx=\"1\" wy=\"1\"/></col>"));
+        result.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         result.add(getConfirmComponent());
         return result;
     }
