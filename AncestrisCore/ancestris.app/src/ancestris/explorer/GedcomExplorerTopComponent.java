@@ -38,6 +38,10 @@ public final class GedcomExplorerTopComponent extends TopComponent implements Ex
     public GedcomExplorerTopComponent() {
         forceClose=false;
         initComponents();
+        
+        // 2018-03 - FL Hide this dialog box for now. It is not used yet.
+        displayType.setVisible(false);
+        
         setName(NbBundle.getMessage(GedcomExplorerTopComponent.class, "CTL_GedcomExplorerTopComponent"));
         setToolTipText(NbBundle.getMessage(GedcomExplorerTopComponent.class, "HINT_GedcomExplorerTopComponent"));
         setIcon(ImageUtilities.loadImage(ICON_PATH, true));
