@@ -46,6 +46,7 @@ import javax.swing.AbstractListModel;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JComboBox;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 
@@ -151,8 +152,12 @@ public class SelectEntityWidget extends JPanel {
     listWidget.setEditable(false);
     listWidget.setRenderer(new Renderer());
     
+    // Explanation text
+    String explanation = "<html>" + RESOURCES.getString((none == null ? "select.explaination.none" : "select.explaination")) + "</html>";
+    
     // layout
     setLayout(new BorderLayout());
+    add(BorderLayout.NORTH, new JLabel(explanation));
     add(BorderLayout.CENTER, listWidget);
     add(BorderLayout.WEST  , sortWidget);
 

@@ -28,6 +28,7 @@ import genj.gedcom.Property;
 import genj.util.Registry;
 import genj.util.WordBuffer;
 import genj.util.swing.NestedBlockLayout;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
@@ -85,7 +86,7 @@ public abstract class CreateRelationship extends AbstractChange {
     @Override
     protected String getConfirmMessage() {
 
-        WordBuffer result = new WordBuffer("\n");
+        WordBuffer result = new WordBuffer("<br>");
 
         // You are about to create a {0} in {1}! / You are about to reference {0} in {1}!
         // This {0} will be {1}.
@@ -100,7 +101,7 @@ public abstract class CreateRelationship extends AbstractChange {
         // A warning already?
         String warning = getWarning(existing);
         if (warning != null) {
-            result.append("\n\n*/!\\* " + warning);
+            result.append("<br><br>/!\\ " + warning);
         }
 
         // combine
@@ -148,7 +149,7 @@ public abstract class CreateRelationship extends AbstractChange {
         });
 
         // wrap it up
-        result.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
+        result.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
         result.add(select);
         result.add(getConfirmComponent());
         result.add(checkID);
@@ -165,7 +166,8 @@ public abstract class CreateRelationship extends AbstractChange {
                 if (existing != null) {
                     checkID.setSelected(false);
                 }
-                checkID.setEnabled(existing == null);
+                checkID.setVisible(existing == null);
+                requestID.setVisible(existing == null);
                 refresh();
             }
         });
@@ -175,6 +177,10 @@ public abstract class CreateRelationship extends AbstractChange {
             select.setSelection(getGedcom().getEntity(REGISTRY.get("select." + getGedcom().getName() + "." + targetType, (String) null)));
         }
 
+        // Setpreferred size
+        result.setPreferredSize(new Dimension(650, 250));
+
+        
         // done
         return result;
     }
