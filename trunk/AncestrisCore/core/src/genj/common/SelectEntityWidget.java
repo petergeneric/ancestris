@@ -277,7 +277,8 @@ public class SelectEntityWidget extends JPanel {
   }
   
   private String getPathText(TagPath tagPath) {
-    return RESOURCES.getString("select.sort", tagPath.length()==1?"ID":getMeta(tagPath).getName());
+    String ID = RESOURCES.getString("select.sortID");
+    return RESOURCES.getString("select.sort", tagPath.length()==1 ? ID : getMeta(tagPath).getName());
   }
   
   /**
