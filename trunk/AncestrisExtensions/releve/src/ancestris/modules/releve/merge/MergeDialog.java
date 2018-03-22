@@ -29,7 +29,6 @@ import org.openide.util.NbPreferences;
  */
 public class MergeDialog extends javax.swing.JFrame implements EntityActionManager {
 
-    private Component dndSourceComponent = null;
     private Entity selectedEntity = null;
     private Gedcom gedcom=null;
     private MergeRecord mergeRecord = null;
@@ -139,7 +138,6 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
      * @param record
      */
     protected void initData(Component sourceComponent, TransferableRecord.TransferableData transferableData, Gedcom gedcom, Entity selectedEntity ) throws Exception {
-        this.dndSourceComponent = sourceComponent;
         this.mergeRecord = new MergeRecord(transferableData);
         this.gedcom = gedcom;
         this.selectedEntity = selectedEntity;
@@ -169,8 +167,8 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
         if ( mergeModelList.isEmpty() ) {
             // je désactive le bouton OK s'il n'y a pas de proposition
             jButtonOK.setEnabled(false);
-        }        
-
+        }    
+        
         // j'affiche les modeles et selectionne le premier modele de la liste
         // (j'affiche le panel1 en dernier pour que le partipant 1 soit selectionné dans l'arbre)
         mergePanel2.initData( mergeModelList, selectedEntity, this, MergeParticipantType.participant2);
