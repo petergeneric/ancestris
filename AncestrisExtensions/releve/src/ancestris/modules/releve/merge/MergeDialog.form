@@ -76,7 +76,7 @@
         <Component class="javax.swing.JButton" name="jButtonOK">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/releve/dnd/Bundle.properties" key="MergeDialog.jButtonOK.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/releve/merge/Bundle.properties" key="MergeDialog.jButtonOK.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
           </Properties>
           <Events>
@@ -86,7 +86,7 @@
         <Component class="javax.swing.JButton" name="jButtonCancel">
           <Properties>
             <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-              <ResourceString bundle="ancestris/modules/releve/dnd/Bundle.properties" key="MergeDialog.jButtonCancel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+              <ResourceString bundle="ancestris/modules/releve/merge/Bundle.properties" key="MergeDialog.jButtonCancel.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
             </Property>
             <Property name="rolloverEnabled" type="boolean" value="false"/>
           </Properties>
