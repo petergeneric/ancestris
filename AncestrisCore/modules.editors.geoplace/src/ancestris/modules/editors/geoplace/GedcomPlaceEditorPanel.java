@@ -134,6 +134,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                         if (jtf.getText().isEmpty()) {
                             updatePlace(mPlace, index + 1);
                         }
+                        parentPanel.setSearchPlace(getPlaceString(0));
                     }
                 }
                 @Override
@@ -150,6 +151,7 @@ public class GedcomPlaceEditorPanel extends javax.swing.JPanel {
                         } else {
                             updatePlace(mPlace, index + 1);
                         }
+                        parentPanel.setSearchPlace(getPlaceString(0));
                     }
                 }
             });

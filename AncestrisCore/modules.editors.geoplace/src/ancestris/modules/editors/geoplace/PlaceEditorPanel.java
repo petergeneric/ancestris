@@ -396,6 +396,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 displayLocationOnMap(place);
             }
         }
+        setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
     }//GEN-LAST:event_replacePlaceButtonActionPerformed
 
     private void completePlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_completePlaceButtonActionPerformed
@@ -410,6 +411,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 displayLocationOnMap(place);
             }
         }
+        setSearchPlace(gedcomPlaceEditorPanel.getPlaceString(0));
     }//GEN-LAST:event_completePlaceButtonActionPerformed
 
     private void geonamesPlacesListResultValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_geonamesPlacesListResultValueChanged
@@ -592,8 +594,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         
         // Set text in search field
         listIsBusy = true;
-        searchPlaceTextField.setText(mPlace.getValue());
-        //searchPlaceTextField.setText(gedcomPlaceEditorPanel.getPlaceString().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
+        //searchPlaceTextField.setText(mPlace.getValue());
+        searchPlaceTextField.setText(mPlace.getValue().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
         listIsBusy = false;
          
         // Display location on map
@@ -827,6 +829,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
         }
         return ret;
+    }
+
+    public void setSearchPlace(String place) {
+        searchPlaceTextField.setText(place.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim());
     }
 
 
