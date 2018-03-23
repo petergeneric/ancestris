@@ -150,12 +150,16 @@ public abstract class GedcomDirectory {
         boolean fileOK = false;
         while (!fileOK) {            
             file = new FileChooserBuilder(GedcomDirectory.class)
-                    .setDirectoriesOnly(true)
+                    .setFilesOnly(true)
                     .setDefaultBadgeProvider()
                     .setTitle(title)
                     .setApproveText(create_action())
+                    .setDefaultExtension(FileChooserBuilder.getGedcomFilter().getExtensions()[0])
+                    .setFileFilter(FileChooserBuilder.getGedcomFilter())
+                    .setAcceptAllFileFilterUsed(true)
                     .setFileHiding(true)
                     .setDefaultWorkingDirectory(new File(EnvironmentChecker.getProperty(new String[]{"ancestris.gedcom.dir", "user.home"}, ".", "choose gedcom file")))
+                    .setSelectedFile(new File(defaultFilename+".ged"))
                     .showSaveDialog(false);
             
             if (file == null) {
