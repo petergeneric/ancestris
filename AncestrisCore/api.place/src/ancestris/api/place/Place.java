@@ -59,4 +59,10 @@ public interface Place {
      * Accessor - the hierarchy of this place's value (non localized)
      */
     void setFormatAsString(boolean global, String format);
+    
+    
+    /**
+     * Accessor - local format of place
+     */
+    public String getPlaceToLocalFormat();
 }

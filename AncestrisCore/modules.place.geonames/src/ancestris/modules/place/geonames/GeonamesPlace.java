@@ -1,6 +1,7 @@
 package ancestris.modules.place.geonames;
 
 import ancestris.api.place.Place;
+import genj.gedcom.PropertyPlace;
 import org.geonames.InsufficientStyleException;
 import org.geonames.PostalCode;
 import org.geonames.Toponym;
@@ -169,6 +170,11 @@ public class GeonamesPlace implements Place {
     @Override
     public Toponym getToponym() {
         return toponym;
+    }
+
+    @Override
+    public String getPlaceToLocalFormat() {
+        return toString().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
     }
 
 

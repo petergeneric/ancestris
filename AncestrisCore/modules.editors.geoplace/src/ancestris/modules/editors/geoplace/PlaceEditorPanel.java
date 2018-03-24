@@ -781,11 +781,21 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             Double latitude = place.getLatitude();
             Double longitude = place.getLongitude();
 
+            // If coordinates do not exist, get them on local file
+            if (longitude == null && latitude == null) {
+                Place geoPlace = PlaceFactory.findPlace(place.getPlaceToLocalFormat());
+                if (geoPlace != null) {
+                    longitude = geoPlace.getLongitude();
+                    latitude = geoPlace.getLatitude();
+                }
+            }
+
+            // If coordinates exist, center map on geo coordinates
             if (longitude != null && latitude != null) {
-                // Center map on existing geo coordinates
                 showLocation(new GeoPosition(latitude, longitude));
                 return;
             }
+            
         }
         // Center map on a clearly non found place
         showLocation(new GeoPosition(DEFAULT_LAT, DEFAULT_LON)); 

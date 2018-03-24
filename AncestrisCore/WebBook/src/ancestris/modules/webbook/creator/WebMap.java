@@ -17,7 +17,6 @@ import genj.gedcom.time.PointInTime;
 import genj.gedcom.GedcomException;
 
 import ancestris.core.pluginservice.PluginInterface;
-import ancestris.modules.geo.GeoNodeObject;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.WebBookWizardAction;
@@ -349,7 +348,7 @@ public class WebMap extends WebSection {
         }
         
         // If not found, get location from local file
-        String searchedPlace = GeoNodeObject.getPlaceToLocalFormat(place);
+        String searchedPlace = place.getPlaceToLocalFormat();
         String code = NbPreferences.forModule(clazz).get(searchedPlace, null);
         if (code == null || code.isEmpty()) {
             return false;

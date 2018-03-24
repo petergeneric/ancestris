@@ -4,6 +4,7 @@
  */
 package ancestris.modules.geo;
 
+import ancestris.api.place.PlaceFactory;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
@@ -110,15 +111,15 @@ class GeoPlacesList implements GedcomMetaListener {
         // Checks if format of saved locations is up to date, otherwise cleans the locations to force research again from the Internet
         // If 1/1/1900, this is a first time use or with no saved locations file, then skip warning
         // If another date, erase local file
-        String paramDate = NbPreferences.forModule(GeoPlacesList.class).get("##Version Date##", NO_DATE);
+        String paramDate = NbPreferences.forModule(PlaceFactory.class).get("##Version Date##", NO_DATE);
         if (!paramDate.equals(NO_DATE)) {
             try {
                 DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
                 Date versionDate = (Date) formatter.parse(paramDate);
                 Date fromValidDate = (Date) formatter.parse(FORCE_REFRESH_DATE);
                 if (versionDate.before(fromValidDate)) {
-                    NbPreferences.forModule(GeoPlacesList.class).clear();
-                    NbPreferences.forModule(GeoPlacesList.class).put("##Version Date##", FORCE_REFRESH_DATE);
+                    NbPreferences.forModule(PlaceFactory.class).clear();
+                    NbPreferences.forModule(PlaceFactory.class).put("##Version Date##", FORCE_REFRESH_DATE);
                 }
             } catch (Exception ex) {
                 Exceptions.printStackTrace(ex);

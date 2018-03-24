@@ -15,8 +15,10 @@ package ancestris.api.place;
 import genj.gedcom.PropertyLatitude;
 import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
+import java.util.StringTokenizer;
 import org.geonames.Toponym;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.openide.util.NbPreferences;
 
 /**
  *
@@ -44,6 +46,14 @@ public class PlaceFactory implements Place {
         this.longitude = geoPoint.getLongitude();
     }
 
+    private PlaceFactory(Double lat, Double lon, Long pop) {
+        this.propertyPlace = null;
+        this.latitude = lat;
+        this.longitude = lon;
+        this.population = pop;
+    }
+    
+    
     @Override
     public int compareTo(Place that) {
         if (propertyPlace == null) {
@@ -136,5 +146,70 @@ public class PlaceFactory implements Place {
         propertyPlace.setFormatAsString(global, format);
     }
 
+    @Override
+    public String getPlaceToLocalFormat() {
+        if (propertyPlace == null) {
+            return "";
+        }
+        return propertyPlace.getPlaceToLocalFormat();
+    }
+
+    
+    public static Place findPlace(String searchedPlaceKey) {
+        String code = NbPreferences.forModule(PlaceFactory.class).get(searchedPlaceKey, null);
+        return Code2Place(code);
+    }
+
+    public static void rememberPlace(String searchedPlaceKey, Place place) {
+        NbPreferences.forModule(PlaceFactory.class).put(searchedPlaceKey, Place2Code(place));
+    }
+
+    
+    
+    /**
+     * Converts geocoordinates strings to place (elements other than
+     * geocoordinates are not used in that case)
+     *
+     * @param code
+     * @return
+     */
+    private static Place Code2Place(String code) {
+        if (code == null || code.isEmpty()) {
+            return null;
+        }
+        Double lat = 0d;
+        Double lon = 0d;
+        Long pop = 0L;
+        try {
+            StringTokenizer tokens = new StringTokenizer(code, ";");
+            if (tokens.hasMoreTokens()) {
+                lat= Double.parseDouble(tokens.nextToken());
+            }
+            if (tokens.hasMoreTokens()) {
+                lon= Double.parseDouble(tokens.nextToken());
+            }
+            if (tokens.hasMoreTokens()) {
+                pop = Long.parseLong(tokens.nextToken());
+            }
+        } catch (Throwable t) {
+        }
+        return new PlaceFactory(lat, lon, pop);
+
+    }
+
+    /**
+     * Converts toponym coordinates into coordinates string
+     *
+     * @param topo
+     * @return
+     */
+    private static String Place2Code(Place place) {
+        if (place == null) {
+            return "";
+        }
+        return place.getLatitude() + ";" + place.getLongitude() + ";" + place.getPopulation();
+    }
+
+    
 
 }

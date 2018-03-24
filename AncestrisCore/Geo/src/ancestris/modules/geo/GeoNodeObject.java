@@ -5,7 +5,7 @@
 package ancestris.modules.geo;
 
 import ancestris.api.place.Place;
-import ancestris.modules.place.geonames.GeonamesPlace;
+import ancestris.api.place.PlaceFactory;
 import ancestris.modules.place.geonames.GeonamesResearcher;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.SortedMap;
-import java.util.StringTokenizer;
 import java.util.TreeMap;
 import org.geonames.InsufficientStyleException;
 import org.geonames.Toponym;
@@ -36,7 +35,6 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  *
@@ -126,7 +124,7 @@ public class GeoNodeObject {
 
         List<Place> placeList = new ArrayList<Place>();
         boolean foundLocally = false;
-        String searchedPlace = getPlaceToLocalFormat(place);
+        String searchedPlace = place.getPlaceToLocalFormat();
         if (searchedPlace.isEmpty()) {
             searchedPlace = place.getFirstAvailableJurisdiction().trim();
         }
@@ -138,7 +136,7 @@ public class GeoNodeObject {
 
         // Search locally first (trimming spaces)
         if (avoidInternetSearch) {
-            placeList.add(Code2Place(NbPreferences.forModule(GeoPlacesList.class).get(searchedPlace, null)));
+            placeList.add(PlaceFactory.findPlace(searchedPlace)); 
             foundLocally = !placeList.isEmpty();
         }
 
@@ -149,53 +147,12 @@ public class GeoNodeObject {
 
         // Remember for next time if found on the Internet and not locally
         if (!foundLocally && !placeList.isEmpty()) {
-            NbPreferences.forModule(GeoPlacesList.class).put(searchedPlace, Place2Code(placeList.get(0)));
+            PlaceFactory.rememberPlace(searchedPlace, placeList.get(0));
         }
 
         return placeList.isEmpty() ? null : placeList.get(0);
     }
 
-
-    /**
-     * Converts geocoordinates strings to place (elements other than
-     * geocoordinates are not used in that case)
-     *
-     * @param code
-     * @return
-     */
-    public Place Code2Place(String code) {
-        if (code == null || code.isEmpty()) {
-            return null;
-        }
-        Toponym topo = new Toponym();
-        try {
-            StringTokenizer tokens = new StringTokenizer(code, ";");
-            if (tokens.hasMoreTokens()) {
-                topo.setLatitude(Double.parseDouble(tokens.nextToken()));
-            }
-            if (tokens.hasMoreTokens()) {
-                topo.setLongitude(Double.parseDouble(tokens.nextToken()));
-            }
-            if (tokens.hasMoreTokens()) {
-                topo.setPopulation(Long.parseLong(tokens.nextToken()));
-            }
-        } catch (Throwable t) {
-        }
-        return new GeonamesPlace(topo, null);
-    }
-
-    /**
-     * Converts toponym coordinates into coordinates string
-     *
-     * @param topo
-     * @return
-     */
-    public String Place2Code(Place place) {
-        if (place == null) {
-            return "";
-        }
-        return place.getLatitude() + ";" + place.getLongitude() + ";" + place.getPopulation();
-    }
 
     /**
      * Set geocoordinates to those stored in gedcom if they are found, regardless of toponym found or not, 
@@ -619,10 +576,6 @@ public class GeoNodeObject {
 
     private String dispName(String str) {
         return str == null || str.isEmpty() ? "-" : str;
-    }
-
-    public static String getPlaceToLocalFormat(PropertyPlace place) {
-        return place.getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
     }
 
 
