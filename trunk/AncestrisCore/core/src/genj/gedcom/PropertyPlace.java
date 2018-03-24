@@ -708,4 +708,12 @@ public class PropertyPlace extends PropertyChoiceValue {
             return shortcut(value, 1);
         }
     }
+    
+    public String getPlaceToLocalFormat() {
+        return getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
+    }
+
+    
+    
+    
 } //PropertyPlace
