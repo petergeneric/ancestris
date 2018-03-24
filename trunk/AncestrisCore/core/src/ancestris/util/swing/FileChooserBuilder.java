@@ -856,8 +856,8 @@ public class FileChooserBuilder {
     private void setDialogSize(JFileChooser chooser) {
         int x = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMX, "-1"));
         int y = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMY, "-1"));
-        int w = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMW, "500"));
-        int h = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMH, "300"));
+        int w = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMW, "650"));
+        int h = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMH, "400"));
         if (x >= 0 && y >= 0) {
             chooser.setLocation(x, y);
         }
