@@ -47,7 +47,6 @@ import org.openide.explorer.ExplorerUtils;
 import org.openide.filesystems.FileUtil;
 import org.openide.nodes.AbstractNode;
 import org.openide.nodes.Children;
-import org.openide.nodes.Node;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -95,7 +94,7 @@ public class AncestrisTopComponent extends TopComponent
     private javax.swing.JComponent panel;
     private boolean isRestored = false;
     private final static Logger LOG = Logger.getLogger("ancestris.app");
-    private Context context;
+    private Context currentContext;
 //    InstanceContent ic = new InstanceContent();
 //    Lookup tcLookup = new AbstractLookup(ic);
 //    Node dummyNode = null;
@@ -171,7 +170,7 @@ public class AncestrisTopComponent extends TopComponent
     @Override
     public UndoRedo getUndoRedo() {
         try {
-            return GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(GedcomDataObject.class).getUndoRedo();
+            return GedcomDirectory.getDefault().getDataObject(currentContext).getLookup().lookup(GedcomDataObject.class).getUndoRedo();
         } catch (ContextNotFoundException ex) {
             Exceptions.printStackTrace(ex);
             return null;
@@ -210,7 +209,7 @@ public class AncestrisTopComponent extends TopComponent
 
     @Override
     public void open() {
-        if (context == null) {
+        if (currentContext == null) {
             return;
         }
         if (!isRestored) {
@@ -227,26 +226,19 @@ public class AncestrisTopComponent extends TopComponent
 
     @Override
     public Gedcom getGedcom() {
-        return context == null ? null : context.getGedcom();
+        return currentContext == null ? null : currentContext.getGedcom();
     }
 
     @Override
     final public void setContext(Context context) {
+
         // appropriate?
-        if (this.context != null && !this.context.sameGedcom(context)) {
+        if (this.currentContext != null && !this.currentContext.sameGedcom(context)) {
             LOG.log(Level.FINER, "context selection on unknown gedcom");
             return;
         }
 
-        // already known?
-        // FL : 04/06/2015 : Actually, remove the 3 lines below otherwise displayed value do not change when modified
-        // Indeed : if one editor modifies a value, this value has to be displayed updated in all windows where it appears.
-        
-//        if (this.context != null && this.context.equals(context)) {
-//            return;
-//        }
-
-        LOG.log(Level.FINER, "fireSelection({0},{1})", new Object[]{context});
+        LOG.log(Level.FINER, "setContext({0},{1})", new Object[]{context});
 
         if (this.lookup == null) {
             try {
@@ -255,23 +247,10 @@ public class AncestrisTopComponent extends TopComponent
             }
         }
         // remember
-        this.context = context;
+        this.currentContext = context;
         if (context.getGedcom() != null) {
             context.getGedcom().getRegistry().put("context", context.toString());
         }
-        Node n = null;
-        try {
-            n = GedcomDirectory.getDefault().getDataObject(context).getLookup().lookup(Node.class);
-        } catch (ContextNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-        //        Node n = new PropertyNode(context);
-        //        if (n != null && n != dummyNode) {
-        //            // Create a dummy node for the save button
-        //            setActivatedNodes(new Node[]{n});
-        //            dummyNode = n;
-        //        }
-        //        ic.add(context);
         try {
             //FIXME: Hack to get set selected node in manager. This will be changed
             // When the whole gedcom will be manage as a nodes tree
@@ -291,7 +270,7 @@ public class AncestrisTopComponent extends TopComponent
     }
 
     public Context getContext() {
-        return context;
+        return currentContext;
     }
 
     public void setPanel(JComponent jpanel) {

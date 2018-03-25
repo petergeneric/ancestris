@@ -68,7 +68,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     // Main elements
     private Gedcom gedcom = null;
     private Editor editor = null;
-    private Context context = null;
+    private Context currentContext = null;
     
     // Update control
     private boolean isBusyCommitting = false;
@@ -119,27 +119,27 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     @Override
     public void setContextImpl(Context newContext) {
         
-        // Quit if context is null  
+        // Quit if new context is null  
         if (newContext == null || newContext.getEntity() == null) {
             return;
         }
 
-        // Adjust context
+        // Adjust new context
         newContext = adjustContext(newContext);
         setManagerContext(newContext.getEntity());
         
         // Quit if context is the same  
-        if (newContext.equals(this.context)) {
+        if (newContext.equals(this.currentContext)) {
             return;
         }
 
         // Redisplay and Quit if same entity, different context, and if editor already exists
-        if (this.context != null && !newContext.equals(this.context) &&  newContext.getEntity().equals(this.context.getEntity()) && editor != null) {
-            this.context = newContext;
+        if (this.currentContext != null && !newContext.equals(this.currentContext) &&  newContext.getEntity().equals(this.currentContext.getEntity()) && editor != null) {
+            this.currentContext = newContext;
             editor.setContext(newContext);  
             return;
         }
-        this.context = newContext;
+        this.currentContext = newContext;
 
         // Reconnect to gedcom if different
         if (newContext.getGedcom() != gedcom) {
