@@ -25,12 +25,10 @@ import ancestris.swing.atable.ATableFilterWidget;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.io.BasicTransferable;
 import genj.util.WordBuffer;
 import genj.util.swing.HeadlessLabel;
-import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -55,7 +53,6 @@ import javax.swing.ListSelectionModel;
 import javax.swing.RowSorter;
 import javax.swing.RowSorter.SortKey;
 import javax.swing.SortOrder;
-import javax.swing.SwingUtilities;
 import javax.swing.TransferHandler;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
@@ -77,8 +74,6 @@ public class PropertyTableWidget extends JPanel {
     private int visibleRowCount = -1;
     private TransferHandler transferer;
     private Map<PropertyTableModel, Table.Model> tableModels;
-    private Runnable selectionRunnable = null;
-    private Context tmpCtx = null;
 
     /**
      * Constructor
@@ -89,6 +84,7 @@ public class PropertyTableWidget extends JPanel {
 
     /**
      * Constructor
+     * @param propertyModel
      */
     public PropertyTableWidget(PropertyTableModel propertyModel) {
 
@@ -102,14 +98,6 @@ public class PropertyTableWidget extends JPanel {
         setLayout(new BorderLayout());
         add(BorderLayout.CENTER, new JScrollPane(table));
         
-        // init runnable
-        selectionRunnable= new Runnable() {
-            @Override
-            public void run() {
-                SelectionDispatcher.fireSelection(tmpCtx);
-                ignoreSelection = false;
-            }
-        };
         // done
     }
 
@@ -431,7 +419,6 @@ public class PropertyTableWidget extends JPanel {
                         }
                     }
                     // FIXME: action is handled here and selection is handled in changeSelection
-                    // => FL : 2018-02-18 - comment out the 3 lines below
                     Object cell = getValueAt(row, col);
                     if (cell != null && cell instanceof Property) {
                         SelectionDispatcher.fireSelection(e, new Context((Property) cell));
@@ -581,20 +568,23 @@ public class PropertyTableWidget extends JPanel {
             return propertyModel;
         }
 
+        
+        /**
+         * Purpose of grabing change selection is to trigger a context change
+         */
         @Override
         public void changeSelection(int rowIndex, int columnIndex, boolean toggle, boolean extend) {
 
             // let table do its thing
             super.changeSelection(rowIndex, columnIndex, toggle, extend);
 
-            // propagate selection change?
-            if (ignoreSelection) {
+            TableModel model = getModel();
+            if (rowIndex < 0 || rowIndex >= model.getRowCount() || columnIndex < 0 || columnIndex >= model.getColumnCount()) {
                 return;
             }
 
             // grab before context
-            List<? extends Property> before = getContext().getProperties();
-
+            Property prop = null;
             List<Property> properties = new ArrayList<Property>();
             ListSelectionModel rows = getSelectionModel();
             ListSelectionModel cols = getColumnModel().getSelectionModel();
@@ -606,36 +596,23 @@ public class PropertyTableWidget extends JPanel {
                         continue;
                     }
                     // 20050721 check arguments - Swing might not always send something smart here
-                    TableModel model = getModel();
                     if (r < 0 || r >= model.getRowCount() || c < 0 || c >= model.getColumnCount()) {
                         continue;
                     }
-                    Property prop = (Property) getValueAt(r, c);
+                    prop = (Property) getValueAt(r, c);
                     if (prop == null) {
                         prop = propertyModel.getRowRoot(convertRowIndexToModel(r));
                     }
                     // keep it
-                    if (before.contains(prop)) {
-                        properties.add(prop);
-                    } else {
+                    if (!properties.contains(prop)) {
                         properties.add(0, prop);
                     }
                 }
             }
-
-            // tell about it
             if (properties.size() == 1) {
-                ignoreSelection = true;
-                if (tmpCtx == null) {
-                    tmpCtx = new Context(properties.get(0).getGedcom(), new ArrayList<Entity>(), properties);
-                } else {
-                    tmpCtx.setProperties(properties);
-                }
-                SwingUtilities.invokeLater(selectionRunnable);
-            } else {
-                ignoreSelection = false;
+                SelectionDispatcher.fireSelection(new Context(properties.get(0)));
             }
-
+            
             // done
         }
 
@@ -658,52 +635,52 @@ public class PropertyTableWidget extends JPanel {
             return d;
         }
 
-        /**
-         * ContextProvider - callback
-         */
-        //XXX: we will have to handle this differently: use nodes (see TableView)
-        // FIXME: this is used only in changeSelection... Should we refactor
-        private ViewContext getContext() {
-
-            // check gedcom first
-            Gedcom ged = propertyModel.getGedcom();
-            if (ged == null) {
-                return null;
-            }
-
-            // one row one col?
-            List<Property> properties = new ArrayList<Property>();
-            int[] rows = super.getSelectedRows();
-            if (rows.length > 0) {
-                int[] cols = getSelectedColumns();
-
-                // loop over rows
-                for (int r = 0; r < rows.length; r++) {
-
-                    // loop over cols
-                    boolean rowRepresented = false;
-                    for (int c = 0; c < cols.length; c++) {
-                        // add property for each cell
-                        Property p = (Property) getValueAt(rows[r], cols[c]);
-                        if (p != null) {
-                            properties.add(p);
-                            rowRepresented = true;
-                        }
-                        // next selected col
-                    }
-
-                    // add representation for each row that wasn't represented by a property
-                    if (!rowRepresented) {
-                        properties.add(propertyModel.getRowRoot(convertRowIndexToModel(rows[r])));
-                    }
-
-                    // next selected row
-                }
-            }
-
-            // done
-            return new ViewContext(ged, new ArrayList<Entity>(), properties);
-        }
+//        /**
+//         * ContextProvider - callback
+//         */
+//        //XXX: we will have to handle this differently: use nodes (see TableView)
+//        // FIXME: this is used only in changeSelection... Should we refactor
+//        private ViewContext getContext() {
+//
+//            // check gedcom first
+//            Gedcom ged = propertyModel.getGedcom();
+//            if (ged == null) {
+//                return null;
+//            }
+//
+//            // one row one col?
+//            List<Property> properties = new ArrayList<Property>();
+//            int[] rows = super.getSelectedRows();
+//            if (rows.length > 0) {
+//                int[] cols = getSelectedColumns();
+//
+//                // loop over rows
+//                for (int r = 0; r < rows.length; r++) {
+//
+//                    // loop over cols
+//                    boolean rowRepresented = false;
+//                    for (int c = 0; c < cols.length; c++) {
+//                        // add property for each cell
+//                        Property p = (Property) getValueAt(rows[r], cols[c]);
+//                        if (p != null) {
+//                            properties.add(p);
+//                            rowRepresented = true;
+//                        }
+//                        // next selected col
+//                    }
+//
+//                    // add representation for each row that wasn't represented by a property
+//                    if (!rowRepresented) {
+//                        properties.add(propertyModel.getRowRoot(convertRowIndexToModel(rows[r])));
+//                    }
+//
+//                    // next selected row
+//                }
+//            }
+//
+//            // done
+//            return new ViewContext(ged, new ArrayList<Entity>(), properties);
+//        }
 
         /**
          * The logical model
