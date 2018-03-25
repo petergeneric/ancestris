@@ -302,7 +302,9 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
             isChangeSource = true;
 
             if (gedcom.isWriteLocked()) {
-                editor.commit();
+                if (!confirmPanel.hasChanged()) { // only commit changes from other modules (eg: undo) if confirm is off (do not automatically commit a pending change for the user)
+                    editor.commit();
+                }
             } else {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -608,7 +610,7 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
         @Override
         public void stateChanged(ChangeEvent e) {
             if (editor != null) {
-                // Force reload
+                // Set force reload on
                 editor.setGedcomHasChanged(true);
                 // Reset context
                 Context ctx = editor.getContext();
