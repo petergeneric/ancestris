@@ -60,7 +60,7 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEventPanel.EventDetailPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Event.png"/>
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/event.png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -256,7 +256,7 @@
                 <Component class="javax.swing.JButton" name="editPlaceButton">
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                      <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Place.png"/>
+                      <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/place.png"/>
                     </Property>
                     <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                       <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEventPanel.editPlaceButton.toolTipText" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
@@ -435,7 +435,7 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEventPanel.notesPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Note.png"/>
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/note.png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -478,7 +478,7 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="FamilyEventPanel.galleryPanel.TabConstraints.tabTitle" replaceFormat="java.text.MessageFormat.format(java.util.ResourceBundle.getBundle(&quot;{bundleNameSlashes}&quot;).getString(&quot;{key}&quot;), {arguments})"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Media.png"/>
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/media.png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>

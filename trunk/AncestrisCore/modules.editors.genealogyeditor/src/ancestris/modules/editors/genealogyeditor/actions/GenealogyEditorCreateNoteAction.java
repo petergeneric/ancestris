@@ -15,7 +15,7 @@ import org.openide.util.Utilities;
 
 @ActionID(category = "Edit",
         id = "ancestris.modules.editors.genealogyeditor.actions.GenealogyEditorCreateNoteAction")
-@ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/Note_add.png",
+@ActionRegistration(iconBase = "ancestris/modules/editors/genealogyeditor/resources/note_add.png",
         displayName = "#CTL_GenealogyEditorCreateNoteAction")
 @ActionReferences({
     @ActionReference(path = "Toolbars/GenealogyEditor", position = 500)

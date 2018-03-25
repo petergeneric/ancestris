@@ -38,7 +38,7 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.namePanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Name.png"/>
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/name.png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -301,7 +301,7 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Note.png"/>
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/note.png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>
@@ -315,7 +315,7 @@
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="NameEditorPanel.sourceCitationsTablePanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
                 <Property name="tabIcon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/Source.png"/>
+                  <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/source.png"/>
                 </Property>
               </JTabbedPaneConstraints>
             </Constraint>

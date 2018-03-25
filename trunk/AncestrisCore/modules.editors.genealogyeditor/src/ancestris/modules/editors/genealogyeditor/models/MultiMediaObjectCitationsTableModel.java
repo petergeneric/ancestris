@@ -75,16 +75,16 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                                 image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
                                 return new ImageIcon(image);
                             } catch (IOException ex) {
-                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                                return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
                             }
                         } else {
-                            return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                            return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
                         }
                     } else {
                         Property propertyfile = multimediaObject.getProperty("FILE", true);
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
                             File multimediaFile = ((PropertyFile) propertyfile).getFile();
-                            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
                             if (multimediaFile != null && multimediaFile.exists()) {
                                 try {
                                     Image image;

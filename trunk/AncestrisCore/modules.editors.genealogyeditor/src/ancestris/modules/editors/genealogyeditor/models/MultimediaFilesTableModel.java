@@ -52,7 +52,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
                 switch (column) {
                     case 0: {
                         if (multimediaFile.exists()) {
-                            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png"));
+                            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
                             try {
                                 Image image;
                                 try {

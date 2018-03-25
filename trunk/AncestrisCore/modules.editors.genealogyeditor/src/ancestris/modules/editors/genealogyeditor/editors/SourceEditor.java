@@ -214,7 +214,7 @@ public class SourceEditor extends EntityEditor {
             .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("SourceEditor.notesPanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/note.png")), notesPanel); // NOI18N
 
         referencesPanel.setRequestFocusEnabled(false);
 
@@ -244,7 +244,7 @@ public class SourceEditor extends EntityEditor {
             .addComponent(multimediaObjectCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
         );
 
-        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Media.png")), multimediaObjectPanel); // NOI18N
+        sourceInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.multimediaObjectPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png")), multimediaObjectPanel); // NOI18N
 
         abbreviationLabel.setText(org.openide.util.NbBundle.getMessage(SourceEditor.class, "SourceEditor.abbreviationLabel.text")); // NOI18N
 

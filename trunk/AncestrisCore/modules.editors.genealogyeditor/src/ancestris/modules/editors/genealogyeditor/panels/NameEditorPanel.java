@@ -320,9 +320,9 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.namePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Name.png")), namePanel); // NOI18N
-        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), noteCitationsTablePanel); // NOI18N
-        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.sourceCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Source.png")), sourceCitationsTablePanel); // NOI18N
+        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.namePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/name.png")), namePanel); // NOI18N
+        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.noteCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/note.png")), noteCitationsTablePanel); // NOI18N
+        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(NameEditorPanel.class, "NameEditorPanel.sourceCitationsTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/source.png")), sourceCitationsTablePanel); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
