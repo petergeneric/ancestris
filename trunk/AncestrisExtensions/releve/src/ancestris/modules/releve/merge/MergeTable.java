@@ -20,6 +20,7 @@ import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.ToolTipManager;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -43,15 +44,21 @@ public class MergeTable extends JTable {
     private static final String NEW_FAMILY = NbBundle.getMessage(MergeModel.class, "MergeTable.label.newFamily");
     private static final String NEW_INDI = NbBundle.getMessage(MergeModel.class, "MergeTable.label.newIndi");
     private static final String NEW_SOURCE = NbBundle.getMessage(MergeModel.class, "MergeTable.label.selectSource");
-
+    
     public  MergeTable() {
         setPreferredSize(null);
         setAutoResizeMode(AUTO_RESIZE_OFF );
-        //setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN );
+        //setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN );        
+        setBackground(Color.WHITE);
         setSelectionBackground(getBackground());
+        setShowGrid(true);
+        //setIntercellSpacing(new Dimension(0, 0));
+        ToolTipManager.sharedInstance().registerComponent( this);
+        ToolTipManager.sharedInstance().setInitialDelay(0) ;
+
         MergeTableRenderer mergeTableRenderer = new MergeTableRenderer();
         setDefaultRenderer(Object.class, mergeTableRenderer);
-        loadColumnLayout();
+        loadColumnLayout();     
     }
 
     public void setModel(MergeModel model) {
@@ -122,9 +129,9 @@ public class MergeTable extends JTable {
         CompareResult cr = ((MergeModel)getModel()).getCompareResult(row) ;
         if (column == 2 && ( cr == MergeModel.CompareResult.NOT_APPLICABLE
                   || cr == MergeModel.CompareResult.EQUAL)  ) {
-            JLabel label = new JLabel("");// Box.createRigidArea(c.getPreferredSize());
-            //label.setBackground(Color.LIGHT_GRAY);
-            label.setOpaque(true);
+            JLabel label = new JLabel("");
+//            label.setBackground(this.getBackground());
+//            label.setOpaque(false);                
             return label;
         }  else {
             return c;
@@ -138,27 +145,15 @@ public class MergeTable extends JTable {
         CompareResult cr = ((MergeModel)getModel()).getCompareResult(row) ;
         if (column == 2 &&( cr == MergeModel.CompareResult.NOT_APPLICABLE
                   || cr == MergeModel.CompareResult.EQUAL) ) {
-            return new JLabel("");//Box.createRigidArea(c.getPreferredSize());
+            JLabel label = new JLabel("");
+//            label.setBackground(this.getBackground());
+//            label.setOpaque(false);                
+            return label;
         }  else {
             return c;
         }
     };
-//
-//
-//    @Override
-//    public TableCellEditor getCellEditor(final int row, int column) {
-//        //int modelColumn = convertColumnIndexToModel(column);
-//        final int modelColumn = column;
-//        if ((modelColumn == 1 || modelColumn == 3) && ((MergeModel)getModel()).getChoice(row, modelColumn) != null) {
-//            JComboBox comboBox = new JComboBox(((MergeModel)getModel()).getChoice(row, modelColumn));
-//            comboBox.setEditable(false);
-//            comboBox.setRenderer(new MergeCellComboRenderer());
-//            return new DefaultCellEditor(comboBox);
-//        } else {
-//            return super.getCellEditor(row, column);
-//        }
-//    }
-
+    
     /**
      * Enregistrer la largeur des colonnes
      * Cette méthode est appelée par la fenêtre principal avant la fermeture
@@ -210,7 +205,7 @@ public class MergeTable extends JTable {
     }
 
 
-
+        
     /**
      * Cette classe gère l'affichage des cellules de la table
      */
@@ -340,12 +335,12 @@ public class MergeTable extends JTable {
 
             // je choisis la couleur de fond
             if (mergeRow.rowType == RowType.Separator) {
-                setBackground(greyColor);
+                setBackground(table.getBackground());
                 setForeground(table.getForeground());
             } else {
                 switch (modelColumn) {
                     case 0:
-                        setBackground(greyColor);
+                        setBackground(table.getBackground());
                         setForeground(table.getForeground());
                         break;
                     case 1:
