@@ -20,9 +20,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
-import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -77,9 +75,6 @@ public class MergePanel extends javax.swing.JPanel  {
         };
         mergeTable1.addMouseListener(mouseAdapter);
         
-        
-
-
     }
 
     /**
@@ -98,8 +93,11 @@ public class MergePanel extends javax.swing.JPanel  {
         
         // je vide le panneau
         jPanelChoice.removeAll();
-        jToggleButtonShowAllParents.setSelected(mergeDialog.getShowAllParents());
-
+        // je masque JButtonMenu dans le deuxième panneau
+        if( participantType == MergeParticipantType.participant2) {
+            jButtonMenu.setVisible(false);
+        }
+        
         // je dimensionne le panneau avec la taille choisie precedemment
         String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight"+participant.name(), "90");
         jSplitPane.setDividerLocation(Integer.parseInt(splitHeight));
@@ -253,7 +251,7 @@ public class MergePanel extends javax.swing.JPanel  {
         jPanel1 = new javax.swing.JPanel();
         jPanelToolbar = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jToggleButtonShowAllParents = new javax.swing.JToggleButton();
+        jButtonMenu = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanelChoice = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -270,28 +268,25 @@ public class MergePanel extends javax.swing.JPanel  {
 
         jLabel1.setText(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.title")); // NOI18N
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
         jPanelToolbar.add(jLabel1, gridBagConstraints);
 
-        jToggleButtonShowAllParents.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/add-spouse24.png"))); // NOI18N
-        jToggleButtonShowAllParents.setToolTipText(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.jToggleButtonShowAllParents.toolTipText")); // NOI18N
-        jToggleButtonShowAllParents.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jToggleButtonShowAllParents.setFocusable(false);
-        jToggleButtonShowAllParents.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
-        jToggleButtonShowAllParents.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
-        jToggleButtonShowAllParents.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        jToggleButtonShowAllParents.addActionListener(new java.awt.event.ActionListener() {
+        jButtonMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/hamb1-16.png"))); // NOI18N
+        jButtonMenu.setMargin(new java.awt.Insets(0, 0, 0, 0));
+        jButtonMenu.setPreferredSize(new java.awt.Dimension(20, 20));
+        jButtonMenu.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jToggleButtonShowAllParentsActionPerformed(evt);
+                jButtonMenuActionPerformed(evt);
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        jPanelToolbar.add(jToggleButtonShowAllParents, gridBagConstraints);
+        jPanelToolbar.add(jButtonMenu, gridBagConstraints);
 
         jPanel1.add(jPanelToolbar, java.awt.BorderLayout.NORTH);
 
@@ -307,17 +302,6 @@ public class MergePanel extends javax.swing.JPanel  {
 
         jSplitPane.setTopComponent(jPanel1);
 
-        jScrollPane2.setPreferredSize(null);
-
-        mergeTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-
-            },
-            new String [] {
-
-            }
-        ));
-        mergeTable1.setPreferredScrollableViewportSize(null);
         jScrollPane2.setViewportView(mergeTable1);
 
         jSplitPane.setBottomComponent(jScrollPane2);
@@ -325,17 +309,14 @@ public class MergePanel extends javax.swing.JPanel  {
         add(jSplitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jToggleButtonShowAllParentsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonShowAllParentsActionPerformed
-        try {
-            mergeDialog.updateData(((JToggleButton) (evt.getSource())).isSelected());
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
-        }
-    }//GEN-LAST:event_jToggleButtonShowAllParentsActionPerformed
+    private void jButtonMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMenuActionPerformed
+        mergeDialog.showPopupMenu(jButtonMenu, 0, jButtonMenu.getHeight());
+    }//GEN-LAST:event_jButtonMenuActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupChoiceModel;
+    private javax.swing.JButton jButtonMenu;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelChoice;
@@ -343,7 +324,6 @@ public class MergePanel extends javax.swing.JPanel  {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane;
-    private javax.swing.JToggleButton jToggleButtonShowAllParents;
     private ancestris.modules.releve.merge.MergeTable mergeTable1;
     // End of variables declaration//GEN-END:variables
 

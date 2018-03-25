@@ -1,5 +1,6 @@
 package ancestris.modules.releve.merge;
 
+import static ancestris.modules.releve.merge.MergeLogger.LOG;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -33,17 +34,28 @@ class MergeModelMiscWill extends MergeModel {
      * @return
      */
     static protected List<MergeModel> createMergeModelMiscWill (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+        String cName = MergeModelMiscWill.class.getName();
+        String mName = "createMergeModelMiscWill";
+
         List<MergeModel> models = new ArrayList<MergeModel>();
         if (selectedEntity instanceof Fam) {
             // 1) Record Will : l'entité selectionnée est une famille
-            Fam family = (Fam) selectedEntity;
+            Fam selectedFamily = (Fam) selectedEntity;
             // j'ajoute un nouvel individu
-            models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, family));
+            models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, selectedFamily));
+            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                MergeLogger.logAccept(cName, mName, "new indi with selectedFamily %s",
+                        selectedFamily.getId());
+            }
             // je recherche les enfants de la famille sélectionnée compatibles avec le releve
-            List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
+            List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, selectedFamily);
             // j'ajoute les enfants compatibles
             for (Indi samedIndi : sameChildren) {
                 models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
+                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                    MergeLogger.logAccept(cName, mName, "samedIndi %s with FamilyWhereBiologicalChild %s", 
+                            samedIndi.getId(), samedIndi.getFamilyWhereBiologicalChild() != null ? samedIndi.getFamilyWhereBiologicalChild().getId() : "null");
+                }
             }
         } else if (selectedEntity instanceof Indi) {
             // 1) Record Will : l'entité selectionnée est un individu
@@ -56,30 +68,46 @@ class MergeModelMiscWill extends MergeModel {
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
 
             if (!marriedFamilies.isEmpty()) {
-                for (Fam family : marriedFamilies) {
+                for (Fam marriedFamily : marriedFamilies) {
                     if (mergeRecord.getIndi().getSex() == PropertySex.MALE) {
-                        Indi husband = family.getHusband();
+                        Indi husband = marriedFamily.getHusband();
                         if (selectedIndi.compareTo(husband) == 0) {
-                            Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, husbandParentFamily));
-
-                            if (husbandParentFamily == null) {
+                            Fam husbandBiologicalFamily = husband.getFamilyWhereBiologicalChild();
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, marriedFamily, husbandBiologicalFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                               MergeLogger.logAccept(cName, mName, "husband %s with marriedFamily %s husbandBiologicalFamily %s",
+                                       husband.getId(), marriedFamily.getId(), husbandBiologicalFamily != null ? husbandBiologicalFamily.getId() : "null" );
+                            }
+                            
+                            if (husbandBiologicalFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, parentFamily));
+                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, marriedFamily, parentFamily));
+                                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                       MergeLogger.logAccept(cName, mName, "husband %s with marriedFamily %s parentFamily %s",
+                                               husband.getId(), marriedFamily.getId(), parentFamily.getId());
+                                    }
                                 }
                             }
                         }
                     } else {
-                        Indi wife = family.getWife();
+                        Indi wife = marriedFamily.getWife();
                         if (selectedIndi.compareTo(wife) == 0) {
-                            Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, wifeParentFamily));
+                            Fam wifeBiologicalFamily = wife.getFamilyWhereBiologicalChild();
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, marriedFamily, wifeBiologicalFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                               MergeLogger.logAccept(cName, mName, "wife %s with marriedFamily %s wifeBiologicalFamily %s",
+                                       wife.getId(), marriedFamily.getId(), wifeBiologicalFamily != null ? wifeBiologicalFamily.getId() : "null");
+                            }
 
-                            if (wifeParentFamily == null) {
+                            if (wifeBiologicalFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, parentFamily));
+                                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, marriedFamily, parentFamily));
+                                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                       MergeLogger.logAccept(cName, mName, "wife %s with marriedFamily %s parentFamily %s",
+                                               wife.getId(), marriedFamily.getId(), parentFamily.getId());
+                                    }
                                 }
                             }
                         }
@@ -89,17 +117,26 @@ class MergeModelMiscWill extends MergeModel {
                 // l'individu n'a pas d'ex conjoint
 
                 // je cherche les familles compatibles avec le releve de deces
-                List<Fam> families = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+                //List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
 
                 // j'ajoute l'individu selectionné par dnd
-                if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
+                Fam indiBiologicalFamily = selectedIndi.getFamilyWhereBiologicalChild();
+                if (indiBiologicalFamily != null) {
                     // j'ajoute l'individu selectionné par dnd
-                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
+                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, indiBiologicalFamily ));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                       MergeLogger.logAccept(cName, mName, "selectedIndi %s with wifeBiologicalFamily %s",
+                               selectedIndi.getId(), indiBiologicalFamily.getId() );
+                    }                    
                 } else {
                     models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, (Fam) null));
                     // j'ajoute l'individu selectionné par dnd avec les familles compatibles
-                    for (Fam family : families) {
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, family));
+                    for (Fam parentFamily : parentFamilies) {
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, selectedIndi, parentFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                           MergeLogger.logAccept(cName, mName, "selectedIndi %s with parentFamily %s",
+                                   selectedIndi.getId(), parentFamily.getId() );
+                        }
                     }
                 }
 
@@ -109,7 +146,7 @@ class MergeModelMiscWill extends MergeModel {
                 List<Indi> sameIndis;
                 if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
                     // l'individu est lié a une famille précise, je l'exclue de la recherche
-                    sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, selectedIndi);
+                    sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, selectedIndi);                   
                 } else {
                     // l'individu n'est pas lié a une famille précise, je l'inclue dans la recherche
                     sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, null);
@@ -117,12 +154,20 @@ class MergeModelMiscWill extends MergeModel {
                 // j'ajoute les individus compatibles
                 for (Indi samedIndi : sameIndis) {
                     // j'ajoute les familles compatibles
-                    Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
-                    if (sameIndiFamily != null) {
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                    Fam sameIndiBiologicalFamily = samedIndi.getFamilyWhereBiologicalChild();
+                    if (sameIndiBiologicalFamily != null) {
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiBiologicalFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                           MergeLogger.logAccept(cName, mName, "samedIndi %s with sameIndiBiologicalFamily %s",
+                                   samedIndi.getId(), sameIndiBiologicalFamily.getId() );
+                        }                         
                     } else {
-                        for (Fam family : families) {
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, family));
+                        for (Fam parentFamily : parentFamilies) {
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, parentFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                               MergeLogger.logAccept(cName, mName, "samedIndi %s with parentFamily %s",
+                                       samedIndi.getId(), parentFamily.getId());
+                            }                         
                         }
                     }
                 }
@@ -133,7 +178,10 @@ class MergeModelMiscWill extends MergeModel {
 
             // j'ajoute un nouvel individu , sans famille associée
             models.add(new MergeModelMiscWill(mergeRecord, gedcom));
-
+            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                MergeLogger.logAccept(cName, mName, "new indi without family" );
+            }
+            
             // je recherche la famille avec l'ex conjoint
             List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithParticipantMarried(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
 
@@ -141,27 +189,43 @@ class MergeModelMiscWill extends MergeModel {
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
 
             if (!marriedFamilies.isEmpty()) {
-                for (Fam family : marriedFamilies) {
+                for (Fam marriedFamily : marriedFamilies) {
                     if (mergeRecord.getIndi().getSex() == PropertySex.MALE) {
-                        Indi husband = family.getHusband();
-                        Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, husbandParentFamily));
-
-                        if (husbandParentFamily == null) {
+                        Indi husband = marriedFamily.getHusband();
+                        Fam husbandBiologicalFamily = husband.getFamilyWhereBiologicalChild();
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, marriedFamily, husbandBiologicalFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "husband %s with marriedFamily %s husbandBiologicalFamily %s",
+                                    husband.getId(), marriedFamily.getId(), husbandBiologicalFamily != null ? husbandBiologicalFamily.getId() : "null");
+                        }    
+                        
+                        if (husbandBiologicalFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, family, parentFamily));
+                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, husband, marriedFamily, parentFamily));
+                                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                    MergeLogger.logAccept(cName, mName, "husband %s with marriedFamily %s parentFamily %s",
+                                            husband.getId(), marriedFamily.getId(), parentFamily.getId());
+                                }    
                             }
                         }
                     } else {
-                        Indi wife = family.getWife();
-                        Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, wifeParentFamily));
+                        Indi wife = marriedFamily.getWife();
+                        Fam wifeBiologicalFamily = wife.getFamilyWhereBiologicalChild();
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, marriedFamily, wifeBiologicalFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "wife %s with marriedFamily %s husbandBiologicalFamily %s",
+                                    wife.getId(), marriedFamily.getId(), wifeBiologicalFamily != null ? wifeBiologicalFamily.getId() : "null");
+                        }    
 
-                        if (wifeParentFamily == null) {
+                        if (wifeBiologicalFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, family, parentFamily));
+                                models.add(new MergeModelMiscWill(mergeRecord, gedcom, wife, marriedFamily, parentFamily));
+                                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                    MergeLogger.logAccept(cName, mName, "husband %s with marriedFamily %s parentFamily %s",
+                                            wife.getId(), marriedFamily.getId(), parentFamily.getId());
+                                }    
                             }
                         }
                     }
@@ -175,22 +239,39 @@ class MergeModelMiscWill extends MergeModel {
                 List<Indi> sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, null);
 
                 // j'ajoute un nouvel individu avec les familles compatibles
-                for (Fam family : parentFamilies) {
-                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, family));
+                for (Fam parentFamily : parentFamilies) {
+                    models.add(new MergeModelMiscWill(mergeRecord, gedcom, null, parentFamily));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        MergeLogger.logAccept(cName, mName, "new indi %s with parentFamily %s",
+                                parentFamily.getId());
+                    }    
                 }
 
                 // j'ajoute les individus compatibles avec la famille de chacun
                 for (Indi samedIndi : sameIndis) {
-                    Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
-                    if (sameIndiFamily != null) {
+                    Fam sameIndiBiologicalFamily = samedIndi.getFamilyWhereBiologicalChild();
+                    if (sameIndiBiologicalFamily != null) {
                         // j'ajoute l'individus compatible avec sa famille
-                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, sameIndiBiologicalFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "samedIndi %s with sameIndiBiologicalFamily %s",
+                                    samedIndi.getId(), sameIndiBiologicalFamily.getId());
+                        }    
+
                     } else {
                         // j'ajoute l'individus compatible sans famille
                         models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, (Fam) null));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "samedIndi %s without family",
+                                    samedIndi.getId());
+                        }    
                         // j'ajoute l'individus compatible avec les familles compatibles
-                        for (Fam family : parentFamilies) {
-                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, family));
+                        for (Fam parentFamily : parentFamilies) {
+                            models.add(new MergeModelMiscWill(mergeRecord, gedcom, samedIndi, parentFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                MergeLogger.logAccept(cName, mName, "samedIndi %s with parentFamily %s",
+                                        samedIndi.getId(), parentFamily.getId());
+                            }    
                         }
                     }
                 }
@@ -205,6 +286,11 @@ class MergeModelMiscWill extends MergeModel {
                 for (Indi father : fathers) {
                     for (Indi mother : mothers) {
                         models.add(new MergeModelMiscWill(mergeRecord, gedcom, father, mother));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "new indi %s with new parent family father %s mother %s",
+                                    father.getId(), mother.getId());
+                        }    
+                        
                     }
                 }
             }

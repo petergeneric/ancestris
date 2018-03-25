@@ -1,5 +1,8 @@
 package ancestris.modules.releve.merge;
 
+import static ancestris.modules.releve.merge.MergeLogger.ACCEPT;
+import static ancestris.modules.releve.merge.MergeLogger.LOG;
+import static ancestris.modules.releve.merge.MergeLogger.REFUSE;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -13,6 +16,7 @@ import genj.gedcom.TagPath;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
 import org.openide.util.NbBundle;
 
 /**
@@ -21,7 +25,7 @@ import org.openide.util.NbBundle;
 class MergeModelDeath extends MergeModel {
 
     private Indi currentIndi;
-    
+
     /**
      * model factory
      * cree un liste contenant un modele comparant le releve et l'entité
@@ -35,6 +39,13 @@ class MergeModelDeath extends MergeModel {
      * @return
      */
     static protected List<MergeModel> createMergeModelDeath (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+        if (LOG.isLoggable(Level.FINER)){
+            LOG.entering(MergeModelDeath.class.getName(), "createMergeModelDeath", 
+                    mergeRecord.getParticipant(MergeParticipantType.participant1).getLastName()
+                    + " "
+                    + mergeRecord.getParticipant(MergeParticipantType.participant1).getFirstName()
+            );
+        }
         List<MergeModel> models = new ArrayList<MergeModel>();
         if (selectedEntity instanceof Fam) {
             // 1.1) Record Death : l'entité selectionnée est une famille
@@ -44,8 +55,8 @@ class MergeModelDeath extends MergeModel {
             // je recherche les enfants de la famille sélectionnée compatibles avec le releve
             List<Indi> sameChildren = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             // j'ajoute les enfants compatibles
-            for (Indi samedIndi : sameChildren) {
-                models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, samedIndi.getFamilyWhereBiologicalChild()));
+            for (Indi sameIndi : sameChildren) {
+                models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, sameIndi.getFamilyWhereBiologicalChild()));
             }
         } else if (selectedEntity instanceof Indi) {
             // 1.2) Record Death : l'entité selectionnée est un individu
@@ -58,31 +69,55 @@ class MergeModelDeath extends MergeModel {
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
 
             if (!marriedFamilies.isEmpty()) {
-                for (Fam family : marriedFamilies) {
+                for (Fam marriedFamily : marriedFamilies) {
                     if (mergeRecord.getIndi().getSex() == PropertySex.MALE) {
-                        Indi husband = family.getHusband();
+                        Indi husband = marriedFamily.getHusband();
                         if (selectedIndi.compareTo(husband) == 0) {
                             Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, husbandParentFamily));
-
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, husband, marriedFamily, husbandParentFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT husband %s with compatible marriedFamily %s and husbandParentFamily %s" , 
+                                        husband.getId(),  marriedFamily.getId(), husbandParentFamily.getId() ));
+                            }
                             if (husbandParentFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, parentFamily));
+                                    models.add(new MergeModelDeath(mergeRecord, gedcom, husband, marriedFamily, parentFamily));
+                                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                        LOG.log(ACCEPT, String.format("ACCEPT husband %s with compatible marriedFamily %s and parentFamily %s" , 
+                                                husband.getId(),  marriedFamily.getId(), parentFamily.getId() ));
+                                    }
                                 }
                             }
+                        } else {
+                            if (LOG.isLoggable(MergeLogger.REFUSE)) {
+                                LOG.log(REFUSE, String.format("REFUSE husband %s different from selectedIndi %s" , 
+                                        husband.getId(), selectedIndi.getId() ));
+                            }                            
                         }
                     } else {
-                        Indi wife = family.getWife();
+                        Indi wife = marriedFamily.getWife();
                         if (selectedIndi.compareTo(wife) == 0) {
                             Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, wifeParentFamily));
-
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, wife, marriedFamily, wifeParentFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT wife %s with compatible marriedFamily %s and wifeParentFamily %s" , 
+                                        wife,  marriedFamily, wifeParentFamily ));
+                            }
                             if (wifeParentFamily == null) {
                                 // j'ajoute un nouvel individu avec les familles compatibles
                                 for (Fam parentFamily : parentFamilies) {
-                                    models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, parentFamily));
+                                    models.add(new MergeModelDeath(mergeRecord, gedcom, wife, marriedFamily, parentFamily));
+                                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                        LOG.log(ACCEPT, String.format("ACCEPT wife %s with compatible marriedFamily %s and parentFamily %s" , 
+                                                wife,  marriedFamily, parentFamily ));
+                                    }
                                 }
+                            }
+                        } else {
+                            if (LOG.isLoggable(MergeLogger.REFUSE)) {
+                                LOG.log(REFUSE, String.format("REFUSE wife %s different from selectedIndi %s",
+                                        wife.getId(), selectedIndi.getId() ));
                             }
                         }
                     }
@@ -90,13 +125,14 @@ class MergeModelDeath extends MergeModel {
             } else {
                 // l'individu n'a pas d'ex conjoint
 
-                // je cherche les familles compatibles avec les parents du défunt
-                List<Fam> families = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
-
-                    // j'ajoute l'individu selectionné par dnd
+                // j'ajoute l'individu selectionné par dnd
                 if (selectedIndi.getFamilyWhereBiologicalChild() != null) {
                     // j'ajoute l'individu selectionné par dnd
                     models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, selectedIndi.getFamilyWhereBiologicalChild()));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        LOG.log(ACCEPT, String.format("ACCEPT selectedIndi %s with compatible FamilyWhereBiologicalChild %s " , 
+                                selectedIndi.getId(),  selectedIndi.getFamilyWhereBiologicalChild().getId() ));
+                    }
                 } else {
                     // je cherche les familles avec selectedIndi
                     Fam[] selectedIndiFamilies = selectedIndi.getFamiliesWhereSpouse();
@@ -104,7 +140,10 @@ class MergeModelDeath extends MergeModel {
                         // je verifie si le mariage de selectedIndi est avant la date de deces
                         if ( MergeQuery.isRecordBeforeThanDate(fam.getMarriageDate(), mergeRecord.getIndi().getDeathDate(), 0, 0) ) {
                             models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, fam, (Fam) null));
-
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT selectedIndi %s with compatible FamiliesWhereSpouse %s ",
+                                        selectedIndi.getId(), fam.getId() ));
+                            }
                             //  j'ajoute un modéle avec une nouvelle famille si le nom de l'epoux est différent entre le relevé et la famille trouvée
                             if (!mergeRecord.getIndi().getMarriedLastName().isEmpty() || !mergeRecord.getIndi().getMarriedFirstName().isEmpty()) {
                                 if (selectedIndi.equals(fam.getHusband())) {
@@ -112,6 +151,10 @@ class MergeModelDeath extends MergeModel {
                                           && MergeQuery.isSameFirstName(fam.getWife().getFirstName(), mergeRecord.getIndi().getMarriedFirstName()))) {
 
                                         models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                            LOG.log(ACCEPT, String.format("ACCEPT selectedIndi %s with new family",
+                                                    selectedIndi.getId() ));                                            
+                                        }
                                     }
 
                                 } else {
@@ -119,16 +162,29 @@ class MergeModelDeath extends MergeModel {
                                           && MergeQuery.isSameFirstName(fam.getHusband().getFirstName(), mergeRecord.getIndi().getMarriedFirstName()))) {
 
                                         models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                            LOG.log(ACCEPT, String.format("ACCEPT selectedIndi %s with fam %s where husband %s different from ex married name%s",
+                                                    selectedIndi.getId(), fam.getId(), fam.getHusband().getId(), mergeRecord.getIndi().getMarriedLastName() ));
+                                        }
                                     }
 
                                 }
                             }
+                        } else {
+                            if (LOG.isLoggable(MergeLogger.REFUSE)) {
+                                LOG.log(REFUSE, String.format("REFUSE selectedIndi %s marriage %s date %s must be before deathDate %s",
+                                        selectedIndi.getId(), fam.getId(), fam.getMarriageDate().getValue() , mergeRecord.getIndi().getDeathDate().getValue() ));
+                            }                            
                         }
                     }
 
                     // j'ajoute l'individu selectionné par dnd avec les familles compatibles
-                    for (Fam family : families) {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, family));
+                    for (Fam parentFamily : parentFamilies) {
+                        models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, parentFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            LOG.log(ACCEPT, String.format("ACCEPT selectedIndi %s with compatible parentFamily %s ",
+                                    selectedIndi.getId(), parentFamily.getId() ));
+                        }
                     }
                 }
 
@@ -144,19 +200,32 @@ class MergeModelDeath extends MergeModel {
                     sameIndis = MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, null);
                 }
                 // j'ajoute les individus compatibles
-                for (Indi samedIndi : sameIndis) {
+                for (Indi sameIndi : sameIndis) {
                     // j'ajoute les familles compatibles
-                    Fam sameIndiFamily = samedIndi.getFamilyWhereBiologicalChild();
+                    Fam sameIndiFamily = sameIndi.getFamilyWhereBiologicalChild();
                     if (sameIndiFamily != null) {
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, sameIndiFamily));
+                        models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, sameIndiFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            LOG.log(ACCEPT, String.format("ACCEPT sameIndi %s with compatible FamilyWhereBiologicalChild %s ",
+                                    sameIndi.getId(), sameIndiFamily.getId() ));
+                        }
+
                     } else {
-                        if ( families.size() > 0 ) {
-                            for (Fam family : families) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, samedIndi, family));
+                        if ( parentFamilies.size() > 0 ) {
+                            for (Fam parentFamily : parentFamilies) {
+                                models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, parentFamily));
+                                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                    LOG.log(ACCEPT, String.format("ACCEPT sameIndi %s with compatible parentFamily %s ",
+                                            sameIndi.getId(), parentFamily.getId() ));
+                                }
                             }
                         } else {
                             // j'ajoute l'individu selectionné sans famille
                             models.add(new MergeModelDeath(mergeRecord, gedcom, selectedIndi, (Fam) null));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT selectedIndi %s without family",
+                                        sameIndi.getId() ));
+                            }
                         }
                     }
                 }
@@ -167,6 +236,9 @@ class MergeModelDeath extends MergeModel {
 
             // j'ajoute un nouvel individu , sans famille associée
             models.add(new MergeModelDeath(mergeRecord, gedcom));
+            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                LOG.log(ACCEPT, String.format("ACCEPT new indi without family" ));
+            }
 
             // je recherche la famille avec l'ex conjoint
             List<Fam> marriedFamilies = MergeQuery.findFamilyCompatibleWithParticipantMarried(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
@@ -175,27 +247,47 @@ class MergeModelDeath extends MergeModel {
             List<Fam> parentFamilies = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
 
             if (!marriedFamilies.isEmpty()) {
-                for (Fam family : marriedFamilies) {
+                for (Fam marriedFamily : marriedFamilies) {
                     if (mergeRecord.getIndi().getSex() == PropertySex.MALE) {
-                        Indi husband = family.getHusband();
+                        Indi husband = marriedFamily.getHusband();
                         Fam husbandParentFamily = husband.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, husbandParentFamily));
-
-                        if (husbandParentFamily == null) {
+                        if (husbandParentFamily != null) {
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, husband, marriedFamily, husbandParentFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT husband %s with compatible marriedFamily %s and husbandParentFamily %s" , 
+                                        husband.getId(),  marriedFamily.getId(), husbandParentFamily.getId() ));
+                            }
+                        } else {     
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, husband, marriedFamily, null));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT husband %s with compatible marriedFamily %s" , 
+                                        husband.getId(),  marriedFamily.getId() ));
+                            }
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, husband, family, parentFamily));
+                                models.add(new MergeModelDeath(mergeRecord, gedcom, husband, marriedFamily, parentFamily));
+                                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                    LOG.log(ACCEPT, String.format("ACCEPT husband %s with compatible marriedFamily %s and parentFamily %s",
+                                            husband.getId(), marriedFamily.getId(), parentFamily.getId() ));
+                                }                            
                             }
                         }
                     } else {
-                        Indi wife = family.getWife();
+                        Indi wife = marriedFamily.getWife();
                         Fam wifeParentFamily = wife.getFamilyWhereBiologicalChild();
-                        models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, wifeParentFamily));
-
+                        models.add(new MergeModelDeath(mergeRecord, gedcom, wife, marriedFamily, wifeParentFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            LOG.log(ACCEPT, String.format("ACCEPT wife %s with compatible marriedFamily %s and wifeParentFamily %s" , 
+                                    wife,  marriedFamily, wifeParentFamily ));
+                        }
                         if (wifeParentFamily == null) {
                             // j'ajoute un nouvel individu avec les familles compatibles
                             for (Fam parentFamily : parentFamilies) {
-                                models.add(new MergeModelDeath(mergeRecord, gedcom, wife, family, parentFamily));
+                                models.add(new MergeModelDeath(mergeRecord, gedcom, wife, marriedFamily, parentFamily));
+                                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                    LOG.log(ACCEPT, String.format("ACCEPT wife %s with compatible marriedFamily %s and parentFamily %s",
+                                            wife, marriedFamily, parentFamily ));
+                                }
                             }
                         }
                     }
@@ -207,6 +299,10 @@ class MergeModelDeath extends MergeModel {
                 // j'ajoute un nouvel individu avec les familles compatibles
                 for (Fam parentFamily : parentFamilies) {
                     models.add(new MergeModelDeath(mergeRecord, gedcom, null, parentFamily));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        LOG.log(ACCEPT, String.format("ACCEPT new indi with parentFamily %s" , 
+                                parentFamily.getId() ));
+                    }                    
                 }
 
                 // je recupere les individus compatibles avec le relevé (qui portent le meme nom que le nom qui est dans le
@@ -219,12 +315,24 @@ class MergeModelDeath extends MergeModel {
                     if (sameIndiFamily != null) {
                         // j'ajoute l'individus compatible avec sa famille
                         models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, sameIndiFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            LOG.log(ACCEPT, String.format("ACCEPT sameIndi %s with compatible FamilyWhereBiologicalChild %s ",
+                                    sameIndi.getId(), sameIndiFamily.getId() ));
+                        }
                     } else {
                         // j'ajoute l'individus compatible sans famille
                         models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, (Fam) null));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            LOG.log(ACCEPT, String.format("ACCEPT sameIndi %s without family",
+                                        sameIndi.getId() ));
+                        }
                         // j'ajoute l'individus compatible avec les familles compatibles
-                        for (Fam family : parentFamilies) {
-                            models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, family));
+                        for (Fam parentFamily : parentFamilies) {
+                            models.add(new MergeModelDeath(mergeRecord, gedcom, sameIndi, parentFamily));
+                            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                                LOG.log(ACCEPT, String.format("ACCEPT sameIndi %s with compatible parentFamily %s ",
+                                        sameIndi.getId(), parentFamily.getId() ));
+                            }
                         }
                     }
                 }
@@ -239,10 +347,17 @@ class MergeModelDeath extends MergeModel {
                 for (Indi father : fathers) {
                     for (Indi mother : mothers) {
                         models.add(new MergeModelDeath(mergeRecord, gedcom, father, mother));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            LOG.log(ACCEPT, String.format("ACCEPT new indi with new family father %s mother %s ",
+                                    father.getId(), mother.getId() ));
+                        }                   
                     }
                 }
             }
 
+        }
+        if (LOG.isLoggable(Level.FINER)){
+            LOG.exiting(MergeModelDeath.class.getName(), "createMergeModelDeath");   
         }
         return models;
     }

@@ -7,6 +7,7 @@
 package ancestris.modules.releve.merge;
 
 import ancestris.modules.releve.dnd.TransferableRecord;
+import static ancestris.modules.releve.merge.MergeLogger.LOG;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
@@ -17,9 +18,14 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.List;
+import java.util.logging.Level;
 import javax.swing.ImageIcon;
+import javax.swing.JCheckBoxMenuItem;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
@@ -34,6 +40,9 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
     private MergeRecord mergeRecord = null;
     private boolean showAllParents = false;
     List<MergeModel> mergeModelList;
+    
+    private final JPopupMenu popupMenu = new JPopupMenu();
+
 
     /**
     * factory de la fenetre
@@ -81,6 +90,39 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
         initComponents();
         setAlwaysOnTop(true);
 
+        JMenuItem menuItemShowLog   = new JMenuItem(NbBundle.getMessage(MergeDialog.class, "MergeDialog.menu.showLog"));
+        menuItemShowLog.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/log-16.png")));
+        menuItemShowLog.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateLog(true);
+            }
+        });        
+        popupMenu.add(menuItemShowLog);
+
+        JMenuItem menuItemCopyLogFileName = new JMenuItem(NbBundle.getMessage(MergeDialog.class, "MergeDialog.menu.copyLogFileName"));
+        menuItemCopyLogFileName.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/clipboard-16.png")));
+        menuItemCopyLogFileName.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateLog(false);
+            }
+        });        
+        popupMenu.add(menuItemCopyLogFileName);
+        
+        showAllParents =  Boolean.parseBoolean(NbPreferences.forModule(MergeDialog.class).get("MergeDialogShowAllParents", "false"));
+        JCheckBoxMenuItem menuItemShowAllParents = new JCheckBoxMenuItem(NbBundle.getMessage(MergeDialog.class, "MergePanel.jToggleButtonShowAllParents.toolTipText"));
+        menuItemShowAllParents.setState(showAllParents);
+        menuItemShowAllParents.addActionListener(new java.awt.event.ActionListener() {
+            @Override
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateData( ((JCheckBoxMenuItem) (evt.getSource()) ).isSelected() );
+            }
+        }); 
+        popupMenu.add(menuItemShowAllParents);
+        
+        //JMenuItem menuItemAddPrents   = new JMenuItem("search parents");
+
         // je configure la taille de la fenetre
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         String size = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSize", "560,600,0,0");
@@ -109,7 +151,7 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
 
         //String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight", "90");
         //jSplitPane0.setDividerLocation(Integer.parseInt(splitHeight));
-        showAllParents =  Boolean.parseBoolean(NbPreferences.forModule(MergeDialog.class).get("MergeDialogShowAllParents", "false"));
+        showAllParents = false;
     }
 
     /**
@@ -182,25 +224,63 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
         }
         
     }
+    
+    
+    /**
+     * Re-initialise le modele de données du comparateur
+     */
+    protected void generateLog(boolean showLog){ 
+        try {
+            MergeLogger.enable();
+            List<MergeModel> mergeModelListLog = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showAllParents);
+            MergeLogger.disable();
+            LOG.setLevel(Level.OFF);
+            MergeLogger.copyFileNameToClipboard();
+            if(showLog) {
+                MergeLogger.showLog();
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            Toolkit.getDefaultToolkit().beep();
+            String title = "";
+            if (ex.getMessage() == null) {
+                JOptionPane.showMessageDialog(this, ex.getClass().getName() + " See console log", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+    }
 
     /**
      * Re-initialise le modele de données du comparateur
      * @param selectedEntity
      * @param record
      */
-    protected void updateData( boolean showNewParents ) throws Exception {
-        this.showAllParents = showNewParents;
-        List<MergeModel> models;
+    protected void updateData( boolean showNewParents ) {
+        try {
+            this.showAllParents = showNewParents;
+            List<MergeModel> models;
 
-        // je recupere les modeles contenant les entites compatibles avec le relevé
-        models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showNewParents);
-        // j'affiche les modeles et selectionne le premier modele de la liste
-        mergePanel1.initData(models, selectedEntity, this, MergeParticipantType.participant1);
-        mergePanel2.initData( models, selectedEntity, this, MergeParticipantType.participant2);
-        if (mergePanel2.getCurrentModel() == null ) {
-            jSplitPane0.setDividerLocation(getHeight());
-        } else {
-            jSplitPane0.setDividerLocation((getHeight()-jPanelButton.getHeight())/2);
+            // je recupere les modeles contenant les entites compatibles avec le relevé
+            models = MergeModel.createMergeModel(mergeRecord, gedcom, selectedEntity, showNewParents);
+            // j'affiche les modeles et selectionne le premier modele de la liste
+            mergePanel1.initData(models, selectedEntity, this, MergeParticipantType.participant1);
+            mergePanel2.initData(models, selectedEntity, this, MergeParticipantType.participant2);
+            if (mergePanel2.getCurrentModel() == null) {
+                jSplitPane0.setDividerLocation(getHeight());
+            } else {
+                jSplitPane0.setDividerLocation((getHeight() - jPanelButton.getHeight()) / 2);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            Toolkit.getDefaultToolkit().beep();
+            String title = "";
+            if (ex.getMessage() == null) {
+                JOptionPane.showMessageDialog(this, ex.getClass().getName() + " See console log", title, JOptionPane.ERROR_MESSAGE);
+            } else {
+                JOptionPane.showMessageDialog(this, ex.getMessage(), title, JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
@@ -285,6 +365,10 @@ public class MergeDialog extends javax.swing.JFrame implements EntityActionManag
                 }
             }
         });
+    }
+    
+    void showPopupMenu(Component invoker, int x, int y) {
+        popupMenu.show(invoker, x, y);       
     }
 
    /** This method is called from within the constructor to
