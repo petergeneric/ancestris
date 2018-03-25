@@ -159,7 +159,7 @@ public class AssociationEditorPanel extends javax.swing.JPanel {
                 .addComponent(noteCitationsTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE))
         );
 
-        associationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Note.png")), notesPanel); // NOI18N
+        associationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.notesPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/note.png")), notesPanel); // NOI18N
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
