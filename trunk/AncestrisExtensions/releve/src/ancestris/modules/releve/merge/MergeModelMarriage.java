@@ -1,5 +1,6 @@
 package ancestris.modules.releve.merge;
 
+import static ancestris.modules.releve.merge.MergeLogger.LOG;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -35,6 +36,10 @@ public class MergeModelMarriage extends MergeModel {
      * @return
      */
     static protected List<MergeModel> createMergeModelMarriage (MergeRecord mergeRecord, Gedcom gedcom, Entity selectedEntity, boolean showNewParents) throws Exception {
+        String cName = MergeModelMarriage.class.getName();
+        String mName = "createMergeModelMarriage";
+                
+        
         List<MergeModel> models = new ArrayList<MergeModel>();
         if (selectedEntity instanceof Fam) {
             // 2.1) Record Marriage : l'entité selectionnée est une famille
@@ -42,6 +47,9 @@ public class MergeModelMarriage extends MergeModel {
 
             // j'ajoute un modele avec la famille selectionne
             models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedFamily));
+            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                 MergeLogger.logAccept(cName, mName, "selectedFamily %s" , selectedFamily.getId());
+            }
 
         } else if (selectedEntity instanceof Indi) {
             // 2.2) Record Marriage : l'entité selectionnée est un individu
@@ -52,6 +60,10 @@ public class MergeModelMarriage extends MergeModel {
             // j'ajoute les familles compatibles
             for (Fam family : families) {
                 models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
+                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                    MergeLogger.logAccept(cName, mName, "selectedIndi %s with FamiliesWhereSpouse %s", selectedIndi.getId(), family.getId() );
+                }
+
             }
 
             if (showNewParents) {
@@ -60,9 +72,16 @@ public class MergeModelMarriage extends MergeModel {
                 List<Indi> wifes = new ArrayList<Indi>();
                 if (selectedIndi.getSex() == PropertySex.MALE) {
                     models.add(new MergeModelMarriage(mergeRecord, gedcom, selectedIndi, (Indi) null));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        MergeLogger.logAccept(cName, mName, "selectedIndi %s without wife", selectedIndi.getId());
+                    }
+
                     husbands.add(selectedIndi);
                 } else if (selectedIndi.getSex() == PropertySex.FEMALE) {
                     models.add(new MergeModelMarriage(mergeRecord, gedcom, (Indi) null, selectedIndi));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        MergeLogger.logAccept(cName, mName, "new family: husband:new wife:%s", selectedIndi.getId());
+                    }
                     wifes.add(selectedIndi);
                 }
                 MergeQuery.findHusbanWifeCompatibleWithMarriageRecord(mergeRecord, gedcom, Arrays.asList(families), husbands, wifes);
@@ -70,6 +89,9 @@ public class MergeModelMarriage extends MergeModel {
                     for (Indi wife : wifes) {
                         //TODO  rechercher la famille de l'epoux et la famille de l'epouse et la prendre en compte si elle existe
                         models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "new family: husband:%s wife:%s", husband.getId(), wife.getId() );
+                        }
                     }
                 }
             }
@@ -78,12 +100,18 @@ public class MergeModelMarriage extends MergeModel {
 
             // j'ajoute une nouvelle famille
             models.add(new MergeModelMarriage(mergeRecord, gedcom));
+            if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                MergeLogger.logAccept(cName, mName, "new family: new husband x nw wife");
+            }
 
             // je recherche les familles compatibles
             List<Fam> families = MergeQuery.findFamilyCompatibleWithMarriageRecord(mergeRecord, gedcom, null);
             // j'ajoute les familles compatibles
             for (Fam family : families) {
                 models.add(new MergeModelMarriage(mergeRecord, gedcom, family));
+                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                    MergeLogger.logAccept(cName, mName, "compatible family %s", family.getId() );
+                }
             }
 
             // je recherche les individus compatibles avec l'epoux et l'epouse du releve
@@ -93,11 +121,20 @@ public class MergeModelMarriage extends MergeModel {
             for (Indi husband : husbands) {
                 for (Indi wife : wifes) {
                     models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wife));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        MergeLogger.logAccept(cName, mName, "new family: husband %s wife %s", husband.getId(), wife.getId());
+                    }
                 }
                 models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, (Indi) null));
+                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                    MergeLogger.logAccept(cName, mName, "new family: husband %s x new wife", husband.getId() );
+                }
             }
             for (Indi wife : wifes) {
                 models.add(new MergeModelMarriage(mergeRecord, gedcom, (Indi) null, wife));
+                if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                    MergeLogger.logAccept(cName, mName, "new family: new husband x wife %s", wife.getId());
+                }                
             }
 
             // je recherche les familles des parents compatibles qui ne sont pas
@@ -134,7 +171,8 @@ public class MergeModelMarriage extends MergeModel {
                     }
                 }
 
-                for (Fam wifeFamily : MergeQuery.findFamilyCompatibleWithWifeParents(mergeRecord, gedcom)) {
+                //for (Fam wifeFamily : MergeQuery.findFamilyCompatibleWithWifeParents(mergeRecord, gedcom)) {
+                for (Fam wifeFamily : MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant2, gedcom)) {
                     Indi[] children = wifeFamily.getChildren();
 
                     boolean foundWife = false;
@@ -160,22 +198,37 @@ public class MergeModelMarriage extends MergeModel {
                 for (Fam husbandFamily : husbandFamilies) {
                     for (Fam wifeFamily : wifeFamilies) {
                         models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wifeFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "new family with husbandParentFamily %s wifeParentFamily %s", husbandFamily.getId(), wifeFamily.getId() );
+                        }
                     }
                     models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, (Fam) null));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        MergeLogger.logAccept(cName, mName, "new family with husbandParentFamily %s without wifeParentFamily", husbandFamily.getId() );
+                    }
                 }
                 for (Fam wifeFamily : wifeFamilies) {
                     models.add(new MergeModelMarriage(mergeRecord, gedcom, (Fam) null, wifeFamily));
+                    if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                        MergeLogger.logAccept(cName, mName, "new family without husbandParentFamily with wifeParentFamily %s", wifeFamily.getId() );
+                    }
                 }
 
                 // j'ajoute les combinaisons entre les epoux précedents et les familles
                 for (Indi husband : husbands) {
                     for (Fam wifeFamily : wifeFamilies) {
                         models.add(new MergeModelMarriage(mergeRecord, gedcom, husband, wifeFamily));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "new family husband %s with wifeParentFamily %s", husband.getId(), wifeFamily.getId() );
+                        }
                     }
                 }
                 for (Indi wife : wifes) {
                     for (Fam husbandFamily : husbandFamilies) {
                         models.add(new MergeModelMarriage(mergeRecord, gedcom, husbandFamily, wife));
+                        if (LOG.isLoggable(MergeLogger.ACCEPT)) {
+                            MergeLogger.logAccept(cName, mName, "new family husbandFamily %s with wife %s", husbandFamily.getId(), wife.getId() );
+                        }
                     }
                 }
             }

@@ -227,17 +227,25 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         mergeRow.merge = !recordValue.equals(entityValue);
                         mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
                     } else {
-                        mergeRow.merge = false;
+                        
                         // il suffit que l'un des noms soit identique 
                         String[] names1 = recordValue.split(",");
                         String[] names2 = entityValue.split(",");
                         boolean result = false;
                         for (String name1 : names1) {
                             for (String name2 : names2) {
-                                result |= name1.trim().equals(name2.trim());
+                                //result |= name1.trim().equals(name2.trim());
+                                result |= MergeQuery.isSameFirstName(name1.trim(), name2.trim());
                             }
                         }
-                        mergeRow.compareResult = !result ? CompareResult.CONFLIT : CompareResult.EQUAL;
+                        if( result ) {
+                            // les noms sont semblables
+                            mergeRow.merge = false;
+                            mergeRow.compareResult =  !recordValue.equals(entityValue) ? CompareResult.COMPATIBLE : CompareResult.EQUAL; 
+                        } else {
+                            mergeRow.merge = false;
+                            mergeRow.compareResult =  CompareResult.CONFLIT;
+                        }
                     }
 
                 } else if (rowType == RowType.IndiFirstName
@@ -252,8 +260,14 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                         mergeRow.merge = !recordValue.equals(entityValue);
                         mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
                     } else {
-                        mergeRow.merge = false;
-                        mergeRow.compareResult = !recordValue.equals(entityValue) ? CompareResult.CONFLIT : CompareResult.EQUAL;
+                        if( MergeQuery.isSameFirstName(recordValue,entityValue) ) {
+                            // les prénoms sont semblables
+                            mergeRow.merge = false;
+                            mergeRow.compareResult =  !recordValue.equals(entityValue) ? CompareResult.COMPATIBLE : CompareResult.EQUAL; 
+                        } else {
+                            mergeRow.merge = false;
+                            mergeRow.compareResult =  CompareResult.CONFLIT;
+                        }
                     }
 
                 } else if (rowType == RowType.IndiSex
