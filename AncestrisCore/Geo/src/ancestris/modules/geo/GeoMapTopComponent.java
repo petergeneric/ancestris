@@ -25,6 +25,7 @@ import genj.view.ScreenshotAction;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
 import java.io.BufferedReader;
@@ -45,7 +46,6 @@ import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.util.Exceptions;
 import org.openide.util.HelpCtx;
 import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
@@ -1143,27 +1143,45 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         if (theList == null) {
             theList = new GeoListTopComponent();
-            delay = 1000;
+            delay = 500;
         }
         if (!theList.isInitialised()) {
             theList.init(getContext());
             theList.open();
         }
         theList.requestActive();
+
         final GeoListTopComponent tmpList = theList;
-        final int d = delay;
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                if (d != 0) {
-                    try {
-                        Thread.sleep(d);
-                    } catch (InterruptedException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+        if (delay != 0) {
+            javax.swing.Timer timer = new javax.swing.Timer(delay, new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    tmpList.showLocation(gno);
                 }
-                tmpList.showLocation(gno);
-            }
-        });
+            });
+            timer.setRepeats(false);
+            timer.start();
+        } else {
+            tmpList.showLocation(gno);
+        }
+        
+        
+        
+//        SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
+//                if (d != 0) {
+//                    try {
+//                        System.out.println("********debug*********** sleep");
+//                        Thread.sleep(d);
+//                    } catch (InterruptedException ex) {
+//                        Exceptions.printStackTrace(ex);
+//                    }
+//                }
+//                System.out.println("********debug*********** show");
+//                tmpList.showLocation(gno);
+//            }
+//        });
+//        System.out.println("********debug*********** après code invokeLater");
     }
 
     public String getFilterName() {
