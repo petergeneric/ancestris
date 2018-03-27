@@ -6,6 +6,8 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -77,13 +79,15 @@ class MergeLogger {
      * affiche le fichier de log avec l'etiteur de texte par défaut du système
      * @throws IOException 
      */
-    static void showLog() throws IOException {
+    static void showLog() throws Exception {
         if (!Desktop.isDesktopSupported()) {
             return;
         }
-        Desktop desktop = Desktop.getDesktop();
-         
-        desktop.open(logFile);         
+        if( System.getProperty("os.name").toLowerCase().contains("win") ) {
+            Desktop.getDesktop().open(logFile);               
+        } else {            
+            Desktop.getDesktop().open(new File(new URI("file://" + logFile.getPath()).getPath() ) );
+        }
     }            
 
 }
