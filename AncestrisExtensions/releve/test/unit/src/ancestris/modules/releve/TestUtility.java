@@ -108,7 +108,7 @@ public class TestUtility extends TestCase {
             placeBrest.setCoordinates("N52.09755", "E23.68775");
 
             Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "child2");
-            child2.setName("Two First Name", "FATHERLASTNAME");
+            child2.setName("Two-First-Name", "FATHERLASTNAME");
             child2.setSex(PropertySex.FEMALE);
             birth = child2.addProperty("BIRT", "");
             birth.addProperty("DATE", "BEF 2004");

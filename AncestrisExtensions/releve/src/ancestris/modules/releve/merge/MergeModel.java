@@ -226,19 +226,8 @@ public abstract class MergeModel extends AbstractTableModel implements java.lang
                     if (entityValue.isEmpty()) {
                         mergeRow.merge = !recordValue.equals(entityValue);
                         mergeRow.compareResult = mergeRow.merge ? CompareResult.COMPATIBLE : CompareResult.EQUAL;
-                    } else {
-                        
-                        // il suffit que l'un des noms soit identique 
-                        String[] names1 = recordValue.split(",");
-                        String[] names2 = entityValue.split(",");
-                        boolean result = false;
-                        for (String name1 : names1) {
-                            for (String name2 : names2) {
-                                //result |= name1.trim().equals(name2.trim());
-                                result |= MergeQuery.isSameFirstName(name1.trim(), name2.trim());
-                            }
-                        }
-                        if( result ) {
+                    } else {                                                
+                        if( MergeQuery.isSameLastName(recordValue.trim(), entityValue.trim() )) {
                             // les noms sont semblables
                             mergeRow.merge = false;
                             mergeRow.compareResult =  !recordValue.equals(entityValue) ? CompareResult.COMPATIBLE : CompareResult.EQUAL; 

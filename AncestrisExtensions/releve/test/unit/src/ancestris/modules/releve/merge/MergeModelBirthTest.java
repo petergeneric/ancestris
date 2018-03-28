@@ -86,7 +86,7 @@ public class MergeModelBirthTest  {
                 record.setFieldValue(FieldType.eventDate, "01/01/1980");
                 record.setFieldValue(FieldType.cote, "cote");
                 record.setFieldValue(FieldType.freeComment,  "photo");
-                record.setIndi("Two First Name", "FATHERLASTNAME", "M", "03 MAR 2003", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndi("Two-First-Name", "FATHERLASTNAME", "M", "03 MAR 2003", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
                 //record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "occupation", "indiFatherResidence", "indiFatherComment", "dead");
                 //record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "occupation", "indiMotherResidence", "indiMotherComment", "dead");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");

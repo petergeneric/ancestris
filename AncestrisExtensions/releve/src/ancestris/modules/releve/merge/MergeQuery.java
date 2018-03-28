@@ -587,7 +587,7 @@ public class MergeQuery {
         }
 
         if (LOG.isLoggable(Level.FINER)){
-            StringBuilder result = new StringBuilder("RETURN");
+            StringBuilder result = new StringBuilder("RETURN marriedFamilies");
             for(Fam fam : marriedFamilies) {
                 result.append(" ").append(fam.getId());
             }
@@ -941,7 +941,7 @@ public class MergeQuery {
         }
         
         if (LOG.isLoggable(Level.FINER)){
-            StringBuilder result = new StringBuilder("RETURN");
+            StringBuilder result = new StringBuilder("RETURN families");
             for(Fam fam : families) {
                 result.append(" ").append(fam.getId());
             }
@@ -1162,8 +1162,7 @@ public class MergeQuery {
         }
         
         if (LOG.isLoggable(Level.FINER)){
-            StringBuilder result = new StringBuilder("RETURN");
-            result.append("fathers ");
+            StringBuilder result = new StringBuilder("RETURN fathers");
             for(Indi father : fathers) {
                 result.append(" ").append(father.getId());
             }
@@ -1571,8 +1570,7 @@ public class MergeQuery {
         }
         
         if (LOG.isLoggable(Level.FINER)){
-            StringBuilder result = new StringBuilder("RETURN");
-            result.append("husbands ");
+            StringBuilder result = new StringBuilder("RETURN husbands");
             for(Indi husband : husbands) {
                 result.append(" ").append(husband.getId());
             }
@@ -1933,8 +1931,7 @@ public class MergeQuery {
         }
         
         if (LOG.isLoggable(Level.FINER)){
-            StringBuilder result = new StringBuilder("RETURN");
-            result.append("sameChildren ");
+            StringBuilder result = new StringBuilder("RETURN sameChildren");
             for(Indi indi : sameChildren) {
                 result.append(" ").append(indi.getId());
             }
@@ -2064,106 +2061,72 @@ public class MergeQuery {
     }
 
     /**
-     * retourne true si l'intervalle [start end ] contient refTime
-     *
-     * refTime --- [****]----- [*****X*****]------[*****] ----- false true false
-     *
-     * @param refTime
-     * @param start
-     * @param end
-     * @return
-     */
-//    static private boolean containsRefTime(final PointInTime refTime, final PointInTime start, final PointInTime end) throws GedcomException {
-//        int jdRef = refTime.getJulianDay();
-//        int jdStart = start.getJulianDay();
-//        int jdEnd = end.getJulianDay();
-//        return jdStart <= jdRef && jdRef <= jdEnd;
-//    }
-
-    /**
      * retourne true si str1 est égal ou se prononce comme str2 ou si str1 est
      * vide
+     * si plusieurs mots sont présents séparés par une virgule ou un espace 
+     * chaque mot est compare individuellement 
      *
      * @param str1
      * @param str2
      * @return
      */
     static public boolean isSameLastName(String str1, String str2) {
-//        boolean result = false;
-//        if( str1 != null && ! str1.isEmpty()) {
-//            String[] names1 = str1.split(",");
-//            String[] names2 = str2.split(",");
-//
-//            for( String name1 : names1) {
-//                String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(name1);
-//                for( String name2 : names2) {
-//                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(name2)));
-//                    if (result) {
-//                        break;
-//                    }
-//                }
-//                if (result) {
-//                    break;
-//                }
-//            }
-//        } else {
-//            // 
-//            return true;
-//        }
-//        return result;
+        boolean result = false;
+        if( str1 != null && ! str1.isEmpty()) {
+            String[] names1 = str1.split(",");
+            String[] names2 = str2.split(",");
 
-        if (str1 != null && !str1.isEmpty()) {
-            //TODO comparer avec tous les noms similaires
-            String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(str1);
-            return dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(str2)));
+            for( String name1 : names1) {
+                String similarName1 = SimilarNameSet.getSimilarLastName().getSimilarName(name1);
+                for( String name2 : names2) {
+                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarLastName().getSimilarName(name2)));
+                    if (result) {
+                        break;
+                    }
+                }
+                if (result) {
+                    break;
+                }
+            }
         } else {
+            // 
             return true;
         }
-
-        //return dm.encode(str1).equals(dm.encode(str2));
-        //return str1.equals(str2);
+        return result;
     }
 
     /**
      * retourne true si str1 est égal ou se prononce comme str2
-     *
+     * si plusieurs mots sont présents séparés par une virgule ou un espace 
+     * chaque mot est compare individuellement
+     * 
      * @param str1
      * @param str2
      * @return
      */
     public static boolean isSameFirstName(String str1, String str2) {
-        //return dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str1)).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
-        //return str1.equals(str2);
-//        boolean result = false;
-//
-//        if( str1 != null && ! str1.isEmpty()) {
-//            String[] names1 = str1.split(",");
-//            String[] names2 = str2.split(",");
-//
-//            for( String name1 : names1) {
-//                String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(name1);
-//                for( String name2 : names2) {
-//                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(name2)));
-//                    if( result) {
-//                        break;
-//                    }                        
-//                }
-//                if (result) {
-//                    break;
-//                }
-//            }
-//        } else {
-//            // 
-//            return true;
-//        }
-//        return result;
+        boolean result = false;
 
-        if (str1 != null && !str1.isEmpty()) {
-            String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(str1);
-            return dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(str2)));
+        if( str1 != null && ! str1.isEmpty()) {
+            String[] names1 = str1.split("[\\,|\\ ]+"); // The + after treats consecutive delimiter chars as one.
+            String[] names2 = str2.split("[\\,|\\ ]+");
+
+            for( String name1 : names1) {
+                String similarName1 = SimilarNameSet.getSimilarFirstName().getSimilarName(name1);
+                for( String name2 : names2) {
+                    result |= dm.encode(similarName1).equals(dm.encode(SimilarNameSet.getSimilarFirstName().getSimilarName(name2)));
+                    if( result) {
+                        break;
+                    }                        
+                }
+                if (result) {
+                    break;
+                }
+            }
         } else {
             return true;
         }
+        return result;
     }
 
     /**
@@ -2406,6 +2369,23 @@ public class MergeQuery {
         }
         return result;
     }
+
+    /**
+     * retourne true si l'intervalle [start end ] contient refTime
+     *
+     * refTime --- [****]----- [*****X*****]------[*****] ----- false true false
+     *
+     * @param refTime
+     * @param start
+     * @param end
+     * @return
+     */
+//    static private boolean containsRefTime(final PointInTime refTime, final PointInTime start, final PointInTime end) throws GedcomException {
+//        int jdRef = refTime.getJulianDay();
+//        int jdStart = start.getJulianDay();
+//        int jdEnd = end.getJulianDay();
+//        return jdStart <= jdRef && jdRef <= jdEnd;
+//    }
 
     /**
      * retourne la date la plus précise entre la date du releve la date de

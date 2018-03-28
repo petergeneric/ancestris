@@ -64,6 +64,10 @@ class MergeLogger {
     static void logAccept(String className, String methodName, String format, Object ... args ) {
         LOG.logp(ACCEPT, className, methodName, String.format("ACCEPT " + format, args ));
     }
+
+    static void logRefuse(String className, String methodName, String format, Object ... args ) {
+        LOG.logp(REFUSE, className, methodName, String.format("REFUSE " + format, args ));
+    }
     
     /**
      * copie le nom du fichier de trace dans le presse papier

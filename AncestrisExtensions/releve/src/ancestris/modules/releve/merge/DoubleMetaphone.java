@@ -84,7 +84,9 @@ public class DoubleMetaphone  {
     public String doubleMetaphone(String value, boolean alternate) {
         value = cleanInput(value);
         if (value == null) {
-            return null;
+            // modif michel
+            //return null;
+            return "";
         }
         
         boolean slavoGermanic = isSlavoGermanic(value);

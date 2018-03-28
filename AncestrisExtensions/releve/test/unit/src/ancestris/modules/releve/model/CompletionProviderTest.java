@@ -278,7 +278,7 @@ public class CompletionProviderTest  {
 
             // je verifie que les prénoms composés sont dans l'ordre alphabétique
             assertEquals("liste", 
-                    "[cousin, Fatherfirstname, Motherfirstname, One First Name, OneFirstName Second, sansfamille1, Sansfamille1 second, Three First Name, Two First Name]",
+                    "[cousin, Fatherfirstname, Motherfirstname, One First Name, OneFirstName Second, sansfamille1, Sansfamille1 second, Three First Name, Two-First-Name]",
                     completionProvider.getFirstNames().getIncluded().toString() );
         } catch (Exception ex) {
             fail("GedcomException "+ ex.toString());
