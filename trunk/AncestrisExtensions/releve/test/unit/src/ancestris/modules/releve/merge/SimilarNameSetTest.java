@@ -9,9 +9,9 @@ import org.junit.Test;
  *
  * @author Michel
  */
-public class SimilarNameTest extends TestCase {
+public class SimilarNameSetTest extends TestCase {
     
-    public SimilarNameTest(String testName) {
+    public SimilarNameSetTest(String testName) {
         super(testName);
     }
 
@@ -30,5 +30,22 @@ public class SimilarNameTest extends TestCase {
         assertEquals("equivalent B2", "B2", SimilarNameSet.getSimilarFirstName().getSimilarName("B2"));
         assertEquals("equivalent C1", "C1", SimilarNameSet.getSimilarFirstName().getSimilarName("C1"));
     }
+    
+    @Test
+    public void testsaveloadSimilarLastName() {
+        HashMap<String,String> hashmap = new HashMap<String,String>();
+
+        hashmap.put("A1", "A");
+        hashmap.put("B1", "B");
+
+        SimilarNameSet.getSimilarLastName().save(hashmap);
+        SimilarNameSet.getSimilarLastName().reset();
+
+        assertEquals("equivalent A1", "A", SimilarNameSet.getSimilarLastName().getSimilarName("A"));
+        assertEquals("equivalent B1", "B", SimilarNameSet.getSimilarLastName().getSimilarName("B"));
+        assertEquals("equivalent B2", "B2", SimilarNameSet.getSimilarLastName().getSimilarName("B2"));
+        assertEquals("equivalent C1", "C1", SimilarNameSet.getSimilarLastName().getSimilarName("C1"));
+    }
+    
 
 }

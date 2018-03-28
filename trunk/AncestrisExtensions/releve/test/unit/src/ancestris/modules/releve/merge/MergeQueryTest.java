@@ -11,6 +11,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
+import java.util.HashMap;
 import java.util.List;
 import junit.framework.TestCase;
 import org.junit.Test;
@@ -173,8 +174,8 @@ public class MergeQueryTest extends TestCase {
             mergeRecord = new MergeRecord(data);            
 
             children = MergeQuery.findSameChild(mergeRecord, gedcom, family);
-            assertEquals("l'enfant existe deja dans la famille", 1, children.size());
-            assertEquals("Nom de l'enfant", mergeRecord.getIndi().getFirstName(), children.get(0).getFirstName());
+            assertEquals("l'enfant existe deja dans la famille", 2, children.size());
+            assertEquals("Nom de l'enfant", mergeRecord.getIndi().getFirstName(), children.get(1).getFirstName());
 
             data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("child1"));
             mergeRecord = new MergeRecord(data);            
@@ -431,21 +432,46 @@ public class MergeQueryTest extends TestCase {
     @Test
     public void testIsSameLastName() {
 
-        assertFalse(MergeQuery.isSameLastName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
+        assertTrue(MergeQuery.isSameLastName("DE QUATRE ,TROIS" , "TROIS"));
+        assertTrue(MergeQuery.isSameLastName("DE QUATRE,TROIS" , "DE QUATRE"));
+        assertFalse(MergeQuery.isSameLastName("DE QUATRE ,TROIS" , "QUATRE"));
+
+        assertFalse("VON DER PFALZ-SIMMERN != AGUILLÉ", MergeQuery.isSameLastName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
         assertTrue("AGUILHÉ = AGUILLÉ",MergeQuery.isSameLastName("AGUILHÉ", "AGUILLÉ"));
         assertTrue("VENTRE = VENTRÉ", MergeQuery.isSameLastName("VENTRE", "VENTRÉ"));
-        assertFalse("VENTRE = BENTRÉ",  MergeQuery.isSameLastName("VENTRE", "BENTRE"));
-
+        assertFalse("VENTRE != BENTRÉ",  MergeQuery.isSameLastName("VENTRE", "BENTRE"));
+        
+        assertTrue("VENTRE= BENTRÉ, VENTRE",  MergeQuery.isSameLastName("VENTRE" , "BENTRÉ, VENTRE"));
+        assertTrue("BENTRÉ, VENTRE = VENTRE",  MergeQuery.isSameLastName("BENTRÉ, VENTRE" , "VENTRE"));
+        assertTrue("VENTRE= BENTRÉ,VENTRE",  MergeQuery.isSameLastName("VENTRE" , "BENTRÉ,VENTRE"));
+        assertTrue("BENTRÉ,VENTRE = VENTRE",  MergeQuery.isSameLastName("BENTRÉ,VENTRE" , "VENTRE"));
     }
  
     @Test
     public void testIsFirstLastName() {
 
-//        assertTrue(MergeQuery.isSameFirstName("Marianne", "Marianne, Pétronille"));
-//        assertTrue(MergeQuery.isSameFirstName("Petronille", "Marianne, Pétronille"));
-//        assertTrue(MergeQuery.isSameFirstName("Petronille, Marianne", "Marianne"));
-//        assertTrue(MergeQuery.isSameFirstName("Marianne, Pétronille", "Pétronille"));
-//        assertFalse(MergeQuery.isSameFirstName("Marianne, Pétronille", "Anne"));
+        assertTrue(MergeQuery.isSameFirstName("un-deux, trois ", "trois"));
+        assertTrue(MergeQuery.isSameFirstName("un deux trois ", "trois"));
+        assertTrue(MergeQuery.isSameFirstName("un deux trois ", "trois"));
+        assertTrue(MergeQuery.isSameFirstName("un, deux, trois ", "trois"));
+        assertTrue(MergeQuery.isSameFirstName("un,, deux,  trois ", "trois"));
+                
+        assertTrue(MergeQuery.isSameFirstName("Marianne ", "Mariane"));
+        
+        assertTrue(MergeQuery.isSameFirstName("Marianne", "Marianne, Pétronille"));
+        assertTrue(MergeQuery.isSameFirstName("Petronille", "Marianne, Pétronille"));
+        assertTrue(MergeQuery.isSameFirstName("Petronille, Marianne", "Marianne"));
+        assertTrue(MergeQuery.isSameFirstName("Marianne, Pétronille", "Pétronille"));
+        assertFalse(MergeQuery.isSameFirstName("Marianne, Pétronille", "Anne"));
+        
+        HashMap<String,String> similarFirstNames = new HashMap<String,String>();
+        similarFirstNames.put("Pétronille", "Peironne");        
+        SimilarNameSet.getSimilarFirstName().save(similarFirstNames);
+        SimilarNameSet.getSimilarFirstName().reset();
+        
+        assertTrue(MergeQuery.isSameFirstName("Peironne" , "Pétronille" ));
+        assertTrue(MergeQuery.isSameFirstName("Pétronille" , "Peironne"));
+
         
     }
 }
