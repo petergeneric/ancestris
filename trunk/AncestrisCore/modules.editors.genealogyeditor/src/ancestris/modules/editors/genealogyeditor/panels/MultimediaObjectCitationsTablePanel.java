@@ -352,6 +352,9 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     public void set(Property root, List<Property> multiMediasList) {
+        if (root == null) {
+            return;
+        }
         mGedcomVersion = root.getGedcom().getGrammar().getVersion();
         this.mRoot = root;
         multiMediaObjectCitationsTableModel.clear();
