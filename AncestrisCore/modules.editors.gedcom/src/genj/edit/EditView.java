@@ -284,9 +284,9 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         // add sticky/focus/mode
         toolbar.add(new JToggleButton(sticky));
         toolbar.add(new JToggleButton(focus));
-        if (REGISTRY.get("showstandard", false)) {
-            toolbar.add(new JToggleButton(mode));
-        }
+//        if (REGISTRY.get("showstandard", false)) {
+//            toolbar.add(new JToggleButton(mode));  // FL 2018-03-29 - mode is not used apparently : it displays an editor which has never been used and is not completeed apparently.
+//        }
 
         // done
         toolbar.endUpdate();
