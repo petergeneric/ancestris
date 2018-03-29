@@ -763,14 +763,16 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 }
             }
 
-            if (mSourceTextModified) {
-                mSourceTextModified = false;
-
+            if (recordingDate.isCommittable()) {
                 try {
                     recordingDate.commit();
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
                 }
+            }
+
+            if (mSourceTextModified) {
+                mSourceTextModified = false;
 
                 Property sourceData = mSourceCitation.getProperty("DATA");
                 if (sourceData == null) {
