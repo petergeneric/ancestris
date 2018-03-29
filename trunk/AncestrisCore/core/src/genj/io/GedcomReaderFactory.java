@@ -448,7 +448,7 @@ public class GedcomReaderFactory {
 
         @Override
         public String getTaskName() {
-            if (gedcom != null) {
+            if (gedcom != null && RESOURCES != null) {
                 return RESOURCES.getString("reader.title", gedcom.getName());
             }
             return "";
