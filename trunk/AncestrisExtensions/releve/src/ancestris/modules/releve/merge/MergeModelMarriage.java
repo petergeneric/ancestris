@@ -394,7 +394,8 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiLastName,   record.getIndi().getLastName(),  husband.getLastName(), husband);
             addRow(RowType.IndiFirstName,  record.getIndi().getFirstName(), husband.getFirstName());
             addRow(RowType.IndiBirthDate,  record.getIndi().getBirthDate(), husband.getBirthDate(false));
-            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(),  husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(),  record.getIndi().getBirthAddress(), 
+                    husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""), husband.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(),  MergeQuery.findOccupation(husband, record.getEventDate()));
             addRow(RowType.IndiDeathDate,  record.getIndi().getDeathDate(), husband.getDeathDate());            
         } else {
@@ -402,7 +403,7 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.IndiLastName,   record.getIndi().getLastName(),  "", null);
             addRow(RowType.IndiFirstName,  record.getIndi().getFirstName(), "");
             addRow(RowType.IndiBirthDate,  record.getIndi().getBirthDate(), null);
-            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(),     "");
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), "", "");
             addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(), "");
             addRow(RowType.IndiDeathDate,  record.getIndi().getDeathDate(), null);            
         }
@@ -441,14 +442,15 @@ public class MergeModelMarriage extends MergeModel {
             addRow(RowType.WifeLastName,   record.getWife().getLastName(), wife.getLastName(), wife);
             addRow(RowType.WifeFirstName,  record.getWife().getFirstName(), wife.getFirstName());
             addRow(RowType.WifeBirthDate,  record.getWife().getBirthDate(), wife.getBirthDate(false));
-            addRow(RowType.WifePlace,      record.getWife().getBirthPlace(),      wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.WifeBirthPlace,      record.getWife().getBirthPlace(), record.getWife().getBirthAddress(), 
+                    wife.getValue(new TagPath("INDI:BIRT:PLAC"), ""), wife.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             addRow(RowType.WifeOccupation, record.getWife().getOccupationWithDate(), MergeQuery.findOccupation(wife, record.getEventDate()));
             addRow(RowType.WifeDeathDate,  record.getWife().getDeathDate(), wife.getDeathDate());            
         } else {
             addRow(RowType.WifeLastName,   record.getWife().getLastName(), "", null);
             addRow(RowType.WifeFirstName,  record.getWife().getFirstName(), "");
             addRow(RowType.WifeBirthDate,  record.getWife().getBirthDate(), null);
-            addRow(RowType.WifePlace,      record.getWife().getBirthPlace(), "");
+            addRow(RowType.WifeBirthPlace, record.getWife().getBirthPlace(), record.getWife().getBirthAddress(), "", "");
             addRow(RowType.WifeOccupation, record.getWife().getOccupationWithDate(), "");
             addRow(RowType.WifeDeathDate,  record.getWife().getDeathDate(), null);            
         }
@@ -580,9 +582,10 @@ public class MergeModelMarriage extends MergeModel {
             }
         }
 
-        // je copie la date, le lieu et commentaire de naissance de l'epoux
-        if (isChecked(RowType.IndiBirthDate)) {
-            copyBirthDate(husband, getRow(RowType.IndiBirthDate), record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), record);
+        // je copie la date, le lieu et le commentaire de naissance de l'epoux
+        if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.IndiBirthPlace)) {
+            copyBirthDate(husband, isChecked(RowType.IndiBirthDate), isChecked(RowType.IndiBirthPlace), 
+                    record.getIndi().getBirthDate(), record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), record);
         }
 
         // je copie la profession de l'epoux
@@ -592,7 +595,7 @@ public class MergeModelMarriage extends MergeModel {
 
         //je copie la date de décès de l'epoux
         if (isChecked(RowType.IndiDeathDate)) {
-            copyDeathDate(husband, getRow(RowType.IndiDeathDate), record);
+            copyDeathDate(husband, record.getIndi().getDeathDate(), record);
         }
 
         // je copie les données des parents de l'epoux
@@ -642,10 +645,11 @@ public class MergeModelMarriage extends MergeModel {
         }
 
         // je copie la date, le lieu et le commentaire de naissance de l'epouse
-        if (isChecked(RowType.WifeBirthDate)) {
-            copyBirthDate(wife, getRow(RowType.WifeBirthDate), record.getWife().getBirthPlace(), record.getWife().getBirthAddress(), record);
+        if (isChecked(RowType.WifeBirthDate) || isChecked(RowType.WifeBirthPlace)) {
+            copyBirthDate(wife, isChecked(RowType.WifeBirthDate), isChecked(RowType.WifeBirthPlace), 
+                    record.getWife().getBirthDate(), record.getWife().getBirthPlace(), record.getWife().getBirthAddress(), record);
         }
-
+        
         // je copie la profession de l'epouse
         if (isChecked(RowType.WifeOccupation)) {
             copyOccupation(wife, record.getWife().getOccupation(), record.getWife().getResidence(), record.getWife().getAddress(), true, record);
@@ -653,7 +657,7 @@ public class MergeModelMarriage extends MergeModel {
 
         //je copie la date de décès de l'epouse 
         if (isChecked(RowType.WifeDeathDate)) {
-            copyDeathDate(wife, getRow(RowType.WifeDeathDate), record);
+            copyDeathDate(wife, record.getWife().getDeathDate(), record);
         }
 
         // je copie les données des parents de l'epouse
@@ -745,6 +749,8 @@ public class MergeModelMarriage extends MergeModel {
                 comment += value;
                 propertyNote.setValue(comment);
             }
+            // je retourne la propriété pour quelle soit selectionne par defaut
+            resultProperty = propertyNote;
         }
 
         return resultProperty;

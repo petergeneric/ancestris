@@ -251,7 +251,8 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
             addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex(), currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
-            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(),
+                    currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""), currentIndi.getValue(new TagPath("INDI:BIRT:ADDR"), "") );
             addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), currentIndi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
             // j'affiche un separateur
             addRowSeparator();
@@ -263,7 +264,7 @@ class MergeModelBirth extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
             addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN, currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
-            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), "", "");
             addRow(RowType.EventComment, record.getEventComment(showFrenchCalendarDate), "");
             // j'affiche un separateur
             addRowSeparator();

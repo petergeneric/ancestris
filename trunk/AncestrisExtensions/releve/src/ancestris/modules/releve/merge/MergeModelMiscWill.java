@@ -358,19 +358,11 @@ class MergeModelMiscWill extends MergeModel {
         addRowSource();
         addRowEvent(currentIndi, "WILL");
         addRowSeparator();
-        addRowIndi();
-        
+        addRowIndi();        
         // j'affiche l'ex conjoint
         addRowMarried(null);
-
         // j'affiche la famille des parents de l'individu
-        addRowSeparator();
-        addRow(RowType.IndiParentFamily, null);
-        addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
-
-        // j'affiche les parents de l'individu
-        addRowFather(father);
-        addRowMother(mother);
+        addRowParents(father, mother);        
     }
     
     private void addRowIndi() throws Exception {
@@ -389,7 +381,8 @@ class MergeModelMiscWill extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), currentIndi.getFirstName());
             addRowSex(RowType.IndiSex, record.getIndi().getSex(), currentIndi.getSex(), currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , currentIndi.getBirthDate());
-            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), 
+                    currentIndi.getValue(new TagPath("INDI:BIRT:PLAC"), ""), currentIndi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             addRow(RowType.IndiDeathDate, record.getIndi().getDeathDate() , currentIndi.getDeathDate());
             addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(), MergeQuery.findOccupation(currentIndi, record.getEventDate()));
 
@@ -407,7 +400,7 @@ class MergeModelMiscWill extends MergeModel {
             addRow(RowType.IndiFirstName, record.getIndi().getFirstName(), "");
             addRowSex(RowType.IndiSex, record.getIndi().getSex(), PropertySex.UNKNOWN, currentIndi);
             addRow(RowType.IndiBirthDate, record.getIndi().getBirthDate() , null);
-            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), "");
+            addRow(RowType.IndiBirthPlace, record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), "", "");
             addRow(RowType.IndiDeathDate, record.getIndi().getDeathDate() , null);
             addRow(RowType.IndiOccupation, record.getIndi().getOccupationWithDate(), "");
         }
@@ -425,6 +418,15 @@ class MergeModelMiscWill extends MergeModel {
             addRowFather(null);
             addRowMother(null);
         }
+    }
+    
+    private void addRowParents( Indi father, Indi mother) throws Exception {
+        addRowSeparator();
+        addRow(RowType.IndiParentFamily, null);
+        addRow(RowType.IndiParentMarriageDate, record.getIndi().getParentMarriageDate(), null);
+        // j'affiche les parents
+        addRowFather(father);
+        addRowMother(mother);        
     }
 
     private void addRowFather( Indi father ) throws Exception {
@@ -557,28 +559,16 @@ class MergeModelMiscWill extends MergeModel {
             }
         }
         
-        // je cree la propriete de naissance si elle n'existait pas
-        if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.IndiBirthPlace) || isChecked(RowType.EventSource) || isChecked(RowType.EventComment)) {
-            Property birthProperty = currentIndi.getProperty("BIRT");
-            if (birthProperty == null) {
-                birthProperty = currentIndi.addProperty("BIRT", "");
-            }
-
-            // je copie la date de naissance du releve dans l'individu
-            if (isChecked(RowType.IndiBirthDate)) {
-                // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
-                copyBirthDate(currentIndi, getRow(RowType.IndiBirthDate), record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), record);
-            }
-
-            // je copie le lieu de naissance
-            if (isChecked(RowType.IndiBirthPlace)) {
-                copyPlace(record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), birthProperty);
-            }
-        }
+        // je copie la date, le lieu et le commentaire de naissance du releve dans l'individu
+        if (isChecked(RowType.IndiBirthDate) || isChecked(RowType.IndiBirthPlace)) {
+            // j'ajoute (ou remplace) la date de la naissance (le lieu de naissance n'est pas connu)
+            copyBirthDate(currentIndi, isChecked(RowType.IndiBirthDate), isChecked(RowType.IndiBirthPlace), 
+                    record.getIndi().getBirthDate(), record.getIndi().getBirthPlace(), record.getIndi().getBirthAddress(), record);
+        }        
 
         // je copie la date de décès 
         if (isChecked(RowType.IndiDeathDate)) {
-            copyDeathDate(currentIndi, getRow(RowType.IndiDeathDate), record);
+            copyDeathDate(currentIndi, record.getIndi().getDeathDate(), record);
         }
         
         // je copie la profession de l'individu

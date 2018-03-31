@@ -8,7 +8,6 @@ import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMisc;
-import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -45,8 +44,8 @@ public class MergeModelMiscWillTest extends TestCase {
             RecordMisc willRecord = new RecordMisc();
             willRecord.setFieldValue(FieldType.eventDate, "01/03/1999");
             willRecord.setFieldValue(Record.FieldType.eventType, "testament");
-            willRecord.setFieldValue(FieldType.notary, "notaire_other");
-            willRecord.setFieldValue(FieldType.cote, "cote");
+            willRecord.setFieldValue(FieldType.notary,          "notaire_other");
+            willRecord.setFieldValue(FieldType.cote,            "cote");
             willRecord.setFieldValue(FieldType.generalComment, "generalcomment");
             willRecord.setFieldValue(FieldType.freeComment,  "photo");
             willRecord.setIndi("accordfirstname", "ACCORDLASTNAME", "M", "50", "", "accordBirthplace", "accordBirthAddress", "accordoccupation", "accordResidence", "accordAddress", "accordcomment");
@@ -75,6 +74,7 @@ public class MergeModelMiscWillTest extends TestCase {
             assertEquals("participant1 : nom",mergeRecord.getIndi().getLastName(), participant1.getLastName());
             assertEquals("participant1 : prénom",mergeRecord.getIndi().getFirstName(), participant1.getFirstName());
             assertEquals("participant1 : lieu naissance",mergeRecord.getIndi().getBirthPlace(), participant1.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("participant1 : adresse naissance",mergeRecord.getIndi().getBirthAddress(), participant1.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             assertEquals("participant1 : Date décès", "FROM 1999", participant1.getDeathDate().getValue());
             
             assertEquals("participant1 : Profession",1, participant1.getProperties(new TagPath("INDI:OCCU")).length);
@@ -82,6 +82,7 @@ public class MergeModelMiscWillTest extends TestCase {
             assertEquals("participant1 : Profession",mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant1 : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant1 : Lieu Profession",mergeRecord.getIndi().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("participant1 : Adresse Profession",mergeRecord.getIndi().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
             
                         
         } catch (Exception ex) {
