@@ -243,8 +243,8 @@ public class MergeTable extends JTable {
                         setToolTipText(wrapToolTip(date.getPhrase(), 80));
                     }
                 } else if (value instanceof PropertyPlace) {
-                    PropertyPlace pace = (PropertyPlace)value;
-                    setText(pace.getDisplayValue());
+                    PropertyPlace place = (PropertyPlace)value;
+                    setText(place.getDisplayValue());
                 } else if (value instanceof Source) {
                     if ( column == 4 ) {
                         setText(((Source)value).getId());
@@ -286,7 +286,10 @@ public class MergeTable extends JTable {
                           ||  mergeRow.rowType == RowType.WifeOccupation
                           ||  mergeRow.rowType == RowType.WifeMarriedOccupation
                           ||  mergeRow.rowType == RowType.WifeFatherOccupation
-                          ||  mergeRow.rowType == RowType.WifeMotherOccupation )
+                          ||  mergeRow.rowType == RowType.WifeMotherOccupation 
+                          ||  mergeRow.rowType == RowType.IndiBirthPlace 
+                          ||  mergeRow.rowType == RowType.WifeBirthPlace 
+                         )
                           && (column == 1 || column==3) && !value.toString().isEmpty()) 
                     {
                         setToolTipText(wrapToolTip(comment, 80));

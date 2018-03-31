@@ -3,7 +3,6 @@ package ancestris.modules.releve.merge;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
-import ancestris.modules.releve.model.Field;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.Record;
@@ -76,6 +75,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             
             assertEquals("participant1 : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), participant1.getBirthDate().getValue());
             assertEquals("participant1 : lieu naissance",mergeRecord.getIndi().getBirthPlace(), participant1.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("participant1 : adresse naissance",mergeRecord.getIndi().getBirthAddress(), participant1.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             assertEquals("participant1 : Date décès","FROM 1999", participant1.getDeathDate().getValue());
             
             assertEquals("participant1 : Profession",1, participant1.getProperties(new TagPath("INDI:OCCU")).length);
@@ -83,6 +83,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("participant1 : Profession",mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant1 : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant1 : Lieu Profession",mergeRecord.getIndi().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("participant1 : Adresse Profession",mergeRecord.getIndi().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
             Property link = participant1.getProperty(new TagPath("INDI:EVEN:XREF"));
             assertEquals("participant1 association vers participant2","@I1@", link.getValue() );
 
@@ -92,13 +93,16 @@ public class MergeModelMiscOtherTest extends TestCase {
             participant2Husband = participant2Family.getHusband();
             assertEquals("participant2 nom",mergeRecord.getWife().getLastName(), participant2Husband.getLastName());
             assertEquals("participant2 prenom",mergeRecord.getWife().getFirstName(),  participant2Husband.getFirstName());
-            assertEquals("participant2 Date naissance","1 JAN 1970", participant2Husband.getBirthDate().getValue());
+            assertEquals("participant2 Date naissance",mergeRecord.getWife().getBirthDate().getValue(), participant2Husband.getBirthDate().getValue());
+            assertEquals("participant2 Lieu naissance",mergeRecord.getWife().getBirthPlace(), participant2Husband.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("participant2 adresse naissance",mergeRecord.getWife().getBirthAddress(), participant2Husband.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             assertEquals("participant2 Date deces","FROM 1999", participant2Husband.getDeathDate().getValue());
             assertEquals("participant2 : nb profession",2, participant2.getProperties(new TagPath("INDI:OCCU")).length);
             occupation = participant2Husband.getProperties(new TagPath("INDI:OCCU"))[0];
             assertEquals("participant2 profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant2 date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant2 lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("participant2 adresse Profession",mergeRecord.getWife().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
             assertEquals("participant2 lien vers participant1","@I7@", participant2.getValue(new TagPath("INDI:ASSO"),""));
             assertEquals("participant2 lien vers participant1","INDI", participant2.getValue(new TagPath("INDI:ASSO:TYPE"),""));
             assertEquals("participant2 lien vers participant1","Présent@INDI:EVEN", participant2.getValue(new TagPath("INDI:ASSO:RELA"),""));
@@ -113,9 +117,7 @@ public class MergeModelMiscOtherTest extends TestCase {
             assertEquals("participant2 femme Profession",mergeRecord.getWife().getMarriedOccupation(), occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("participant2 femme Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("participant2 femme Lieu Profession",mergeRecord.getWife().getMarriedResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
-
-            //MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, miscRecord, true);
-            //Thread.sleep(10000);
+            assertEquals("participant2 femme Addresse Profession",mergeRecord.getWife().getMarriedAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
 
         } catch (Exception ex) {
             ex.printStackTrace(System.err);

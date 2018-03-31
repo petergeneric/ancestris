@@ -104,11 +104,14 @@ public class MergeModelDeathTest extends TestCase {
 
             assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
             assertEquals("indiBirthPlace",mergeRecord.getIndi().getBirthPlace(), indi.getPropertyByPath("INDI:BIRT:PLAC").getValue());
+            assertEquals("indiBirthAddress",mergeRecord.getIndi().getBirthAddress(), indi.getPropertyByPath("INDI:BIRT:ADDR").getValue());
+            assertEquals("indiBirthNote ","Lieu de naissance birthAddress, indiBirthPlace indiqué dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
             
             assertEquals("indiOccupation",mergeRecord.getIndi().getOccupation(), indi.getProperty("OCCU").getValue());
-            assertEquals("indiOcccupationResidence",mergeRecord.getIndi().getResidence(), indi.getPropertyByPath("INDI:OCCU:PLAC").getValue());
             assertEquals("indiOcccupationDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:OCCU:DATE").getValue());
-
+            assertEquals("indiOcccupationResidence",mergeRecord.getIndi().getResidence(), indi.getPropertyByPath("INDI:OCCU:PLAC").getValue());
+            assertEquals("indiOcccupationAddress",mergeRecord.getIndi().getAddress(), indi.getPropertyByPath("INDI:OCCU:ADDR").getValue());
+            
             // conjoint
             Indi married = indi.getFamiliesWhereSpouse()[0].getWife();
             assertEquals("marriedLastName",recordDeath.getFieldValue(FieldType.indiMarriedLastName), married.getLastName());

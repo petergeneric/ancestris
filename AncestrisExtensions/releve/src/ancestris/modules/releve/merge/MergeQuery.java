@@ -2662,6 +2662,14 @@ public class MergeQuery {
         String result;
         if (foundOccupation != null) {
             result = foundOccupation.getValue();
+            Property address = foundOccupation.getProperty("ADDR");
+            if (address != null && !address.getValue().isEmpty()) {
+                if (!result.isEmpty()) {
+                    result += ", ";
+                }
+                result += address.getValue();
+            }
+
             Property place = foundOccupation.getProperty("PLAC");
             if (place != null && !place.getValue().isEmpty()) {
                 if (!result.isEmpty()) {
@@ -2708,6 +2716,14 @@ public class MergeQuery {
         String result = "";
         if (foundResidence != null) {
             result = foundResidence.getValue();
+            Property address = foundResidence.getProperty("ADDR");
+            if (address != null && !address.getValue().isEmpty()) {
+                if (!result.isEmpty()) {
+                    result += ", ";
+                }
+                result += address.getValue();
+            }
+
             Property place = foundResidence.getProperty("PLAC");
             if (place != null && !place.getValue().isEmpty()) {
                 if (!result.isEmpty()) {

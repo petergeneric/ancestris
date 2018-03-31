@@ -123,17 +123,19 @@ public class MergeModelMiscMarcTest extends TestCase {
 
             assertEquals("Date marriage","ABT 1999", fam.getMarriageDate().getValue());
 
-
             assertEquals("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
-            // le lieu et commentaire sont mis à jour 
             assertSame("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            //assertEquals("Indi : Note naissance","", fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+            assertSame("Indi : adresse naissance",mergeRecord.getIndi().getBirthAddress(), fam.getHusband().getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+            assertEquals("Indi : Note naissance",
+                    "Date de naissance ava 1981 déduite de l'acte de contrat de mariage entre Fatherfirstname NEW_FATHERLASTNAME et Motherfirstname NEW_WIFEFATHERLASTNAME le 01/03/1999 (ville_marc, notaire_marc)",
+                    fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
 
             assertEquals("Indi : Profession",1, fam.getHusband().getProperties(new TagPath("INDI:OCCU")).length);
             Property occupation = fam.getHusband().getProperties(new TagPath("INDI:OCCU"))[0];
             assertEquals("Indi : Profession",mergeRecord.getIndi().getOccupation(), occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("Indi : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Indi : Lieu Profession",mergeRecord.getIndi().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("Indi : adresse Profession",mergeRecord.getIndi().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
             //assertEquals("Indi : Note Profession","Profession indiquée dans l'acte CM entre Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_marc, notaire_marc) ",
             //        occupation.getValue(new TagPath("OCCU:NOTE"),""));
 
@@ -144,10 +146,14 @@ public class MergeModelMiscMarcTest extends TestCase {
             assertEquals("Mari pere nom",mergeRecord.getIndi().getFatherLastName(), indiFather.getLastName());
             assertEquals("Mari pere prenom",mergeRecord.getIndi().getFatherFirstName(),  indiFather.getFirstName());
             assertEquals("Mari pere profession",mergeRecord.getIndi().getFatherOccupation(),  indiFather.getProperty("OCCU").getValue());
+            assertEquals("Mari pere lieu profession",mergeRecord.getIndi().getFatherResidence(),  indiFather.getPropertyByPath("INDI:OCCU:PLAC").getValue());
+            assertEquals("Mari pere adresse profession",mergeRecord.getIndi().getFatherAddress(),  indiFather.getPropertyByPath("INDI:OCCU:ADDR").getValue());
             indiMother = indiParentFamily.getWife();
             assertEquals("Mari mere nom",mergeRecord.getIndi().getMotherLastName(), indiMother.getLastName());
             assertEquals("Mari mere prenom",mergeRecord.getIndi().getMotherFirstName(),  indiMother.getFirstName());
             assertEquals("Mari mere profession",mergeRecord.getIndi().getMotherOccupation(),  indiMother.getProperty("OCCU").getValue());
+            assertEquals("Mari mere lieu profession",mergeRecord.getIndi().getMotherResidence(),  indiMother.getPropertyByPath("INDI:OCCU:PLAC").getValue());
+            assertEquals("Mari mere adresse profession",mergeRecord.getIndi().getMotherAddress(),  indiMother.getPropertyByPath("INDI:OCCU:ADDR").getValue());
 
             assertEquals("Wife : Date naissance",mergeRecord.getWife().getBirthDate().getValue(), fam.getWife().getBirthDate().getValue());
             assertEquals("Wife : lieu naissance",mergeRecord.getWife().getBirthPlace(), fam.getWife().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
@@ -161,6 +167,7 @@ public class MergeModelMiscMarcTest extends TestCase {
             assertEquals("Wife : Profession",mergeRecord.getWife().getOccupation(),      occupation.getValue(new TagPath("OCCU"),""));
             assertEquals("Wife : Date Profession",mergeRecord.getEventDate().getValue(), occupation.getValue(new TagPath("OCCU:DATE"),""));
             assertEquals("Wife : Lieu Profession",mergeRecord.getWife().getResidence(), occupation.getValue(new TagPath("OCCU:PLAC"),""));
+            assertEquals("Wife : Adresse Profession",mergeRecord.getWife().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"),""));
             //assertEquals("Wife : Note Profession",
             //        "Profession indiquée dans l'acte CM entre Fatherfirstname FATHERLASTNAME et Motherfirstname WIFEFATHERLASTNAME le 01/03/1999 ( ville_marc, notaire_marc) ",
             //        occupation.getValue(new TagPath("OCCU:NOTE"),""));
@@ -172,10 +179,14 @@ public class MergeModelMiscMarcTest extends TestCase {
             assertEquals("Femme pere nom",mergeRecord.getWife().getFatherLastName(), wifeFather.getLastName());
             assertEquals("Femme pere prenom",mergeRecord.getWife().getFatherFirstName(),  wifeFather.getFirstName());
             assertEquals("Femme pere profession",mergeRecord.getWife().getFatherOccupation(),  wifeFather.getProperty("OCCU").getValue());
+            assertEquals("Femme pere : Lieu Profession",mergeRecord.getWife().getFatherResidence(), wifeFather.getValue(new TagPath("INDI:OCCU:PLAC"),""));
+            assertEquals("Femme pere : Adresse Profession",mergeRecord.getWife().getFatherAddress(), wifeFather.getValue(new TagPath("INDI:OCCU:ADDR"),""));
             wifeMother = wifeParentFamily.getWife();
             assertEquals("Femme mere nom",mergeRecord.getWife().getMotherLastName(), wifeMother.getLastName());
             assertEquals("Femme mere prenom",mergeRecord.getWife().getMotherFirstName(),  wifeMother.getFirstName());
             assertEquals("Femme mere profession",mergeRecord.getWife().getMotherOccupation(),  wifeMother.getProperty("OCCU").getValue());
+            assertEquals("Femme mere : Lieu Profession",mergeRecord.getWife().getMotherResidence(), wifeMother.getValue(new TagPath("INDI:OCCU:PLAC"),""));
+            assertEquals("Femme mere : Adresse Profession",mergeRecord.getWife().getMotherAddress(), wifeMother.getValue(new TagPath("INDI:OCCU:ADDR"),""));
 
             //MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, miscRecord, true);
             //Thread.sleep(10000);
@@ -202,6 +213,7 @@ public class MergeModelMiscMarcTest extends TestCase {
 
 
             RecordMisc miscRecord = createMiscMarcRecord("CM1");
+            miscRecord.setFieldValue(FieldType.indiBirthAddress, "");
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, miscRecord);
             MergeRecord mergeRecord = new MergeRecord(data);            
@@ -216,17 +228,11 @@ public class MergeModelMiscMarcTest extends TestCase {
 
             models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
             assertEquals("Nombre model",2,models.size());
-
-            //MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, null, miscRecord, true);
-            //Thread.sleep(10000);
-
             models.get(0).copyRecordToEntity();
 
             Fam fam = (Fam) gedcom.getEntity("F4");
             assertEquals("Lien marc vers source","", fam.getValue(new TagPath("FAM:MARC:SOUR"),""));
             assertEquals("Source marc","", fam.getValue(new TagPath("FAM:MARC:SOUR:PAGE"),""));
-            //assertEquals("Date marc",miscRecord.getEventDateProperty().getValue(), fam.getValue(new TagPath("FAM:MARC:DATE"),""));
-            //assertEquals("Date marc", true, miscRecord.getField(FieldType.eventDate).sameAs(fam.getProperty(new TagPath("FAM:MARC:DATE"))));
             assertEquals("Date marc", true, miscRecord.getField(FieldType.eventDate).equalsProperty(fam.getPropertyByPath("FAM:MARC:DATE")));
             
             assertEquals("Lieu marc",getRecordsInfoPlace().getValue(), fam.getValue(new TagPath("FAM:MARC:PLAC"),""));
@@ -238,8 +244,7 @@ public class MergeModelMiscMarcTest extends TestCase {
             assertEquals("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
             // le lieu et commentaire ne sont pas modifiés car la date de naissance du releve n'est pas plus precise
             assertNotSame("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            assertEquals("Indi : Note naissance","",
-                    fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+            assertEquals("Indi : Note naissance","", fam.getHusband().getValue(new TagPath("INDI:BIRT:NOTE"), ""));
 
             assertEquals("Indi : Profession",2, fam.getHusband().getProperties(new TagPath("INDI:OCCU")).length);
             Property occupation = fam.getHusband().getProperties(new TagPath("INDI:OCCU"))[0];

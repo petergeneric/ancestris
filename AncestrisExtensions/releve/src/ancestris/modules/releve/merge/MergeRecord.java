@@ -1577,17 +1577,10 @@ public class MergeRecord {
         }
 
         String getOccupationWithDate() {
-            String occupation = m_Occupation;
-            if (!m_Residence.isEmpty()) {
-                if (!occupation.isEmpty()) {
-                    occupation += ", ";
-                }
-                occupation += m_Residence;
-            }
+            String occupation = appendValue(m_Occupation, m_Address, m_Residence);
             if (!occupation.isEmpty()) {
                 occupation += " (" + getEventDate().getDisplayValue() + ")";
             }
-
             return occupation;
         }
 
@@ -1670,13 +1663,7 @@ public class MergeRecord {
         }
 
         String getMarriedOccupationWithDate() {
-            String occupation = m_MarriedOccupation;
-            if (!m_MarriedResidence.isEmpty()) {
-                if (!occupation.isEmpty()) {
-                    occupation += ", ";
-                }
-                occupation += m_MarriedResidence;
-            }
+            String occupation = appendValue(m_MarriedOccupation, m_MarriedAddress, m_MarriedResidence);
             if (!occupation.isEmpty()) {
                 occupation += " (" + getEventDate().getDisplayValue() + ")";
             }
@@ -1738,13 +1725,7 @@ public class MergeRecord {
         }
 
         String getFatherOccupationWithDate() {
-            String occupation = m_FatherOccupation;
-            if (!m_FatherResidence.isEmpty()) {
-                if (!occupation.isEmpty()) {
-                    occupation += ", ";
-                }
-                occupation += m_FatherResidence;
-            }
+            String occupation = appendValue(m_FatherOccupation, m_FatherAddress, m_FatherResidence);
             if (!occupation.isEmpty()) {
                 occupation += " (" + getEventDate().getDisplayValue() + ")";
             }
@@ -1782,17 +1763,10 @@ public class MergeRecord {
         }
 
         String getMotherOccupationWithDate() {
-            String occupation = m_MotherOccupation;
-            if (!m_MotherResidence.isEmpty()) {
-                if (!occupation.isEmpty()) {
-                    occupation += ", ";
-                }
-                occupation += m_MotherResidence;
-            }
+            String occupation = appendValue(m_MotherOccupation, m_MotherAddress, m_MotherResidence);
             if (!occupation.isEmpty()) {
                 occupation += " (" + getEventDate().getDisplayValue() + ")";
             }
-
             return occupation;
         }
 
