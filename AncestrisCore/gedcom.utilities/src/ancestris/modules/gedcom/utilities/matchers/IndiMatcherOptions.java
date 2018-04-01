@@ -12,14 +12,16 @@ public class IndiMatcherOptions extends MatcherOptions {
     private int dateinterval;
     private boolean checkAllNames;
     private boolean allFirstNamesEquals;
-    private boolean emptyValueValid;
+    private boolean emptyValueInvalid;
+    private boolean excludeSameFamily;
 
     public IndiMatcherOptions() {
         registry = Registry.get(MatcherOptions.class);
         dateinterval = registry.get("MatcherOptions.Indi.dateinterval", 365);
         checkAllNames = registry.get("MatcherOptions.Indi.checkAllNames", true);
         allFirstNamesEquals = registry.get("MatcherOptions.Indi.allFirstNamesEquals", true);
-        emptyValueValid = registry.get("MatcherOptions.Indi.emptyValueValid", true);
+        emptyValueInvalid = registry.get("MatcherOptions.Indi.emptyValueInvalid", true);
+        excludeSameFamily = registry.get("MatcherOptions.Indi.excludeSameFamily", true);
     }
     
     /**
@@ -68,17 +70,32 @@ public class IndiMatcherOptions extends MatcherOptions {
     }
 
     /**
-     * @return the emptyValueValid
+     * @return the emptyValueInvalid
      */
-    public boolean isEmptyValueValid() {
-        return emptyValueValid;
+    public boolean isEmptyValueInvalid() {
+        return emptyValueInvalid;
     }
 
     /**
-     * @param emptyValueValid the emptyDateValid to set
+     * @param emptyValueInvalid the emptyDateInvalid to set
      */
-    public void setEmptyValueValid(boolean emptyValueValid) {
-        this.emptyValueValid = emptyValueValid;
-        registry.put("MatcherOptions.Indi.emptyValueValid", emptyValueValid);
+    public void setEmptyValueInvalid(boolean emptyValueInvalid) {
+        this.emptyValueInvalid = emptyValueInvalid;
+        registry.put("MatcherOptions.Indi.emptyValueInvalid", emptyValueInvalid);
+    }
+
+    /**
+     * @return the excludeSameFamily
+     */
+    public boolean isExcludeSameFamily() {
+        return excludeSameFamily;
+    }
+
+    /**
+     * @param excludeSameFamily the excludeSameFamily to set
+     */
+    public void setExcludeSameFamily(boolean excludeSameFamily) {
+        this.excludeSameFamily = excludeSameFamily;
+        registry.put("MatcherOptions.Indi.excludeSameFamily", excludeSameFamily);
     }
 }

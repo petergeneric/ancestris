@@ -13,7 +13,7 @@ public final class FamMatcherOptionsPanel extends JPanel {
     public FamMatcherOptionsPanel() {
         initComponents();
         famMaxDateIntervalSpinner.setModel(new SpinnerNumberModel(famMatcherOptions.getDateinterval(),0,3650,1));
-        famEmptyValuesValidRadioButton.setSelected(famMatcherOptions.isEmptyValueValid());
+        famEmptyValuesInvalidRadioButton.setSelected(famMatcherOptions.isEmptyValueInvalid());
         saveOptions();
     }
 
@@ -27,7 +27,7 @@ public final class FamMatcherOptionsPanel extends JPanel {
 
         famMaxDateIntervalLabel = new javax.swing.JLabel();
         famMaxDateIntervalSpinner = new javax.swing.JSpinner();
-        famEmptyValuesValidRadioButton = new javax.swing.JRadioButton();
+        famEmptyValuesInvalidRadioButton = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
@@ -39,11 +39,11 @@ public final class FamMatcherOptionsPanel extends JPanel {
             }
         });
 
-        famEmptyValuesValidRadioButton.setSelected(true);
-        org.openide.awt.Mnemonics.setLocalizedText(famEmptyValuesValidRadioButton, org.openide.util.NbBundle.getMessage(FamMatcherOptionsPanel.class, "FamMatcherOptionsPanel.famEmptyValuesValidRadioButton.text")); // NOI18N
-        famEmptyValuesValidRadioButton.addActionListener(new java.awt.event.ActionListener() {
+        famEmptyValuesInvalidRadioButton.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(famEmptyValuesInvalidRadioButton, org.openide.util.NbBundle.getMessage(FamMatcherOptionsPanel.class, "FamMatcherOptionsPanel.famEmptyValuesInvalidRadioButton.text")); // NOI18N
+        famEmptyValuesInvalidRadioButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                famEmptyValuesValidRadioButtonActionPerformed(evt);
+                famEmptyValuesInvalidRadioButtonActionPerformed(evt);
             }
         });
 
@@ -62,7 +62,7 @@ public final class FamMatcherOptionsPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(famEmptyValuesValidRadioButton)
+                    .addComponent(famEmptyValuesInvalidRadioButton)
                     .addComponent(famMaxDateIntervalLabel)
                     .addComponent(jScrollPane1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -79,7 +79,7 @@ public final class FamMatcherOptionsPanel extends JPanel {
                     .addComponent(famMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(famMaxDateIntervalLabel))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(famEmptyValuesValidRadioButton)
+                .addComponent(famEmptyValuesInvalidRadioButton)
                 .addContainerGap(33, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -88,12 +88,12 @@ public final class FamMatcherOptionsPanel extends JPanel {
         saveOptions();
     }//GEN-LAST:event_famMaxDateIntervalSpinnerStateChanged
 
-    private void famEmptyValuesValidRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_famEmptyValuesValidRadioButtonActionPerformed
+    private void famEmptyValuesInvalidRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_famEmptyValuesInvalidRadioButtonActionPerformed
         saveOptions();
-    }//GEN-LAST:event_famEmptyValuesValidRadioButtonActionPerformed
+    }//GEN-LAST:event_famEmptyValuesInvalidRadioButtonActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JRadioButton famEmptyValuesValidRadioButton;
+    private javax.swing.JRadioButton famEmptyValuesInvalidRadioButton;
     private javax.swing.JLabel famMaxDateIntervalLabel;
     private javax.swing.JSpinner famMaxDateIntervalSpinner;
     private javax.swing.JScrollPane jScrollPane1;
@@ -105,7 +105,7 @@ public final class FamMatcherOptionsPanel extends JPanel {
      */
     public void saveOptions() {
         famMatcherOptions.setDateinterval((Integer) famMaxDateIntervalSpinner.getValue());
-        famMatcherOptions.setEmptyValueValid(famEmptyValuesValidRadioButton.isSelected());
+        famMatcherOptions.setEmptyValueInvalid(famEmptyValuesInvalidRadioButton.isSelected());
     }
     
     public FamMatcherOptions getSelectedOptions() {

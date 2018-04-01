@@ -12,12 +12,12 @@ public class FamMatcherOptions extends MatcherOptions {
 
     private Registry registry;
     private int dateinterval;
-    private boolean emptyValueValid;
+    private boolean emptyValueInvalid;
 
     public FamMatcherOptions() {
         registry = Registry.get(MatcherOptions.class);
         dateinterval = registry.get("MatcherOptions.Fam.dateinterval", 365);
-        emptyValueValid = registry.get("MatcherOptions.Fam.emptyValueValid", true);
+        emptyValueInvalid = registry.get("MatcherOptions.Fam.emptyValueInvalid", true);
     }
     
     
@@ -37,17 +37,17 @@ public class FamMatcherOptions extends MatcherOptions {
 }
 
     /**
-     * @return the emptyValueValid
+     * @return the emptyValueInvalid
      */
-    public boolean isEmptyValueValid() {
-        return emptyValueValid;
+    public boolean isEmptyValueInvalid() {
+        return emptyValueInvalid;
     }
 
     /**
-     * @param emptyValueValid the emptyValueValid to set
+     * @param emptyValueInvalid the emptyValueInvalid to set
      */
-    public void setEmptyValueValid(boolean emptyValueValid) {
-        this.emptyValueValid = emptyValueValid;
-        registry.put("MatcherOptions.Fam.emptyValueValid", emptyValueValid);
+    public void setEmptyValueInvalid(boolean emptyValueInvalid) {
+        this.emptyValueInvalid = emptyValueInvalid;
+        registry.put("MatcherOptions.Fam.emptyValueInvalid", emptyValueInvalid);
     }
 }

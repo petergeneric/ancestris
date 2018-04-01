@@ -26,6 +26,7 @@ package genj.gedcom;
 public class PropertyHusband extends PropertyXRef {
 
   public final static String LABEL_FATHER = Gedcom.resources.getString("HUSB.father");
+  public final static String LABEL = Gedcom.resources.getString("HUSB.name");
 
   /**
    * Empty Constructor

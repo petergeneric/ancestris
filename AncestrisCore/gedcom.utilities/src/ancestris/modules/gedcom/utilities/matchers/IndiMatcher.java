@@ -1,5 +1,6 @@
 package ancestris.modules.gedcom.utilities.matchers;
 
+import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -26,24 +27,44 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
 
     @Override
     public int compare(Indi leftIndi, Indi rightIndi) {
+        
         int score = 0;
+        
+        // Exclude parent and child relationships
+        if (options.isExcludeSameFamily()) {
+            if (leftIndi.getParents().contains(rightIndi) || rightIndi.getParents().contains(leftIndi)) {
+                return 0;
+            }
+        }
         
         // Same sex
         if ((leftIndi.getSex() == rightIndi.getSex())) {
             score += 5;
         }
+        
         // Same last names ?
-        if (compareLastNames(leftIndi, rightIndi)) {
+        boolean sameLastnames = compareLastNames(leftIndi, rightIndi);
+        if (sameLastnames) {
             score += 5;
         }
 
-        // same firt names
-        if (compareFirstNames(leftIndi, rightIndi)) {
+        // Same firt names ?
+        boolean sameFirstnames = compareFirstNames(leftIndi, rightIndi);
+
+        // Eliminate solution if all names or all firstnames must be equal
+        if (options.isAllFirstNamesEquals() && !sameFirstnames) {
+            return 0;
+        }
+        if (options.isCheckAllNames() && (!sameLastnames || !sameFirstnames)) {
+            return 0;
+        }
+        if (sameFirstnames) {
             score += 10;
         }
+        
         // Same birth date ?
         if (compareDates(leftIndi.getBirthDate(), rightIndi.getBirthDate()) < options.getDateinterval()) {
-            score += 20;
+            score += (options.isEmptyValueInvalid() ? 20 : 10);
         }
 
         // Same birth Place ?
@@ -53,7 +74,7 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
 
         // same death date ?
         if (compareDates(leftIndi.getDeathDate(), rightIndi.getDeathDate()) < options.getDateinterval()) {
-            score += 20;
+            score += (options.isEmptyValueInvalid() ? 20 : 10);
         }
 
         // same death place ?
@@ -61,7 +82,10 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
             score += 20;
         }
 
-        return score;
+        // same spouse and wedding date ?
+        score += 20 * compareMarriage(leftIndi, rightIndi);
+
+        return score>100 ? 100 : score;
     }
 
     private boolean compareLastNames(Indi leftIndi, Indi rightIndi) {
@@ -138,6 +162,9 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         } else {
             Property leftName = leftIndi.getProperty("NAME");
             Property rightName = rightIndi.getProperty("NAME");
+            if (leftName == null || rightName == null) {
+                return false;
+            }
             if (options.isAllFirstNamesEquals()) {
                 double count = 0;
                 String[] leftFistNames = ((PropertyName) leftName).getFirstName().split(" ");
@@ -177,24 +204,24 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
                     return Math.abs(leftDate.getStart().getJulianDay() - rightDate.getStart().getJulianDay());
                 } catch (GedcomException ex) {
                     Exceptions.printStackTrace(ex);
-                    if (options.isEmptyValueValid()) {
-                        return options.getDateinterval() - 1;
-                    } else {
+                    if (options.isEmptyValueInvalid()) {
                         return options.getDateinterval();
+                    } else {
+                        return options.getDateinterval() - 1;
                     }
                 }
             } else {
-                if (options.isEmptyValueValid()) {
-                    return options.getDateinterval() - 1;
-                } else {
+                if (options.isEmptyValueInvalid()) {
                     return options.getDateinterval();
+                } else {
+                    return options.getDateinterval() - 1;
                 }
             }
         } else {
-            if (options.isEmptyValueValid()) {
-                return options.getDateinterval() - 1;
-            } else {
+            if (options.isEmptyValueInvalid()) {
                 return options.getDateinterval();
+            } else {
+                return options.getDateinterval() - 1;
             }
         }
     }
@@ -238,6 +265,53 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         } else {
             return false;
         }
+
+    }
+
+    // Compare fams of each
+    private int compareMarriage(Indi leftIndi, Indi rightIndi) {
+        Fam[] leftFams = leftIndi.getFamiliesWhereSpouse();
+        Fam[] rightFams = rightIndi.getFamiliesWhereSpouse();
+        // Let's see if wa can find one match (same spouse or same spouse lastname, same date)
+        int match = 0;
+        boolean sameSpouse = false;
+        boolean sameMarrDate = false;
+        for (Fam leftFam : leftFams) {
+            for (Fam rightFam : rightFams) {
+                match = 0;
+                sameSpouse = false;
+                sameMarrDate = false;
+                Indi leftSpouse = leftFam.getOtherSpouse(leftIndi);
+                Indi rightSpouse = rightFam.getOtherSpouse(rightIndi);
+                if (leftSpouse != null && rightSpouse != null) {
+                    if (leftSpouse.equals(rightSpouse)) {
+                        match += 3;
+                    } else {
+                        sameSpouse = compareLastNames(leftSpouse, rightSpouse);
+                        if (sameSpouse) {
+                            match++;
+                        }
+                        sameSpouse = compareFirstNames(leftSpouse, rightSpouse);
+                        if (sameSpouse) {
+                            match++;
+                        }
+                    }
+                }
+                PropertyDate leftDate = leftFam.getMarriageDate();
+                PropertyDate rightDate = rightFam.getMarriageDate();
+                if (leftDate != null && rightDate != null) {
+                    sameMarrDate = compareDates(leftDate, rightDate) < options.getDateinterval();
+                }
+                if (sameMarrDate) {
+                    match++;
+                }
+                if (match > 1) {
+                    return match;
+                }
+            }
+        }
+
+        return match;
 
     }
 
