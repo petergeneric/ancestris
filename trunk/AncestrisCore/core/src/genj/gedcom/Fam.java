@@ -562,6 +562,32 @@ public class Fam extends Entity {
     }
 
     /**
+     * Get fam's Marriage place
+     *
+     * @return date or null
+     */
+    public PropertyPlace getMarriagePlace() {
+        return getMarriagePlace(false);
+        // Calculate MARR|DATE
+    }
+
+    /**
+     * returns a PropertyPlace view on the marriage place of this family
+     *
+     * @param create if true, and the property doesn't already exist, initialize the Property
+     *
+     * @return a PropertyPlace or null. If create is true, this method will not return null
+     */
+    public PropertyPlace getMarriagePlace(boolean create) {
+        PropertyPlace place = (PropertyPlace) getProperty(PATH_FAMMARRPLAC);
+        if (null != place || !create) {
+            return place;
+        }
+        setValue(PATH_FAMMARRPLAC, "");
+        return (PropertyPlace) getProperty(PATH_FAMMARRPLAC);
+    }
+
+    /**
      * Calculate fam's divorce date
      *
      * @return date or null

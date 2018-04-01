@@ -17,6 +17,9 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyFamilyChild;
+import genj.gedcom.PropertyFamilySpouse;
+import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.util.Registry;
 import java.awt.Color;
@@ -161,11 +164,10 @@ public class ResultPanel extends javax.swing.JPanel {
                 for (TagPath tagPath2 : secondLevelTagPaths) {
                     Property leftP2 = leftEntity.getProperty(tagPath2, true);
                     Property rightP2 = rightEntity.getProperty(tagPath2, true);
-                    String label2 = getLabelFromProperty(leftP2, rightP2);  // leftP2 != null ? leftP2.getPropertyName() : rightP2.getPropertyName();
+                    String label2 = getLabelFromProperty(leftP2, rightP2);
                     // Add second level row with no separator
                     propRows.add(new PropertyRow(label2, leftP2, rightP2, false));
                 }
-
             }
         }
         
@@ -175,13 +177,13 @@ public class ResultPanel extends javax.swing.JPanel {
         
     private void showLeftEntity() {
         if (!propRows.isEmpty()) {
-            SelectionDispatcher.fireSelection(new Context(propRows.get(0).propA));  ;
+            SelectionDispatcher.fireSelection(new Context(propRows.get(0).propA));
         }
     }
     
     private void showRightEntity() {
         if (!propRows.isEmpty()) {
-            SelectionDispatcher.fireSelection(new Context(propRows.get(0).propB));  ;
+            SelectionDispatcher.fireSelection(new Context(propRows.get(0).propB));
         }
     }
     
@@ -283,17 +285,43 @@ public class ResultPanel extends javax.swing.JPanel {
     
     private ArrayList<TagPath> getTagPaths(Property pLeft, Property pRight) {
         ArrayList<TagPath> tagPaths = new ArrayList<TagPath>();
+        String pathPrefix = "";
+        TagPath tp = null;
+        String tmpStr = "";
+        
+        // left
         if (pLeft != null) {
+            if (pLeft instanceof PropertyFamilySpouse || pLeft instanceof PropertyFamilyChild) {
+                pathPrefix = pLeft.getPath(true).toString() + TagPath.SEPARATOR_STRING + TagPath.FOLLOW_TAG + TagPath.SEPARATOR_STRING + TagPath.MOVEUP_TAG + TagPath.SEPARATOR_STRING;
+                pLeft = ((PropertyXRef) pLeft).getTargetParent();
+            }
             for (Property property : pLeft.getProperties()) {
-                TagPath tp = property.getPath(true);
+                tmpStr = property.getPath(true).toString();
+                if (!pathPrefix.isEmpty()) {
+                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING)+1);
+                }
+                tp = new TagPath(tmpStr);
                 if (!tagPaths.contains(tp)) {
                     tagPaths.add(tp);
                 }
             }
         }
+        
+        // right
+        pathPrefix = "";
+        tp = null;
+        tmpStr = "";
         if (pRight != null) {
+            if (pRight instanceof PropertyFamilySpouse || pRight instanceof PropertyFamilyChild) {
+                pathPrefix = pRight.getPath(true).toString() + TagPath.SEPARATOR_STRING + TagPath.FOLLOW_TAG + TagPath.SEPARATOR_STRING + TagPath.MOVEUP_TAG + TagPath.SEPARATOR_STRING;
+                pRight = ((PropertyXRef) pRight).getTargetParent();
+            }
             for (Property property : pRight.getProperties()) {
-                TagPath tp = property.getPath(true);
+                tmpStr = property.getPath(true).toString();
+                if (!pathPrefix.isEmpty()) {
+                    tmpStr = pathPrefix + tmpStr.substring(tmpStr.indexOf(TagPath.SEPARATOR_STRING)+1);
+                }
+                tp = new TagPath(tmpStr);
                 if (!tagPaths.contains(tp)) {
                     tagPaths.add(tp);
                 }
@@ -324,6 +352,10 @@ public class ResultPanel extends javax.swing.JPanel {
         if (p != null) {
             if (p instanceof Entity) {
                 ret = ((Entity) p).getId();
+            } else if (p.getTag().equals("MARR")) { // replace marr with date and place
+                ret = "";
+                ret += p.getProperty("DATE") != null ? (p.getProperty("DATE") + "<br>") : "";
+                ret += p.getProperty("PLAC") != null ? p.getProperty("PLAC") : "";
             } else {
                 ret = p.getDisplayValue();
             }
@@ -381,7 +413,6 @@ public class ResultPanel extends javax.swing.JPanel {
         
     }
 
-    
     /**
      * Other Classes
      */

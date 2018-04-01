@@ -56,6 +56,10 @@ public class TagPath implements Comparable{
   public final static String SEPARATOR_STRING = String.valueOf(SEPARATOR);
   private final static char SELECTOR = '#';
 
+  public final static String STAY_TAG = ".";
+  public final static String MOVEUP_TAG = "..";
+  public final static String FOLLOW_TAG = "*";
+  
   private static Map<String,TagPath> tagCache = new HashMap<String,TagPath>(5);
 
   /**
@@ -341,7 +345,7 @@ public class TagPath implements Comparable{
     String p = prop.getTag();
     while (!(prop instanceof Entity)) {
       prop = prop.getParent();
-      p = prop.getTag() + ":" + p;
+      p = prop.getTag() + SEPARATOR_STRING + p;
     }
     
     // done
@@ -398,17 +402,17 @@ public class TagPath implements Comparable{
       tag = get(pos);
       
        // up?
-      if (tag.equals("..")) {
+      if (tag.equals(MOVEUP_TAG)) {
         if (prop.getParent()!=null)
           prop = prop.getParent();
         continue;
       }
       // stay?
-      if (tag.equals( ".")) {
+      if (tag.equals(STAY_TAG)) {
         continue;
       }
       // follow?
-      if (tag.equals( "*")) {
+      if (tag.equals(FOLLOW_TAG)) {
         // check out target
         if (!(prop instanceof PropertyXRef)||((PropertyXRef)prop).getTarget()==null)
           return false;

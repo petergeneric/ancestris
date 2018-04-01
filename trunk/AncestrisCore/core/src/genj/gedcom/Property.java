@@ -121,7 +121,6 @@ public abstract class Property implements Comparable<Property> {
      */
     /*package*/ void propagatePropertyChanged(Property property, String oldValue) {
         if (parent != null) {
-            String debug = property.getValue();
             parent.propagatePropertyChanged(property, oldValue);
         }
     }
@@ -857,7 +856,7 @@ public abstract class Property implements Comparable<Property> {
     /**
      * Returns one of this property's properties by path
      */
-    public Property getProperty(TagPath path, boolean backtrack) {
+    public Property getProperty(final TagPath path, boolean backtrack) {
 
         final Property[] result = new Property[1];
 

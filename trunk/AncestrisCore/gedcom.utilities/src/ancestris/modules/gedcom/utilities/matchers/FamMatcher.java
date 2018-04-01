@@ -25,11 +25,7 @@ public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
         Indi rightHusband = right.getHusband();
         if (leftHusband != null && rightHusband != null) {
             int m = new IndiMatcher().compare(leftHusband, rightHusband);
-            if (m >= 80) {
-                score += 30;
-            } else if (m >= 60) {
-                score += 20;
-            }
+            score += m;
         }
 
         // Same wife ?
@@ -37,27 +33,24 @@ public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
         Indi rightWife = right.getWife();
         if (leftWife != null && rightWife != null) {
             int m = new IndiMatcher().compare(leftWife, rightWife);
-            if (m >= 80) {
-                score += 30;
-            } else if (m >= 60) {
-                score += 20;
-            }
+            score *= m / 100;
         }
+        score = Math.max(score - 20, 0);
 
         // Same date ?
         PropertyDate leftwhen = left.getMarriageDate();
         PropertyDate rightwhen = right.getMarriageDate();
         if (leftwhen != null && leftwhen.isComparable() && rightwhen != null && rightwhen.isComparable()) {
             if (leftwhen.compareTo(rightwhen) <= options.getDateinterval()) {
-                score += 20;
+                score += 10;
             }
-        } else if (options.isEmptyValueValid()) {
-            score += 20;
+        } else if (!options.isEmptyValueInvalid()) {
+            score += 5;
         }
 
         // Same place ?
         if (compareMarriagePlace(left, right)) {
-            score += 20;
+            score += 10;
         }
 
         return score;

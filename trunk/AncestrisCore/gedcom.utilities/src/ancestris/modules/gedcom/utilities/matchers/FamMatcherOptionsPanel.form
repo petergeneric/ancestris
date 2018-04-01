@@ -19,7 +19,7 @@
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="famEmptyValuesValidRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Component id="famEmptyValuesInvalidRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="famMaxDateIntervalLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                   <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
               </Group>
@@ -40,7 +40,7 @@
                   <Component id="famMaxDateIntervalLabel" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="famEmptyValuesValidRadioButton" min="-2" max="-2" attributes="0"/>
+              <Component id="famEmptyValuesInvalidRadioButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace pref="33" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -59,15 +59,15 @@
         <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="famMaxDateIntervalSpinnerStateChanged"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JRadioButton" name="famEmptyValuesValidRadioButton">
+    <Component class="javax.swing.JRadioButton" name="famEmptyValuesInvalidRadioButton">
       <Properties>
         <Property name="selected" type="boolean" value="true"/>
         <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
-          <ResourceString bundle="ancestris/modules/gedcom/utilities/matchers/Bundle.properties" key="FamMatcherOptionsPanel.famEmptyValuesValidRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+          <ResourceString bundle="ancestris/modules/gedcom/utilities/matchers/Bundle.properties" key="FamMatcherOptionsPanel.famEmptyValuesInvalidRadioButton.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="famEmptyValuesValidRadioButtonActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="famEmptyValuesInvalidRadioButtonActionPerformed"/>
       </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">

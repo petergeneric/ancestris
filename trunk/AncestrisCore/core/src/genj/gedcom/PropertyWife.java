@@ -32,6 +32,7 @@ public class PropertyWife extends PropertyXRef {
   public final static String TAG = "WIFE";
 
   public final static String LABEL_MOTHER = Gedcom.resources.getString("WIFE.mother");
+  public final static String LABEL = Gedcom.resources.getString("WIFE.name");
   
   /**
    * Empty Constructor

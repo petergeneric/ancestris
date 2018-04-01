@@ -53,7 +53,7 @@ public abstract class EntityMatcher<E extends Entity, O extends MatcherOptions> 
             }
         }
 
-        log.log(Level.INFO, "Potential matches: {0}", matches.size());
+        log.log(Level.FINE, "Potential matches: {0}", matches.size());
 
         return matches;
     }

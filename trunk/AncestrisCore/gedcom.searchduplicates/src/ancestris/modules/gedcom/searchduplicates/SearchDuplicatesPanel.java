@@ -103,70 +103,65 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel1 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
-        jButton3 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        jLabelText = new javax.swing.JLabel();
+        jLabelSelect = new javax.swing.JLabel();
         jCheckBox1 = new javax.swing.JCheckBox();
-        jButton5 = new javax.swing.JButton();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jButton6 = new javax.swing.JButton();
-        jCheckBox3 = new javax.swing.JCheckBox();
-        jButton7 = new javax.swing.JButton();
-        jCheckBox4 = new javax.swing.JCheckBox();
-        jCheckBox5 = new javax.swing.JCheckBox();
-        jCheckBox6 = new javax.swing.JCheckBox();
-        jCheckBox7 = new javax.swing.JCheckBox();
         jButton1 = new javax.swing.JButton();
+        jCheckBox2 = new javax.swing.JCheckBox();
         jButton2 = new javax.swing.JButton();
+        jCheckBox3 = new javax.swing.JCheckBox();
+        jButton3 = new javax.swing.JButton();
+        jCheckBox4 = new javax.swing.JCheckBox();
+        jButton4 = new javax.swing.JButton();
+        jCheckBox5 = new javax.swing.JCheckBox();
+        jButton5 = new javax.swing.JButton();
+        jCheckBox6 = new javax.swing.JCheckBox();
+        jButton6 = new javax.swing.JButton();
+        jCheckBox7 = new javax.swing.JCheckBox();
+        jButton7 = new javax.swing.JButton();
 
+        setPreferredSize(new java.awt.Dimension(340, 359));
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 formComponentResized(evt);
             }
         });
 
-        jScrollPane2.setBorder(null);
+        jScrollPane1.setPreferredSize(new java.awt.Dimension(346, 359));
 
-        jTextArea1.setEditable(false);
-        jTextArea1.setColumns(20);
-        jTextArea1.setLineWrap(true);
-        jTextArea1.setRows(4);
-        jTextArea1.setText(org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jTextArea1.text")); // NOI18N
-        jTextArea1.setWrapStyleWord(true);
-        jTextArea1.setBorder(null);
-        jScrollPane2.setViewportView(jTextArea1);
+        jPanel1.setPreferredSize(new java.awt.Dimension(330, 353));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton3.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelText, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jLabelText.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jLabel1.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton4.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabelSelect, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jLabelSelect.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox1.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton5, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton5.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton1.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox2, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox2.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton6, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton6.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton2.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox3, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox3.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton7, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton7.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton3, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton3.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox4, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox4.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton4, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton4.text")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox5, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox5.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButton5, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton5.text")); // NOI18N
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox6, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox6.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jButton6, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton6.text")); // NOI18N
+
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox7, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jCheckBox7.text")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton1.text")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jButton2, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jButton7, org.openide.util.NbBundle.getMessage(SearchDuplicatesPanel.class, "SearchDuplicatesPanel.jButton7.text")); // NOI18N
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -175,10 +170,9 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1)
+                            .addComponent(jLabelSelect)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(40, 40, 40)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -198,16 +192,18 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
                                     .addComponent(jButton7)
                                     .addComponent(jButton1)
                                     .addComponent(jButton2))))
-                        .addGap(5, 5, 5)))
-                .addContainerGap())
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabelText, javax.swing.GroupLayout.DEFAULT_SIZE, 320, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel1)
+                .addComponent(jLabelText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jLabelSelect)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jCheckBox1)
@@ -245,11 +241,11 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 410, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 338, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 359, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -272,11 +268,10 @@ public class SearchDuplicatesPanel extends javax.swing.JPanel {
     private javax.swing.JCheckBox jCheckBox5;
     private javax.swing.JCheckBox jCheckBox6;
     private javax.swing.JCheckBox jCheckBox7;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabelSelect;
+    private javax.swing.JLabel jLabelText;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
     // End of variables declaration//GEN-END:variables
 
 
