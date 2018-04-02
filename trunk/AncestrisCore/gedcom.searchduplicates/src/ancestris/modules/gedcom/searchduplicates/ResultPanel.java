@@ -34,11 +34,13 @@ import java.util.HashMap;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.BorderFactory;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.ParallelGroup;
 import javax.swing.GroupLayout.SequentialGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
@@ -138,7 +140,7 @@ public class ResultPanel extends javax.swing.JPanel {
         propRows.clear();
 
         // Init IDs
-        propRows.add(new PropertyRow(leftEntity.getPropertyName() + " " + NbBundle.getMessage(ResultPanel.class, "ResultPanel.ID"), leftEntity, rightEntity, false));
+        propRows.add(new PropertyRow(leftEntity.getPropertyName() + " " + NbBundle.getMessage(ResultPanel.class, "ResultPanel.ID"), leftEntity, rightEntity, false, true));
         entAButton.setAction(goToLeft);
         entBButton.setAction(goToRight);
         entAButton.setText(leftEntity.getId() + " = " + leftEntity.toString(false));
@@ -158,7 +160,7 @@ public class ResultPanel extends javax.swing.JPanel {
                 Property rightP = (index >= rightProperties.length) ? null : rightProperties[index];
                 String label = getLabelFromProperty(leftP, rightP);
                 // Add first level row with a separator
-                propRows.add(new PropertyRow(label, leftP, rightP, true));
+                propRows.add(new PropertyRow(label, leftP, rightP, true, false));
                 ArrayList<TagPath> secondLevelTagPaths = getTagPaths(leftP, rightP);
                 // loop second level properties
                 for (TagPath tagPath2 : secondLevelTagPaths) {
@@ -166,7 +168,7 @@ public class ResultPanel extends javax.swing.JPanel {
                     Property rightP2 = rightEntity.getProperty(tagPath2, true);
                     String label2 = getLabelFromProperty(leftP2, rightP2);
                     // Add second level row with no separator
-                    propRows.add(new PropertyRow(label2, leftP2, rightP2, false));
+                    propRows.add(new PropertyRow(label2, leftP2, rightP2, false, tagPath2.contains("*")));
                 }
             }
         }
@@ -210,8 +212,8 @@ public class ResultPanel extends javax.swing.JPanel {
         // Add other rows
         for (PropertyRow row : propRows) {
             pgHH.addComponent(row.label); //, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
-            pgHHA.addComponent(row.checkPropA, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
-            pgHHB.addComponent(row.checkPropB, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
+            pgHHA.addComponent(row.compA, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
+            pgHHB.addComponent(row.compB, GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE);
         }
         sgH.addContainerGap();
         sgH.addGroup(pgHH);
@@ -255,8 +257,8 @@ public class ResultPanel extends javax.swing.JPanel {
             }
             sgV.addGroup(panelLayout.createParallelGroup(GroupLayout.Alignment.CENTER)
                     .addComponent(row.label)
-                    .addComponent(row.checkPropA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addComponent(row.checkPropB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
+                    .addComponent(row.compA, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(row.compB, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE));
             sgV.addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED);
         }
         sgV.addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE);
@@ -271,7 +273,7 @@ public class ResultPanel extends javax.swing.JPanel {
     public List<Property> getSelectedProperties() {
         List<Property> selectedProperties = new ArrayList<Property>();
         for (PropertyRow row : propRows) {
-            if (row.checkPropB.isSelected()) {
+            if (row.isBSelected()) {
                 selectedProperties.add(row.propB);
             }
         }
@@ -424,11 +426,15 @@ public class ResultPanel extends javax.swing.JPanel {
         public boolean separator = false;
         public JSeparator jSeparator; // separator before
         public JLabel label = new JLabel();
-        public JCheckBox checkPropA = new JCheckBox();
-        public JCheckBox checkPropB = new JCheckBox();
+        public JComponent compA = null;
+        public JComponent compB = null;
+        private JLabel labelA = new JLabel();
+        private JLabel labelB = new JLabel();
+        private JCheckBox checkPropA = new JCheckBox();
+        private JCheckBox checkPropB = new JCheckBox();
         private boolean same = false;
 
-        public PropertyRow(String label, Property propA, Property propB, boolean separator) {
+        public PropertyRow(String label, Property propA, Property propB, boolean separator, boolean forInfoOnly) {
             // Remember properties
             this.propA = propA;
             this.propB = propB;
@@ -446,40 +452,69 @@ public class ResultPanel extends javax.swing.JPanel {
                 this.label.setFont(new Font("Default", Font.BOLD, 12));
             }
             
-            // Check boxes
-            checkPropA.setText(getTextFromProperty(propA));
-            checkPropB.setText(getTextFromProperty(propB));
-            same = checkPropA.getText().equals(checkPropB.getText()) || propA instanceof Entity;
-            Color color = same ? Color.BLUE : Color.red;
-            if (isMerged) {
-                color = new Color(0, 94, 20); // dark green
-            }
-            checkPropA.setSelected(true);
-            checkPropB.setSelected(false);
-            checkPropB.setEnabled(!isMerged && !same);
-            checkPropA.setForeground(color);
-            checkPropB.setForeground(color);
-            if (!same && prop.getMetaProperty().isSingleton()) {
-                checkPropA.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        checkPropB.setSelected(!isMerged && !checkPropA.isSelected());
-                    }
-                });
-                checkPropB.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        checkPropA.setSelected(!checkPropB.isSelected());
-                    }
-                });
+            // Info only or not
+            if (forInfoOnly) {
+                compA = labelA;
+                compB = labelB;
+                // Check boxes
+                labelA.setText(getTextFromProperty(propA));
+                labelB.setText(getTextFromProperty(propB));
+                same = labelA.getText().equals(labelB.getText()) || propA instanceof Entity;
+                Color color = same ? Color.BLUE : Color.red;
+                if (isMerged) {
+                    color = new Color(0, 94, 20); // dark green
+                } else {
+                    labelA.setIcon(propA == null ? prop.getImage() : propA.getImage());
+                    labelB.setIcon(propB == null ? prop.getImage() : propB.getImage());
+                }
+                labelA.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
+                labelB.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
+                labelB.setEnabled(!isMerged && !same);
+                labelA.setForeground(color);
+                labelB.setForeground(color);
             } else {
-                checkPropA.addActionListener(new ActionListener() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        checkPropA.setSelected(true);
-                    }
-                });
+                compA = checkPropA;
+                compB = checkPropB;
+                // Check boxes
+                checkPropA.setText(getTextFromProperty(propA));
+                checkPropB.setText(getTextFromProperty(propB));
+                same = checkPropA.getText().equals(checkPropB.getText()) || propA instanceof Entity;
+                Color color = same ? Color.BLUE : Color.red;
+                if (isMerged) {
+                    color = new Color(0, 94, 20); // dark green
+                }
+                checkPropA.setSelected(true);
+                checkPropB.setSelected(false);
+                checkPropB.setEnabled(!isMerged && !same);
+                checkPropA.setForeground(color);
+                checkPropB.setForeground(color);
+                if (!same && prop.getMetaProperty().isSingleton()) {
+                    checkPropA.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            checkPropB.setSelected(!isMerged && !checkPropA.isSelected());
+                        }
+                    });
+                    checkPropB.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            checkPropA.setSelected(!checkPropB.isSelected());
+                        }
+                    });
+                } else {
+                    checkPropA.addActionListener(new ActionListener() {
+                        @Override
+                        public void actionPerformed(ActionEvent e) {
+                            checkPropA.setSelected(true);
+                        }
+                    });
+                }
             }
+            
+        }
+        
+        public boolean isBSelected() {
+            return checkPropB.isSelected();
         }
     }
 
