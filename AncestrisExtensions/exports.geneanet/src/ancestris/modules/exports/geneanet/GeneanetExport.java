@@ -28,6 +28,7 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAlias;
 import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyXRef;
 import genj.io.GedcomReader;
 import genj.io.GedcomReaderContext;
 import genj.io.GedcomReaderFactory;
@@ -200,8 +201,9 @@ public class GeneanetExport {
         
         console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingOther"));
 
-        // Convert FAM:EVEN:TYPE from Relation to unmarried
+        // Process families
         for (Entity entity : gedcom.getFamilies()) {
+            // Convert FAM:EVEN:TYPE from Relation to unmarried
             props = entity.getProperties("EVEN");
             for (Property p : props) {
                 prop = p.getProperty("TYPE");
@@ -210,6 +212,15 @@ public class GeneanetExport {
                     if (rela.equals("Relation")) {
                         prop.setValue("unmarried");
                     }
+                }
+            }
+            
+            // Process adoptions (remove adopted child from families)
+            props = entity.getProperties("CHIL");
+            for (Property p : props) {
+                prop = ((PropertyXRef) p).getTargetEntity();
+                if (prop != null && prop.getProperty("ADOP") != null) {
+                    entity.delProperty(p);
                 }
             }
             
