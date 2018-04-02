@@ -469,7 +469,7 @@ public class ResultPanel extends javax.swing.JPanel {
                 }
                 labelA.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
                 labelB.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 0));
-                labelB.setEnabled(!isMerged && !same);
+                labelB.setEnabled((!isMerged && !same) || (propA instanceof Entity));
                 labelA.setForeground(color);
                 labelB.setForeground(color);
             } else {
