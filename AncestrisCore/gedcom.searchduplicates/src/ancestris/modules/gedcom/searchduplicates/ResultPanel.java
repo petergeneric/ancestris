@@ -160,7 +160,7 @@ public class ResultPanel extends javax.swing.JPanel {
                 Property rightP = (index >= rightProperties.length) ? null : rightProperties[index];
                 String label = getLabelFromProperty(leftP, rightP);
                 // Add first level row with a separator
-                propRows.add(new PropertyRow(label, leftP, rightP, true, false));
+                propRows.add(new PropertyRow(label, leftP, rightP, true,  tagPath.contains("CHAN")));
                 ArrayList<TagPath> secondLevelTagPaths = getTagPaths(leftP, rightP);
                 // loop second level properties
                 for (TagPath tagPath2 : secondLevelTagPaths) {
