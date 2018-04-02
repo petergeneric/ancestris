@@ -176,7 +176,7 @@
             <SOUR super="INDI:SOUR"/>
             <NOTE super="INDI:NAME:NOTE"/>
         </ASSO>
-        <ALIA hide="2" type="PropertyAlias" img="Indi" cardinality="0:M"/>
+        <ALIA type="PropertyAlias" img="Indi" cardinality="0:M"/>
         +++++++++++++ numbers / processing +++++++++++++
         <RFN hide="2" type="PropertySimpleValue" img="Code" cardinality="0:1"/>
         <AFN hide="2" type="PropertyNumericValue" img="Code" cardinality="0:1"/>
