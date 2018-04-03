@@ -219,8 +219,21 @@ public class GeneanetExport {
             props = entity.getProperties("CHIL");
             for (Property p : props) {
                 prop = ((PropertyXRef) p).getTargetEntity();
-                if (prop != null && prop.getProperty("ADOP") != null) {
-                    entity.delProperty(p);
+                if (prop != null) {
+                    Property adop = prop.getProperty("ADOP");
+                    if (adop != null) {
+                        // remove CHIL from family
+                        entity.delProperty(p);
+                        // add FAMC and ADOP below ADOP in the INDI record, unless already there
+                        Property famc = adop.getProperty("FAMS");
+                        if (famc == null) {
+                            famc = adop.addProperty("FAMS", "@" + ((Entity)prop).getId() + "@");
+                        }
+                        adop = famc.getProperty("ADOP");
+                        if (adop == null) {
+                            adop = famc.addProperty("ADOP", "BOTH");
+                        }
+                    }
                 }
             }
             
