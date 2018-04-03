@@ -57,7 +57,7 @@ public class Resources {
             result.description = "" + clazz;
             return result;
         } catch (MissingResourceException e) {
-            LOG.log(Level.WARNING, "resources file is non longer supported for class {0}: use Bundles.properties", clazz);
+            LOG.log(Level.WARNING, "resources file is no longer supported for class {0}: use Bundles.properties", clazz);
             return new Resources();
         }
     }
