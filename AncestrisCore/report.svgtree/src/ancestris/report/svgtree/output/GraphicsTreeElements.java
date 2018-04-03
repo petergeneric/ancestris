@@ -697,7 +697,11 @@ public class GraphicsTreeElements implements TreeElements {
                     break;
                 sb.append(names[n]).append(" ");
             }
-            lines[j] = sb.substring(0, sb.length() - 1);
+            if (sb.length() > 0) {
+                lines[j] = sb.substring(0, sb.length() - 1);
+            } else {
+                lines[j] = "";
+            }
         }
 
         return lines;
