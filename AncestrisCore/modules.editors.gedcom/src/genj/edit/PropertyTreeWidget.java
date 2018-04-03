@@ -133,7 +133,7 @@ public class PropertyTreeWidget extends DnDTree {
   //XXX: will be refactored. left ATM but no more a contetxprovider
   public ViewContext getContext() {
     // no root - it's the gedcom itself
-    Entity root = (Entity)getRoot();
+        Entity root = (Entity)getRoot();
     if (root==null) 
       return new ViewContext(gedcom);
     // no selection - it's the root
@@ -289,13 +289,16 @@ public class PropertyTreeWidget extends DnDTree {
    * returns the currently selected properties
    */
   public List<Property> getSelection() {
-    // go through selection paths
-    List<Property> result = new ArrayList<Property>();
-    TreePath[] paths = getSelectionPaths();
-    for (int i=0;paths!=null&&i<paths.length;i++) {
-      result.add((Property)paths[i].getLastPathComponent());
-    }
-    // done
+      // go through selection paths
+      List<Property> result = new ArrayList<Property>();
+      TreePath[] paths = getSelectionPaths();
+      for (int i = 0; paths != null && i < paths.length; i++) {
+          Property p = (Property) paths[i].getLastPathComponent();
+          if (p.getEntity() != null) {  // make sure selected property still has an entity (case of deletion of property)
+            result.add(p);
+          }
+      }
+      // done
     return result;
   }
   
