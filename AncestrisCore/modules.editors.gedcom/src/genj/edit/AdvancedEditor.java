@@ -28,7 +28,6 @@ import ancestris.core.actions.SubMenuAction;
 import ancestris.core.resources.Images;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
-import genj.common.SelectEntityWidget;
 import genj.edit.beans.PropertyBean;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -45,8 +44,6 @@ import genj.io.PropertyTransferable;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-import genj.util.swing.NestedBlockLayout;
-import genj.util.swing.TextAreaWidget;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Component;
@@ -57,7 +54,6 @@ import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.IOException;
@@ -399,48 +395,22 @@ import org.openide.windows.WindowManager;
                 return;
             }
             // setup looks
-            this.what = "'" + Property.getPropertyNames(properties, 5) + "' (" + properties.size() + ")";
-            setText(resources.getString("action.propagate", what) + " ...");
+            this.what = "'" + Property.getPropertyNames(properties, 5) + "'";
+            setText(resources.getString("action.propagate", what) + "...");
         }
 
         /** apply it */
         @Override
         public void actionPerformed(ActionEvent event) {
 
-            // prepare options
-            final TextAreaWidget text = new TextAreaWidget("", 4, 10, false, true);
-            final SelectEntityWidget select = new SelectEntityWidget(gedcom, entity.getTag(), resources.getString("action.propagate.toall"));
-            select.addActionListener(new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    Entity target = select.getSelection();
-                    String string = target == null ? resources.getString("action.propagate.all", new Object[]{what, "" + select.getEntityCount(), Gedcom.getName(entity.getTag())})
-                            : resources.getString("action.propagate.one", new Object[]{what, target.getId(), Gedcom.getName(target.getTag())});
-                    text.setText(string);
-                }
-            });
-
-            final JCheckBox check = new JCheckBox(resources.getString("action.propagate.value"));
-
-            JPanel panel = new JPanel(new NestedBlockLayout("<col><select wx=\"1\"/><note wx=\"1\" wy=\"1\"/><check wx=\"1\"/></col>"));
-            panel.add(select);
-            panel.add(new JScrollPane(text));
-            panel.add(check);
-
-            // preselect something?
-            select.setSelection(gedcom.getEntity(REGISTRY.get("select." + entity.getTag(), (String) null)));
-
-            // show it
-            boolean cancel = DialogManager.OK_OPTION != DialogManager.create(getText(), panel)
-              .setOptionType(DialogManager.OK_CANCEL_OPTION)
-              .setMessageType(DialogManager.WARNING_MESSAGE)
-              //.setDialogId("")
-              .show();
-            if (cancel) {
+            // Selection box
+            final SelectEntityToPropagatePanel select = new SelectEntityToPropagatePanel(gedcom, entity.getTag(), what,
+                    gedcom.getEntity(REGISTRY.get("select." + entity.getTag(), (String) null)), resources.getString("action.propagate.toall"));
+            if (DialogManager.OK_OPTION != DialogManager.create(resources.getString("action.propagate", ""), select).setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION)
+                    .setDialogId("propagate.entityselected").show()) {
                 return;
             }
-
+            
             final Entity selection = select.getSelection();
 
             // remember selection
@@ -453,7 +423,7 @@ import org.openide.windows.WindowManager;
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         for (Entity to : selection != null ? Collections.singletonList(selection) : gedcom.getEntities(entity.getTag())) {
-                            Propagate.this.copy(properties, entity, to, check.isSelected());
+                            Propagate.this.copy(properties, entity, to, select.isSelected());
                         }
                     }
                 });

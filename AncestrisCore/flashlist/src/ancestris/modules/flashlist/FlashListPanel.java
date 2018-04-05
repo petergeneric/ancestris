@@ -1,8 +1,8 @@
 package ancestris.modules.flashlist;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.util.swing.SelectEntityPanel;
 import ancestris.view.AncestrisTopComponent;
+import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -43,7 +43,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         "FlashListPanel.displayLegendComboBox.legendBot"
     };
     
-    private SelectEntityPanel selectEntityPanel = null;
+    private SelectEntityWidget selectEntityWidget = null;
 
 
     public FlashListPanel(Gedcom gedcom) {
@@ -133,7 +133,7 @@ final class FlashListPanel extends javax.swing.JPanel {
 
         jScrollPane1.setPreferredSize(new java.awt.Dimension(686, 280));
 
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(580, 250));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(580, 260));
 
         sortingPanel.setPreferredSize(new java.awt.Dimension(600, 250));
         sortingPanel.setRequestFocusEnabled(false);
@@ -268,7 +268,7 @@ final class FlashListPanel extends javax.swing.JPanel {
                                     .addComponent(sortingHeaderLabel))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(sortingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(filterHeaderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 131, Short.MAX_VALUE)
+                                    .addComponent(filterHeaderLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 258, Short.MAX_VALUE)
                                     .addComponent(filterKey1TextField)
                                     .addComponent(filterKey2TextField)
                                     .addComponent(filterKey3TextField))
@@ -346,16 +346,7 @@ final class FlashListPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(selectLabel, org.openide.util.NbBundle.getMessage(FlashListPanel.class, "FlashListPanel.selectLabel.text")); // NOI18N
 
-        javax.swing.GroupLayout selectIndiPanelLayout = new javax.swing.GroupLayout(selectIndiPanel);
-        selectIndiPanel.setLayout(selectIndiPanelLayout);
-        selectIndiPanelLayout.setHorizontalGroup(
-            selectIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        selectIndiPanelLayout.setVerticalGroup(
-            selectIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
+        selectIndiPanel.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout formattingPanelLayout = new javax.swing.GroupLayout(formattingPanel);
         formattingPanel.setLayout(formattingPanelLayout);
@@ -364,47 +355,37 @@ final class FlashListPanel extends javax.swing.JPanel {
             .addGroup(formattingPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(structureLabel)
                     .addGroup(formattingPanelLayout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(repeatHeaderCheckBox)
+                            .addComponent(addTOCCheckBox)
                             .addGroup(formattingPanelLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addComponent(displayZerosCheckBox))
-                            .addComponent(zerosLabel))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, formattingPanelLayout.createSequentialGroup()
-                        .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(structureLabel)
-                            .addGroup(formattingPanelLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
-                                .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(repeatHeaderCheckBox)
-                                    .addComponent(addTOCCheckBox)
-                                    .addGroup(formattingPanelLayout.createSequentialGroup()
-                                        .addComponent(displayLegendLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(displayLegendComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                        .addGap(18, 18, 18)
+                                .addComponent(displayLegendLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(displayLegendComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, 116, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addComponent(zerosLabel)
+                    .addComponent(displayZerosCheckBox, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(selectIndiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(formattingPanelLayout.createSequentialGroup()
                         .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(boldLabel)
                             .addGroup(formattingPanelLayout.createSequentialGroup()
-                                .addGap(6, 6, 6)
                                 .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(selectIndiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(formattingPanelLayout.createSequentialGroup()
-                                        .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(formattingPanelLayout.createSequentialGroup()
-                                                .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                    .addComponent(nbEventsLabel)
-                                                    .addComponent(minSosaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(yearSpanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                    .addComponent(nbEventsFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(yearSpanFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addComponent(minSosaFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                            .addComponent(selectLabel))
-                                        .addGap(0, 0, Short.MAX_VALUE)))))
-                        .addGap(16, 16, 16))))
+                                    .addComponent(nbEventsLabel)
+                                    .addComponent(minSosaLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(yearSpanLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(nbEventsFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(yearSpanFormattedTextField, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(minSosaFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(selectLabel))
+                        .addGap(0, 76, Short.MAX_VALUE)))
+                .addGap(16, 16, 16))
         );
         formattingPanelLayout.setVerticalGroup(
             formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -429,15 +410,19 @@ final class FlashListPanel extends javax.swing.JPanel {
                     .addComponent(displayLegendComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(minSosaLabel)
                     .addComponent(minSosaFormattedTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(selectIndiPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(zerosLabel)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(displayZerosCheckBox)
-                .addGap(6, 6, 6))
+                .addGroup(formattingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(formattingPanelLayout.createSequentialGroup()
+                        .addGap(17, 17, 17)
+                        .addComponent(zerosLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(displayZerosCheckBox)
+                        .addGap(46, 69, Short.MAX_VALUE))
+                    .addGroup(formattingPanelLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(selectLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(selectIndiPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap())))
         );
 
         jTabbedPane1.addTab(org.openide.util.NbBundle.getMessage(FlashListPanel.class, "FlashListPanel.formattingPanel.TabConstraints.tabTitle"), formattingPanel); // NOI18N
@@ -448,7 +433,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 594, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 721, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -582,7 +567,7 @@ final class FlashListPanel extends javax.swing.JPanel {
     }
 
     public Indi getRootIndi() {
-        return (Indi) selectEntityPanel.getSelection();
+        return (Indi) selectEntityWidget.getSelection();
     }
 
     /**
@@ -822,9 +807,8 @@ final class FlashListPanel extends javax.swing.JPanel {
     }
 
     private void initContextIndi(Gedcom gedcom) {
-        selectEntityPanel = new SelectEntityPanel(gedcom, Gedcom.INDI);
-        selectIndiPanel.setLayout(new javax.swing.BoxLayout(selectIndiPanel, javax.swing.BoxLayout.LINE_AXIS));
-        selectIndiPanel.add(selectEntityPanel);
+        selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null);
+        selectIndiPanel.add(selectEntityWidget);
         // Check context
         Indi selectedIndividual = null;
         Context context = null;
@@ -852,7 +836,7 @@ final class FlashListPanel extends javax.swing.JPanel {
         } else {
             selectedIndividual = gedcom.getIndis().iterator().next();
         }
-        selectEntityPanel.setSelection(selectedIndividual);
+        selectEntityWidget.setSelection(selectedIndividual);
     }
 
     

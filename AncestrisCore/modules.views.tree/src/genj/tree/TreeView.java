@@ -37,7 +37,6 @@ import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionActionEvent;
 import ancestris.view.SelectionDispatcher;
 import ancestris.view.TemplateToolTip;
-import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -65,6 +64,7 @@ import genj.util.swing.ViewPortOverview;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
 import ancestris.swing.ToolBar;
+import ancestris.util.swing.SelectIndiOrFamPanel;
 import genj.tree.Model.NextFamily;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -1537,16 +1537,15 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         public void actionPerformed(ActionEvent event) {
 
             // let the user choose an individual
-            SelectEntityWidget select = new SelectEntityWidget(context.getGedcom(), Gedcom.INDI, null);
-            Object rc = DialogManager.create(getText(), new JComponent[]{select})
-                    .setOptionType(DialogManager.OK_CANCEL_OPTION)
-                    .setDialogId("select.root")
-                    .show();
-            if (rc == DialogManager.OK_OPTION) {
-                setRoot(select.getSelection());
+            SelectIndiOrFamPanel select = new SelectIndiOrFamPanel(context.getGedcom(), model.getRoot().getTag(), NbBundle.getMessage(this.getClass(), "treeview.askentity"), null);
+            if (DialogManager.OK_OPTION != DialogManager.create(getText(), select)
+                    .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("select.root").show()) {
+                return;
             }
-            if (bMenu.getAction() != this)
-                bMenu.setAction( this );
+            setRoot(select.getSelection());
+            if (bMenu.getAction() != this) {
+                bMenu.setAction(this);
+            }
             // done
         }
     } //ActionChooseRoot
