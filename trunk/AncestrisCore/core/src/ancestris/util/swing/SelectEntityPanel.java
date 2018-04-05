@@ -1,9 +1,10 @@
 /*
  * Ancestris - http://www.ancestris.org
  * 
- * Copyright 2012 Ancestris
+ * Copyright 2012-2018 Ancestris
  * 
  * Author: Dominique Baron (lemovice-at-ancestris-dot-org).
+ * Author: Frederic Lapeyre(frederic-at-ancestris-dot-org).
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -17,7 +18,7 @@ import genj.gedcom.Gedcom;
 
 /**
  *
- * @author lemovice
+ * @author frederic & lemovice
  */
 public class SelectEntityPanel extends javax.swing.JPanel {
 
@@ -26,10 +27,12 @@ public class SelectEntityPanel extends javax.swing.JPanel {
     /**
      * Creates new form SelectEntityPanel
      */
-    public SelectEntityPanel(Gedcom gedcom, String entityTag) {
-        initComponents();
+    public SelectEntityPanel(Gedcom gedcom, String entityTag, String label, Entity selectedEntity) {
         selectEntityWidget = new SelectEntityWidget(gedcom, entityTag, null);
+        initComponents();
+        jLabel1.setText("<html>" + label + "</html>");
         jPanel1.add(selectEntityWidget);
+        setSelection(selectedEntity);
     }
 
     /**
@@ -41,33 +44,45 @@ public class SelectEntityPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel1 = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
 
-        jPanel1.setLayout(new javax.swing.BoxLayout(jPanel1, javax.swing.BoxLayout.LINE_AXIS));
+        setPreferredSize(new java.awt.Dimension(388, 120));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(SelectEntityPanel.class, "SelectEntityPanel.jLabel1.text")); // NOI18N
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 376, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 
     public void setSelection(Entity selectedEntity) {
-        selectEntityWidget.setSelection(selectedEntity);
+        if (selectedEntity != null) {
+            selectEntityWidget.setSelection(selectedEntity);
+        }
     }
 
     public Entity getSelection() {

@@ -11,7 +11,7 @@
  */
 package ancestris.modules.gedcom.sosanumbers;
 
-import ancestris.util.swing.SelectEntityPanel;
+import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -31,7 +31,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
     private Registry registry = null;
     private Indi selectedIndividual = null;
     private Indi decujusIndividual = null;
-    private SelectEntityPanel selectEntityPanel = null;
+    private SelectEntityWidget selectEntityWidget = null;
 
 
     /**
@@ -61,9 +61,8 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
 
         // Init components including the entity selector
         initComponents();
-        selectEntityPanel = new SelectEntityPanel(gedcom, Gedcom.INDI);
-        selectIndiPanel.setLayout(new javax.swing.BoxLayout(selectIndiPanel, javax.swing.BoxLayout.LINE_AXIS));
-        selectIndiPanel.add(selectEntityPanel);
+        selectEntityWidget = new SelectEntityWidget(gedcom, Gedcom.INDI, null);
+        selectIndiPanel.add(selectEntityWidget);
         
         // Get mode and select action based on mode
         mode = registry.get(ACTION, MODE_GENERATE);
@@ -89,7 +88,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
             if (decujusIndividual != null) {
                 currentDecujusRadioButton.setText(NbBundle.getMessage(SosaPanel.class, "SosaPanel.currentDecujusRadioButton.text", decujusIndividual.toString(true)));
                 currentDecujusRadioButton.setEnabled(true);
-                selectEntityPanel.setSelection(decujusIndividual);
+                selectEntityWidget.setSelection(decujusIndividual);
             }
             if (s == 1 && selectedIndividual == null) {
                 s = 2;
@@ -98,7 +97,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
             currentDecujusRadioButton.setText(NbBundle.getMessage(SosaPanel.class, "SosaPanel.currentDecujusRadioButton.text", ""));
             currentDecujusRadioButton.setVisible(false);
             if (selectedIndividual != null) {
-                selectEntityPanel.setSelection(selectedIndividual); 
+                selectEntityWidget.setSelection(selectedIndividual); 
                 s = 1;
             } else {
                 s = 3;
@@ -235,16 +234,8 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
             }
         });
 
-        javax.swing.GroupLayout selectIndiPanelLayout = new javax.swing.GroupLayout(selectIndiPanel);
-        selectIndiPanel.setLayout(selectIndiPanelLayout);
-        selectIndiPanelLayout.setHorizontalGroup(
-            selectIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        selectIndiPanelLayout.setVerticalGroup(
-            selectIndiPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 16, Short.MAX_VALUE)
-        );
+        selectIndiPanel.setPreferredSize(new java.awt.Dimension(0, 30));
+        selectIndiPanel.setLayout(new java.awt.BorderLayout());
 
         individualButtonGroup.add(allIndividualRadioButton);
         org.openide.awt.Mnemonics.setLocalizedText(allIndividualRadioButton, org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.allIndividualRadioButton.text")); // NOI18N
@@ -329,7 +320,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addComponent(allIndividualRadioButton)
                 .addGap(18, 18, 18)
                 .addComponent(saveCheckBox)
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -391,7 +382,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         } else if (currentDecujusRadioButton.isSelected()) {
             return decujusIndividual;
         } else if (otherIndividualRadioButton.isSelected()) {
-            return (Indi) selectEntityPanel.getSelection();
+            return (Indi) selectEntityWidget.getSelection();
         }
         return null;
     }

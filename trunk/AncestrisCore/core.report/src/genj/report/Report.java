@@ -1,7 +1,8 @@
 /**
- * GenJ - GenealogyJ
+ * Ancestris
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
+ * Copyright (C) 2003 - 2018 Frederic Lapeyre <frederic@ancestris.org>
  *
  * This piece of code is free software; you can redistribute it and/or modify it
  * under the terms of the GNU General Public License as published by the Free
@@ -25,7 +26,7 @@ import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
-import genj.common.SelectEntityWidget;
+import ancestris.util.swing.SelectEntityPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -56,12 +57,9 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
 import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.filechooser.FileFilter;
 
 /**
@@ -422,28 +420,11 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      */
     public final Entity getEntityFromUser(String msg, Gedcom gedcom, String tag) {
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
-        panel.setBorder(BorderFactory.createEmptyBorder(6, 6, 6, 6));
-        String explanation = "<html>" + COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag)) + "<br>&nbsp;</html>";
-        panel.add(new JLabel(explanation));
-        if (msg != null && !msg.isEmpty()) {
-            panel.add(new JLabel(msg));
-        }
-
         // Selection box
-        SelectEntityWidget select = new SelectEntityWidget(gedcom, tag, null);
-        Entity entity = gedcom.getEntity(registry.get("select." + tag, (String) null));
-        if (entity != null) {
-            select.setSelection(entity);
-        }
-
-        // show it
-        if (DialogManager.create(getName(), new JComponent[]{panel, select})
-                .setMessageType(DialogManager.QUESTION_MESSAGE)
-                .setOptionType(DialogManager.OK_CANCEL_OPTION)
-                .setDialogId("report.entityfromuser")
-                .show() != DialogManager.OK_OPTION) {
+        SelectEntityPanel select = new SelectEntityPanel(gedcom, tag, COMMON_RESOURCES.getString("choose.entity", Gedcom.getName(tag)), 
+                gedcom.getEntity(registry.get("select." + tag, (String) null)));
+        if (DialogManager.OK_OPTION != DialogManager.create(getName(), select).setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION)
+                .setDialogId("report.entityfromuser").show()) {
             return null;
         }
 

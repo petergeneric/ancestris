@@ -14,7 +14,8 @@ package ancestris.modules.reports.relatives;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import ancestris.modules.document.view.FopDocumentView;
 import static ancestris.modules.reports.relatives.Bundle.*;
-import ancestris.util.swing.SelectEntityDialog;
+import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.SelectEntityPanel;
 import genj.fo.Document;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -59,8 +60,15 @@ public final class ReportRelativesAction extends AbstractAncestrisContextAction 
         if (contextToOpen != null) {
             Gedcom myGedcom = contextToOpen.getGedcom();
 
-            SelectEntityDialog selectEntityDialog = new SelectEntityDialog(NbBundle.getMessage(this.getClass(), "ReportRelatives.AskDeCujus"), myGedcom, Gedcom.INDI);
-            Indi indiDeCujus = (Indi) selectEntityDialog.getEntity();
+            // Selection box
+            SelectEntityPanel select = new SelectEntityPanel(myGedcom, Gedcom.INDI, NbBundle.getMessage(this.getClass(), "ReportRelatives.AskDeCujus"),
+                    contextToOpen.getEntity());
+            if (DialogManager.OK_OPTION != DialogManager.create(NbBundle.getMessage(this.getClass(), "CTL_ReportRelativesAction"), select)
+                    .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("report.ReportRelatives").show()) {
+                return;
+            }
+
+            Indi indiDeCujus = (Indi) select.getSelection();
             if (indiDeCujus != null) {
                 Document document = new ReportRelatives().start(indiDeCujus);
                 if (document != null) {

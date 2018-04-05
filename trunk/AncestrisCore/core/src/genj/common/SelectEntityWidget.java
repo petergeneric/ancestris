@@ -3,7 +3,7 @@
  * 
  * Copyright 2018 Ancestris
  * 
- * Author: Frédéric Lapeyre (frederic@ancestris.org).
+ * Author: Frédéric Lapeyre (frederic@ancestris.org) & Nils
  * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
@@ -146,10 +146,6 @@ public class SelectEntityWidget extends javax.swing.JPanel {
         // Prepare list widget    
         listWidget.setRenderer(new SelectEntityWidget.Renderer());
 
-        // Explanation text
-        explanationLabel.setText("<html>" + RESOURCES.getString((none == null ? "select.explanation.none" : "select.explanation")) + "</html>");
-
-        
 
         // Init state
         sort(sort);
@@ -170,43 +166,35 @@ public class SelectEntityWidget extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        explanationLabel = new javax.swing.JLabel();
-        listWidget = new javax.swing.JComboBox();
         sortWidget = new genj.util.swing.PopupWidget();
+        listWidget = new javax.swing.JComboBox();
 
-        setPreferredSize(new java.awt.Dimension(500, 180));
+        setPreferredSize(new java.awt.Dimension(310, 24));
 
-        org.openide.awt.Mnemonics.setLocalizedText(explanationLabel, org.openide.util.NbBundle.getMessage(SelectEntityWidget.class, "SelectEntityWidget.explanationLabel.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(sortWidget, org.openide.util.NbBundle.getMessage(SelectEntityWidget.class, "SelectEntityWidget.sortWidget.text")); // NOI18N
 
         listWidget.setMaximumRowCount(16);
         listWidget.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        org.openide.awt.Mnemonics.setLocalizedText(sortWidget, org.openide.util.NbBundle.getMessage(SelectEntityWidget.class, "SelectEntityWidget.sortWidget.text")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(sortWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(listWidget, 0, 450, Short.MAX_VALUE))
-                    .addComponent(explanationLabel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 0, Short.MAX_VALUE))
-                .addContainerGap())
+                .addGap(0, 0, 0)
+                .addComponent(sortWidget, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(listWidget, 0, 272, Short.MAX_VALUE)
+                .addGap(0, 0, 0))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(12, 12, 12)
-                .addComponent(explanationLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(0, 0, 0)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(sortWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(listWidget))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 0, 0))
         );
 
         getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(SelectEntityWidget.class, "SelectEntityWidget.AccessibleContext.accessibleName")); // NOI18N
@@ -214,7 +202,6 @@ public class SelectEntityWidget extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel explanationLabel;
     private javax.swing.JComboBox listWidget;
     private genj.util.swing.PopupWidget sortWidget;
     // End of variables declaration//GEN-END:variables

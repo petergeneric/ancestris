@@ -12,7 +12,7 @@
 package ancestris.core.actions;
 
 import ancestris.util.swing.DialogManager;
-import genj.common.SelectEntityWidget;
+import ancestris.util.swing.SelectEntityPanel;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -94,14 +94,11 @@ public class Swivel extends AbstractAncestrisContextAction {
             return;
         }
 
-        SelectEntityWidget select = new SelectEntityWidget(xref.getGedcom(), xref.getTargetType(), null);
+        SelectEntityPanel select = new SelectEntityPanel(xref.getGedcom(), xref.getTargetType(), NbBundle.getMessage(this.getClass(), "xrefbean.swivel.askentity"), null);
         if (DialogManager.OK_OPTION != DialogManager.create(getText(), select)
-                .setOptionType(DialogManager.OK_CANCEL_OPTION)
-                .setDialogId("xrefbean.swivel")
-                .show()) {
+                .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("xrefbean.swivel").show()) {
             return;
         }
-
         final Entity newTarget = select.getSelection();
 
         if (xref.getTarget() != null) {

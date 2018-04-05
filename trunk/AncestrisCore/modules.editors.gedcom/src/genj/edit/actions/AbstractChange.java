@@ -78,16 +78,6 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
     }
 
     /**
-     * Callback to update confirm text
-     */
-    protected void refresh() {
-        // might be no confirmation showing
-        if (confirm != null) {
-            confirm.setText(getHTMLMessage());
-        }
-    }
-
-    /**
      * @see genj.util.swing.AbstractAncestrisAction#execute()
      */
     @Override

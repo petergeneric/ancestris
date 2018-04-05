@@ -19,6 +19,7 @@
  */
 package genj.edit.actions;
 
+import ancestris.util.swing.SelectRelationshipPanel;
 import genj.common.SelectEntityWidget;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -27,14 +28,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.util.Registry;
 import genj.util.WordBuffer;
-import genj.util.swing.NestedBlockLayout;
-import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import javax.swing.BorderFactory;
-import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
@@ -49,11 +43,10 @@ import javax.swing.JTextField;
 public abstract class CreateRelationship extends AbstractChange {
 
     protected Registry REGISTRY = Registry.get(CreateRelationship.class);
+    private SelectRelationshipPanel select = null;
     /** the referenced entity */
     private Entity existing;
     private Entity created;
-    /** check for forcing id */
-    private JCheckBox checkID;
     /** text field for entering id */
     private JTextField requestID;
     /** the target type of the relationship (where it points to) */
@@ -122,67 +115,21 @@ public abstract class CreateRelationship extends AbstractChange {
 
     /**
      * Override content components to show to user
+     * @return selection panel
      */
     @Override
     protected JPanel getDialogContent() {
 
-        JPanel result = new JPanel(new NestedBlockLayout("<col><row><select wx=\"1\"/></row><row><text wx=\"1\" wy=\"1\"/></row><row><check/><text/></row></col>"));
-        
-        // create selector
-        final SelectEntityWidget select = new SelectEntityWidget(getGedcom(), targetType, SelectEntityWidget.NEW);
-        existing = select.getSelection();
-
-        // prepare id checkbox and textfield
-        requestID = new JTextField(getGedcom().getNextAvailableID(targetType), 8);
-        requestID.setEditable(false);
-
-        checkID = new JCheckBox(resources.getString("assign_id"));
-        checkID.getModel().addItemListener(new ItemListener() {
-
+        existing = getGedcom().getEntity(REGISTRY.get("select." + getGedcom().getName() + "." + targetType, (String) null));
+        select = new SelectRelationshipPanel(getGedcom(), targetType, getConfirmMessage(), existing, SelectEntityWidget.NEW) {
             @Override
-            public void itemStateChanged(ItemEvent e) {
-                requestID.setEditable(checkID.isSelected());
-                if (checkID.isSelected()) {
-                    requestID.requestFocusInWindow();
-                }
-            }
-        });
-
-        // wrap it up
-        result.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
-        result.add(select);
-        result.add(getConfirmComponent());
-        result.add(checkID);
-        result.add(requestID);
-
-        // add listening
-        select.addActionListener(new ActionListener() {
-
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // grab current selection (might be null)
+            public String getLabel() {
                 existing = select.getSelection();
-                // can the user force an id now?
-                if (existing != null) {
-                    checkID.setSelected(false);
-                }
-                checkID.setVisible(existing == null);
-                requestID.setVisible(existing == null);
-                refresh();
+                return getConfirmMessage();
             }
-        });
-
-        // preselect something (for anything but indi and fam)?
-        if (!(targetType.equals(Gedcom.INDI) || targetType.equals(Gedcom.FAM))) {
-            select.setSelection(getGedcom().getEntity(REGISTRY.get("select." + getGedcom().getName() + "." + targetType, (String) null)));
-        }
-
-        // Setpreferred size
-        result.setPreferredSize(new Dimension(650, 250));
-
-        
-        // done
-        return result;
+        };
+        requestID = select.getTextIDComponent();
+        return select;
     }
 
     /**
@@ -192,6 +139,7 @@ public abstract class CreateRelationship extends AbstractChange {
     protected final Context execute(Gedcom gedcom, ActionEvent event) throws GedcomException {
         // create the entity if necessary
         Entity change;
+        existing = select.getSelection();
         if (existing != null) {
             change = existing;
         } else {
