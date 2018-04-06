@@ -250,6 +250,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         registry = Registry.get(getClass());
         eventSplitPane.setDividerLocation(registry.get("cygnuseventSplitDividerLocation", eventSplitPane.getDividerLocation()));
+        focusButton.setSelected(registry.get("focus", false));
         
         // Remove Enter key stroke bindings
         removeEnterKeyBindingsFromButtons();
@@ -268,6 +269,7 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         buttonGender = new javax.swing.ButtonGroup();
         stickyButton = new javax.swing.JButton();
+        focusButton = new javax.swing.JToggleButton();
         warningButton = new javax.swing.JButton();
         indiAddButton = new javax.swing.JButton();
         title = new javax.swing.JLabel();
@@ -374,6 +376,16 @@ public class IndiPanel extends Editor implements DocumentListener {
         stickyButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 stickyButtonActionPerformed(evt);
+            }
+        });
+
+        focusButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/Focus.png"))); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(focusButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.focusButton.text")); // NOI18N
+        focusButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.focusButton.toolTipText")); // NOI18N
+        focusButton.setPreferredSize(new java.awt.Dimension(30, 26));
+        focusButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                focusButtonActionPerformed(evt);
             }
         });
 
@@ -1458,8 +1470,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(stickyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(2, 2, 2)
+                                .addComponent(focusButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(2, 2, 2)
                                 .addComponent(warningButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGap(21, 21, 21)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(indiAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1480,18 +1494,19 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(indiAddButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(indiDelButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(warningButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(stickyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(stickyButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(focusButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(1, 1, 1)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(scrollPaneFamily, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE))
+                        .addComponent(scrollPaneFamily, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
                     .addComponent(mediaPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(separator, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(eventSplitPane, javax.swing.GroupLayout.PREFERRED_SIZE, 352, Short.MAX_VALUE))
+                .addComponent(eventSplitPane, javax.swing.GroupLayout.DEFAULT_SIZE, 352, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -2062,6 +2077,10 @@ public class IndiPanel extends Editor implements DocumentListener {
         triggerChange();
     }//GEN-LAST:event_prefMediaEventButtonActionPerformed
 
+    private void focusButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_focusButtonActionPerformed
+        triggerFocus();
+    }//GEN-LAST:event_focusButtonActionPerformed
+
     
     private void scrollEventNotes(int notches) {
         if (isBusyEventNote) {
@@ -2158,6 +2177,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JRadioButton femaleRadioButton;
     private javax.swing.JComboBox firstnamesCombo;
     private javax.swing.JLabel firstnamesLabel;
+    private javax.swing.JToggleButton focusButton;
     private javax.swing.JLabel idLabel;
     private javax.swing.JButton indiAddButton;
     private javax.swing.JButton indiDelButton;
@@ -2276,22 +2296,25 @@ public class IndiPanel extends Editor implements DocumentListener {
             }
             
             // Focus saved focused field, or else on firstnames
-            WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                @Override
-                public void run() {
-                    if (savedFocusedControl == null || !savedFocusedControl.isFocusable()) {
-                        firstnamesText.setCaretPosition(firstnamesText.getText().length());
-                        firstnamesText.requestFocus();
-                    } else {
-                        if (savedFocusedControl instanceof JTextField) {
-                            JTextField jtf = (JTextField) savedFocusedControl;
-                            jtf.setCaretPosition(jtf.getText().length());
+            if (isGrabFocus()) {
+                WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (savedFocusedControl == null || !savedFocusedControl.isFocusable()) {
+                            firstnamesText.setCaretPosition(firstnamesText.getText().length());
+                            firstnamesText.requestFocus();
+                        } else {
+                            if (savedFocusedControl instanceof JTextField) {
+                                JTextField jtf = (JTextField) savedFocusedControl;
+                                jtf.setCaretPosition(jtf.getText().length());
+                            }
+                            savedFocusedControl.requestFocus();
+                            savedFocusedControl = null;
                         }
-                        savedFocusedControl.requestFocus();
-                        savedFocusedControl = null;
                     }
-                }
-            });
+                });
+            }
+
             
             // Overwrite and select default context property if any
             selectPropertyContext(context);
@@ -2499,6 +2522,19 @@ public class IndiPanel extends Editor implements DocumentListener {
         stickyButton.setIcon(stickyButton.isSelected() ? 
                   (new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/StickOn.png"))) 
                 : (new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/StickOff.png"))));
+    }
+
+    
+    private void triggerFocus() {
+        registry.put("focus", focusButton.isSelected());
+        
+    }
+
+    /**
+     * Check whether editor should grab focus or not
+     */
+    private boolean isGrabFocus() {
+        return focusButton.isSelected();
     }
 
     
