@@ -500,9 +500,11 @@ public abstract class GedcomMgr {
 
                 } catch (GedcomEncodingException gee) {
                     DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_encoding_error", gee.getMessage())).show();
+                    LOG.log(Level.SEVERE, "Cannot encode gedcom " + gedcom.getName() + ". Error is : "+ gee.getLocalizedMessage());
                     return false;
                 } catch (IOException ex) {
                     DialogManager.createError(gedcom.getName(), RES.getString("cc.save.open_error", gedcom.getOrigin().getFile().getAbsolutePath())).show();
+                    LOG.log(Level.SEVERE, "Cannot create file or writer for gedcom " + gedcom.getName() + ". Error is : "+ ex.getLocalizedMessage());
                     return false;
                 }
 
