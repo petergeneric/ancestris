@@ -503,11 +503,12 @@ public abstract class GedcomMgr {
                     LOG.log(Level.SEVERE, "Cannot encode gedcom " + gedcom.getName() + ". Error is : "+ gee.getLocalizedMessage());
                     return false;
                 } catch (IOException ex) {
-                    DialogManager.createError(gedcom.getName(), RES.getString("cc.save.open_error", gedcom.getOrigin().getFile().getAbsolutePath())).show();
                     if (file == null) {
+                        DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_error", gedcom.getOrigin().getFile().getAbsolutePath(), ex.getLocalizedMessage())).show();
                         LOG.log(Level.SEVERE, "Cannot get cannonical file for gedcom " + gedcom.getName() + ". Error is : "+ ex.getLocalizedMessage());
                     }
                     if (temp == null) {
+                        DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_error", file.getParentFile().getAbsolutePath(), ex.getLocalizedMessage())).show();
                         LOG.log(Level.SEVERE, "Cannot create temp file for gedcom " + gedcom.getName() + " in directory " + file.getParentFile().getAbsolutePath() + ". Error is : "+ ex.getLocalizedMessage());
                     }
                     return false;
