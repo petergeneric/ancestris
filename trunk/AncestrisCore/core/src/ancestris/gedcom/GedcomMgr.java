@@ -485,7 +485,7 @@ public abstract class GedcomMgr {
             try {
 
                 // prep files and writer
-                File file, temp;
+                File file = null, temp = null;
                 try {
                     // .. resolve to canonical file now to make sure we're writing to the
                     // file being pointed to by a symbolic link
@@ -504,7 +504,12 @@ public abstract class GedcomMgr {
                     return false;
                 } catch (IOException ex) {
                     DialogManager.createError(gedcom.getName(), RES.getString("cc.save.open_error", gedcom.getOrigin().getFile().getAbsolutePath())).show();
-                    LOG.log(Level.SEVERE, "Cannot create file or writer for gedcom " + gedcom.getName() + ". Error is : "+ ex.getLocalizedMessage());
+                    if (file == null) {
+                        LOG.log(Level.SEVERE, "Cannot get cannonical file for gedcom " + gedcom.getName() + ". Error is : "+ ex.getLocalizedMessage());
+                    }
+                    if (temp == null) {
+                        LOG.log(Level.SEVERE, "Cannot create file or writer for gedcom " + gedcom.getName() + " in directory " + file.getParentFile().getAbsolutePath() + ". Error is : "+ ex.getLocalizedMessage());
+                    }
                     return false;
                 }
 
