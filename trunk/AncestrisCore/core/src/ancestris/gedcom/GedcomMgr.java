@@ -508,7 +508,7 @@ public abstract class GedcomMgr {
                         LOG.log(Level.SEVERE, "Cannot get cannonical file for gedcom " + gedcom.getName() + ". Error is : "+ ex.getLocalizedMessage());
                     }
                     if (temp == null) {
-                        LOG.log(Level.SEVERE, "Cannot create file or writer for gedcom " + gedcom.getName() + " in directory " + file.getParentFile().getAbsolutePath() + ". Error is : "+ ex.getLocalizedMessage());
+                        LOG.log(Level.SEVERE, "Cannot create temp file for gedcom " + gedcom.getName() + " in directory " + file.getParentFile().getAbsolutePath() + ". Error is : "+ ex.getLocalizedMessage());
                     }
                     return false;
                 }
