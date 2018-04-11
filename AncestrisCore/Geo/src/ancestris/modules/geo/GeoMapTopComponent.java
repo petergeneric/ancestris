@@ -1167,21 +1167,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         
         
         
-//        SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-//                if (d != 0) {
-//                    try {
-//                        System.out.println("********debug*********** sleep");
-//                        Thread.sleep(d);
-//                    } catch (InterruptedException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
-//                }
-//                System.out.println("********debug*********** show");
-//                tmpList.showLocation(gno);
-//            }
-//        });
-//        System.out.println("********debug*********** après code invokeLater");
     }
 
     public String getFilterName() {

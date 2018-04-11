@@ -47,6 +47,7 @@ public class FontChooser extends JPanel {
   
   /** combo for fonts */
   private JComboBox fonts;
+  private Font[] allFonts;
   
   /** text for size */
   private JTextField size;
@@ -69,7 +70,8 @@ public class FontChooser extends JPanel {
   public FontChooser() {
     
     // sub-components
-    fonts = new JComboBox(getAllFonts());
+    allFonts = getAllFonts();
+    fonts = new JComboBox(allFonts);
     fonts.setEditable(false);
     fonts.setRenderer(new Renderer());
     size = new JTextField(3);
@@ -107,13 +109,11 @@ public class FontChooser extends JPanel {
     }
       
     String family = font.getFamily();
-    Font[] fs = getAllFonts();
-    for (int i = 0; i < fs.length; i++) {
-      if (fs[i].getFamily().equals(family)) {
+    for (int i = 0; i < allFonts.length; i++) {
+      if (allFonts[i].getFamily().equals(family)) {
         fonts.setSelectedIndex(i);
         break;
       }
-      
     }
     size.setText(""+font.getSize());
   }
