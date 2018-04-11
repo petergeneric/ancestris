@@ -3,6 +3,7 @@ package genj.tree;
 
 import ancestris.modules.views.tree.style.Style;
 import ancestris.modules.views.tree.style.TreeStyleManager;
+import ancestris.util.TimingUtility;
 import genj.util.Resources;
 import genj.util.swing.ColorsWidget;
 import java.awt.Component;
@@ -20,6 +21,7 @@ import javax.swing.JList;
 import javax.swing.JSpinner;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataEvent;
@@ -65,7 +67,9 @@ public class TreeViewSettings extends javax.swing.JPanel {
      * - But any changes in style elements should only change Perso style (and update tree)
      * 
      */
-    public TreeViewSettings(TreeView view) {
+    public TreeViewSettings(final TreeView view) {
+        TimingUtility.getInstance().reset();
+        
         this.view = view;
         commit = new Commit(view);
         
@@ -88,21 +92,23 @@ public class TreeViewSettings extends javax.swing.JPanel {
         jcAction.setSelectedItem(TreeView.getOnAction());
         spingen.setValue((Integer) view.getModel().getMaxGenerations());
         cbShowPopup.setSelected(TreeView.showPopup());
-        // Bookmarks
-        bList.getModel().addListDataListener(commit);        
         // Style
         stylesList.setCellRenderer(new ListEntryCellRenderer());
         stylesList.setSelectedValue(view.getStyle(), true);
 
         colors = new ColorsWidget();
-        colors.addChangeListener(commit);
         for (String key : TreeStyleManager.ORDERCOLORS) {
             colors.addColor(key, RESOURCES.getString("color." + key), view.getColors().get(key));
         }
         colorsPanel.add(colors);
 
-        fontChooser.setSelectedFont(view.getContentFont());
-        fontChooser.addChangeListener(commit);
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                busy = true;
+                fontChooser.setSelectedFont(view.getContentFont()); // this could take a while, so swing thread
+                busy = false;
+            }
+        });
 
         bendCheckBox.setSelected(view.getModel().isBendArcs());
         marrsymbolsCheckBox.setSelected(view.getModel().isMarrSymbols());
@@ -117,6 +123,11 @@ public class TreeViewSettings extends javax.swing.JPanel {
         initSpinner(paddingSpinner, 0.4, m.pad * 0.1D, MAXPAD, 0.1D);
         bIndiSpinner.setModel(new SpinnerNumberModel(m.indisThick, 1, MAXTHICKNESS, 1));
         bFamSpinner.setModel(new SpinnerNumberModel(m.famsThick, 1, MAXTHICKNESS, 1));
+
+        // Listeners
+        bList.getModel().addListDataListener(commit);        
+        colors.addChangeListener(commit);
+        fontChooser.addChangeListener(commit);
         
         busy = false;
     }
