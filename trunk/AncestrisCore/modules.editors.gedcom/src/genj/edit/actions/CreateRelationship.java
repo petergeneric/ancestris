@@ -121,7 +121,7 @@ public abstract class CreateRelationship extends AbstractChange {
     protected JPanel getDialogContent() {
 
         existing = getGedcom().getEntity(REGISTRY.get("select." + getGedcom().getName() + "." + targetType, (String) null));
-        select = new SelectRelationshipPanel(getGedcom(), targetType, getConfirmMessage(), existing, SelectEntityWidget.NEW) {
+        select = new SelectRelationshipPanel(getGedcom(), targetType, getConfirmMessage(), null, SelectEntityWidget.NEW) {   // do not use existing, always set list to new entity
             @Override
             public String getLabel() {
                 existing = select.getSelection();
