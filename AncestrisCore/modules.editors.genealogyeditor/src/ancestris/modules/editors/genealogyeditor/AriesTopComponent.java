@@ -169,7 +169,16 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
                 editor.setContext(old);
             }
             editorContainer.setViewportView(editor);
-            titleLabel.setText("<html>  " + editor.getTitle() + " </html>");
+            String title = editor.getTitle();
+            if (!title.isEmpty()) {
+                int len = title.length();
+                if (len > 80) {
+                    int cut = title.indexOf(" ", 80);
+                    title = title.substring(0, cut) + "...";
+                }
+            }
+
+            titleLabel.setText("<html>  " + title + " </html>");
             editor.getExplorerHelper().setPopupAllowed(true);
             editor.addChangeListener(confirmPanel);
         }
