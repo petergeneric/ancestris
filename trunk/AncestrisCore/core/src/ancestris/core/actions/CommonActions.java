@@ -69,7 +69,16 @@ public class CommonActions {
 
         public JMenuItem getPopupPresenter() {
 //            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
-            JMenuItem item = new TitleMenuItem(new StringBuilder("<html><b>&nbsp;&nbsp;").append(title).append("</b></html>").toString());
+            String truncate = "";
+            if (!title.isEmpty()) {
+                int len = title.length();
+                if (len > 150) {
+                    int cut = title.indexOf(" ", 150);
+                    title = title.substring(0, cut) + "...";
+                    truncate = "<body width=\"500\">";
+                }
+            }
+            JMenuItem item = new TitleMenuItem(new StringBuilder("<html>"+truncate+"<b>&nbsp;&nbsp;").append(title).append("</b></html>").toString());
             String tt = (String) getValue(SHORT_DESCRIPTION);
             if (tt!=null){
                 //setToolTipText("<html><p width=\"500\">" +value+"</p></html>");
