@@ -743,9 +743,9 @@ public class FileChooserBuilder {
      * @return this
      */
     private Component findDialogParent() {
-//        if (this.parent != null){
-//            return this.parent;
-//        }
+        // Force display in the center
+        if (true) return null;
+        // Forget all that follows, this is a bit strange to thte user to see this window at different positions everytime the time
         Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (parent == null) {
             parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getActiveWindow();
