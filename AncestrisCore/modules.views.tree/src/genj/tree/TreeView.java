@@ -647,6 +647,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         for (Entity entity : model.getDefaultEntities()) {
             node = model.getNode(entity);
             if (node != null) {
+                model.clearDefaultEntities(); // should work only once
                 break;
             }
         }

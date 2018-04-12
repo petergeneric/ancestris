@@ -719,6 +719,10 @@ import org.openide.windows.WindowManager;
         return fallbackEntities;
     }
   
+    public void clearDefaultEntities() {
+        fallbackEntities.clear();
+    }
+  
   
   
   /**
