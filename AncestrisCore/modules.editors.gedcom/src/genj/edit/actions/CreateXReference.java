@@ -6,6 +6,7 @@ package genj.edit.actions;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -123,8 +124,8 @@ public class CreateXReference extends CreateRelationship {
         }
         
 
-        // Add parents if target is new
-        if (targetIsNew) {
+        // Add parents if target is new and target is a family
+        if (targetIsNew && target instanceof Fam) {
             final Property prop = xref.getTarget();
             SwingUtilities.invokeLater(new Runnable() {
                 @Override
