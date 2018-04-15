@@ -1393,7 +1393,8 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         private ActionRoot(Entity entity, boolean in) {
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
             root = entity;
-            setText(RESOURCES.getString(in ? "root.in" : "root", TITLE));
+            setText(RESOURCES.getString("root"));
+            setTip(RESOURCES.getString("root.tip"));
             setImage(Images.imgView);
         }
 
@@ -1682,8 +1683,10 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             setImage(BOOKMARK_ICON);
             if (local) {
                 setText(RESOURCES.getString("bookmark.add"));
+                setTip(RESOURCES.getString("bookmark.add.tip"));
             } else {
                 setText(RESOURCES.getString("bookmark.in", TITLE));
+                setTip(RESOURCES.getString("bookmark.in.tip"));
             }
         }
 
@@ -1694,25 +1697,22 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
         public void actionPerformed(ActionEvent event) {
 
             // calculate a name
-            String name = "";
-            if (entity instanceof Indi) {
-                name = ((Indi) entity).getName();
-            }
-            if (entity instanceof Fam) {
-                Indi husb = ((Fam) entity).getHusband();
-                Indi wife = ((Fam) entity).getWife();
-                if (husb == null && wife == null) {
-                    name = entity.getId();
-                } else {
-                    name = (husb == null ? "" : husb.getName()) + " & " + (wife == null ? "" : wife.getName());
-                }
-            }
+            String name = entity.getDisplayTitle();
+//            if (entity instanceof Indi) {
+//                name = ((Indi) entity).getDisplayTitle();
+//            }
+//            if (entity instanceof Fam) {
+//                Indi husb = ((Fam) entity).getHusband();
+//                Indi wife = ((Fam) entity).getWife();
+//                if (husb == null && wife == null) {
+//                    name = entity.getId();
+//                } else {
+//                    name = (husb == null ? "" : husb.getName()) + " & " + (wife == null ? "" : wife.getName());
+//                }
+//            }
 
             // Ask for name of bookmark
-            name = DialogManager.create(
-                    TITLE, RESOURCES.getString("bookmark.name"), name)
-                    .show();
-
+            name = DialogManager.create(TITLE, RESOURCES.getString("bookmark.name"), name).show();
             if (name == null) {
                 return;
             }

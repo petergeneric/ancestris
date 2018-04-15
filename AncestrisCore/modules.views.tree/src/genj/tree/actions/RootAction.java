@@ -18,6 +18,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.tree.TreeView;
 import java.awt.event.ActionEvent;
+import java.util.Collection;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
@@ -33,22 +34,25 @@ import org.openide.util.ContextAwareAction;
 @ActionID(category = "Tree", id = "genj.tree.actions.RootAction")
 @ActionRegistration(displayName = "SetRoot",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", separatorBefore = 950, position = 1000)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 730)})
 /**
  * ActionRoot
  */
-public class RootAction
-        extends AbstractAction
-        implements ContextAwareAction {
+public class RootAction extends AbstractAction implements ContextAwareAction {
 
-    public @Override
-    void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
         assert false;
     }
 
-    public @Override
-    Action createContextAwareInstance(org.openide.util.Lookup context) {
+    @Override 
+    public Action createContextAwareInstance(org.openide.util.Lookup context) {
 
+        Collection<? extends Property> props = context.lookupAll(Property.class);
+        if (props == null || props.isEmpty() || props.size() > 1) {
+            return CommonActions.NOOP;
+        }
+        
         Entity e = null;
         Property p = context.lookup(Property.class);
         if (p instanceof Entity){

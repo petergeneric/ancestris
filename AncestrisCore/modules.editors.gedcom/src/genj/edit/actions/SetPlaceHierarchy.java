@@ -57,7 +57,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#place.hierarchy",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 545)})
 public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInterface {
 
     //private static final ImageIcon IMG = Grammar.V55.getMeta(TagPath.valueOf("INDI:BIRT:PLAC")).getImage();
@@ -80,6 +80,7 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
     public SetPlaceHierarchy() {
         super();
         setImageText(IMG, resources.getString("place.hierarchy"));
+        setTip(resources.getString("place.hierarchy.tip"));
     }
 
     /**
@@ -111,6 +112,7 @@ public class SetPlaceHierarchy extends AbstractChange implements PlaceFormatInte
     protected final void contextChanged() {
         if (place != null) {
             setEnabled(true);
+            setTip(resources.getString("place.hierarchy.tip"));
         } else {
             setEnabled(false);
         }

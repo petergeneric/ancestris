@@ -41,9 +41,9 @@ import org.openide.util.NbBundle;
         ,
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position=550)
 })
-@NbBundle.Messages("submitter.short=Set Submitter")
+@NbBundle.Messages("submitter.short=Set submitter")
 public class SetSubmitter extends AbstractChange {
 
     /** the submitter */
@@ -73,10 +73,10 @@ public class SetSubmitter extends AbstractChange {
 
         if (submitter != null && submitter.getGedcom().getSubmitter() != submitter) {
             setEnabled(true);
-            setTip(resources.getString("submitter", getGedcom().getName()));
+            setTip(resources.getString("submitter.tip", getGedcom().getName()));
         } else {
             setEnabled(false);
-            setTip(resources.getString("submitter.short"));
+            setTip(resources.getString("submitter.tip", ""));
         }
     }
 

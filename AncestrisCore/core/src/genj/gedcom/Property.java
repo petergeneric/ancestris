@@ -987,9 +987,40 @@ public abstract class Property implements Comparable<Property> {
 
     /**
      * Returns a user-readable property value
+     * @return 
      */
     public String getDisplayValue() {
         return getValue();
+    }
+
+    /**
+     * Returns a user-readable property title
+     * Makes a reference to entity
+     * @return 
+     */
+    public String getDisplayTitle() {
+        Entity entity = getEntity();
+        return entity.getDisplayTitle() + " - " + getPath().getName();
+    }
+
+    /**
+     * Returns a user-readable property truncated description
+     * @param maxLen : max number of characters to display. Zero to keep full size.
+     * @return 
+     */
+    public String getDisplayDescription(int maxLen) {
+        String str = getDisplayValue().trim();
+        if (!str.isEmpty() && maxLen != 0) {
+            int len = str.length();
+            if (len > maxLen) {
+                int cut = str.indexOf(" ", maxLen);
+                if (cut != -1) {
+                    str = str.substring(0, cut) + "...";
+                }
+            }
+        }
+        
+        return str;
     }
 
     /**

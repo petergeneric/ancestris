@@ -75,7 +75,7 @@ public class SelectEntityToPropagatePanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox1, org.openide.util.NbBundle.getMessage(SelectEntityToPropagatePanel.class, "action.propagate.value")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(SelectEntityToPropagatePanel.class, "SelectEntityToPropagatePanel.jLabel2.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel2, org.openide.util.NbBundle.getMessage(SelectEntityToPropagatePanel.class, "SelectEntityToPropagatePanel.jLabel2.text", label));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);

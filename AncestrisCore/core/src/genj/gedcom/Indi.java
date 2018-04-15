@@ -672,6 +672,20 @@ public class Indi extends Entity {
     }
 
     /**
+     * Returns a user-readable indi title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        String lastNames[] = getLastName().split(",");
+        String firstNames[] = getFirstName().split(",");
+        String lastname = lastNames.length > 0 ? lastNames[0] : "?";
+        String firstname = firstNames.length > 0 ? firstNames[0] : "?";
+        return getId() + " - " + firstname + " " + lastname;
+    }
+
+    
+    /**
      * list of indis to array
      */
     /*package*/ static Indi[] toIndiArray(Collection<Indi> c) {

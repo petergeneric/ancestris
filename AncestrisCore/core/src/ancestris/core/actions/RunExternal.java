@@ -40,7 +40,7 @@ import org.openide.util.NbBundle;
 @ActionID(category = "Edit", id = "ancestris.core.actions.RunExternal")
 @ActionRegistration(displayName = "Run External",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1005)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 740)})
 @NbBundle.Messages({"file.open=Open..."})
 public class RunExternal extends AbstractAncestrisContextAction {
 
@@ -71,6 +71,7 @@ public class RunExternal extends AbstractAncestrisContextAction {
         super.contextChanged();
         setImage(PropertyFile.DEFAULT_IMAGE);
         setText(RESOURCES.getString("file.open"));
+        setTip(RESOURCES.getString("file.open.tip"));
         setEnabled(file != null && file.exists());
     }
 
@@ -81,6 +82,7 @@ public class RunExternal extends AbstractAncestrisContextAction {
         this.file = file;
         super.setImage(PropertyFile.DEFAULT_IMAGE);
         super.setText(RESOURCES.getString("file.open"));
+        super.setTip(RESOURCES.getString("file.open.tip"));
         setEnabled(file != null && file.exists());
     }
 

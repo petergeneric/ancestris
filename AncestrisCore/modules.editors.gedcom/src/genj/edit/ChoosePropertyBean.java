@@ -36,6 +36,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import javax.swing.BorderFactory;
 
 import javax.swing.ButtonGroup;
 import javax.swing.DefaultListCellRenderer;
@@ -121,8 +122,10 @@ public class ChoosePropertyBean extends JComponent {
     rbCustom = new JRadioButton(RESOURCES.getString("choose.new"),defs.length==0);
     rbCustom.addItemListener(callback);
     rbCustom.setAlignmentX(0);
-    if (allowCustom)
-      add(rbCustom);
+    if (allowCustom) {
+        rbCustom.setBorder(BorderFactory.createEmptyBorder(12, 0, 0, 0));
+        add(rbCustom);
+    }
 
     ButtonGroup group = new ButtonGroup();
     group.add(rbChoose);

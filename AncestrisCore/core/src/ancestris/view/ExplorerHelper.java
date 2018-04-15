@@ -14,7 +14,6 @@ package ancestris.view;
 import ancestris.core.actions.AncestrisActionProvider;
 import ancestris.core.actions.CommonActions;
 import ancestris.gedcom.PropertyNode;
-import genj.gedcom.Entity;
 import genj.gedcom.Property;
 import java.awt.Component;
 import java.awt.Point;
@@ -124,42 +123,29 @@ public class ExplorerHelper {
             aactions.addAll(aap.getActions(false, selNodes));
         }
         actions.addAll(aactions);
-        
+
         // If actions exist and title is not null, insert title at the top and display popup
         if (actions.size() > 0) {
-            String title = getTitleFromNodes(selNodes);
-            if (title != null) {
-                Action menuTitle;
-                menuTitle = CommonActions.createSeparatorAction(title);
-                actions.add(0, menuTitle);
-                actions.add(1, null);  // add separator
-            }
+            Property property = getPropertyFromNodes(selNodes);
+            Action menuTitleItem = CommonActions.createTitleAction(property);
+            actions.add(0, menuTitleItem);
+            actions.add(1, null);  // add separator
 
             // Builds actions with currently selected context (regardless of nodes)
             JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), clickedComponent);
+            popup.setPopupSize(Math.min(450, popup.getPreferredSize().width), popup.getPreferredSize().height);
             if (popup.getSubElements().length > 0) {
                 popup.show(source, p.x, p.y);
             }
         }
     }
 
-    private static String getTitleFromNodes(Node[] nodes) {
-        String result = null;
+    private static Property getPropertyFromNodes(Node[] nodes) {
+        Property property = null;
         if (nodes != null && nodes.length == 1 && nodes[0] instanceof PropertyNode) {
-            Property prop = ((PropertyNode) nodes[0]).getProperty();
-
-            result = prop.getDisplayValue();
-            if (!result.isEmpty()) {
-                result = prop.getPropertyName() + ": " + result;
-            }
-            if (result.isEmpty() && prop instanceof Entity) {
-                result = ((Entity) prop).toString(true);
-            }
-            if (result.isEmpty()) {
-                result = prop.getEntity().toString(false) + " (" + prop.getPropertyName() + ")";
-            }
+            property = ((PropertyNode) nodes[0]).getProperty();
         }
-        return result;
+        return property;
     }
 
     /**

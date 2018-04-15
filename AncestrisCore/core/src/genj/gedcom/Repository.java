@@ -40,6 +40,32 @@ public class Repository extends Entity {
     return getRepositoryName();
   }
 
+    /**
+     * Returns a user-readable repository title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        int maxLen = 30;
+        String str = getRepositoryName().trim();
+        if (!str.isEmpty() && maxLen != 0) {
+            int len = str.length();
+            if (len > maxLen) {
+                int cut = str.indexOf(" ", maxLen);
+                if (cut != -1) {
+                    str = str.substring(0, cut);
+                }
+            }
+        }
+        if (str.isEmpty()) {
+            str = "?";
+        }
+        return getId() + " - " + str;
+    }
+
+  
+
+  
   /**
    * Returns the name of this repository
    */

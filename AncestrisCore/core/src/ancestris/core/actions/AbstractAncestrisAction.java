@@ -144,6 +144,7 @@ public class AbstractAncestrisAction extends AbstractAction implements Ancestris
     public JMenuItem getPopupPresenter() {
         JMenuItem m;
         m = new Actions.MenuItem(this, true);
+        m.setToolTipText(getTip());
         return m;
     }
 

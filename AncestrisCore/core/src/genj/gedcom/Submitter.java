@@ -50,6 +50,30 @@ public class Submitter extends Entity {
     return getName();
   }
   
+    /**
+     * Returns a user-readable submitter title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        int maxLen = 30;
+        String str = getName().trim();
+        if (!str.isEmpty() && maxLen != 0) {
+            int len = str.length();
+            if (len > maxLen) {
+                int cut = str.indexOf(" ", maxLen);
+                if (cut != -1) {
+                    str = str.substring(0, cut);
+                }
+            }
+        }
+        if (str.isEmpty()) {
+            str = "?";
+        }
+        return getId() + " - " + str;
+    }
+
+  
   /**
    * Name of Submitter
    */
