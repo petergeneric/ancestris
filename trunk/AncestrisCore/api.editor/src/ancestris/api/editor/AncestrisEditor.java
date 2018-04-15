@@ -28,6 +28,7 @@ import ancestris.core.actions.CommonActions;
 import genj.gedcom.GedcomOptions;
 import genj.gedcom.Indi;
 import genj.gedcom.PropertyPlace;
+import java.util.Collection;
 import java.util.List;
 import javax.swing.ImageIcon;
 import org.openide.util.NbBundle;
@@ -208,17 +209,22 @@ public abstract class AncestrisEditor {
             displayName = "#OpenInEditor.title",
             lazy = false
     )
-    @ActionReferences({@ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReferences({@ActionReference(path = "Ancestris/Actions/GedcomProperty", position= 660)})
     @Messages("OpenInEditor.title=Edit/Modify")
     public final static class OpenEditorAction extends AbstractAction implements ContextAwareAction {
 
-        public @Override
-        void actionPerformed(ActionEvent e) {
+        @Override
+        public void actionPerformed(ActionEvent e) {
             assert false;
         }
 
-        public @Override
-        Action createContextAwareInstance(Lookup context) {
+        @Override
+        public Action createContextAwareInstance(Lookup context) {
+            Collection<? extends Property> props = context.lookupAll(Property.class);
+            if (props == null || props.isEmpty() || props.size() > 1) {
+                return CommonActions.NOOP;
+            }
+
             Action action = CommonActions.NOOP;
             Property property = context.lookup(Property.class);
             AncestrisEditor editor = AncestrisEditor.findEditor(property);
@@ -238,6 +244,7 @@ public abstract class AncestrisEditor {
                 this.property = context;
                 this.editor = editor;
                 setText(OpenInEditor_title());  // NOI18N
+                setTip(NbBundle.getMessage(Bundle.class, "OpenInEditor.tip")); // NOI18N
                 setImage(editor.getIcon());
             }
 

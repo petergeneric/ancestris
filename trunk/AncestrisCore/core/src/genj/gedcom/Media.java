@@ -50,6 +50,31 @@ public class Media extends Entity {
     return getTitle();
   }
   
+    /**
+     * Returns a user-readable media title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        int maxLen = 30;
+        String str = getTitle().trim();
+        if (!str.isEmpty() && maxLen != 0) {
+            int len = str.length();
+            if (len > maxLen) {
+                int cut = str.indexOf(" ", maxLen);
+                if (cut != -1) {
+                    str = str.substring(0, cut);
+                }
+            }
+        }
+        if (str.isEmpty()) {
+            str = "?";
+        }
+        return getId() + " - " + str;
+    }
+
+  
+
   /**
    * Overriden - special case for file association
    */
@@ -108,5 +133,5 @@ public class Media extends Entity {
   public void setTitle(String title) {
     setValue(titlepath, title);
   }
-
+  
 } //Media

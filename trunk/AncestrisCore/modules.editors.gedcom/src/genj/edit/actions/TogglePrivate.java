@@ -42,8 +42,7 @@ import org.openide.util.LookupEvent;
 @ActionRegistration(displayName = "#private",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools"
-        ,position= 3000)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position= 640)})
 public class TogglePrivate extends AbstractChange {
 
     /** the properties */
@@ -54,6 +53,7 @@ public class TogglePrivate extends AbstractChange {
     public TogglePrivate() {
         super();
         setImageText(MetaProperty.IMG_PRIVATE, resources.getString("private"));
+        setTip(resources.getString("private.tip"));
     }
 
     /**
@@ -77,7 +77,7 @@ public class TogglePrivate extends AbstractChange {
         if (properties.isEmpty()) {
             setEnabled(false);
             setText(resources.getString("private"));
-            setTip(resources.getString("private"));
+            setTip(resources.getString("private.tip"));
         } else {
             setEnabled(true);
             // assuming we want to make them all private
@@ -87,8 +87,8 @@ public class TogglePrivate extends AbstractChange {
                     makePrivate = false;
                 }
             }
-            setText(resources.getString(makePrivate ? "private" : "public"));
-            setTip(resources.getString(makePrivate ? "private" : "public"));
+            setText(resources.getString(makePrivate ? "private" : "public") + "...");
+            setTip(resources.getString(makePrivate ? "private.tip" : "public.tip"));
         }
     }
 

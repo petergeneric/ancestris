@@ -48,21 +48,33 @@
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                     <attr name="position" intvalue="520"/>
                 </file>
+                <file name="Separator1.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="650"/>
+                </file>
+                <file name="Separator2.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="700"/>
+                </file>
                 <folder name="Navigate">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Navigate"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Navigate.short"/>
                     <attr name="iconBase" stringvalue="ancestris/core/resources/images/Navigate.png"/>
-                    <attr name="position" intvalue="525"/>
+                    <attr name="position" intvalue="710"/>
                 </folder>
+                <file name="Separator3.instance">
+                    <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
+                    <attr name="position" intvalue="850"/>
+                </file>
                 <folder name="Tools">
                     <attr name="displayName" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools"/>
                     <attr name="shortDescription" bundlevalue="ancestris.core.menus.Bundle#Ancestris/Actions/GedcomProperty/Tools.short"/>
                     <attr name="iconBase" stringvalue="ancestris/core/resources/images/Tools.png"/>
-                    <attr name="position" intvalue="530"/>
+                    <attr name="position" intvalue="860"/>
                 </folder>
-                <file name="Separator1.instance">
+                <file name="Separator4.instance">
                     <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
-                    <attr name="position" intvalue="535"/>
+                    <attr name="position" intvalue="900"/>
                 </file>
             </folder>
         </folder>

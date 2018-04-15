@@ -81,6 +81,31 @@ public class Note extends Entity implements MultiLineProperty {
     return getDelegate().getDisplayValue();
   }
 
+    /**
+     * Returns a user-readable note title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        int maxLen = 30;
+        String str = getDisplayValue().trim();
+        if (!str.isEmpty() && maxLen != 0) {
+            int len = str.length();
+            if (len > maxLen) {
+                int cut = str.indexOf(" ", maxLen);
+                if (cut != -1) {
+                    str = str.substring(0, cut);
+                }
+            }
+        }
+        if (str.isEmpty()) {
+            str = getPropertyName();
+        }
+        return getId() + " - " + str;
+    }
+
+  
+
   /**
    * @see genj.gedcom.Entity#setValue(java.lang.String)
    */

@@ -40,6 +40,7 @@ final public class Images {
     public static ImageIcon imgPaste = new ImageIcon(Images.class,"images/Paste");
     
     public static ImageIcon imgAdd = new ImageIcon(Images.class,"images/Add");
+    public static ImageIcon imgPropagate = new ImageIcon(Images.class,"images/Propagate");
 	
     public static ImageIcon imgDel = new ImageIcon(Images.class,"images/Delete");
     public static ImageIcon imgNew = new ImageIcon(Images.class,"images/New");

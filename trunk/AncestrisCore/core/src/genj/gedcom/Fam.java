@@ -507,6 +507,27 @@ public class Fam extends Entity {
     }
 
     /**
+     * Returns a user-readable fam title
+     * @return 
+     */
+    @Override
+    public String getDisplayTitle() {
+        String husbname = "?";
+        if (getHusband() != null) {
+            String lastNames[] = getHusband().getLastName().split(",");
+            husbname = lastNames.length > 0 ? lastNames[0] : "?";
+        }
+        
+        String wifename = "?";
+        if (getWife() != null) {
+            String lastNames[] = getWife().getLastName().split(",");
+            wifename = lastNames.length > 0 ? lastNames[0] : "?";
+        }
+
+        return getId() + " - " + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() +  " " + wifename;
+    }
+
+    /**
      * Meier, Magdalene (I1) & Meier, Lars (I2) ...
      */
     protected String getNames() {

@@ -30,7 +30,6 @@ import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
-import genj.gedcom.TagPath;
 import static genj.report.Bundle.*;
 import genj.util.Resources;
 import java.awt.event.ActionEvent;
@@ -175,7 +174,7 @@ public static class PropertiesReportSubMenu extends SubMenuAction {
 //            getReportActions(entities, Utilities.getGedcomFromContext(context), group);
         } else if (properties.size() == 1) {
             Property property = properties.iterator().next();
-            setText(report_runon(Property.LABEL, TagPath.get(property).getName()));
+            setText(report_runon("", property.getDisplayTitle()));
             setImage(property.getImage(false));
             setImage(ReportViewFactory.IMG);
         addActions(getReportActions(property, property.getGedcom()));
@@ -207,7 +206,7 @@ public static class EntitiesReportSubMenu extends SubMenuAction {
             addActions(getReportActions(entities, ctx.getGedcom()));
         } else if (entities.size() == 1) {
             Entity entity = entities.iterator().next();
-            setText(report_runon("", entity.toString(true)));
+            setText(report_runon("", entity.getDisplayTitle()));
             setImage(entity.getImage());
             setImage(ReportViewFactory.IMG);
             addActions(getReportActions(entity, entity.getGedcom()));

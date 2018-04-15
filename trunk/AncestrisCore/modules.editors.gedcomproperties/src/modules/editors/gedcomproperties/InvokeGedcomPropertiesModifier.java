@@ -583,7 +583,26 @@ public class InvokeGedcomPropertiesModifier implements ModifyGedcom, Constants {
         if (tagPath.contains(":")) {
             String firstTag = tagPath.substring(0, tagPath.indexOf(":"));
             if (firstTag.equals(HEADER) || firstTag.equals(SUBM)) {
-                property = gedcom.getFirstEntity(firstTag);
+                if (firstTag.equals(HEADER)) {
+                    property = gedcom.getFirstEntity(HEADER);
+                } else {
+                    boolean found = false;
+                    // Find SUBM reference in header and if not found, take first submitter entity found in gedcom
+                    property = gedcom.getFirstEntity(HEADER);
+                    if (property != null) {
+                        property = property.getProperty(SUBM);
+                        if (property != null) {
+                            String id = property.getValue().replaceAll("@", "").trim();
+                            property = gedcom.getEntity(SUBM, id);
+                            if (property != null) {
+                                found = true;
+                            }
+                        }
+                    }
+                    if (!found) {
+                        property = null;
+                    }
+                }
             } else {
                 property = parent != null ? parent.getProperty(firstTag) : null;
             }

@@ -5,7 +5,6 @@ import ancestris.core.actions.CommonActions;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Indi;
-import genj.report.ReportPlugin;
 import java.awt.event.ActionEvent;
 import javax.swing.Action;
 import org.openide.awt.ActionID;
@@ -27,7 +26,7 @@ import org.openide.util.NbBundle;
         lazy = false
 )
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", separatorBefore = ReportPlugin.POSITION-100, position = ReportPlugin.POSITION-95)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 540)})
 public class ContextSosaAction extends AbstractAncestrisAction implements Constants, ContextAwareAction {
 
     private Context context = null;
@@ -36,6 +35,7 @@ public class ContextSosaAction extends AbstractAncestrisAction implements Consta
         super();
         setImage("ancestris/modules/gedcom/sosanumbers/SosaNumbersIcon.png");
         setText(NbBundle.getMessage(getClass(), "ContextSosaAction", ""));
+        setTip(NbBundle.getMessage(getClass(), "ContextSosaAction.tip"));
     }
     
     @Override
@@ -52,6 +52,7 @@ public class ContextSosaAction extends AbstractAncestrisAction implements Consta
             this.context = new Context(e);
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
             setText(NbBundle.getMessage(getClass(), "ContextSosaAction", ((Indi)e).toString(true)));
+            setTip(NbBundle.getMessage(getClass(), "ContextSosaAction.tip"));
             return this;
         }
     }

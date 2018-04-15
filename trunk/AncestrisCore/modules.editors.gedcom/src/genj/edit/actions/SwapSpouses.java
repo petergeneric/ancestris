@@ -45,7 +45,7 @@ import org.openide.util.LookupEvent;
 @ActionRegistration(displayName = "#swap.spouses",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1108)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 535)})
 public class SwapSpouses extends AbstractChange {
 
     /** fam */
@@ -59,10 +59,12 @@ public class SwapSpouses extends AbstractChange {
         //FIXME: we must have some static method to get an image for a tag
         ImageIcon img = Grammar.V55.getMeta(TagPath.valueOf("FAM")).getImage();
         setImageText(img, resources.getString("swap.spouses"));
+        setTip(resources.getString("swap.spouses.tip"));
     }
 
     public SwapSpouses(Fam family) {
         setImageText(family.getImage(false), resources.getString("swap.spouses"));
+        setTip(resources.getString("swap.spouses.tip"));
         fam = family;
         contextChanged();
     }
@@ -102,6 +104,7 @@ public class SwapSpouses extends AbstractChange {
     protected final void contextChanged() {
         if (fam != null && fam.getNoOfSpouses() != 0) {
             setEnabled(true);
+            setTip(resources.getString("swap.spouses.tip"));
         } else {
             setEnabled(false);
         }

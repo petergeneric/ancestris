@@ -388,6 +388,7 @@ import org.openide.windows.WindowManager;
             // remember
             this.entity = (Entity) tree.getRoot();
             properties = Property.normalize(selection);
+            setImage(Images.imgPropagate);
             // something there?
             if (properties.isEmpty()) {
                 setText(resources.getString("action.propagate", ""));
@@ -396,7 +397,8 @@ import org.openide.windows.WindowManager;
             }
             // setup looks
             this.what = "'" + Property.getPropertyNames(properties, 5) + "'";
-            setText(resources.getString("action.propagate", what) + "...");
+            setText(resources.getString("action.propagate") + "...");
+            setTip(resources.getString("action.propagate.tip", what));
         }
 
         /** apply it */
@@ -463,8 +465,9 @@ import org.openide.windows.WindowManager;
         /** constructor */
         private Cut(List<Property> preset) {
             presetSelection = Property.normalize(preset);
-            super.setImage(Images.imgCut);
-            super.setText(resources.getString("action.cut"));
+            setImage(Images.imgCut);
+            setText(resources.getString("action.cut"));
+            setTip(resources.getString("action.cut.tip"));
         }
 
         private Cut() {
@@ -493,6 +496,7 @@ import org.openide.windows.WindowManager;
                 if (DialogManager.create(resources.getString("action.cut"), veto)
                         .setMessageType(DialogManager.WARNING_MESSAGE)
                         .setOptions(new Object[]{cut,DialogManager.CANCEL_OPTION})
+                        .setDialogId("action.cut")
                         .show() != cut) {
                     return;
                 }
@@ -530,18 +534,25 @@ import org.openide.windows.WindowManager;
         /** assemble a list of vetos for cutting properties */
         private String getVeto(List<Property> properties) {
 
+            boolean found = false;
+            String msg = resources.getString("del.warning.message");
             StringBuilder result = new StringBuilder();
             for (Property p : properties) {
 
                 String veto = p.getDeleteVeto();
                 if (veto != null) {
+                    found = true;
                     // Removing property {0} from {1} leads to:\n{2}
                     result.append(resources.getString("del.warning", p.getPropertyName(), p.getParent().getPropertyName(), veto));
-                    result.append("\n");
+                    result.append("\n\n");
                 }
             }
+            
+            if (found) {
+                return msg + result.toString();
+            }
 
-            return result.toString();
+            return "";
         }
     } //Cut
 
@@ -557,6 +568,7 @@ import org.openide.windows.WindowManager;
         protected Copy(List<Property> preset) {
             presetSelection = Property.normalize(preset);
             setText(resources.getString("action.copy"));
+            setTip(resources.getString("action.copy.tip"));
             setImage(Images.imgCopy);
         }
 
@@ -599,6 +611,7 @@ import org.openide.windows.WindowManager;
         protected Paste(Property property) {
             presetParent = property;
             setText(resources.getString("action.paste"));
+            setTip(resources.getString("action.paste.tip"));
             setImage(Images.imgPaste);
 
             // 20060404 isPasteAvail() apparently is VERY costly - depending on what's in the system clipboard
@@ -696,7 +709,8 @@ import org.openide.windows.WindowManager;
         /** constructor */
         protected Add(Property parent) {
             this.parent = parent;
-            setText(resources.getString("action.list.add") + " ...");
+            setText(resources.getString("action.list.add") + "...");
+            setTip(resources.getString("action.list.add.tip"));
             setImage(Images.imgAdd);
         }
 
@@ -707,11 +721,13 @@ import org.openide.windows.WindowManager;
             // need to let user select tags to add?
             if (tags == null) {
                 JLabel label = new JLabel(resources.getString("add.choose"));
+                label.setBorder(BorderFactory.createEmptyBorder(6, 0, 6, 0));
                 ChoosePropertyBean choose = new ChoosePropertyBean(parent);
                 JCheckBox check = new JCheckBox(resources.getString("add.default_too"), addDefaults);
                 if (DialogManager.create(resources.getString("add.title"), new JComponent[]{label, choose, check})
                         .setMessageType(DialogManager.QUESTION_MESSAGE)
                         .setOptionType(DialogManager.OK_CANCEL_OPTION)
+                        .setDialogId("add.title")
                         .show() != DialogManager.OK_OPTION){
                     return;
                 }
@@ -915,8 +931,8 @@ import org.openide.windows.WindowManager;
                 result.add(null);
                 Property prop = selection.get(0);
                 if (!prop.isTransient()) {
-                    result.add(new Add(prop));
                     SubMenuAction menu = new SubMenuAction(resources.getString("action.add"));
+                    menu.setTip(resources.getString("action.add.tip"));
                     MetaProperty[] metas = prop.getNestedMetaProperties(MetaProperty.WHERE_NOT_HIDDEN | MetaProperty.WHERE_CARDINALITY_ALLOWS);
                     Arrays.sort(metas);
                     for (int i = 0; i < metas.length; i++) {
@@ -925,13 +941,16 @@ import org.openide.windows.WindowManager;
                         }
                     }
                     result.add(menu);
+                    result.add(new Add(prop));
                 }
+            } else {
+                result.add(null);
             }
 
             if (!selection.isEmpty() && !selection.contains(tree.getRoot())) {
                 result.add(new Propagate(selection));
             }
-
+            
             return result;
         }
     } //Tree

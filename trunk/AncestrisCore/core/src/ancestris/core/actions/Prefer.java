@@ -36,7 +36,7 @@ import org.openide.util.LookupEvent;
 @ActionID(category = "Edit", id = "ancestris.core.actions.Prefer")
 @ActionRegistration(displayName = "#xref.preferon",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = 1115)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 525)})
 public class Prefer extends AbstractAncestrisContextAction {
 
     protected final static Resources RESOURCES = Resources.get(Prefer.class);
@@ -75,6 +75,7 @@ public class Prefer extends AbstractAncestrisContextAction {
             }
         }
         setText(getLabel());
+        setTip(RESOURCES.getString("xref.prefer.tip"));
         setEnabled(fam != null);
     }
 
@@ -88,6 +89,7 @@ public class Prefer extends AbstractAncestrisContextAction {
         this.fam = fam;
         super.setText(getLabel());
         super.setImage(Images.imgPref);
+        super.setTip(RESOURCES.getString("xref.prefer.tip"));
         setEnabled(fam != null);
 }
 

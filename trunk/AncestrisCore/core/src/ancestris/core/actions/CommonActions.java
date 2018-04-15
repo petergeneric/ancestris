@@ -11,19 +11,19 @@
  */
 package ancestris.core.actions;
 
+import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
 import javax.swing.JMenuItem;
-import javax.swing.UIManager;
+import javax.swing.JPanel;
 import org.openide.awt.DynamicMenuContent;
 import org.openide.util.actions.Presenter;
 
 /**
  *
- * @author daniel
+ * @author daniel & frederic
  */
 public class CommonActions {
 
@@ -46,19 +46,17 @@ public class CommonActions {
         }
     }
 
-    public static Action createSeparatorAction(String title) {
-        SeparatorAction result = new SeparatorAction(title);
-        return result;
+    public static Action createTitleAction(Property property) {
+        return new TitleAction(property);
     }
 
-    private static class SeparatorAction extends AbstractAction implements Presenter.Popup {
+    private static class TitleAction extends AbstractAction implements Presenter.Popup {
 
-        private String title;
-
-        public SeparatorAction(String title) {
-            this.title = title;
+        private Property property;
+        
+        public TitleAction(Property property) {
+            this.property = property;
             setEnabled(true);
-            putValue(NAME, title);
             putValue(DynamicMenuContent.HIDE_WHEN_DISABLED, true);
         }
 
@@ -67,54 +65,29 @@ public class CommonActions {
             //nothing to do
         }
 
+        @Override
         public JMenuItem getPopupPresenter() {
-//            JMenuItem item = new JMenuItem("<html><b><font size=+1>"+title+"</font></b></html>");
-            String truncate = "";
-            if (!title.isEmpty()) {
-                int len = title.length();
-                if (len > 150) {
-                    int cut = title.indexOf(" ", 150);
-                    title = title.substring(0, cut) + "...";
-                    truncate = "<body width=\"500\">";
-                }
-            }
-            JMenuItem item = new TitleMenuItem(new StringBuilder("<html>"+truncate+"<b>&nbsp;&nbsp;").append(title).append("</b></html>").toString());
-            String tt = (String) getValue(SHORT_DESCRIPTION);
-            if (tt!=null){
-                //setToolTipText("<html><p width=\"500\">" +value+"</p></html>");
-                item.setToolTipText(new StringBuilder("<html><body width=\"500\">")
-                        .append(tt.replaceAll("\\n", "<br/>"))
-                        .append("</body></html>")
-                        .toString());
-            }
-            item.setEnabled(false);
-            return item;
+            return new TitleMenuItem(property); 
         }
     }
 
     static private class TitleMenuItem extends JMenuItem implements DynamicMenuContent {
 
-        private JLabel title;
+        private JPanel panel;
 
-        public TitleMenuItem(String title) {
-            this.title = new JLabel(title);
-            this.title.setBackground(UIManager.getColor("MenuItem.selectionBackground"));
-            this.title.setForeground(UIManager.getColor("MenuItem.selectionForeground"));
-            this.title.setOpaque(true);
+        public TitleMenuItem(Property property) {
+            panel = new TitleActionPanel(property);
         }
 
         @Override
-        public void setToolTipText(String text) {
-            title.setToolTipText(text);
-        }
-
-        
         public JComponent[] getMenuPresenters() {
-            return new JComponent[]{title};
+            return new JComponent[]{panel};
         }
 
+        @Override
         public JComponent[] synchMenuPresenters(JComponent[] items) {
             return getMenuPresenters();
         }
     }
+    
 }

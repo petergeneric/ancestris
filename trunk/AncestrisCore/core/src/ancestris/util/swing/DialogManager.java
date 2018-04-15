@@ -171,7 +171,6 @@ param text
                     doEnablement();
                 }
             });
-
         }
 
         private void doEnablement() {
@@ -279,6 +278,7 @@ param text
             descriptor = new MyInputLine(text, title);
             descriptor.setInputText(value);
             setOptionType(OK_CANCEL_OPTION);
+            setMessageType(NotifyDescriptor.QUESTION_MESSAGE);
         }
 
         @Override

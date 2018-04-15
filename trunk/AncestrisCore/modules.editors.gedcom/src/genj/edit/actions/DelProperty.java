@@ -40,7 +40,6 @@ import org.openide.awt.ActionReference;
 import org.openide.awt.ActionReferences;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.LookupEvent;
-import org.openide.util.NbBundle;
 
 /**
  * PDelete - delete a property
@@ -49,7 +48,7 @@ import org.openide.util.NbBundle;
 @ActionRegistration(displayName = "#delete",
         lazy = false)
 @ActionReferences(value = {
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty")})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 670)})
 public class DelProperty extends AbstractChange {
 
     /** the candidates to delete */
@@ -62,7 +61,7 @@ public class DelProperty extends AbstractChange {
     public DelProperty(List<Property> props) {
         super();
         setContextProperties(props);
-        setImageText(Images.imgDel, resources.getString("delete"));
+        setImageText(Images.imgDel, resources.getString("delete") + "...");
         contextChanged();
     }
 
@@ -82,12 +81,12 @@ public class DelProperty extends AbstractChange {
         String result = "";
         if (candidates != null && !candidates.isEmpty()) {
             if (candidates.size() > 1) {
-                result = "'" + Property.getPropertyNames(candidates, 5) + "' (" + candidates.size() + ")";
+                result = Property.getPropertyNames(candidates, 5) + " (" + candidates.size() + ")";
             } else {
-                result = " '" + candidates.iterator().next().toString();
+                result = candidates.iterator().next().toString();
             }
         }
-        setTip(NbBundle.getMessage(DelProperty.class, "delete") + " " + result);
+        setTip(resources.getString("delete.tip", result));
     }
 
     //XXX: for Entity this was: 

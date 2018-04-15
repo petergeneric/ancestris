@@ -31,21 +31,19 @@ import org.openide.util.ContextAwareAction;
 @ActionID(category = "Tree", id = "genj.tree.actions.BookmarkAction")
 @ActionRegistration(displayName = "BookMark",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty/Tools", position = 1010)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 720)})
 /**
  * ActionRoot
  */
-public class BookmarkAction
-        extends AbstractAction
-        implements ContextAwareAction {
+public class BookmarkAction extends AbstractAction implements ContextAwareAction {
 
-    public @Override
-    void actionPerformed(ActionEvent e) {
+    @Override
+    public void actionPerformed(ActionEvent e) {
         assert false;
     }
 
-    public @Override
-    Action createContextAwareInstance(org.openide.util.Lookup context) {
+    @Override
+    public Action createContextAwareInstance(org.openide.util.Lookup context) {
 
         Entity e = context.lookup(Entity.class);
         if (e == null) {

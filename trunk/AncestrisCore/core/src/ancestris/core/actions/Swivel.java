@@ -39,7 +39,7 @@ import org.openide.util.NbBundle;
 @ActionID(category = "Edit", id = "ancestris.core.actions.Swivel")
 @ActionRegistration(displayName = "Swivel",lazy = false)
 @ActionReferences({
-    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 1105)})
+    @ActionReference(path = "Ancestris/Actions/GedcomProperty", position = 530)})
 @NbBundle.Messages({"xref.swivel=Swivel..."})
 public class Swivel extends AbstractAncestrisContextAction {
 
@@ -51,9 +51,10 @@ public class Swivel extends AbstractAncestrisContextAction {
     
     @Override
     public void resultChanged(LookupEvent ev) {
-        // valid only for context aware action
-        if (lkpInfo != null) {
-            xref = null;
+        // valid only for context aware action with one context
+        xref = null;
+        setEnabled(false);
+        if (lkpInfo != null && lkpInfo.allInstances().size() == 1) {
             for (Property prop : lkpInfo.allInstances()) {
                 if (prop instanceof PropertyXRef) {
                     xref = (PropertyXRef) prop;
@@ -68,9 +69,10 @@ public class Swivel extends AbstractAncestrisContextAction {
         super.contextChanged();
         if (xref != null && xref.getTargetEntity() != null) {
             IMAGE = xref.getTargetEntity().getImage(false);
-            super.setImage(IMAGE.getOverLayed(MetaProperty.IMG_LINK));
+            setImage(IMAGE.getOverLayed(MetaProperty.IMG_LINK));
+            setText(RESOURCES.getString("xref.swivel"));
+            setTip(xref);
         }
-        setText(RESOURCES.getString("xref.swivel"));
         setEnabled(xref != null);
     }
 
@@ -84,6 +86,7 @@ public class Swivel extends AbstractAncestrisContextAction {
         this.xref = xref;
         super.setText(RESOURCES.getString("xref.swivel"));
         super.setImage(MetaProperty.IMG_LINK);
+        setTip(xref);
         setEnabled(xref != null);
 }
 
@@ -94,7 +97,12 @@ public class Swivel extends AbstractAncestrisContextAction {
             return;
         }
 
-        SelectEntityPanel select = new SelectEntityPanel(xref.getGedcom(), xref.getTargetType(), NbBundle.getMessage(this.getClass(), "xrefbean.swivel.askentity"), null);
+        String type = xref.getTargetType();
+        if (type == null) {
+            type = Gedcom.INDI;
+        }
+        String msg = NbBundle.getMessage(this.getClass(), "xrefbean.swivel.askentity", xref.getTargetEntity().toString(true));
+        SelectEntityPanel select = new SelectEntityPanel(xref.getGedcom(), type, msg, null);
         if (DialogManager.OK_OPTION != DialogManager.create(getText(), select)
                 .setMessageType(DialogManager.QUESTION_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).setDialogId("xrefbean.swivel").show()) {
             return;
@@ -126,6 +134,18 @@ public class Swivel extends AbstractAncestrisContextAction {
         }
 
         // done
+    }
+
+    private void setTip(PropertyXRef xref) {
+        String ref = "";
+        if (xref != null && xref.getTargetEntity() != null) {
+            Entity ent = xref.getTargetEntity();
+            if (ent != null) {
+                ref = ent.getId();
+            }
+            super.setImage(IMAGE.getOverLayed(MetaProperty.IMG_LINK));
+        }
+        super.setTip(RESOURCES.getString("xref.swivel.tip", ref));
     }
 
 }
