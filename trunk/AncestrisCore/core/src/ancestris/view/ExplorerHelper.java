@@ -124,12 +124,15 @@ public class ExplorerHelper {
         }
         actions.addAll(aactions);
 
-        // If actions exist and title is not null, insert title at the top and display popup
+        // If actions exist display popup
         if (actions.size() > 0) {
-            Property property = getPropertyFromNodes(selNodes);
-            Action menuTitleItem = CommonActions.createTitleAction(property);
-            actions.add(0, menuTitleItem);
-            actions.add(1, null);  // add separator
+            // If nodes >=1, insert title at the top 
+            if (selNodes.length > 0) {
+                Property property = getPropertyFromNodes(selNodes);
+                Action menuTitleItem = CommonActions.createTitleAction(property);
+                actions.add(0, menuTitleItem);
+                actions.add(1, null);  // add separator
+            }
 
             // Builds actions with currently selected context (regardless of nodes)
             JPopupMenu popup = Utilities.actionsToPopup(actions.toArray(new Action[0]), clickedComponent);
