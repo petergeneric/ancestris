@@ -49,6 +49,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     IMG_LINK    = loadImage("Association"),
     IMG_UNKNOWN = loadImage("Question"),
     IMG_ERROR   = loadImage("Error"),
+    IMG_WARNING = loadImage("Warning"),
     IMG_PRIVATE = loadImage("Private");
   
   /** grammar */
@@ -328,6 +329,8 @@ public class MetaProperty implements Comparable<MetaProperty> {
       // check err
       if ("err".equals(postfix))
         return IMG_ERROR;
+      else if ("warn".equals(postfix))
+        return IMG_WARNING;
       else
         return getImage() ;
     } 
