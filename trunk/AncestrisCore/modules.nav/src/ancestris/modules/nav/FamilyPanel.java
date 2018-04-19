@@ -324,7 +324,8 @@ public final class FamilyPanel extends JPanel implements AncestrisActionProvider
             return;
         }
         
-        if (focusIndi != null && focusIndi.getNoOfFams() > 0 && focusIndi.getNoOfFams() > famIndex) {
+//        if (focusIndi != null && focusIndi.getNoOfFams() > 0 && focusIndi.getNoOfFams() > famIndex) {
+        if (focusIndi != null && focusIndi.getFamiliesWhereSpouse().length>0 && focusIndi.getNoOfFams() > famIndex) {
             focusFam = focusIndi.getFamiliesWhereSpouse()[famIndex];
         }
         
