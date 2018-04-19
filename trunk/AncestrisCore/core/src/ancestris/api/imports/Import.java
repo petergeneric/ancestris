@@ -890,14 +890,8 @@ public abstract class Import implements ImportRunner {
                 propName = (PropertyName) rawName;
             }
             // If name is invalid, replace it
-            if (propName != null && !propName.isValid()) {
-                propName.setName( // must have the same parameters as computeNameValue in PropertyName
-                        propName.getNamePrefix(true), 
-                        propName.getFirstName(true),  
-                        propName.getSurnamePrefix(true), 
-                        propName.getLastName(true), 
-                        propName.getSuffix(true), 
-                        false);
+            if (propName != null && (!propName.isValid() || propName.hasWarning())) {
+                propName.fixNameValue();
                 hasErrors = true;
                 nbChanges++;
             }

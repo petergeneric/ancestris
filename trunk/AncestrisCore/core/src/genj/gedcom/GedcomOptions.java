@@ -375,16 +375,6 @@ public class GedcomOptions {
     }
 
 
-    private static final String ADD_NAME_SUBTAGS = "gedcom.addNameSubtags";         // NOI18N
-
-    public void setAddNameSubtags(boolean value) {
-        getPreferences().put(ADD_NAME_SUBTAGS, value);
-    }
-
-    public boolean getAddNameSubtags() {
-        return getPreferences().get(ADD_NAME_SUBTAGS, true);
-    }
-
     /**
      * Given Name Choice (Prefer given name et special tag?)
      */
@@ -413,20 +403,6 @@ public class GedcomOptions {
 //        getPreferences().put(NAME_SPECIAL, value);
 //    }
 //
-    private static final String SPACE_IS_SEPARATOR = "gedcom.spaceIsSeparator";         // NOI18N
-
-    /**
-     * True if space is considered as separator (same as comma) in name pieces
-     * defaults to true
-     */
-    public boolean replaceSpaceSeparatorWithComma() {
-        return getPreferences().get(SPACE_IS_SEPARATOR, true);
-    }
-
-    public void setReplaceSpaceSeparatorWithComma(boolean value) {
-        getPreferences().put(SPACE_IS_SEPARATOR, value);
-    }
-
     private static final String ENTITY_ID_LENGTH = "gedcom.entityIdLength";         // NOI18N
 
     /**

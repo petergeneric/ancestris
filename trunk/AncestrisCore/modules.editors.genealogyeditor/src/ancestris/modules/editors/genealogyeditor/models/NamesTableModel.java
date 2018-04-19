@@ -35,9 +35,9 @@ public class NamesTableModel extends AbstractTableModel {
     public Object getValueAt(int row, int column) {
         PropertyName propertyName = namesList.get(row);
         if (column == 0) {
-            return propertyName.getFirstName(false);
+            return propertyName.getFirstName();
         } else {
-            return propertyName.getLastName(false);
+            return propertyName.getLastName();
         }
     }
 
