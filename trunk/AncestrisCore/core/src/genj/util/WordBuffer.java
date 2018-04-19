@@ -25,7 +25,8 @@ package genj.util;
  */
 public class WordBuffer {
   
-  /** a buffer we collect words in */
+    // FIXME: replace StringBuffer with StringBuilder?
+    /** a buffer we collect words in */
   private StringBuffer buffer;
   
   /** the filler between words */
@@ -47,7 +48,8 @@ public class WordBuffer {
   }
   
   /**
-   * Set the filler to use between words   */
+   * Set the filler to use between words
+   */
   public WordBuffer setFiller(String set) {
     filler = set;
     return this;
@@ -87,15 +89,21 @@ public class WordBuffer {
   }
 
   /**
-   * Append a word
+   * Append a word.
+   * nothing is done if word is null.
    */  
   public WordBuffer append(String word) {
     return (word==null) ? this :append(word, null);
   }
   
   /**
-   * Append a word
-   */  
+   * Append a word. 
+   * if word is null or empty, append nullSubst if not null.
+   * if word starts with a punctuation character (.,:/) no filler is appended.
+   * @param word
+   * @param nullSubst
+   * @return this to be chained
+   */
   public WordBuffer append(String word, String nullSubst) {
     // nothing to do?
     if ((word==null)||(word.length()==0)) return append(nullSubst);
@@ -116,6 +124,7 @@ public class WordBuffer {
       case '.': return true;
       case ',': return true;
       case ':': return true;
+      case '/': return true;
     }
   }
   
