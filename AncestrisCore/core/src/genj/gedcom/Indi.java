@@ -431,7 +431,7 @@ public class Indi extends Entity {
      */
     public String getFirstName() {
         PropertyName p = (PropertyName) getProperty("NAME", true);
-        return p != null ? p.getFirstName(true, true) : "";
+        return p != null ? p.getFirstName() : "";
     }
 
     /**

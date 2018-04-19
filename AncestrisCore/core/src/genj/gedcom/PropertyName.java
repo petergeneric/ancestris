@@ -46,15 +46,15 @@ public class PropertyName extends Property {
             KEY_FIRSTNAME = "NAME.first";
     /** the first + last name */
     private String lastName = "",
-            firstName = "",
-            suffix = "";
+    firstName = "",
+    suffix = "";
     // XXX:nameValue should probably be replaced by nameAsString
     private String nameTagValue;
     /** the name if unparsable */
     private String nameAsString;
     
     // use busy flag to avoid loopings
-    private boolean isBusy = false;
+    private int mutePropertyChange = 0;
 
     /**
      * need tag-argument constructor for all properties
@@ -72,6 +72,7 @@ public class PropertyName extends Property {
 
     /**
      * Constructor
+     * @deprecated use new PropertyName().setName(first,last)
      */
     public PropertyName(String first, String last) {
         this();
@@ -82,34 +83,35 @@ public class PropertyName extends Property {
     public PropertyComparator2 getComparator() {
         return NAMEComparator.getInstance();
     }
+    public boolean isMutePropertyChange() {
+        return mutePropertyChange!=0;
+    }
+
+    public boolean mutePropertyChange() {
+        boolean isMute = isMutePropertyChange();
+        this.mutePropertyChange++;
+        return isMute;
+    }
+    public void unmutePropertyChange() {
+        unmutePropertyChange(false);
+    }
+    public void unmutePropertyChange(boolean clear) {
+        if (clear)
+            mutePropertyChange = 0;
+        else {
+            this.mutePropertyChange--;
+            if (mutePropertyChange<0)
+                mutePropertyChange = 0;
+        }
+    }
+
 
     /**
-     * the first name
+     * the first name.
+     * Returns First Name as display value ie in a user friendly format
      */
     public String getFirstName() {
-        return getFirstName(false);
-    }
-
-    /**
-     * the first name
-     */
-    public String getFirstName(boolean displayValue) {
-        return getFirstName(displayValue, true);
-    }
-    
-    /**
-     * the first name
-     */
-    public String getFirstName(boolean displayValue, boolean useSepOption) {
-        if (displayValue) {
-            if (useSepOption) {
-                return firstName.replaceAll(" *, *", GedcomOptions.getInstance().replaceSpaceSeparatorWithComma() ? ", " : " ");    
-            } else {
-                return firstName.replaceAll(" *, *", " ");
-            }
-        } else {
-            return firstName;
-        }
+        return gedcomToValue(firstName);
     }
 
     /**
@@ -141,6 +143,7 @@ public class PropertyName extends Property {
      * Returns <b>true</b> if this property is valid
      */
     @Override
+    //TODO: check
     public boolean isValid() {
         /// no indi -> true
         if (!(getEntity() instanceof Indi || getEntity() instanceof Submitter)) {
@@ -149,16 +152,35 @@ public class PropertyName extends Property {
         if (nameAsString != null) {
             return false;
         }
-        if (nameTagValue == null) {
-            return true;
-        }
-        // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
-        // We do not consider space character around / (for geneatique compatibility
-        // We do consider the case of char (ie SURN may be UPPER where NAME is not)
-        // XXX: We should consider the case where there is no sub tags in NAME structure
-        return nameTagValue.replaceAll(" */ *", "/").replaceAll(" +", " ").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
+        return true;
+//        if (nameTagValue == null) {
+//            return true;
+//        }
+//        // NAME is considered valid if NAME TAG value is equivalent to computed NAME TAG value from all subtags.
+//        // We do not consider space character around / (for geneatique compatibility
+//        // We do consider the case of char (ie SURN may be UPPER where NAME is not)
+//        // XXX: We should consider the case where there is no sub tags in NAME structure
+//        return nameTagValue.replaceAll(" */ *", "/").replaceAll(" +", " ").equalsIgnoreCase(computeNameValue().replaceAll(" */ *", "/"));
     }
 
+    /**
+     * Returns true if property has some inconsticency.
+     * Retuns true if is valid but contains some not properly formated data
+     * or inconsticency (data syntactically correct but out of realisme, 
+     * eg age older than 200 years, ...)
+     */
+    public boolean hasWarning() {
+        Collator c = getGedcom().getCollator();
+
+        if (isValid() && 
+                ! c.equals(nameTagValue.replaceAll(" */ *", "/").replaceAll(" +", " "),
+                        computeNameValue().replaceAll(" */ *", "/"))
+                ){
+            return true;
+        }
+        return false;
+    }
+    
     /**
      * Returns localized label for first name
      */
@@ -184,22 +206,15 @@ public class PropertyName extends Property {
      * the last name
      */
     public String getLastName() {
-        return getLastName(false);
+        return lastName;
     }
 
     /**
      * the last name
+     * @deprecated  will be remove after commit
      */
     public String getLastName(boolean displayValue) {
-        if (displayValue) {
-            if (lastName.indexOf(',') < 0) {
-                return lastName;
-            } else {
-                return lastName.substring(0, lastName.indexOf(','));
-            }
-        } else {
-            return lastName;
-        }
+        return getLastName();
     }
     
     /**
@@ -240,7 +255,7 @@ public class PropertyName extends Property {
      * the name prefix
      */
     public String getNamePrefix() {
-        return getPropertyValue("NPFX");
+        return gedcomToValue(getPropertyValue("NPFX"));
     }
 
     public String getNamePrefix(boolean displayValue) {
@@ -258,22 +273,18 @@ public class PropertyName extends Property {
         return getPropertyValue("SPFX");
     }
 
-    public String getSurnamePrefix(boolean displayValue) {
-        if (displayValue) {
-            return getSurnamePrefix().replaceAll(" *, *", " ");
-        } else {
-            return getSurnamePrefix();
-        }
-    }
-
-
     /**
      * the suffix
      */
     public String getSuffix() {
-        return getPropertyValue("NSFX");
+        return getPropertyValue("NSFX").trim();
     }
 
+    /**
+     * @deprecated
+     * @param displayValue
+     * @return 
+     */
     public String getSuffix(boolean displayValue) {
         if (displayValue) {
             return getSuffix().replaceAll(" *, *", " ");
@@ -317,35 +328,35 @@ public class PropertyName extends Property {
     private String computeNameValue() {
         return computeNameValue(
                 getNamePrefix(true),
-                getFirstName(true, false),
-                getSurnamePrefix(true),
-                getLastName(true),
-                getSuffix(true));
+                getFirstName(),
+                getSurnamePrefix(),
+                getLastName(),
+                getSuffix());
 
+    }
+    /**
+     * Compute and update a new TAG NAME value according to existing sub tag properties.
+     */
+    public void fixNameValue(){
+        nameTagValue = computeNameValue();
     }
 
     private String computeNameValue(String npfx, String first, String spfx, String last, String nsfx) {
         WordBuffer wb = new WordBuffer();
 
-        if (!npfx.isEmpty()) {
-            wb.append(npfx);
-        }
-        if (!first.isEmpty()) {
-            wb.append(first);
-        }
+        first = first.replaceAll(",$", ""); // remove first name's ending comma if any
+        wb.append(npfx).append(first);
 
-        String name = spfx;
-        if (!name.isEmpty() && !last.isEmpty()) {
-            name += " ";
-        }
-        name += last;
+        WordBuffer wpname = new WordBuffer();
+        wpname.append(spfx).append(last).setFiller("");
+        
+        String name = wpname.toString();
         // 20050328 need last name //'s if there's a suffix
         if (name.length() > 0 || nsfx.length() > 0) {
             wb.append("/" + name + "/");
         }
-        if (nsfx.length() > 0) {
-            wb.append(nsfx);
-        }
+        wb.append(nsfx);
+
         return wb.toString();
     }
 
@@ -364,31 +375,31 @@ public class PropertyName extends Property {
             return nameAsString;
         }
 
-        // if not valid, return name tag value
-        if (!isValid() && nameTagValue != null) {
-            return nameTagValue;
-        }
+//        // if not valid, return name tag value
+//        if (!isValid() && nameTagValue != null) {
+//            return nameTagValue;
+//        }
 
         WordBuffer b = new WordBuffer();
+        String last = getLastName().split(",")[0]; // Only first last name if many
+        if (last.length() == 0) {
+            last = "?";
+        }
+        // remove trailing comma if any
+        String first = getFirstName().replaceAll(", *$", "");
 
         if (GedcomOptions.getInstance().getNameFormat() == GedcomOptions.NameFormat.LAST) {
 
-            String last = getLastName(true);
-            if (last.length() == 0) {
-                last = "?";
-            }
-            b.append(getSurnamePrefix());
-            b.append(last);
-            b.append(getSuffix(true));
-            b.setFiller(", ");
-            b.append(getFirstName(true, false));
+            b.append(getSurnamePrefix())
+            .append(last)
+            .append(getSuffix())
+            .setFiller(", ")
+            .append(first);
 
         } else {
-
-            b.append(getFirstName(true, false));
-            b.append(getSurnamePrefix(true));
-            b.append(getLastName(true));
-
+            b.append(first)
+                .append(getSurnamePrefix())
+                .append(last);
         }
 
         return b.toString();
@@ -419,18 +430,39 @@ public class PropertyName extends Property {
     /**
      * Sets name to a new value
      */
-    public PropertyName setName(String setFirst, String setLast, String setSuffix) {
+    private PropertyName setName(String setFirst, String setLast, String setSuffix) {
         return setName(setFirst, setLast, setSuffix, false);
     }
 
     /**
      * Sets name to a new value
+     * @deprecated used only in ShortNameBean which is never used.
      */
     public PropertyName setName(String first, String last, String suff, boolean replaceAllLastNames) {
         return setName(getPropertyValue("NPFX"), first, getPropertyValue("SPFX"), last, suff, replaceAllLastNames);
     }
 
+    /**
+     * Sets name to a new value.
+     * @param nPfx
+     * @param first
+     * @param sPfx
+     * @param last
+     * @param suff
+     * @param replaceAllLastNames
+     * @return 
+     * @deprecated use {@link #setName(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
+     * and {@link #replaceAllLastNames(java.lang.String)} 
+     */
     public PropertyName setName(String nPfx, String first, String sPfx, String last, String suff, boolean replaceAllLastNames) {
+        String oldLast = getLastName();
+        setName(nPfx, first, sPfx, last, suff);
+        if (replaceAllLastNames){
+            replaceAllLastNames(oldLast);
+        }
+        return this;
+    }
+    public PropertyName setName(String nPfx, String first, String sPfx, String last, String suff) {
 
         // 20070128 don't bother with calculating old if this is happening in init()
         boolean hasParent = getParent() != null;
@@ -445,94 +477,135 @@ public class PropertyName extends Property {
         // TUNING We expect that a lot of first and last names are the same
         // so we pay the upfront cost of reusing an intern cached String to
         // save overall memory
-        boolean rswc = GedcomOptions.getInstance().replaceSpaceSeparatorWithComma();
-        first = normalizeName(first, rswc);
-        last = normalizeName(last, false);
-        nPfx = normalizeName(nPfx, rswc);
-        sPfx = normalizeName(sPfx, rswc);
-        suff = normalizeName(suff, rswc);
-
-        // replace all last names?
-        if (replaceAllLastNames) {
-            // change value of all with value
-            Property[] others = getSameLastNames();
-            for (Property other : others) {
-                if (other instanceof PropertyName && other != this) {
-                    ((PropertyName) other).setName(last);
-                }
-            }
-        }
+        //boolean rswc = GedcomOptions.getInstance().replaceSpaceSeparatorWithComma();
+        // compute gedcom values from user display or input valus
+        first = gedcomFromValue(first);
+//        last = normalizeName(last);
+        nPfx = gedcomFromValue(nPfx);
+//        sPfx = gedcomFromValue(sPfx);
+//        suff = gedcomFromValue(suff);
 
         // remember us
-        remember(first, last, rswc);
+        remember(first, last);
 
-        // update GIVN|SURN - IF we have a parent
-        if (hasParent && !isBusy) {
-            isBusy = true;
-            boolean add = GedcomOptions.getInstance().getAddNameSubtags();
-            addNameSubProperty(add || !nPfx.isEmpty() || (first.matches(".*[^,] .*") && rswc), "GIVN", first);    // GIVN forced if name prefix not empty or FIRST contains a name not followed by a comma ","
-            addNameSubProperty(add || !sPfx.isEmpty() || last.contains(","), "SURN", last);             // SURN forced if surname prefix not empty and SURN contains commas
-            addNameSubProperty(add || !nPfx.isEmpty(), "NPFX", nPfx);                                   // name prefix forced if name prefix not empty
-            addNameSubProperty(add || !sPfx.isEmpty(), "SPFX", sPfx);                                   // surname prefix forced if surname prefix not empty
-            addNameSubProperty(add || !suff.isEmpty(), "NSFX", suff);                                   // suffix forced if suffix not empty
+        try {
+            boolean isMuted = mutePropertyChange();
+            // update GIVN|SURN - IF we have a parent
+            if (hasParent && !isMuted) {
+    //        if (!mutePropertyChange) {
+                addNameSubProperty(true, "GIVN", first);
+                addNameSubProperty(true, "SURN", last);
+                addNameSubProperty(true, "NSFX", suff);
+                addNameSubProperty(true, "SPFX", sPfx);
+                addNameSubProperty(true, "NPFX", nPfx);
+            }
+
+            // Make sure no Information is kept in base class
+            nameAsString = null;
+            lastName = last;
+            firstName = first;
+            suffix = suff;
+            // clear NAME tag value
+//            this.nameTagValue = null;
+
+            // tell about it
+            if (old != null && !isMuted) {
+                propagatePropertyChanged(this, old);
+            }
+        } finally {
+            // Done
+            unmutePropertyChange();
         }
+        fixNameValue();
+        return this;
+    }
 
-        // Make sure no Information is kept in base class
-        nameAsString = null;
-        lastName = last;
-        firstName = first;
-        suffix = suff;
-        // clear NAME tag value
-        this.nameTagValue = null;
-
-        // tell about it
-        if (old != null && !isBusy) {
-            propagatePropertyChanged(this, old);
+    // TODO: convert to a static function?
+    public PropertyName replaceAllLastNames(String from){
+        String to = getLastName();
+        // change value of all with value
+        Property[] others = getSameLastNames(from);
+        for (Property other : others) {
+            if (other instanceof PropertyName && other != this) {
+                ((PropertyName) other).setName(to);
+            }
         }
-
-        // Done
-        isBusy = false;
         return this;
     }
 
     /**
      * Add or update a subproperty to a name tag
      *
-     * @param force if true, add a property if no sub property is present.
-     *              Otherwise no property is added
+     * @param force if false, don't update an existing property but adds one if none exists.
+     * if true, update an existing property or create one.
+     * If a new property is created, the guessed attribute is set to true
      * @param tag   the TAG
-     * @param value property's value. If null no property is added and the previous is deleted
+     * @param value property's value. If empty no property is added and the previous is deleted
+     * @return the property created or null if this property has been deleted
      */
-    private void addNameSubProperty(boolean force, String tag, String value) {
+    private String addNameSubProperty(boolean force, String tag, String value) {
         Property sub = getProperty(tag);
         String oldValue = (sub != null) ? sub.getValue() : "";
 
-        if (value.isEmpty()) {
-            if (sub != null && !oldValue.isEmpty()) {
-                delProperty(sub);
-            }
-            return;
-        }
         if (sub == null) {
-            sub = addProperty(tag, value);
-        } else {
-            if (!value.equals(oldValue)) {
-                sub.setValue(value);
+            if (!value.isEmpty()){
+                sub = addProperty(tag, value);
+                sub.setGuessed(!force);
+//                sub.setReadOnly(true); //FIXME: why RO?
+                return sub.getValue();
+            }
+            return "";
+        } else if (force) {
+            if (value == null || value.isEmpty()) {
+                if (!oldValue.isEmpty()) {
+                    delProperty(sub);
+                    return "";
+                }
+            } else {
+                if (!value.equals(oldValue)) {
+                    sub.setValue(value);
+                }
+                sub.setGuessed(false);
             }
         }
-        sub.setGuessed(!force);
-        sub.setReadOnly(true);
+        return sub.getValue();
     }
 
-    private static String normalizeName(String namePiece, boolean replaceSpaceSeparatorWithComma) {
-        if (namePiece.isEmpty()) {
-            return "";
+    // si pas espace sans virgule, remplace  '*, *' par ' '
+    // sinon ajoute une virgule à la fin si pas de virgule
+    private static String gedcomToValue(String namePiece){
+        if (! namePiece.matches(".*[^, ] +[^, ].*")) {
+            return namePiece.replaceAll(" *, *", " ");
         }
-        String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
-        if (replaceSpaceSeparatorWithComma) {
-            result = result.replaceAll(" +", ",");
+        if (!namePiece.contains(",")){
+            namePiece = namePiece+",";
         }
-        return result.replaceAll(",", ", ");
+        return namePiece;
+    }
+    
+    /**
+     * Convert a namePiece from a user input to a gedcom compliant String value.
+     * <ul>
+     *   <li/>First replace all multiple spaces by one space
+     *   <li/>If there is at least one comma, 
+     *   <li/>Remove any space before a comma
+     *   <li/>If namePiece does not contain commas, replace all space by ', '
+     *   <li/>Remove trailing comma if any
+     * </ul>
+     * 
+     * @param namePiece from user input (eb NameBean)
+     * @return compliant gedcom value (with comma where applicable)
+     */
+    private String gedcomFromValue(String namePiece){
+        String np = namePiece;
+        // no comma, replace ' ' by ', '
+        if (np.indexOf(',') == -1){
+            np = np.replaceAll(" +",", ");
+        }
+        np = np.replaceAll(" *, *",", ");
+        // remove trailing comma
+        np = np.replaceAll(", *$", "");
+        return np;
     }
 
     /**
@@ -547,7 +620,7 @@ public class PropertyName extends Property {
         // continue
         super.afterAddNotify();
         // our change to remember the last name
-        remember(firstName, lastName, GedcomOptions.getInstance().replaceSpaceSeparatorWithComma());
+        remember(firstName, lastName);
         // done
     }
 
@@ -561,7 +634,7 @@ public class PropertyName extends Property {
     @Override
     void beforeDelNotify() {
         // forget value
-        remember("", "", false);
+        remember("", "");
         // continue
         super.beforeDelNotify();
         // done
@@ -583,55 +656,78 @@ public class PropertyName extends Property {
             return;
         }
 
-        // Only name specified ?
-        if (newValue.indexOf('/') < 0) {
-            setName(newValue, "", "");
-            return;
-        }
+        // Parse NAME string:
+        // [_firstName][/[last]/[suffix]]
+        String _firstName = "";
+        String _lastName ="";
+        String _suffix = "";
 
-        // Name AND First name
-        String f = newValue.substring(0, newValue.indexOf('/')).trim();
-        String l = newValue.substring(newValue.indexOf('/') + 1);
-
-        // ... wrong format (2 x '/'s !)
-        if (l.indexOf('/') == -1) {
-            setName("", "", "");
+        String[] parts = newValue.split("/",-1);
+        _firstName = parts[0];
+        if (parts.length == 3){
+            _lastName = parts[1];
+            _suffix=parts[2];
+        } else if (parts.length != 1){
+            // ... wrong format: must have 0 or 2 '/'
+            // clears values and go on
+            _firstName = "";
+            _lastName = "";
+            _suffix = "";
             nameAsString = newValue;
-            return;
+            //TODO: should we show a warning?
         }
 
-        // ... format ok
-        String s = l.substring(l.indexOf('/') + 1);
-        l = l.substring(0, l.indexOf('/'));
-
-        f = f.replaceAll(",", " ");// remove commas
-        f = f.replaceAll(" +", " ");// normalize
+//        _firstName = _firstName.replaceAll(",", " ");// remove commas
+//        _firstName = _firstName.replaceAll(" +", " ");// normalize
         // rewrite name TAG value (normalize)
-        newValue = computeNameValue("", f, "", l, s);
+//        newValue = computeNameValue("", f, "", l, s);
 
-        String npfx = getPropertyValue("NPFX");
-        f = stripPrefix(f, npfx);
+        _firstName = stripPrefix(_firstName, getNamePrefix());
 
-        String spfx = getPropertyValue("SPFX");
-        l = stripPrefix(l, spfx);
-
+        _lastName = stripPrefix(_lastName, getSurnamePrefix());
         // Format GIVN Tag (' ' char replaced by ', ')
-        if (GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()) {
-            f = f.replaceAll(" +", ", ");// Normalize
+//        _firstName = _firstName.replaceAll(" +", ", ");
+
+//        // Replace _firstName, last and suffix by tag values if present
+//        if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
+//            _lastName = gedcomToValue(getPropertyValue("SURN"));
+//        }
+//        if (getProperty("GIVN") != null && !getProperty("GIVN").isGuessed()) {
+//            _firstName = gedcomToValue(getPropertyValue("GIVN"));
+//        }
+//        if (getProperty("NSFX") != null && !getProperty("NSFX").isGuessed()) {
+//            _suffix = gedcomToValue(getPropertyValue("NSFX"));
+//        }
+        // keep
+//        setNameValue(getPropertyValue("NPFX"), _firstName, getPropertyValue("SPFX"), _lastName, _suffix);
+
+        // remember us
+        remember(_firstName, _lastName);
+        try {
+            boolean isMuted = mutePropertyChange();
+            _firstName = addNameSubProperty(false, "GIVN", gedcomFromValue(_firstName));
+            _lastName = addNameSubProperty(false, "SURN", _lastName);
+            _suffix = addNameSubProperty(false, "NSFX", _suffix);
+
+            // Make sure no Information is kept in base class
+            nameAsString = null;
+            lastName = _lastName;
+            firstName = _firstName;
+            suffix = _suffix;
+            // clear NAME tag value
+    //        this.nameTagValue = null;
+
+//            // tell about it
+//            if (old != null && !isMuted) {
+//                propagatePropertyChanged(this, old);
+//            }
+
+        } finally {
+            // Done
+            unmutePropertyChange();
         }
 
-        // Replace first, last and suffix by tag values if present
-        if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
-            l = getPropertyValue("SURN");
-        }
-        if (getProperty("GIVN") != null && !getProperty("GIVN").isGuessed()) {
-            f = getPropertyValue("GIVN");
-        }
-        if (getProperty("NSFX") != null && !getProperty("NSFX").isGuessed()) {
-            s = getPropertyValue("NSFX");
-        }
-        // keep
-        setName(getPropertyValue("NPFX"), f, getPropertyValue("SPFX"), l, s, false);
+
         nameTagValue = newValue;
 
         // done
@@ -657,9 +753,32 @@ public class PropertyName extends Property {
      * refresh name structure from name value and all subtags
      */
     private void refresh(Property property) {
-        String tag = property.getTag();
-        if (!isBusy) {
-            setName(getPropertyValue("NPFX"), getPropertyValue("GIVN"), getPropertyValue("SPFX"), getPropertyValue("SURN"), getPropertyValue("NSFX"), false);
+        // FIXME: nothing to do ATM. Will have to rethink about change propagation
+//        String tag = property.getTag();
+        try{
+            if (!mutePropertyChange()) {
+    //            fixNameValue();
+//                nameTagValue = computeNameValue(
+//                        getPropertyValue("NPFX"), 
+//                        getPropertyValue("GIVN"), 
+//                        getPropertyValue("SPFX"), 
+//                        getPropertyValue("SURN"), 
+//                        getPropertyValue("NSFX"));
+                for (String tag:new String[]{"NPFX", "GIVN", "SPFX", "SURN", "NSFX"} ){
+                    Property p = getProperty(tag);
+                    if (p!=null)
+                        p.setGuessed(false);
+                }
+                // FIXME: to be changed (gedcomfromvalue(gedcomtovalues(...))
+                setName(
+                        gedcomToValue(getPropertyValue("NPFX")), 
+                        gedcomToValue(getPropertyValue("GIVN")), 
+                        getPropertyValue("SPFX"), 
+                        getPropertyValue("SURN"), 
+                        getPropertyValue("NSFX"));
+            }
+        } finally{
+            unmutePropertyChange();
         }
     }
 
@@ -739,13 +858,22 @@ public class PropertyName extends Property {
      * Returns all PropertyNames that contain the same name
      */
     public Property[] getSameLastNames() {
-        return toArray(getGedcom().getReferenceSet(KEY_LASTNAME).getReferences(getLastName()));
+        return getSameLastNames(getLastName());
+    }
+    
+    /**
+     * Returns all PropertyNames that contain given lastname.
+     * @param last
+     * @return 
+     */
+    private Property[] getSameLastNames(String last) {
+        return toArray(getGedcom().getReferenceSet(KEY_LASTNAME).getReferences(last));
     }
 
     /**
      * Remember a last name
      */
-    private void remember(String newFirst, String newLast, boolean replaceSpaceSeparatorWithComma) {
+    private void remember(String newFirst, String newLast) {
         // got access to a reference set?
         Gedcom gedcom = getGedcom();
         if (gedcom == null) {
@@ -766,9 +894,9 @@ public class PropertyName extends Property {
         }
         if (newFirst.length() > 0) {
             String f = newFirst;
-            if (!replaceSpaceSeparatorWithComma) {
-                f = f.replace(",", " ").replaceAll(" +", " ");
-            }
+//            if (!replaceSpaceSeparatorWithComma) {
+//                f = f.replace(",", " ").replaceAll(" +", " ");
+//            }
             refSet.add(f, this);
         }
         // done

@@ -168,18 +168,30 @@ public class PropertyReader {
       int lineNoForChild = lines;
 
       // add sub property
-      Property child = addProperty(prop, tag, value, pos);
-
-      String prevValue = value;
-
+      // DAN 20180313: Property'svalue will be set 
+      // after child properties have been read (mainly for PropertyName
+      //Property child = addProperty(prop, tag, "", pos);
+        String prevValue = value;
+        String prevTag  = tag;
+        Property child;
+//        if (prop instanceof PropertyName){
+        if (prevTag.equalsIgnoreCase("NAME")){  // bricolage...
+//            value = "";
+            child = addProperty(prop, tag, "", pos);
+        } else {
+            child = addProperty(prop, tag, value, pos);            
+        }
+//        String prevValue = value;
+        
       // first recurse into child(ren)
       readProperties(child, level, 0);
 
       // set NameProperty again after children have been read
       //XXX:(try to  fix value%subtag inconstitencies) There is probably a better method
-      if (child instanceof PropertyName) {
-          child.setValue(prevValue);
-      }
+        //if (child instanceof PropertyName) {
+        if (prevTag.equalsIgnoreCase("NAME")){  // re bricolage...
+            child.setValue(prevValue);
+        }
         
       // 20060406 now link after children are setup - this makes a difference for
       // e.g. link() in case of ASSO that looks at RELA
@@ -205,7 +217,13 @@ public class PropertyReader {
     }
     
     try {
-      return prop.addProperty(tag, value, pos);
+        if (prop instanceof PropertyName){
+            Property p = prop.addProperty(tag, "", pos);
+            p.setValue(value);
+            return p;
+        } else {
+            return prop.addProperty(tag, value, pos);
+        }
     } catch (GedcomException e) {
       Property fallback = prop.addSimpleProperty(tag, value, pos);
       trackBadProperty(fallback, e.getMessage());

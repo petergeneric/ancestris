@@ -106,7 +106,7 @@
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
                                   <Component id="firstNameSuffixLabel" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace min="-2" max="-2" attributes="0"/>
-                                  <Component id="firstNameSuffixTextField" pref="98" max="32767" attributes="0"/>
+                                  <Component id="firstNameSuffixTextField" max="32767" attributes="0"/>
                               </Group>
                               <Component id="firstNameChoiceWidget" max="32767" attributes="0"/>
                           </Group>

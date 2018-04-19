@@ -414,17 +414,18 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * by a comma.
              *
              */
-            Property firstnamePrefix = mName.getProperty("NPFX");
-            firstNamePrefixTextField.setText(firstnamePrefix != null ? firstnamePrefix.getValue() : "");
+//            Property firstnamePrefix = mName.getProperty("NPFX");
+//            firstNamePrefixTextField.setText(firstnamePrefix != null ? firstnamePrefix.getValue() : "");
+            firstNamePrefixTextField.setText(mName.getNamePrefix());
             firstNamePrefixModified = false;
 
             /*
              * GIVN Given mName or earned mName. Different given names are
              * separated by a comma.
              */
-            Property givenName = mName.getProperty("GIVN");
+//            Property givenName = mName.getProperty("GIVN");
             firstNameChoiceWidget.setValues(PropertyName.getFirstNames(mRoot.getGedcom(), true));
-            firstNameChoiceWidget.setText(givenName != null ? givenName.getValue() : mName.getFirstName());
+            firstNameChoiceWidget.setText(mName.getFirstName());
             firstNameModified = false;
 
             /*
@@ -432,8 +433,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * and surname parts. Different mName suffix parts are separated by a
              * comma.
              */
-            Property firstNameSuffix = mName.getProperty("NSFX");
-            firstNameSuffixTextField.setText(firstNameSuffix != null ? firstNameSuffix.getValue() : "");
+            //Property firstNameSuffix = mName.getProperty("NSFX");
+            firstNameSuffixTextField.setText(mName.getSuffix());
             firstNameSuffixModified = false;
 
             /*
@@ -441,21 +442,21 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * surname articles are separated by a comma, for example in the
              * mName "de la Cruz", this value would be "de, la".
              */
-            Property familyNamePrefix = mName.getProperty("SPFX");
-            familyNamePrefixTextField.setText(familyNamePrefix != null ? familyNamePrefix.getValue() : "");
+//            Property familyNamePrefix = mName.getProperty("SPFX");
+            familyNamePrefixTextField.setText(mName.getSurnamePrefix());
             familyNamePrefixModified = false;
 
             /*
              * SURN Surname or family mName. Different surnames are separated by
              * a comma.
              */
-            Property familyName = mName.getProperty("SURN");
+//            Property familyName = mName.getProperty("SURN");
             familyNameChoiceWidget.setValues(PropertyName.getLastNames(mRoot.getGedcom(), true));
-            if (familyName != null) {
-                familyNameChoiceWidget.setText(familyName.getValue());
-            } else {
+//            if (familyName != null) {
+//                familyNameChoiceWidget.setText(familyName.getValue());
+//            } else {
                 familyNameChoiceWidget.setText(mName.getLastName());
-            }
+//            }
             familyNameModified = false;
 
             /*
@@ -466,7 +467,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
             nicknameTextField.setText(nickName != null ? nickName.getValue() : "");
             nicknameModified = false;
 
-            if (firstnamePrefix != null || firstNameSuffix != null || familyNamePrefix != null) {
+//            if (firstnamePrefix != null || firstNameSuffix != null || familyNamePrefix != null) {
+            if (false) {
                 jCheckBox1.setSelected(true);
                 firstNamePrefixLabel.setVisible(true);
                 firstNamePrefixTextField.setVisible(true);
@@ -555,83 +557,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 }
             }
 
-            /*
-             * NPFX Non indexing mName piece that appears preceding the
-             * given mName and surname parts. Different mName prefix parts
-             * are separated by a comma.
-             */
-            if (firstNamePrefixModified == true) {
-                Property firstnamePrefix = mName.getProperty("NPFX");
-                if (firstnamePrefix == null) {
-                    logger.log(Level.INFO, "Add property NPFX");
-
-                    mName.addProperty("NPFX", firstNamePrefixTextField.getText().trim());
-                } else {
-                    logger.log(Level.INFO, "Update property NPFX");
-                    firstnamePrefix.setValue(firstNamePrefixTextField.getText().trim());
-                }
-            }
-
-            /*
-             * GIVN Given mName or earned mName. Different given names are
-             * separated by a comma.
-             */
-            if (firstNameModified == true) {
-                Property givenName = mName.getProperty("GIVN");
-                if (givenName == null) {
-                    // Suppressed as an IndexOutOfBoundsException is thrown on undo
-                    // logger.log(Level.INFO, "Add property GIVN");
-                    // mName.addProperty("GIVN", firstNameTextField.getText().trim());
-                } else {
-                    logger.log(Level.INFO, "Update property GIVN");
-                    givenName.setValue(firstNameChoiceWidget.getText().trim());
-                }
-            }
-
-            if (firstNameSuffixModified == true) {
-                Property firstNameSuffix = mName.getProperty("NSFX");
-                if (firstNameSuffix == null) {
-                    logger.log(Level.INFO, "Add property NSFX");
-                    mName.addProperty("NSFX", firstNameSuffixTextField.getText().trim());
-                } else {
-                    logger.log(Level.INFO, "Update property NSFX");
-                    firstNameSuffix.setValue(firstNameSuffixTextField.getText().trim());
-                }
-            }
-
-            /*
-             * SPFX surname prefix or article used in a family mName.
-             * Different surname articles are separated by a comma, for
-             * example in the mName "de la Cruz", this value would be
-             * "de, la".
-             */
-            if (familyNamePrefixModified == true) {
-                Property familyNamePrefix = mName.getProperty("SPFX");
-                if (familyNamePrefix == null) {
-                    logger.log(Level.INFO, "Add property SPFX");
-                    mName.addProperty("SPFX", familyNamePrefixTextField.getText().trim());
-                } else {
-                    logger.log(Level.INFO, "Update property SPFX");
-                    familyNamePrefix.setValue(familyNamePrefixTextField.getText().trim());
-                }
-            }
-
-            /*
-             * SURN Surname or family mName. Different surnames are
-             * separated by a comma.
-             */
-            if (familyNameModified == true) {
-                Property familyName = mName.getProperty("SURN");
-                if (familyName == null) {
-                    // Suppressed as an IndexOutOfBoundsException is thrown on undo
-                    // logger.log(Level.INFO, "Add property SURN");
-                    // mName.addProperty("SURN", familyNameTextField.getText().trim());
-                } else {
-                    logger.log(Level.INFO, "Update property SURN");
-                    familyName.setValue(familyNameChoiceWidget.getText().trim());
-                }
-            }
-
             if (nicknameModified == true) {
                 Property nickname = mName.getProperty("NICK");
                 if (nickname == null) {
@@ -648,8 +573,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                     firstNameChoiceWidget.getText().trim(),
                     familyNamePrefixTextField.getText().trim(),
                     familyNameChoiceWidget.getText().trim(),
-                    firstNameSuffixTextField.getText().trim(),
-                    false);
+                    firstNameSuffixTextField.getText().trim());
             logger.log(Level.INFO, "... finished");
         }
         // clear changed

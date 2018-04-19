@@ -175,8 +175,12 @@ public class NameBean extends PropertyBean {
     }
 
     // ... store changed value
-    p.setName( nPfx, first, sPfx, last, suff, cAll.isSelected());
+    String oldLast = p.getLastName();   // Save last name for replaceAll if requested
+    p.setName( nPfx, first, sPfx, last, suff);
     p.setNick( nick );
+    if (cAll.isSelected()){
+        p.replaceAllLastNames(oldLast);
+    }
     
     // start fresh
     setPropertyImpl(p);

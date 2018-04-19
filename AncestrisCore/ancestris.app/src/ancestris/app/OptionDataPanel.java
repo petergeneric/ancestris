@@ -60,8 +60,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
         mainPanel = new javax.swing.JPanel();
         namesPanel = new javax.swing.JPanel();
         cbNamesInUppercase = new javax.swing.JCheckBox();
-        cbAddNameSubtags = new javax.swing.JCheckBox();
-        cbReplaceSpaceWithComma = new javax.swing.JCheckBox();
         cbSameSpouseName = new javax.swing.JCheckBox();
         cbGivenName = new javax.swing.JCheckBox();
         jtGivenTag = new javax.swing.JTextField();
@@ -93,12 +91,6 @@ final class OptionDataPanel extends javax.swing.JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(cbNamesInUppercase, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbNamesInUppercase.text")); // NOI18N
         cbNamesInUppercase.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbNamesInUppercase.toolTipText")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(cbAddNameSubtags, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.text")); // NOI18N
-        cbAddNameSubtags.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbAddNameSubtags.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(cbReplaceSpaceWithComma, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReplaceSpaceWithComma.text")); // NOI18N
-        cbReplaceSpaceWithComma.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbReplaceSpaceWithComma.toolTipText")); // NOI18N
-
         org.openide.awt.Mnemonics.setLocalizedText(cbSameSpouseName, org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.text")); // NOI18N
         cbSameSpouseName.setToolTipText(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.cbSameSpouseName.toolTipText")); // NOI18N
 
@@ -121,17 +113,12 @@ final class OptionDataPanel extends javax.swing.JPanel {
             .addGroup(namesPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cbNamesInUppercase)
+                    .addComponent(cbSameSpouseName)
                     .addGroup(namesPanelLayout.createSequentialGroup()
                         .addComponent(cbGivenName)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtGivenTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(namesPanelLayout.createSequentialGroup()
-                        .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cbNamesInUppercase)
-                            .addComponent(cbAddNameSubtags)
-                            .addComponent(cbReplaceSpaceWithComma)
-                            .addComponent(cbSameSpouseName))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addComponent(jtGivenTag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         namesPanelLayout.setVerticalGroup(
@@ -139,15 +126,12 @@ final class OptionDataPanel extends javax.swing.JPanel {
             .addGroup(namesPanelLayout.createSequentialGroup()
                 .addComponent(cbNamesInUppercase)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbAddNameSubtags)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbReplaceSpaceWithComma)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cbSameSpouseName)
-                .addGap(2, 2, 2)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(namesPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cbGivenName)
-                    .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(jtGivenTag, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         IDPanel.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEtchedBorder(), org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.IDPanel.border.title"), javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 1, 12))); // NOI18N
@@ -170,7 +154,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                 .addGroup(IDPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(IDPanelLayout.createSequentialGroup()
                         .addComponent(cbReuseIDs)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGap(0, 17, Short.MAX_VALUE))
                     .addGroup(IDPanelLayout.createSequentialGroup()
                         .addComponent(lDefaultIDLength)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -204,7 +188,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
             .addGroup(placePanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(placePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cbUseSpace, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(cbUseSpace, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
                     .addComponent(cbSplitJuridictions, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         placePanelLayout.setVerticalGroup(
@@ -309,7 +293,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
         editingPanelLayout.setVerticalGroup(
             editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(editingPanelLayout.createSequentialGroup()
-                .addContainerGap()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(editingPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(lDefaultEditor)
                     .addComponent(cboxDefaultEditor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -320,8 +304,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                     .addComponent(nbCancellations, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lCancellations))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cbCreateSpouse)
-                .addGap(0, 13, Short.MAX_VALUE))
+                .addComponent(cbCreateSpouse))
         );
 
         javax.swing.GroupLayout mainPanelLayout = new javax.swing.GroupLayout(mainPanel);
@@ -330,17 +313,17 @@ final class OptionDataPanel extends javax.swing.JPanel {
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(editingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(namesPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(placePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(IDPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(IDPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addContainerGap())
         );
         mainPanelLayout.setVerticalGroup(
             mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -357,7 +340,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
                         .addComponent(encodingPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(editingPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(258, 258, 258))
+                .addGap(271, 271, 271))
         );
 
         namesPanel.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(OptionDataPanel.class, "OptionDataPanel.namesPanel.AccessibleContext.accessibleName")); // NOI18N
@@ -371,36 +354,32 @@ final class OptionDataPanel extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 638, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 655, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 411, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void cbGivenNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbGivenNameActionPerformed
-        jtGivenTag.setEnabled(cbGivenName.isSelected());
-    }//GEN-LAST:event_cbGivenNameActionPerformed
-
-    private void cboxDefaultEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboxDefaultEditorActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboxDefaultEditorActionPerformed
 
     private void cbAutoCommitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbAutoCommitActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cbAutoCommitActionPerformed
 
+    private void cboxDefaultEditorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboxDefaultEditorActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboxDefaultEditorActionPerformed
+
+    private void cbGivenNameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cbGivenNameActionPerformed
+        jtGivenTag.setEnabled(cbGivenName.isSelected());
+    }//GEN-LAST:event_cbGivenNameActionPerformed
+
     void load() {
         // Names
         cbNamesInUppercase.setSelected(gedcomOptions.isUpperCaseNames());
-        cbAddNameSubtags.setSelected(gedcomOptions.getAddNameSubtags());
         cbGivenName.setSelected(!gedcomOptions.getGivenTag().isEmpty());
         jtGivenTag.setText(gedcomOptions.getGivenTag());
         cbGivenNameActionPerformed(new java.awt.event.ActionEvent(this,0,null));
-        cbReplaceSpaceWithComma.setSelected(gedcomOptions.replaceSpaceSeparatorWithComma());
         setNamesSpouse(gedcomPrefs.get("setWifeLastname", ""));
 
         // ID Numbers
@@ -425,9 +404,7 @@ final class OptionDataPanel extends javax.swing.JPanel {
     void store() {
         // Names
         gedcomOptions.setUpperCaseNames(cbNamesInUppercase.isSelected());
-        gedcomOptions.setAddNameSubtags(cbAddNameSubtags.isSelected());
         gedcomOptions.setGivenTag(cbGivenName.isSelected()?jtGivenTag.getText().trim():"");
-        gedcomOptions.setReplaceSpaceSeparatorWithComma(cbReplaceSpaceWithComma.isSelected());
         gedcomPrefs.put("setWifeLastname", getNamesSpouse());
 
         // ID Numbers
@@ -460,12 +437,10 @@ final class OptionDataPanel extends javax.swing.JPanel {
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel IDPanel;
-    private javax.swing.JCheckBox cbAddNameSubtags;
     private javax.swing.JCheckBox cbAutoCommit;
     private javax.swing.JCheckBox cbCreateSpouse;
     private javax.swing.JCheckBox cbGivenName;
     private javax.swing.JCheckBox cbNamesInUppercase;
-    private javax.swing.JCheckBox cbReplaceSpaceWithComma;
     private javax.swing.JCheckBox cbReuseIDs;
     private javax.swing.JCheckBox cbSameSpouseName;
     private javax.swing.JCheckBox cbSaveEncoding;
