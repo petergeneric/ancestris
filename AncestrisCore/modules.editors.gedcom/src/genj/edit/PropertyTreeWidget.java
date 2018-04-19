@@ -757,7 +757,12 @@ public class PropertyTreeWidget extends DnDTree {
       if (prop.isSecret()) {
         result.append("*****");
       } else {
-        String val = prop.getDisplayValue();
+        String val;
+        if (prop.isValid() && ! prop.hasWarning()){
+            val = prop.getDisplayValue();
+        } else {
+            val = prop.getValue();
+        }
         int nl = val.indexOf('\n');
         if (nl>=0) val = val.substring(0, nl) + "...";
         result.append(val);
