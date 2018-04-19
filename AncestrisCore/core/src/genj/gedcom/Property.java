@@ -47,7 +47,7 @@ public abstract class Property implements Comparable<Property> {
     // 20070128 made this a lazy list so we're not wasting the space for all those leaf nodes out there
     private List<Property> children = null;
     /** images */
-    protected ImageIcon image, imageErr;
+    protected ImageIcon image, imageErr, imageWarn;
     /** whether we're transient or not */
     protected boolean isTransient = false;
     /** whether we're private or not */
@@ -529,19 +529,26 @@ public abstract class Property implements Comparable<Property> {
     public ImageIcon getImage(boolean checkValid) {
 
         // valid or not ?
-        if (!checkValid || isValid()) {
+        if (!checkValid || (isValid() && ! hasWarning())) {
             if (image == null) {
                 image = getGedcom() != null ? getMetaProperty().getImage() : MetaProperty.IMG_CUSTOM;
             }
             return image;
         }
 
-        // not valid
-        if (imageErr == null) {
-            imageErr = getMetaProperty().getImage("err");
-        }
-
-        return imageErr;
+        if (! isValid()){
+            // not valid
+            if (imageErr == null) {
+                imageErr = getMetaProperty().getImage("err");
+            }
+            return imageErr;
+        } else {
+            // has warnings
+            if (imageWarn == null) {
+                imageWarn = getMetaProperty().getImage("warn");
+            }
+            return imageWarn;
+        }            
     }
 
     /**
@@ -1132,12 +1139,21 @@ public abstract class Property implements Comparable<Property> {
      * Sets this property's value as string.
      */
     public abstract void setValue(String value);
-
+    
     /**
      * Returns <b>true</b> if this property is valid
      */
     public boolean isValid() {
         return true;
+    }
+    
+    /**
+     * Returns <b>true</b> if this property data is inconsistent. 
+     * Used for instance in {@link PropertyName} to mark NAME Tags
+     * where its value does not match to subtag data.
+     */
+    public boolean hasWarning(){
+        return false;
     }
 
     /**
@@ -1218,10 +1234,6 @@ public abstract class Property implements Comparable<Property> {
 
     public void setGuessed(boolean value) {
         isGuessed = value;
-        // a Guessed property is read only
-        if (value) {
-            setReadOnly(true);
-        }
     }
 
     private boolean isReadOnly = false;
@@ -1417,6 +1429,7 @@ public abstract class Property implements Comparable<Property> {
      *
      * @return formatted string if at least one marker matched, "" otherwise
      */
+    //TODO: extend format syntax. eg {...#tag$x...}
     public String format(String format, PrivacyPolicy policy) {
 
         if (format == null) {
