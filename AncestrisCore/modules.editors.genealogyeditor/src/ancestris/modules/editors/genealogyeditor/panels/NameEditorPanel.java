@@ -414,8 +414,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * by a comma.
              *
              */
-//            Property firstnamePrefix = mName.getProperty("NPFX");
-//            firstNamePrefixTextField.setText(firstnamePrefix != null ? firstnamePrefix.getValue() : "");
             firstNamePrefixTextField.setText(mName.getNamePrefix());
             firstNamePrefixModified = false;
 
@@ -423,7 +421,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * GIVN Given mName or earned mName. Different given names are
              * separated by a comma.
              */
-//            Property givenName = mName.getProperty("GIVN");
             firstNameChoiceWidget.setValues(PropertyName.getFirstNames(mRoot.getGedcom(), true));
             firstNameChoiceWidget.setText(mName.getFirstName());
             firstNameModified = false;
@@ -433,7 +430,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * and surname parts. Different mName suffix parts are separated by a
              * comma.
              */
-            //Property firstNameSuffix = mName.getProperty("NSFX");
             firstNameSuffixTextField.setText(mName.getSuffix());
             firstNameSuffixModified = false;
 
@@ -442,7 +438,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * surname articles are separated by a comma, for example in the
              * mName "de la Cruz", this value would be "de, la".
              */
-//            Property familyNamePrefix = mName.getProperty("SPFX");
             familyNamePrefixTextField.setText(mName.getSurnamePrefix());
             familyNamePrefixModified = false;
 
@@ -450,13 +445,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * SURN Surname or family mName. Different surnames are separated by
              * a comma.
              */
-//            Property familyName = mName.getProperty("SURN");
             familyNameChoiceWidget.setValues(PropertyName.getLastNames(mRoot.getGedcom(), true));
-//            if (familyName != null) {
-//                familyNameChoiceWidget.setText(familyName.getValue());
-//            } else {
-                familyNameChoiceWidget.setText(mName.getLastName());
-//            }
+            familyNameChoiceWidget.setText(mName.getLastName());
             familyNameModified = false;
 
             /*
@@ -467,8 +457,9 @@ public class NameEditorPanel extends javax.swing.JPanel {
             nicknameTextField.setText(nickName != null ? nickName.getValue() : "");
             nicknameModified = false;
 
-//            if (firstnamePrefix != null || firstNameSuffix != null || familyNamePrefix != null) {
-            if (false) {
+            if ((!firstNamePrefixTextField.getText().isEmpty())
+                    || (!familyNamePrefixTextField.getText().isEmpty())
+                    || (!firstNameSuffixTextField.getText().isEmpty())) {
                 jCheckBox1.setSelected(true);
                 firstNamePrefixLabel.setVisible(true);
                 firstNamePrefixTextField.setVisible(true);
