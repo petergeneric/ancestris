@@ -491,9 +491,10 @@ public class MergeRecord {
             return "";
         }
         String result = namePiece.trim().replaceAll(" +", " ").replaceAll(" *, *", ",");
-        if (GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()) {
-            result = result.replaceAll(" +", ",");
-        }
+        // FIXME: formatFirstName should certainly be tuned as PropertyName API has changed
+//        if (GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()) {
+//            result = result.replaceAll(" +", ",");
+//        }
         return result.replaceAll(",", ", ");
     }
 
