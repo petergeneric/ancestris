@@ -122,7 +122,7 @@ public class AncestrisTopComponent extends TopComponent
 
         // following line tells the top component which lookup should be associated with it
         associateLookup(ExplorerUtils.createLookup(manager, map));
-
+        
     }
     
     
@@ -240,12 +240,14 @@ public class AncestrisTopComponent extends TopComponent
 
         LOG.log(Level.FINER, "setContext({0},{1})", new Object[]{context});
 
+        /**
         if (this.lookup == null) {
             try {
                 lookup = GedcomDirectory.getDefault().getDataObject(context).getLookup();
             } catch (ContextNotFoundException ex) {
             }
         }
+        */
         // remember
         this.currentContext = context;
         if (context.getGedcom() != null) {

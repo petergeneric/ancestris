@@ -306,16 +306,16 @@ public class TableView extends View {
             return;
         }
 
-        // save settings
-        currentMode.save();
-
-        // clear?
-        PropertyTableModel old = propertyTable.getModel();
-        if (context.getGedcom() == null) {
+        // Do not do anything if sticky is on
+        if (sticky.isSelected()) {
             return;
         }
 
+        // Save settings
+        currentMode.save();
+
         // starting a new gedcom?
+        PropertyTableModel old = propertyTable.getModel();
         if (old == null) {
             // refresh modes
             for (Mode mode : modes.values()) {
