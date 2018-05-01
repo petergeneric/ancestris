@@ -269,6 +269,8 @@ public class PropertyReader {
                       int i = nextLine.indexOf(' ');
                       if (i != -1) {
                           bit = nextLine.substring(0, i);
+                      } else {
+                          bit = "";
                       }
                   }
                   if (bit.length() == 1 && bit.matches("[0-9]")) {
