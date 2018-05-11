@@ -32,6 +32,7 @@ import java.awt.Insets;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -132,9 +133,9 @@ public class TableViewSettings extends JPanel {
 
         gh.add(new JLabel(resources.getString("info.order")), 0, 2, 4, 1, GridBagHelper.FILL_HORIZONTAL);
         gh.add(pathList, 0, 3, 4, 1, GridBagHelper.GROWFILL_BOTH);
-        gh.add(new JButton(up), 0, 4, 1, 1, GridBagHelper.FILL_HORIZONTAL);
-        gh.add(new JButton(dn), 1, 4, 1, 1, GridBagHelper.FILL_HORIZONTAL);
-        gh.add(new JButton(del), 2, 4, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+        gh.add(new JButton((Action)up), 0, 4, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+        gh.add(new JButton((Action)dn), 1, 4, 1, 1, GridBagHelper.FILL_HORIZONTAL);
+        gh.add(new JButton((Action)del), 2, 4, 1, 1, GridBagHelper.FILL_HORIZONTAL);
 
         final JCheckBox cbTableFollowEntity = new JCheckBox(
                 resources.getString("cbTableFollowEntity.text"),

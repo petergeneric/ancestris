@@ -214,11 +214,11 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
         DialogDescriptor gedcomMergeResultDescriptor = new DialogDescriptor(
                 gedcomMergeResultPanel,
                 org.openide.util.NbBundle.getMessage(getClass(), "merge.result.dialog"),
-                true,
+                true, 
                 new Object[]{openMergeGedcomButton, NotifyDescriptor.CANCEL_OPTION},
                 DialogDescriptor.OK_OPTION,
                 DialogDescriptor.DEFAULT_ALIGN,
-                null,
+                null, 
                 null);
         Dialog gedcomMergeResultDialog = DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor);
         gedcomMergeResultDialog.setVisible(true);

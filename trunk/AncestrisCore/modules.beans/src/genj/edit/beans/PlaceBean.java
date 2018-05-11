@@ -33,6 +33,7 @@ import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
@@ -186,7 +187,7 @@ public class PlaceBean extends PropertyBean {
         // FIXME: We don't show edit button ATM
         final AncestrisEditor editor = AncestrisEditor.findEditor(prop);
         if (false && editor != null) {
-            gh.add(new JButton(
+            gh.add(new JButton((Action)
                     new AbstractAncestrisAction() {
                         @Override
                         public void actionPerformed(ActionEvent e) {

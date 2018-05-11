@@ -18,7 +18,6 @@ import static ancestris.gedcom.PropertyFinder.Constants.*;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import genj.gedcom.Property;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -62,6 +62,7 @@ import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
 import java.awt.Component;
 import java.util.Collections;
+import javax.swing.Action;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -374,7 +375,7 @@ public class TableView extends View {
         for (int i = 0, j = 1; i < Gedcom.ENTITIES.length; i++) {
             String tag = Gedcom.ENTITIES[i];
             Mode mode = getMode(tag);
-            JToggleButton b = new JToggleButton(mode);
+            JToggleButton b = new JToggleButton((Action)mode);
             toolbar.add(b);
             group.add(b);
             if (currentMode == mode) {
@@ -389,7 +390,7 @@ public class TableView extends View {
 
         // sticky
         toolbar.add(new Download());
-        toolbar.add(new JToggleButton(sticky));
+        toolbar.add(new JToggleButton((Action)sticky));
         toolbar.add(new Settings());
 
         toolbar.setFloatable(false);
