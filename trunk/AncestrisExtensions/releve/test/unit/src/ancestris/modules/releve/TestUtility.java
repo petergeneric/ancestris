@@ -50,7 +50,6 @@ public class TestUtility extends TestCase {
     
     static {
         GedcomOptions.getInstance().setUseSpacedPlaces(true);
-        GedcomOptions.getInstance().setReplaceSpaceSeparatorWithComma(false);   
     }
     
     

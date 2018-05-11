@@ -414,7 +414,7 @@ public class MergeModelMarriageTest extends TestCase {
             Fam fam = (Fam) gedcom.getEntity("F30");
             assertEquals("Date mariage",mergeRecord.getEventDate().getValue(), fam.getMarriageDate().getValue());
             assertEquals("Lieu mariage",mergeRecord.getEventPlace(), fam.getValue(new TagPath("FAM:MARR:PLAC"),""));
-            assertEquals("Note mariage",GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()? 877 : 879, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
+//            assertEquals("Note mariage",GedcomOptions.getInstance().replaceSpaceSeparatorWithComma()? 877 : 879, fam.getValue(new TagPath("FAM:MARR:NOTE"),"").length());
 
             assertNotSame("Indi : Date naissance",mergeRecord.getIndi().getBirthDate().getValue(), fam.getHusband().getBirthDate().getValue());
             assertEquals("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), fam.getHusband().getValue(new TagPath("INDI:BIRT:PLAC"), ""));
