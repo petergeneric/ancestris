@@ -5,12 +5,12 @@
 package ancestris.modules.calculatrice;
 
 import java.util.logging.Logger;
+import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;
+import org.openide.windows.Mode;
 import org.openide.windows.TopComponent;
 import org.openide.windows.WindowManager;
-import org.openide.util.ImageUtilities;
-import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.windows.Mode;
 
 /**
  * Top component which displays something.

@@ -28,6 +28,7 @@ import genj.util.swing.NestedBlockLayout;
 
 import java.awt.event.ActionEvent;
 import java.util.Arrays;
+import javax.swing.Action;
 
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -63,7 +64,7 @@ public class AgeBean extends PropertyBean {
     add(new JLabel(TEMPLATE));
     
     update =  new ActionUpdate();
-    add(new JButton(update));
+    add(new JButton((Action)update));
     
   }
   

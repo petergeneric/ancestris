@@ -308,7 +308,7 @@ import org.openide.windows.WindowManager;
             JToolBar header = new JToolBar();
             header.setFloatable(false);
             if (prop instanceof PropertyXRef) {
-                JButton follow = new JButton(new Follow((PropertyXRef) prop));
+                JButton follow = new JButton((Action)new Follow((PropertyXRef) prop));
                 header.add(follow);
             } else {
                 JLabel label = new JLabel(Gedcom.getName(prop.getTag()), prop.getImage(false), SwingConstants.LEFT);
