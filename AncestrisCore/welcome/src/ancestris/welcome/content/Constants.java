@@ -74,8 +74,8 @@ public interface Constants {
     static final Font SECTION_HEADER_FONT = new Font( null, Font.BOLD, FONT_SIZE+3 ); //NOI18N
     static final Font GET_STARTED_FONT =  new Font( null, Font.PLAIN, FONT_SIZE+1 ) ; //NOI18N
 
-    static final String ARVERNES_LOGO_IMAGE = "ancestris/welcome/resources/ancestris_icon48.png"; // NOI18N
-    static final String JAVA_LOGO_IMAGE = "ancestris/welcome/resources/java_logo.png"; // NOI18N
+    static final String ANCESTRIS_ICON_IMAGE = "ancestris/welcome/resources/ancestris_icon48.png"; // NOI18N
+    static final String ANCESTRIS_LOGO_IMAGE = "ancestris/welcome/resources/ancestris_logo_small.png"; // NOI18N
 
     static final String IMAGE_TOPBAR_CENTER = "ancestris/welcome/resources/topbar_center"; // NOI18N
     static final String IMAGE_TOPBAR_LEFT = "ancestris/welcome/resources/topbar_left.png"; // NOI18N

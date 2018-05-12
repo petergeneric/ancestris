@@ -66,14 +66,14 @@ public class Logo extends JPanel implements Constants, MouseListener {
 
     private String url;
 
-    public static Logo createArvernesLogo() {
-        return new Logo( ARVERNES_LOGO_IMAGE, BundleSupport.getURL( "ArvernesLogo" ),  // NOI18N
-                BundleSupport.getLabel( "ArvernesLogo_tip" )); 
+    public static Logo createAncestrisLogo() {
+        return new Logo( ANCESTRIS_LOGO_IMAGE, BundleSupport.getURL( "AncestrisLogo" ),  // NOI18N
+                BundleSupport.getLabel( "AncestrisLogo_tip" )); 
     }
 
-    public static Logo createJavaLogo() {
-        return new Logo( JAVA_LOGO_IMAGE, BundleSupport.getURL( "JavaLogo" ),  // NOI18N
-                BundleSupport.getLabel( "JavaLogo_tip" ) ); 
+    public static Logo createAncestrisIcon() {
+        return new Logo( ANCESTRIS_ICON_IMAGE, BundleSupport.getURL( "AncestrisIcon" ),  // NOI18N
+                BundleSupport.getLabel( "AncestrisIcon_tip" ) ); 
     }
 
     /** Creates a new instance of RecentProjects */
