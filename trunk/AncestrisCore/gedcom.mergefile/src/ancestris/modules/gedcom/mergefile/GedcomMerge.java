@@ -28,8 +28,7 @@ import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Cancellable;
-import org.openide.util.RequestProcessor;
+import org.openide.util.*;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.WindowManager;
 
@@ -218,7 +217,7 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
                 new Object[]{openMergeGedcomButton, NotifyDescriptor.CANCEL_OPTION},
                 DialogDescriptor.OK_OPTION,
                 DialogDescriptor.DEFAULT_ALIGN,
-                null, 
+                (HelpCtx) null, 
                 null);
         Dialog gedcomMergeResultDialog = DialogDisplayer.getDefault().createDialog(gedcomMergeResultDescriptor);
         gedcomMergeResultDialog.setVisible(true);
