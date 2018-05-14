@@ -13,7 +13,6 @@ package ancestris.app;
 
 import ancestris.api.core.Version;
 import ancestris.core.pluginservice.AncestrisPlugin;
-import ancestris.mac.MacMenu;
 import genj.option.OptionProvider;
 import genj.util.EnvironmentChecker;
 import genj.util.Registry;
@@ -159,16 +158,18 @@ public class App {
                 // Startup Information
                 EnvironmentChecker.log();
 
-                // Patch up Ancestris menu for Mac if applicable
-                LOG.info("Controlling OS...");
-                if (EnvironmentChecker.isMac()) {
-                    LOG.info("Setting up MacOs adjustments");
-                    if (EnvironmentChecker.isJava18()) {
-                        MacMenu macMenu = new MacMenu(LOG);
-                        macMenu.setup();
-                    }
-                }
-                
+//                // Patch up Ancestris menu for Mac if applicable
+//                // FL : 2018-05-08 : do not use anymore : has no impact on look and feel, system menu or application name.
+//                // SSince NB 8.2, creates a bug at launch.
+//                LOG.info("Controlling OS...");
+//                if (EnvironmentChecker.isMac()) {
+//                    LOG.info("Setting up MacOs adjustments");
+//                    if (EnvironmentChecker.isJava18()) {
+//                        MacMenu macMenu = new MacMenu(LOG);
+//                        macMenu.setup();
+//                    }
+//                }
+//                
 
                 // Check VM version
                 //TODO: demander une version >1.6 dans NB
