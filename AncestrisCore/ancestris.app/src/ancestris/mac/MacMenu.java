@@ -17,10 +17,8 @@ package ancestris.mac;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
 
-import com.apple.eawt.Application;
-import com.apple.eawt.ApplicationAdapter;
-import com.apple.eawt.ApplicationEvent;
 import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  * By default, menu appears as:
@@ -70,37 +68,43 @@ public class MacMenu {
             
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             
-            // Create an instance of the Mac Application class
-            Application macApplication = Application.getApplication();
-
-            
-            // Enable/Disable items
-            macApplication.setEnabledAboutMenu(true); // This works
-            macApplication.setEnabledPreferencesMenu(true); // This works
-            macApplication.removeAboutMenuItem();  // This works
-            macApplication.removePreferencesMenuItem(); //test
-
-            // Handles Quit and About
-            macApplication.addApplicationListener(new ApplicationAdapter() {
-                @Override
-                public void handleQuit(ApplicationEvent event) {
-//                    JOptionPane.showMessageDialog(null,
-//                            "prefs Ancestris 1",
-//                            "prefs Ancestris 2",
-//                            JOptionPane.INFORMATION_MESSAGE);                
-                }
-                @Override
-                public void handleAbout(ApplicationEvent event) {
-//                    JOptionPane.showMessageDialog(null,
-//                            "about Ancestris 1",
-//                            "about Ancestris 2",
-//                            JOptionPane.INFORMATION_MESSAGE);
-                }
-            });
+//            // Create an instance of the Mac Application class
+//            Application macApplication = Application.getApplication();
+//
+//            
+//            // Enable/Disable items
+//            macApplication.setEnabledAboutMenu(true); // This works
+//            macApplication.setEnabledPreferencesMenu(true); // This works
+//            macApplication.removeAboutMenuItem();  // This works
+//            macApplication.removePreferencesMenuItem(); //test
+//
+//            // Handles Quit and About
+//            macApplication.addApplicationListener(new ApplicationAdapter() {
+//                @Override
+//                public void handleQuit(ApplicationEvent event) {
+////                    JOptionPane.showMessageDialog(null,
+////                            "prefs Ancestris 1",
+////                            "prefs Ancestris 2",
+////                            JOptionPane.INFORMATION_MESSAGE);                
+//                }
+//                @Override
+//                public void handleAbout(ApplicationEvent event) {
+////                    JOptionPane.showMessageDialog(null,
+////                            "about Ancestris 1",
+////                            "about Ancestris 2",
+////                            JOptionPane.INFORMATION_MESSAGE);
+//                }
+//            });
                 
             
             
-        } catch (Exception ex) {
+        } catch (ClassNotFoundException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (IllegalAccessException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (InstantiationException ex) {
+            Exceptions.printStackTrace(ex);
+        } catch (UnsupportedLookAndFeelException ex) {
             Exceptions.printStackTrace(ex);
         } catch (Throwable ex) {
             Exceptions.printStackTrace(ex);
