@@ -21,7 +21,6 @@ import javax.swing.JList;
 import javax.swing.JSpinner;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListDataEvent;
@@ -101,14 +100,6 @@ public class TreeViewSettings extends javax.swing.JPanel {
             colors.addColor(key, RESOURCES.getString("color." + key), view.getColors().get(key));
         }
         colorsPanel.add(colors);
-
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                busy = true;
-                fontChooser.setSelectedFont(view.getContentFont()); // this could take a while, so swing thread
-                busy = false;
-            }
-        });
 
         bendCheckBox.setSelected(view.getModel().isBendArcs());
         marrsymbolsCheckBox.setSelected(view.getModel().isMarrSymbols());
