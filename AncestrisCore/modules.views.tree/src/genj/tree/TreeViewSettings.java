@@ -91,16 +91,26 @@ public class TreeViewSettings extends javax.swing.JPanel {
         jcAction.setSelectedItem(TreeView.getOnAction());
         spingen.setValue((Integer) view.getModel().getMaxGenerations());
         cbShowPopup.setSelected(TreeView.showPopup());
+
         // Style
         stylesList.setCellRenderer(new ListEntryCellRenderer());
         stylesList.setSelectedValue(view.getStyle(), true);
+
+        fontChooser.setCallBack(new Runnable() {
+            @Override
+            public void run() {
+                busy = true;
+                fontChooser.setSelectedFont(view.getStyle().font);
+                busy = false;
+            }
+        });
 
         colors = new ColorsWidget();
         for (String key : TreeStyleManager.ORDERCOLORS) {
             colors.addColor(key, RESOURCES.getString("color." + key), view.getColors().get(key));
         }
         colorsPanel.add(colors);
-
+        
         bendCheckBox.setSelected(view.getModel().isBendArcs());
         marrsymbolsCheckBox.setSelected(view.getModel().isMarrSymbols());
         antialiasingCheckBox.setSelected(view.isAntialising());
