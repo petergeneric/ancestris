@@ -192,7 +192,11 @@ public class CreateParent extends CreateRelationship {
         } else { // need new family
 
             // lastname will match that of child
-            lastname = child.getLastName();
+            if (sex == PropertySex.MALE || GedcomOptions.getInstance().isSetWifeLastname()) {
+                lastname = child.getLastName();
+            } else {
+                lastname = "";
+            }
 
             // create new family with child
             family = (Fam) ged.createEntity(Gedcom.FAM);
