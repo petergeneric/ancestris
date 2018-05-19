@@ -97,7 +97,7 @@ public class TitleActionPanel extends javax.swing.JPanel {
         propertyShortDescription = new javax.swing.JLabel();
 
         actionsMenuLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
-        actionsMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/core/resources/images/Menu24.png"))); // NOI18N
+        actionsMenuLabel.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/core/resources/images/Menu.png"))); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(actionsMenuLabel, actionsMenutext);
         actionsMenuLabel.setIconTextGap(8);
 
@@ -131,15 +131,15 @@ public class TitleActionPanel extends javax.swing.JPanel {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
+                .addGap(2, 2, 2)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(propertyIconLabel)
                     .addComponent(actionsMenuLabel))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(2, 2, 2)
                 .addComponent(jSeparator, javax.swing.GroupLayout.PREFERRED_SIZE, 7, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(propertyTitle, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(propertyTitle)
+                .addGap(2, 2, 2)
                 .addComponent(propertyShortDescription)
                 .addContainerGap())
         );
