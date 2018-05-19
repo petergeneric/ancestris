@@ -195,7 +195,7 @@ public class FontChooser extends JPanel {
                 Font font = (Font) value;
                 super.getListCellRendererComponent(list, font.getFamily(), index, isSelected, cellHasFocus);
                 if (isRenderWithFont) {
-                    setFont(font);
+                    setFont(font);   // this could take very long for some fonts (ex: Han font)
                 }
             } else {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
