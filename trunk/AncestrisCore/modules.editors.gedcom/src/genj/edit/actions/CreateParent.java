@@ -94,7 +94,7 @@ public class CreateParent extends CreateRelationship {
         
         if (entity instanceof Fam) {
             family = (Fam) entity;
-            this.child = null;
+            this.child = family.getChild(0);
             this.sex = sex;
             return family.acceptSpouse(sex);
         }
@@ -184,8 +184,15 @@ public class CreateParent extends CreateRelationship {
             }
             FAMS = family.setSpouse((Indi) parent).getTarget();
             Indi other = family.getOtherSpouse((Indi) parent);
-            lastname = other != null ? other.getLastName() : "";
-            if (parentIsNew && sex == 0) { // if sex was unknown, leave it unknown, user had the choice to not leave unknown in the drop down menu
+            
+            // lastname will match that of child
+            if (sex == PropertySex.MALE || GedcomOptions.getInstance().isSetWifeLastname()) {
+                lastname = ((child != null) ? child.getLastName() : ((other != null) ? other.getLastName() : ""));
+            } else {
+                lastname = "";
+            }
+            
+            if (parentIsNew && sex == PropertySex.UNKNOWN) { // if sex was unknown, leave it unknown, user had the choice to not leave unknown in the drop down menu
                 ((Indi) parent).setSex(sex);
             }
 
