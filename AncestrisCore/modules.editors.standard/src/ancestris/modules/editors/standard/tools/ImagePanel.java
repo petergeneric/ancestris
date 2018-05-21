@@ -84,7 +84,7 @@ public class ImagePanel extends javax.swing.JPanel {
             public void run() {
                 sourceZoom = (double) (ip.getWidth()) / (double) image.getWidth();
                 double s2 = (double) (ip.getHeight()) / (double) image.getHeight();
-                if (s2 < sourceZoom) {
+                if (s2 > sourceZoom) {
                     sourceZoom = s2;
                 }
                 if (sourceZoom > 20) {
