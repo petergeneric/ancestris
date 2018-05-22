@@ -11,15 +11,19 @@ import ancestris.modules.releve.model.RecordMarriage;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import javax.swing.JFrame;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
+import org.netbeans.jemmy.operators.JButtonOperator;
+import org.netbeans.jemmy.operators.JFrameOperator;
+import org.netbeans.jemmy.util.NameComponentChooser;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author Michel
  */
-public class MergeDialogTest extends TestCase {
+public class MergeDialogTest {
 
     /**
      * testMergeRecordBirth avec source existante
@@ -29,15 +33,16 @@ public class MergeDialogTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             RecordMarriage record = MergeModelMarriageTest.createMarriageRecord("M1");
-            
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, recordsInfoPlace, "fileName", record);
-
-            MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, data, false);
-            dialog.copyRecordToEntity();
-            dialog.componentClosed();
-            dialog.dispose();
+            int nbFam = gedcom.getFamilies().size();
+            MergeDialog dialog = MergeDialog.show(null, gedcom, null, data, false);
+            JFrameOperator jfo = new JFrameOperator(dialog);
+            JButtonOperator jbo  = new JButtonOperator(jfo , new NameComponentChooser("OK"));
+            jbo.push();
+            // 5 familles sont créées
+            assertEquals(nbFam+5, gedcom.getFamilies().size());
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
@@ -67,11 +72,17 @@ public class MergeDialogTest extends TestCase {
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, recordsInfoPlace,sourceTitle, record);
-            
+
+            int nbFam = gedcom.getFamilies().size();
+
             MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, data, false);
-            dialog.copyRecordToEntity();
-            dialog.componentClosed();
-            dialog.dispose();
+            JFrameOperator jfo = new JFrameOperator(dialog);
+            JButtonOperator jbo  = new JButtonOperator(jfo , new NameComponentChooser("OK"));
+            jbo.push();
+
+            // 1 famille est créée
+            assertEquals(nbFam+1, gedcom.getFamilies().size());
+
         } catch (Exception ex) {
             fail(ex.getMessage());
         }
@@ -103,9 +114,10 @@ public class MergeDialogTest extends TestCase {
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, recordsInfoPlace,sourceTitle, record);
             MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, data, false);
-            dialog.copyRecordToEntity();
-            dialog.componentClosed();
-            dialog.dispose();
+            JFrameOperator jfo = new JFrameOperator(dialog);
+            JButtonOperator jbo  = new JButtonOperator(jfo , new NameComponentChooser("OK"));
+            jbo.push();
+
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail(ex.getMessage());
@@ -132,15 +144,15 @@ public class MergeDialogTest extends TestCase {
             record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            
+
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Paris,75000,,state,country");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, recordsInfoPlace,sourceTitle, record);
             MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, indi, data, false);
-            dialog.copyRecordToEntity();
-            dialog.componentClosed();
-            dialog.dispose();
+            JFrameOperator jfo = new JFrameOperator(dialog);
+            JButtonOperator jbo  = new JButtonOperator(jfo , new NameComponentChooser("OK"));
+            jbo.push();
         } catch (Exception ex) {
             fail(ex.getMessage());
         }

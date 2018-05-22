@@ -5,14 +5,17 @@ import java.util.Scanner;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class MergeDialogTestMatch extends TestCase {
+public class MergeDialogTestMatch {
 
 
     /**
@@ -115,7 +118,7 @@ public class MergeDialogTestMatch extends TestCase {
         } else {
             fail("no match");
         }
-        
+
         sourceTitle = "BMS city-namée 1720" ;
         match = findSources(pattern, sourceTitle);
         if ( match != null) {
@@ -133,7 +136,7 @@ public class MergeDialogTestMatch extends TestCase {
         } else {
             fail("no match");
         }
-        
+
         sourceTitle = "xxxxx citynamée 1720" ;
         match = findSources(pattern, sourceTitle);
         assertEquals("prefixe xxxx", null, match);
@@ -168,13 +171,13 @@ public class MergeDialogTestMatch extends TestCase {
         }
 
     }
-     
+
     private MatchResult findSources(Pattern pattern, String line) {
         Scanner scan = new Scanner(line);
         MatchResult match = null;
         if (scan.findInLine(pattern) != null) {
             match = scan.match();
-        } 
+        }
         scan.close();
         return match;
 
@@ -191,7 +194,7 @@ public class MergeDialogTestMatch extends TestCase {
         sourceTitle = "75000 city-namée BMS" ;
         match = findSources(sourceTitle, "75", "75000", "city-namée");
         assertNotNull(match);
-        
+
         sourceTitle = "75 city-namée BMS" ;
         match = findSources(sourceTitle, "75", "75111", "city-namée");
         assertNotNull(match);
@@ -234,32 +237,31 @@ public class MergeDialogTestMatch extends TestCase {
 
         sourceTitle = "75000 city-namée BMS" ;
         match = findSources2(sourceTitle, "75", "75000", "city-namée");
-        assertTrue(match);
+        assertEquals(true, match);
 
         sourceTitle = "75 city-namée BMS" ;
         match = findSources2(sourceTitle, "75", "75111", "city-namée");
-        assertTrue(match);
+        assertEquals(true, match);
 
         sourceTitle = "75 city-namée Etat civil" ;
         match = findSources2(sourceTitle, "75", "", "city-namée");
-        assertTrue(match);
+        assertEquals(true, match);
 
         sourceTitle = "75 La xxxx-xxx Etat civil" ;
         match = findSources2(sourceTitle, "75", "", "La xxxx-xxx");
-        assertTrue(match);
+        assertEquals(true, match);
 
         sourceTitle = "75 city-namée BMS 1720-1790" ;
         match = findSources2(sourceTitle, "75", "", "city");
-        assertFalse(match);
+        assertEquals(false, match);
 
         sourceTitle = "75 city-namée BMS" ;
         match = findSources2(sourceTitle, "75", "", "");
-        assertFalse(match);
+        assertEquals(false, match);
 
         sourceTitle = "75 city-namée BMS" ;
         match = findSources2(sourceTitle, "", "", "");
-        assertFalse(match);
-
+        assertEquals(false, match);
     }
 
     private boolean findSources2(String line, String countyCode, String cityCode, String cityName) {
@@ -301,6 +303,6 @@ public class MergeDialogTestMatch extends TestCase {
 //    }
 
 
-   
+
 
 }

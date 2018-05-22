@@ -1,12 +1,13 @@
 package ancestris.modules.releve.merge;
 
+import ancestris.modules.releve.IgnoreOtherTestMethod;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
-import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import genj.gedcom.Fam;
@@ -20,10 +21,12 @@ import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import genj.util.ReferenceSet;
 import java.util.Set;
-import java.util.List;
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.fail;
+import org.junit.Rule;
 import org.junit.Test;
-import static org.junit.Assert.*;
 import org.openide.util.Exceptions;
 
 /**
@@ -31,6 +34,8 @@ import org.openide.util.Exceptions;
  * @author Michel
  */
 public class MergeModelBirthTest  {
+    @Rule
+    public IgnoreOtherTestMethod rule = new IgnoreOtherTestMethod("");
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
@@ -42,12 +47,12 @@ public class MergeModelBirthTest  {
 
         if ( firstName.equals("sansfamille1")) {
             RecordBirth record = new RecordBirth();
-                record.setFieldValue(FieldType.eventDate, "01/01/2000");
+                record.setFieldValue(FieldType.eventDate, "02/01/2000");
                 record.setFieldValue(FieldType.cote, "cote");
                 record.setFieldValue(FieldType.freeComment,  "photo");
-                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
-                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "70y");
-                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "true", "72y");
+                record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "01/01/2000", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+                record.setIndiFather("Fatherfirstname", "FATHERLASTNAME", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "", "30y");
+                record.setIndiMother("Motherfirstname", "MOTHERLASTNAME", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "true", "28y");
                 record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
                 record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
                 record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
@@ -111,7 +116,7 @@ public class MergeModelBirthTest  {
                 record.setFieldValue(FieldType.generalComment, "generalcomment");
             return record;
         } else {
-            
+
             return null;
         }
     }
@@ -126,47 +131,51 @@ public class MergeModelBirthTest  {
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordInfoPlace fullInfoPlace = new RecordInfoPlace();
             fullInfoPlace.setValue("Paris","75000","county","state","country");
-            String fileName = "";
-            TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, fullInfoPlace, fileName, createBirthRecord("sansfamille1"));
-            MergeRecord mergeRecord = new MergeRecord(data);
-            List<MergeModel> models;
-            // je memorise la date de naissance du pere
+            String fileName = "releve paris.txt";
+            String sourceTitle = ((Source)gedcom.getEntity("S1") ).getTitle();
+            MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
+           // je memorise la date de naissance du pere
             String previousFatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getValue();
+           TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, fullInfoPlace, fileName, createBirthRecord("sansfamille1"));
 
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            //TODO  retourne 2 propositions identiques : suppriemr une proposition
-            models.get(0).copyRecordToEntity();
-            assertEquals("Nombre model",3,models.size());
-            
+//TestUtility.showMergeDialog(data, gedcom, indi);
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+            assertEquals("Nombre model",2,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
             assertEquals("Indi : date naissance",mergeRecord.getIndi().getBirthDate().getValue(), indi.getBirthDate().getValue() );
-            assertEquals("Indi : lieu naissance",mergeRecord.getIndi().getBirthPlace(), indi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
-            assertEquals("Indi : adresse naissance",mergeRecord.getIndi().getBirthAddress(), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+            assertEquals("Indi : lieu naissance",mergeRecord.getIndi().getBirthResidence().getPlace(), indi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("Indi : adresse naissance",mergeRecord.getIndi().getBirthResidence().getAddress(), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             //assertEquals("Indi : note naissance", "", indi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
-            
+            Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
+            assertEquals("Nb birthsource",1,sourceLink.length );
+            assertEquals("Source name","BMS Paris", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
+
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
             assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
 
             assertEquals("indiBirthDate",mergeRecord.getIndi().getBirthDate().getValue(), indi.getBirthDate().getValue());
 
             Indi father = indi.getBiologicalFather();
-            assertEquals("father FirstName",mergeRecord.getIndi().getFatherFirstName(), father.getFirstName());
+            assertEquals("father FirstName",mergeRecord.getIndi().getFather().getFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("father : birth date", previousFatherBirthDate, father.getBirthDate().getValue());
             assertEquals("father : death date",   "AFT 1999", father.getDeathDate().getValue());
             Property occupation = father.getProperties(new TagPath("INDI:OCCU"))[0];
-            assertEquals("father : occupation", mergeRecord.getIndi().getFatherOccupation(), occupation.getValue(new TagPath("OCCU"), ""));
-            assertEquals("father : place",      mergeRecord.getIndi().getFatherResidence(), occupation.getValue(new TagPath("OCCU:PLAC"), ""));
-            assertEquals("father : address",    mergeRecord.getIndi().getFatherAddress(),   occupation.getValue(new TagPath("OCCU:ADDR"), ""));
-            
+            assertEquals("father : occupation", mergeRecord.getIndi().getFather().getOccupation(), occupation.getValue(new TagPath("OCCU"), ""));
+            assertEquals("father : place",      mergeRecord.getIndi().getFather().getResidence().getPlace(), occupation.getValue(new TagPath("OCCU:PLAC"), ""));
+            assertEquals("father : address",    mergeRecord.getIndi().getFather().getResidence().getAddress(),   occupation.getValue(new TagPath("OCCU:ADDR"), ""));
+
             Indi mother = indi.getBiologicalMother();
-            assertEquals("mother : birth date", "CAL 1928", mother.getBirthDate().getValue());
+            assertEquals("mother : birth date", "CAL 1972", mother.getBirthDate().getValue());
             assertEquals("mother : death date", "BET 2000 AND 2000", mother.getDeathDate().getValue());
             occupation = mother.getProperties(new TagPath("INDI:OCCU"))[0];
-            assertEquals("mother : occupation", mergeRecord.getIndi().getMotherOccupation(), occupation.getValue(new TagPath("OCCU"), ""));
-            assertEquals("mother : place",      mergeRecord.getIndi().getMotherResidence(), occupation.getValue(new TagPath("OCCU:PLAC"), ""));
-            assertEquals("mother : address",    mergeRecord.getIndi().getMotherAddress(), occupation.getValue(new TagPath("OCCU:ADDR"), ""));
-            
-            assertEquals("EventPlace",fullInfoPlace.toString(), mergeRecord.getEventPlace());         
+            assertEquals("mother : occupation", mergeRecord.getIndi().getMother().getOccupation(), occupation.getValue(new TagPath("OCCU"), ""));
+            assertEquals("mother : place",      mergeRecord.getIndi().getMother().getResidence().getPlace(), occupation.getValue(new TagPath("OCCU:PLAC"), ""));
+            assertEquals("mother : address",    mergeRecord.getIndi().getMother().getResidence().getAddress(), occupation.getValue(new TagPath("OCCU:ADDR"), ""));
+
+            assertEquals("EventPlace",fullInfoPlace.toString(), mergeRecord.getEventPlace());
 
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
@@ -186,15 +195,14 @@ public class MergeModelBirthTest  {
             fullInfoPlace.setValue("Paris","75000","county","state","country");
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, fullInfoPlace, fileName, createBirthRecord("sansfamille1"));
-            MergeRecord mergeRecord = new MergeRecord(data);
-            List<MergeModel> models;
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
             // je memorise la date de naissance du pere
             String previousFatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getValue();
 
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-
-            assertEquals("Nombre model",3,models.size());
-            models.get(0).copyRecordToEntity();
+            assertEquals("Nombre model",2,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
 
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
             assertEquals("Mariage date","BEF 2000", indi.getFamilyWhereBiologicalChild().getMarriageDate().getValue());
@@ -202,49 +210,46 @@ public class MergeModelBirthTest  {
             assertEquals("indiBirthDate",mergeRecord.getIndi().getBirthDate().getValue(), indi.getBirthDate().getValue());
 
             Indi father = indi.getBiologicalFather();
-            assertEquals("fatherFirstName",mergeRecord.getIndi().getFatherFirstName(), father.getFirstName());
+            assertEquals("fatherFirstName",mergeRecord.getIndi().getFather().getFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("Naissance du pere",previousFatherBirthDate, father.getBirthDate().getValue());
             assertEquals("deces du pere",   "AFT 1999", father.getDeathDate().getValue());
 
             Indi mother = indi.getBiologicalMother();
-            assertEquals("Naissance de la mere","CAL 1928", mother.getBirthDate().getValue());
+            assertEquals("Naissance de la mere","CAL 1972", mother.getBirthDate().getValue());
             assertEquals("deces de la mere",    "BET 2000 AND 2000", mother.getDeathDate().getValue());
-            
-            assertEquals("EventPlace",fullInfoPlace.toString(), mergeRecord.getEventPlace());         
+
+            assertEquals("EventPlace",fullInfoPlace.toString(), mergeRecord.getEventPlace());
 
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail(ex.getMessage());
         }
     }
-    
+
     /**
      * test_RecordBirth_copyRecordToEntity_Date
      */
-    @Test
+     @Test
     public void test_RecordBirth_copyRecordToEntity_Date2() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = null;
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, createBirthRecord("child3"));
-            MergeRecord mergeRecord = new MergeRecord(data);            
-            List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model", 3, models.size());
-            for(MergeModel model : models ) {
-                System.out.println("model "+ model.getTitle() + " : ProposedEntity=" + model.getProposedEntity());
-            }
-                        
-            models.get(0).copyRecordToEntity();
-            
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+
+            assertEquals("Nombre model", 3, mergeManager.getProposalList1().getSize());
+
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
             //assertEquals("Indi id","child3", birthProperty.getEntity().getId());
             indi = (Indi)gedcom.getEntity("child3");
             assertEquals("famille","F1", indi.getFamilyWhereBiologicalChild().getId());
             assertNotNull("IndiBirthDate",indi.getPropertyByPath("INDI:BIRT:DATE"));
             assertNotNull("IndiBirthPlace",indi.getPropertyByPath("INDI:BIRT:PLAC"));
             assertNotNull("IndiBirthComment",indi.getPropertyByPath("INDI:BIRT:NOTE"));
-            
+
             String expected = "";
             expected +="Date de l'acte: 06/07/2001\n";
             expected +="Nouveau né: Three, First, Name FATHERLASTNAME, né le 04/07/2001 à birthAddress, indiBirthplace, indioccupation, domicile indiAddress, indiResidence, indicomment\n";
@@ -266,7 +271,7 @@ public class MergeModelBirthTest  {
     /**
      * test_RecordBirth_copyRecordToEntity_Comment
      */
-    @Test
+     @Test
     public void test_RecordBirth_copyRecordToEntity_Comment() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -274,19 +279,16 @@ public class MergeModelBirthTest  {
             RecordBirth record = createBirthRecord("sansfamille1");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            
-            List<MergeModel> models;
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
 
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",3,models.size());
-            models.get(0).copyRecordToEntity();
+            assertEquals("Nombre model",2,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
 
             String expected = "";
-            expected +="Date de l'acte: 01/01/2000\n";
-            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à birthAddress, indiBirthplace, indiOccupation, domicile indiAddress, indiResidence, indiComment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
+            expected +="Date de l'acte: 02/01/2000\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né le 01/01/2000 à birthAddress, indiBirthplace, indiOccupation, domicile indiAddress, indiResidence, indiComment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 30 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 28 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
@@ -296,13 +298,13 @@ public class MergeModelBirthTest  {
 
             // je verifie que le nouveau commentaire contient la concatenation de l'ancien commentaire et du nouveau
             indi.getPropertyByPath("INDI:BIRT:NOTE").setValue("oldcomment");
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
-            expected ="Date de l'acte: 01/01/2000\n";
-            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né à birthAddress, indiBirthplace, indiOccupation, domicile indiAddress, indiResidence, indiComment\n";
-            expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
-            expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
+            mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+            expected ="Date de l'acte: 02/01/2000\n";
+            expected +="Nouveau né: sansfamille1 FATHERLASTNAME, né le 01/01/2000 à birthAddress, indiBirthplace, indiOccupation, domicile indiAddress, indiResidence, indiComment\n";
+            expected +="Père: Fatherfirstname FATHERLASTNAME, 30 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
+            expected +="Mère: Motherfirstname MOTHERLASTNAME, 28 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
             expected +="Parrain/témoin: w1firstname w1lastname, w1occupation, w1comment\n";
             expected +="Marraine/témoin: w2firstname w2lastname, w2occupation, w2comment\n";
             expected +="Témoin(s): w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
@@ -316,27 +318,25 @@ public class MergeModelBirthTest  {
         }
     }
 
-    
+
     /**
      * testMergeRecordBirth avec source existante
      */
-    @Test
+     @Test
     public void testMergeRecordBirthSourceExistanteDejaAssociee() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
-            List<MergeModel> models;
             RecordBirth record = createBirthRecord("I1");
             String fileName = "releve paris.txt";
             String sourceTitle = "BMS Paris";
             MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),fileName, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            
-            
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
             assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
             assertEquals("IndiSex",mergeRecord.getIndi().getSex(), indi.getSex());
@@ -353,14 +353,12 @@ public class MergeModelBirthTest  {
     /**
      * testMergeRecordBirth avec ajout d'une source existante mais pas déjà associee à la naissance
      */
-    @Test
+     @Test
     public void testMergeRecordBirthSourceExistanteNonAssociee() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("child2");
             int indiSex = indi.getSex();
-            List<MergeModel> models;
-            
             RecordBirth record= createBirthRecord("child2");
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Brest","35000","","state","country");
@@ -368,12 +366,12 @@ public class MergeModelBirthTest  {
             String sourceTitle = "Etat civil Brest";
             MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            
-            
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
             assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
             assertEquals("IndiSex un changed",  indiSex, indi.getSex());
@@ -381,10 +379,10 @@ public class MergeModelBirthTest  {
             Property[] sourceLink = indi.getProperties(new TagPath("INDI:BIRT:SOUR"));
 //            for(Property prop : sourceLink) {
 //                System.out.println("source="+ ((Source)((PropertyXRef)prop).getTargetEntity()).getTitle());
-//            }            
+//            }
             assertEquals("Nb birthsource",1,sourceLink.length );
             assertEquals("Source title 0","Etat civil Brest", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getTitle() );
-            assertEquals("Source ID 0","S3", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getId());            
+            assertEquals("Source ID 0","S3", ((Source)((PropertyXRef)sourceLink[0]).getTargetEntity()).getId());
 
         } catch (Exception ex) {
             fail(ex.getMessage());
@@ -394,26 +392,23 @@ public class MergeModelBirthTest  {
     /**
      * testMergeRecordBirth avec nouvelle source
      */
-    @Test
+     @Test
     public void testMergeRecordBirthSourceNewSource() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
 
             Indi indi = (Indi)gedcom.getEntity("I1");
-            List<MergeModel> models;
-
             RecordBirth record = createBirthRecord("I1");
             RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
             recordsInfoPlace.setValue("Versailles","75009","","state","country");
             String fileName = "BMS Paris";
             MergeOptionPanel.SourceModel.getModel().add(fileName, "BMS Paris");
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            
-            
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("IndiFirstName",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
             assertEquals("IndiLastName",mergeRecord.getIndi().getLastName(), indi.getLastName());
             assertEquals("IndiSex",mergeRecord.getIndi().getSex(), indi.getSex());
@@ -431,25 +426,23 @@ public class MergeModelBirthTest  {
     /**
      * testMergeRecordBirth avec nouvelle source
      */
-    @Test
+     @Test
     public void testMergeRecordBirthAutreIndiExistant() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             Indi indi = (Indi)gedcom.getEntity("I1");
             RecordBirth record = createBirthRecord("I1");
             // je renseigne la meme date de naissance
-            record.setFieldValue(FieldType.eventDate, indi.getBirthDate().getValue());            
+            record.setFieldValue(FieldType.eventDate, indi.getBirthDate().getValue());
             String fileName = "BMS Paris";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            
-            List<MergeModel> models;
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
 
-            assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("otherIndi",0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, mergeRecord.getParticipant(MergeParticipantType.participant1), gedcom, indi).size());
 
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("Indi First Name",mergeRecord.getIndi().getFirstName(), indi.getFirstName());
             assertEquals("Indi Last Name",mergeRecord.getIndi().getLastName(), indi.getLastName());
             assertEquals("Indi Sex",mergeRecord.getIndi().getSex(), indi.getSex());
@@ -468,14 +461,14 @@ public class MergeModelBirthTest  {
     /**
      * testMergeRecordBirth avec nouvelle source et avec le lieu avec des coordonnées
      */
-    @Test
+     @Test
     public void testMergeRecordBirthIndiBirthPlace() {
         try {
             RecordBirth record;
             MergeRecord mergeRecord;
-            
+
             PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
-         
+
             // cas : indiBirthPlace = ""
             record = new RecordBirth();
             record.setFieldValue(FieldType.eventDate, "01/01/2000");
@@ -493,8 +486,8 @@ public class MergeModelBirthTest  {
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
             mergeRecord = new MergeRecord(data);
-            
-            assertEquals("Indi Birth place=IndiFatherResidence",record.getFieldValue(FieldType.indiFatherResidence), mergeRecord.getIndi().getBirthPlace());
+
+            assertEquals("Indi Birth place=IndiFatherResidence",record.getFieldValue(FieldType.indiFatherResidence), mergeRecord.getIndi().getBirthResidence().getPlace());
 
              // cas : indiBirthPlace = "" et indiFatherResidence = ""
             record = new RecordBirth();
@@ -510,25 +503,26 @@ public class MergeModelBirthTest  {
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setFieldValue(FieldType.generalComment, "generalcomment");
 
-            data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-            mergeRecord = new MergeRecord(data);
-            assertEquals("Indi Birth place=eventPlace",getRecordsInfoPlace().toString(), mergeRecord.getIndi().getBirthPlace());
-            assertEquals("Indi Birth address is empty","", mergeRecord.getIndi().getBirthAddress());
-
             Gedcom gedcom = TestUtility.createGedcom();
-            List<MergeModel> models;
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-            assertEquals("Nombre model",4,models.size());
-            models.get(0).copyRecordToEntity();
+            data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
+//TestUtility.showMergeDialog(data, gedcom, gedcom.getEntity("child3"));
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+            mergeRecord = mergeManager.getMergeRecord();
+            assertEquals("Indi Birth place=eventPlace",getRecordsInfoPlace().toString(), mergeRecord.getIndi().getBirthResidence().getPlace());
+            assertEquals("Indi Birth address is empty","", mergeRecord.getIndi().getBirthResidence().getAddress());
+
+//            mergeManager.getProposalList1().showAllProposal(true);
+            assertEquals("Nombre model",4,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             Fam family = (Fam)gedcom.getEntity("F1");
-            Indi[] children = family.getChildren(false);   // sorted=true => classé par ordre de date de naissance , sinon par ordre de création 
+            Indi[] children = family.getChildren(false);   // sorted=true => classé par ordre de date de naissance , sinon par ordre de création
             assertEquals("Nombre d'enfants",4,children.length);
             Indi indi = children[3];  // je recupere le 4ieme enfant par ordre de creation
             // je verifie que le lieu de naissance du 4ieme enfant a ete renseigne avec le lieu par défaut du releve
             assertEquals("Indi : Lieu de naissance",getRecordsInfoPlace().getValue(), indi.getBirthPlace().getValue());
-            assertEquals("Indi : adresse naissance",mergeRecord.getIndi().getBirthAddress(), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
-            
-            // je verifie les coordonnees 
+            assertEquals("Indi : adresse naissance",mergeRecord.getIndi().getBirthResidence().getAddress(), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+
+            // je verifie les coordonnees
             ReferenceSet<String, Property>  gedcomPlaces = gedcom.getReferenceSet("PLAC");
             Set<Property> parisPlaces = gedcomPlaces.getReferences(getRecordsInfoPlace().toString());
             PropertyPlace parisPlace = null;
@@ -540,31 +534,30 @@ public class MergeModelBirthTest  {
             }
             assertNotNull("Lieu de naissance existe deja dans le gedcom",parisPlace);
             assertNotNull("Coordonnées du lieu de naissance sont présentes",parisPlace.getMap());
-            
+
             assertEquals("Lieu de naissance","N48.8534", indi.getBirthPlace().getLatitude(true).getValue());
-            assertEquals("Lieu de naissance","E2.3486", indi.getBirthPlace().getLongitude(true).getValue());            
-            
-            
+            assertEquals("Lieu de naissance","E2.3486", indi.getBirthPlace().getLongitude(true).getValue());
+
+
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
-    
-    
+
+
     /**
      * testMergeRecordBirth avec nouvelle source et avec le lieu avec des coordonnées
      */
-    @Test
+     @Test
     public void testMergeRecordBirthIndiBirthAddress() {
         try {
             RecordBirth record;
-            MergeRecord mergeRecord;
-            
+
             PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
             String fileName = "";
-            
-            // cas : indiBirthPlace = "" et indiBirthAdress ="" 
+
+            // cas : indiBirthPlace = "" et indiBirthAdress =""
             record = new RecordBirth();
             record.setFieldValue(FieldType.eventDate, "01/01/2000");
             record.setFieldValue(FieldType.cote, "cote");
@@ -581,190 +574,181 @@ public class MergeModelBirthTest  {
             {
                 // record  birthPlace=""  birthAddress=""
                 // entity  birthPlace=""  birthAddress=""
-                Gedcom gedcom = TestUtility.createGedcom();            
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+//TestUtility.showMergeDialog(data, gedcom, null);
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiFatherResidence), indi.getBirthPlace().getValue());
-                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiFatherAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
             {
                 // record birthPlace=""  birthAddress="indiBirthAddress"
                 // entity birthPlace=""  birthAddress=""
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "", "indiBirthAddress", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiFatherResidence), indi.getBirthPlace().getValue());
-                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiFatherAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
             {
                 // record birthPlace="indiFatherResidence"  birthAddress="indiBirthAddress"
                 // entity birthPlace=""  birthAddress=""
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiFatherResidence", "indiBirthAddress", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
                 assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
             {
                 // record birthPlace="indiBirthPlace" birthAddress="indiBirthAddress"
                 // entity birthPlace=""               birthAddress=""
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthPlace", "indiBirthAddress", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
                 assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
             {
                 // record birthPlace="indiBirthPlace"  et birthAddress=""
                 // entity = birthPlace=""      birthAddress=""
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthPlace", "", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);                
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
                 assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
             {
                 // record birthPlace="indiBirthPlace"  birthAddress="indiBirthAddress"
                 // entity birthPlace="indiBirthPlace"  birthAddress=""
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthPlace", "indiBirthAddress", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 indi.getProperty("BIRT").addProperty("PLAC", "indiBirthPlace");
-                
+
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
                 assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-                        
+
             {
                 // record birthPlace="indiBirthPlace"  birthAddress="xxxx yyy"
                 // entity birthPlace="indiBirthPlace"  birthAddress="indiBirthAddress"
-                // date naissance egale  
+                // date naissance egale
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthPlace", "xxxx yyy", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 indi.getProperty("BIRT").addProperty("PLAC", "indiBirthPlace");
                 indi.getProperty("BIRT").addProperty("ADDR", "indiBirthAddress");
-                
+
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
-                assertNotSame("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
             {
                 // record birthPlace="indiBirthPlace"  birthAddress="xxxx yyy"
                 // entity birthPlace="indiBirthPlace"  birthAddress="indiBirthAddress"
-                // date naissance record plus précise que date naissance  gedcom  
+                // date naissance record plus précise que date naissance  gedcom
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthPlace", "xxxx yyy", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 indi.getProperty("BIRT").getProperty("DATE").setValue("2000");
                 indi.getProperty("BIRT").addProperty("ADDR", "indiBirthAddress");
                 indi.getProperty("BIRT").addProperty("PLAC", "indiBirthPlace");
-                
+
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
                 assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
             {
                 // record birthPlace=""  birthAddress="xxxx yyy"
                 // entity birthPlace="indiBirthPlace"  birthAddress="indiBirthAddress"
-                // date naissance record plus précise que date naissance  gedcom  
+                // date naissance record plus précise que date naissance  gedcom
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "", "xxxx yyy", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 indi.getProperty("BIRT").getProperty("DATE").setValue("2000");
                 indi.getProperty("BIRT").addProperty("PLAC", "indiBirthPlace");
                 indi.getProperty("BIRT").addProperty("ADDR", "indiBirthAddress");
-                
+
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiFatherResidence), indi.getBirthPlace().getValue());
-                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+                assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiFatherAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
 
             {
                 // record birthPlace="indiBirthPlace"  birthAddress="indiBirthAddress"
                 // entity birthPlace="indiBirthPlace"  birthAddress="indiBirthAddress"
                 record.setIndi("sansfamille1", "FATHERLASTNAME", "M", "", "", "indiBirthPlace", "indiBirthAddress", "", "","", "indicomment");
-                
-                Gedcom gedcom = TestUtility.createGedcom();            
+
+                Gedcom gedcom = TestUtility.createGedcom();
                 Indi indi = (Indi)gedcom.getEntity("sansfamille1");
                 indi.getProperty("BIRT").addProperty("PLAC", "indiBirthPlace");
                 indi.getProperty("BIRT").addProperty("ADDR", "indiBirthAddress");
-                
+
                 TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
-                mergeRecord = new MergeRecord(data);
-                List<MergeModel> models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-                models.get(0).copyRecordToEntity();
-                
+                MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+                mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
                 assertEquals("Indi : birth place",record.getFieldValue(FieldType.indiBirthPlace), indi.getBirthPlace().getValue());
                 assertEquals("Indi : birth address",record.getFieldValue(FieldType.indiBirthAddress), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
             }
-            
+
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
-    
-    
+
+
     /**
      * test_RecordBirth_copyRecordToEntity_Date
      */
-    @Test
+     @Test
     public void test_RecordBirth_copyRecordToEntity_Sex() {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
@@ -773,50 +757,114 @@ public class MergeModelBirthTest  {
             String fileName = "";
             Record record = createBirthRecord("sansfamille1");
             TransferableRecord.TransferableData data;
-            MergeRecord mergeRecord ;
-            List<MergeModel> models;
-                    
+
             record.setFieldValue(FieldType.indiSex, "F");
             data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
-            mergeRecord = new MergeRecord(data);
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",2,models.size());
-            models.get(0).copyRecordToEntity();
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model",2,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("record.inidSex = F , indi.sex = M, resultat=M", PropertySex.MALE, indi.getSex());
 
             record.setFieldValue(FieldType.indiSex, "");
             data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
-            mergeRecord = new MergeRecord(data);
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+            mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("record.inidSex = U , indi.sex = M resultat= M", PropertySex.MALE, indi.getSex());
 
             record.setFieldValue(FieldType.indiSex, "");
             indi.setSex(PropertySex.UNKNOWN);
             data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
-            mergeRecord = new MergeRecord(data);
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+            mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("record.inidSex = U , indi.sex = U , resultat= U", PropertySex.UNKNOWN,indi.getSex());
 
             record.setFieldValue(FieldType.indiSex, "M");
             indi.setSex(PropertySex.UNKNOWN);
             data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
-            mergeRecord = new MergeRecord(data);
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);  
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
+
+            mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
             assertEquals("record.inidSex = M , indi.sex = U ,resultat= M", PropertySex.MALE,indi.getSex());
 
-            
+
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail(ex.getMessage());
         }
     }
-    
+
+
+    /**
+     * testMergeRecordBirth avec nouvelle source et avec le lieu avec des coordonnées
+     */
+     @Test
+    public void test_MergeRecordBirth_newMariage_fatherMother() {
+        try {
+            RecordBirth record;
+
+            Gedcom gedcom = TestUtility.createGedcomEmpty();
+            {
+                Property birth;
+                Indi father = (Indi) gedcom.createEntity(Gedcom.INDI);
+                father.setName("first", "NEWFATHER");
+                father.setSex(PropertySex.MALE);
+                birth = father.addProperty("BIRT", "");
+                birth.addProperty("DATE", "BEF 1970", 1);
+
+                Indi mother = (Indi) gedcom.createEntity(Gedcom.INDI);
+                mother.setName("second", "NEWMOTHER");
+                mother.setSex(PropertySex.FEMALE);
+                birth = mother.addProperty("BIRT", "");
+                birth.addProperty("DATE", "01 JAN 1972", 1);
+            }
+
+            PlaceFormatModel.getModel().savePreferences(0,1,2,3,4,6);
+
+            // cas : indiBirthPlace = ""
+            record = new RecordBirth();
+            record.setFieldValue(FieldType.eventDate, "01/01/2000");
+            record.setFieldValue(FieldType.cote, "cote");
+            record.setFieldValue(FieldType.freeComment,  "photo");
+            record.setIndi("one", "NEWFATHER", "M", "","", "indiBirthplace", "birthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+            record.setIndiFather("first", "NEWFATHER", "fatherOccupation", "indiFatherResidence", "indiFatherAddress", "comment", "", "30y");
+            record.setIndiMother("second", "NEWMOTHER", "motherOccupation", "indiMotherResidence", "indiMotherAddress", "comment", "", "28y");
+            record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+            record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+            record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+            record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+            record.setFieldValue(FieldType.generalComment, "generalcomment");
+
+            String fileName = "";
+            TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(), fileName, record);
+
+//TestUtility.showMergeDialog(data, gedcom, null);
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+            assertEquals("Nombre model",2,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
+            Indi indi = (Indi) mergeManager.getProposalList1().getElementAt(0).getMainEntity();
+            assertEquals("Indi : Lieu de naissance",mergeRecord.getIndi().getBirthResidence().getPlace(), indi.getBirthPlace().getValue());
+            assertEquals("Indi : adresse naissance",mergeRecord.getIndi().getBirthResidence().getAddress(), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+
+            Indi father = indi.getBiologicalFather();
+            assertEquals("father FirstName", mergeRecord.getIndi().getFather().getFirstName(), father.getFirstName());
+            assertEquals("father LastName", mergeRecord.getIndi().getFather().getLastName(), father.getLastName());
+
+            Indi mother = indi.getBiologicalMother();
+            assertEquals("father FirstName", mergeRecord.getIndi().getMother().getFirstName(), mother.getFirstName());
+            assertEquals("father LastName", mergeRecord.getIndi().getMother().getLastName(), mother.getLastName());
+
+
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            fail(ex.getMessage());
+        }
+    }
+
 
 
 }

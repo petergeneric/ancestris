@@ -18,7 +18,7 @@ public class SimilarNameSet {
 
     private final HashMap<String,String> similarNames = new HashMap<String,String>();
     private final String similarPreference;
-    
+
 
     /**
      * factory
@@ -89,26 +89,26 @@ public class SimilarNameSet {
         String similarString = NbPreferences.forModule(SimilarNameSet.class).get(
                     similarPreference,"");
         String[] values = similarString.split(";");
-        for (int i = 0; i < values.length; i++) {
-            if (!values[i].isEmpty()) {
-                String[] pairValue = values[i].split("=");
+        for (String value : values) {
+            if (!value.isEmpty()) {
+                String[] pairValue = value.split("=");
                 similarNames.put(pairValue[0], pairValue[1]);
             }
         }
-    }     
+    }
 
-   
+
     /**
-     * enregistre les equivalences 
+     * enregistre les equivalences
      */
     private void savePreferences() {
         StringBuilder values = new StringBuilder();
 
         for (Map.Entry<String, String> entry : similarNames.entrySet()) {
             values.append(entry.getKey()).append("=").append(entry.getValue()).append(";");
-        }        
+        }
         NbPreferences.forModule(SimilarNameSet.class).put(
                    similarPreference, values.toString());
     }
-    
+
 }

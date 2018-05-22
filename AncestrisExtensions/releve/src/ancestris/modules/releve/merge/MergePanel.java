@@ -5,8 +5,8 @@
 
 package ancestris.modules.releve.merge;
 
-import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
-import genj.gedcom.Entity;
+import java.awt.Color;
+import java.awt.Font;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -14,13 +14,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.MessageFormat;
-import java.util.List;
+import java.util.concurrent.TimeUnit;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButton;
+import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.ToolTipManager;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
@@ -29,22 +30,19 @@ import org.openide.util.NbPreferences;
  */
 public class MergePanel extends javax.swing.JPanel  {
 
-    private MergeDialog mergeDialog = null;
-    private MergeModel currentModel = null;
-    private MergeParticipantType participant = null;
+    private Proposal currentProposal = null;
 
     private JPopupMenu popupMenu;
-    MouseAdapter mouseAdapter;
     private JMenuItem menuItemImportClipboard = new JMenuItem(NbBundle.getMessage(MergePanel.class, "MergePanel.menu.copyToClipboard"));
+    private boolean firstPanel = true;
 
 
     /**
      * le construteur initialise l'affichage
      */
-    public MergePanel() {        
+    public MergePanel() {
         initComponents();
 
-         //je cree le popupmenu
         ActionListener popupActionListener = new ActionListener(){
 
             @Override
@@ -52,12 +50,14 @@ public class MergePanel extends javax.swing.JPanel  {
                 if (menuItemImportClipboard.equals(e.getSource())) {
                     // je copie le relevé
                     Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-                    StringSelection sel = new StringSelection(currentModel.record.getEventComment(currentModel.showFrenchCalendarDate));
+                    StringSelection sel = new StringSelection(currentProposal.getEventComment() );
                     clipboard.setContents(sel, sel);
                 }
             }
 
         };
+
+        //je cree le popupmenu
         popupMenu = new JPopupMenu();
         menuItemImportClipboard.addActionListener(popupActionListener);
         //menuItemImportClipboard.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/NewFile.png")));
@@ -65,16 +65,15 @@ public class MergePanel extends javax.swing.JPanel  {
 
         // je branche le clic du bouton droit de la souris sur l'afffichage
         // du popupmenu
-        mouseAdapter = new MouseAdapter() {
+        mergeTable1.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
                 if (SwingUtilities.isRightMouseButton(e)) {
                     popupMenu.show(e.getComponent(), e.getX(), e.getY());
                 }
             }
-        };
-        mergeTable1.addMouseListener(mouseAdapter);
-        
+        });
+
     }
 
     /**
@@ -84,38 +83,25 @@ public class MergePanel extends javax.swing.JPanel  {
      *
      * @param models    liste des modeles
      * @param selectedEntity  entite selectonne
-     * @param mergeDialog     fenetre principale
      */
-    protected void initData (final List<MergeModel> models, Entity selectedEntity, final MergeDialog mergeDialog , MergeParticipantType participantType) {
-        
-        this.mergeDialog = mergeDialog;
-        this.participant = participantType;
-        
+    protected void initData (MergeManager.ProposalList proposalList, boolean firstPanel) {
+        this.firstPanel = firstPanel;
+
         // je vide le panneau
         jPanelChoice.removeAll();
-        // je masque JButtonMenu dans le deuxième panneau
-        if( participantType == MergeParticipantType.participant2) {
-            jButtonMenu.setVisible(false);
-        }
-        
+
         // je dimensionne le panneau avec la taille choisie precedemment
-        String splitHeight = NbPreferences.forModule(MergeDialog.class).get("MergeDialogSplitHeight"+participant.name(), "90");
+        String splitHeight = NbPreferences.forModule(MergePanel.class).get("MergeDialogSplitHeight"+ (firstPanel? "1" :"2"), "90");
         jSplitPane.setDividerLocation(Integer.parseInt(splitHeight));
 
-        // j'ajoute les modeles avec un radio bouton pour chaque modele
+        // j'ajoute un radio bouton pour chaque proposition
         buttonGroupChoiceModel=new javax.swing.ButtonGroup();
-                
-        int position = 0;
-        for(int i= 0; i< models.size(); i++) {
-            MergeModel mergeModel = models.get(i);
-            if ( mergeModel.getParticipantType() == participantType) {
-                addRadioButton(position, mergeModel, selectedEntity);
-                position++;
-            }
+        for(int i= 0; i< proposalList.getSize(); i++) {
+            addRadioButton(i, proposalList.getElementAt(i), proposalList.containsSelectedEntity(i) );
         }
 
         if ( buttonGroupChoiceModel.getButtonCount() >0 ) {
-            // j'ajoute un label pour occuper le bas du panel
+            // j'ajoute un label pour occuper le bas du panel s'il y a au moins une proposition
             java.awt.GridBagConstraints gridBagConstraints = new java.awt.GridBagConstraints();
             gridBagConstraints.gridx = 0;
             gridBagConstraints.gridy = buttonGroupChoiceModel.getButtonCount();
@@ -125,84 +111,86 @@ public class MergePanel extends javax.swing.JPanel  {
             JLabel jLabelEnd = new javax.swing.JLabel();
             jPanelChoice.add(jLabelEnd, gridBagConstraints);
 
-            // je selectionne le premier modele
+            // je selectionne la premiere proposition
             JRadioButton radioButton0 = (JRadioButton)buttonGroupChoiceModel.getElements().nextElement();
-
-            // j'affiche le titre
-            jLabel1.setText(MessageFormat.format(NbBundle.getMessage(MergePanel.class, "MergePanel.title"), buttonGroupChoiceModel.getButtonCount())); // NOI18N
-
-            //radioButton0.setSelected(true);
             radioButton0.doClick();
-            //selectModel(models.get(0));
-        } else {
-            // s'il n'y a aucune proposition, j'affiche un message d'information dans le premier panneau
-            if ( participantType == MergeParticipantType.participant1 ) {
-                jLabel1.setText("<html>"+NbBundle.getMessage(MergePanel.class, "MergePanel.title.NoProposition")+"</html>");                             
-            } else {
-                setVisible(false);            
-            }
-
         }
+
         this.revalidate();
         this.repaint();
     }
 
     protected void componentClosed() {
-        NbPreferences.forModule(MergeDialog.class).put("MergeDialogSplitHeight"+participant.name(), String.valueOf(jSplitPane.getDividerLocation()));
-        //NbPreferences.forModule(MergeDialog.class).put("MergeDialogShowAllParents", String.valueOf(showAllParents));
-
-        mergeTable1.componentClosed();
+        if( firstPanel ) {
+            NbPreferences.forModule(MergePanel.class).put("MergeDialogSplitHeight"+ (firstPanel? "1" :"2") , String.valueOf(jSplitPane.getDividerLocation()));
+            mergeTable1.componentClosed();
+        }
     }
 
     /**
      * affiche un radio bouton
      * @param entity
      * @param record
-     * @param mergeDialog
      * @param selected
      */
-    private void addRadioButton(int position, final MergeModel model, Entity selectedEntity) {
+    private void addRadioButton(int position, final Proposal proposal, boolean containsSelectedEntity) {
         // je cree le label a afficher en tete du panneau
-        String labelText = Integer.toString(model.getNbMatch())+"/"+Integer.toString(model.getNbMatchMax());
+        String labelText = " " + Integer.toString(proposal.getDisplayRuleList().getNbEqual() )+ " ";
         JLabel jLabelNbMatch =  new JLabel();
         jLabelNbMatch.setText(labelText);
+        jLabelNbMatch.setBorder(null);
+        jLabelNbMatch.setVerticalTextPosition(SwingConstants.TOP);
+        jLabelNbMatch.setVerticalAlignment(SwingConstants.TOP);
+        if (proposal.getDisplayRuleList().getNbConflict()> 0) {
+            jLabelNbMatch.setBackground(Color.PINK);
+            jLabelNbMatch.setOpaque(true);
+        }
+        jLabelNbMatch.addMouseListener(new ToolMouseAdapter() );
 
         // je cree le radiobutton
         JRadioButton jRadioButton =  new JRadioButton();
-        jRadioButton.setText(model.getSummary(selectedEntity));
+        jRadioButton.setVerticalTextPosition(SwingConstants.TOP);
+        jRadioButton.setText(proposal.getSummary(false));
+         if( !containsSelectedEntity ) {
+             // j'affiche en bleu si c'est une proposition avec une autre entité
+             // que celle sélectionnées par l'utilisateur
+             jRadioButton.setFont(jRadioButton.getFont().deriveFont(Font.ITALIC));
+             jRadioButton.setForeground(Color.blue);
+        }
         jRadioButton.setMargin(new java.awt.Insets(0, 2, 0, 2));
         jRadioButton.setPreferredSize(null);
         jRadioButton.setSelected(false);
+        jRadioButton.setToolTipText(proposal.getSummary(true) );
+        jRadioButton.addMouseListener( mouseAdapter );
         jRadioButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectModel(model);
+                selectProposal(proposal, (JRadioButton) evt.getSource());
             }
         });
 
         // j'ajoute le bouton dans le groupe de boutons pour activer la selection exlusive
         buttonGroupChoiceModel.add(jRadioButton);
 
-        // j'affiche le radiobutton dans la premiere colonne
+        // j'affiche le radiobutton dans la deuxième colonne
         java.awt.GridBagConstraints gridBagConstraints;
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = position;
         gridBagConstraints.weightx = 1;
         //gridBagConstraints.weighty = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
         jPanelChoice.add(jRadioButton,gridBagConstraints);
 
-        // j'affiche le nombre de champs egaux dans la deuxième colonne
+        // j'affiche le nombre de champs egaux dans la premiere colonne
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = position;
         gridBagConstraints.weightx = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.NONE;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHEAST;
         jPanelChoice.add(jLabelNbMatch, gridBagConstraints);
-
     }
 
     /**
@@ -211,31 +199,37 @@ public class MergePanel extends javax.swing.JPanel  {
      * @param entity
      * @param record
      */
-    protected void selectModel(MergeModel model) {
-        this.currentModel = model;
-        mergeTable1.setModel(currentModel);
-        mergeTable1.setEntityActionManager(mergeDialog);
+    private void selectProposal(Proposal proposal, JRadioButton radioButton) {
+        this.currentProposal = proposal;
+        mergeTable1.setModel(currentProposal.getDisplayRuleList());
         // j'affiche les données du modele dans la table
-        currentModel.fireTableDataChanged();
+        currentProposal.getDisplayRuleList().fireTableDataChanged();
+        // j'affiche  dans l'arbre l'entité proposée par le modele
+        SelectionManager.setRootEntity(currentProposal.getMainEntity());
+    }
 
-        // je renseigne le titre de la fenetre
-        mergeDialog.setTitle(currentModel.getTitle());
-        
-        // j'affiche  dans l'arbre l'entité proposée par le modele 
-        Entity proposedEntity = currentModel.getProposedEntity();
-        if (proposedEntity != null) {
-            // je mets l'entité  comme racine de l'arbre
-            SelectionManager.setRootEntity(proposedEntity);        
-            // je selectionne l'entité
-            SelectionManager.showEntity(proposedEntity);
+    Proposal getCurrentProposal() {
+        return currentProposal;
+    }
+
+    static private ToolMouseAdapter mouseAdapter = new ToolMouseAdapter();
+
+    static private class ToolMouseAdapter extends MouseAdapter {
+
+        final int defaultDismissTimeout = ToolTipManager.sharedInstance().getDismissDelay();
+        final int dismissDelayMinutes = (int) TimeUnit.MINUTES.toMillis(10); // 10 minutes
+
+        @Override
+        public void mouseEntered(MouseEvent me) {
+            ToolTipManager.sharedInstance().setDismissDelay(dismissDelayMinutes);
         }
-    }
 
-    MergeModel getCurrentModel() {
-        return currentModel;
-    }
+        @Override
+        public void mouseExited(MouseEvent me) {
+            ToolTipManager.sharedInstance().setDismissDelay(defaultDismissTimeout);
+        }
+    };
 
-   
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -244,14 +238,10 @@ public class MergePanel extends javax.swing.JPanel  {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
         buttonGroupChoiceModel = new javax.swing.ButtonGroup();
         jSplitPane = new javax.swing.JSplitPane();
         jPanel1 = new javax.swing.JPanel();
-        jPanelToolbar = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jButtonMenu = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanelChoice = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -262,33 +252,6 @@ public class MergePanel extends javax.swing.JPanel  {
         jSplitPane.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
 
         jPanel1.setLayout(new java.awt.BorderLayout());
-
-        jPanelToolbar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanelToolbar.setLayout(new java.awt.GridBagLayout());
-
-        jLabel1.setText(org.openide.util.NbBundle.getMessage(MergePanel.class, "MergePanel.title")); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 0;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.HORIZONTAL;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.insets = new java.awt.Insets(0, 4, 0, 0);
-        jPanelToolbar.add(jLabel1, gridBagConstraints);
-
-        jButtonMenu.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/hamb1-16.png"))); // NOI18N
-        jButtonMenu.setMargin(new java.awt.Insets(0, 0, 0, 0));
-        jButtonMenu.setPreferredSize(new java.awt.Dimension(20, 20));
-        jButtonMenu.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButtonMenuActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
-        jPanelToolbar.add(jButtonMenu, gridBagConstraints);
-
-        jPanel1.add(jPanelToolbar, java.awt.BorderLayout.NORTH);
 
         jScrollPane1.setBorder(null);
         jScrollPane1.setHorizontalScrollBar(null);
@@ -309,18 +272,11 @@ public class MergePanel extends javax.swing.JPanel  {
         add(jSplitPane, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButtonMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonMenuActionPerformed
-        mergeDialog.showPopupMenu(jButtonMenu, 0, jButtonMenu.getHeight());
-    }//GEN-LAST:event_jButtonMenuActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroupChoiceModel;
-    private javax.swing.JButton jButtonMenu;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelChoice;
-    private javax.swing.JPanel jPanelToolbar;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSplitPane jSplitPane;

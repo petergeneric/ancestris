@@ -1,16 +1,8 @@
 package ancestris.modules.releve.merge;
 
-import ancestris.modules.releve.merge.MergeModel.CompareResult;
-import ancestris.modules.releve.merge.MergeModel.RowType;
-import genj.gedcom.Entity;
-import genj.gedcom.Fam;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyEvent;
 import genj.gedcom.PropertyPlace;
-import genj.gedcom.Source;
 import genj.util.WordBuffer;
 import java.awt.Color;
 import java.awt.Component;
@@ -20,12 +12,12 @@ import java.awt.event.MouseEvent;
 import java.util.StringTokenizer;
 import javax.swing.JLabel;
 import javax.swing.JTable;
-import javax.swing.ToolTipManager;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;
 
 /**
@@ -36,63 +28,44 @@ import org.openide.util.NbPreferences;
  * @author Michel
  */
 public class MergeTable extends JTable {
-    private EntityActionManager entityActionManager = null;
     private static final Color yellowColor = new Color(240, 240, 10);
     private static final Color blueColor = new Color(200, 255, 255);
     private static final Color greyColor = new Color(240, 240, 240);
-    private static final String entityCursorToolTip = "<html>Simple clic: centrer dans l'arbre.<br>Double clic: racine de l'arbre</html>";
-    private static final String NEW_FAMILY = NbBundle.getMessage(MergeModel.class, "MergeTable.label.newFamily");
-    private static final String NEW_INDI = NbBundle.getMessage(MergeModel.class, "MergeTable.label.newIndi");
-    private static final String NEW_SOURCE = NbBundle.getMessage(MergeModel.class, "MergeTable.label.selectSource");
-    
+
+
+
     public  MergeTable() {
         setPreferredSize(null);
-        setAutoResizeMode(AUTO_RESIZE_OFF );
-        //setAutoResizeMode(AUTO_RESIZE_LAST_COLUMN );        
+        setAutoResizeMode(AUTO_RESIZE_SUBSEQUENT_COLUMNS);
         setBackground(Color.WHITE);
         setSelectionBackground(getBackground());
         setShowGrid(true);
+        getTableHeader().setReorderingAllowed(false);
         //setIntercellSpacing(new Dimension(0, 0));
-        ToolTipManager.sharedInstance().registerComponent( this);
-        ToolTipManager.sharedInstance().setInitialDelay(0) ;
+        //ToolTipManager.sharedInstance().registerComponent( this);
+        //ToolTipManager.sharedInstance().setInitialDelay(0) ;
 
         MergeTableRenderer mergeTableRenderer = new MergeTableRenderer();
         setDefaultRenderer(Object.class, mergeTableRenderer);
-        loadColumnLayout();     
-    }
-
-    public void setModel(MergeModel model) {
-        super.setModel(model);
-        loadColumnLayout();
 
         addMouseListener(new MouseAdapter() {
 
             @Override
             public void mousePressed(MouseEvent e) {
                 JTable target = (JTable) e.getSource();
-                int row = target.rowAtPoint(e.getPoint());
                 int column = target.columnAtPoint(e.getPoint());
-
                 if (column == 4) {
-                    Object objectValue =  ((MergeModel) getModel()).getValueAt(row, column);
-                    if( objectValue instanceof Indi || objectValue instanceof Fam )  {
-                     
-                        Entity entity = (Entity) objectValue;
-                        if (e.getClickCount() == 2) {
-                            SelectionManager.setRootEntity(entity);
-                        } else {
-                            SelectionManager.showEntity(entity);
-                        }
-                    } else if( ((MergeModel) getModel()).getRow(row).rowType == MergeModel.RowType.EventSource) {
-                        entityActionManager.selectSource();  
-                        
+                    int row = target.rowAtPoint(e.getPoint());
+                    Object objectValue = getModel().getValueAt(row, column);
+                    if( objectValue instanceof MergeTableAction && ((MergeTableAction)objectValue).isClickable() )  {
+                        ((MergeTableAction)objectValue).applyAction( (java.awt.Frame) SwingUtilities.getWindowAncestor(target), e.getClickCount());
                     }
                 }
-            }        
+            }
         });
 
         /**
-         * change le curseur si la souris passe au dessus d'une cellule 
+         * change le curseur si la souris passe au dessus d'une cellule
          * contenant une entité cliquable
          */
         addMouseMotionListener(new MouseAdapter() {
@@ -100,24 +73,29 @@ public class MergeTable extends JTable {
             @Override
             public void mouseMoved(MouseEvent e) {
                 JTable target = (JTable) e.getSource();
-                //int cModel = target.columnAtPoint(e.getPoint());
-                //int column = target.convertColumnIndexToView(cModel);
-                int row = target.rowAtPoint(e.getPoint());
                 int column = target.columnAtPoint(e.getPoint());
-                Object value = ((MergeModel) getModel()).getValueAt(row, column);
-                if (entityActionManager != null && column == 4  &&
-                   ( value != null  || ((MergeModel) getModel()).getRow(row).rowType == MergeModel.RowType.EventSource)  ) {
-                    setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-                    
-                } else {
-                    setCursor(Cursor.getDefaultCursor());
+                if (column == 4) {
+                    int row = target.rowAtPoint(e.getPoint());
+                    Object value = getModel().getValueAt(row, column);
+                    if ( value instanceof MergeTableAction && ((MergeTableAction)value).isClickable() ) {
+                        setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                    } else {
+                        setCursor(Cursor.getDefaultCursor());
+                    }
                 }
             }
         });
+
+    }
+
+    public void setModel(ProposalRuleTableModel model) {
+        super.setModel(model);
+//        model.addTableModelListener(this);
+        loadColumnLayout();
     }
 
     /**
-     * cet methode masque les check box inutiles dans la colonne 2
+     * cet methode masque la checkbox inutile dans la colonne 2
      * @param renderer
      * @param row
      * @param column
@@ -125,35 +103,31 @@ public class MergeTable extends JTable {
      */
     @Override
     public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-        Component c = super.prepareRenderer(renderer, row, column);
-        CompareResult cr = ((MergeModel)getModel()).getCompareResult(row) ;
-        if (column == 2 && ( cr == MergeModel.CompareResult.NOT_APPLICABLE
-                  || cr == MergeModel.CompareResult.EQUAL)  ) {
+        if (column == 2 && getModel().getValueAt(row, 2) == null  ) {
+            // j'affiche un Jlabel à la place de la checkbox si la valeur de la colonne 2 est nule
             JLabel label = new JLabel("");
-//            label.setBackground(this.getBackground());
-//            label.setOpaque(false);                
+            if( ((ProposalRuleTableModel) getModel()).getCompareResult(row) == ProposalRule.CompareResult.EQUAL) {
+                label.setHorizontalAlignment(SwingConstants.CENTER);
+                label.setText("=");
+            }
             return label;
         }  else {
-            return c;
+            return super.prepareRenderer(renderer, row, column);
         }
     }
 
 
     @Override
     public Component prepareEditor(TableCellEditor editor, int row, int column) {
-        Component c = super.prepareEditor(editor, row, column);
-        CompareResult cr = ((MergeModel)getModel()).getCompareResult(row) ;
-        if (column == 2 &&( cr == MergeModel.CompareResult.NOT_APPLICABLE
-                  || cr == MergeModel.CompareResult.EQUAL) ) {
+        if (column == 2 && getModel().getValueAt(row, 2) == null  ) {
+            // j'affiche un Jlabel à la place de la checkbox si la valeur de la colonne 2 est nule
             JLabel label = new JLabel("");
-//            label.setBackground(this.getBackground());
-//            label.setOpaque(false);                
             return label;
         }  else {
-            return c;
+            return super.prepareEditor(editor, row, column);
         }
     };
-    
+
     /**
      * Enregistrer la largeur des colonnes
      * Cette méthode est appelée par la fenêtre principal avant la fermeture
@@ -177,9 +151,31 @@ public class MergeTable extends JTable {
                 int w = Integer.parseInt(tokens.nextToken());
                 col.setWidth(w);
                 col.setPreferredWidth(w);
+                col.setMinWidth(20);
             }
-        } catch (Throwable t) {
-            // ignore
+
+            String maxtext0="AAAAAAAAAA";
+            String maxtext4="AAAAAAAAAAAAAAAAAAAA";
+            for(int i=0 ; i< getRowCount(); i++) {
+                if( getModel().getValueAt(i, 4) != null) {
+                    String text = getModel().getValueAt(i, 0).toString();
+                    if ( text.length() > maxtext0.length() ) {
+                        maxtext0 = text;
+                    }
+                }if( getModel().getValueAt(i, 4) != null) {
+                    String text = getModel().getValueAt(i, 4).toString();
+                    if ( text.length() > maxtext4.length() ) {
+                        maxtext4 = text;
+                    }
+                }
+            }
+
+            columns.getColumn(0).setMaxWidth(getGraphics().getFontMetrics().stringWidth(maxtext0) *2 +15);
+            columns.getColumn(4).setMaxWidth(getGraphics().getFontMetrics().stringWidth(maxtext0) *2 +15);
+            columns.getColumn(2).setMinWidth(25);
+            columns.getColumn(2).setMaxWidth(25);
+        } catch (NumberFormatException t) {
+            // ignore, l'erreur sera corrigée par la prochaine sauvegarde
         }
     }
 
@@ -200,12 +196,6 @@ public class MergeTable extends JTable {
 
     }
 
-    void setEntityActionManager(EntityActionManager entityActionManager) {
-        this.entityActionManager = entityActionManager;
-    }
-
-
-        
     /**
      * Cette classe gère l'affichage des cellules de la table
      */
@@ -228,8 +218,7 @@ public class MergeTable extends JTable {
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value,
                 boolean isSelected, boolean hasFocus, int row, int column) {
-            MergeModel model = (MergeModel) table.getModel();
-            MergeModel.MergeRow mergeRow = model.getRow(row);
+            ProposalRuleTableModel model = (ProposalRuleTableModel) table.getModel();
             setFont(table.getFont());
             setToolTipText(null);
             // je choisis le format d'affichage du texte
@@ -245,28 +234,11 @@ public class MergeTable extends JTable {
                 } else if (value instanceof PropertyPlace) {
                     PropertyPlace place = (PropertyPlace)value;
                     setText(place.getDisplayValue());
-                } else if (value instanceof Source) {
-                    if ( column == 4 ) {
-                        setText(((Source)value).getId());
-                    } else {
-                        setText(((Source)value).getTitle());
-                    }
-                } else if (value instanceof Entity) {
-                    if ( column == 4 ) {
-                        setText(((Entity)value).getId());
-                        // j'affiche un tooltip pour
-                        setToolTipText(entityCursorToolTip);
-                    } else {
-                        setText(((Entity)value).getDisplayValue());
-                    }
-                } else if (value instanceof PropertyEvent) {
-                    PropertyEvent propertyEvent = (PropertyEvent) value;
-                    String type = propertyEvent.getPropertyValue("TYPE");
-                    if( ! type.isEmpty()) {
-                        setText(type);   
-                    } else {
-                        setText(Gedcom.getName(propertyEvent.getTag()));
-                    }
+                } else if (value instanceof MergeTableAction) {
+                    MergeTableAction action = (MergeTableAction)value;
+                    setText(action.getText() );
+                    setToolTipText(action.getToolTipText() );
+
                 } else {
                     String comment ;
                     if (value instanceof Property) {
@@ -275,117 +247,54 @@ public class MergeTable extends JTable {
                         comment = value.toString();
                     }
                     setText(comment.replace('\n', ' '));
-                    
+
                     // j'affiche un tooltip pour les commentaires et les professions
-                    if ( (mergeRow.rowType == RowType.EventComment
-                          ||  mergeRow.rowType == RowType.EventInsinuationComment
-                          ||  mergeRow.rowType == RowType.IndiOccupation
-                          ||  mergeRow.rowType == RowType.IndiMarriedOccupation
-                          ||  mergeRow.rowType == RowType.IndiFatherOccupation
-                          ||  mergeRow.rowType == RowType.IndiMotherOccupation
-                          ||  mergeRow.rowType == RowType.WifeOccupation
-                          ||  mergeRow.rowType == RowType.WifeMarriedOccupation
-                          ||  mergeRow.rowType == RowType.WifeFatherOccupation
-                          ||  mergeRow.rowType == RowType.WifeMotherOccupation 
-                          ||  mergeRow.rowType == RowType.IndiBirthPlace 
-                          ||  mergeRow.rowType == RowType.WifeBirthPlace 
-                         )
-                          && (column == 1 || column==3) && !value.toString().isEmpty()) 
+                    if ( comment.length() > 8
+                          && (column == 1 || column==3) && !value.toString().isEmpty())
                     {
                         setToolTipText(wrapToolTip(comment, 80));
-                    }                    
+                    }
                 }
             } else {
                 // la valeur est nulle
-                if ( column == 4 ) {
-                    if (mergeRow.compareResult != CompareResult.NOT_APPLICABLE) {
-                        switch ( mergeRow.rowType) {
-                            case EventSource :
-                                setText(NEW_SOURCE);
-                                break;
-                            case MarriageFamily :
-                            case IndiParentFamily:
-                            case IndiMarriedFamily :
-                            case WifeParentFamily:
-                            case WifeMarriedFamily:
-                                setText(NEW_FAMILY);
-                                break;
-                            case IndiLastName :
-                            case IndiFatherLastName :
-                            case IndiMotherLastName :
-                            case WifeLastName :
-                            case WifeFatherLastName :
-                            case WifeMotherLastName :
-                                setText(NEW_INDI);
-                                break;
-                            default:
-                                setText("");
-                        }
-                    } else {
-                        switch ( mergeRow.rowType) {
-                            case EventSource :
-                                setText(NEW_SOURCE);
-                                break;                           
-                            default:
-                                // la comparaison n' est pas applicable , je n'affiche rien dans la colonne 4
-                                setText("");
-                        }
-                    }
-                } else {
-                    setText("");
-                }
+                setText("");
             }
 
-            // je choisis la couleur de fond
-            if (mergeRow.rowType == RowType.Separator) {
-                setBackground(table.getBackground());
-                setForeground(table.getForeground());
-            } else {
-                switch (modelColumn) {
-                    case 0:
-                        setBackground(table.getBackground());
+            // je choisis la couleur de fond de la colonne 3
+              switch (modelColumn) {
+                case 3:
+                    setForeground(table.getForeground());
+                    switch (model.getCompareResult(row)) {
+                        case EQUAL:
+                        case MANDATORY:
+                        case NOT_APPLICABLE:
+                            setBackground(table.getBackground());
+                            break;
+                        case CONFLICT:
+                            setBackground(Color.PINK);
+                            break;
+                        case COMPATIBLE:
+                        default:
+                            if (!model.isMergeChanged(row)) {
+                                setBackground(blueColor);
+                            } else {
+                                setBackground(greyColor);
+                            }
+                    }
+                    break;
+                case 4:
+                    if (value instanceof MergeTableAction &&  ((MergeTableAction)value).isClickable() ) {
+                        // j'affiche en bleu pour signaler une action possible avec la souris
+                        setForeground(Color.blue);
+                    } else {
                         setForeground(table.getForeground());
-                        break;
-                    case 1:
-                        setBackground(table.getBackground());
-                        setForeground(table.getForeground());
-                        break;
-                    case 3:
-                        setForeground(table.getForeground());
-                        switch (model.getCompareResult(row)) {
-                            case NOT_APPLICABLE:
-                                setBackground(table.getBackground());
-                                break;
-                            case CONFLIT:
-                                setBackground(Color.PINK);
-                                break;
-                            case EQUAL:
-                                setBackground(table.getBackground());
-                                break;
-                            default:
-                                if (mergeRow.merge == mergeRow.merge_initial) {
-                                    setBackground(blueColor);
-                                } else {
-                                    setBackground(yellowColor);
-                                }
-                        }
-                        break;
-                    case 4:
-                        if (entityActionManager != null 
-                             && ( (value != null && (value instanceof Fam || value instanceof Indi))
-                                || mergeRow.rowType == MergeModel.RowType.EventSource )) {
-                            // j'affiche en bleu pour signaler une action possible avec la souris
-                            setForeground(Color.blue);
-                        } else {
-                            setForeground(table.getForeground());
-                        }
-                        setBackground(table.getBackground());
-                        break;
-                    default:
-                        setBackground(table.getBackground());
-                        setForeground(table.getForeground());
-                        break;
-                }
+                    }
+                    setBackground(table.getBackground());
+                    break;
+                default:
+                    setBackground(table.getBackground());
+                    setForeground(table.getForeground());
+                    break;
             }
             return this;
 
@@ -405,13 +314,13 @@ public class MergeTable extends JTable {
 
         StringBuilder sb = new StringBuilder("<html>");
         while (position < tip.length()) {
-            String buffer;                    
+            String buffer;
             if (position + maxLength + MARGING > tip.length()) {
                 buffer = tip.substring(position);
             } else {
                 buffer = tip.substring(position, position + maxLength + MARGING );
             }
-                
+
             int firstReturn = buffer.indexOf('\n');
             if (firstReturn != -1) {
                 // je decoupe au niveau du caractere '\n'
@@ -444,7 +353,7 @@ public class MergeTable extends JTable {
                 }
             }
         }
-        
+
         sb.append(("</html>"));
         return sb.toString();
     }

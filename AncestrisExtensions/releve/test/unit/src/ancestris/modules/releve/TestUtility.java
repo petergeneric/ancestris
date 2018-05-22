@@ -2,10 +2,14 @@ package ancestris.modules.releve;
 
 import ancestris.modules.releve.dnd.TransferableRecord;
 import ancestris.modules.releve.merge.MergeDialog;
+import ancestris.modules.releve.merge.MergeManager;
+import ancestris.modules.releve.merge.MergeRecord;
+import ancestris.modules.releve.merge.ProposalHelper;
 import ancestris.modules.releve.model.Record;
 import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
+import ancestris.modules.releve.model.RecordInfoPlace;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import genj.gedcom.Entity;
@@ -42,17 +46,31 @@ public class TestUtility extends TestCase {
         File file = new File(System.getProperty("user.home") + File.separator + "ancestris.txt");
         boolean append = false;
         FileWriter writer = new FileWriter(file, append);
-        writer.write(data);            
-        writer.close();        
+        writer.write(data);
+        writer.close();
         return file;
 
     }
-    
+
     static {
         GedcomOptions.getInstance().setUseSpacedPlaces(true);
+        //GedcomOptions.getInstance().setReplaceSpaceSeparatorWithComma(false);
     }
-    
-    
+
+    /**
+     * creation 'un gedcom minimal
+     * @return
+     * @throws GedcomException
+     * @throws java.net.MalformedURLException
+     */
+    public static Gedcom createGedcomEmpty() throws GedcomException, MalformedURLException {
+        Gedcom gedcom;
+        gedcom = new Gedcom();
+        gedcom.setGrammar(Grammar.V55);
+        return gedcom;
+    }
+
+
     /**
      * creation 'un gedcom minimal
      * @return
@@ -63,12 +81,12 @@ public class TestUtility extends TestCase {
 
         // Gedcom options
 
-        
+
         Gedcom gedcom;
         gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
-        
-        
+
+
         Source source1 = (Source) gedcom.createEntity(Gedcom.SOUR, "S1");
         source1.addProperty("TITL", "BMS Paris");
         Source source2 = (Source) gedcom.createEntity(Gedcom.SOUR, "S2");
@@ -125,8 +143,8 @@ public class TestUtility extends TestCase {
             family.addChild(child2);
             family.addChild(child3);
         }
-        
-        {            
+
+        {
             Indi cousin = (Indi) gedcom.createEntity(Gedcom.INDI, "I10");
             cousin.setName("cousin", "FATHERLASTNAME");
             cousin.setSex(PropertySex.MALE);
@@ -146,10 +164,10 @@ public class TestUtility extends TestCase {
                 ((PropertyXRef) property).link();
             }
         }
-        
 
 
-        
+
+
         return gedcom;
     }
 
@@ -160,16 +178,18 @@ public class TestUtility extends TestCase {
      */
     public static Gedcom createGedcomF2() throws GedcomException {
         // Gedcom options
-        
+
         Gedcom gedcom = new Gedcom();
         gedcom.setGrammar(Grammar.V55);
-        
+
         Source source1 = (Source) gedcom.createEntity(Gedcom.SOUR, "S1");
         source1.addProperty("TITL", "BMS Paris");
-        
+        Source source2 = (Source) gedcom.createEntity(Gedcom.SOUR, "S2");
+        source2.addProperty("TITL", "Etat civil Paris");
+
         {
             // famille 2
-            Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "F2husband");
+            Indi husband = (Indi) gedcom.createEntity(Gedcom.INDI, "IF2husband");
             husband.setName("Jupiter", "PLANET");
             husband.setSex(PropertySex.MALE);
             Property birth = husband.addProperty("BIRT", "");
@@ -180,44 +200,49 @@ public class TestUtility extends TestCase {
             PropertyPlace placeParis = (PropertyPlace) birth.getProperty("PLAC");
             placeParis.setCoordinates("N48.8534", "E2.3486");
 
-            Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "F2Wife");
+            Indi wife = (Indi) gedcom.createEntity(Gedcom.INDI, "IF2Wife");
             wife.setName("Venus", "GALAXY");
             wife.setSex(PropertySex.FEMALE);
             husband.addProperty("OCCU", "F2Wifeoccupation");
-            
-            Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "F2child1");
+
+            Indi child1 = (Indi) gedcom.createEntity(Gedcom.INDI, "IF2child1");
             child1.setName("Mercure", "PLANET");
             child1.setSex(PropertySex.MALE);
             birth = child1.addProperty("BIRT", "");
             birth.addProperty("DATE", "01 APR 1980");
             birth.addProperty("PLAC", "Brest");
             birth.addProperty("SOUR", "@S2@");
-            
-            Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "F2child2");
+
+            Indi child2 = (Indi) gedcom.createEntity(Gedcom.INDI, "IF2child2");
             child2.setName("Janus", "PLANET");
             child2.setSex(PropertySex.FEMALE);
             birth = child1.addProperty("BIRT", "");
             birth.addProperty("DATE", "01 SEP 1982");
             birth.addProperty("PLAC", "Brest");
             birth.addProperty("SOUR", "@S2@");
-            
+
             Fam family = (Fam) gedcom.createEntity(Gedcom.FAM, "F2");
             family.setHusband(husband);
             family.setWife(wife);
             PropertyDate marriage = family.getMarriageDate(true);  // create=true
             marriage.setValue("05 FEB 1979");
-            
+
             // je complete les referecences entre les entités et sources
-//            for (Property property : gedcom.getProperties(new TagPath("INDI:BIRT:SOUR"))) {
-//                ((PropertyXRef) property).link();
-//            }
-            
-            
+            for (Property property : gedcom.getProperties(new TagPath("INDI:BIRT:SOUR"))) {
+                ((PropertyXRef) property).link();
+            }
+
+
         }
         return gedcom;
     }
-    
-    
+
+    static public RecordInfoPlace getRecordsInfoPlace() {
+        RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
+        recordsInfoPlace.setValue("Paris","75000","","state","country");
+        return recordsInfoPlace;
+    }
+
     public static RecordBirth getRecordBirth() {
         RecordBirth record = new RecordBirth();
         record.setFieldValue(FieldType.eventDate, "01/01/2000");
@@ -254,7 +279,7 @@ public class TestUtility extends TestCase {
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         return record;
     }
-    
+
     public static RecordDeath getRecordDeath() {
         RecordDeath record = new RecordDeath();
         record.setFieldValue(FieldType.eventDate, "11/11/2000");
@@ -271,7 +296,7 @@ public class TestUtility extends TestCase {
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         return record;
     }
-    
+
     public static RecordMisc getRecordMisc() {
         RecordMisc record = new RecordMisc();
         record.setFieldValue(FieldType.eventDate, "29/02/2012");
@@ -295,8 +320,8 @@ public class TestUtility extends TestCase {
         record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
         record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
         return record;
-    }   
-    
+    }
+
     public static Record getRecordBirthF2() {
         RecordBirth record = new RecordBirth();
                 record.setFieldValue(Record.FieldType.eventDate, "01/04/1980");
@@ -312,7 +337,7 @@ public class TestUtility extends TestCase {
                 record.setFieldValue(Record.FieldType.generalComment, "generalcomment");
         return record;
     }
-    
+
     public static RecordMarriage getRecordMarriageF2() {
         RecordMarriage record = new RecordMarriage();
         record.setFieldValue(FieldType.eventDate, "05/02/1979");
@@ -334,7 +359,35 @@ public class TestUtility extends TestCase {
         return record;
     }
 
-        
+    public static RecordMisc getRecordMiscOtherF2() {
+        RecordMisc record = new RecordMisc();
+        record.setFieldValue(FieldType.eventDate, "05/02/1979");
+        record.setFieldValue(FieldType.cote, "cote");
+        record.setFieldValue(Record.FieldType.eventType, "eventname");
+        record.setFieldValue(FieldType.freeComment,  "photo");
+        record.setFieldValue(FieldType.generalComment, "general comment");
+        record.setIndi("Jupiter", "PLANET", "M", "30y", "01/02/1990", "indiBirthPlace", "indiBirthAddress", "indiOccupation", "indiResidence", "indiAddress", "indiComment");
+        record.setIndiMarried("indiMarriedFirstname", "indiMarriedLastname", "indiMarriedOccupation", "indiMarriedResidence", "indiMarriedAddress", "indiMarriedComment", "DEAD");
+        record.setIndiFather("indiFatherFirstname", "PLANET", "indiFatherOccupation", "indiFatherResidence", "indiFatherAddress", "indiFatherComment", "false", "70y");
+        record.setIndiMother("indiMotherFirstname", "ASTRE", "indiMotherOccupation", "indiMotherResidence", "indiMotherAddress", "indiMotherComment", "false", "72y");
+        record.setWife("Venus", "GALAXY", "19y", "wifeAge", "02/02/1992", "wifeBirthPlace", "wifeBirthAddress", "wifeOccupation", "wifeResidence", "wifeAddress", "wifeComment");
+        record.setWifeMarried("wifeMarriedFirstname", "wifeMarriedLastname", "wifeMarriedOccupation", "wifeMarriedResidence", "wifeMarriedAddress", "wifeMarriedComment", "ALIVE");
+        record.setWifeFather("wifeFatherFirstname", "GALAXY", "wifeFatherOccupation", "wifeFatherResidence", "wifeFatherAddress", "wifeFatherComment", "false", "71y");
+        record.setWifeMother("wifeMotherFirstname", "COMET", "wifeMotherOccupation", "wifeMotherResidence", "wifeMotherAddress", "wifeMotherComment", "false", "73y");
+        record.setWitness1("w1firstname", "w1lastname", "w1occupation", "w1comment");
+        record.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
+        record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
+        record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
+        return record;
+    }
+
+    public static MergeRecord createMergeRecord(Record record ) throws Exception {
+        RecordInfoPlace infoPlace = TestUtility.getRecordsInfoPlace();
+        String fileName = "";
+        TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
+        return new MergeRecord(data);
+    }
+
     protected static Component getComponentByName(Component parent, String name) {
 
         if (parent.getName() != null && parent.getName().equals(name)) {
@@ -352,12 +405,40 @@ public class TestUtility extends TestCase {
         }
         return null;
     }
-    
-    public static void showMergeDialog(Gedcom gedcom, Entity entity, TransferableRecord.TransferableData data ) {
-        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, entity, data, true);
+
+    public static void showMergeDialog(TransferableRecord.TransferableData data, Gedcom gedcom, Entity selectedEntity ) {
+        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, selectedEntity, data, true);
         TestUtility.waitForDialogClose(dialog);
     }
-            
+
+    public static void showMergeDialog(RecordInfoPlace recordsInfoPlace, String fileName, Record record, Gedcom gedcom, Entity selectedEntity ) {
+        TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, recordsInfoPlace, fileName, record);
+        MergeDialog dialog = MergeDialog.show(new javax.swing.JFrame(), gedcom, selectedEntity, data, true);
+        TestUtility.waitForDialogClose(dialog);
+    }
+
+    public static MergeManager createMergeManager(TransferableRecord.TransferableData data, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+        MergeManager mergeManager = new MergeManager(data, gedcom, selectedEntity);
+        mergeManager.createProposals();
+        return mergeManager;
+    }
+
+    public static MergeManager createMergeManager(RecordInfoPlace recordsInfoPlace, String fileName, Record record, Gedcom gedcom, Entity selectedEntity ) throws Exception {
+        TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, recordsInfoPlace, fileName, record);
+        MergeManager mergeManager = new MergeManager(data, gedcom, selectedEntity);
+        mergeManager.createProposals();
+        return mergeManager;
+    }
+
+    public static ProposalHelper createProposalHelper(Record record, Gedcom gedcom ) throws Exception {
+        RecordInfoPlace infoPlace = TestUtility.getRecordsInfoPlace();
+        String fileName = "";
+        TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, infoPlace, fileName, record);
+        MergeRecord mergeRecord = new MergeRecord(data);
+        return new ProposalHelper(mergeRecord, null, gedcom);
+    }
+
+
 
     public static final Object lock = new Object();
     public static void waitForDialogClose(final java.awt.Window dialog) {

@@ -1,19 +1,14 @@
 package ancestris.modules.releve.merge;
 
-import ancestris.modules.releve.merge.SimilarNameSet;
 import java.util.HashMap;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class SimilarNameSetTest extends TestCase {
-    
-    public SimilarNameSetTest(String testName) {
-        super(testName);
-    }
+public class SimilarNameSetTest {
 
     @Test
     public void testsaveloadSimilarFirstName() {
@@ -30,7 +25,7 @@ public class SimilarNameSetTest extends TestCase {
         assertEquals("equivalent B2", "B2", SimilarNameSet.getSimilarFirstName().getSimilarName("B2"));
         assertEquals("equivalent C1", "C1", SimilarNameSet.getSimilarFirstName().getSimilarName("C1"));
     }
-    
+
     @Test
     public void testsaveloadSimilarLastName() {
         HashMap<String,String> hashmap = new HashMap<String,String>();
@@ -46,6 +41,6 @@ public class SimilarNameSetTest extends TestCase {
         assertEquals("equivalent B2", "B2", SimilarNameSet.getSimilarLastName().getSimilarName("B2"));
         assertEquals("equivalent C1", "C1", SimilarNameSet.getSimilarLastName().getSimilarName("C1"));
     }
-    
+
 
 }
