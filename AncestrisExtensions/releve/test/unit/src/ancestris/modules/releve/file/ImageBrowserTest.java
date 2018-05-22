@@ -2,16 +2,15 @@ package ancestris.modules.releve.file;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.io.FilenameFilter;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class ImageBrowserTest extends TestCase {
-    
+public class ImageBrowserTest {
+
     /**
      * test splitCSV
      */
@@ -36,10 +35,10 @@ public class ImageBrowserTest extends TestCase {
         assertTrue("test vide", true);
 
     }
-    
+
     private File getFiles(File directory, DirectoryReferenceFilter dirFilter, FileReferenceFilter fileFilter) {
         File result = null;
-            
+
          if (directory.isDirectory()) {
             // je cherche sous repertoire
             File directories[] = directory.listFiles(dirFilter);
@@ -65,9 +64,9 @@ public class ImageBrowserTest extends TestCase {
                 }
             }
         }
-        
+
         return result;
-    }  
+    }
 
 
     private class DirectoryReferenceFilter implements FileFilter {

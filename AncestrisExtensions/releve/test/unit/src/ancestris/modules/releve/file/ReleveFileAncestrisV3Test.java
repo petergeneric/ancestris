@@ -10,7 +10,9 @@ import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.openide.util.Exceptions;
 
@@ -18,11 +20,7 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class ReleveFileAncestrisV3Test extends TestCase {
-    
-    public ReleveFileAncestrisV3Test(String testName) {
-        super(testName);
-    }
+public class ReleveFileAncestrisV3Test {
 
     /**
      * Test of isValidFile method, of class ReleveFileAncestrisV3.
@@ -34,7 +32,7 @@ public class ReleveFileAncestrisV3Test extends TestCase {
             String data;
             data = "";
             StringBuilder sb;
- 
+
             data = "";
             file = TestUtility.createFile(data);
             sb = new StringBuilder();
@@ -59,11 +57,11 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
         }
-            
-        
+
+
     }
 
-    
+
     /**
      * Test of loadFile method, of class ReleveFileAncestrisV3.
      */
@@ -127,11 +125,11 @@ public class ReleveFileAncestrisV3Test extends TestCase {
     @Test
     public void testSaveFileBirth() {
         File file = new File(System.getProperty("user.home") + File.separator +"testsaveFile.txt");
-        
+
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
-        
+
         RecordBirth record = TestUtility.getRecordBirth();
         dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), RecordType.BIRTH, file, false);
@@ -148,12 +146,12 @@ public class ReleveFileAncestrisV3Test extends TestCase {
                 assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.secondDate
-                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress 
+                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress
                      || fieldType == FieldType.indiMarriedAddress
                      || fieldType == FieldType.indiFatherAddress || fieldType == FieldType.indiMotherAddress
-                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress 
+                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress
                      || fieldType == FieldType.wifeMarriedAddress
-                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress                     
+                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress
                      ) {
                     assertNull(fieldType.name(), record2.getField(fieldType));
                     assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
@@ -176,12 +174,12 @@ public class ReleveFileAncestrisV3Test extends TestCase {
     @Test
     public void testSaveFileMarriage() {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-        
+
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
-        
-        RecordMarriage record = TestUtility.getRecordMarriage();      
+
+        RecordMarriage record = TestUtility.getRecordMarriage();
         dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), RecordType.MARRIAGE, file, false);
         assertEquals("save result", 0, sb.length());
@@ -197,12 +195,12 @@ public class ReleveFileAncestrisV3Test extends TestCase {
                 assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.secondDate
-                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress 
+                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress
                      || fieldType == FieldType.indiMarriedAddress
                      || fieldType == FieldType.indiFatherAddress || fieldType == FieldType.indiMotherAddress
-                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress 
+                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress
                      || fieldType == FieldType.wifeMarriedAddress
-                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress                     
+                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress
                      ) {
                     assertNull(fieldType.name(), record2.getField(fieldType));
                     assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
@@ -229,7 +227,7 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
-        
+
         RecordDeath record = TestUtility.getRecordDeath();
         dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), RecordType.DEATH, file, false);
@@ -246,12 +244,12 @@ public class ReleveFileAncestrisV3Test extends TestCase {
                 assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                if ( fieldType == FieldType.secondDate
-                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress 
+                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress
                      || fieldType == FieldType.indiMarriedAddress
                      || fieldType == FieldType.indiFatherAddress || fieldType == FieldType.indiMotherAddress
-                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress 
+                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress
                      || fieldType == FieldType.wifeMarriedAddress
-                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress                     
+                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress
                      ) {
                      assertNull(fieldType.name(), record2.getField(fieldType));
                     assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
@@ -278,7 +276,7 @@ public class ReleveFileAncestrisV3Test extends TestCase {
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
-        
+
         RecordMisc record = TestUtility.getRecordMisc();
         dataManager.addRecord(record);
         StringBuilder sb = ReleveFileAncestrisV3.saveFile(dataManager, dataManager.getDataModel(), RecordType.MISC, file, false);
@@ -295,12 +293,12 @@ public class ReleveFileAncestrisV3Test extends TestCase {
                 assertNull(fieldType.name(), record2.getField(fieldType));
             } else {
                 if ( fieldType == FieldType.secondDate
-                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress 
+                     || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress
                      || fieldType == FieldType.indiMarriedAddress
                      || fieldType == FieldType.indiFatherAddress || fieldType == FieldType.indiMotherAddress
-                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress 
+                     || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress
                      || fieldType == FieldType.wifeMarriedAddress
-                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress                     
+                     || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress
                      ) {
                     assertNull(fieldType.name(), record2.getField(fieldType));
                     assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));

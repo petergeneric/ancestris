@@ -9,7 +9,8 @@ import genj.fo.Format;
 import genj.fo.PDFFormat;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.openide.util.Exceptions;
 
@@ -17,9 +18,9 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class ReleveFilePdfTest extends TestCase {
-    
-    
+public class ReleveFilePdfTest {
+
+
     /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
@@ -78,12 +79,12 @@ public class ReleveFilePdfTest extends TestCase {
             format.format(doc, file);
         } catch (IOException ex) {
             Exceptions.printStackTrace(ex);
-            fail(ex.getMessage());            
+            fail(ex.getMessage());
         }
 
         file.delete();
 
     }
 
-    
+
 }

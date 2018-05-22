@@ -1,17 +1,12 @@
 package ancestris.modules.releve.model;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class FieldDateTest extends TestCase {
-    
-    public FieldDateTest(String testName) {
-        super(testName);
-    }
+public class FieldDateTest {
 
     /**
      * Test of setValue method, of class FieldDate.

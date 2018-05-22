@@ -2,8 +2,8 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -11,18 +11,15 @@ import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class ReleveFileNimegueTest extends TestCase {
-    
-    public ReleveFileNimegueTest(String testName) {
-        super(testName);
-    }
+public class ReleveFileNimegueTest {
 
     /**
      * Test of isValidFile method, of class ReleveFileNimegue.
@@ -162,7 +159,7 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("IndiMotherDead",          "",record2.getFieldValue(FieldType.indiMotherDead));
         assertEquals("IndiMotherOccupation",    record.getFieldValue(FieldType.indiMotherOccupation),record2.getFieldValue(FieldType.indiMotherOccupation));
         assertEquals("IndiMotherComment",       "72y, indiMotherResidence, indiMotherComment",record2.getFieldValue(FieldType.indiMotherComment));
-        
+
         assertEquals("WifeFirstName",           "",record2.getFieldValue(FieldType.wifeFirstName));
         assertEquals("WifeLastName",            "",record2.getFieldValue(FieldType.wifeLastName));
         assertEquals("WifeSex",                 "",record2.getFieldValue(FieldType.wifeSex));
@@ -188,39 +185,39 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("WifeMotherDead",          "",record2.getFieldValue(FieldType.wifeMotherDead));
         assertEquals("WifeMotherOccupation",    "",record2.getFieldValue(FieldType.wifeMotherOccupation));
         assertEquals("WifeMotherComment",       "",record2.getFieldValue(FieldType.wifeMotherComment));
-                
+
         assertWitnesses(record, record2);
 
         file.delete();
 
     }
-    
+
     private void assertWitnesses(Record record, Record record2) {
-       
+
         assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
         assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName), record2.getFieldValue(FieldType.witness1LastName));
         assertEquals("Witness1 " + " Occupation", "",record2.getFieldValue(FieldType.witness1Occupation));
-        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation) 
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation)
                      , record2.getFieldValue(FieldType.witness1Comment));
-        
+
         assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
         assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
         assertEquals("Witness2 " + " Occupation" , "",record2.getFieldValue(FieldType.witness2Occupation));
-        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation) 
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation)
                      , record2.getFieldValue(FieldType.witness2Comment));
-         
+
         assertEquals("Witness3 " + " FirstName" ,  "", record2.getFieldValue(FieldType.witness3FirstName));
         assertEquals("Witness3 " + " LastName" ,   "", record2.getFieldValue(FieldType.witness3LastName));
         assertEquals("Witness3 " + " Occupation",  "", record2.getFieldValue(FieldType.witness3Occupation));
-        assertEquals("Witness3 "+ " Comment",      "", record2.getFieldValue(FieldType.witness3Comment));        
-        
+        assertEquals("Witness3 "+ " Comment",      "", record2.getFieldValue(FieldType.witness3Comment));
+
         assertEquals("Witness4 " + " FirstName" ,  "", record2.getFieldValue(FieldType.witness4FirstName));
         assertEquals("Witness4 " + " LastName" ,   "", record2.getFieldValue(FieldType.witness4LastName));
         assertEquals("Witness4 " + " Occupation",  "", record2.getFieldValue(FieldType.witness4Occupation));
         assertEquals("Witness4 "+ " Comment",      "", record2.getFieldValue(FieldType.witness4Comment));
-        
+
         //assertEquals("GeneralComment", "generalcomment, témoin: w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment",record2.getFieldValue(FieldType.generalComment));
-     
+
     }
 
 
@@ -230,7 +227,7 @@ public class ReleveFileNimegueTest extends TestCase {
     @Test
     public void testSaveFileMarriage() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-        
+
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
 
@@ -310,25 +307,25 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
         assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName), record2.getFieldValue(FieldType.witness1LastName));
         assertEquals("Witness1 " + " Occupation", "",record2.getFieldValue(FieldType.witness1Occupation));
-        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation) 
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation)
                      , record2.getFieldValue(FieldType.witness1Comment));
-        
+
         assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
         assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
         assertEquals("Witness2 " + " Occupation" , "",record2.getFieldValue(FieldType.witness2Occupation));
-        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation) 
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation)
                      , record2.getFieldValue(FieldType.witness2Comment));
-         
+
         assertEquals("Witness3 " + " FirstName" ,  record.getFieldValue(FieldType.witness3FirstName) , record2.getFieldValue(FieldType.witness3FirstName));
         assertEquals("Witness3 " + " LastName" ,   record.getFieldValue(FieldType.witness3LastName),  record2.getFieldValue(FieldType.witness3LastName));
         assertEquals("Witness3 " + " Occupation",  "",record2.getFieldValue(FieldType.witness3Occupation));
-        assertEquals("Witness3 "+ " Comment",      record.getFieldValue(FieldType.witness3Comment)+ ", " + record.getFieldValue(FieldType.witness3Occupation) 
-                     , record2.getFieldValue(FieldType.witness3Comment));     
-        
+        assertEquals("Witness3 "+ " Comment",      record.getFieldValue(FieldType.witness3Comment)+ ", " + record.getFieldValue(FieldType.witness3Occupation)
+                     , record2.getFieldValue(FieldType.witness3Comment));
+
         assertEquals("Witness4 " + " FirstName" ,  record.getFieldValue(FieldType.witness4FirstName) , record2.getFieldValue(FieldType.witness4FirstName));
         assertEquals("Witness4 " + " LastName" ,   record.getFieldValue(FieldType.witness4LastName),  record2.getFieldValue(FieldType.witness4LastName));
         assertEquals("Witness4 " + " Occupation",  "",record2.getFieldValue(FieldType.witness4Occupation));
-        assertEquals("Witness4 "+ " Comment",      record.getFieldValue(FieldType.witness4Comment)+ ", " + record.getFieldValue(FieldType.witness4Occupation) 
+        assertEquals("Witness4 "+ " Comment",      record.getFieldValue(FieldType.witness4Comment)+ ", " + record.getFieldValue(FieldType.witness4Occupation)
                      , record2.getFieldValue(FieldType.witness4Comment));
 
         file.delete();
@@ -340,7 +337,7 @@ public class ReleveFileNimegueTest extends TestCase {
     @Test
     public void testSaveFileDeath() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-        
+
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
 
@@ -428,7 +425,7 @@ public class ReleveFileNimegueTest extends TestCase {
     @Test
     public void testSaveFileMisc() throws Exception {
         File file = new File(System.getProperty("user.home") + File.separator + "testsaveFile.txt");
-        
+
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
 
@@ -504,30 +501,30 @@ public class ReleveFileNimegueTest extends TestCase {
         assertEquals("WifeMotherDead",          "",record2.getFieldValue(FieldType.wifeMotherDead));
         assertEquals("WifeMotherOccupation",    record.getFieldValue(FieldType.wifeMotherOccupation),record2.getFieldValue(FieldType.wifeMotherOccupation));
         assertEquals("WifeMotherComment",       "73y, Vivant, wifeMotherResidence, wifeMotherComment",record2.getFieldValue(FieldType.wifeMotherComment));
-        
+
         assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
         assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName), record2.getFieldValue(FieldType.witness1LastName));
         assertEquals("Witness1 " + " Occupation", "",record2.getFieldValue(FieldType.witness1Occupation));
-        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation) 
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Comment)+ ", " + record.getFieldValue(FieldType.witness1Occupation)
                      , record2.getFieldValue(FieldType.witness1Comment));
-        
+
         assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
         assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
         assertEquals("Witness2 " + " Occupation" , "",record2.getFieldValue(FieldType.witness2Occupation));
-        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation) 
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Comment)+ ", " + record.getFieldValue(FieldType.witness2Occupation)
                      , record2.getFieldValue(FieldType.witness2Comment));
-         
+
         assertEquals("Witness3 " + " FirstName" ,  record.getFieldValue(FieldType.witness3FirstName) , record2.getFieldValue(FieldType.witness3FirstName));
         assertEquals("Witness3 " + " LastName" ,   record.getFieldValue(FieldType.witness3LastName),  record2.getFieldValue(FieldType.witness3LastName));
         assertEquals("Witness3 " + " Occupation",  "",record2.getFieldValue(FieldType.witness3Occupation));
-        assertEquals("Witness3 "+ " Comment",      record.getFieldValue(FieldType.witness3Comment)+ ", " + record.getFieldValue(FieldType.witness3Occupation) 
-                     , record2.getFieldValue(FieldType.witness3Comment));     
-        
+        assertEquals("Witness3 "+ " Comment",      record.getFieldValue(FieldType.witness3Comment)+ ", " + record.getFieldValue(FieldType.witness3Occupation)
+                     , record2.getFieldValue(FieldType.witness3Comment));
+
         assertEquals("Witness4 " + " FirstName" ,  record.getFieldValue(FieldType.witness4FirstName) , record2.getFieldValue(FieldType.witness4FirstName));
         assertEquals("Witness4 " + " LastName" ,   record.getFieldValue(FieldType.witness4LastName),  record2.getFieldValue(FieldType.witness4LastName));
         assertEquals("Witness4 " + " Occupation",  "",record2.getFieldValue(FieldType.witness4Occupation));
-        assertEquals("Witness4 "+ " Comment",      record.getFieldValue(FieldType.witness4Comment)+ ", " + record.getFieldValue(FieldType.witness4Occupation) 
-                     , record2.getFieldValue(FieldType.witness4Comment)); 
+        assertEquals("Witness4 "+ " Comment",      record.getFieldValue(FieldType.witness4Comment)+ ", " + record.getFieldValue(FieldType.witness4Occupation)
+                     , record2.getFieldValue(FieldType.witness4Comment));
 
         file.delete();
     }

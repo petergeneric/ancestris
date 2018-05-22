@@ -1,5 +1,5 @@
  package ancestris.modules.releve;
- 
+
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
@@ -25,7 +25,7 @@ import java.beans.PropertyVetoException;
 import java.io.IOException;
 import java.net.URL;
 import javax.swing.text.Utilities;
-import junit.framework.Assert;
+import org.junit.Assert;
 import org.openide.filesystems.Repository;
 import org.openide.filesystems.XMLFileSystem;
 import org.openide.util.Lookup;
@@ -48,38 +48,38 @@ public class UnitTestUtils extends ProxyLookup  {
         Assert.assertNull(DEFAULT_LOOKUP);
         DEFAULT_LOOKUP = this;
     }
-    
-    
+
+
     /** Makes global layer from given string resource info
      * @param stringLayers
      * @throws java.io.IOException
      * @throws org.xml.sax.SAXException
      * @throws java.beans.PropertyVetoException */
-    public static void prepareTest(String[] stringLayers) 
+    public static void prepareTest(String[] stringLayers)
                 throws IOException, SAXException, PropertyVetoException {
         prepareTest(stringLayers, null);
     }
-    
-    public static void prepareTest (String[] stringLayers, Lookup lkp) 
+
+    public static void prepareTest (String[] stringLayers, Lookup lkp)
                 throws IOException, SAXException, PropertyVetoException {
         URL[] layers = new URL[stringLayers.length];
-        
+
         for (int cntr = 0; cntr < layers.length; cntr++) {
             layers[cntr] = Utilities.class.getResource(stringLayers[cntr]);
         }
-        
+
         XMLFileSystem system = new XMLFileSystem();
         system.setXmlUrls(layers);
-        
+
         Repository repository = new Repository(system);
-        
+
         if (lkp == null) {
             UnitTestUtils.setLookup(new Object[] { repository }, UnitTestUtils.class.getClassLoader());
         } else {
             UnitTestUtils.setLookup(new Object[] { repository }, lkp, UnitTestUtils.class.getClassLoader());
         }
     }
-    
+
     /**
      * Set the global default lookup with some fixed instances including META-INF/services/*.
      */
@@ -90,27 +90,27 @@ public class UnitTestUtils extends ProxyLookup  {
             Lookups.singleton(cl),
         });
     }
-    
+
     private static void setLookup(Object[] instances, Lookup lkp, ClassLoader cl) {
         DEFAULT_LOOKUP.setLookups(new Lookup[] {
-            lkp,        
+            lkp,
             Lookups.fixed(instances),
             Lookups.metaInfServices(cl),
             Lookups.singleton(cl),
         });
     }
-    
-    
+
+
     static {
         UnitTestUtils.class.getClassLoader().setDefaultAssertionStatus(true);
         System.setProperty("org.openide.util.Lookup", UnitTestUtils.class.getName());
         Assert.assertEquals(UnitTestUtils.class, Lookup.getDefault().getClass());
     }
-    
+
     public static void initLookup() {
         //currently nothing.
     }
-   
+
 
 
 }

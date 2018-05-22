@@ -6,16 +6,18 @@ import ancestris.modules.releve.model.RecordBirth;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class FileManagerTest extends TestCase {
-    
-   
+public class FileManagerTest  {
+
+
     /**
      * test splitCSV
      */
@@ -59,7 +61,7 @@ public class FileManagerTest extends TestCase {
             FileBuffer fb = FileManager.loadFile(file);
             file.delete();
             assertEquals("Mariage minimal", "", fb.getError());
-            
+
         } catch (Exception ex) {
             fail("IOException "+ ex.toString());
             if (file!= null) {
