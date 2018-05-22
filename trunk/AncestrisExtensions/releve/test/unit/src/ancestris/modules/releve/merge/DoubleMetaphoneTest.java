@@ -1,14 +1,13 @@
 package ancestris.modules.releve.merge;
 
-import ancestris.modules.releve.merge.MergeQuery;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class DoubleMetaphoneTest extends TestCase {
+public class DoubleMetaphoneTest {
 
 
 

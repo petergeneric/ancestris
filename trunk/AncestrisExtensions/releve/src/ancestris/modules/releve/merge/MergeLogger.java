@@ -1,5 +1,7 @@
 package ancestris.modules.releve.merge;
 
+import genj.gedcom.Entity;
+import genj.gedcom.PropertyDate;
 import java.awt.Desktop;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
@@ -7,9 +9,9 @@ import java.awt.datatransfer.StringSelection;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.logging.FileHandler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
 
@@ -21,17 +23,14 @@ import org.openide.util.Exceptions;
 
 class MergeLogger {
 
-    static final Level ACCEPT = Level.FINE;
-    static final Level REFUSE = Level.FINEST;
-    
     static private File logFile;
-    static private FileHandler fileHandler = null; 
+    static private FileHandler fileHandler = null;
     static final Logger LOG = Logger.getLogger("releve");
-    
+
     static {
         LOG.setLevel(Level.OFF);
     }
-    
+
     static void enable() {
         try {
             if( fileHandler == null) {
@@ -52,23 +51,50 @@ class MergeLogger {
         LOG.setLevel(Level.FINEST);
     }
 
-    static void disable() { 
+    static void disable() {
         if(fileHandler!=null ) {
             fileHandler.flush();
             fileHandler.close();
         }
         LOG.removeHandler(fileHandler);
-        fileHandler = null;        
-    }
-    
-    static void logAccept(String className, String methodName, String format, Object ... args ) {
-        LOG.logp(ACCEPT, className, methodName, String.format("ACCEPT " + format, args ));
+        fileHandler = null;
+        LOG.setLevel(Level.OFF);
     }
 
-    static void logRefuse(String className, String methodName, String format, Object ... args ) {
-        LOG.logp(REFUSE, className, methodName, String.format("REFUSE " + format, args ));
+    static final Level ACCEPT = Level.FINE;
+    static final Level REFUSE = Level.FINEST;
+
+    static MergeInfo.InfoFormatter infoFormater = new MergeInfo.InfoFormatter() {
+        @Override
+        public Object format(Object arg) {
+            if (arg == null) {
+                return "null";
+            } else if (arg instanceof Entity) {
+                return ((Entity) arg).getId();
+            } else if (arg instanceof PropertyDate) {
+                return ((PropertyDate) arg).getValue();
+            } else {
+                return arg;
+            }
+        }
+    };
+
+    static LogRecord getAccept( String logFormat, Object ... logArgs ) {
+        return new LogRecord(ACCEPT, "ACCEPT " + new MergeInfo(logFormat, logArgs).toString(infoFormater) );
     }
-    
+
+    static LogRecord getAccept(MergeInfo mergeInfo ) {
+        return new LogRecord(ACCEPT, "ACCEPT " + mergeInfo.toString(infoFormater) );
+    }
+
+    static LogRecord getRefuse( String logFormat, Object ... logArgs ) {
+        return new LogRecord(REFUSE, "REFUSE " + new MergeInfo(logFormat, logArgs).toString(infoFormater)) ;
+    }
+
+    static LogRecord getRefuse( MergeInfo mergeInfo ) {
+        return new LogRecord(REFUSE, "REFUSE " + mergeInfo.toString(infoFormater) );
+    }
+
     /**
      * copie le nom du fichier de trace dans le presse papier
      */
@@ -76,22 +102,21 @@ class MergeLogger {
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         StringSelection sel = new StringSelection(logFile.getPath());
         clipboard.setContents(sel, sel);
-         
-    } 
-    
+    }
+
     /**
      * affiche le fichier de log avec l'etiteur de texte par défaut du système
-     * @throws IOException 
+     * @throws IOException
      */
     static void showLog() throws Exception {
         if (!Desktop.isDesktopSupported()) {
             return;
         }
         if( System.getProperty("os.name").toLowerCase().contains("win") ) {
-            Desktop.getDesktop().open(logFile);               
-        } else {            
+            Desktop.getDesktop().open(logFile);
+        } else {
             Desktop.getDesktop().open(new File(new URI("file://" + logFile.getPath()).getPath() ) );
         }
-    }            
+    }
 
 }

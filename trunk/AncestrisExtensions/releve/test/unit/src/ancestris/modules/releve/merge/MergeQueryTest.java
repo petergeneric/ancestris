@@ -3,7 +3,6 @@ package ancestris.modules.releve.merge;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
-import ancestris.modules.releve.merge.MergeRecord.MergeParticipantType;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -13,14 +12,15 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import java.util.HashMap;
 import java.util.List;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class MergeQueryTest extends TestCase {
+public class MergeQueryTest {
 
 
     /**
@@ -165,20 +165,20 @@ public class MergeQueryTest extends TestCase {
             String fileName = "";
 
             data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("sansfamille1"));
-            mergeRecord = new MergeRecord(data);            
+            mergeRecord = new MergeRecord(data);
 
             children = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             assertEquals("l'enfant n'existe pas dans la famille", 0, children.size());
 
             data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("child1"));
-            mergeRecord = new MergeRecord(data);            
+            mergeRecord = new MergeRecord(data);
 
             children = MergeQuery.findSameChild(mergeRecord, gedcom, family);
             assertEquals("l'enfant existe deja dans la famille", 2, children.size());
             assertEquals("Nom de l'enfant", mergeRecord.getIndi().getFirstName(), children.get(1).getFirstName());
 
             data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("child1"));
-            mergeRecord = new MergeRecord(data);            
+            mergeRecord = new MergeRecord(data);
 
             Indi father = family.getHusband();
             PropertyDate fatherBirtDate =  father.getBirthDate();
@@ -204,16 +204,17 @@ public class MergeQueryTest extends TestCase {
             Indi indi = (Indi)gedcom.getEntity("child1");
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("sansfamille1"));
-            MergeRecord mergeRecord = new MergeRecord(data);            
+            MergeRecord mergeRecord = new MergeRecord(data);
+            MergeRecord.RecordParticipant participant = mergeRecord.getParticipant(MergeRecord.MergeParticipantType.participant1);
 
-            List<Fam> fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1,  gedcom);
+            List<Fam> fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant,  gedcom);
             assertEquals("l'individu existe et a deja une famille", 1, fams.size());
-            assertEquals("Nom de la mere", mergeRecord.getIndi().getMotherLastName(), fams.get(0).getWife().getLastName());
+            assertEquals("Nom de la mere", mergeRecord.getIndi().getMother().getLastName(), fams.get(0).getWife().getLastName());
 
             indi = (Indi)gedcom.getEntity("sansfamille1");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1,  gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant,  gedcom);
             assertEquals("l'individu existe mais n'avait pas de famille", 1, fams.size());
-            assertEquals("Nom de la mere", mergeRecord.getIndi().getMotherLastName(), fams.get(0).getWife().getLastName());
+            assertEquals("Nom de la mere", mergeRecord.getIndi().getMother().getLastName(), fams.get(0).getWife().getLastName());
 
 
             indi = (Indi)gedcom.getEntity("sansfamille1");
@@ -223,60 +224,61 @@ public class MergeQueryTest extends TestCase {
             mergeRecord.getEventDate().getStart().set(fatherBirtDate.getStart());
             mergeRecord.getEventDate().getStart().add(0, 0, 10);
             mergeRecord.getIndi().getBirthDate().setValue(PropertyDate.DATE,  mergeRecord.getEventDate().getStart(),null, "");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("l'individu existe mais n'a que 10 ans de plus que le pere", 0, fams.size());
 
             data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("sansfamille1"));
-            mergeRecord = new MergeRecord(data); 
+            mergeRecord = new MergeRecord(data);
             mergeRecord.getEventDate().setValue("1 JAN 2000");
+            participant = mergeRecord.getParticipant(MergeRecord.MergeParticipantType.participant1);
 
             fatherBirtDate.setValue("BEF 1880");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("Father="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("BEF 1990");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("Father="+fatherBirtDate.getValue(), 1, fams.size());
 
 
             fatherBirtDate.setValue("BET 1980 AND 1990");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("Father="+fatherBirtDate.getValue(), 1, fams.size());
 
             fatherBirtDate.setValue("BET 1990 AND 2000");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("Father="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("AFT 2001");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("Father="+fatherBirtDate.getValue(), 0, fams.size());
 
 
 
             fatherBirtDate.setValue("EST 1870");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("EST 1894");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("EST 1982");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 1, fams.size());
 
             //  fatherBirtDate < 2000 - 18 +5  OK
             fatherBirtDate.setValue("EST 1986");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 1, fams.size());
 
             //  fatherBirtDate < 2000 - 18 +5  KO
             fatherBirtDate.setValue("EST 1988");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
             fatherBirtDate.setValue("EST 2001");
-            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, MergeRecord.MergeParticipantType.participant1, gedcom);
+            fams = MergeQuery.findFamilyCompatibleWithParticipantParents(mergeRecord, participant, gedcom);
             assertEquals("fatherBirtDate="+fatherBirtDate.getValue(), 0, fams.size());
 
 
@@ -297,10 +299,12 @@ public class MergeQueryTest extends TestCase {
             indi.getBirthDate().setValue("1 APR 2000");
             String fileName = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, MergeModelBirthTest.getRecordsInfoPlace(), fileName, MergeModelBirthTest.createBirthRecord("sansfamille1"));
-            MergeRecord mergeRecord = new MergeRecord(data);            
+            MergeRecord mergeRecord = new MergeRecord(data);
+            MergeRecord.RecordParticipant participant = mergeRecord.getParticipant(MergeRecord.MergeParticipantType.participant1);
 
 
             mergeRecord.getEventDate().setValue("1 APR 2000");
+            mergeRecord.getIndi().getBirthDate().setValue("1 APR 2000");
 
             // je cree deuxième individu avec le meme nom et la meme date de naissance
             Indi sansfamille2 = (Indi) gedcom.createEntity(Gedcom.INDI);
@@ -309,39 +313,40 @@ public class MergeQueryTest extends TestCase {
             Property birth = sansfamille2.addProperty("BIRT","" );
             PropertyDate birthDate = (PropertyDate) birth.addProperty("DATE","");
 
+
             // liste des individu de meme nom et meme date de naissance, mais diffrents de l'individu selectionné
             birthDate.setValue(indi.getBirthDate().getValue());
-            assertEquals("otherIndi 1",1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("otherIndi 1",1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
 
             // liste des individu de meme nom et meme date de naissance
-            assertEquals("otherIndi 2",1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("otherIndi 2",1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
 
             birthDate.setValue("BEF 1999");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BEF 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BEF 28 FEB 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BEF 5 MAY 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BEF 2002");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BEF 2222");
             //assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithRecord(mergeRecord, gedcom, indi).size());
 
             birthDate.setValue("BET 1990 AND 1998");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BET 1990 AND 2002");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("BET 5 MAY 2000 AND 2002");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
 
             birthDate.setValue("AFT 1880");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("AFT 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),1, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
             birthDate.setValue("AFT MAY 2000");
-            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, MergeParticipantType.participant1, gedcom, indi).size());
+            assertEquals("record=1/4/2000 indi="+birthDate.getValue(),0, MergeQuery.findIndiCompatibleWithParticipant(mergeRecord, participant, gedcom, indi).size());
 
             //  "@#DFRENCH R@ 25 VEND 2"
 
@@ -432,46 +437,46 @@ public class MergeQueryTest extends TestCase {
     @Test
     public void testIsSameLastName() {
 
-        assertTrue(MergeQuery.isSameLastName("DE QUATRE ,TROIS" , "TROIS"));
-        assertTrue(MergeQuery.isSameLastName("DE QUATRE,TROIS" , "DE QUATRE"));
-        assertFalse(MergeQuery.isSameLastName("DE QUATRE ,TROIS" , "QUATRE"));
+        assertEquals(true, MergeQuery.isSameLastName("DE QUATRE ,TROIS" , "TROIS"));
+        assertEquals(true,MergeQuery.isSameLastName("DE QUATRE,TROIS" , "DE QUATRE"));
+        assertEquals(false, MergeQuery.isSameLastName("DE QUATRE ,TROIS" , "QUATRE"));
 
-        assertFalse("VON DER PFALZ-SIMMERN != AGUILLÉ", MergeQuery.isSameLastName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
-        assertTrue("AGUILHÉ = AGUILLÉ",MergeQuery.isSameLastName("AGUILHÉ", "AGUILLÉ"));
-        assertTrue("VENTRE = VENTRÉ", MergeQuery.isSameLastName("VENTRE", "VENTRÉ"));
-        assertFalse("VENTRE != BENTRÉ",  MergeQuery.isSameLastName("VENTRE", "BENTRE"));
-        
-        assertTrue("VENTRE= BENTRÉ, VENTRE",  MergeQuery.isSameLastName("VENTRE" , "BENTRÉ, VENTRE"));
-        assertTrue("BENTRÉ, VENTRE = VENTRE",  MergeQuery.isSameLastName("BENTRÉ, VENTRE" , "VENTRE"));
-        assertTrue("VENTRE= BENTRÉ,VENTRE",  MergeQuery.isSameLastName("VENTRE" , "BENTRÉ,VENTRE"));
-        assertTrue("BENTRÉ,VENTRE = VENTRE",  MergeQuery.isSameLastName("BENTRÉ,VENTRE" , "VENTRE"));
+        assertEquals("VON DER PFALZ-SIMMERN != AGUILLÉ",false,  MergeQuery.isSameLastName("VON DER PFALZ-SIMMERN", "VENTRÉ"));
+        assertEquals("AGUILHÉ = AGUILLÉ",true,MergeQuery.isSameLastName("AGUILHÉ", "AGUILLÉ"));
+        assertEquals("VENTRE = VENTRÉ", true,MergeQuery.isSameLastName("VENTRE", "VENTRÉ"));
+        assertEquals("VENTRE != BENTRÉ",false,   MergeQuery.isSameLastName("VENTRE", "BENTRE"));
+
+        assertEquals("VENTRE= BENTRÉ, VENTRE", true, MergeQuery.isSameLastName("VENTRE" , "BENTRÉ, VENTRE"));
+        assertEquals("BENTRÉ, VENTRE = VENTRE",true,  MergeQuery.isSameLastName("BENTRÉ, VENTRE" , "VENTRE"));
+        assertEquals("VENTRE= BENTRÉ,VENTRE", true, MergeQuery.isSameLastName("VENTRE" , "BENTRÉ,VENTRE"));
+        assertEquals("BENTRÉ,VENTRE = VENTRE", true, MergeQuery.isSameLastName("BENTRÉ,VENTRE" , "VENTRE"));
     }
- 
+
     @Test
     public void testIsFirstLastName() {
 
-        assertTrue(MergeQuery.isSameFirstName("un-deux, trois ", "trois"));
-        assertTrue(MergeQuery.isSameFirstName("un deux trois ", "trois"));
-        assertTrue(MergeQuery.isSameFirstName("un deux trois ", "trois"));
-        assertTrue(MergeQuery.isSameFirstName("un, deux, trois ", "trois"));
-        assertTrue(MergeQuery.isSameFirstName("un,, deux,  trois ", "trois"));
-                
-        assertTrue(MergeQuery.isSameFirstName("Marianne ", "Mariane"));
-        
-        assertTrue(MergeQuery.isSameFirstName("Marianne", "Marianne, Pétronille"));
-        assertTrue(MergeQuery.isSameFirstName("Petronille", "Marianne, Pétronille"));
-        assertTrue(MergeQuery.isSameFirstName("Petronille, Marianne", "Marianne"));
-        assertTrue(MergeQuery.isSameFirstName("Marianne, Pétronille", "Pétronille"));
-        assertFalse(MergeQuery.isSameFirstName("Marianne, Pétronille", "Anne"));
-        
+        assertEquals(true,MergeQuery.isSameFirstName("un-deux, trois ", "trois"));
+        assertEquals(true,MergeQuery.isSameFirstName("un deux trois ", "trois"));
+        assertEquals(true,MergeQuery.isSameFirstName("un deux trois ", "trois"));
+        assertEquals(true,MergeQuery.isSameFirstName("un, deux, trois ", "trois"));
+        assertEquals(true,MergeQuery.isSameFirstName("un,, deux,  trois ", "trois"));
+
+        assertEquals(true,MergeQuery.isSameFirstName("Marianne ", "Mariane"));
+
+        assertEquals(true,MergeQuery.isSameFirstName("Marianne", "Marianne, Pétronille"));
+        assertEquals(true,MergeQuery.isSameFirstName("Petronille", "Marianne, Pétronille"));
+        assertEquals(true,MergeQuery.isSameFirstName("Petronille, Marianne", "Marianne"));
+        assertEquals(true,MergeQuery.isSameFirstName("Marianne, Pétronille", "Pétronille"));
+        assertEquals(false, MergeQuery.isSameFirstName("Marianne, Pétronille", "Anne"));
+
         HashMap<String,String> similarFirstNames = new HashMap<String,String>();
-        similarFirstNames.put("Pétronille", "Peironne");        
+        similarFirstNames.put("Pétronille", "Peironne");
         SimilarNameSet.getSimilarFirstName().save(similarFirstNames);
         SimilarNameSet.getSimilarFirstName().reset();
-        
-        assertTrue(MergeQuery.isSameFirstName("Peironne" , "Pétronille" ));
-        assertTrue(MergeQuery.isSameFirstName("Pétronille" , "Peironne"));
 
-        
+        assertEquals(true,MergeQuery.isSameFirstName("Peironne" , "Pétronille" ));
+        assertEquals(true,MergeQuery.isSameFirstName("Pétronille" , "Peironne"));
+
+
     }
 }

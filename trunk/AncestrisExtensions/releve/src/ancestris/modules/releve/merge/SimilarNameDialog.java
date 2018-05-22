@@ -29,11 +29,11 @@ import org.openide.util.NbBundle;
  * @author Michel
  */
 public class SimilarNameDialog extends javax.swing.JFrame {
-     
+
     SimilarNameSet similarName;
     SimilarTableModel tableModel;
 
-    
+
     /**
      * affiche la fenetre de des prénoms similaires
      */
@@ -64,7 +64,7 @@ public class SimilarNameDialog extends javax.swing.JFrame {
 
     private SimilarNameDialog() {
         initComponents();
-            
+
         // je configure la position de la fenetre
         Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screen.width - getWidth())/ 2, (screen.height -getHeight()) / 2, getWidth(), getHeight());
@@ -79,7 +79,7 @@ public class SimilarNameDialog extends javax.swing.JFrame {
         tableModel = new SimilarTableModel(similarName, columnTitle1, columnTitle2);
 
         jTableSimilar.setModel(tableModel);
-        
+
         jTableSimilar.getColumnModel().getColumn(0).setCellEditor(cellEditor);
         jTableSimilar.getColumnModel().getColumn(1).setCellEditor(cellEditor);
         jTableSimilar.setRowHeight(jTableSimilar.getRowHeight()+4);
@@ -91,7 +91,7 @@ public class SimilarNameDialog extends javax.swing.JFrame {
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
         jTableSimilar.getRowSorter().setSortKeys(sortKeys);
-        
+
     }
 
 
@@ -105,8 +105,8 @@ public class SimilarNameDialog extends javax.swing.JFrame {
         int n = tableModel.getRowCount();
         HashMap<String,String> hashmap = new HashMap<String,String>();
         for(int i = 0; i <n ; i++) {
-            if ( !tableModel.getValueAt(i, 0).toString().isEmpty() && !tableModel.getValueAt(i, 1).toString().isEmpty() ) {
-                hashmap.put(tableModel.getValueAt(i, 0).toString(), tableModel.getValueAt(i, 1).toString());
+            if ( !tableModel.getValueAt(i, 0).isEmpty() && !tableModel.getValueAt(i, 1).isEmpty() ) {
+                hashmap.put(tableModel.getValueAt(i, 0), tableModel.getValueAt(i, 1));
             }
         }
 
@@ -215,7 +215,7 @@ public class SimilarNameDialog extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        //rien a faire        
+        //rien a faire
     }//GEN-LAST:event_formWindowClosed
 
     private void jButtonDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonDeleteActionPerformed
@@ -263,8 +263,8 @@ public class SimilarNameDialog extends javax.swing.JFrame {
         jTableSimilar.requestFocus();
         jTableSimilar.editCellAt(0,0);
     }//GEN-LAST:event_jButtonAddActionPerformed
-   
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonAdd;
     private javax.swing.JButton jButtonCancel;
@@ -281,8 +281,8 @@ public class SimilarNameDialog extends javax.swing.JFrame {
 
     private class SimilarTableModel extends AbstractTableModel {
         private final Class<?> columnClass[] = {String.class, String.class};
-        private List<String> keys;
-        private List<String> values;
+        private final List<String> keys;
+        private final List<String> values;
         String[] columnName = { "",""};
 
         public SimilarTableModel( SimilarNameSet similarName, String columnName1, String columnName2) {
@@ -305,7 +305,7 @@ public class SimilarNameDialog extends javax.swing.JFrame {
             keys.remove(row);
             values.remove(row);
         }
-        
+
         @Override
         public int getColumnCount() {
             return columnClass.length;

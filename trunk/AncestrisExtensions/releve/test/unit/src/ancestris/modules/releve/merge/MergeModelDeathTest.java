@@ -1,18 +1,21 @@
 package ancestris.modules.releve.merge;
 
+import ancestris.modules.releve.IgnoreOtherTestMethod;
 import ancestris.modules.releve.RecordTransferHandle;
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.dnd.TransferableRecord;
-import ancestris.modules.releve.merge.MergeModel.MergeRow;
-import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.PlaceFormatModel;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordInfoPlace;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
-import java.util.List;
-import junit.framework.TestCase;
+import genj.gedcom.TagPath;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+import org.junit.Rule;
 import org.junit.Test;
 import org.openide.util.Exceptions;
 
@@ -20,7 +23,9 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class MergeModelDeathTest extends TestCase {
+public class MergeModelDeathTest {
+    @Rule
+    public IgnoreOtherTestMethod rule = new IgnoreOtherTestMethod("");
 
     static public RecordInfoPlace getRecordsInfoPlace() {
         RecordInfoPlace recordsInfoPlace = new RecordInfoPlace();
@@ -74,23 +79,21 @@ public class MergeModelDeathTest extends TestCase {
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, recordDeath);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            
-            List<MergeModel> models;
+//TestUtility.showMergeDialog(data, gedcom, indi);
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
 
             // je memorise la date de naissance de l'enfant
             String previousIndiBirthDate = ((Indi)gedcom.getEntity("sansfamille1")).getBirthDate().getValue();
             // je memorise la date de naissance du pere
             String previousFatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getValue();
 
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-
-            assertEquals("Nombre model",2,models.size());
+            assertEquals("Nombre model", 1, mergeManager.getProposalList1().getSize());
             // je copie la premierse proposition dans l'entité
-            models.get(0).copyRecordToEntity();
-            
-            assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:DEAT:DATE").getValue());
-            assertEquals("indiDeathPlace",mergeRecord.getIndi().getResidence(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
+            assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getValue(new TagPath("INDI:DEAT:DATE"), ""));
+            assertEquals("indiDeathPlace",mergeRecord.getIndi().getPlace(), indi.getValue(new TagPath("INDI:DEAT:PLAC"), ""));
             assertEquals("indiDeathComment",
                     "Date de l'acte: 01/01/2003\n"
                     + "Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à birthAddress, indiBirthPlace, indioccupation, domicile indiAddress, indiResidence, indicomment\n"
@@ -100,24 +103,26 @@ public class MergeModelDeathTest extends TestCase {
                     + "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n"
                     + "Commentaire général: generalcomment\n"
                     + "Cote: cote, photo",
-                    indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
+                    indi.getValue(new TagPath("INDI:DEAT:NOTE"), ""));
 
             assertEquals("indiBirthDate",previousIndiBirthDate, indi.getBirthDate().getValue());
-            assertEquals("indiBirthPlace",mergeRecord.getIndi().getBirthPlace(), indi.getPropertyByPath("INDI:BIRT:PLAC").getValue());
-            assertEquals("indiBirthAddress",mergeRecord.getIndi().getBirthAddress(), indi.getPropertyByPath("INDI:BIRT:ADDR").getValue());
-            assertEquals("indiBirthNote ","Lieu de naissance birthAddress, indiBirthPlace indiqué dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", indi.getPropertyByPath("INDI:BIRT:NOTE").getValue());
-            
+            assertEquals("indiBirthPlace",mergeRecord.getIndi().getBirthResidence().getPlace(), indi.getValue(new TagPath("INDI:BIRT:PLAC"), ""));
+            assertEquals("indiBirthAddress",mergeRecord.getIndi().getBirthResidence().getAddress(), indi.getValue(new TagPath("INDI:BIRT:ADDR"), ""));
+            assertEquals("indiBirthNote ","Lieu de naissance birthAddress, indiBirthPlace indiqué dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", indi.getValue(new TagPath("INDI:BIRT:NOTE"), ""));
+
             assertEquals("indiOccupation",mergeRecord.getIndi().getOccupation(), indi.getProperty("OCCU").getValue());
-            assertEquals("indiOcccupationDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:OCCU:DATE").getValue());
-            assertEquals("indiOcccupationResidence",mergeRecord.getIndi().getResidence(), indi.getPropertyByPath("INDI:OCCU:PLAC").getValue());
-            assertEquals("indiOcccupationAddress",mergeRecord.getIndi().getAddress(), indi.getPropertyByPath("INDI:OCCU:ADDR").getValue());
-            
+            assertEquals("indiOcccupationDate",mergeRecord.getEventDate().getValue(), indi.getValue(new TagPath("INDI:OCCU:DATE"), ""));
+            assertEquals("indiOcccupationResidence",mergeRecord.getIndi().getPlace(), indi.getValue(new TagPath("INDI:OCCU:PLAC"), ""));
+            assertEquals("indiOcccupationAddress",mergeRecord.getIndi().getResidence().getAddress(), indi.getValue(new TagPath("INDI:OCCU:ADDR"), ""));
+
             // conjoint
             Indi married = indi.getFamiliesWhereSpouse()[0].getWife();
             assertEquals("marriedLastName",recordDeath.getFieldValue(FieldType.indiMarriedLastName), married.getLastName());
             assertEquals("marriedFirstName",recordDeath.getFieldValue(FieldType.indiMarriedFirstName), married.getFirstName());
             assertEquals("marriedBirth","BEF 1985", married.getBirthDate().getValue());
             assertEquals("marriedDead","BEF 2003", married.getDeathDate().getValue());
+            assertEquals("marriedDeathPlace", null, married.getValue(new TagPath("INDI:DEAT:PLAC"), null));
+
             Property marriedOccupation = married.getProperties("OCCU")[0];
             assertEquals("marriedOccupation",recordDeath.getFieldValue(FieldType.indiMarriedOccupation), marriedOccupation.getValue());
             assertEquals("marriedOcccupationPlace",recordDeath.getFieldValue(FieldType.indiMarriedResidence), marriedOccupation.getProperty("PLAC").getValue());
@@ -131,16 +136,16 @@ public class MergeModelDeathTest extends TestCase {
 
             // pere
             Indi father = indi.getBiologicalFather();
-            assertEquals("fatherLastName",mergeRecord.getIndi().getFatherLastName(), father.getLastName());
-            assertEquals("fatherFirstName",mergeRecord.getIndi().getFatherFirstName(), father.getFirstName());
+            assertEquals("fatherLastName",mergeRecord.getIndi().getFather().getLastName(), father.getLastName());
+            assertEquals("fatherFirstName",mergeRecord.getIndi().getFather().getFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("Naissance du pere",previousFatherBirthDate, father.getBirthDate().getValue());
             assertEquals("deces du pere",   "AFT 1999", father.getDeathDate().getValue());
 
             Property fatherOccupation = father.getProperties("OCCU")[0];
-            assertEquals("fatherOccupation",mergeRecord.getIndi().getFatherOccupation(), fatherOccupation.getValue());
-            assertEquals("fatherOcccupationPlace",mergeRecord.getIndi().getFatherResidence(), fatherOccupation.getProperty("PLAC").getValue());
-            assertEquals("fatherOcccupationAddress",mergeRecord.getIndi().getFatherAddress(), fatherOccupation.getProperty("ADDR").getValue());
+            assertEquals("fatherOccupation",mergeRecord.getIndi().getFather().getOccupation(), fatherOccupation.getValue());
+            assertEquals("fatherOcccupationPlace",mergeRecord.getIndi().getFather().getResidence().getPlace(), fatherOccupation.getProperty("PLAC").getValue());
+            assertEquals("fatherOcccupationAddress",mergeRecord.getIndi().getFather().getResidence().getAddress(), fatherOccupation.getProperty("ADDR").getValue());
             assertEquals("fatherOcccupationDate",mergeRecord.getEventDate().getValue(), fatherOccupation.getProperty("DATE").getValue());
             assertEquals("fatherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", fatherOccupation.getProperty("NOTE").getValue());
 
@@ -150,9 +155,9 @@ public class MergeModelDeathTest extends TestCase {
             assertEquals("deces de la mere",    "BET 2000 AND 2003", mother.getDeathDate().getValue());
 
             Property motherOccupation = mother.getProperties("OCCU")[0];
-            assertEquals("motherOccupation",mergeRecord.getIndi().getMotherOccupation(), motherOccupation.getValue());
-            assertEquals("motherOcccupationPlace",mergeRecord.getIndi().getMotherResidence(), motherOccupation.getProperty("PLAC").getValue());
-            assertEquals("motherOcccupationAddress",mergeRecord.getIndi().getMotherAddress(), motherOccupation.getProperty("ADDR").getValue());
+            assertEquals("motherOccupation",mergeRecord.getIndi().getMother().getOccupation(), motherOccupation.getValue());
+            assertEquals("motherOcccupationPlace",mergeRecord.getIndi().getMother().getResidence().getPlace(), motherOccupation.getProperty("PLAC").getValue());
+            assertEquals("motherOcccupationAddress",mergeRecord.getIndi().getMother().getResidence().getAddress(), motherOccupation.getProperty("ADDR").getValue());
             assertEquals("motherOcccupationDate",mergeRecord.getEventDate().getValue(), motherOccupation.getProperty("DATE").getValue());
             assertEquals("motherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", motherOccupation.getProperty("NOTE").getValue());
 
@@ -171,28 +176,27 @@ public class MergeModelDeathTest extends TestCase {
         try {
             Gedcom gedcom = TestUtility.createGedcom();
             PlaceFormatModel.getModel().savePreferences(0,1,2,3,4, 6);
-            
+
             Indi indi = (Indi)gedcom.getEntity("sansfamille1");
             RecordDeath recordDeath = createDeathRecord("sansfamille1");
             // je supprime la profession et le lieu de naissance
             recordDeath.setIndi("sansfamille1", "FATHERLASTNAME", "M", "3y", "", "", "", "", "", "", "indicomment");
-            
+
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, recordDeath);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            List<MergeModel> models;
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
 
             // je memorise la date de naissance de l'enfant
             String previousIndiBirthDate = ((Indi)gedcom.getEntity("sansfamille1")).getBirthDate().getValue();
             // je memorise la date de naissance du pere
             String previousFatherBirthDate = ((Indi)gedcom.getEntity("I1")).getBirthDate().getValue();
 
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-
-            assertEquals("Nombre model",2,models.size());
+            assertEquals("Nombre model", 1, mergeManager.getProposalList1().getSize());
             // je copie la premiere proposition dans l'entité
-            models.get(0).copyRecordToEntity();
-            
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
             assertEquals("indiDeathDate",mergeRecord.getEventDate().getValue(), indi.getPropertyByPath("INDI:DEAT:DATE").getValue());
             assertEquals("indiDeathPlace",mergeRecord.getEventPlace(), indi.getPropertyByPath("INDI:DEAT:PLAC").getValue());
             assertEquals("indiDeathComment",
@@ -232,16 +236,16 @@ public class MergeModelDeathTest extends TestCase {
 
             // pere
             Indi father = indi.getBiologicalFather();
-            assertEquals("fatherLastName",mergeRecord.getIndi().getFatherLastName(), father.getLastName());
-            assertEquals("fatherFirstName",mergeRecord.getIndi().getFatherFirstName(), father.getFirstName());
+            assertEquals("fatherLastName",mergeRecord.getIndi().getFather().getLastName(), father.getLastName());
+            assertEquals("fatherFirstName",mergeRecord.getIndi().getFather().getFirstName(), father.getFirstName());
             // la date de naissance du pere n'est pas changée car elle est plus précise que celle du releve
             assertEquals("Naissance du pere",previousFatherBirthDate, father.getBirthDate().getValue());
             assertEquals("deces du pere",   "AFT 1999", father.getDeathDate().getValue());
 
             Property fatherOccupation = father.getProperties("OCCU")[0];
-            assertEquals("fatherOccupation",mergeRecord.getIndi().getFatherOccupation(), fatherOccupation.getValue());
-            assertEquals("fatherOcccupationPlace",mergeRecord.getIndi().getFatherResidence(), fatherOccupation.getProperty("PLAC").getValue());
-            assertEquals("fatherOcccupationAddress",mergeRecord.getIndi().getFatherAddress(), fatherOccupation.getProperty("ADDR").getValue());
+            assertEquals("fatherOccupation",mergeRecord.getIndi().getFather().getOccupation(), fatherOccupation.getValue());
+            assertEquals("fatherOcccupationPlace",mergeRecord.getIndi().getFather().getResidence().getPlace(), fatherOccupation.getProperty("PLAC").getValue());
+            assertEquals("fatherOcccupationAddress",mergeRecord.getIndi().getFather().getResidence().getAddress(), fatherOccupation.getProperty("ADDR").getValue());
             assertEquals("fatherOcccupationDate",mergeRecord.getEventDate().getValue(), fatherOccupation.getProperty("DATE").getValue());
             assertEquals("fatherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", fatherOccupation.getProperty("NOTE").getValue());
 
@@ -251,9 +255,9 @@ public class MergeModelDeathTest extends TestCase {
             assertEquals("deces de la mere",    "BET 2000 AND 2003", mother.getDeathDate().getValue());
 
             Property motherOccupation = mother.getProperties("OCCU")[0];
-            assertEquals("motherOccupation",mergeRecord.getIndi().getMotherOccupation(), motherOccupation.getValue());
-            assertEquals("motherOcccupationPlace",mergeRecord.getIndi().getMotherResidence(), motherOccupation.getProperty("PLAC").getValue());
-            assertEquals("motherOcccupationAddress",mergeRecord.getIndi().getMotherAddress(), motherOccupation.getProperty("ADDR").getValue());
+            assertEquals("motherOccupation",mergeRecord.getIndi().getMother().getOccupation(), motherOccupation.getValue());
+            assertEquals("motherOcccupationPlace",mergeRecord.getIndi().getMother().getResidence().getPlace(), motherOccupation.getProperty("PLAC").getValue());
+            assertEquals("motherOcccupationAddress",mergeRecord.getIndi().getMother().getResidence().getAddress(), motherOccupation.getProperty("ADDR").getValue());
             assertEquals("motherOcccupationDate",mergeRecord.getEventDate().getValue(), motherOccupation.getProperty("DATE").getValue());
             assertEquals("motherOcccupationNote","Profession indiquée dans l'acte de décès de sansfamille1 FATHERLASTNAME le 01/01/2003 (Paris)", motherOccupation.getProperty("NOTE").getValue());
 
@@ -274,12 +278,9 @@ public class MergeModelDeathTest extends TestCase {
             RecordDeath record = createDeathRecord("sansfamille1");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
-            List<MergeModel> models;
-
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",2,models.size());
-            models.get(0).copyRecordToEntity();
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model", 1, mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
 
             String expected = "";
             expected +="Date de l'acte: 01/01/2003\n";
@@ -287,17 +288,40 @@ public class MergeModelDeathTest extends TestCase {
             expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedAddress, indiMarriedResidence, marriedcomment\n";
             expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
             expected +="Mère: Motherfirstname MOTHERLASTNAME, 72 années, Décédé, motherOccupation, domicile indiMotherAddress, indiMotherResidence, indiMotherComment\n";
-            expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
-            expected +="Commentaire général: generalcomment\n";
-            expected +="Cote: cote, photo";
-            assertEquals("comment1",expected, indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
+            expected += "Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
+            expected += "Commentaire général: generalcomment\n";
+            expected += "Cote: cote, photo";
+            assertEquals("comment1", expected, indi.getValue(new TagPath("INDI:DEAT:NOTE"), ""));
+
+        } catch (Exception ex) {
+            ex.printStackTrace(System.err);
+            fail(ex.getMessage());
+        }
+    }
+
+    /**
+     * test_RecordDeath_copyRecordToEntity_Comment
+     */
+    @Test
+    public void test_RecordDeath_copyRecordToEntity_Add_Comment() {
+        try {
+            Gedcom gedcom = TestUtility.createGedcom();
+            Indi indi = (Indi)gedcom.getEntity("sansfamille1");
+            RecordDeath record = createDeathRecord("sansfamille1");
+            String sourceTitle = "";
+            TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, record);
 
             // je verifie que le nouveau commentaire contient la concatenation de l'ancien commentaire et du nouveau
-            indi.getPropertyByPath("INDI:DEAT:NOTE").setValue("oldcomment");
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, indi);
-            assertEquals("Nombre model",1,models.size());
-            models.get(0).copyRecordToEntity();
-            expected ="Date de l'acte: 01/01/2003\n";
+            indi.addProperty("DEAT", "").addProperty("NOTE", "previouscomment");
+            //indi.getPropertyByPath("INDI:DEAT").addProperty("NOTE", "previouscomment");
+            //indi.getPropertyByPath("INDI:DEAT:NOTE").setValue("oldcomment");
+//TestUtility.showMergeDialog(data, gedcom, indi);
+            MergeManager mergeManager;
+            mergeManager = TestUtility.createMergeManager(data, gedcom, indi);
+            assertEquals("Nombre model",1,mergeManager.getProposalList1().getSize());
+            mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+            assertEquals("Nombre model", 1, mergeManager.getProposalList1().getSize());
+            String expected = "Date de l'acte: 01/01/2003\n";
             expected +="Défunt: sansfamille1 FATHERLASTNAME, 3 années, né à birthAddress, indiBirthPlace, indioccupation, domicile indiAddress, indiResidence, indicomment\n";
             expected +="Conjoint: Marriedfirstname MARRIEDLASTNAME, Décédé, marriedOccupation, domicile indiMarriedAddress, indiMarriedResidence, marriedcomment\n";
             expected +="Père: Fatherfirstname FATHERLASTNAME, 70 années, fatherOccupation, domicile indiFatherAddress, indiFatherResidence, indiFatherComment\n";
@@ -305,8 +329,8 @@ public class MergeModelDeathTest extends TestCase {
             expected +="Témoin(s): w1firstname w1lastname, w1occupation, w1comment, w2firstname w2lastname, w2occupation, w2comment, w3firstname w3lastname, w3occupation, w3comment, w4firstname w4lastname, w4occupation, w4comment\n";
             expected +="Commentaire général: generalcomment\n";
             expected +="Cote: cote, photo\n";
-            expected += "oldcomment";
-            assertEquals("comment2",expected, indi.getPropertyByPath("INDI:DEAT:NOTE").getValue());
+            expected += "previouscomment";
+            assertEquals("comment2",expected, indi.getValue(new TagPath("INDI:DEAT:NOTE"), ""));
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
             fail(ex.getMessage());
@@ -330,24 +354,21 @@ public class MergeModelDeathTest extends TestCase {
             record.setIndiMarried("Motherfirstname", "MOTHERLASTNAME", "", "", "", "", "");
             String sourceTitle = "";
             TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlace(),sourceTitle, record);
-            MergeRecord mergeRecord = new MergeRecord(data);
+            MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+            assertEquals("Nombre model",2,mergeManager.getProposalList1().getSize());
 
-            List<MergeModel> models;
-            models = MergeModel.createMergeModel(mergeRecord, gedcom, null);
-            assertEquals("Nombre model",2,models.size());
+            Indi indi = (Indi) mergeManager.getProposalList1().getElementAt(0).getMainEntity();
+            Indi indiMarried = indi.getFamiliesWhereSpouse()[0].getOtherSpouse(indi);
+            //MergeRow IndiMarriedLastNameRow =  mergeManager.getProposalList1().getElementAt(0).getRow(MergeRow.RowType.IndiMarriedLastName);
+
+            assertNotNull("IndiMarriedLastName", indiMarried.getLastName());
+            assertEquals("IndiMarriedLastName not null", "MOTHERLASTNAME", indiMarried.getLastName());
 
 
-            MergeRow IndiMarriedLastNameRow =  models.get(0).getRow(MergeModel.RowType.IndiMarriedLastName);
-            assertNotNull("IndiMarriedLastName", IndiMarriedLastNameRow.entityValue);
-            assertEquals("IndiMarriedLastName not null", "MOTHERLASTNAME", IndiMarriedLastNameRow.entityValue.toString());
-
-            //MergeDialog dialog = MergeDialog.show(new JFrame(), gedcom, null, record, true);
-            //Thread.sleep(10000);
-           
         } catch (Exception ex) {
             ex.printStackTrace(System.err);
             fail(ex.getMessage());
         }
     }
-    
+
 }
