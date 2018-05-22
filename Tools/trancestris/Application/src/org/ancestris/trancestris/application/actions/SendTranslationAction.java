@@ -105,7 +105,8 @@ public final class SendTranslationAction implements ActionListener {
     }
 
     private void setDefaultValues(SendTranslationPanel sendTranslationPanel) {
-        sendTranslationPanel.setMailToFormattedTextField(modulePreferences.get("mailto.address", "frederic@ancestris.org"));
+//        sendTranslationPanel.setMailToFormattedTextField(modulePreferences.get("mailto.address", "frederic@ancestris.org"));
+        sendTranslationPanel.setMailToFormattedTextField("frederic@ancestris.org");
         sendTranslationPanel.setNameFormattedTextField(modulePreferences.get("mail.name", ""));
         sendTranslationPanel.setEmailFormattedTextField(modulePreferences.get("mail.address", ""));
         String TS = new SimpleDateFormat(NbBundle.getMessage(SendTranslationAction.class, "SendTranslationAction.msg.subject.date")).format(new Date());
