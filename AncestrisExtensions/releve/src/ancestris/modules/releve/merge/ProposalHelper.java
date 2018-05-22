@@ -272,7 +272,7 @@ public class ProposalHelper {
         //String subTageName = subProperty.getTag();
         String propertyValue;
         if("DATE".equals(subTageName)) {
-            PropertyDate propertyDate = (PropertyDate) eventProperty.getProperty(subTageName);
+            PropertyDate propertyDate = (PropertyDate) eventProperty.getProperty(subTageName, false); // j'accepte les DATE ouPLAC invalides pour eviter null pointerexception
             propertyValue = propertyDate.getDisplayValue();
             if (eventTagName.equals("BIRT")) {
                 noteText = "Date de naissance {0} déduite de";

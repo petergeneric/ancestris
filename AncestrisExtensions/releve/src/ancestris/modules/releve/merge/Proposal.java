@@ -81,13 +81,13 @@ public class Proposal implements java.lang.Comparable<Proposal> , MergeTableActi
             if( husbandParentFamily == null) {
                 husbandParentFamily = husband.getFamilyWhereBiologicalChild();
             }
-            if (husbandParentFamily != null) {
-                if( husbandFather == null) {
-                    husbandFather = husbandParentFamily.getHusband();
-                }
-                if( husbandMother == null) {
-                    husbandMother = husbandParentFamily.getWife();
-                }
+        }
+        if (husbandParentFamily != null) {
+            if( husbandFather == null) {
+                husbandFather = husbandParentFamily.getHusband();
+            }
+            if( husbandMother == null) {
+                husbandMother = husbandParentFamily.getWife();
             }
         }
 
@@ -95,13 +95,14 @@ public class Proposal implements java.lang.Comparable<Proposal> , MergeTableActi
             if( wifeParentFamily == null) {
                 wifeParentFamily = wife.getFamilyWhereBiologicalChild();
             }
-            if (wifeParentFamily != null) {
-                if( wifeFather == null ) {
-                    wifeFather = wifeParentFamily.getHusband();
-                }
-                if( wifeMother == null) {
-                    wifeMother = wifeParentFamily.getWife();
-                }
+        }
+
+        if (wifeParentFamily != null) {
+            if( wifeFather == null ) {
+                wifeFather = wifeParentFamily.getHusband();
+            }
+            if( wifeMother == null) {
+                wifeMother = wifeParentFamily.getWife();
             }
         }
 
@@ -286,7 +287,7 @@ public class Proposal implements java.lang.Comparable<Proposal> , MergeTableActi
         if( html ) {
             StringBuilder summary = new StringBuilder();
             summary.append( "<html>") ;
-            if ( m_displayRuleList.getNbConflict() >0) {
+            if ( m_displayRuleList.getNbConflict() >0 && m_helper.getSelectedEntity() != null) {
                 summary.append("<font color=\"red\">")
                     .append(NbBundle.getMessage(Proposal.class, "Summary.conflict1", m_helper.getSelectedEntity().toString() ))
                     .append("<br>")
@@ -352,9 +353,8 @@ public class Proposal implements java.lang.Comparable<Proposal> , MergeTableActi
     }
 
     /**
-     * compare le nombre de champs egaux du modele avec celui d'un autre modele
-     * pour savoir quel est le modele qui contient l'entité la plus proche du
-     * relevé.
+     * compare le nombre de champs egaux de la proposition avec celui d'une autre proposition
+     * pour savoir quel est la proposition correspondant le mieux au relevé
      *
      * @param object
      * @return
@@ -363,12 +363,29 @@ public class Proposal implements java.lang.Comparable<Proposal> , MergeTableActi
     public int compareTo(Proposal that) {
         int nombre1 = that.getDisplayRuleList().getNbEqual();
         int nombre2 = this.getDisplayRuleList().getNbEqual();
-        if (nombre2 > nombre1) {
-            return -1;
-        } else if (nombre1 == nombre2) {
-            return 0;
-        } else {
+        if (nombre1 > nombre2) {
             return 1;
+        } else if (nombre1 == nombre2) {
+            // compare le nombre de  champs plus precis
+            nombre1 = that.getDisplayRuleList().getNbCompatibleNotChecked();
+            nombre2 = this.getDisplayRuleList().getNbCompatibleNotChecked();
+            if (nombre1 > nombre2) {
+                return 1;
+            } else if (nombre1 == nombre2) {
+                nombre1 = that.getDisplayRuleList().getNbCompatibleChecked();
+                nombre2 = this.getDisplayRuleList().getNbCompatibleChecked();
+                if (nombre1 > nombre2) {
+                    return 1;
+                } else if (nombre1 == nombre2) {
+                    return 0;
+                } else {
+                    return -1;
+                }
+            } else {
+                return -1;
+            }
+        } else {
+            return -1;
         }
     }
 

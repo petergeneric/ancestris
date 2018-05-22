@@ -494,4 +494,61 @@ public class MergeModelMarriageTest {
             fail(ex.getMessage());
         }
     }
+
+    /**
+     * modification de la date de deces du pere
+     * @throws java.lang.Exception
+     */
+    @Test
+    public void testMariage_wifeParent() throws Exception {
+        Gedcom gedcom = TestUtility.createGedcomEmpty();
+        Property property;
+
+        //je cree les parents de l'epouse
+        Indi wifeFather = (Indi) gedcom.createEntity(Gedcom.INDI);
+        wifeFather.setName("Jean", "WIFENAME");
+        wifeFather.setSex(PropertySex.MALE);
+        property = wifeFather.addProperty("BIRT", "");
+        property.addProperty("DATE", "BEF 1758");
+
+        Indi wifeMother = (Indi) gedcom.createEntity(Gedcom.INDI);
+        wifeMother.setName("Jeanne", "WIFEMOTHERNAME");
+        wifeMother.setSex(PropertySex.FEMALE);
+        property = wifeMother.addProperty("BIRT", "");
+        property.addProperty("DATE", "BEF 1758");
+        property = wifeMother.addProperty("DEAT", "");
+        property.addProperty("DATE", "BET 1776 AND 1802");
+
+        Fam parentFamily = (Fam) gedcom.createEntity(Gedcom.FAM);
+        parentFamily.setHusband(wifeFather);
+        parentFamily.setWife(wifeMother);
+        property = parentFamily.addProperty("MARR", "");
+        property.addProperty("DATE", "BEF 1776");
+
+        RecordMarriage record = new RecordMarriage();
+        record.setFieldValue(FieldType.eventDate, "23/01/1803");
+        record.setIndi("Joseph", "HUSBANDNAME", "M", "26a", "08/05/1778", "indiBirthplace", "indiBirthAddress", "Laboureur", "indiResidence", "", "indicomments");
+        record.setIndiFather("Bernard", "HUSBANDNAME", "indifatheroccupation", "indiFatherResidence", "indiFatherAddress", "indifathercomment", "true", "");
+        record.setIndiMother("Jeanne", "INDIMOTHERNAME", "indimotheroccupation", "indiMotherResidence", "indiMotherAddress", "indimothercomment", "", "");
+        record.setWife("Catherine", "WIFENAME", "F", "19a", "10/05/1783", "wifeplace", "wifeBirthAddress", "wifeoccupation", "wifeResidence", "wifeAddress", "wifecomment");
+        record.setWifeFather("Jean", "WIFENAME", "wifefatheroccupation", "wiferFatherResidence", "wiferFatherAddress", "wifefathercomment", "", "");
+        record.setWifeMother("Jeanne", "WIFEMOTHERNAME", "wifemotheroccupation", "wifeMotherResidence", "wifeMotherAddress", "wifemothercomment", "true", "");
+        String fileName = "Etat civil Paris.txt";
+        String sourceTitle = "Etat civil Paris";
+        MergeOptionPanel.SourceModel.getModel().add(fileName, sourceTitle);
+        TransferableRecord.TransferableData data = RecordTransferHandle.createTransferableData(null, getRecordsInfoPlaceVilleMariage(), fileName, record);
+//TestUtility.showMergeDialog(data, gedcom, null);
+        MergeManager mergeManager = TestUtility.createMergeManager(data, gedcom, null);
+        MergeRecord mergeRecord = mergeManager.getMergeRecord();
+
+        assertEquals("Nombre model", 2, mergeManager.getProposalList1().getSize());
+        mergeManager.getProposalList1().getElementAt(0).copyRecordToEntity();
+
+        Fam fam = (Fam) mergeManager.getProposalList1().getElementAt(0).getMainEntity();
+
+        assertEquals("Wife parent family ID", parentFamily.getId(), fam.getWife().getFamilyWhereBiologicalChild().getId());
+        assertEquals("Wife father ID", wifeFather.getId(), fam.getWife().getBiologicalFather().getId());
+        assertEquals("Wife mother ID", wifeMother.getId(), fam.getWife().getBiologicalMother().getId());
+
+    }
 }
