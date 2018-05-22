@@ -4,8 +4,8 @@ import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.Record.FieldType;
 import genj.gedcom.Gedcom;
 import java.util.ArrayList;
-import static junit.framework.Assert.assertEquals;
-import static junit.framework.Assert.fail;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.openide.util.Exceptions;
 
@@ -14,10 +14,6 @@ import org.openide.util.Exceptions;
  * @author Michel
  */
 public class CompletionProviderTest  {
-
-    public CompletionProviderTest() {
-    }
-
 
     /**
      * test ajout d'une naissance
@@ -37,7 +33,7 @@ public class CompletionProviderTest  {
             record.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
             record.setFieldValue(FieldType.generalComment, "generalcomment");
-            
+
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addRecord(record);
             // je verifie que les données ont bien été ajoutées
@@ -51,7 +47,7 @@ public class CompletionProviderTest  {
             assertEquals("Nombre de noms",        0,  completionProvider.getLastNames().getAll().size());
             assertEquals("Nombre de professions", 0,  completionProvider.getOccupations().getAll().size());
             assertEquals("Nombre de lieux",       0,  completionProvider.getPlaces().getAll().size());
-            
+
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail("GedcomException "+ ex.toString());
@@ -85,7 +81,7 @@ public class CompletionProviderTest  {
             record1.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record1.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record1.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            
+
             RecordMisc record2 = new RecordMisc();
             record2.setFieldValue(FieldType.eventDate, "02/01/2012");
             record2.setFieldValue(FieldType.cote, "cote");
@@ -106,7 +102,7 @@ public class CompletionProviderTest  {
             record2.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record2.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record2.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            
+
             RecordMisc record3 = new RecordMisc();
             record3.setFieldValue(FieldType.eventDate, "03/01/2012");
             record3.setFieldValue(FieldType.cote, "cote");
@@ -127,7 +123,7 @@ public class CompletionProviderTest  {
             record3.setWitness2("w2firstname", "w2lastname", "w2occupation", "w2comment");
             record3.setWitness3("w3firstname", "w3lastname", "w3occupation", "w3comment");
             record3.setWitness4("w4firstname", "w4lastname", "w4occupation", "w4comment");
-            
+
             CompletionProvider completionProvider = new CompletionProvider();
             completionProvider.addRecord(record1);
             completionProvider.addRecord(record2);
@@ -165,7 +161,7 @@ public class CompletionProviderTest  {
             fail("GedcomException "+ ex.toString());
         }
     }
-   
+
     /**
      * Test of addGedcomCompletion method, of class CompletionProvider.
      */
@@ -184,7 +180,7 @@ public class CompletionProviderTest  {
         }
 
     }
-    
+
     /**
      * test exlusion de prenom et de nom
      */
@@ -210,7 +206,7 @@ public class CompletionProviderTest  {
 
             ArrayList<String> excludedLastNameList = new ArrayList<String>();
             boolean add3 = excludedLastNameList.add("w3lastname");
-            
+
             ArrayList<String> excludedOccupationList = new ArrayList<String>();
             boolean add4 = excludedOccupationList.add("w4occupation");
 
@@ -237,20 +233,20 @@ public class CompletionProviderTest  {
             excludedFirstNameList.clear();
             excludedLastNameList.clear();
             excludedOccupationList.clear();
-            
+
             CompletionProvider.saveExcludedCompletion(excludedFirstNameList, CompletionProvider.CompletionType.firstName);
             CompletionProvider.saveExcludedCompletion(excludedLastNameList, CompletionProvider.CompletionType.lastName);
-            CompletionProvider.saveExcludedCompletion(excludedOccupationList, CompletionProvider.CompletionType.occupation); 
+            CompletionProvider.saveExcludedCompletion(excludedOccupationList, CompletionProvider.CompletionType.occupation);
             completionProvider.refreshExcludeCompletion(CompletionProvider.CompletionType.firstName);
             completionProvider.refreshExcludeCompletion(CompletionProvider.CompletionType.lastName);
             completionProvider.refreshExcludeCompletion(CompletionProvider.CompletionType.occupation);
-            
+
             completionProvider.addRecord(record);
             // je verifie que les données ont bien été ajoutées
             assertEquals("Nombre de prenoms 7", 7,  completionProvider.getFirstNames().getIncluded().size());
             assertEquals("Nombre de noms  6",   6,  completionProvider.getLastNames().getIncluded().size());
             assertEquals("Nombre de professions", 7,  completionProvider.getOccupations().getIncluded().size());
-            
+
         } catch (Exception ex) {
             Exceptions.printStackTrace(ex);
             fail("GedcomException "+ ex.toString());
@@ -277,7 +273,7 @@ public class CompletionProviderTest  {
             completionProvider.addRecord(record);
 
             // je verifie que les prénoms composés sont dans l'ordre alphabétique
-            assertEquals("liste", 
+            assertEquals("liste",
                     "[cousin, Fatherfirstname, Motherfirstname, One First Name, OneFirstName Second, sansfamille1, Sansfamille1 second, Three First Name, Two-First-Name]",
                     completionProvider.getFirstNames().getIncluded().toString() );
         } catch (Exception ex) {

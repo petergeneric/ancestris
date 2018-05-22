@@ -3,21 +3,17 @@ import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.Record.FieldType;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
-
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 
 /**
  *
  * @author Michel
  */
-public class DataManagerTest extends TestCase {
-    
-    public DataManagerTest(String testName) {
-        super(testName);
-    }
+public class DataManagerTest {
 
-        /**
+    /**
      * Test of removeGedcomCompletion method, of class CompletionProvider.
      */
     @Test
@@ -46,7 +42,7 @@ public class DataManagerTest extends TestCase {
             assertEquals("Nombre de lieux apres ajout", 4, dataManager.getCompletionProvider().getPlaces().getAll().size());
 
             Gedcom gedcom = TestUtility.createGedcomF2();
-            
+
 //            File file = new File("D:/Genealogie/GED/test1.ged");
 //            boolean exis = file.exists();
 //            FileObject fo = FileUtil.toFileObject(file);
@@ -54,13 +50,13 @@ public class DataManagerTest extends TestCase {
 //            Gedcom gedcom = context.getGedcom();
 //            int placeCount = gedcom.getPropertyCount("PLAC");
 //            Property[] plac = gedcom.getProperties(new TagPath("INDI:PLAC"));
-//            
+//
 //            //List<PropertyPlace> plac2 = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
 //            List<String> set1 = gedcom.getReferenceSet("PLAC").getKeys();
-            
+
 //            ReferenceSet<String, Property> plac3 = gedcom.getReferenceSet("PLAC.0");
 //                    String[] choices = PropertyChoiceValue.getChoices(gedcom, "PLAC", false);
-            
+
             dataManager.addGedcomCompletion(gedcom);
 
             assertEquals("Nombre de prenoms apres ajout gedcom", 7+4, dataManager.getCompletionProvider().getFirstNames().getAll().size());

@@ -2,8 +2,8 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.FieldDead;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
@@ -11,7 +11,10 @@ import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import java.io.File;
 import java.io.IOException;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.openide.util.Exceptions;
 
@@ -19,11 +22,7 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class ReleveFileAncestrisV5Test extends TestCase {
-
-    public ReleveFileAncestrisV5Test(String testName) {
-        super(testName);
-    }
+public class ReleveFileAncestrisV5Test {
 
     /**
      * Test of isValidFile method, of class ReleveFileAncestrisV5.

@@ -2,16 +2,17 @@ package ancestris.modules.releve.file;
 
 import ancestris.modules.releve.TestUtility;
 import ancestris.modules.releve.model.DataManager;
-import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record;
+import ancestris.modules.releve.model.Record.FieldType;
 import ancestris.modules.releve.model.Record.RecordType;
 import ancestris.modules.releve.model.RecordBirth;
 import ancestris.modules.releve.model.RecordDeath;
 import ancestris.modules.releve.model.RecordMarriage;
 import ancestris.modules.releve.model.RecordMisc;
 import java.io.File;
-import static junit.framework.Assert.assertEquals;
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 import org.junit.Test;
 import org.openide.util.Exceptions;
 
@@ -19,8 +20,8 @@ import org.openide.util.Exceptions;
  *
  * @author Michel
  */
-public class ReleveFileEgmtTest extends TestCase {
-    
+public class ReleveFileEgmtTest {
+
      /**
      * Test of saveFile method, of class ReleveFileEgmt.
      */
@@ -103,12 +104,12 @@ public class ReleveFileEgmtTest extends TestCase {
                                 || fieldType == FieldType.indiFatherResidence || fieldType == FieldType.indiMotherResidence
                                 || fieldType == FieldType.wifeResidence || fieldType == FieldType.wifeMarriedResidence
                                 || fieldType == FieldType.wifeFatherResidence || fieldType == FieldType.wifeMotherResidence
-                                || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress 
+                                || fieldType == FieldType.indiBirthAddress || fieldType == FieldType.indiAddress
                                 || fieldType == FieldType.indiMarriedAddress
                                 || fieldType == FieldType.indiFatherAddress || fieldType == FieldType.indiMotherAddress
-                                || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress 
+                                || fieldType == FieldType.wifeBirthAddress || fieldType == FieldType.wifeAddress
                                 || fieldType == FieldType.wifeMarriedAddress
-                                || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress     
+                                || fieldType == FieldType.wifeFatherAddress || fieldType == FieldType.wifeMotherAddress
                             ) {
                             assertNull(fieldType.name(), record2.getField(fieldType));
                             assertEquals(fieldType.name(), "", record2.getFieldValue(fieldType));
@@ -146,7 +147,7 @@ public class ReleveFileEgmtTest extends TestCase {
             fail(ex.getMessage());
             return;
         }
-        
+
         assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getMarriageCount());
         RecordMarriage marriage2 = (RecordMarriage) fb.getRecords().get(0);
@@ -167,7 +168,7 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("IndiBirthDate",           "",marriage2.getFieldValue(FieldType.indiBirthDate));
         assertEquals("IndiBirthPlace",          "",marriage2.getFieldValue(FieldType.indiBirthPlace));
         assertEquals("IndiOccupation",          "",marriage2.getFieldValue(FieldType.indiOccupation));
-        assertEquals("IndiComment",            "indiComment, né le 01/02/1990, indiBirthPlace, indiOccupation, Ex conjoint: indiMarriedFirstname indiMarriedLastname Décédé indiMarriedOccupation indiMarriedResidence indiMarriedComment",marriage2.getFieldValue(FieldType.indiComment));                                                 
+        assertEquals("IndiComment",            "indiComment, né le 01/02/1990, indiBirthPlace, indiOccupation, Ex conjoint: indiMarriedFirstname indiMarriedLastname Décédé indiMarriedOccupation indiMarriedResidence indiMarriedComment",marriage2.getFieldValue(FieldType.indiComment));
         assertEquals("IndiMarriedFirstName",    "",marriage2.getFieldValue(FieldType.indiMarriedFirstName));
         assertEquals("IndiMarriedLastName",     "",marriage2.getFieldValue(FieldType.indiMarriedLastName));
         assertEquals("IndiMarriedOccupation",   "",marriage2.getFieldValue(FieldType.indiMarriedOccupation));
@@ -212,9 +213,9 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("WifeMotherDead",          marriage.getFieldValue(FieldType.wifeMotherDead),marriage2.getFieldValue(FieldType.wifeMotherDead));
         assertEquals("WifeMotherOccupation",    "",marriage2.getFieldValue(FieldType.wifeMotherOccupation));
         assertEquals("WifeMotherComment",       "wifeMotherComment, wifeMotherOccupation, wifeMotherResidence, Age:73a",marriage2.getFieldValue(FieldType.wifeMotherComment));
-        
+
         assertWitnesses(marriage, marriage2);
-        
+
 //        assertEquals("Witness1FirstName",     marriage.getWitness1FirstName().toString(),marriage2.getWitness1FirstName().toString());
 //        assertEquals("Witness1LastName",      marriage.getWitness1LastName().toString(),marriage2.getWitness1LastName().toString());
 //        assertEquals("Witness1Occupation",    "",marriage2.getWitness1Occupation().toString());
@@ -233,34 +234,34 @@ public class ReleveFileEgmtTest extends TestCase {
 //        assertEquals("Witness4Comment",       "",marriage2.getWitness4Comment().toString());
 //
 //        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment ",marriage2.getFieldValue(FieldType.generalComment));
-        
+
         file.delete();
 
     }
-    
+
     private void assertWitnesses(Record record, Record record2) {
         assertEquals("Witness1 " + " FirstName" , record.getFieldValue(FieldType.witness1FirstName),record2.getFieldValue(FieldType.witness1FirstName));
         assertEquals("Witness1 " + " LastName" ,  record.getFieldValue(FieldType.witness1LastName),record2.getFieldValue(FieldType.witness1LastName));
         assertEquals("Witness1 " + " Occupation" , "",  record2.getFieldValue(FieldType.witness1Occupation));
-        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Occupation)+ ", " + record.getFieldValue(FieldType.witness1Comment) 
+        assertEquals("Witness1 " + " Comment",    record.getFieldValue(FieldType.witness1Occupation)+ ", " + record.getFieldValue(FieldType.witness1Comment)
                      , record2.getFieldValue(FieldType.witness1Comment));
-        
+
         assertEquals("Witness2 " + " FirstName" , record.getFieldValue(FieldType.witness2FirstName),record2.getFieldValue(FieldType.witness2FirstName));
         assertEquals("Witness2 " + " LastName" ,  record.getFieldValue(FieldType.witness2LastName),record2.getFieldValue(FieldType.witness2LastName));
         assertEquals("Witness2 " + " Occupation" ,  "",  record2.getFieldValue(FieldType.witness2Occupation));
-        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Occupation)+ ", " + record.getFieldValue(FieldType.witness2Comment) 
+        assertEquals("Witness2 " + " Comment",    record.getFieldValue(FieldType.witness2Occupation)+ ", " + record.getFieldValue(FieldType.witness2Comment)
                      , record2.getFieldValue(FieldType.witness2Comment));
-        
+
         assertEquals("Witness3 " + " FirstName" ,  "", record2.getFieldValue(FieldType.witness3FirstName));
         assertEquals("Witness3 " + " LastName" ,   "",  record2.getFieldValue(FieldType.witness3LastName));
         assertEquals("Witness3 " + " Occupation",  "",record2.getFieldValue(FieldType.witness3Occupation));
-        assertEquals("Witness3 "+ " Comment",      "", record2.getFieldValue(FieldType.witness3Comment));        
-        
+        assertEquals("Witness3 "+ " Comment",      "", record2.getFieldValue(FieldType.witness3Comment));
+
         assertEquals("Witness4 " + " FirstName" ,  "", record2.getFieldValue(FieldType.witness4FirstName));
         assertEquals("Witness4 " + " LastName" ,   "",  record2.getFieldValue(FieldType.witness4LastName));
         assertEquals("Witness4 " + " Occupation",  "",record2.getFieldValue(FieldType.witness4Occupation));
         assertEquals("Witness4 "+ " Comment",      "", record2.getFieldValue(FieldType.witness4Comment));
-        
+
     }
 
     /**
@@ -273,7 +274,7 @@ public class ReleveFileEgmtTest extends TestCase {
         DataManager dataManager = new DataManager();
         dataManager.setPlace("cityname","citycode","county","state","country");
         String place = dataManager.getPlace().getValue();
-        
+
         RecordDeath death = TestUtility.getRecordDeath();
         dataManager.addRecord(death);
         StringBuilder sb = ReleveFileEgmt.saveFile(dataManager, dataManager.getDataModel(), RecordType.DEATH, file, false);
@@ -357,8 +358,8 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("WifeMotherComment",       "", death2.getFieldValue(FieldType.wifeMotherComment));
 
         assertWitnesses(death, death2);
-        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment ",death2.getFieldValue(FieldType.generalComment));                                        
-        
+        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment ",death2.getFieldValue(FieldType.generalComment));
+
         file.delete();
 
     }
@@ -453,9 +454,9 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("WifeMotherComment",       "wifeMotherComment, wifeMotherOccupation, wifeMotherResidence, Age:73a",misc2.getFieldValue(FieldType.wifeMotherComment));
 
         assertWitnesses(misc, misc2);
-        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment, insinué le 04/04/2012",misc2.getFieldValue(FieldType.generalComment));                                        
+        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment, insinué le 04/04/2012",misc2.getFieldValue(FieldType.generalComment));
 
-        
+
         file.delete();
 
     }
@@ -484,7 +485,7 @@ public class ReleveFileEgmtTest extends TestCase {
             fail(ex.getMessage());
             return;
         }
-        
+
         assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc misc2 = (RecordMisc) fb.getRecords().get(0);
@@ -558,7 +559,7 @@ public class ReleveFileEgmtTest extends TestCase {
         assertEquals("WifeMotherComment",       "",misc2.getFieldValue(FieldType.wifeMotherComment));
 
         assertWitnesses(misc, misc2);
-        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment, insinué le 04/04/2012, Héritier: wifeFirstname wifeLastname, né le 02/02/1992 wifeBirthPlace, wifeComment, wifeOccupation, wifeResidence, Père de l'héritier: wifeFatherFirstname wifeFatherLastname Age:71a Vivant wifeFatherOccupation wifeFatherResidence wifeFatherComment, Mère de l'héritier: wifeMotherFirstname wifeMotherLastname Age:73a Vivant wifeMotherOccupation wifeMotherResidence wifeMotherComment, Conjoint de l'héritier: wifeMarriedFirstname wifeMarriedLastname Décédé wifeMarriedOccupation wifeMarriedResidence wifeMotherComment",misc2.getFieldValue(FieldType.generalComment));                                        
+        assertEquals("GeneralComment", "generalcomment, témoin(s): w3firstname w3lastname w3occupation w3comment, w4firstname w4lastname w4occupation w4comment, insinué le 04/04/2012, Héritier: wifeFirstname wifeLastname, né le 02/02/1992 wifeBirthPlace, wifeComment, wifeOccupation, wifeResidence, Père de l'héritier: wifeFatherFirstname wifeFatherLastname Age:71a Vivant wifeFatherOccupation wifeFatherResidence wifeFatherComment, Mère de l'héritier: wifeMotherFirstname wifeMotherLastname Age:73a Vivant wifeMotherOccupation wifeMotherResidence wifeMotherComment, Conjoint de l'héritier: wifeMarriedFirstname wifeMarriedLastname Décédé wifeMarriedOccupation wifeMarriedResidence wifeMotherComment",misc2.getFieldValue(FieldType.generalComment));
 
         file.delete();
 
@@ -587,7 +588,7 @@ public class ReleveFileEgmtTest extends TestCase {
             fail(ex.getMessage());
             return;
         }
-        
+
         assertEquals("load result", "", fb.getError());
         assertEquals("load count", 1, fb.getMiscCount());
         RecordMisc misc2 = (RecordMisc) fb.getRecords().get(0);

@@ -33,14 +33,13 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import javax.swing.filechooser.FileSystemView;
-import junit.framework.TestCase;
 import org.openide.util.Exceptions;
 
 /**
  *
  * @author Michel
  */
-public class TestUtility extends TestCase {
+public class TestUtility  {
 
     public static File createFile( String data ) throws IOException  {
         File file = new File(System.getProperty("user.home") + File.separator + "ancestris.txt");
