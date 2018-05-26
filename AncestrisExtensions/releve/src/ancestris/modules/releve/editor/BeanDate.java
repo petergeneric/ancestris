@@ -30,36 +30,32 @@ public class BeanDate extends Bean {
     private final static NestedBlockLayout V = new NestedBlockLayout("<table><row><choose/><date1/></row><row><label2/><date2/></row><row><phrase cols=\"2\"/></row></table>");
     private DateWidget dateWidget;
     private Calendar preferedCalendar = PointInTime.GREGORIAN;
-  
+
 
     public BeanDate() {
         setLayout(V.copy());
         setAlignmentX(0);
 
-        // .. first date
         dateWidget = new DateWidget();
         dateWidget.addChangeListener(changeSupport);
         add(dateWidget);
 
-        // do the layout and format
-        setPreferHorizontal(false);
-        //setFormat(PropertyDate.FORMATS[0]);
         setPreferedCalendar(PointInTime.GREGORIAN, PointInTime.FRENCHR);
 
         // setup default focus
         defaultFocus = dateWidget;
 
         // je configure le raccourci des touches de direction haut et bas pour increment ou decrementer la date d'un jour
-        JComponent date2 = (JComponent) dateWidget.getComponent(0);
-        if ( date2 instanceof JTextField) {
+        if ( dateWidget.getComponent(1)  instanceof JTextField) {
+            JTextField jTextFieldDay = (JTextField) dateWidget.getComponent(1);
             // je desactive les touches haut et pas pour supprimer l'action du scrollbar parent
-            date2.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
-            date2.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
+            jTextFieldDay.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0));
+            jTextFieldDay.getInputMap(JComponent.WHEN_FOCUSED).remove( KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0));
             // j'associe les touches et les actions
-            date2.getInputMap(JComponent.WHEN_FOCUSED).put( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Increase");
-            date2.getInputMap(JComponent.WHEN_FOCUSED).put( KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Decrease");
+            jTextFieldDay.getInputMap(JComponent.WHEN_FOCUSED).put( KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0), "Increase");
+            jTextFieldDay.getInputMap(JComponent.WHEN_FOCUSED).put( KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0), "Decrease");
             // j'ajoute les nouvelles actions
-            date2.getActionMap().put("Increase", new AbstractAction() {
+            jTextFieldDay.getActionMap().put("Increase", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     // j'incremente la valeur
@@ -67,33 +63,25 @@ public class BeanDate extends Bean {
                 }
             });
 
-            date2.getActionMap().put("Decrease", new AbstractAction() {
+            jTextFieldDay.getActionMap().put("Decrease", new AbstractAction() {
                 @Override
                 public void actionPerformed(ActionEvent actionEvent) {
                     // je decremente la valeur
                     dateWidget.setValue(dateWidget.getValue().add(-1, 0, 0));
                 }
             });
+
+            // le focus sera donné au champs de saisie du jour
+            defaultFocus = jTextFieldDay;
         }
-     
+
     }
 
     public final void setPreferedCalendar(Calendar prefered, Calendar alternate) {
         preferedCalendar = prefered;
         dateWidget.setPreferedCalendar(prefered, alternate);
         //date2.setPreferedCalendar(prefered, alternate);
-        
-    }
 
-    public final void setPreferHorizontal(boolean set) {
-
-        setLayout(set ? H.copy() : V.copy());
-        //PropertyDate.Format f = format;
-        //format = null;
-        //setFormat(f);
-
-        revalidate();
-        repaint();
     }
 
     /**
@@ -110,7 +98,7 @@ public class BeanDate extends Bean {
         if (prop == null) {
             pit = new PointInTime();
         } else {
-            pit = prop.getStart();            
+            pit = prop.getStart();
             if (pit.getCalendar() != preferedCalendar) {
                 try {
                     pit = pit.getPointInTime(preferedCalendar);
@@ -134,7 +122,7 @@ public class BeanDate extends Bean {
         if (prop == null) {
             pit = new PointInTime();
         } else {
-            pit = prop.getStart();            
+            pit = prop.getStart();
             if (pit.getCalendar() != preferedCalendar) {
                 try {
                     pit = pit.getPointInTime(preferedCalendar);
@@ -145,7 +133,7 @@ public class BeanDate extends Bean {
             }
         }
         dateWidget.setValue(pit);
-        
+
         // je sélectionne le texte contenu dans le premier champ de la date
         if (dateWidget.getComponent(0) != null  && dateWidget.getComponent(0) instanceof JTextField) {
             ((JTextField)dateWidget.getComponent(0)).selectAll();
@@ -157,7 +145,7 @@ public class BeanDate extends Bean {
      * Finish editing a property through proxy
      */
     @Override
-    protected void commitImpl() {        
+    protected void commitImpl() {
         String result;
         PointInTime pit = dateWidget.getValue();
         if( pit != null) {
@@ -169,11 +157,11 @@ public class BeanDate extends Bean {
                     Exceptions.printStackTrace(ex);
                     return;
                 }
-            } 
-            
+            }
+
             int  day2 = pit.getDay();
-            int month2 = pit.getMonth();        
-            int  year2 = pit.getYear();   
+            int month2 = pit.getMonth();
+            int  year2 = pit.getYear();
             if ( year2 == PointInTime.UNKNOWN ) {
                 result = "";
             } else if (month2 == PointInTime.UNKNOWN  ) {
@@ -186,7 +174,7 @@ public class BeanDate extends Bean {
         } else {
             result = "";
         }
-        
+
         setFieldValue(result);
 
     }
