@@ -11,8 +11,7 @@ import java.awt.event.ActionListener;
 import org.jdesktop.swingx.tips.TipOfTheDayModel;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
+import org.openide.util.*;
 
 /**
  *
@@ -65,7 +64,7 @@ public class TipOfTheDayDialog implements ActionListener {
                 new Object[]{previous, next, close},
                 close,
                 DialogDescriptor.DEFAULT_ALIGN,
-                null,
+                (HelpCtx)null,
                 null);
         TipOfTheDayDialogDescriptor.setAdditionalOptions(new Object[]{confirmationCheckBox});
         TipOfTheDayDialogDescriptor.setClosingOptions(new Object[]{close});
