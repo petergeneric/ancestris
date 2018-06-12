@@ -550,9 +550,12 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
                     GridBagConstraints.CENTER,GridBagConstraints.BOTH,new Insets(0,0,0,0),0,0 ) );
         }
 
+        // Error message
         panel.add( new JLabel(BundleSupport.getLabel("ErrCannotConnect")),  // NOI18N
                 new GridBagConstraints(0,row++,1,1,0.0,0.0,
                 GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,10,10,5),0,0 ) );
+        
+        // Proxy button
         if( showProxyButton ) {
             JButton button = new JButton();
             Mnemonics.setLocalizedText( button, BundleSupport.getLabel( "ProxyConfig" ) );  // NOI18N
@@ -565,6 +568,21 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
             });
             panel.add( button, new GridBagConstraints(0,row++,1,1,0.0,0.0,
                     GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,10,10,5),0,0 ) );
+
+            // Add reload button
+            JButton buttonR = new JButton();
+            Mnemonics.setLocalizedText( buttonR, BundleSupport.getLabel( "Reload" ) );  // NOI18N
+            buttonR.setOpaque( false );
+            buttonR.addActionListener( new ActionListener() {
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    lastReload = 0;
+                    reload();
+                }
+            });
+            panel.add( buttonR, new GridBagConstraints(0,row++,1,1,0.0,0.0,
+                    GridBagConstraints.CENTER,GridBagConstraints.NONE,new Insets(5,10,10,5),0,0 ) );
+            
         }
         return panel;
     }
