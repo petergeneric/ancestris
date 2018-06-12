@@ -221,6 +221,8 @@ public class GedcomWriter implements IGedcomWriter {
 
         } catch (GedcomIOException ioe) {
             throw ioe;
+        } catch (UnmappableCharacterException unme) {
+            throw new GedcomEncodingException(gedcom.getFirstEntity("HEAD"), gedcom.getEncoding());
         } catch (Exception ex) {
             throw new GedcomIOException("Error while writing / " + ex.getMessage(), line);
         } finally {
