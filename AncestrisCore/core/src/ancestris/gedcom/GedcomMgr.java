@@ -535,6 +535,10 @@ public abstract class GedcomMgr {
                     }
                 }
 
+            } catch (GedcomEncodingException gee) {
+                DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_error", gee.getMessage())).show();
+                LOG.log(Level.SEVERE, "Cannot encode gedcom " + gedcom.getName() + ". Error is : "+ gee.getLocalizedMessage());
+                return false;
             } catch (GedcomIOException gioex) {
                 DialogManager.createError(gedcom.getName(), RES.getString("cc.save.write_error", "" + gioex.getLine()) + ":\n" + gioex.getMessage()).show();
                 return false;

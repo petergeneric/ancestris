@@ -975,7 +975,7 @@ public abstract class Import implements ImportRunner {
         for (Entity entity : gedcom.getIndis()) {
             getPropertiesRecursively(list, "ASSO", entity);
         }
-        int increment = list.size() / 10;
+        int increment = list.size() / 10 + 1;
         int counter = 0;
         for (Property prop : list) {
             // increment progress
