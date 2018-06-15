@@ -276,10 +276,15 @@ public class TreeSharingTopComponent extends TopComponent {
         members.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                updateMembersList();
-                updateStatsDisplay();
                 if (commHandler != null) {
-                    commHandler.sendPing();
+                    commHandler.clearCommunicationError();
+                }
+                boolean ret = updateMembersList();
+                if (ret) {
+                    updateStatsDisplay();
+                    if (commHandler != null) {
+                        commHandler.sendPing();
+                    }
                 }
             }
         });
@@ -419,9 +424,14 @@ public class TreeSharingTopComponent extends TopComponent {
         
         swingTimer = new javax.swing.Timer(REFRESH_DELAY*1000, new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                updateMembersList();
-                checkDisconnection();
-                updateStatsDisplay();
+                boolean ret = updateMembersList();
+                if (!ret && isShareAllOn()) {
+                    stopSharingAll();
+                }
+                if (ret) {
+                    checkDisconnection();
+                    updateStatsDisplay();
+                }
             }
         });
         swingTimer.setInitialDelay(REFRESH_DELAY*1000);
@@ -430,8 +440,9 @@ public class TreeSharingTopComponent extends TopComponent {
 
 
     
-    public void updateMembersList() {
-        resetAncestrisMembers();
+    public boolean updateMembersList() {
+        boolean ret = resetAncestrisMembers();
+
         final int n = ancestrisMembers.size() - (shareAll ? 1 : 0);
         membersNumber.setToolTipText(NbBundle.getMessage(MembersPopup.class, "TIP_MembersNumber", n));
         // 
@@ -454,6 +465,7 @@ public class TreeSharingTopComponent extends TopComponent {
             });
             rememberMembers();
         }
+        return ret;
     }
     
     public void updateStatsDisplay() {
@@ -498,37 +510,43 @@ public class TreeSharingTopComponent extends TopComponent {
     }
     
         
-    private void resetAncestrisMembers() {
+    private boolean resetAncestrisMembers() {
+        // Clear existing list 
+        if (ancestrisMembers == null) {
+            ancestrisMembers = new ArrayList<AncestrisMember>(); 
+        } else {
+            ancestrisMembers.clear();
+        }
+
         // Get new list from server
         List<AncestrisMember> newList = commHandler.getAncestrisMembers();
         String key = "";
         boolean isAllowed = true;
 
         // If a list is found on the server, 
-        for (AncestrisMember tempItem : newList) {
-            if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
-                for (AncestrisMember member : ancestrisMembers) {
-                    if (tempItem.getMemberName().equals(member.getMemberName())) {
-                        tempItem.setAllowed(member.isAllowed());
-                        tempItem.setUsePrivate(member.getUsePrivate());
-                        continue;
+        if (newList != null) {
+            for (AncestrisMember tempItem : newList) {
+                if (ancestrisMembers != null && !ancestrisMembers.isEmpty()) {
+                    for (AncestrisMember member : ancestrisMembers) {
+                        if (tempItem.getMemberName().equals(member.getMemberName())) {
+                            tempItem.setAllowed(member.isAllowed());
+                            tempItem.setUsePrivate(member.getUsePrivate());
+                            continue;
+                        }
                     }
                 }
+                key = "memberip-" + tempItem.getxIPAddress();
+                isAllowed = NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1");
+                key = "memberps-" + tempItem.getMemberName();
+                isAllowed &= NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1");
+                tempItem.setAllowed(isAllowed);
             }
-            key = "memberip-" + tempItem.getxIPAddress();
-            isAllowed = NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1");
-            key = "memberps-" + tempItem.getMemberName();
-            isAllowed &= NbPreferences.forModule(TreeSharingOptionsPanel.class).get(key, "1").equals("1");
-            tempItem.setAllowed(isAllowed);
-        }
 
-        // Clear existing list and add newList to previous list
-        if (ancestrisMembers == null) {
-            ancestrisMembers = new ArrayList<AncestrisMember>(); 
-        } else {
-            ancestrisMembers.clear();
+            // Add newList to previous list
+            ancestrisMembers.addAll(newList);
         }
-        ancestrisMembers.addAll(newList);
+        
+        return (newList != null);
     }
 
     
@@ -548,7 +566,7 @@ public class TreeSharingTopComponent extends TopComponent {
                 //Exceptions.printStackTrace(ex);
             }
             startSharingAll();
-            LOG.log(Level.INFO, "Connection lost. Turning sharing off and back on...   " + getRegisteredEndDate());
+            LOG.log(Level.FINE, "Connection lost. Turning sharing off and back on...   " + getRegisteredEndDate());
         }
 
     }

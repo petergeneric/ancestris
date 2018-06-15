@@ -29,6 +29,7 @@ import java.net.DatagramSocket;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.net.UnknownHostException;
@@ -46,6 +47,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
+import javax.swing.SwingUtilities;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.apache.commons.lang.StringEscapeUtils;
@@ -136,6 +138,7 @@ public class Comm {
     private static String COMM_PROTOCOL = "http://";                                        // for sql web service only
     private static String COMM_CREDENTIALS = "user=ancestrishare&pw=2fQB&format=xml";       // for sql web service only
     private int COMM_TIMEOUT = 1000; // One second
+    private boolean isCommError = false;                                                    // true if a communicaiton error exists
 
     private static DatagramSocket socket = null;
 
@@ -295,6 +298,9 @@ public class Comm {
         List<AncestrisMember> ancestrisMembers = new ArrayList<AncestrisMember>();
         
         String outputString = getQueryResult(COMM_PROTOCOL + COMM_SERVER + CMD_GETMB + COMM_CREDENTIALS);
+        if (outputString == null) {
+            return null;
+        }
         if (outputString.isEmpty()) {
             return ancestrisMembers;
         }
@@ -323,7 +329,7 @@ public class Comm {
             
         } catch (Exception ex) {
             //Exceptions.printStackTrace(ex);
-            LOG.log(Level.INFO, "Error while getting ancestris members : " + ex.getMessage());
+            displayErrorMessage(false, "getAncestrisMembers Exception", "ERR_ParsingError", ex.getLocalizedMessage());
         }
         
         // Return list
@@ -344,16 +350,26 @@ public class Comm {
             }
             in.close();
             connection.disconnect();
+            isCommError = false;
+        } catch (UnknownHostException ex) {
+            displayErrorMessage(true, "getQueryResult UnknownHostException", "ERR_UnknownHostException", ex.getLocalizedMessage());
+            ret = null;
+        } catch (SocketException ex) {
+            displayErrorMessage(true, "getQueryResult SocketException", "ERR_SocketException", ex.getLocalizedMessage());
+            ret = null;
+        } catch (IOException ex) {
+            displayErrorMessage(true, "getQueryResult IOException", "ERR_IOException", ex.getLocalizedMessage());
+            ret = null;
         } catch (Exception ex) {
             //Exceptions.printStackTrace(ex);
-            LOG.log(Level.INFO, "Error while querying the server : " + ex.getMessage());
-            ret = "";
+            displayErrorMessage(true, "getQueryResult Exception", "ERR_Exception", ex.getLocalizedMessage());
+            ret = null;
         }
 
         return ret;
     }
 
-    
+
 
     
     
@@ -365,15 +381,20 @@ public class Comm {
      */
     public boolean registerMe(String pseudo) {
 
-        LOG.log(Level.INFO, "***");
-        LOG.log(Level.INFO, "Communication packet size is "+COMM_PACKET_SIZE);
+        LOG.log(Level.FINE, "***");
+        LOG.log(Level.FINE, "Communication packet size is "+COMM_PACKET_SIZE);
+        clearCommunicationError();
+
         try {
             // Create our unique socket
             socket = new DatagramSocket();
             
             // Registers on server
             String content = pseudo + " " + getLocalHostLANAddress().getHostAddress() + " " + socket.getLocalPort();
-            sendCommand(CMD_REGIS, content, null, COMM_SERVER, COMM_PORT);
+            boolean ret = sendCommand(CMD_REGIS, content, null, COMM_SERVER, COMM_PORT);
+            if (!ret) {
+                return false;
+            }
 
             // Listen to reply
             byte[] bytesReceived = new byte[512];
@@ -396,13 +417,14 @@ public class Comm {
                 return false;
             }
             
-        } catch(SocketTimeoutException e) {
-            String err = NbBundle.getMessage(Comm.class, "ERR_ServerNotResponding");
-            LOG.log(Level.FINE, "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server. Error : " + err);
-            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Registration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
+        } catch(SocketTimeoutException ex) {
+            String log = "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server.";
+            displayErrorMessage(false, log, "ERR_ServerNotResponding", NbBundle.getMessage(Comm.class, "MSG_Registration") + " ; " + ex.getLocalizedMessage());
             return false;
-        } catch (IOException e) {
-            Exceptions.printStackTrace(e);
+        } catch (IOException ex) {
+            //Exceptions.printStackTrace(ex);
+            String log = "...(TIMEOUT) Could not register " + pseudo + " from the Ancestris server.";
+            displayErrorMessage(false, log, "ERR_IOException", ex.getLocalizedMessage());
             return false;
         }
         startListeningToFriends();  
@@ -417,7 +439,10 @@ public class Comm {
 
         try {
             // Send unrestering command
-            sendCommand(CMD_UNREG, pseudo, null, COMM_SERVER, COMM_PORT);
+            boolean ret = sendCommand(CMD_UNREG, pseudo, null, COMM_SERVER, COMM_PORT);
+            if (!ret) {
+                return false;
+            }
             
             // Expect answer back (wait for response from the other thread...)
             int s = 0;
@@ -427,14 +452,14 @@ public class Comm {
             }
             if (sharing) { // response never came back after timeout, consider it failed
                 String err = NbBundle.getMessage(Comm.class, "ERR_ServerNotResponding");
-                LOG.log(Level.FINE, "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server. Error : " + err);
-                DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), err).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                String log = "...(TIMEOUT) Could not unregister " + pseudo + " from the Ancestris server.";
+                displayErrorMessage(false, log, "ERR_ServerNotResponding", NbBundle.getMessage(Comm.class, "MSG_Unregistration"));
                 return false;
             }
             
-        } catch (Exception e) {
-            DialogManager.create(NbBundle.getMessage(Comm.class, "MSG_Unregistration"), e.getMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
+        } catch (Exception ex) {
             //Exceptions.printStackTrace(e);
+            displayErrorMessage(false, "unregisterMe Exception", "ERR_Exception", NbBundle.getMessage(Comm.class, "MSG_Unregistration") + " ; " + ex.getLocalizedMessage());
             return false;
         }
         if (socket != null) {
@@ -460,6 +485,7 @@ public class Comm {
             try {
                 TimeUnit.SECONDS.sleep(refreshDelay);
             } catch (InterruptedException ex) {
+                displayErrorMessage(true, "ping InterruptedException", "ERR_InterruptedException", ex.getLocalizedMessage());
                 Exceptions.printStackTrace(ex);
             }
         }
@@ -475,7 +501,12 @@ public class Comm {
     }
     
     
+
+    public void clearCommunicationError() {
+        isCommError = false;
+    }
     
+
     public void setCommunicationInProgress(boolean inProgress) {
         communicationInProgress = inProgress;
     }
@@ -648,8 +679,9 @@ public class Comm {
                     break;
                 }
             
-            } catch (Exception e) {
-                Exceptions.printStackTrace(e);
+            } catch (Exception ex) {
+                displayErrorMessage(false, "call Exception", "ERR_CallException", ex.getLocalizedMessage());
+                //Exceptions.printStackTrace(e);
                 return false;
             }
         }
@@ -727,7 +759,8 @@ public class Comm {
             memberInProgress = null;
             
         } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage(false, "connectToMember Exception", "ERR_ConnectException", ex.getLocalizedMessage());
+            //Exceptions.printStackTrace(ex);
             return false;
         }
         LOG.log(Level.FINE, "...(SUCCESS) Connected successfully to member " + member.getMemberName());
@@ -771,7 +804,7 @@ public class Comm {
         String member = null;
         AncestrisMember aMember = null;
         
-        LOG.log(Level.INFO, "Listening to all incoming calls indefinitely.......");
+        LOG.log(Level.FINE, "Listening to all incoming calls indefinitely.......");
         
         // Upload profile picture once for all
         packetsOfProfile = buildPacketsOfProfile(owner.getMyProfile());
@@ -1177,7 +1210,7 @@ public class Comm {
     /**
      * Used to send command to Server and Members
      */
-    private void sendCommand(String command, String string, Object object, String ipAddress, int portAddress) {
+    private boolean sendCommand(String command, String string, Object object, String ipAddress, int portAddress) {
         
         byte[] msgBytes = null; // content to send
 
@@ -1193,19 +1226,21 @@ public class Comm {
 
         // abort if msgBytes failed
         if (msgBytes == null) {   
-            LOG.log(Level.SEVERE, "Sending command " + command + " with " + string + " to " + ipAddress + ":" + portAddress + " => Cannot wrap message. Abort communication.");
-            return;
+            //LOG.log(Level.SEVERE, "Sending command " + command + " with " + string + " to " + ipAddress + ":" + portAddress + " => Cannot wrap message. Abort communication.");
+            LOG.log(Level.FINE, "Sending command " + command + " with " + string + " => Cannot wrap message. Abort communication.");
+            return false;
             }
         
         // no need to log this PONGG message as it is sent every few minutes to the server
         if (!command.equals(CMD_PONGG)) {   
-            LOG.log(Level.INFO, "Sending command " + command + " with " + string + " and object of size (" + msgBytes.length + " bytes) to " + ipAddress + ":" + portAddress);
+            //LOG.log(Level.INFO, "Sending command " + command + " with " + string + " and object of size (" + msgBytes.length + " bytes) to " + ipAddress + ":" + portAddress);
+            LOG.log(Level.FINE, "Sending command " + command + " with " + string + " and object of size (" + msgBytes.length + " bytes)");
             }
         
         // Truncate package if object is too bug
         int s = msgBytes.length;
         if (s > COMM_PACKET_SIZE) {
-            LOG.log(Level.SEVERE, "./!\\ Object of size (" + s + " bytes) is larger than maximum packet size of " + COMM_PACKET_SIZE);
+            LOG.log(Level.FINE, "./!\\ Object of size (" + s + " bytes) is larger than maximum packet size of " + COMM_PACKET_SIZE);
             // test class of object
             boolean abort = true;
             if (object instanceof Set) {
@@ -1233,22 +1268,22 @@ public class Comm {
                             msgBytes = tmpBytes;
                             limit += 10;
                         } else {
-                            LOG.log(Level.SEVERE, ".You are the caller : number of common names has been truncated to first " + (limit - 10) + " names instead of " + set.size() + ".");
-                            LOG.log(Level.SEVERE, ".Packet size is now (" + msgBytes.length + ") bytes.");
+                            LOG.log(Level.FINE, ".You are the caller : number of common names has been truncated to first " + (limit - 10) + " names instead of " + set.size() + ".");
+                            LOG.log(Level.FINE, ".Packet size is now (" + msgBytes.length + ") bytes.");
                             break;  // use msgBytes
                         }
                     }
                     index++;
                 }
             } else {
-                LOG.log(Level.SEVERE, ".You are the receiver : compression factor is currently set to " + COMM_COMPRESSING_FACTOR + " and should be increased by the developpers.");
-                LOG.log(Level.SEVERE, ".=> Abort communication.");
-                return;
+                LOG.log(Level.FINE, ".You are the receiver : compression factor is currently set to " + COMM_COMPRESSING_FACTOR + " and should be increased by the developpers.");
+                LOG.log(Level.FINE, ".=> Abort communication.");
+                return false;
             }
         }
         
         // Send msg with object
-        sendObject(msgBytes, ipAddress, portAddress);
+        return sendObject(msgBytes, ipAddress, portAddress);
     }
     
     
@@ -1260,7 +1295,8 @@ public class Comm {
             byteStream.write(wrapObject(object));
             ret = byteStream.toByteArray();
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage(false, "getWrappedObject", "ERR_WrappedException", ex.getLocalizedMessage());
+            //Exceptions.printStackTrace(ex);
         }
 
         return ret;
@@ -1283,7 +1319,8 @@ public class Comm {
             bytes = contentStream.toByteArray();
             
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage(false, "wrapObject", "ERR_WrapException", ex.getLocalizedMessage());
+            //Exceptions.printStackTrace(ex);
         }
         return bytes;
     }
@@ -1303,12 +1340,15 @@ public class Comm {
             object = is.readObject();
             is.close();
         } catch (EOFException ex) {
-            LOG.log(Level.SEVERE, "Receiving message. Packet size was probably larger than the maximum packet size and therefore has been truncated, or packets have different sizes between the sender and the receiver. Please update your version of Ancestris or contact the Ancestris support.");
-            Exceptions.printStackTrace(ex);
+            String log = "Receiving message. Packet size was probably larger than the maximum packet size and therefore has been truncated, or packets have different sizes between the sender and the receiver. Please update your version of Ancestris or contact the Ancestris support.";
+            displayErrorMessage(false, log, "ERR_UnwrapException", ex.getLocalizedMessage());
+            //Exceptions.printStackTrace(ex);
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage(false, "unwrapObject IOException", "ERR_UnwrapException", ex.getLocalizedMessage());
+            //Exceptions.printStackTrace(ex);
         } catch (ClassNotFoundException ex) {
-            Exceptions.printStackTrace(ex);
+            displayErrorMessage(false, "unwrapObject ClassNotFoundException", "ERR_UnwrapException", ex.getLocalizedMessage());
+            //Exceptions.printStackTrace(ex);
         }
         return object;
     }
@@ -1316,16 +1356,21 @@ public class Comm {
     /**
      * Elementary method to send object once packet has been built
      */
-    private void sendObject(byte[] bytesSent, String ipAddress, int portAddress) {
+    private boolean sendObject(byte[] bytesSent, String ipAddress, int portAddress) {
         DatagramPacket packetSent;
         try {
             packetSent = new DatagramPacket(bytesSent, bytesSent.length, InetAddress.getByName(ipAddress), portAddress);
             socket.send(packetSent);
         } catch (UnknownHostException ex) {
-            Exceptions.printStackTrace(ex);
+            //Exceptions.printStackTrace(ex);
+            displayErrorMessage(true, "sendObject UnknownHostException", "ERR_UnknownHostException", ex.getLocalizedMessage());
+            return false;
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            //Exceptions.printStackTrace(ex);
+            displayErrorMessage(false, "sendObject IOException", "ERR_SendException", ex.getLocalizedMessage());
+            return false;
         }
+        return true;
     }
     
 
@@ -1512,6 +1557,27 @@ public class Comm {
         return false;
         }
 
+    private void displayErrorMessage(boolean mute, String log, String err, String sub_err) {
+        
+        if (mute && isCommError) {
+            return;
+        }
+        
+        final String title = NbBundle.getMessage(TreeSharingTopComponent.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(Comm.class, "MSG_CommunicationError");
+        sub_err = sub_err.replace(COMM_SERVER, "www");
+        final String msg = NbBundle.getMessage(Comm.class, err, sub_err);
+        
+        LOG.log(Level.FINE, log + "   (" + title + ": " + msg + ")");
+        
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                DialogManager.create(title, msg).setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.ERROR_MESSAGE).show();
+            }
+        });
+        isCommError = true;
+    }
+
     
 
     
@@ -1601,9 +1667,9 @@ public class Comm {
                 throw new UnknownHostException("InetAddress.getLocalHost() method unexpectedly returned null.");
             }
             return jdkSuppliedAddress;
-        } catch (Exception e) {
-            UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + e);
-            unknownHostException.initCause(e);
+        } catch (Exception ex) {
+            UnknownHostException unknownHostException = new UnknownHostException("Failed to determine LAN address: " + ex);
+            unknownHostException.initCause(ex);
             throw unknownHostException;
         }
     }
