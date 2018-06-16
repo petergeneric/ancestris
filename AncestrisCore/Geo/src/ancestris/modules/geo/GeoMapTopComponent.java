@@ -28,8 +28,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.List;
@@ -44,6 +44,7 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
 import org.jdesktop.swingx.mapviewer.Waypoint;
 import org.jdesktop.swingx.mapviewer.WaypointPainter;
 import org.jdesktop.swingx.mapviewer.WaypointRenderer;
+import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.HelpCtx;
@@ -68,6 +69,11 @@ autostore = false)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, Filter {
 
     private genj.util.Registry registry = null;
+    
+    /** Handle internet connection */
+    private boolean isConnectionOn = true;
+    private URL osmUrl;
+    private boolean isBusyChecking = false;
     
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "ancestris/modules/geo/geo.png";
@@ -153,16 +159,24 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public boolean createPanel() {
-        checkConnection();
+        try {
+            osmUrl = new URL("http://tile.openstreetmap.org/");
+        } catch (MalformedURLException ex) {
+        }
+        checkConnection(false);
         // TopComponent window parameters
         initComponents();
         loadSettings();
         geoFilter.setGedcom(getGedcom());
-        jXMapKit1.setDataProviderCreditShown(true);
-        jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
-        jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         hoverPanel = new HoverPanel(this);
         hoverPanel.setVisible(false);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            jXMapKit1.setTileFactory(new EmptyTileFactory());
+        }
+        jXMapKit1.setDataProviderCreditShown(true);
+        jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
         jXMapKit1.getMainMap().add(hoverPanel);
         
         // Add listener for zoom adapter
@@ -171,7 +185,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 jXMapKit1PropertyChange(evt);
             }
         });
-
 
         // Set settings
         customiseFromSettings();
@@ -503,8 +516,12 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }//GEN-LAST:event_jToggleSliderButtonActionPerformed
 
     private void jViewAllButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jViewAllButtonActionPerformed
-        if (jXMapKit1 != null && jXMapKit1.getMainMap() != null) {
-            jXMapKit1.getMainMap().calculateZoomFrom(getPositionsFromMarkers());
+        checkConnection(false);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+            if (jXMapKit1 != null && jXMapKit1.getMainMap() != null) {
+                jXMapKit1.getMainMap().calculateZoomFrom(getPositionsFromMarkers());
+            }
         }
     }//GEN-LAST:event_jViewAllButtonActionPerformed
 
@@ -532,6 +549,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }//GEN-LAST:event_jSettingsButtonActionPerformed
 
     private void jRefreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jRefreshButtonActionPerformed
+        checkConnection(true);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            String txt = NbBundle.getMessage(GeoMapTopComponent.class, "MSG_RefreshingError");
+            DialogManager.createError(NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent") + " - " + NbBundle.getMessage(GeoMapTopComponent.class, "TITL_ConnectionError"), txt).show();
+            return;
+        }
         jRefreshButton.setEnabled(false);
         GeoPlacesList.getInstance(getGedcom()).launchPlacesSearch(true);
         refreshFlag = true;
@@ -548,11 +573,34 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         applyFilters();
     }//GEN-LAST:event_jToggleShowUnknownActionPerformed
 
+    /**
+     * Detect property change to zoom and save settings
+     * In addition, inclue Internet connection detection : with no connection, the tiles retrieval from the internet crashes with many messages.
+     * FL : I cannot grab the exception from within JXLapKit, therefore I retest connection every time.
+     * It is a bit time consumming but otherwise, in case of lost connection, there would be many error messages (1 for each tile).
+     * 
+     * @param evt 
+     */
     private void jXMapKit1PropertyChange(java.beans.PropertyChangeEvent evt) {                                         
+        
+        // Get property
         String pn = evt.getPropertyName();
-        if ("zoom".equals(pn) && resizeWithZoom) {
-            resizeWithZoom();
+        
+        // Detect internet connection status and dynamic
+        boolean isBeforeOn = isConnectionOn;
+        checkConnection(true);
+        if (isConnectionOn) {
+            if (!isBeforeOn) {
+                jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps); // Connection is back, set tiles back on
+            }
+            if ("zoom".equals(pn) && resizeWithZoom) {
+                resizeWithZoom();
+            }
+        } else if (isBeforeOn) {
+            jXMapKit1.setTileFactory(new EmptyTileFactory());  // Connection has been lost, prevent tile retrieval from the Internet
         }
+        
+        // Save settings regardless
         if ("zoom".equals(pn) || "center".equals(pn)) {
             saveSettings();
         }
@@ -1237,17 +1285,28 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     // Check access to map tiles
-    private boolean checkConnection() {
+    private void checkConnection(boolean mute) {
         try {
-            URL url = new URL("http://tile.openstreetmap.org/");
-            BufferedReader in = new BufferedReader(new InputStreamReader(url.openStream()));
-        } catch (Exception ex) {
-            //Exceptions.printStackTrace(ex);
-            String txt = NbBundle.getMessage(GeoMapTopComponent.class, "MSG_ConnectionError", ex.getLocalizedMessage());
-            DialogManager.createError(NbBundle.getMessage(GeoMapTopComponent.class, "TITL_ConnectionError"), txt).show();
-            return false;
+            if (isBusyChecking) {
+                return;
+            }
+            isBusyChecking = true;
+            osmUrl.openStream();
+        } catch (IOException ex) {
+            if (!mute) {
+                DialogManager.createError(
+                        NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent") +  " - " 
+                                + NbBundle.getMessage(GeoMapTopComponent.class, "TITL_ConnectionError"), 
+                        NbBundle.getMessage(GeoMapTopComponent.class, "MSG_ConnectionError"))
+                        .show();
+            }
+            isConnectionOn = false;
+            isBusyChecking = false;
+            return;
         }
-        return true;
+        isConnectionOn = true;
+        isBusyChecking = false;
+        return;
     }
 
 
