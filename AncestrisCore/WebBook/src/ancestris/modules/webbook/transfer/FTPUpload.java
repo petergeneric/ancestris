@@ -9,6 +9,7 @@ package ancestris.modules.webbook.transfer;
 
 import ancestris.modules.webbook.Log;
 import ancestris.modules.webbook.WebBook;
+import ancestris.util.swing.DialogManager;
 
 import java.net.*;
 import java.io.*;
@@ -199,6 +200,11 @@ public class FTPUpload {
      */
     private synchronized boolean connectToServer() {
 
+        if (!checkConnection()) {
+            return false;
+        }
+        
+        
         try {
             // Opens connection with server
             debugMsg("Opening socket");
@@ -248,6 +254,20 @@ public class FTPUpload {
         return true;
     }
 
+    private boolean checkConnection() {
+        try {
+            new URL("http://www.ancestris.org/").openStream();
+        } catch (IOException ex) {
+            DialogManager.createError(
+                        NbBundle.getMessage(this.getClass(), "fb.title"), 
+                         NbBundle.getMessage(this.getClass(), "fb.nointernet") +  "\n" + NbBundle.getMessage(this.getClass(), "fb.msg.senderror"))
+                        .show();
+            return false;
+        }
+        return true;
+    }
+
+    
     /**
      * Upload files
      */
