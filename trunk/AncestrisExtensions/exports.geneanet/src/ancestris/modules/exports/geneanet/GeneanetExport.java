@@ -223,11 +223,12 @@ public class GeneanetExport {
                     Property adop = prop.getProperty("ADOP");
                     if (adop != null) {
                         // remove CHIL from family
+                        String id = ((Entity) (p.getEntity())).getId();
                         entity.delProperty(p);
                         // add FAMC and ADOP below ADOP in the INDI record, unless already there
-                        Property famc = adop.getProperty("FAMS");
+                        Property famc = adop.getProperty("FAMC");
                         if (famc == null) {
-                            famc = adop.addProperty("FAMS", "@" + ((Entity)prop).getId() + "@");
+                            famc = adop.addProperty("FAMC", "@" + id + "@");
                         }
                         adop = famc.getProperty("ADOP");
                         if (adop == null) {
