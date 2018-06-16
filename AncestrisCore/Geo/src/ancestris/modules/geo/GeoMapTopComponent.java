@@ -74,6 +74,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private boolean isConnectionOn = true;
     private URL osmUrl;
     private boolean isBusyChecking = false;
+    private long lastCheckTimeStamp = 0;
     
     /** path to the icon used by the component and its open action */
     static final String ICON_PATH = "ancestris/modules/geo/geo.png";
@@ -575,9 +576,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     /**
      * Detect property change to zoom and save settings
-     * In addition, inclue Internet connection detection : with no connection, the tiles retrieval from the internet crashes with many messages.
-     * FL : I cannot grab the exception from within JXLapKit, therefore I retest connection every time.
+     * In addition, include Internet connection detection : with no connection, the tiles retrieval from the internet crashes with many messages.
+     * FL 2018-06-16 - : I cannot grab the exception from within JXMapKit, therefore I retest connection every time.
      * It is a bit time consumming but otherwise, in case of lost connection, there would be many error messages (1 for each tile).
+     * To avoid slow map movements, leave 5 seconds between 2 checks.
      * 
      * @param evt 
      */
@@ -588,7 +590,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         
         // Detect internet connection status and dynamic
         boolean isBeforeOn = isConnectionOn;
-        checkConnection(true);
+        if (System.currentTimeMillis() - lastCheckTimeStamp > 5000) {
+            checkConnection(true);
+        }
         if (isConnectionOn) {
             if (!isBeforeOn) {
                 jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps); // Connection is back, set tiles back on
@@ -1291,6 +1295,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 return;
             }
             isBusyChecking = true;
+            lastCheckTimeStamp = System.currentTimeMillis();
             osmUrl.openStream();
         } catch (IOException ex) {
             if (!mute) {
