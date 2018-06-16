@@ -6,8 +6,7 @@
 		<Toolbar name="Clipboard" visible="true" draggable="true" align="left"/>
 		<Toolbar name="UndoRedo" visible="true" draggable="true" align="left"/>
 		<Toolbar name="Memory" visible="false" draggable="true" align="left"/>
-		<Toolbar name="EditorIndi" visible="false" draggable="true" align="left"/>
-		<Toolbar name="EditorStd" visible="false" draggable="true" align="left"/>
+		<Toolbar name="GenealogyEditor" visible="false" draggable="true" align="left"/>
 		<Toolbar name="Nav" visible="true" draggable="true" align="right"/>
 		<Toolbar name="Help" visible="true" draggable="true" align="right"/>
 	</Row>
