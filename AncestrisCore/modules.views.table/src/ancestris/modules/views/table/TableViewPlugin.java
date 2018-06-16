@@ -21,7 +21,7 @@ public class TableViewPlugin extends AncestrisPlugin {
     @Override
     public Collection<Class<? extends TopComponent>> getDefaultOpenedViews() {
         List<Class<? extends TopComponent>> result = new ArrayList<Class<? extends TopComponent>>(3);
-        result.add(TableTopComponent.class);
+        //result.add(TableTopComponent.class);
         return result;
 
     }
