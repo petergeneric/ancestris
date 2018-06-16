@@ -3,6 +3,7 @@ package ancestris.modules.editors.geoplace;
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
 import ancestris.modules.place.geonames.GeonamesResearcher;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -18,6 +19,9 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -39,6 +43,7 @@ import javax.swing.table.TableRowSorter;
 import org.jdesktop.swingx.JXMapKit;
 import org.jdesktop.swingx.JXMapViewer;
 import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
 import org.openide.util.NbBundle;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -84,17 +89,28 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     // Possibiity to double click on list simulates OK button
     private JButton OKButton;
     
+    /** Handle internet connection */
+    private boolean isConnectionOn = true;
+    private URL osmUrl;
+    private boolean isBusyChecking = false;
+    
+    
+    
     /**
      * Creates new form GedcomPlacesEditorPanel
      */
     public PlaceEditorPanel() {
         registry = Registry.get(getClass());
+        try {
+            osmUrl = new URL("http://tile.openstreetmap.org/");
+        } catch (MalformedURLException ex) {
+        }
+        
         initComponents();
 
         searchPlaceTextField.getDocument().addDocumentListener(new FilterListener());
         jXMapKit1.setDataProviderCreditShown(true);
         jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
-        jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         jXMapKit1.setMiniMapVisible(false);
         jXMapKit1.getZoomSlider().setValue(5);
         setMouseListener();
@@ -422,6 +438,14 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_geonamesPlacesListResultValueChanged
 
     private void searchPlaceButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchPlaceButtonActionPerformed
+        checkConnection(true);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            String txt = NbBundle.getMessage(PlaceEditorPanel.class, "MSG_RefreshingError");
+            DialogManager.createError(NbBundle.getMessage(PlaceEditorPanel.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ConnectionError"), txt).show();
+            return;
+        }
         String searchedPlace = searchPlaceTextField.getText();
             if (!searchedPlace.isEmpty()) {
                 searchPlace();
@@ -543,7 +567,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         if (place == null) {
             place = new PropertyPlace("PLAC");
         }
-        
+
+        checkConnection(false);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            jXMapKit1.setTileFactory(new EmptyTileFactory());
+        }
         this.mGedcom = gedcom;
         this.mPlace = place;
         
@@ -846,6 +876,32 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     }
 
 
+    // Check access to map tiles
+    private void checkConnection(boolean mute) {
+        try {
+            if (isBusyChecking) {
+                return;
+            }
+            isBusyChecking = true;
+            osmUrl.openStream();
+        } catch (IOException ex) {
+            if (!mute) {
+                DialogManager.createError(
+                        NbBundle.getMessage(PlaceEditorPanel.class, "OpenIDE-Module-Name") +  " - " 
+                                + NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ConnectionError"), 
+                        NbBundle.getMessage(PlaceEditorPanel.class, "MSG_ConnectionError"))
+                        .show();
+            }
+            isConnectionOn = false;
+            isBusyChecking = false;
+            return;
+        }
+        isConnectionOn = true;
+        isBusyChecking = false;
+        return;
+    }
+
+    
 
 
     
