@@ -4,8 +4,10 @@
  */
 package ancestris.modules.feedback;
 
+import ancestris.util.swing.DialogManager;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Date;
 import java.util.Properties;
 import java.util.logging.Level;
@@ -55,6 +57,11 @@ public class SendMailWorker implements Runnable {
 
     @Override
     public void run() {
+        
+        if (!checkConnection()) {
+            return;
+        }
+        
         Session session = null;
         ProgressHandle progressHandle = ProgressHandleFactory.createHandle(NbBundle.getMessage(this.getClass(), "SendMailWorker.Sending-In-Progress"));
 
@@ -115,6 +122,21 @@ public class SendMailWorker implements Runnable {
 
     }
 
+    private boolean checkConnection() {
+        try {
+            new URL("http://www.ancestris.org/").openStream();
+        } catch (IOException ex) {
+            DialogManager.createError(
+                        NbBundle.getMessage(this.getClass(), "fb.title"), 
+                         NbBundle.getMessage(this.getClass(), "fb.nointernet") +  "\n" + NbBundle.getMessage(this.getClass(), "fb.msg.senderror"))
+                        .show();
+            return false;
+        }
+        return true;
+    }
+
+    
+    
     private Session createSSLSession() {
         Session session = null;
         Properties props = new Properties();
