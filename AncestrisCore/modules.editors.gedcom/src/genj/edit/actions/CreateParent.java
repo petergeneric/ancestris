@@ -94,7 +94,11 @@ public class CreateParent extends CreateRelationship {
         
         if (entity instanceof Fam) {
             family = (Fam) entity;
-            this.child = family.getChild(0);
+            if (family.getNoOfChildren() > 0) {
+                this.child = family.getChild(0);
+            } else {
+                this.child = null;
+            }
             this.sex = sex;
             return family.acceptSpouse(sex);
         }
