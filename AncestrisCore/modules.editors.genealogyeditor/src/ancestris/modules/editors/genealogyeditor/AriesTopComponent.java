@@ -174,7 +174,9 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
                 int len = title.length();
                 if (len > 80) {
                     int cut = title.indexOf(" ", 80);
-                    title = title.substring(0, cut) + "...";
+                    if (cut != -1) {
+                        title = title.substring(0, cut) + "...";
+                    }
                 }
             }
 
