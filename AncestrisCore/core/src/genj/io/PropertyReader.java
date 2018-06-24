@@ -19,6 +19,7 @@
  */
 package genj.io;
 
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.GedcomException;
 import genj.gedcom.MultiLineProperty;
 import genj.gedcom.Property;
@@ -32,7 +33,7 @@ import java.io.Reader;
 import java.util.Collection;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import org.openide.util.Exceptions;
+import javax.swing.SwingUtilities;
 
 /**
  * Reads gedcom lines into properties
@@ -255,12 +256,13 @@ public class PropertyReader {
         }
       }
       
+      
       // Add ability to detect that the next line should be appened to the current line:
       // - Read next lines to check if it starts with a single digit number
       // - If yes, skip, else append.
       // - If eof reached, skip as well
       if (!useIndents) {
-          in.mark(1024); // mark where we are
+          in.mark(4096); // mark where we are
           cont = true;
           while (cont) {
               nextLine = in.readLine();
@@ -272,20 +274,30 @@ public class PropertyReader {
                       } else {
                           bit = "";
                       }
+                  } else {
+                      continue; // line is empty
                   }
                   if (bit.length() == 1 && bit.matches("[0-9]")) {
                       // next line seems to be ok, reset and continue;
                       try {
                           in.reset();  // go back to previous mark
                       } catch (Exception e) {
+                          SwingUtilities.invokeLater(new Runnable() {
+                              @Override
+                              public void run() {
+                                  DialogManager.create("Error reading file", "Line is not Gedcom compatible and is way too long (exceeds 4000 characters). Rewrite manually.\nLine starts with '"+nextLine.substring(0, 60)+"'.").setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.ERROR_MESSAGE).show();
+                              }
+                          });
                           System.err.println("******");
+                          System.err.println("Line is not Gedcom compatible and is way too long (exceeds 4000 characters). Rewrite manually.\n");
                           System.err.println("Error exceeding marker while reading line = "+ nextLine + "\n");
                           System.err.println("******");
-                          Exceptions.printStackTrace(e);
+                          return false;
+                          //Exceptions.printStackTrace(e);
                       }
                       cont = false;
                   } else {
-                      in.mark(1024);  // progress marking
+                      in.mark(4096);  // progress marking
                       line = line.trim() + " " + nextLine;
                   }
               } else {
