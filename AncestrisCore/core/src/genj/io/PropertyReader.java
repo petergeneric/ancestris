@@ -267,6 +267,7 @@ public class PropertyReader {
           while (cont) {
               nextLine = in.readLine();
               if (nextLine != null) {
+                  nextLine = nextLine.trim();
                   if (!nextLine.trim().isEmpty()) {
                       int i = nextLine.indexOf(' ');
                       if (i != -1) {
