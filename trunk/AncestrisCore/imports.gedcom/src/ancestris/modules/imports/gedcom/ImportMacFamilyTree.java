@@ -209,6 +209,7 @@ public class ImportMacFamilyTree extends Import {
                 reduceEvents(entity, "DEAT");
                 reduceEvents(entity, "BURI");
                 reduceEvents(entity, "CREM");
+                reduceEvents(entity, "CONF");
             }
 
             
