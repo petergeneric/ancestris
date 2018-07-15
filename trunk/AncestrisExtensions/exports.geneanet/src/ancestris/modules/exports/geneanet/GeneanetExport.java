@@ -251,7 +251,8 @@ public class GeneanetExport {
                     String value = p.getValue();
                     parent.delProperty(p);
                     try {
-                        parent.addProperty("NAME", value, pos);
+                        Property pp = parent.addProperty("NAME", "", pos); // for names, set it in two steps.
+                        pp.setValue(value);
                     } catch (GedcomException ex) {
                         Exceptions.printStackTrace(ex);
                     }
