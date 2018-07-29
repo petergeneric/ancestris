@@ -73,7 +73,6 @@ public class StartPageContent extends JPanel implements Constants, MouseListener
         super( new GridBagLayout() );
 
         int nn = new Random().nextInt(24) + 1;                   // random.nextInt(max - min + 1) + min
-        nn= 1; // Just to celebrate the world cup
         imgCenter = ImageUtilities.loadImage(IMAGE_TOPBAR_CENTER + String.valueOf(nn) + ".jpg", true); 
         
         tabs = new TabbedPane( new LearnAndDiscoverTab(), new MyAncestrisTab(), new WhatsNewTab());
