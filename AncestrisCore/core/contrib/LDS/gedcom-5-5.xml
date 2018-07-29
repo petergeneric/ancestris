@@ -47,7 +47,7 @@
                     </FILE>
                     <NOTE default="1" xref="0" type="PropertyNote|PropertyMultilineValue" img="Note" cardinality="0:1"/>
                 </OBJE>
-                <TEXT xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+                <TEXT xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:M"/>
                 <NOTE type="PropertyNote|PropertyMultilineValue" img="Note"/>
             </SOUR>
             <NOTE type="PropertyNote|PropertyMultilineValue" img="Note">
