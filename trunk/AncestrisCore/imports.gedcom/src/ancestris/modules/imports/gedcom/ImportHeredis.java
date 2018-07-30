@@ -146,6 +146,9 @@ public class ImportHeredis extends Import {
         if (processTagNotAllowed()) {
             return true;
         }
+        if (processSwapTags()) {
+            return true;
+        }
         return false;
     }
 
@@ -381,6 +384,27 @@ public class ImportHeredis extends Import {
         return false;
     }
 
+    /**
+     * fix change TITL and ABBR in sources
+     * @return 
+     */
+    private boolean processSwapTags() throws IOException {
+        String tag = input.getTag();
+        TagPath path = input.getPath();
+        if ("SOUR:TITL".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
+            String result = output.writeLine(input.getLevel(), "ABBR", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.swappedTitlAbbr", input.getLine() + " ==> " + result));
+            return true;
+        }
+        if ("SOUR:ABBR".equalsIgnoreCase(path.toString())) {  // invalid tag here and redundant information, replace with _DATE
+            String result = output.writeLine(input.getLevel(), "TITL", input.getValue());
+            console.println(NbBundle.getMessage(ImportHeredis.class, "Import.swappedAbbrTitl", input.getLine() + " ==> " + result));
+            return true;
+        }
+        return false;
+    }
+    
+    
     // calendrier repub
     private boolean processJulianHeredis() throws IOException {
         // C'est un tag DATE: on transforme les dates rep
@@ -646,6 +670,8 @@ public class ImportHeredis extends Import {
                 source.delProperty(prop);
                 hasErrors = true;
             }
+
+
         }
         
         console.println("=============================");
