@@ -307,8 +307,9 @@ public abstract class GedcomDirectory {
         // -                       "2 NAME xxxx" => software = xxxx if nothing in SOUR
         String software = "";
         boolean stop = false;
+        GedcomFileReader input = null;
         try {
-            GedcomFileReader input = GedcomFileReader.create(new File(foInput.getPath()));
+            input = GedcomFileReader.create(new File(foInput.getPath()));
             try {
                 while ((input.getNextLine(true)) != null && !stop) {
                     if (input.getLevel() == 0 && input.getTag().equals("HEAD")) {
@@ -335,13 +336,12 @@ public abstract class GedcomDirectory {
                 }
             }
         } catch (GedcomFormatException e) {
-            String l = ""+e.getLine();
-            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", l));
+            JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", e.getLine()+" - "+input.getLine()));
             //Exceptions.printStackTrace(e);
             return null;
         } catch (Exception e) {
             LOG.severe(e.toString());
-            JOptionPane.showMessageDialog(null, e.getMessage());
+            JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.line", e.getMessage()+" : " + input.getLine()));
             Exceptions.printStackTrace(e);
             return null;
         }
