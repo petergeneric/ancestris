@@ -22,12 +22,15 @@ import ancestris.gedcom.SaveOptionsWidget;
 import ancestris.modules.console.Console;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAlias;
 import genj.gedcom.PropertyAssociation;
+import genj.gedcom.PropertyChild;
+import genj.gedcom.PropertyFamilyChild;
 import genj.gedcom.PropertyXRef;
 import genj.io.GedcomReader;
 import genj.io.GedcomReaderContext;
@@ -215,24 +218,39 @@ public class GeneanetExport {
                 }
             }
             
-            // Process adoptions (remove adopted child from families)
+            // Process adoptions (remove adopted child from their adopting family)
             props = entity.getProperties("CHIL");
             for (Property p : props) {
                 prop = ((PropertyXRef) p).getTargetEntity();
                 if (prop != null) {
                     Property adop = prop.getProperty("ADOP");
                     if (adop != null) {
-                        // remove CHIL from family
-                        String id = ((Entity) (p.getEntity())).getId();
-                        entity.delProperty(p);
-                        // add FAMC and ADOP below ADOP in the INDI record, unless already there
-                        Property famc = adop.getProperty("FAMC");
-                        if (famc == null) {
-                            famc = adop.addProperty("FAMC", "@" + id + "@");
+                        // Get adopting family (famc)
+                        Property famc = null;
+                        for (PropertyFamilyChild pFamChild : adop.getProperties(PropertyFamilyChild.class)) { // use class, incase link to FAMC is lost, getProperty(FAMC) returns null.
+                            famc = pFamChild;
+                            break;
                         }
+                        if (famc == null) {
+                            continue;  // we do not know the adopting family, skip.
+                        }
+                        // add ADOP below FAMC in the INDI record, unless already there
                         adop = famc.getProperty("ADOP");
                         if (adop == null) {
                             adop = famc.addProperty("ADOP", "BOTH");
+                        }
+                        // remove CHIL from adopting family
+                        Fam adopFam = (Fam) ((PropertyXRef) famc).getTargetEntity();
+                        if (adopFam == null || adopFam.getNoOfChildren() == 0) {
+                            continue;
+                        }
+                        String currentChildId = prop.getEntity().getId();
+                        for (PropertyChild pChild : adopFam.getProperties(PropertyChild.class)) {
+                            if (pChild.getChild().getId().equals(currentChildId)) {
+                                pChild.unlink();
+                                adopFam.delProperty(pChild);
+                                break;
+                            }
                         }
                     }
                 }
