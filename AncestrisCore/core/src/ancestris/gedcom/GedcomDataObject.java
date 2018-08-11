@@ -12,13 +12,18 @@
 package ancestris.gedcom;
 
 import ancestris.core.pluginservice.AncestrisPlugin;
+import static ancestris.gedcom.GedcomMgr.LOG;
+import ancestris.util.TimingUtility;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
+import genj.util.Resources;
 import genj.view.SelectionListener;
 import java.io.IOException;
+import java.util.logging.Level;
 import org.netbeans.core.spi.multiview.MultiViewElement;
 import org.netbeans.core.spi.multiview.text.MultiViewEditorElement;
 import org.openide.cookies.SaveCookie;
@@ -43,6 +48,7 @@ import org.openide.windows.TopComponent;
 //XXX: create a callback that extends gedcomadapter?
 public class GedcomDataObject extends MultiDataObject implements SelectionListener, GedcomMetaListener {
 
+    final static Resources RES = Resources.get(GedcomMgr.class);
     private Context context;
     private GedcomUndoRedo undoredo;
     private final Lookup lookup;
@@ -112,6 +118,8 @@ public class GedcomDataObject extends MultiDataObject implements SelectionListen
             undoredo = new GedcomUndoRedo((context.getGedcom()));
             AncestrisPlugin.register(this);
         } catch (Exception e) {
+            LOG.log(Level.SEVERE, "{0}: gedcomOpened - " + e.getLocalizedMessage(), TimingUtility.getInstance().getTime());
+            DialogManager.createError(RES.getString("cc.open.title"), e.getLocalizedMessage()).show();
             return false;
         }
         return true;
