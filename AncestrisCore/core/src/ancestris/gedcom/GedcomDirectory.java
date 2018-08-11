@@ -298,9 +298,16 @@ public abstract class GedcomDirectory {
     public Context openGedcom(FileObject foInput) {
         
         if (foInput == null) {
-            LOG.info("File to open no longer seems to exists");
+            LOG.severe("File to open no longer seems to exists");
             return null;
         }
+        if (foInput.getName().length() > 75) { // max is 80 char with extension ".ged"
+            String error = RES.getString("cc.save.file_too_long") + "\n(" + foInput.getName() + ").";
+            LOG.severe(error);
+            DialogManager.createError(RES.getString("cc.open.title"), error).show();
+            return null;
+        }
+        
         
         // Detect Gedcom origin : 
         // - Open file header line "1 SOUR xxxx" => software = xxxx
