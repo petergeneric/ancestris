@@ -1512,7 +1512,7 @@ public abstract class Property implements Comparable<Property> {
                     value = prop.getDisplayValue();
                 } else {
                     prop = property;
-                    value = property.getDisplayValue();
+                    value = ""; // property.getDisplayValue();
                 }
                 break;
             }
