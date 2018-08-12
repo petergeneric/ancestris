@@ -75,7 +75,7 @@ text-align: left;
 #set($inhumation=$INDI.getProperty("BURI"))
 #set($residence=$INDI.getProperty("RESI"))
 #set($profession=$INDI.getProperty("OCCU"))
-#set($version="DD_FM_FL_2017/12/30")
+#set($version="DD_FM_FL_2018/08/12")
 
 
 <!----------------------------------- Titre de la page --------------------------->
@@ -173,8 +173,17 @@ text-align: left;
   #end
   <ul>
   #foreach($occu in $INDI.getProperties("OCCU"))
-    <li><span class="italic">$!occu.Value - $!occu.Place</span><br>
-    <span class="italic">$!occu.Date</span> ;</li>
+    <li>
+        <span class="italic">$!occu.Value
+        #if($!occu.Place != "")
+             - $!occu.Place</span><br>
+        #else
+             </span><br>
+        #end
+        #if($!occu.Date != "")
+             <span class="italic">$!occu.Date</span>
+        #end
+    </li>
   #end
   </ul>
 #end
