@@ -163,6 +163,7 @@ public abstract class GedcomDirectory {
                     .showSaveDialog(false);
             
             if (file == null) {
+                LOG.log(Level.SEVERE, "problem defining the gedcom file in given directory");
                 return null;
             }
             if (!file.getName().endsWith(".ged")) {
@@ -186,7 +187,7 @@ public abstract class GedcomDirectory {
                 gedcom.setOrigin(Origin.create(file.toURI().toURL()));
             }
         } catch (MalformedURLException e) {
-            LOG.log(Level.WARNING, "unexpected exception creating new gedcom", e);
+            LOG.log(Level.SEVERE, "unexpected exception creating new gedcom", e);
             return null;
         }
 
