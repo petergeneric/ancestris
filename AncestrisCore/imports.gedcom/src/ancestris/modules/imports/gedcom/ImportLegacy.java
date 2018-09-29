@@ -661,7 +661,7 @@ public class ImportLegacy extends Import {
         
         /**
          * Fix of structure in all entities
-         * - OBJE Form not propermy placed
+         * - OBJE Form not properly placed
          * - ...:SOUR:DATE not allowed, move it to DATA, create DATA if does not exist (we assume it is a source date)
          * - ...:SOUR:PAGE:CONC/CONT not allowed, replaced with SOUR:PAGE longer string
          * - ...:SOUR:REFN invalid in citation, move it to source record
@@ -675,14 +675,15 @@ public class ImportLegacy extends Import {
             // Fix OBJE
             for (Property obje : entity.getAllProperties("OBJE")) {
                 prop = obje.getProperty("FORM");
-                if (prop != null) {
+                if (prop != null) { // error : there should not be a FORM under an OBJE => move it under FILE
                     host = obje.getProperty("FILE");
-                    if (host != null) {
-                        host.addProperty("FORM", prop.getValue());
-                        prop.getParent().delProperty(prop);
-                        hasErrors = true;
-                        nbChanges++;
+                    if (host == null) {  // there is *NO* FILE = create one
+                        host = obje.addProperty("FILE", "");
                     }
+                    host.addProperty("FORM", prop.getValue());
+                    prop.getParent().delProperty(prop);
+                    hasErrors = true;
+                    nbChanges++;
                 }
                 host = obje.getProperty("FILE");
                 if (host != null) {
