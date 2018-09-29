@@ -44,6 +44,7 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.openide.util.Exceptions;
 
 /**
  * GedcomReader is a custom reader for Gedcom compatible information. Normally
@@ -284,6 +285,7 @@ public class GedcomReaderFactory {
                 } catch (GedcomException ex) {
                     context.handleWarning(lazyLink.line, ex.getMessage(), new Context(lazyLink.xref));
                 } catch (Throwable t) {
+                    Exceptions.printStackTrace(t);
                     throw new GedcomIOException(RESOURCES.getString("read.error.xref", new Object[]{lazyLink.xref.getTag(), lazyLink.xref.getValue()}), lazyLink.line);
                 }
                 i++;
