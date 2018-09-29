@@ -30,6 +30,13 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         
         int score = 0;
         
+        // Exclude empty names
+        if (options.isExcludeEmptyNames()) {
+            if (isEmptyName(leftIndi) || isEmptyName(rightIndi)) {
+                return -1;
+            }
+        }
+        
         // Exclude parent and child relationships
         if (options.isExcludeSameFamily()) {
             if (leftIndi.getParents().contains(rightIndi) || rightIndi.getParents().contains(leftIndi)) {
@@ -86,6 +93,21 @@ public class IndiMatcher extends EntityMatcher<Indi, IndiMatcherOptions> {
         score += 20 * compareMarriage(leftIndi, rightIndi);
 
         return score>100 ? 100 : score;
+    }
+
+    private boolean isEmptyName(Indi indi) {
+        Property[] names = indi.getProperties("NAME");
+        for (Property name : names) {
+            String nameStr = ((PropertyName) name).getLastName().trim();
+            if (nameStr.isEmpty() || nameStr.equals("?")) {
+                return true;
+            }
+            nameStr = ((PropertyName) name).getFirstName().trim();
+            if (nameStr.isEmpty() || nameStr.equals("?")) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean compareLastNames(Indi leftIndi, Indi rightIndi) {

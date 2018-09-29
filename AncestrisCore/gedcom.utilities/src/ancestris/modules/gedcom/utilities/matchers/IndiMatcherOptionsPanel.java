@@ -17,6 +17,7 @@ public final class IndiMatcherOptionsPanel extends JPanel {
         indiCheckAllNamesRadioButton.setSelected(indiMatcherOptions.isCheckAllNames());
         indiAllFirstNamesRadioButton.setSelected(indiMatcherOptions.isAllFirstNamesEquals());
         indiExcludeSameFamilyRadioButton.setSelected(indiMatcherOptions.isExcludeSameFamily());
+        indiExcludeEmptyNamesRadioButton.setSelected(indiMatcherOptions.isExcludeEmptyNames());
     }
 
 
@@ -38,6 +39,7 @@ public final class IndiMatcherOptionsPanel extends JPanel {
         indiAllFirstNamesRadioButton = new javax.swing.JRadioButton();
         indiCheckAllNamesRadioButton = new javax.swing.JRadioButton();
         indiExcludeSameFamilyRadioButton = new javax.swing.JRadioButton();
+        indiExcludeEmptyNamesRadioButton = new javax.swing.JRadioButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTextArea1 = new javax.swing.JTextArea();
 
@@ -125,6 +127,14 @@ public final class IndiMatcherOptionsPanel extends JPanel {
             }
         });
 
+        indiExcludeEmptyNamesRadioButton.setSelected(true);
+        org.openide.awt.Mnemonics.setLocalizedText(indiExcludeEmptyNamesRadioButton, org.openide.util.NbBundle.getMessage(IndiMatcherOptionsPanel.class, "IndiMatcherOptionsPanel.indiExcludeEmptyNamesRadioButton.text")); // NOI18N
+        indiExcludeEmptyNamesRadioButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                indiExcludeEmptyNamesRadioButtonActionPerformed(evt);
+            }
+        });
+
         jTextArea1.setEditable(false);
         jTextArea1.setColumns(20);
         jTextArea1.setLineWrap(true);
@@ -140,15 +150,19 @@ public final class IndiMatcherOptionsPanel extends JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(indiEmptyValuesInvalidRadioButton)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(indiMaximumDateIntervalLabel)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(indiAllFirstNamesRadioButton)
-                    .addComponent(indiCheckAllNamesRadioButton)
-                    .addComponent(jScrollPane1)
-                    .addComponent(indiExcludeSameFamilyRadioButton))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(indiEmptyValuesInvalidRadioButton)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(indiMaximumDateIntervalLabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(indiMaxDateIntervalSpinner, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(indiAllFirstNamesRadioButton)
+                            .addComponent(indiCheckAllNamesRadioButton)
+                            .addComponent(indiExcludeSameFamilyRadioButton)
+                            .addComponent(indiExcludeEmptyNamesRadioButton))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -168,6 +182,8 @@ public final class IndiMatcherOptionsPanel extends JPanel {
                 .addComponent(indiAllFirstNamesRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(indiExcludeSameFamilyRadioButton)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(indiExcludeEmptyNamesRadioButton)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -192,11 +208,16 @@ public final class IndiMatcherOptionsPanel extends JPanel {
         saveOptions();
     }//GEN-LAST:event_indiExcludeSameFamilyRadioButtonActionPerformed
 
+    private void indiExcludeEmptyNamesRadioButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_indiExcludeEmptyNamesRadioButtonActionPerformed
+        saveOptions();
+    }//GEN-LAST:event_indiExcludeEmptyNamesRadioButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel emptyPanel;
     private javax.swing.JRadioButton indiAllFirstNamesRadioButton;
     private javax.swing.JRadioButton indiCheckAllNamesRadioButton;
     private javax.swing.JRadioButton indiEmptyValuesInvalidRadioButton;
+    private javax.swing.JRadioButton indiExcludeEmptyNamesRadioButton;
     private javax.swing.JRadioButton indiExcludeSameFamilyRadioButton;
     private javax.swing.JSpinner indiMaxDateIntervalSpinner;
     private javax.swing.JLabel indiMaximumDateIntervalLabel;
@@ -213,6 +234,7 @@ public final class IndiMatcherOptionsPanel extends JPanel {
         indiMatcherOptions.setAllFirstNames(indiAllFirstNamesRadioButton.isSelected());
         indiMatcherOptions.setEmptyValueInvalid(indiEmptyValuesInvalidRadioButton.isSelected());
         indiMatcherOptions.setExcludeSameFamily(indiExcludeSameFamilyRadioButton.isSelected());
+        indiMatcherOptions.setExcludeEmptyNames(indiExcludeEmptyNamesRadioButton.isSelected());
     }
 
     public IndiMatcherOptions getSelectedOptions() {

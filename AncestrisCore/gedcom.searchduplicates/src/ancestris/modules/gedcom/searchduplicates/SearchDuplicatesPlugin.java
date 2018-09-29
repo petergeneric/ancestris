@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import org.netbeans.api.progress.ProgressHandle;
 import org.openide.DialogDescriptor;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -56,6 +57,7 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
     };
     private final List<String> entities2Ckeck;
     private Map<String, ? extends MatcherOptions> selectedOptions;
+    private ProgressHandle progressHandle;
 
     public SearchDuplicatesPlugin() {
         this.gedcom = null;
@@ -63,10 +65,11 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
         this.selectedOptions = null;
     }
 
-    public SearchDuplicatesPlugin(Gedcom leftGedcom, List<String> entities2Ckeck, Map<String, ? extends MatcherOptions> selectedOptions) {
+    public SearchDuplicatesPlugin(Gedcom leftGedcom, List<String> entities2Ckeck, Map<String, ? extends MatcherOptions> selectedOptions, ProgressHandle progressHandle) {
         this.gedcom = leftGedcom;
         this.entities2Ckeck = entities2Ckeck;
         this.selectedOptions = selectedOptions;
+        this.progressHandle = progressHandle;
     }
 
     @Override
@@ -77,9 +80,19 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
         if (gedcom == null) {
             return;
         }
+        
+        // set progress max
+        int num = 0;
+        for (String tag : entities2Ckeck) {
+            num += gedcom.getEntities(tag).size();
+        }
+        progressHandle.start(); //we must start the PH before we switch to determinate
+        progressHandle.switchToDeterminate(num);
+        
         try {
             
             // Get matches by block of entity type
+            num = 0;
             for (String tag : entities2Ckeck) {
                 List<? extends Entity> entities = new ArrayList<Entity>(gedcom.getEntities(tag));
 
@@ -100,7 +113,8 @@ public class SearchDuplicatesPlugin extends AncestrisPlugin implements Runnable 
                     (entitiesMatchers.get(tag)).setOptions((MediaMatcherOptions) selectedOptions.get(Gedcom.OBJE));
                 }
                 // Get block
-                List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities);
+                List<PotentialMatch<? extends Entity>> potentialMatches = (entitiesMatchers.get(tag)).getPotentialMatches(entities, progressHandle, num);
+                num += entities.size();
                 
                 // Swap matches so that left entity is with smaller id
                 for (PotentialMatch<? extends Entity> e : potentialMatches) {

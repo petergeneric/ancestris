@@ -69,9 +69,7 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
             if (RP == null) {
                 RP = new RequestProcessor("SearchDuplicatesWizardAction", 1, true);
             }
-            theTask = RP.create(new SearchDuplicatesPlugin(gedcom, entities2Ckeck, selectedOptions));
             final ProgressHandle progressHandle = ProgressHandleFactory.createHandle(CheckDuplicates_runing(), new Cancellable() {
-
                 @Override
                 public boolean cancel() {
                     log.log(Level.INFO, "handleCancel");
@@ -82,6 +80,7 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
                 }
             });
 
+            theTask = RP.create(new SearchDuplicatesPlugin(gedcom, entities2Ckeck, selectedOptions, progressHandle));
             theTask.addTaskListener(
                     new TaskListener() {
                         @Override
@@ -89,9 +88,9 @@ public final class SearchDuplicatesWizardAction extends AbstractAncestrisContext
                             progressHandle.finish();
                         }
                     });
-            progressHandle.start();
+            //progressHandle.start(); // start is done in task
 
-            // This actually start the task
+            // This actually starts the task
             theTask.schedule(0);
         }
     }
