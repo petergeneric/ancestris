@@ -4,6 +4,7 @@ import genj.gedcom.Entity;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.netbeans.api.progress.ProgressHandle;
 
 /**
  *
@@ -14,7 +15,7 @@ public abstract class EntityMatcher<E extends Entity, O extends MatcherOptions> 
     private static final Logger log = Logger.getLogger(EntityMatcher.class.getName());
     protected O options = null;
 
-    public List<PotentialMatch<E>> getPotentialMatches(List<E> entities) throws InterruptedException {
+    public List<PotentialMatch<E>> getPotentialMatches(List<E> entities, ProgressHandle progressHandle, int counter) throws InterruptedException {
         Map<String, List<E>> sortedEntities;
         List<PotentialMatch<E>> matches = new ArrayList<PotentialMatch<E>>();
         Map<String, List<String>> compareDone = new HashMap<String, List<String>>();
@@ -30,6 +31,7 @@ public abstract class EntityMatcher<E extends Entity, O extends MatcherOptions> 
 
             if (entityList.size() > 1) {
                 for (E leftEntity : entityList) {
+                    progressHandle.progress("Recherche de doublons (" + matches.size() + " doublons trouvés)", counter++);
                     List<String> idCompared = new ArrayList<String>();
                     compareDone.put(leftEntity.getId(), idCompared);
 
@@ -42,13 +44,22 @@ public abstract class EntityMatcher<E extends Entity, O extends MatcherOptions> 
                         if (compareDone.get(rightEntity.getId()) == null || compareDone.get(rightEntity.getId()) != null && compareDone.get(rightEntity.getId()).contains(leftEntity.getId()) == false) {
                             numberOfCompares++;
                             int diff = compare(leftEntity, rightEntity);
-                            if (diff > 50) {
+                            if (diff < 0) {
+                                break;
+                            }
+                            if (diff > 50 && matches.size() < 1000) {
                                 matches.add(new PotentialMatch<E>(leftEntity, rightEntity, diff));
+                                if (matches.size() >= 1000) {
+                                    break;
+                                }
                             }
                         }
                     }
                     log.log(Level.FINE, "... {0} comparisons done", numberOfCompares);
                     Thread.sleep(0); //throws InterruptedException is the task was cancelled
+                    if (matches.size() >= 1000) {
+                        break;
+                    }
                 }
             }
         }

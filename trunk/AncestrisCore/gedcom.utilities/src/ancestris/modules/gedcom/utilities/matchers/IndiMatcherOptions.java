@@ -14,6 +14,7 @@ public class IndiMatcherOptions extends MatcherOptions {
     private boolean allFirstNamesEquals;
     private boolean emptyValueInvalid;
     private boolean excludeSameFamily;
+    private boolean excludeEmptyNames;
 
     public IndiMatcherOptions() {
         registry = Registry.get(MatcherOptions.class);
@@ -22,6 +23,7 @@ public class IndiMatcherOptions extends MatcherOptions {
         allFirstNamesEquals = registry.get("MatcherOptions.Indi.allFirstNamesEquals", true);
         emptyValueInvalid = registry.get("MatcherOptions.Indi.emptyValueInvalid", true);
         excludeSameFamily = registry.get("MatcherOptions.Indi.excludeSameFamily", true);
+        excludeEmptyNames = registry.get("MatcherOptions.Indi.excludeEmptyNames", true);
     }
     
     /**
@@ -97,5 +99,20 @@ public class IndiMatcherOptions extends MatcherOptions {
     public void setExcludeSameFamily(boolean excludeSameFamily) {
         this.excludeSameFamily = excludeSameFamily;
         registry.put("MatcherOptions.Indi.excludeSameFamily", excludeSameFamily);
+    }
+
+    /**
+     * @return the excludeSameFamily
+     */
+    public boolean isExcludeEmptyNames() {
+        return excludeEmptyNames;
+    }
+
+    /**
+     * @param excludeEmptyNames the excludeEmptyNames to set
+     */
+    public void setExcludeEmptyNames(boolean excludeEmptyNames) {
+        this.excludeEmptyNames = excludeEmptyNames;
+        registry.put("MatcherOptions.Indi.excludeEmptyNames", excludeEmptyNames);
     }
 }
