@@ -83,7 +83,11 @@ public class GedcomFileReader extends PropertyReader {
         if (level <= 0) {
             path = new TagPath(tag);
         } else {
-            path = new TagPath(new TagPath(path, level), tag);
+            try {
+                path = new TagPath(new TagPath(path, level), tag);
+            } catch (ArrayIndexOutOfBoundsException e) {
+                throw new GedcomFormatException(RESOURCES.getString("read.warn.badlevel", level), lines);
+            }
         }
         if (consume) {
             line = null;
