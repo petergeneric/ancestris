@@ -31,22 +31,28 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Main Class for Ancestris Application
  */
 public class App {
+    
 
     /*package*/ static Logger LOG;
 
     /*package*/ static File LOGFILE;
     private static Startup startup;
     public static ControlCenter center;
+    
+    /* Minimal version of Java to launch application */
+    private static final String JAVA_VERSION = "1.8";
 
     /**
      * Ancestris Main Method
@@ -112,6 +118,7 @@ public class App {
         /**
          * Constructor
          */
+        @Override
         public void run() {
 
             // Catch anything that might happen
@@ -171,8 +178,15 @@ public class App {
 //                }
 //                
 
-                // Check VM version
-                //TODO: demander une version >1.6 dans NB
+                // Check VM version 1.8 minimum
+                final String version = System.getProperty("java.version");
+                if (JAVA_VERSION.compareTo(version.substring(0, 3)) > 0) {
+                    final String errorMessage = NbBundle.getMessage(App.class, "EM_JavaVersion");
+                    JOptionPane.showMessageDialog(null, errorMessage, "Error Message", JOptionPane.ERROR_MESSAGE);
+                    throw new RuntimeException("Java Version not compatible.");
+                }
+                
+                
                 
                 // Setup control center
                 LOG.info("Launching control center...");
