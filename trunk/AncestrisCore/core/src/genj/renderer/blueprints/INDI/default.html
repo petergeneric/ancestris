@@ -22,17 +22,17 @@
 			</table></td>
 		</tr>
 		<tr>
-			<td><prop path=INDI:BIRT img=yes txt=no></td>
+			<td><ifvalue path=INDI:BIRT default=INDI:CHR img=yes txt=no></td>
 			<td valign="top">
-				<b><prop path=INDI:BIRT format="{$D}"></b>&nbsp;<br>
-				<prop path=INDI:BIRT:PLAC max=67>&nbsp;
+				<b><ifvalue path=INDI:BIRT default=INDI:CHR format="{$D}"></b>&nbsp;<br>
+				<ifvalue path=INDI:BIRT:PLAC default=INDI:CHR:PLAC max=67>&nbsp;
 			</td>
 		</tr>
 			<tr>
-			<td><prop path=INDI:DEAT img=yes txt=no></td>
+			<td><ifvalue path=INDI:DEAT default=INDI:BURI img=yes txt=no></td>
 			<td valign="top">
-				<b><prop path=INDI:DEAT:DATE></b>&nbsp;<br>
-				<prop path=INDI:DEAT:PLAC max=67>&nbsp;
+				<b><ifvalue path=INDI:DEAT:DATE default=INDI:BURI:DATE></b>&nbsp;<br>
+				<ifvalue path=INDI:DEAT:PLAC default=INDI:BURI:DATE max=67>&nbsp;
 			</td>
 		</tr>
 		<tr>
