@@ -3,25 +3,27 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.report;
 
 import genj.util.Registry;
 import genj.util.Resources;
 import java.awt.Component;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -43,14 +45,14 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * Report list capable of displaying the report list in two formats.
- * Either it is a list of all reports sorted alphabetically or it is a tree
- * with reports within their categories.
+ * Report list capable of displaying the report list in two formats. Either it
+ * is a list of all reports sorted alphabetically or it is a tree with reports
+ * within their categories.
  *
  * @author Przemek Wiech <pwiech@losthive.org>
  */
-/*package*/ class ReportList extends JScrollPane
-{
+/*package*/ class ReportList extends JScrollPane {
+
     public static final int VIEW_LIST = 0;
     public static final int VIEW_TREE = 1;
 
@@ -106,9 +108,10 @@ import javax.swing.tree.TreeSelectionModel;
 
     /**
      * Creates the component.
-     * @param reports   all reports
-     * @param viewType  view type
-     * @param registry  configuration registry
+     *
+     * @param reports all reports
+     * @param viewType view type
+     * @param registry configuration registry
      */
     public ReportList(Report[] reports, int viewType) {
         this.reports = reports;
@@ -119,6 +122,7 @@ import javax.swing.tree.TreeSelectionModel;
         tree.setCellRenderer(callback);
         tree.addTreeSelectionListener(callback);
         tree.addTreeExpansionListener(callback);
+        tree.addMouseListener(getMouseListener());
         tree.setRootVisible(false);
         setViewportView(tree);
 
@@ -150,7 +154,7 @@ import javax.swing.tree.TreeSelectionModel;
         } else {
             for (int i = 0; i < tree.getRowCount(); i++) {
                 TreePath path = tree.getPathForRow(i);
-                Object v = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+                Object v = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
                 if (v == selection) {
                     tree.addSelectionPath(path);
                     tree.makeVisible(path);
@@ -184,19 +188,49 @@ import javax.swing.tree.TreeSelectionModel;
         refreshView();
     }
 
+    private MouseListener getMouseListener() {
+        final MouseListener retour = new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+                // Let the standard selected part to be done
+                if (e.getClickCount() == 1) {
+                    super.mousePressed(e);
+                }
+                // Launch the report
+                if (!tree.isSelectionEmpty() && e.getClickCount() == 2) {
+                    Component vue = getViewport().getView();
+                    while (!(vue instanceof ReportView)) {
+                        vue = vue.getParent();
+                        if (vue == null || vue instanceof ReportView) {
+                            break;
+                        }
+                    }
+                    if (vue instanceof ReportView) {
+                        ((ReportView) vue).startReport();
+                    }
+
+                }
+            }
+        };
+        return retour;
+    }
+
     /**
-     * Refreshes the view, possibly changing the view type.
-     * Changing view types doesn't change the currently selected report.
+     * Refreshes the view, possibly changing the view type. Changing view types
+     * doesn't change the currently selected report.
      */
     private void refreshView() {
         Report oldSelection = getSelection();
         if (viewType == VIEW_LIST) {
-            if (listModel == null)
+            if (listModel == null) {
                 listModel = createList();
+            }
             tree.setModel(listModel);
         } else {
-            if (treeModel == null)
+            if (treeModel == null) {
                 treeModel = createTree();
+            }
             tree.setModel(treeModel);
             refreshExpanded();
         }
@@ -209,13 +243,14 @@ import javax.swing.tree.TreeSelectionModel;
     private void refreshExpanded() {
         for (int i = 0; i < tree.getRowCount(); i++) {
             TreePath path = tree.getPathForRow(i);
-            Object v = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
+            Object v = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
             if (v instanceof Report.Category) {
-                Report.Category category = (Report.Category)v;
-                if (registry.get("expanded." + category.getName(), true))
+                Report.Category category = (Report.Category) v;
+                if (registry.get("expanded." + category.getName(), true)) {
                     tree.expandPath(path);
-                else
+                } else {
                     tree.collapsePath(path);
+                }
             }
         }
     }
@@ -225,8 +260,9 @@ import javax.swing.tree.TreeSelectionModel;
      */
     private TreeModel createList() {
         DefaultMutableTreeNode top = new DefaultMutableTreeNode();
-        for (int i = 0; i < reports.length; i++)
+        for (int i = 0; i < reports.length; i++) {
             top.add(new DefaultMutableTreeNode(reports[i]));
+        }
         return new DefaultTreeModel(top);
     }
 
@@ -237,7 +273,7 @@ import javax.swing.tree.TreeSelectionModel;
         SortedMap categories = new TreeMap();
         for (int i = 0; i < reports.length; i++) {
             String name = reports[i].getCategory().getDisplayName();
-            CategoryList list = (CategoryList)categories.get(name);
+            CategoryList list = (CategoryList) categories.get(name);
             if (list == null) {
                 list = new CategoryList(reports[i].getCategory());
                 categories.put(name, list);
@@ -248,11 +284,12 @@ import javax.swing.tree.TreeSelectionModel;
         DefaultMutableTreeNode top = new DefaultMutableTreeNode();
         Iterator iterator = categories.entrySet().iterator();
         while (iterator.hasNext()) {
-            CategoryList list = (CategoryList)((Map.Entry)iterator.next()).getValue();
+            CategoryList list = (CategoryList) ((Map.Entry) iterator.next()).getValue();
             DefaultMutableTreeNode cat = new DefaultMutableTreeNode(list.getCategory());
             Report[] reps = list.getReportsInCategory();
-            for (int i = 0; i < reps.length; i++)
+            for (int i = 0; i < reps.length; i++) {
                 cat.add(new DefaultMutableTreeNode(reps[i]));
+            }
             top.add(cat);
         }
         return new DefaultTreeModel(top);
@@ -262,8 +299,8 @@ import javax.swing.tree.TreeSelectionModel;
      * A private callback for various messages coming in.
      */
     private class Callback implements TreeCellRenderer, TreeSelectionListener,
-        TreeExpansionListener
-    {
+            TreeExpansionListener {
+
         /**
          * a default renderer for tree
          */
@@ -278,13 +315,13 @@ import javax.swing.tree.TreeSelectionModel;
                 int index, boolean hasFocus) {
             defTreeRenderer.getTreeCellRendererComponent(tree, value, isSelected,
                     isExpanded, isLeaf, index, hasFocus);
-            Object v = ((DefaultMutableTreeNode)value).getUserObject();
+            Object v = ((DefaultMutableTreeNode) value).getUserObject();
             if (v instanceof Report) {
-                Report report = (Report)v;
+                Report report = (Report) v;
                 defTreeRenderer.setText(report.getName());
                 defTreeRenderer.setIcon(report.getIcon());
             } else if (v instanceof Report.Category) {
-                Report.Category category = (Report.Category)v;
+                Report.Category category = (Report.Category) v;
                 defTreeRenderer.setText(category.getDisplayName());
                 defTreeRenderer.setIcon(category.getImage());
             }
@@ -300,12 +337,14 @@ import javax.swing.tree.TreeSelectionModel;
             selection = null;
             TreePath path = tree.getSelectionPath();
             if (path != null) {
-                Object v = ((DefaultMutableTreeNode)path.getLastPathComponent()).getUserObject();
-                if (v instanceof Report)
-                    selection = (Report)v;
+                Object v = ((DefaultMutableTreeNode) path.getLastPathComponent()).getUserObject();
+                if (v instanceof Report) {
+                    selection = (Report) v;
+                }
             }
-            if (selectionListener != null)
+            if (selectionListener != null) {
                 selectionListener.valueChanged(selection);
+            }
         }
 
         /**
@@ -313,10 +352,10 @@ import javax.swing.tree.TreeSelectionModel;
          */
         @Override
         public void treeExpanded(TreeExpansionEvent e) {
-            Object v = ((DefaultMutableTreeNode)e.getPath()
+            Object v = ((DefaultMutableTreeNode) e.getPath()
                     .getLastPathComponent()).getUserObject();
             if (v instanceof Report.Category) {
-                Report.Category category = (Report.Category)v;
+                Report.Category category = (Report.Category) v;
                 registry.put("expanded." + category.getName(), true);
             }
         }
@@ -326,10 +365,10 @@ import javax.swing.tree.TreeSelectionModel;
          */
         @Override
         public void treeCollapsed(TreeExpansionEvent e) {
-            Object v = ((DefaultMutableTreeNode)e.getPath()
+            Object v = ((DefaultMutableTreeNode) e.getPath()
                     .getLastPathComponent()).getUserObject();
             if (v instanceof Report.Category) {
-                Report.Category category = (Report.Category)v;
+                Report.Category category = (Report.Category) v;
                 registry.put("expanded." + category.getName(), false);
             }
         }
@@ -338,8 +377,8 @@ import javax.swing.tree.TreeSelectionModel;
     /**
      * List of reports in a category.
      */
-    private static class CategoryList
-    {
+    private static class CategoryList {
+
         private Report.Category category;
         private List reportsInCategory = new ArrayList();
 
@@ -352,7 +391,7 @@ import javax.swing.tree.TreeSelectionModel;
         }
 
         public Report[] getReportsInCategory() {
-            return (Report[])reportsInCategory.toArray(new Report[reportsInCategory.size()]);
+            return (Report[]) reportsInCategory.toArray(new Report[reportsInCategory.size()]);
         }
 
         public void add(Report report) {
