@@ -554,6 +554,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(fatherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.fatherButton.text")); // NOI18N
         fatherButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.fatherButton.toolTipText")); // NOI18N
         fatherButton.setPreferredSize(new java.awt.Dimension(60, 27));
+        fatherButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                fatherButtonMouseClicked(evt);
+            }
+        });
         fatherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 fatherButtonActionPerformed(evt);
@@ -569,6 +574,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         org.openide.awt.Mnemonics.setLocalizedText(motherButton, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.motherButton.text")); // NOI18N
         motherButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.motherButton.toolTipText")); // NOI18N
         motherButton.setPreferredSize(new java.awt.Dimension(60, 27));
+        motherButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                motherButtonMouseClicked(evt);
+            }
+        });
         motherButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 motherButtonActionPerformed(evt);
@@ -660,6 +670,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         brothersButton.setMaximumSize(new java.awt.Dimension(45, 27));
         brothersButton.setMinimumSize(new java.awt.Dimension(45, 27));
         brothersButton.setPreferredSize(new java.awt.Dimension(60, 27));
+        brothersButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                brothersButtonMouseClicked(evt);
+            }
+        });
         brothersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 brothersButtonActionPerformed(evt);
@@ -672,6 +687,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         sistersButton.setMaximumSize(new java.awt.Dimension(45, 27));
         sistersButton.setMinimumSize(new java.awt.Dimension(45, 27));
         sistersButton.setPreferredSize(new java.awt.Dimension(60, 27));
+        sistersButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                sistersButtonMouseClicked(evt);
+            }
+        });
         sistersButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 sistersButtonActionPerformed(evt);
@@ -684,6 +704,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         spousesButton.setMaximumSize(new java.awt.Dimension(45, 27));
         spousesButton.setMinimumSize(new java.awt.Dimension(45, 27));
         spousesButton.setPreferredSize(new java.awt.Dimension(60, 27));
+        spousesButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                spousesButtonMouseClicked(evt);
+            }
+        });
         spousesButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 spousesButtonActionPerformed(evt);
@@ -696,6 +721,11 @@ public class IndiPanel extends Editor implements DocumentListener {
         childrenButton.setMaximumSize(new java.awt.Dimension(45, 27));
         childrenButton.setMinimumSize(new java.awt.Dimension(45, 27));
         childrenButton.setPreferredSize(new java.awt.Dimension(60, 27));
+        childrenButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                childrenButtonMouseClicked(evt);
+            }
+        });
         childrenButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 childrenButtonActionPerformed(evt);
@@ -1056,7 +1086,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 192, Short.MAX_VALUE))
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -1451,7 +1481,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1473,7 +1503,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventPlaceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 87, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
@@ -1605,27 +1635,27 @@ public class IndiPanel extends Editor implements DocumentListener {
     }//GEN-LAST:event_delMediaEventButtonActionPerformed
 
     private void brothersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_brothersButtonActionPerformed
-        showPopupFamilyMenu(brothersButton, IndiCreator.REL_BROTHER, null, indi.getBrothers(true));
+        //xxx
     }//GEN-LAST:event_brothersButtonActionPerformed
 
     private void sistersButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_sistersButtonActionPerformed
-        showPopupFamilyMenu(sistersButton, IndiCreator.REL_SISTER, null, indi.getSisters(true));
+        //xxx
     }//GEN-LAST:event_sistersButtonActionPerformed
 
     private void spousesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_spousesButtonActionPerformed
-        showPopupFamilyMenu(spousesButton, IndiCreator.REL_PARTNER, null, indi.getPartners());
+        //xxx
     }//GEN-LAST:event_spousesButtonActionPerformed
 
     private void childrenButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_childrenButtonActionPerformed
-        showPopupFamilyMenu(childrenButton, IndiCreator.REL_CHILD, null, indi.getChildren());
+        //xxx
     }//GEN-LAST:event_childrenButtonActionPerformed
 
     private void fatherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fatherButtonActionPerformed
-        showPopupFamilyMenu(fatherButton, IndiCreator.REL_FATHER, indi.getBiologicalFather(), null);
+        //xxx
     }//GEN-LAST:event_fatherButtonActionPerformed
 
     private void motherButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_motherButtonActionPerformed
-        showPopupFamilyMenu(motherButton, IndiCreator.REL_MOTHER, indi.getBiologicalMother(), null);
+        //xxx
     }//GEN-LAST:event_motherButtonActionPerformed
 
     private void moreNamesButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_moreNamesButtonActionPerformed
@@ -2097,6 +2127,30 @@ public class IndiPanel extends Editor implements DocumentListener {
     private void splitPanePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_splitPanePropertyChange
         registry.put("cygnustopSplitDividerLocation", splitPane.getDividerLocation());
     }//GEN-LAST:event_splitPanePropertyChange
+
+    private void fatherButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fatherButtonMouseClicked
+        showPopupFamilyMenu(fatherButton, evt.getButton() == 3, IndiCreator.REL_FATHER, indi.getBiologicalFather(), null);
+    }//GEN-LAST:event_fatherButtonMouseClicked
+
+    private void motherButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_motherButtonMouseClicked
+        showPopupFamilyMenu(motherButton, evt.getButton() == 3, IndiCreator.REL_MOTHER, indi.getBiologicalMother(), null);
+    }//GEN-LAST:event_motherButtonMouseClicked
+
+    private void brothersButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_brothersButtonMouseClicked
+        showPopupFamilyMenu(brothersButton, evt.getButton() == 3, IndiCreator.REL_BROTHER, null, indi.getBrothers(true));
+    }//GEN-LAST:event_brothersButtonMouseClicked
+
+    private void sistersButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_sistersButtonMouseClicked
+        showPopupFamilyMenu(sistersButton, evt.getButton() == 3, IndiCreator.REL_SISTER, null, indi.getSisters(true));
+    }//GEN-LAST:event_sistersButtonMouseClicked
+
+    private void spousesButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_spousesButtonMouseClicked
+        showPopupFamilyMenu(spousesButton, evt.getButton() == 3, IndiCreator.REL_PARTNER, null, indi.getPartners());
+    }//GEN-LAST:event_spousesButtonMouseClicked
+
+    private void childrenButtonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_childrenButtonMouseClicked
+        showPopupFamilyMenu(childrenButton, evt.getButton() == 3, IndiCreator.REL_CHILD, null, indi.getChildren());
+    }//GEN-LAST:event_childrenButtonMouseClicked
 
     
     private void scrollEventNotes(int notches) {
@@ -3873,7 +3927,7 @@ public class IndiPanel extends Editor implements DocumentListener {
      * Family buttons navigation
      */
     
-    private void showPopupFamilyMenu(JButton button, final int relation, Indi familyMember, Indi[] familyMembers) {
+    private void showPopupFamilyMenu(JButton button, boolean isPopup, final int relation, Indi familyMember, Indi[] familyMembers) {
         
         ImageIcon displaIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/editindi.png"));
         ImageIcon createIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/standard/images/ico_create.png"));
@@ -3905,7 +3959,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 public void actionPerformed(ActionEvent ae) {
                     if (fThisIndi != null) {
                         if (changes.hasChanged()) {
-                            changes.fireChangeEvent(new Boolean(true));
+                            changes.fireChangeEvent(true);
                         }
                     }
                     SelectionDispatcher.fireSelection(new Context(fFamilyIndi));   // fireselection because we are navigating to another entity
@@ -3952,7 +4006,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         }
                         if (indiToAttach != null) {
                             if (changes.hasChanged()) {
-                                changes.fireChangeEvent(new Boolean(true));
+                                changes.fireChangeEvent(true);
                             }
                             IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, null, indiToAttach);
                             getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
@@ -3974,7 +4028,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             menuItem.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent ae) {
                     if (changes.hasChanged()) {
-                        changes.fireChangeEvent(new Boolean(true));
+                        changes.fireChangeEvent(true);
                     }
                     new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
                     getEditorTopComponent().setContext(new Context(indi));
@@ -3996,7 +4050,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         if (changes.hasChanged()) {
-                            changes.fireChangeEvent(new Boolean(true));
+                            changes.fireChangeEvent(true);
                         }
                         SelectionDispatcher.fireSelection(new Context(fIndi));   // fireselection because we are navigating to another entity
                     }
@@ -4067,7 +4121,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         }
                         if (indiToAttach != null) {
                             if (changes.hasChanged()) {
-                                changes.fireChangeEvent(new Boolean(true));
+                                changes.fireChangeEvent(true);
                             }
                             IndiCreator indiCreator = new IndiCreator(IndiCreator.ATTACH, indi, relation, currentFam, indiToAttach);
                             getEditorTopComponent().setContext(new Context(indiCreator.getIndi()));
@@ -4090,7 +4144,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 menuItem.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent ae) {
                         if (changes.hasChanged()) {
-                            changes.fireChangeEvent(new Boolean(true));
+                            changes.fireChangeEvent(true);
                         }
                         new IndiCreator(IndiCreator.DETACH, indi, relation, null, fIndi);
                         getEditorTopComponent().setContext(new Context(indi));
@@ -4103,7 +4157,13 @@ public class IndiPanel extends Editor implements DocumentListener {
         
         
         // Show menu
-        menu.show(button, 3, button.getHeight()-5);
+        if (isPopup) {
+            menu.show(button, 3, button.getHeight()-5);
+        } else {
+            JMenuItem item = (JMenuItem) menu.getSubElements()[0];
+            item.doClick();
+        }
+        
 
         
     }
