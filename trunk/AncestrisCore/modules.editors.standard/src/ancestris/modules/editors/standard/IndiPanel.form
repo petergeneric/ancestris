@@ -538,6 +538,7 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="fatherButtonMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="fatherButtonActionPerformed"/>
                       </Events>
                     </Component>
@@ -572,6 +573,7 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="motherButtonMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="motherButtonActionPerformed"/>
                       </Events>
                     </Component>
@@ -739,6 +741,7 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="brothersButtonMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="brothersButtonActionPerformed"/>
                       </Events>
                     </Component>
@@ -764,6 +767,7 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="sistersButtonMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="sistersButtonActionPerformed"/>
                       </Events>
                     </Component>
@@ -789,6 +793,7 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="spousesButtonMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="spousesButtonActionPerformed"/>
                       </Events>
                     </Component>
@@ -814,6 +819,7 @@
                         </Property>
                       </Properties>
                       <Events>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="childrenButtonMouseClicked"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="childrenButtonActionPerformed"/>
                       </Events>
                     </Component>
@@ -904,7 +910,7 @@
                                   <Component id="modificationLabel" max="32767" attributes="0"/>
                               </Group>
                               <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="sourcePanel" alignment="0" pref="192" max="32767" attributes="0"/>
+                              <Component id="sourcePanel" alignment="0" pref="195" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
                       </Group>
@@ -1374,7 +1380,7 @@
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="eventNotePanel" pref="307" max="32767" attributes="0"/>
+                              <Component id="eventNotePanel" pref="304" max="32767" attributes="0"/>
                               <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1403,7 +1409,7 @@
                               <Component id="eventPlaceCombo" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventNotePanel" pref="87" max="32767" attributes="0"/>
+                          <Component id="eventNotePanel" pref="84" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="eventSourcePanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
