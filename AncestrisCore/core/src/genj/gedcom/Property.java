@@ -1510,9 +1510,14 @@ public abstract class Property implements Comparable<Property> {
                 prop = property.getProperty("DATE");
                 if ((prop instanceof PropertyDate) && prop.isValid()) {
                     value = prop.getDisplayValue();
-                } else if (property instanceof PropertyEvent && ((PropertyEvent) property).isKnownToHaveHappened()) {
+                } else if (property instanceof PropertyEvent) {
+                    final Boolean kthh = ((PropertyEvent) property).isKnownToHaveHappened();
+                    if (kthh != null && kthh) {
                     prop = property;
                     value = property.getDisplayValue();
+                    } else {
+                        value = "";
+                    }
                 } else {
                     value = "";
                 }
