@@ -2,6 +2,7 @@ package ancestris.modules.editors.placeeditor.topcomponents;
 
 import ancestris.modules.editors.geoplace.PlaceEditorPanel;
 import ancestris.modules.editors.placeeditor.models.GedcomPlaceTableModel;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
@@ -12,7 +13,6 @@ import genj.gedcom.GedcomMetaListener;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
-import java.awt.Dialog;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -20,6 +20,7 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.JButton;
 import javax.swing.JToolTip;
 import javax.swing.Popup;
 import javax.swing.PopupFactory;
@@ -29,8 +30,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.DialogDescriptor;
-import org.openide.DialogDisplayer;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.util.ImageUtilities;
@@ -57,7 +56,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private Gedcom gedcom = null;
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
-    private PlaceEditorPanel placesEditorPanel = null;
+    private PlaceEditorPanel placesEditor = null;
     
     private boolean isBusyCommitting = false;
     private UndoRedoListener undoRedoListener;
@@ -115,28 +114,26 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                 } else if (e.getClickCount() == 2) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
-                    placesEditorPanel = new PlaceEditorPanel();
-                    DialogDescriptor placesEditorPanelDescriptor = new DialogDescriptor(
-                            placesEditorPanel,
-                            NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.all", propertyPlaces.iterator().next().getGeoValue()),
-                            true,
-                            null);
-                    placesEditorPanel.set(gedcom, propertyPlaces);
-                    if (propertyPlaces.iterator().next().getLatitude(true) == null) {
-                        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-                            @Override
-                            public void run() {
-                                placesEditorPanel.runSearch();
+                    placesEditor = new PlaceEditorPanel();
+                    placesEditor.set(gedcom, propertyPlaces);
+                    final boolean search = propertyPlaces.iterator().next().getLatitude(true) == null;
+                    WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (search) {
+                                placesEditor.runSearch();
                             }
-                        });
-                    }
-                    Dialog dialog = DialogDisplayer.getDefault().createDialog(placesEditorPanelDescriptor);
-                    dialog.setVisible(true);
-                    dialog.toFront();
-                    if (placesEditorPanelDescriptor.getValue() == DialogDescriptor.OK_OPTION) {
-                        commit(); 
-                        updateGedcomPlaceTable();
-                    }
+                            JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+                            JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+                            Object[] options = new Object[]{OKButton, cancelButton};
+                            Object o = DialogManager.create(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.all", propertyPlaces.iterator().next().getGeoValue()), placesEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
+                            placesEditor.close();
+                            if (o == DialogManager.OK_OPTION) {
+                                commit();
+                                updateGedcomPlaceTable();
+                            }
+                        }
+                    });
                 }
             }
         });
@@ -394,13 +391,13 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         isBusyCommitting = true;
         try {
             if (gedcom.isWriteLocked()) {
-                placesEditorPanel.commit();
+                placesEditor.commit();
             } else {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
-                        placesEditorPanel.commit();
+                        placesEditor.commit();
                     }
                 });
             }

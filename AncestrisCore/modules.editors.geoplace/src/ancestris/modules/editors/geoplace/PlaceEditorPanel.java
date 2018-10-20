@@ -596,6 +596,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      */
     public void set(Gedcom gedcom, Set<PropertyPlace> propertyPlaces) {
         
+        checkConnection(false);
+        if (isConnectionOn) {
+            jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
+        } else {
+            jXMapKit1.setTileFactory(new EmptyTileFactory());
+        }
+        
         if (mPropertyPlaces == null) {
             mPropertyPlaces = propertyPlaces;
         }
