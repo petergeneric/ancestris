@@ -387,6 +387,8 @@ public class NameEditorPanel extends javax.swing.JPanel {
     public void set(Indi mRoot, PropertyName mName) {
         this.mRoot = mRoot;
         this.mName = mName;
+        
+        this.nameTypeComboBoxModelModel.setGedcom(mRoot.getGedcom());
 
         changeSupport.mute();
         String version = mRoot.getGedcom().getGrammar().getVersion();
