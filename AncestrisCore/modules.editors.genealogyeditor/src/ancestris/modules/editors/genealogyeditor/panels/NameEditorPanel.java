@@ -16,7 +16,7 @@ import javax.swing.event.DocumentListener;
  */
 public class NameEditorPanel extends javax.swing.JPanel {
 
-    private NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
+    private final NameTypeComboBoxModel nameTypeComboBoxModelModel = new NameTypeComboBoxModel();
     private Indi mRoot;
     private PropertyName mName;
     private boolean nameTypeModified = false;
