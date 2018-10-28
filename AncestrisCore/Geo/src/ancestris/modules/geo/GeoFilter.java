@@ -5,13 +5,13 @@
 package ancestris.modules.geo;
 
 import ancestris.api.search.SearchCommunicator;
+import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySex;
-import genj.gedcom.*;
 import genj.util.Registry;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,7 +31,7 @@ import org.openide.util.Utilities;
 public class GeoFilter {
 
     private Registry registry = null;
-    
+
     private Gedcom gedcom;
     public String location = "";
     public boolean showUnknown = false;
@@ -50,13 +50,13 @@ public class GeoFilter {
     public boolean deaths = false;
     public boolean otherEvents = false;
     public Indi rootIndi = null;
-    private HashSet<Indi> ancestorsList = null;
-    private HashSet<Indi> descendantsList = null;
-    private HashSet<Indi> cousinsList = null;
-    private HashSet<Indi> othersList = null;
-    private HashSet<Indi> searchedIndis = null;
+    private HashSet<Indi> ancestorsList = new HashSet<>();
+    private HashSet<Indi> descendantsList = new HashSet<>();
+    private HashSet<Indi> cousinsList = new HashSet<>();
+    private HashSet<Indi> othersList = new HashSet<>();
+    private HashSet<Indi> searchedIndis = new HashSet<>();
     private Indi selectedIndi = null;
-    
+
     private boolean isBusy = false;
 
     public void setGedcom(Gedcom gedcom) {
@@ -131,7 +131,7 @@ public class GeoFilter {
         if (node.isEvent) {
             return false;
         }
-        
+
         // Filter on location : reject node if location not included in location's description
         if (!location.isEmpty()) { // there is a location filter
             if (node.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {   // exclude empty locations
@@ -141,20 +141,19 @@ public class GeoFilter {
                 return false;
             }
         }
-        
+
         // exclude default/unknown locations
-        if (!showUnknown && node.isUnknown()) {   
+        if (!showUnknown && node.isUnknown()) {
             return false;
         }
-        
-        
+
         // Make sure at least an event matches a criteria
         for (GeoNodeObject event : node.getAllEvents()) {
             if (compliesEvent(event)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -179,7 +178,7 @@ public class GeoFilter {
                 return false;
             }
         }
-        
+
         // Filter on event date and type
         // Reject node if none of the events end dates is after yearStart
         if (!yearStart.isEmpty() && !after(event.getEventsMaxDate(), yearStart)) {
@@ -191,13 +190,15 @@ public class GeoFilter {
             return false;
         }
 
-        
         return true;
     }
 
     public boolean compliesIndi(Indi indi) {
         if (ascendants || descendants || cousins || otherAncestors) {
-            if (!((ascendants && ancestorsList.contains(indi)) || (descendants && descendantsList.contains(indi)) || (cousins && cousinsList.contains(indi)) || (otherAncestors && othersList.contains(indi)))) {
+            if (!((ascendants && ancestorsList.contains(indi))
+                    || (descendants && descendantsList.contains(indi))
+                    || (cousins && cousinsList.contains(indi))
+                    || (otherAncestors && othersList.contains(indi)))) {
                 return false;
             }
         }
@@ -220,7 +221,7 @@ public class GeoFilter {
     }
 
     public boolean isMarriage(String tag) {
-        return  ("MARR".equals(tag) || "ENGA".equals(tag) || "MARB".equals(tag) || "MARC".equals(tag));
+        return ("MARR".equals(tag) || "ENGA".equals(tag) || "MARB".equals(tag) || "MARC".equals(tag));
     }
 
     public boolean isDeath(String tag) {
@@ -251,16 +252,17 @@ public class GeoFilter {
         }
         return rootIndi;
     }
-    
+
     /**
-     * Ask user for a temporary de-cujus (does not change the one in the file, just used temporarily for the filters)
-     * Recalculate lists
+     * Ask user for a temporary de-cujus (does not change the one in the file,
+     * just used temporarily for the filters) Recalculate lists
+     *
      * @return
      */
     public Indi askRootIndi() {
-        Indi chosenIndi = null;
-        Entity[] ents = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
-        JComboBox <Entity>jlist = new JComboBox<Entity>(ents);
+        final Indi chosenIndi;
+        final Entity[] ents = gedcom.getEntities(Gedcom.INDI, "INDI:NAME");
+        final JComboBox<Entity> jlist = new JComboBox<>(ents);
 
         // set selected item to current decujus
         if (rootIndi != null) {
@@ -286,7 +288,7 @@ public class GeoFilter {
         if (str == null || str.isEmpty()) {
             return 0;
         }
-        int sosaNb = 0;
+        int sosaNb;
 
         int start = 0, end = str.length();
         while (start <= end && !Character.isDigit(str.charAt(start))) {
@@ -301,7 +303,7 @@ public class GeoFilter {
         } else {
             try {
                 sosaNb = Integer.parseInt(str.substring(start, end));
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 sosaNb = 0;
             }
         }
@@ -310,6 +312,7 @@ public class GeoFilter {
 
     /**
      * Get list of ancestors from the root indi
+     *
      * @param rootIndi
      * @return
      */
@@ -318,9 +321,9 @@ public class GeoFilter {
             return null;
         }
 
-        HashSet<Indi> retList = new HashSet<Indi>();
+        HashSet<Indi> retList = new HashSet<>();
 
-        List<Indi> indis = new ArrayList<Indi>();
+        List<Indi> indis = new ArrayList<>();
         indis.add(rootIndi);
         for (ListIterator<Indi> it = indis.listIterator(); it.hasNext();) {
             Indi indi = it.next();
@@ -348,6 +351,7 @@ public class GeoFilter {
 
     /**
      * Get list of descendants from the root indi
+     *
      * @param rootIndi
      * @return
      */
@@ -356,9 +360,9 @@ public class GeoFilter {
             return null;
         }
 
-        HashSet<Indi> retList = new HashSet<Indi>();
+        HashSet<Indi> retList = new HashSet<>();
 
-        List<Indi> indis = new ArrayList<Indi>();
+        List<Indi> indis = new ArrayList<>();
         indis.add(rootIndi);
         for (ListIterator<Indi> it = indis.listIterator(); it.hasNext();) {
             Indi indi = it.next();
@@ -367,8 +371,7 @@ public class GeoFilter {
             }
             // grab kids
             Indi[] children = indi.getChildren();
-            for (int i = 0; i < children.length; i++) {
-                Indi kid = children[i];
+            for (Indi kid : children) {
                 it.add(kid);
                 it.previous();
             }
@@ -379,17 +382,18 @@ public class GeoFilter {
 
     /**
      * Get list of cousins leveraging the ancestors list
+     *
      * @param ancestorsList
      * @return
      */
     private HashSet<Indi> getCousins() {
-        if (ancestorsList == null || descendantsList == null || gedcom == null) {
-            return null;
+        if (gedcom == null) {
+            return new HashSet<>();
         }
-        
-        HashSet<Indi> retList = new HashSet<Indi>();
 
-        HashSet<Indi> excludedIndis = new HashSet<Indi>();
+        HashSet<Indi> retList = new HashSet<>();
+
+        HashSet<Indi> excludedIndis = new HashSet<>();
 
         // get all non ancestors and non descendants
         excludedIndis.addAll(ancestorsList);
@@ -397,7 +401,7 @@ public class GeoFilter {
 
         // Get cousins now by flaging all non ancestors nor descendants of root that are descendants of an ancestor of root
         for (Indi ancestor : ancestorsList) {
-            HashSet<Indi> descendantslst = new HashSet<Indi>();
+            final HashSet<Indi> descendantslst = new HashSet<>();
             getDescendants(ancestor, excludedIndis, descendantslst); // get descendants of ancestor that are not to be excluded
             retList.addAll(descendantslst);
             excludedIndis.addAll(retList);
@@ -406,9 +410,7 @@ public class GeoFilter {
     }
 
     private void getDescendants(Indi ancestor, HashSet<Indi> excludedSet, HashSet<Indi> descendants) {
-        Indi[] children = ancestor.getChildren();
-        for (int i = 0; i < children.length; i++) {
-            Indi indi = children[i];
+        for (Indi indi : ancestor.getChildren()) {
             if (excludedSet.contains(indi)) {
                 continue;
             }
@@ -419,18 +421,19 @@ public class GeoFilter {
 
     /**
      * Get others (non direct ancestors nor cousins) list
+     *
      * @param ancestorsList
      * @param cousinsList
      * @return
      */
     private HashSet<Indi> getOthersList() {
-        if (ancestorsList == null && descendantsList == null && cousinsList == null || gedcom == null) {
-            return null;
+        if (gedcom == null) {
+            return new HashSet<>();
         }
 
-        HashSet<Indi> retList = new HashSet<Indi>();
+        final HashSet<Indi> retList = new HashSet<>();
 
-        HashSet<Indi> indis = new HashSet<Indi>((Collection <Indi>) gedcom.getEntities(Gedcom.INDI));
+        final HashSet<Indi> indis = new HashSet<>((Collection<Indi>) gedcom.getEntities(Gedcom.INDI));
         indis.removeAll(ancestorsList);
         indis.removeAll(descendantsList);
         indis.removeAll(cousinsList);
@@ -440,15 +443,16 @@ public class GeoFilter {
 
     /**
      * Get all individuals who are somewhere in the search dialog result
+     *
      * @return
      */
     public HashSet<Indi> getSearchedIndis() {
         if (gedcom == null) {
-            return null;
+            return new HashSet<>();
         }
-        HashSet<Indi> retList = new HashSet<Indi>();
-        
-        List<Property> results = SearchCommunicator.getResults(gedcom);
+        final HashSet<Indi> retList = new HashSet<>();
+
+        final List<Property> results = SearchCommunicator.getResults(gedcom);
         if (results == null) {
             return retList;
         }
@@ -478,6 +482,7 @@ public class GeoFilter {
 
     /**
      * Get currently selected individual in the editor view
+     *
      * @return
      */
     public Indi getSelectedIndi() {
@@ -486,11 +491,13 @@ public class GeoFilter {
         }
         // Quick replace Editor search by ControlCenter api
         Context context = Utilities.actionsGlobalContext().lookup(Context.class);
-        if (context == null){
+        if (context == null) {
             return null;
         }
         Entity ent = context.getEntity();
-        if (ent == null) return null;
+        if (ent == null) {
+            return null;
+        }
         if (ent instanceof Indi) {
             return (Indi) ent;
         } else if (ent instanceof Fam) {
@@ -506,20 +513,10 @@ public class GeoFilter {
         return null;
     }
 
-    private void printList(String str, HashSet<Indi> list) {
-        int i = 0;
-        if (list == null) {
-            return;
-        }
-        for (Indi indi : list) {
-            i++;
-            System.out.println("DEBUG - " + str + "indi(" + i + ")=" + indi);
-        }
-    }
-
     /**
      * Display description of filter depending on what filters are selected
-     * @return 
+     *
+     * @return
      */
     public String getShortDescription() {
         String ret = "";
@@ -541,22 +538,22 @@ public class GeoFilter {
         String indi = (rootIndi != null) ? rootIndi.toString(true) : "";
         if (ascendants | descendants | cousins | otherAncestors) {
             String tree = "";
-            String asce  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jAncestorCheckBox.text");
+            String asce = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jAncestorCheckBox.text");
             String desc = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jDescendantCheckBox.text");
             String cous = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jCousinCheckBox.text");
-            String othe  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jOthersCheckBox.text");
+            String othe = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jOthersCheckBox.text");
             if (!ascendants) {
                 asce = "";
-            } 
+            }
             tree += asce;
-            
+
             if (!descendants) {
                 desc = "";
             } else if (!tree.isEmpty()) {
                 tree += "+";
             }
             tree += desc;
-            
+
             if (!cousins) {
                 cous = "";
             } else if (!tree.isEmpty()) {
@@ -582,12 +579,12 @@ public class GeoFilter {
         // Are there any filters on events
         if (!yearStart.isEmpty() | !yearEnd.isEmpty() | births | marriages | deaths | otherEvents) {
             String event = "";
-            String yeas  = ">";
-            String yeae  = "<";
-            String birt  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jBirthCheckBox.text");
-            String marr  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWeddingCheckBox.text");
-            String deat  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jDeathCheckBox1.text");
-            String othe  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jOtherEventCheckBox1.text");
+            String yeas = ">";
+            String yeae = "<";
+            String birt = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jBirthCheckBox.text");
+            String marr = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWeddingCheckBox.text");
+            String deat = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jDeathCheckBox1.text");
+            String othe = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jOtherEventCheckBox1.text");
 
             if (yearStart.isEmpty()) {
                 yeas = "";
@@ -601,10 +598,10 @@ public class GeoFilter {
                 yeae += yeae + yearEnd;
             }
             if (!event.isEmpty()) {
-                event += "+"; 
+                event += "+";
             }
             event += yeae;
-            
+
             if (!births) {
                 birt = "";
             } else if (!event.isEmpty()) {
@@ -632,37 +629,37 @@ public class GeoFilter {
                 event += "+";
             }
             event += othe;
-            
+
             if (!event.isEmpty()) {
                 if (!ret.isEmpty()) {
                     ret += " + ";
                 }
                 ret += org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.events", event);
             }
-            
+
         }
-        
+
         // Are there any filters on individuals
         String selected = (selectedIndi != null) ? selectedIndi.toString(true) : "";
         if (males | females | selectedIndividual | selectedSearch) {
             String selindi = "";
-            String male  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jMenRadioButton.text");
+            String male = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jMenRadioButton.text");
             String fema = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jWomenRadioButton.text");
             String sind = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSelectedRadioButton.text");
-            String ssea  = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSearchedRadioButton.text");
+            String ssea = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "SettingsPanel.jSearchedRadioButton.text");
             if (!males) {
                 male = "";
             } else {
                 selindi += male;
             }
-            
+
             if (!females) {
                 fema = "";
             } else if (!selindi.isEmpty()) {
                 selindi += "+";
             }
-            selindi +=  fema;
-            
+            selindi += fema;
+
             if (!selectedIndividual) {
                 sind = "";
             } else if (!selindi.isEmpty()) {
@@ -670,16 +667,16 @@ public class GeoFilter {
             }
             selindi += sind;
             if (selectedIndividual) {
-                selindi +=  " (" + selected + ")";
+                selindi += " (" + selected + ")";
             }
-            
+
             if (!selectedSearch) {
                 ssea = "";
             } else if (!selindi.isEmpty()) {
                 selindi += "+";
             }
             selindi += ssea;
-            
+
             if (!selindi.isEmpty()) {
                 if (!ret.isEmpty()) {
                     ret += " + ";
@@ -688,7 +685,6 @@ public class GeoFilter {
             }
         }
 
-        
         return ret;
     }
 
