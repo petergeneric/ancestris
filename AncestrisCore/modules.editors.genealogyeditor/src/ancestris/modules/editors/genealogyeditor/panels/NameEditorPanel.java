@@ -387,8 +387,10 @@ public class NameEditorPanel extends javax.swing.JPanel {
     public void set(Indi mRoot, PropertyName mName) {
         this.mRoot = mRoot;
         this.mName = mName;
-        
+
         this.nameTypeComboBoxModelModel.setGedcom(mRoot.getGedcom());
+        // insert a blank
+        nameTypeComboBox.insertItemAt("", 0);
 
         changeSupport.mute();
         String version = mRoot.getGedcom().getGrammar().getVersion();
@@ -406,7 +408,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
             if (nameType != null) {
                 nameTypeComboBox.setSelectedItem(nameType.getValue());
             } else {
-                nameTypeComboBox.setSelectedIndex(1);
+                nameTypeComboBox.setSelectedIndex(0);
             }
             nameTypeModified = false;
 
@@ -536,29 +538,41 @@ public class NameEditorPanel extends javax.swing.JPanel {
                 mName = (PropertyName) mRoot.addProperty("NAME", "");
             }
 
-            if (version.equals("5.5.1") && nameTypeModified == true) {
+            if ("5.5.1".equals(version) && nameTypeModified == true) {
 
                 Property nameType = mName.getProperty("TYPE");
-                if (nameType == null) {
-                    logger.log(Level.INFO, "Add property TYPE");
+                final String typeValue = nameTypeComboBox.getSelectedItem().toString();
+                if (typeValue != null && !"".equals(typeValue)) {
+                    if (nameType == null) {
+                        logger.log(Level.INFO, "Add property TYPE");
 
-                    mName.addProperty("TYPE", nameTypeComboBox.getSelectedItem().toString());
-                } else {
-                    logger.log(Level.INFO, "Update property TYPE");
-
-                    nameType.setValue(nameTypeComboBox.getSelectedItem().toString());
+                        mName.addProperty("TYPE", typeValue);
+                    } else {
+                        logger.log(Level.INFO, "Update property TYPE");
+                        nameType.setValue(typeValue);
+                    }
+                } else if (nameType != null) {
+                    logger.log(Level.INFO, "Remove property TYPE");
+                    mName.delProperties("TYPE");
                 }
             }
 
             if (nicknameModified == true) {
-                Property nickname = mName.getProperty("NICK");
-                if (nickname == null) {
-                    logger.log(Level.INFO, "Update property NICK");
-                    mName.addProperty("NICK", nicknameTextField.getText().trim());
-                } else {
-                    logger.log(Level.INFO, "Update property NICK");
-                    nickname.setValue(nicknameTextField.getText().trim());
+                final Property nickname = mName.getProperty("NICK");
+                final String nickSelected = nicknameTextField.getText().trim();
+                if (nickSelected != null && !"".equals(nickSelected)) {
+                    if (nickname == null) {
+                        logger.log(Level.INFO, "Update property NICK");
+                        mName.addProperty("NICK", nicknameTextField.getText().trim());
+                    } else {
+                        logger.log(Level.INFO, "Update property NICK");
+                        nickname.setValue(nicknameTextField.getText().trim());
+                    }
+                } else if (nickname != null) {
+                    logger.log(Level.INFO, "Remove property NICK");
+                    mName.delProperties("NICK");
                 }
+
             }
             // ... store changed value
             mName.setName(
