@@ -119,11 +119,11 @@
         <echo message=" "/>
         <echo message=" "/>
         <echo message="BUILDING INSTALLER FOR WINDOWS..." />
-        <exec executable="svnversion" failonerror="false"
+   <!--     <exec executable="svnversion" failonerror="false"
               outputproperty="svnversion" errorproperty="svnerror">
             <arg value="-n"/>
         </exec>
-        <property name="inst.version" value="0.3-1_r${svnversion}"/>
+      -->  <property name="inst.version" value="0.3-1_r${svnversion}"/>
         <echo message="version = ${inst.version}" />
         <property name="nbdist.dir" value="dist"/>
         <property name="nbdist-app.dir" value="${nbdist.dir}/${app.name}"/>

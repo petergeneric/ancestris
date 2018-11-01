@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.9.7
+Created-By: 1.8.0_181-b13 (Oracle Corporation)
+AutoUpdate-Show-In-Client: true
+OpenIDE-Module: ancestris.modules.exports.geneanet
+OpenIDE-Module-Layer: ancestris/modules/exports/geneanet/layer.xml
+OpenIDE-Module-Localizing-Bundle: ancestris/modules/exports/geneanet/B
+ undle.properties
+OpenIDE-Module-Requires:  ancestris.modules.console, ancestris.modules
+ .optionspanel
+OpenIDE-Module-Specification-Version: 0.10.0.0
+
