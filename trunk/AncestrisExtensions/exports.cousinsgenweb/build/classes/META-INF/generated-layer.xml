@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN"
+                            "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Services">
+        <folder name="JavaHelp">
+            <file name="ancestris-modules-exports-cousinsgenweb-docs.xml">
+                <!--ancestris.modules.exports.cousinsgenweb.docs-->
+                <attr intvalue="3487" name="position"/><![CDATA[<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE helpsetref PUBLIC "-//NetBeans//DTD JavaHelp Help Set Reference 1.0//EN" "http://www.netbeans.org/dtds/helpsetref-1_0.dtd">
+<helpsetref url="nbdocs:/ancestris/modules/exports/cousinsgenweb/docs/cousinsgenweb-hs.xml" merge="true"/>
+]]></file>
+        </folder>
+    </folder>
+    <folder name="Actions">
+        <folder name="File">
+            <file name="ancestris-modules-exports-cousinsgenweb-CousinsGenWebAction.instance">
+                <!--ancestris.modules.exports.cousinsgenweb.CousinsGenWebAction-->
+                <attr
+                    bundlevalue="ancestris.modules.exports.cousinsgenweb.Bundle#CTL_CousinsGenWebAction" name="displayName"/>
+                <attr name="instanceCreate" newvalue="ancestris.modules.exports.cousinsgenweb.CousinsGenWebAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="File">
+            <folder name="Export">
+                <file name="CousinsGenWebAction.shadow">
+                    <!--ancestris.modules.exports.cousinsgenweb.CousinsGenWebAction-->
+                    <attr name="originalFile" stringvalue="Actions/File/ancestris-modules-exports-cousinsgenweb-CousinsGenWebAction.instance"/>
+                    <attr intvalue="300" name="position"/>
+                </file>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
