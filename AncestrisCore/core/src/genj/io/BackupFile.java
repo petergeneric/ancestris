@@ -45,7 +45,7 @@ public class BackupFile {
                 File parent = file.getParentFile();
                 File[] backups = parent.listFiles(filter);
                 Arrays.sort(backups);
-
+                
                 // TODO: mettre une options
                 if (backups.length >= Options.getNbBackups()) {
                     for (int i = 0; i <= backups.length - Options.getNbBackups(); i++) {
@@ -65,6 +65,11 @@ public class BackupFile {
                 }
                 if (bak.exists()) {
                     throw new GedcomIOException("Couldn't create backup file " + bak.getName(), -1);
+                }
+                 try {
+                    Thread.sleep(500);
+                } catch( InterruptedException e) {
+                    //RAF.
                 }
                 if (!file.renameTo(bak)) {
                     throw new GedcomIOException("Couldn't create backup for " + file.getName(), -1);

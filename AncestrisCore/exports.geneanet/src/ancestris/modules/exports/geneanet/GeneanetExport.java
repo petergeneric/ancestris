@@ -19,7 +19,6 @@ package ancestris.modules.exports.geneanet;
 
 import ancestris.gedcom.GedcomMgr;
 import ancestris.gedcom.SaveOptionsWidget;
-import ancestris.modules.console.Console;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -37,10 +36,9 @@ import genj.io.GedcomReaderContext;
 import genj.io.GedcomReaderFactory;
 import genj.util.Origin;
 import java.io.File;
-import java.io.FilenameFilter;
-import java.nio.file.Files;
-import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -55,11 +53,11 @@ import spin.Spin;
 public class GeneanetExport {
 
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
-    private Console console = null;
-    private Gedcom gedcom = null;
-    private Gedcom copyGedcom = null;
-    private SaveOptionsWidget options = null;
-    private File exportFile = null;
+
+    private final Gedcom gedcom;
+    private Gedcom copyGedcom;
+    private final SaveOptionsWidget options;
+    private final File exportFile;
 
     GeneanetExport(Gedcom gedcom, File exportFile, SaveOptionsWidget options) {
 
@@ -69,19 +67,22 @@ public class GeneanetExport {
     }
 
     public boolean execute() {
-        boolean ok = true;
+        boolean ok;
 
         // Open console trace
-        console = new Console(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle") + " " + gedcom.getName());
-        console.println(String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), gedcom.getName()));
+        LOG.log(Level.INFO, "{0} {1}", new Object[]{NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.TabTitle"), gedcom.getName()});
+        LOG.log(Level.INFO, String.format(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"), gedcom.getName()));
 
-        // Create file copy of gedcom file
+        // Create file copy of gedcom file with filters done
+        final Origin pOrigin = gedcom.getOrigin();
         try {
-            Files.copy(gedcom.getOrigin().getFile().toPath(), exportFile.toPath(), REPLACE_EXISTING);
-        } catch (Throwable t) {
-            console.println("Failed to create origin for file " + exportFile.getAbsolutePath());
-            console.println(t.toString());
+            final Origin nOrigin = Origin.create(exportFile.toURI().toURL());
+            gedcom.setOrigin(nOrigin);
+            ok = GedcomMgr.getDefault().saveGedcomImpl(gedcom, options.getFilters(), null);
+            gedcom.setOrigin(pOrigin);
+        } catch (IOException e) {
             ok = false;
+            LOG.log(Level.INFO, "Can't create new file ", e);
         }
 
         // Open gedcom copy
@@ -101,24 +102,19 @@ public class GeneanetExport {
 
         // Save gedcom copy
         if (ok) {
-            ok = GedcomMgr.getDefault().saveGedcomImpl(copyGedcom, options.getFilters(), null);
+            ok = GedcomMgr.getDefault().saveGedcomImpl(copyGedcom, null, null);
             // remove backup files is exist
-            final String str = copyGedcom.getName().replace(".ged", "")+"_";
+            final String str = copyGedcom.getName().replace(".ged", "") + "_";
             File dir = new File(exportFile.getParent());
-            File[] foundFiles = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.startsWith(str);
-                }
-            });
+            File[] foundFiles = dir.listFiles((File dir1, String name) -> name.startsWith(str));
             for (File file : foundFiles) {
                 file.delete();
             }
         }
 
         // Export terminated
-        console.println("====================");
-        console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.End"));
-        console.close();
+        LOG.log(Level.INFO, "====================");
+        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.End"));
         return ok;
     }
 
@@ -127,21 +123,23 @@ public class GeneanetExport {
             return null;
         }
 
-        Context context = null;
-
+        final Context context;
         try {
             Origin origin = Origin.create(input);
             GedcomReader reader = (GedcomReader) Spin.off(GedcomReaderFactory.createReader(origin, (GedcomReaderContext) Spin.over(new GedcomReaderContext() {
+                @Override
                 public String getPassword() {
                     return "";
                 }
 
+                @Override
                 public void handleWarning(int line, String warning, Context context) {
                 }
             })));
             Gedcom localGedcom = reader.read();
             context = new Context(localGedcom);
-        } catch (Exception ex) {
+        } catch (IOException ex) {
+            LOG.log(Level.WARNING, "Unable to open copied gedcom", ex);
             return null;
         }
         return context;
@@ -149,22 +147,18 @@ public class GeneanetExport {
 
     private boolean convertAssociations(Gedcom gedcom) {
 
-        Indi indiRela = null;
-        Property propAsso = null;
-        String type = null;
-        Property relaProp = null;
         String rela = null;
 
-        console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingAssos"));
+        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingAssos"));
 
-        List<PropertyAssociation> list = (List<PropertyAssociation>) gedcom.getPropertiesByClass(PropertyAssociation.class);
+        final List<PropertyAssociation> list = (List<PropertyAssociation>) gedcom.getPropertiesByClass(PropertyAssociation.class);
         for (PropertyAssociation prop : list) {
             // Get info
-            console.println(prop.getDisplayValue());
-            indiRela = (Indi) prop.getEntity();
-            propAsso = prop.getTarget().getParent();
-            type = "INDI"; // in geneanet, type is always INDI, not "prop.getTargetType()"
-            relaProp = prop.getProperty("RELA");
+            LOG.log(Level.INFO, prop.getDisplayValue());
+            final Indi indiRela = (Indi) prop.getEntity();
+            final Property propAsso = prop.getTarget().getParent();
+            final String type = "INDI"; // in geneanet, type is always INDI, not "prop.getTargetType()"
+            final Property relaProp = prop.getProperty("RELA");
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
             }
@@ -177,51 +171,50 @@ public class GeneanetExport {
             parent.addProperty("TYPE", type);
             parent.addProperty("RELA", rela);
         }
-        
-        console.println("====================");
-        Entity entity = gedcom.getFirstEntity("HEAD");
-        Property property = entity.getProperty("NOTE");
-        String note = NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NoteWarning");
+
+        LOG.log(Level.INFO, "====================");
+        final Entity entity = gedcom.getFirstEntity("HEAD");
+        final Property property = entity.getProperty("NOTE");
+        final String note = NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NoteWarning");
         if (property != null) {
-            note = property.getDisplayValue() + " - " + note;
+            // forget old value : this is export for Geneanet.
+            //note = property.getDisplayValue() + " - " + note;
             property.setValue(note);
         } else {
             entity.addProperty("NOTE", note);
         }
-        console.println(note);
+        final Property dest = entity.getProperty("DEST");
+        if (dest != null) {
+            dest.setValue("Geneanet");
+        } else {
+            entity.addProperty("DEST", "Geneanet");
+        }
+        LOG.log(Level.INFO, note);
 
         return true;
     }
 
-    
-    
     private boolean convertOther(Gedcom gedcom) {
-
-        Property[] props = null;
-        Property prop = null;
-        String rela = null;
-        List<Property> propList = null;
-        
-        console.println(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingOther"));
+        LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingOther"));
 
         // Process families
         for (Entity entity : gedcom.getFamilies()) {
             // Convert FAM:EVEN:TYPE from Relation to unmarried
-            props = entity.getProperties("EVEN");
+            Property[] props = entity.getProperties("EVEN");
             for (Property p : props) {
-                prop = p.getProperty("TYPE");
+                final Property prop = p.getProperty("TYPE");
                 if (prop != null) {
-                    rela = prop.getValue();
+                    final String rela = prop.getValue();
                     if (rela.equals("Relation")) {
                         prop.setValue("unmarried");
                     }
                 }
             }
-            
+
             // Process adoptions (remove adopted child from their adopting family)
             props = entity.getProperties("CHIL");
             for (Property p : props) {
-                prop = ((PropertyXRef) p).getTargetEntity();
+                final Property prop = ((PropertyXRef) p).getTargetEntity();
                 if (prop != null) {
                     Property adop = prop.getProperty("ADOP");
                     if (adop != null) {
@@ -237,7 +230,7 @@ public class GeneanetExport {
                         // add ADOP below FAMC in the INDI record, unless already there
                         adop = famc.getProperty("ADOP");
                         if (adop == null) {
-                            adop = famc.addProperty("ADOP", "BOTH");
+                            famc.addProperty("ADOP", "BOTH");
                         }
                         // remove CHIL from adopting family
                         Fam adopFam = (Fam) ((PropertyXRef) famc).getTargetEntity();
@@ -255,16 +248,16 @@ public class GeneanetExport {
                     }
                 }
             }
-            
+
         }
-        
+
         // Conversion for indis 
         for (Entity entity : gedcom.getIndis()) {
             // Convert ALIA to NAME
-            props = entity.getProperties("ALIA");
+            final Property[] props = entity.getProperties("ALIA");
             for (Property p : props) {
                 Property parent = p.getParent();
-                if (p != null && !(p instanceof PropertyAlias)) {
+                if (!(p instanceof PropertyAlias)) {
                     int pos = parent.getPropertyPosition(p);
                     String value = p.getValue();
                     parent.delProperty(p);
@@ -276,51 +269,21 @@ public class GeneanetExport {
                     }
                 }
             }
-            
+
             // Convert NSFX to NICK
-            propList = entity.getAllProperties("NSFX");
+            final List<Property> propList = entity.getAllProperties("NSFX");
             for (Property p : propList) {
                 Property parent = p.getParent();
-                if (p != null) {
-                    int pos = parent.getPropertyPosition(p);
-                    String value = p.getValue();
-                    parent.delProperty(p);
-                    try {
-                        parent.addProperty("NICK", value, pos);
-                    } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
-                    }
+                int pos = parent.getPropertyPosition(p);
+                String value = p.getValue();
+                parent.delProperty(p);
+                try {
+                    parent.addProperty("NICK", value, pos);
+                } catch (GedcomException ex) {
+                    Exceptions.printStackTrace(ex);
                 }
             }
-            
         }
-        
-//        Stack propToDelete = new Stack();
-//        
-//        // Remove _SOSA and _SOSADABOVILLE and _DABOVILLE tags
-//        for (Entity entity : gedcom.getIndis()) {
-//            propToDelete.clear();
-//            props = entity.getProperties("_SOSA");
-//            for (Property p : props) {
-//                propToDelete.add(p);
-//            }
-//            props = entity.getProperties("_SOSADABOVILLE");
-//            for (Property p : props) {
-//                propToDelete.add(p);
-//            }
-//            props = entity.getProperties("_DABOVILLE");
-//            for (Property p : props) {
-//                propToDelete.add(p);
-//            }
-//            while (!propToDelete.empty()) {
-//                entity.delProperty((Property) propToDelete.pop());
-//            }
-//        }
-        
-        
-        
-        
         return true;
-        
     }
 }

@@ -169,8 +169,10 @@ public abstract class GedcomMgr {
         String prevEncoding = gedcom.getEncoding();
         Origin prevOrigin = gedcom.getOrigin();
 
-        gedcom.setPassword(options.getPassword());
-        gedcom.setEncoding(options.getEncoding());
+        if (options.isIsGedcom()) {
+            gedcom.setPassword(options.getPassword());
+            gedcom.setEncoding(options.getEncoding());
+        }
 
         Origin newOrigin;
         // .. create new origin
@@ -187,7 +189,7 @@ public abstract class GedcomMgr {
         }
 
         // copy media files when necessary
-        if (options.areMediaToBeCopied()) {
+        if (options.isIsGedcom()&& options.areMediaToBeCopied()) {
             int undoNb = gedcom.getUndoNb();
             final Origin prevOriginUoW = prevOrigin;
             final Origin newOriginUoW = newOrigin;
@@ -354,8 +356,8 @@ public abstract class GedcomMgr {
 
             // Open Connection and get input stream
             Origin origin = Origin.create(input);
-            final List<ViewContext> warnings = new ArrayList<ViewContext>();
-            final List<Object> bag = new ArrayList<Object>(); // stores something if header has warnings
+            final List<ViewContext> warnings = new ArrayList<>();
+            final List<Object> bag = new ArrayList<>(); // stores something if header has warnings
             GedcomReader reader;
             try {
 
@@ -373,7 +375,7 @@ public abstract class GedcomMgr {
                         if (line == 0 && bag.isEmpty()) {
                             bag.add("header");
                         }
-                        warnings.add(new ViewContext(RES.getString("cc.open.warning", new Object[]{Integer.valueOf(line), warning}), context));
+                        warnings.add(new ViewContext(RES.getString("cc.open.warning", new Object[]{line, warning}), context));
                     }
                 })));
 
