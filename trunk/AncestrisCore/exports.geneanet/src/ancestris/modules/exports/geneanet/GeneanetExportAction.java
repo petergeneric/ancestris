@@ -16,7 +16,7 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*
+ /*
  * GeneanetExportAction.java
  *
  * Created on 23 mai 2011, 21:34:49
@@ -34,8 +34,13 @@ import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
@@ -56,7 +61,7 @@ import org.openide.windows.WindowManager;
 @ActionReference(path = "Menu/File/Export", name = "GeneanetExportAction", position = 100)
 public final class GeneanetExportAction extends AbstractAncestrisContextAction {
 
-    private Gedcom myGedcom = null;
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     public GeneanetExportAction() {
         super();
@@ -73,23 +78,19 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
     @Override
     protected void actionPerformedImpl(ActionEvent event) {
         // Create the file chooser
-        Context contextToOpen = getContext();
+        final Context contextToOpen = getContext();
 
         if (contextToOpen != null) {
-            myGedcom = contextToOpen.getGedcom();
+            final Gedcom myGedcom = contextToOpen.getGedcom();
             String gedcomName = removeExtension(myGedcom.getName());
 
-            ArrayList<Filter> theFilters = new ArrayList<Filter>(5);
-            for (Filter f : AncestrisPlugin.lookupAll(Filter.class)) {
-                if (f.canApplyTo(contextToOpen.getGedcom())) {
-                    theFilters.add(f);
-                }
-            }
-            for (Filter f : Lookup.getDefault().lookupAll(Filter.class)) {
-                if (f.canApplyTo(contextToOpen.getGedcom())) {
-                    theFilters.add(f);
-                }
-            }
+            final List<Filter> theFilters = new ArrayList<>(5);
+            AncestrisPlugin.lookupAll(Filter.class).stream().filter((f) -> (f.canApplyTo(myGedcom))).forEachOrdered((f) -> {
+                theFilters.add(f);
+            });
+            Lookup.getDefault().lookupAll(Filter.class).stream().filter((f) -> (f.canApplyTo(myGedcom))).forEachOrdered((f) -> {
+                theFilters.add(f);
+            });
 
             SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));
 
@@ -105,11 +106,12 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                     .setFileHiding(true)
                     .setSelectedFile(new File(gedcomName + "-geneanet"))
                     .showSaveDialog();
-            
+
             if (file != null) {
+
                 GeneanetExport exportGeneanet = new GeneanetExport(myGedcom, file, options);
                 showWaitCursor();
-                String result = "";
+                final String result;
                 boolean b;
                 if (b = exportGeneanet.execute()) {
                     result = NbBundle.getMessage(GeneanetExport.class, "GeneanetExportAction.End");
@@ -127,7 +129,8 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                         Desktop.getDesktop().browse(uri);
                     } else {
                     }
-                } catch (Exception ex) {
+                } catch (IOException | URISyntaxException ex) {
+                    LOG.log(Level.FINE, "Unable to contact Geneanet", ex);
                 }
             }
         }
@@ -153,28 +156,20 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
     }
 
     private static void showWaitCursor() {
-        Mutex.EVENT.readAccess(new Runnable() {
-
-            @Override
-            public void run() {
-                JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
-                mainWindow.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-                mainWindow.getGlassPane().setVisible(true);
-                StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"));
-            }
+        Mutex.EVENT.readAccess(() -> {
+            JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
+            mainWindow.getGlassPane().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+            mainWindow.getGlassPane().setVisible(true);
+            StatusDisplayer.getDefault().setStatusText(NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.Start"));
         });
     }
 
     private static void hideWaitCursor() {
-        Mutex.EVENT.readAccess(new Runnable() {
-
-            @Override
-            public void run() {
-                StatusDisplayer.getDefault().setStatusText("");  //NOI18N
-                JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
-                mainWindow.getGlassPane().setVisible(false);
-                mainWindow.getGlassPane().setCursor(null);
-            }
+        Mutex.EVENT.readAccess(() -> {
+            StatusDisplayer.getDefault().setStatusText("");  //NOI18N
+            JFrame mainWindow = (JFrame) WindowManager.getDefault().getMainWindow();
+            mainWindow.getGlassPane().setVisible(false);
+            mainWindow.getGlassPane().setCursor(null);
         });
     }
 
