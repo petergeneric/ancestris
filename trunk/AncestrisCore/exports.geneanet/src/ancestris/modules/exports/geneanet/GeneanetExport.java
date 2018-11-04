@@ -24,6 +24,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
+import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAlias;
@@ -38,11 +39,11 @@ import genj.util.Origin;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import spin.Spin;
 
@@ -98,6 +99,7 @@ public class GeneanetExport {
         if (ok && copyGedcom != null) {
             ok = convertAssociations(copyGedcom);
             ok &= convertOther(copyGedcom);
+            ok &= convertHeader(copyGedcom);
         }
 
         // Save gedcom copy
@@ -150,6 +152,9 @@ public class GeneanetExport {
         String rela = null;
 
         LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingAssos"));
+        
+        boolean is55 = Grammar.V55.equals(gedcom.getGrammar());
+          final String type = "INDI"; // in geneanet, type is always INDI, not "prop.getTargetType()"
 
         final List<PropertyAssociation> list = (List<PropertyAssociation>) gedcom.getPropertiesByClass(PropertyAssociation.class);
         for (PropertyAssociation prop : list) {
@@ -157,7 +162,7 @@ public class GeneanetExport {
             LOG.log(Level.INFO, prop.getDisplayValue());
             final Indi indiRela = (Indi) prop.getEntity();
             final Property propAsso = prop.getTarget().getParent();
-            final String type = "INDI"; // in geneanet, type is always INDI, not "prop.getTargetType()"
+          
             final Property relaProp = prop.getProperty("RELA");
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
@@ -168,12 +173,18 @@ public class GeneanetExport {
 
             // Add to second asso entity
             Property parent = propAsso.addProperty("ASSO", "@" + indiRela.getId() + "@");
-            parent.addProperty("TYPE", type);
+           if (is55){
+               parent.addProperty("TYPE", type);
+           }
             parent.addProperty("RELA", rela);
         }
 
         LOG.log(Level.INFO, "====================");
-        final Entity entity = gedcom.getFirstEntity("HEAD");
+        return true;
+    }
+
+    private boolean convertHeader(Gedcom gedcom1) throws MissingResourceException {
+        final Entity entity = gedcom1.getFirstEntity("HEAD");
         final Property property = entity.getProperty("NOTE");
         final String note = NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.NoteWarning");
         if (property != null) {
@@ -183,14 +194,9 @@ public class GeneanetExport {
         } else {
             entity.addProperty("NOTE", note);
         }
-        final Property dest = entity.getProperty("DEST");
-        if (dest != null) {
-            dest.setValue("Geneanet");
-        } else {
-            entity.addProperty("DEST", "Geneanet");
-        }
+        // File for Geneanet.
+       gedcom1.setDestination("Geneanet");
         LOG.log(Level.INFO, note);
-
         return true;
     }
 
@@ -254,8 +260,7 @@ public class GeneanetExport {
         // Conversion for indis 
         for (Entity entity : gedcom.getIndis()) {
             // Convert ALIA to NAME
-            final Property[] props = entity.getProperties("ALIA");
-            for (Property p : props) {
+            for (Property p : entity.getProperties("ALIA")) {
                 Property parent = p.getParent();
                 if (!(p instanceof PropertyAlias)) {
                     int pos = parent.getPropertyPosition(p);
@@ -265,25 +270,49 @@ public class GeneanetExport {
                         Property pp = parent.addProperty("NAME", "", pos); // for names, set it in two steps.
                         pp.setValue(value);
                     } catch (GedcomException ex) {
-                        Exceptions.printStackTrace(ex);
+                        LOG.log(Level.WARNING, "Error during ALIA conversion", ex);
                     }
                 }
             }
 
             // Convert NSFX to NICK
-            final List<Property> propList = entity.getAllProperties("NSFX");
-            for (Property p : propList) {
-                Property parent = p.getParent();
+            for (Property p : entity.getAllProperties("NSFX")) {
+                final Property parent = p.getParent();
                 int pos = parent.getPropertyPosition(p);
                 String value = p.getValue();
                 parent.delProperty(p);
                 try {
                     parent.addProperty("NICK", value, pos);
                 } catch (GedcomException ex) {
-                    Exceptions.printStackTrace(ex);
+                    LOG.log(Level.WARNING, "Error during NSFX conversion", ex);
                 }
             }
         }
+        
+         // Convert _TIME to TIME
+         for (Entity entity : gedcom.getEntities()) {
+            for (Property p : entity.getAllProperties("_TIME")) {
+                final Property parent = p.getParent();
+                final int pos = parent.getPropertyPosition(p);
+                String value = p.getValue();
+                parent.delProperty(p);
+                try {
+                    parent.addProperty("TIME", value, pos);
+                } catch (GedcomException ex) {
+                    LOG.log(Level.WARNING, "Error during _TIME conversion", ex);
+                }
+            }
+         }
+         
+          // Remove all "_TAG"
+         for (Entity entity : gedcom.getEntities()) {
+            for (Property p : entity.getAllSpecificProperties()) {
+                final Property parent = p.getParent();
+                final int pos = parent.getPropertyPosition(p);
+                parent.delProperty(p);
+            }
+         }
+
         return true;
     }
 }

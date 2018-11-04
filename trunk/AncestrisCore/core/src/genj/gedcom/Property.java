@@ -23,7 +23,6 @@ import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.util.Resources;
 import genj.util.WordBuffer;
 import genj.util.swing.ImageIcon;
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,9 +57,20 @@ public abstract class Property implements Comparable<Property> {
     public final static String LABEL = resources.getString("prop");
     /** the tag */
     private String tag = null;
+    
+    private final boolean specific;
 
     protected Property(String tag) {
         this.tag = tag;
+        this.specific = tag.startsWith("_");
+    }
+    
+    /**
+     * Getter.
+     * @return true if tag is not a standard specification Tag. 
+     */
+    public boolean isSpecific() {
+        return specific;
     }
 
     /**
@@ -761,7 +771,7 @@ public abstract class Property implements Comparable<Property> {
 
     
     public List<Property> getAllProperties(String tag) {
-        List<Property> props = new ArrayList<Property>(10);
+        List<Property> props = new ArrayList<>(10);
         getAllPropertiesRecursively(props, tag);
         return props;
     }
@@ -775,6 +785,22 @@ public abstract class Property implements Comparable<Property> {
             }
             child.getAllPropertiesRecursively(props, tag);
         }
+    }
+    
+    public List<Property> getAllSpecificProperties() {
+         List<Property> props = new ArrayList<>(10);
+        getAllSpecificPropertiesRecursively(props);
+        return props;
+    }
+    
+    private void getAllSpecificPropertiesRecursively(List<Property> props) {
+        for (int c = 0; c < getNoOfProperties(); c++) {
+            Property child = getProperty(c);
+            if (child.isSpecific()) {
+                props.add(child);
+            }
+            child.getAllSpecificPropertiesRecursively(props);
+        } 
     }
     
     /**
