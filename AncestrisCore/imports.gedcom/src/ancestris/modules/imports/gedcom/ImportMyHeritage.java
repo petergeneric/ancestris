@@ -17,8 +17,6 @@ import static ancestris.modules.imports.gedcom.Bundle.importmyheritage_name;
 import static ancestris.modules.imports.gedcom.Bundle.importmyheritage_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
-import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Grammar;
 import genj.gedcom.Property;
@@ -27,6 +25,8 @@ import genj.gedcom.PropertySource;
 import genj.gedcom.TagPath;
 import java.io.IOException;
 import java.util.List;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -88,10 +88,7 @@ public class ImportMyHeritage extends Import {
         if (super.process()) {
             return true;
         }
-        if (processOther()) {
-            return true;
-        }
-        return false;
+        return processOther();
     }
     
     /**
@@ -172,11 +169,9 @@ public class ImportMyHeritage extends Import {
         // Move OBJE:FORM under OBJE:FILE for grammar 5.5.1
         if (gedcom.getGrammar().equals(Grammar.V551)) {
             List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
-            Property obje = null;
-            Property form = null;
             for (Property file : fileList) {
-                obje = file.getParent();
-                form = obje.getProperty("FORM");
+                final Property obje = file.getParent();
+                final Property form = obje.getProperty("FORM");
                 if (form != null) {
                     if (file.getProperty("FORM") == null) {
                         file.addProperty("FORM", form.getValue());
@@ -187,7 +182,7 @@ public class ImportMyHeritage extends Import {
                 } else {
                     if (file.getProperty("FORM") == null) {
                         String value = file.getValue();
-                        String ext = "";
+                        String ext;
                         if (value.startsWith("http")) {
                             ext = "web";
                         } else {
@@ -233,11 +228,7 @@ public class ImportMyHeritage extends Import {
                 reduceEvents(entity, "CREM");
                 reduceEvents(entity, "CONF");
             }
-
-            
         }
-        
-        
         
         return hasErrors;
     }
