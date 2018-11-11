@@ -72,6 +72,7 @@ public class EventWrapper {
     private boolean hasAttribute = false;   // attribute of event if of type PropertyChoiceValue
     private Property dummyProperty = null;  // Temporary gedcom to attach date and place property
     public PropertyDate date = null;        // Date temp property (to be saved in gedcom)
+    public String time = "";                // Time of event (optional)
     public PropertyPlace place = null;      // Place temp property (to be saved in gedcom)
     public String dayOfWeek = "";           // Displayed day of week (calculated)
     public String age = "";                 // Displayed age as a string in full (calculated)
@@ -145,6 +146,8 @@ public class EventWrapper {
             // Age (for table (eventAge) and description (age) and value (ageAsDouble)
             calcAge(indi, property);
             
+            // Display _TIME
+            this.time = getTimeOfEvent();
 
             // Place of event
             this.place = (PropertyPlace) dummyProperty.addProperty("PLAC", "");
@@ -213,6 +216,10 @@ public class EventWrapper {
 
     public void setDescription(String text) {
         description = text;
+    }
+
+    public void setTime(String text) {
+        time = text;
     }
 
     public void setPlace(String text) {
@@ -611,6 +618,23 @@ public class EventWrapper {
                 
             }
 
+            // Time (set time, and if empty, remove it)
+            Property tmpTime = eventProperty.getProperty("_TIME", false);
+            if (tmpTime == null) { // there is no time tag in the gedcom for that event...
+                String val = time.trim();
+                if (!val.isEmpty()) { // if new one not empty, add it
+                    eventProperty.addProperty("_TIME", val);
+                } else { // if empty, nothing
+                }
+            } else { // there is a time in the gedcom for that event...
+                String val = time.trim();
+                if (!val.isEmpty()) { // if new one not empty, replace only if different
+                    Utils.setDistinctValue(tmpTime, val);
+                } else { // if empty, remove it if event is not birth
+                    eventProperty.delProperty(tmpTime);
+                }
+            }
+
             // Place (set place, and if empty, remove it)
             boolean noplace = false;
             PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
@@ -749,6 +773,12 @@ public class EventWrapper {
         Property type = eventProperty.getProperty("TYPE");
         
         return hasAttribute ? eventProperty.getDisplayValue().trim() : (type != null ? type.getDisplayValue() : "");
+    }
+
+    private String getTimeOfEvent() {
+        
+        Property time = eventProperty.getProperty("_TIME");
+        return time != null ? time.getDisplayValue(): "";
     }
 
     private void createDummyProperty(Gedcom gedcom) {
