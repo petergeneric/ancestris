@@ -20,21 +20,21 @@ public class SourceMatcher extends EntityMatcher<Source, SourceMatcherOptions> {
         int ret = 0;
 
         if (!left.getTitle().isEmpty() && left.getTitle().equals(right.getTitle())) {
-            ret += 15;
+            ret += 35;
         }
 
         Property abbrLeft = left.getProperty("ABBR");
         Property abbrRight = right.getProperty("ABBR");
         if (abbrLeft != null && abbrRight != null && !abbrLeft.getDisplayValue().isEmpty() && !abbrRight.getDisplayValue().isEmpty()
                 && abbrRight.getDisplayValue().equals(abbrLeft.getDisplayValue())) {
-            ret += 10;
+            ret += 35;
         }
 
         Property authLeft = left.getProperty("AUTH");
         Property authRight = right.getProperty("AUTH");
         if (authLeft != null && authRight != null && !authLeft.getDisplayValue().isEmpty() && !authRight.getDisplayValue().isEmpty()
                 && authRight.getDisplayValue().equals(authLeft.getDisplayValue())) {
-            ret += 15;
+            ret += 35;
         }
 
         Property pLeft = left.getProperty("REPO");
@@ -42,13 +42,13 @@ public class SourceMatcher extends EntityMatcher<Source, SourceMatcherOptions> {
         Property repoLeft = (pLeft != null && pLeft instanceof PropertyRepository) ? ((PropertyRepository) pLeft).getTargetEntity() : null;
         Property repoRight = (pRight != null && pRight instanceof PropertyRepository) ? ((PropertyRepository) pRight).getTargetEntity() : null;
         if (repoLeft != null && repoLeft.equals(repoRight)) {
-            ret += 10;
+            ret += 35;
         }
 
         String lS = left.getText();
         String rS = right.getText();
         if (lS != null && rS != null && !lS.isEmpty() && !rS.isEmpty()) {
-            int s = (int) (similarity(lS, rS) * 50);
+            int s = (int) (similarity(lS, rS) * 40);
             ret += s;
         }
 
