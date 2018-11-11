@@ -337,6 +337,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDate = new genj.edit.beans.DateBean();
         dayOfWeek = new javax.swing.JLabel();
         ageAtEvent = new javax.swing.JLabel();
+        timelabel = new javax.swing.JLabel();
+        eventTime = new javax.swing.JTextField();
         placeLabel = new javax.swing.JLabel();
         eventPlaceCombo = new javax.swing.JComboBox();
         eventPlaceButton = new javax.swing.JButton();
@@ -1131,6 +1133,13 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         org.openide.awt.Mnemonics.setLocalizedText(ageAtEvent, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.ageAtEvent.text")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(timelabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.timelabel.text")); // NOI18N
+
+        eventTime.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
+        eventTime.setText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.eventTime.text")); // NOI18N
+        eventTime.setMinimumSize(new java.awt.Dimension(12, 15));
+        eventTime.setPreferredSize(new java.awt.Dimension(78, 22));
+
         org.openide.awt.Mnemonics.setLocalizedText(placeLabel, org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.placeLabel.text")); // NOI18N
 
         eventPlaceCombo.setEditable(true);
@@ -1251,7 +1260,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(maxNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventNoteScrollPane)
+                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
                     .addGroup(eventNotePanelLayout.createSequentialGroup()
                         .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2))))
@@ -1400,7 +1409,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .addGap(2, 2, 2)
                 .addComponent(eventSourceTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                .addComponent(eventSourceScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 34, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(repoPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -1466,6 +1475,10 @@ public class IndiPanel extends Editor implements DocumentListener {
                                 .addComponent(dayOfWeek)
                                 .addGap(18, 18, 18)
                                 .addComponent(ageAtEvent)
+                                .addGap(18, 18, 18)
+                                .addComponent(timelabel)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(eventTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(eventRightLayout.createSequentialGroup()
                                 .addComponent(eventDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -1481,7 +1494,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1496,14 +1509,16 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(dayOfWeek)
-                    .addComponent(ageAtEvent))
+                    .addComponent(ageAtEvent)
+                    .addComponent(timelabel)
+                    .addComponent(eventTime, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventRightLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(placeLabel)
                     .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventPlaceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 84, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
@@ -2242,6 +2257,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JTextField eventSourceTitle;
     private javax.swing.JSplitPane eventSplitPane;
     private javax.swing.JTable eventTable;
+    private javax.swing.JTextField eventTime;
     private javax.swing.JLabel eventTitle;
     private javax.swing.JTree familyTree;
     private javax.swing.JButton fatherButton;
@@ -2288,6 +2304,7 @@ public class IndiPanel extends Editor implements DocumentListener {
     private javax.swing.JButton spousesButton;
     private javax.swing.JButton stickyButton;
     private javax.swing.JTextArea textAreaPhotos;
+    private javax.swing.JLabel timelabel;
     private javax.swing.JLabel title;
     private javax.swing.JPanel topPanel;
     private javax.swing.JRadioButton unknownRadioButton;
@@ -2739,6 +2756,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         lastnameText.getDocument().addDocumentListener(this);
         nameDetails.addListeners(this);
         eventDate.addChangeListener(new EventDateListener());
+        eventTime.getDocument().addDocumentListener(new EventTimeListener());
         eventPlaceText.getDocument().addDocumentListener(new EventPlaceListener());
         
         // Events
@@ -3039,6 +3057,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         eventDate.setVisible(show);
         dayOfWeek.setVisible(show);
         ageAtEvent.setVisible(show);
+        timelabel.setVisible(show);
+        eventTime.setVisible(show);
         placeLabel.setVisible(show);
         eventPlaceCombo.setVisible(show);
         eventPlaceButton.setVisible(show);
@@ -3075,6 +3095,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                 }
                 ageAtEvent.setText(event.age);
                 dayOfWeek.setText(event.dayOfWeek);
+                
+                // Time
+                eventTime.setText(event.time);
 
                 // Place
                 if (event.place != null) {
@@ -3758,6 +3781,17 @@ public class IndiPanel extends Editor implements DocumentListener {
         EventWrapper event = getCurrentEvent();
         if (event != null) {
             event.setDate(eventDate);
+        }
+    }
+
+    private void updateEventTime(DocumentEvent e) {
+        if (isBusyEvent) {
+            return;
+        }
+        EventWrapper event = getCurrentEvent();
+        if (event != null) {
+            event.setTime(eventTime.getText());
+            triggerChange();
         }
     }
 
@@ -4638,6 +4672,24 @@ public class IndiPanel extends Editor implements DocumentListener {
 
         public void changedUpdate(DocumentEvent e) {
             updateEventDescription(e);
+        }
+    }
+
+    /**
+     * Document listener methods for Event description
+     */
+    private class EventTimeListener implements DocumentListener {
+
+        public void insertUpdate(DocumentEvent e) {
+            updateEventTime(e);
+        }
+
+        public void removeUpdate(DocumentEvent e) {
+            updateEventTime(e);
+        }
+
+        public void changedUpdate(DocumentEvent e) {
+            updateEventTime(e);
         }
     }
 
