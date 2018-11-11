@@ -203,7 +203,7 @@
         <DESI super="INDI:SUBM"/>
         <SOUR super="INDI:NAME:SOUR"/>
         <ASSO hide="1" type="PropertyAssociation" img="Association">
-            <TYPE default="1" cardinality="0:1" type="PropertySimpleValue" img="Type"/>   <!--  exception to Grammar to allow association with entities other than INDI -->
+         <!--    <TYPE default="1" cardinality="0:1" type="PropertySimpleValue" img="Type"/> exception to Grammar to allow association with entities other than INDI not allowed in 5.5.1 -->
             <RELA default="1" cardinality="1:1" type="PropertyRelationship" img="Type"/>
             <SOUR super="INDI:SOUR"/>
             <NOTE super="INDI:NAME:NOTE"/>

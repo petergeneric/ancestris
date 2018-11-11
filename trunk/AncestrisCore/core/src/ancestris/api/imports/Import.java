@@ -21,6 +21,7 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomOptions;
+import genj.gedcom.Grammar;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyAssociation;
@@ -32,7 +33,6 @@ import genj.io.GedcomFileReader;
 import genj.io.GedcomFileWriter;
 import genj.io.GedcomFormatException;
 import genj.util.Origin;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -43,12 +43,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.MissingResourceException;
 import java.util.concurrent.Callable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import spin.Spin;
 
@@ -69,9 +71,9 @@ import spin.Spin;
  *
  */
 public abstract class Import implements ImportRunner {
-    
+
     protected static String EOL = System.getProperty("line.separator");
-    
+
     protected static final String INDI_TAG_YES = "BIRT|CHR|DEAT|BURI|CREM|"
             + "ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|"
             + "CENS|PROB|WILL|GRAD|RETI|";
@@ -99,20 +101,22 @@ public abstract class Import implements ImportRunner {
     // static Pattern pattern = Pattern.compile("^1 REPO (.*)");
     protected static Pattern gedcom_line = Pattern.compile("^(\\d) (_*\\w+)(.*)");
 
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
+
     // Header
     private boolean headerzone = false;
-    
+
     // Destination
-    private static int TAG_MISSING = 0;
-    private static int TAG_INVALID = 1;
-    private static int TAG_VALID = 2;
+    private final static int TAG_MISSING = 0;
+    private final static int TAG_INVALID = 1;
+    private final static int TAG_VALID = 2;
     private int destination_found = TAG_MISSING;
-    
+
     // Place format
-    private static int PLACE_MAX_LENGTH = 20;
+    private final static int PLACE_MAX_LENGTH = 20;
     private int place_found = TAG_MISSING;
-    private Integer[] place_format_sizes = new Integer[PLACE_MAX_LENGTH];
-    
+    private final Integer[] place_format_sizes = new Integer[PLACE_MAX_LENGTH];
+
     // Lists of entities
     private static HashMap<String, ImportEnt> hashIndis;
     private static HashMap<String, ImportEnt> hashFams;
@@ -121,7 +125,7 @@ public abstract class Import implements ImportRunner {
     private static HashMap<String, ImportEnt> hashSours;
     private static HashMap<String, ImportEnt> hashRepos;
     private static HashMap<String, ImportEnt> hashSubms;
-    
+
     /**
      * our files
      */
@@ -140,7 +144,7 @@ public abstract class Import implements ImportRunner {
     private int state = 0;
     private int progress;
     private boolean cancel = false;
-    
+
     /**
      * Constructor
      */
@@ -150,25 +154,27 @@ public abstract class Import implements ImportRunner {
     /**
      * Gives back import name
      */
+    @Override
     public abstract String toString();
 
     /**
      * Identifies generic module
+     *
+     * @return trus if generic
      */
     public abstract boolean isGeneric();
 
     /**
      * Gives back output file name
+     *
+     * @return Import Comment
      */
     protected abstract String getImportComment();
 
-    
-    
     public void setTabName(String tabName) {
         console = new Console(tabName);
     }
-    
-    
+
     ////////////////////////////////////////////////////////////////////////////
     // Overall launch panel and process
     //
@@ -183,12 +189,12 @@ public abstract class Import implements ImportRunner {
             }
         });
         String title = NbBundle.getMessage(Import.class, "Import.progress.importing", inputFile.getName());
-        DialogManager dialog = DialogManager.create(title, importPanel, false).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(new Object[] {}).setResizable(false);
+        DialogManager dialog = DialogManager.create(title, importPanel, false).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(new Object[]{}).setResizable(false);
         dialog.show();
 
         // Prepare console window
         setTabName(NbBundle.getMessage(Import.class, "OpenIDE-Module-Name") + " - " + toString());
-        
+
         // Fix header and lines
         ImportRunner importTask = (ImportRunner) Spin.off(ImportFactory.createImport(this));
         ProgressListener.Dispatcher.processStarted(importTask);
@@ -199,8 +205,7 @@ public abstract class Import implements ImportRunner {
             return;
         }
         importPanel.increment();
-        
-        
+
         // Open Gedcom normally. Avoid potential error message by being quiet.
         GedcomMgr.getDefault().setQuiet(true);
         Context context = GedcomDirectory.getDefault().openAncestrisGedcom(FileUtil.toFileObject(outputFile));
@@ -210,8 +215,7 @@ public abstract class Import implements ImportRunner {
             return;
         }
         importPanel.increment();
-        
-        
+
         // Fix gedcom (it will need to be reopen afterwards to take into account all modifications, therefore it needs to be saved)
         final Gedcom importedGedcom = context.getGedcom();
         importedGedcom.setName(inputFile.getName());
@@ -242,11 +246,11 @@ public abstract class Import implements ImportRunner {
         }
         importPanel.requestFocusInWindow();
         importPanel.increment();
-        
+
         // Ask user if he wants to see conversion stats
         dialog.cancel();
-        Object rc = DialogManager.create(NbBundle.getMessage(Import.class, "Import.completed"), 
-                NbBundle.getMessage(Import.class, "cc.importResults?", inputFile.getName(), toString(), 
+        Object rc = DialogManager.create(NbBundle.getMessage(Import.class, "Import.completed"),
+                NbBundle.getMessage(Import.class, "cc.importResults?", inputFile.getName(), toString(),
                         getIndisNb(), getFamsNb(), getNotesNb(), getObjesNb(),
                         getSoursNb(), getReposNb(), getSubmsNb(), getChangesNb()))
                 .setMessageType(DialogManager.INFORMATION_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show();
@@ -254,7 +258,6 @@ public abstract class Import implements ImportRunner {
             showDetails();
         }
 
-        
     }
 
     public void cancelProcess() {
@@ -262,8 +265,6 @@ public abstract class Import implements ImportRunner {
         cancelProcess = true;
     }
 
-
-    
     ////////////////////////////////////////////////////////////////////////////
     // Trackable methods
     //
@@ -283,7 +284,7 @@ public abstract class Import implements ImportRunner {
                 }
                 progress = (state * 50 * nbOfFileLines + input.getLines()) / nbOfFileLines;
                 return progress;
-                
+
             case CONVERTGEDCOM:
                 return progress;
             default:
@@ -293,7 +294,8 @@ public abstract class Import implements ImportRunner {
 
     /**
      * Returns current read state as explanatory string
-     * @return 
+     *
+     * @return
      */
     @Override
     public String getState() {
@@ -313,7 +315,6 @@ public abstract class Import implements ImportRunner {
         return NbBundle.getMessage(Import.class, "Import.progress.importing", tabName);
     }
 
-    
     public void incrementProgress() {
         progress += 10;
         if (progress > 100) {
@@ -322,18 +323,19 @@ public abstract class Import implements ImportRunner {
     }
     ////////////////////////////////////////////////////////////////////////////
 
-
     /**
-     * This runs the first 3 steps of the import process. This method is a file filter.
+     * This runs the first 3 steps of the import process. This method is a file
+     * filter.
      *
      * @param fileIn Gedcom to import
      * @param fileOut Temporary Gedcom file created
      * @return true if conversion is successful
      */
+    @Override
     public boolean run(File fileIn, File fileOut) {
         this.tabName = fileIn.getName();
         init();
-        
+
         // Get nb of file lines of file
         state = READLINES;
         try {
@@ -343,10 +345,10 @@ public abstract class Import implements ImportRunner {
                 // Loop just in case the file is > Long.MAX_VALUE or skip() decides to not read the entire file
             }
             nbOfFileLines = (count.getLineNumber() + 1) / 50;   // 2 (we will read twice) * nblines / 100  (percent)
-        } catch (Exception ex) {
-            Exceptions.printStackTrace(ex);
+        } catch (IOException ex) {
+            LOG.log(Level.INFO, "Error during File Reading.", ex);
         }
-        
+
         // Read pass. No writing is made
         try {
             input = GedcomFileReader.create(fileIn);
@@ -368,24 +370,24 @@ public abstract class Import implements ImportRunner {
             //Exceptions.printStackTrace(e1);
             return false;
         } catch (GedcomFormatException e) {
-            String l = ""+e.getLine();
+            String l = "" + e.getLine();
             JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", l));
             //Exceptions.printStackTrace(e);
             return false;
-        } catch (Exception e) {
+        } catch (IOException e) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "error.other", e.getMessage()));
-            e.printStackTrace();
-            //Exceptions.printStackTrace(e);
+            LOG.log(Level.INFO, "Error during new file creation.", e);
             return false;
         }
 
         // maintenant on effectue toutes les transformations
         state++;
-        
+
         try {
             output = new GedcomFileWriter(fileOut, input.getCharset(), getEOL(fileIn));
         } catch (IOException e1) {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.create.error", fileOut.getName()));
+            LOG.log(Level.INFO, "Error during new file creation.", e1);
             return false;
         }
         try {
@@ -423,12 +425,13 @@ public abstract class Import implements ImportRunner {
             JOptionPane.showMessageDialog(null, NbBundle.getMessage(Import.class, "file.not.found", fileIn.getName()));
             return false;
         } catch (GedcomFormatException e) {
-            String l = ""+e.getLine();
+            String l = "" + e.getLine();
             JOptionPane.showMessageDialog(null, e.getMessage() + "\n" + NbBundle.getMessage(Import.class, "error.line", l));
             //Exceptions.printStackTrace(e);
             return false;
-        } catch (Exception e) {
+        } catch (IOException | MissingResourceException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
+            LOG.log(Level.INFO, "Error during new file reading.", e);
             return false;
         }
 
@@ -437,8 +440,6 @@ public abstract class Import implements ImportRunner {
     }
 
     ///////////////////////////// START OF LOGIC ///////////////////////////////
-    
-    
     /**
      * *** 0 *** Initialisation of variables
      */
@@ -447,28 +448,28 @@ public abstract class Import implements ImportRunner {
         headerzone = false;
         destination_found = TAG_MISSING;
         place_found = TAG_MISSING;
-        for (int i = 0 ; i < PLACE_MAX_LENGTH ; i++) {
+        for (int i = 0; i < PLACE_MAX_LENGTH; i++) {
             place_format_sizes[i] = 0;
         }
-        hashIndis = new HashMap<String, ImportEnt>();
-        hashFams  = new HashMap<String, ImportEnt>();
-        hashNotes = new HashMap<String, ImportEnt>();
-        hashObjes = new HashMap<String, ImportEnt>();
-        hashSours = new HashMap<String, ImportEnt>();
-        hashRepos = new HashMap<String, ImportEnt>();
-        hashSubms = new HashMap<String, ImportEnt>();
+        hashIndis = new HashMap<>();
+        hashFams = new HashMap<>();
+        hashNotes = new HashMap<>();
+        hashObjes = new HashMap<>();
+        hashSours = new HashMap<>();
+        hashRepos = new HashMap<>();
+        hashSubms = new HashMap<>();
     }
 
     /**
-     * *** 1 *** This is the first step of import process. The file is analysed line by line.
-     * Purpose is to :
-     * - Get structure of gedcom file for later display somewhere (origin, number of entities of each type, number of user define labels and types, etc.)
-     * - Get gedcom version (default is 5.5 defined in declaration parameters)
-     * - Determine destination type : missing or invalid or correct
-     * - Remember all entities IDs
+     * *** 1 *** This is the first step of import process. The file is analysed
+     * line by line. Purpose is to : - Get structure of gedcom file for later
+     * display somewhere (origin, number of entities of each type, number of
+     * user define labels and types, etc.) - Get gedcom version (default is 5.5
+     * defined in declaration parameters) - Determine destination type : missing
+     * or invalid or correct - Remember all entities IDs
      */
     protected void firstPass() {
-        
+
         // Set headerzone
         if (headerzone && (input.getLevel() == 0) && !input.getTag().equals("HEAD")) {
             headerzone = false;
@@ -476,13 +477,12 @@ public abstract class Import implements ImportRunner {
         if ((input.getLevel() == 0) && input.getTag().equals("HEAD")) {
             headerzone = true;
         }
-        
-        
+
         // Get gedcom version (default is 5.5 defined in declaration parameters)
         if ((input.getLevel() == 2) && input.getTag().equals("VERS")) {
             GEDCOM_VERSION = input.getValue();
         }
-        
+
         // Determine destination type : missing or invalid or correct
         if ((input.getLevel() == 1) && input.getTag().equals("DEST")) {
             String value = input.getValue();
@@ -492,7 +492,7 @@ public abstract class Import implements ImportRunner {
                 destination_found = TAG_INVALID;
             }
         }
-        
+
         // Determine place tag : missing or invalid or correct
         if (headerzone && (input.getLevel() == 1) && input.getTag().equals("PLAC")) {
             try {
@@ -510,24 +510,23 @@ public abstract class Import implements ImportRunner {
                 }
             }
         }
-        
+
         // Memorize all different place form lengths
         if (input.getTag().equals("PLAC") && !input.getValue().isEmpty()) {
             int length = input.getValue().split(PropertyPlace.JURISDICTION_SEPARATOR).length;
             if (length < PLACE_MAX_LENGTH) {
-                place_format_sizes[length]++;;
+                place_format_sizes[length]++;
             }
         }
-        
+
         // Remember all entities IDs
         memorizeEntities();
     }
 
-    
     /**
-     * *** 2 *** This is the second step of the import process. The file is fixed line by line "on the fly".
-     * Purpose is to :
-     * - fix all main grammar errors (yes tags, invalid tags) that can be fixed on the fly
+     * *** 2 *** This is the second step of the import process. The file is
+     * fixed line by line "on the fly". Purpose is to : - fix all main grammar
+     * errors (yes tags, invalid tags) that can be fixed on the fly
      */
     protected boolean process() throws IOException {
         if (processHeader()) {
@@ -539,16 +538,14 @@ public abstract class Import implements ImportRunner {
         if (processInvalidTag()) {
             return true;
         }
-        if (processInvalidDates()) {
-            return true;
-        }
-        return false;
+        return processInvalidDates();
     }
 
     /**
-     * *** 3 *** This is the third step of the import process. Neccessary lines are added at the end before the last TRLR line is written.
-     * Purpose is to :
-     * - fix all main grammar errors (yes tags, invalid tags) that can be fixed on the fly
+     * *** 3 *** This is the third step of the import process. Neccessary lines
+     * are added at the end before the last TRLR line is written. Purpose is to
+     * : - fix all main grammar errors (yes tags, invalid tags) that can be
+     * fixed on the fly
      */
     protected void finalise() throws IOException {
         addMissingEntities();
@@ -557,10 +554,10 @@ public abstract class Import implements ImportRunner {
     }
 
     /**
-     * *** 4 *** This is the fourth step of the import process. The gedcom file generated in
-     * step one as been loaded in memory and can be manipulated using all
-     * ancestris core functionnalities. .
-     * This is called only after first 3 steeps are fine.
+     * *** 4 *** This is the fourth step of the import process. The gedcom file
+     * generated in step one as been loaded in memory and can be manipulated
+     * using all ancestris core functionnalities. . This is called only after
+     * first 3 steeps are fine.
      *
      * @param gedcom
      * @return
@@ -573,36 +570,24 @@ public abstract class Import implements ImportRunner {
     }
 
     /**
-     * *** 5 *** This is the fifth and last step of the import process. The gedcom has fully been repaired.
-     * This is mainly to let the opportunity to conclude and write an end message.
-     * This is called from the import method.
+     * *** 5 *** This is the fifth and last step of the import process. The
+     * gedcom has fully been repaired. This is mainly to let the opportunity to
+     * conclude and write an end message. This is called from the import method.
      */
+    @Override
     public void complete() {
         progress = 100;
         console.println(NbBundle.getMessage(Import.class, "Import.completed"));
         console.println("=============================");
         //console.show();
     }
-    
-    
+
     ////////////////////////////  END OF LOGIC /////////////////////////////////
-
-    
-    
-    
-
-    
-    
-    
-    
-    
     ////////////////////////////////////////////////////////////////////////////
     //                                FIXES                                   //
     ////////////////////////////////////////////////////////////////////////////
-
-    
     private void memorizeEntities() {
-        
+
         // Indis
         memorizeEntity("INDI", hashIndis);
         memorizeProperty("HUSB", hashIndis);
@@ -610,7 +595,7 @@ public abstract class Import implements ImportRunner {
         memorizeProperty("CHIL", hashIndis);
         memorizeProperty("ALIA", hashIndis);
         memorizeProperty("ASSO", hashIndis);
-        
+
         // Fams
         memorizeEntity("FAM", hashFams);
         memorizeProperty("FAMS", hashFams);
@@ -619,26 +604,25 @@ public abstract class Import implements ImportRunner {
         // Notes
         memorizeEntity("NOTE", hashNotes);
         memorizeProperty("NOTE", hashNotes);
-        
+
         // Objes
         memorizeEntity("OBJE", hashObjes);
         memorizeProperty("OBJE", hashObjes);
-        
+
         // Sours
         memorizeEntity("SOUR", hashSours);
         memorizeProperty("SOUR", hashSours);
-        
+
         // Repos
         memorizeEntity("REPO", hashRepos);
         memorizeProperty("REPO", hashRepos);
-        
+
         // Subms
         memorizeEntity("SUBM", hashSubms);
         memorizeProperty("SUBM", hashSubms);
         memorizeProperty("SUBN", hashSubms);
         memorizeProperty("ANCI", hashSubms);
         memorizeProperty("DESI", hashSubms);
-        
 
     }
 
@@ -689,7 +673,7 @@ public abstract class Import implements ImportRunner {
     }
 
     public boolean processHeader() throws IOException {
-        
+
         // DEST tag
         if (destination_found == TAG_MISSING) {
             if ((input.getLevel() == 1) && (input.getTag().equals("GEDC"))) {
@@ -739,23 +723,21 @@ public abstract class Import implements ImportRunner {
                 return true;
             }
         }
-        
-        
+
         return false;
     }
 
     /**
-     * Normallize YES_TAGS. This is called at any import.
-     * Convert all "YES_TAGS" (eg BIRT, EVEN, ...) where value is not null 
-     * and different from "Y" from
+     * Normallize YES_TAGS. This is called at any import. Convert all "YES_TAGS"
+     * (eg BIRT, EVEN, ...) where value is not null and different from "Y" from
      * <pre>
-     * n TAG value</pre>
-     * to 
+     * n TAG value</pre> to
      * <pre>
      * n TAG
      * n+1 NOTE value</pre>
+     *
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public boolean processYesTag() throws IOException {
         Matcher matcher = tag_y.matcher(input.getTag());
@@ -765,11 +747,11 @@ public abstract class Import implements ImportRunner {
             int level = input.getLevel();
             String line = input.getLine();
             if (input.getValue().length() != 0) {
-                if (input.getValue().equalsIgnoreCase("y")){
+                if (input.getValue().equalsIgnoreCase("y")) {
                     output.writeLine(input);
                 } else {
                     result = output.writeLine(level, tag, null);
-                    result += "\n"+output.writeLine(level+1, "NOTE", input.getValue());
+                    result += "\n" + output.writeLine(level + 1, "NOTE", input.getValue());
                 }
             } else {
                 String temp = input.getNextLine(false);
@@ -779,7 +761,7 @@ public abstract class Import implements ImportRunner {
                     result = output.writeLine(level, tag, "Y");
                 }
             }
-            if (result != null){
+            if (result != null) {
                 nbChanges++;
                 console.println(NbBundle.getMessage(Import.class, "Import.fixYesTag", line + " ==> " + result));
             }
@@ -790,14 +772,15 @@ public abstract class Import implements ImportRunner {
     }
 
     /**
-     * Fix invalid tags and prefix them with "_".  This is called at any import.
+     * Fix invalid tags and prefix them with "_". This is called at any import.
+     *
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public boolean processInvalidTag() throws IOException {
-        
+
         String lineTag = input.getTag();
-        
+
         // C'est un tag perso: on ecrit telque
         if (lineTag.startsWith("_")) {
             return false;
@@ -814,10 +797,11 @@ public abstract class Import implements ImportRunner {
     }
 
     /**
-     * Normallize DATE tags. This is called at any import.
-     * Ensure dates are formattedd as .. month year
+     * Normallize DATE tags. This is called at any import. Ensure dates are
+     * formattedd as .. month year
+     *
      * @return
-     * @throws IOException 
+     * @throws IOException
      */
     public boolean processInvalidDates() throws IOException {
         if ("DATE".equals(input.getTag())) {
@@ -829,7 +813,7 @@ public abstract class Import implements ImportRunner {
                 return true;
             }
         }
-        
+
         return false;
     }
 
@@ -858,25 +842,23 @@ public abstract class Import implements ImportRunner {
         }
         return date;
     }
-    
-    
+
     /**
-     * Fix names.  This is called at any import.
-     * Makes sure that the NAME tag has the properly constructed string from the provided subtags
-     * If not, replaces NAME string and return false.
+     * Fix names. This is called at any import. Makes sure that the NAME tag has
+     * the properly constructed string from the provided subtags If not,
+     * replaces NAME string and return false.
+     *
      * @param gedcom
-     * @return 
+     * @return
      */
     public boolean fixNames(Gedcom gedcom) {
 
-        Property rawName = null;
-        PropertyName propName = null;
         boolean hasErrors = false;
-        
+
         console.println(NbBundle.getMessage(Import.class, "Import.fixNames"));
 
         Collection<Indi> indis = gedcom.getIndis();
-        int increment = indis.size() / 10 +  1;
+        int increment = indis.size() / 10 + 1;
         int counter = 0;
         for (Indi indi : indis) {
             // increment progress
@@ -884,36 +866,38 @@ public abstract class Import implements ImportRunner {
             if (counter % increment == 0 && progress < 100) {
                 progress++;
             }
-            
-            rawName = indi.getProperty("NAME", false);
+
+            final Property rawName = indi.getProperty("NAME", false);
             if (rawName instanceof PropertyName) {
-                propName = (PropertyName) rawName;
+                final PropertyName propName = (PropertyName) rawName;
+
+                // If name is invalid, replace it
+                if (!propName.isValid() || propName.hasWarning()) {
+                    propName.fixNameValue();
+                    hasErrors = true;
+                    nbChanges++;
+                }
             }
-            // If name is invalid, replace it
-            if (propName != null && (!propName.isValid() || propName.hasWarning())) {
-                propName.fixNameValue();
-                hasErrors = true;
-                nbChanges++;
-            }
-            
         }
-        
+
         console.println("=============================");
-        
+
         return hasErrors;
     }
 
     /**
-     * Fix places.  This is called at any import.
-     * Makes sure that the PLAC tag has the properly constructed string with the proper number of jurisdictions
+     * Fix places. This is called at any import. Makes sure that the PLAC tag
+     * has the properly constructed string with the proper number of
+     * jurisdictions
+     *
      * @param gedcom
-     * @return 
+     * @return
      */
     public boolean fixPlaces(Gedcom gedcom) {
 
         boolean hasErrors = false;
         String[] locs = null;
-        
+
         console.println(NbBundle.getMessage(Import.class, "Import.fixPlaces"));
 
         int nbLocs = PropertyPlace.getFormat(gedcom.getPlaceFormat()).length;
@@ -926,7 +910,7 @@ public abstract class Import implements ImportRunner {
             if (counter % increment == 0 && progress < 100) {
                 progress++;
             }
-            
+
             locs = place.getJurisdictions();
             // If nb of jurisdictions of correct length, set it and return true
             if (locs.length == nbLocs) {
@@ -937,47 +921,42 @@ public abstract class Import implements ImportRunner {
                 nbChanges++;
             }
         }
-        
+
         console.println("=============================");
         return hasErrors;
     }
 
     /**
-     * ConvertAssociations.  This is called only for specific imports.
-     * The way associations work in ANCESTRIS is the following:
-     *    If individual A is the "relation" of B, then in A, we should have 1 ASSO B with RELA = relation
-     *    Example : if A is oncle of B, we should have in A the "1 ASSO @B@" tag with "2 RELA Oncle"
-     * In gedcoms files from other software, it seems that :
-     *    - The 1 ASSO tags are in the same direction as Ancestris
-     *    - But the 2 ASSO tags underneath events of A are the other way around and should be reversed to be put under individual B.
-     *      So if A has got 2 ASSO @B@ ; 3 RELA Notary, the notary is actually B
-     *      so then we need to go to individual B, write 1 ASSO @A@ 2 RELA Notary
-     * 
-     * The idea of this method is therefore to get all ASSOs tags that are level 2 or more (PropertySimpleValue), and leave 1 ASSO as is (PropertyAssociation)
-     * 
+     * ConvertAssociations. This is called only for specific imports. The way
+     * associations work in ANCESTRIS is the following: If individual A is the
+     * "relation" of B, then in A, we should have 1 ASSO B with RELA = relation
+     * Example : if A is oncle of B, we should have in A the "1 ASSO @B@" tag
+     * with "2 RELA Oncle" In gedcoms files from other software, it seems that :
+     * - The 1 ASSO tags are in the same direction as Ancestris - But the 2 ASSO
+     * tags underneath events of A are the other way around and should be
+     * reversed to be put under individual B. So if A has got 2 ASSO @B@ ; 3
+     * RELA Notary, the notary is actually B so then we need to go to individual
+     * B, write 1 ASSO @A@ 2 RELA Notary
+     *
+     * The idea of this method is therefore to get all ASSOs tags that are level
+     * 2 or more (PropertySimpleValue), and leave 1 ASSO as is
+     * (PropertyAssociation)
+     *
      * @param gedcom
-     * @return 
+     * @return
      */
     public boolean convertAssociations(Gedcom gedcom) {
 
-        String id = "";
-        Indi indiRela = null;
-        PropertyAssociation propAsso = null;
-        String type = null;
-        Property relaProp = null;
-        String rela = null;
-        PropertyRelationship pship = null;
-        TagPath tagpath = null;
-
         console.println(NbBundle.getMessage(Import.class, "Import.convertingAssos"));
 
-        List<Property> list = new ArrayList<Property>();
-        for (Entity entity : gedcom.getIndis()) {
+        List<Property> list = new ArrayList<>();
+        gedcom.getIndis().forEach((entity) -> {
             getPropertiesRecursively(list, "ASSO", entity);
-        }
-        for (Entity entity : gedcom.getFamilies()) {
+        });
+        gedcom.getFamilies().forEach((entity) -> {
             getPropertiesRecursively(list, "ASSO", entity);
-        }
+        });
+        final boolean isV55 = Grammar.V55.equals(gedcom.getGrammar());
         int increment = list.size() / 10 + 1;
         int counter = 0;
         for (Property prop : list) {
@@ -986,35 +965,37 @@ public abstract class Import implements ImportRunner {
             if (counter % increment == 0 && progress < 100) {
                 progress++;
             }
-            
+
             // Skip PropertyAssociation
             if (prop instanceof PropertyAssociation) {
                 continue;
             }
-            
+
             // Get initial individual B
-            id = prop.getValue().replace("@", "").trim();
-            indiRela = (Indi) gedcom.getEntity(id);  // This will be the new individual A
+            String id = prop.getValue().replace("@", "").trim();
+            final Indi indiRela = (Indi) gedcom.getEntity(id);  // This will be the new individual A
             if (indiRela == null) {
                 console.println(NbBundle.getMessage(Import.class, "Import.indiNotFound", id));
                 continue;
             }
-            
+
             // Get type, rela and tagpath
-            type = prop.getEntity().getTag();
-            relaProp = prop.getProperty("RELA");
-            rela = "";
+            final String type = prop.getEntity().getTag();
+            final Property relaProp = prop.getProperty("RELA");
+            String rela = "";
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
             }
-            tagpath = prop.getParent().getPath(true);
+            final TagPath tagpath = prop.getParent().getPath(true);
 
             // Create asso set in B
             id = prop.getEntity().getId();  // id of A
-            propAsso = (PropertyAssociation) indiRela.addProperty("ASSO", "@" + id + "@");  // add 1 ASSO @A@
-            propAsso.addProperty("TYPE", type);
-            pship = (PropertyRelationship) propAsso.getProperty("RELA", false);
-            rela +=  "@" + tagpath.toString();
+            final PropertyAssociation propAsso = (PropertyAssociation) indiRela.addProperty("ASSO", "@" + id + "@");  // add 1 ASSO @A@
+            if (isV55) {
+                propAsso.addProperty("TYPE", type);
+            }
+            final PropertyRelationship pship = (PropertyRelationship) propAsso.getProperty("RELA", false);
+            rela += "@" + tagpath.toString();
             if (pship == null) {
                 propAsso.addProperty("RELA", rela);
             } else {
@@ -1023,37 +1004,38 @@ public abstract class Import implements ImportRunner {
 
             // Add other sub-tags of A:ASSO to the new B:ASSO => copy prop/subtags to propAsso/ except RELA and TYPE
             for (Property child : prop.getProperties()) {
-                if (child.getTag().equals("RELA") || child.getTag().equals("TYPE")) {
+                if (child.getTag().equals("RELA")) {
                     continue;
+                }
+                if (child.getTag().equals("TYPE")) {
+                    if (isV55) {
+                        continue;
+                    }
+
                 }
                 movePropertiesRecursively(child, propAsso);
             }
-            
+
             // Link A with B
             try {
                 propAsso.link();
             } catch (GedcomException ex) {
                 return false;
             }
-            
+
             // Delete from first asso entity
             prop.getParent().delProperty(prop);
             nbChanges++;
         }
-        
+
         console.println("=============================");
-        
+
         return true;
     }
 
-    
-    
-    
     ////////////////////////////////////////////////////////////////////////////
     //                            FIXING TOOLS                                //
     ////////////////////////////////////////////////////////////////////////////
-    
-    
     public <T> void getPropertiesRecursively(List<T> props, String tag, Property parent) {
         for (Property child : parent.getProperties()) {
             if (tag.equals(child.getTag())) {
@@ -1085,7 +1067,6 @@ public abstract class Import implements ImportRunner {
         }
     }
 
-
     public void reduceEvents(Entity entity, String tag) {
         int n = 0;
         Property[] props = entity.getProperties(tag);
@@ -1103,19 +1084,19 @@ public abstract class Import implements ImportRunner {
         }
     }
 
-
     /**
-     * Adds all the sub-tags from propertySrc after the last child property of parentPropertyDest
-     * 
+     * Adds all the sub-tags from propertySrc after the last child property of
+     * parentPropertyDest
+     *
      * @param propertySrc
-     * @param parentPropertyDest 
+     * @param parentPropertyDest
      */
     private void movePropertiesRecursively(Property propertySrc, Property parentPropertyDest) {
 
         if (parentPropertyDest == null) {
             return;
         }
-        
+
         int n = parentPropertyDest.getNoOfProperties();
         Property propertyDest = null;
         try {
@@ -1138,17 +1119,17 @@ public abstract class Import implements ImportRunner {
 
     }
 
-    
     /**
      * Calculates place format length based on all place sizes found
-     * @param freq : if true, length will be the maximum frequency length, otherwise the longuest place size
-     * @return 
+     *
+     * @param freq : if true, length will be the maximum frequency length,
+     * otherwise the longuest place size
+     * @return
      */
     private String getPlaceFormat(boolean freq) {
-        String place_format = "";
         int place_format_length = 0;
         int max = 0;
-        for (int i = 0 ; i < PLACE_MAX_LENGTH ; i++) {
+        for (int i = 0; i < PLACE_MAX_LENGTH; i++) {
             if (freq && place_format_sizes[i] > max) {
                 place_format_length = i;
                 max = place_format_sizes[i];
@@ -1158,11 +1139,10 @@ public abstract class Import implements ImportRunner {
             }
         }
         if (place_format_length == 0) {
-            place_format = GedcomOptions.getInstance().getPlaceFormat();
-            return place_format;
+            return GedcomOptions.getInstance().getPlaceFormat();
         }
-        
-        place_format = "";
+
+        String place_format = "";
         for (int i = 1; i <= place_format_length; i++) {
             place_format += "jur" + i;
             if (i != place_format_length) {
@@ -1176,56 +1156,48 @@ public abstract class Import implements ImportRunner {
         protected boolean seen = false;
     }
 
-    
-    
     ////////////////////////////////////////////////////////////////////////////
     //                         ACCESSORS                                      //
     ////////////////////////////////////////////////////////////////////////////
-    
     public int getIndisNb() {
         return hashIndis.size();
     }
+
     public int getFamsNb() {
         return hashFams.size();
     }
+
     public int getNotesNb() {
         return hashNotes.size();
     }
-    
+
     public int getSoursNb() {
         return hashSours.size();
     }
-    
+
     public int getObjesNb() {
         return hashObjes.size();
     }
-    
+
     public int getReposNb() {
         return hashRepos.size();
     }
-    
+
     public int getSubmsNb() {
         return hashSubms.size();
     }
-    
+
     public int getChangesNb() {
         return nbChanges;
     }
-    
+
     public void showDetails() {
         console.show();
-        return;
     }
-    
-    
-    
-    
-    
-    
+
     ////////////////////////////////////////////////////////////////////////////
     //                         FILE READING TOOLS                             //
     ////////////////////////////////////////////////////////////////////////////
-    
     public String getEOL(File input) {
 
         String eolMark = System.getProperty("line.separator");
@@ -1248,6 +1220,5 @@ public abstract class Import implements ImportRunner {
 
         return eolMark;
     }
-    
 
 }

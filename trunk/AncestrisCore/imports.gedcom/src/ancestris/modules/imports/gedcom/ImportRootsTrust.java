@@ -18,8 +18,6 @@ import static ancestris.modules.imports.gedcom.Bundle.importrootstrust_name;
 import static ancestris.modules.imports.gedcom.Bundle.importrootstrust_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
-import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -28,6 +26,10 @@ import genj.gedcom.TagPath;
 import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -42,6 +44,7 @@ import java.util.Stack;
 })
 @ServiceProvider(service = Import.class)
 public class ImportRootsTrust extends Import {
+     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     /**
      * Constructor
@@ -127,14 +130,7 @@ public class ImportRootsTrust extends Import {
             return true;
         }
         
-        
-        if (super.process()) {
-            return true;
-        }
-        
-
-        
-        return false;
+        return super.process();
     }
     
     /**
@@ -175,30 +171,19 @@ public class ImportRootsTrust extends Import {
     }
 
     ////////////////////////////  END OF LOGIC /////////////////////////////////
-
-
-    
     
     
     ////////////////////////////////////////////////////////////////////////////
     //                     SPECIFIC IMPORT FIXES                              //
     ////////////////////////////////////////////////////////////////////////////
-    
-    
 
     /**
      * Specific code depending from import type after Gedcom is processed
      * @return 
      */
     public boolean fixOther(Gedcom gedcom) {
-
         boolean hasErrors = false;
-        Property[] props = null;
-        Property prop = null;
-        Property host = null;
-        
-        Stack propToDelete = new Stack();
-        
+        Stack<Property> propToDelete = new Stack<>();
         
         for (Entity entity : gedcom.getEntities()) {
             
@@ -207,39 +192,37 @@ public class ImportRootsTrust extends Import {
                 String value = page.getValue();
                 int n = page.getNoOfProperties();
                 for (int i = 0; i < n ; i++) {
-                    prop = page.getProperty(i);
-                    if (prop.getTag().equals("CONC")) {
+                    final Property prop = page.getProperty(i);
+                    final String tag = prop.getTag();
+                    if ("CONC".equals(tag)) {
                         value += prop.getValue();
                         propToDelete.add(prop);
-                    } else if (prop.getTag().equals("CONT")) {
+                    } else if ("CONT".equals(tag)) {
                         value += " " + prop.getValue();
                         propToDelete.add(prop);
-                    } else {
-                        //nothing
                     }
                 }
                 if (n > 0) {
                     page.setValue(value);
                     while (!propToDelete.empty()) {
-                        page.delProperty((Property) propToDelete.pop());
+                        page.delProperty(propToDelete.pop());
                     }
                     nbChanges++;
                     hasErrors = true;
                 }
             }
 
-
             // Move NAME:SOUR and NAME:NOTE one level up
             if (entity.getTag().equals("INDI")) {
-                host = entity.getProperty("NAME");
+                final Property host = entity.getProperty("NAME");
                 if (host != null) {
-                    props = host.getProperties("SOUR");
+                    Property[] props = host.getProperties("SOUR");
                     for (Property sour : props) {
                         try {
                             GedcomUtilities.movePropertyRecursively(sour, entity);
                             nbChanges++;
                         } catch (GedcomException ex) {
-                            continue;
+                            LOG.log(Level.INFO, "Error with SOUR", ex);
                         }
                     }
                     props = host.getProperties("NOTE");
@@ -248,13 +231,11 @@ public class ImportRootsTrust extends Import {
                             GedcomUtilities.movePropertyRecursively(note, entity);
                             nbChanges++;
                         } catch (GedcomException ex) {
-                            continue;
+                            LOG.log(Level.INFO, "Error with NOTE", ex);
                         }
                     }
-                }
-                
+                }    
             }
-            
 
             // For individual with several BIRTs, BAPM, DEAT, etc. change the other ones into EVEN
             if (entity.getTag().equals("INDI")) {
@@ -264,22 +245,19 @@ public class ImportRootsTrust extends Import {
                 reduceEvents(entity, "BURI");
                 reduceEvents(entity, "CREM");
             }
-
-            
-            
             
             // Add FORM to FILE
             if (entity.getTag().equals("OBJE")) {
-                prop = entity.getProperty("FORM");
+                Property prop = entity.getProperty("FORM");
                 if (prop != null) {
-                    host = entity.getProperty("FILE");
+                    final Property host = entity.getProperty("FILE");
                     if (host != null) {
                         host.addProperty("FORM", prop.getValue());
                         prop.getParent().delProperty(prop);
                         hasErrors = true;
                     }
                 }
-                host = entity.getProperty("FILE");
+                final Property host = entity.getProperty("FILE");
                 if (host != null) {
                     prop = host.getProperty("FORM");
                     if (prop == null) {
@@ -302,17 +280,8 @@ public class ImportRootsTrust extends Import {
                 } else {
                     entity.addDefaultProperties();
                 }
-            }
-            
+            }   
         }
-        
-        
-
         return hasErrors;
     }
-
-    
-    
-    
-    
 }

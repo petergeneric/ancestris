@@ -18,8 +18,6 @@ import static ancestris.modules.imports.gedcom.Bundle.importfamilytreemaker_name
 import static ancestris.modules.imports.gedcom.Bundle.importfamilytreemaker_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
-import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -28,6 +26,8 @@ import genj.gedcom.TagPath;
 import java.io.File;
 import java.io.IOException;
 import java.util.Stack;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -197,7 +197,7 @@ public class ImportFamilyTreeMaker extends Import {
         Property prop = null;
         Property host = null;
         
-        Stack propToDelete = new Stack();
+        Stack<Property> propToDelete = new Stack<>();
         
         
         for (Entity entity : gedcom.getEntities()) {
@@ -221,7 +221,7 @@ public class ImportFamilyTreeMaker extends Import {
                 if (n > 0) {
                     page.setValue(value);
                     while (!propToDelete.empty()) {
-                        page.delProperty((Property) propToDelete.pop());
+                        page.delProperty(propToDelete.pop());
                     }
                     nbChanges++;
                     hasErrors = true;
