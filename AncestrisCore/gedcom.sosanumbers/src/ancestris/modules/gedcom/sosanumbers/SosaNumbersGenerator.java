@@ -159,7 +159,11 @@ public class SosaNumbersGenerator implements Constants {
                 commit(task);
                 String msg = "<html>";
                 if (stoppedCounter == 0) {
-                    msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                    if (message == null) {
+                        msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                    } else {
+                        msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                    }
                 } else {
                     msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>";
                 }
