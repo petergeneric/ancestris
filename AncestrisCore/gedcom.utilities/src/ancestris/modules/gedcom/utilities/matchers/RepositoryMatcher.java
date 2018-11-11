@@ -19,7 +19,7 @@ public class RepositoryMatcher extends EntityMatcher<Repository, RepositoryMatch
         Property leftName = left.getProperty("NAME");
         Property rightName = right.getProperty("NAME");
         if (leftName != null && rightName != null) {
-            if (left.equals(rightName)) {
+            if (leftName.getDisplayValue().equals(rightName.getDisplayValue())) {
                 return 100;
             }
         }
