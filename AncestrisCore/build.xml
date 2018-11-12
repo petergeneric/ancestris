@@ -101,7 +101,7 @@
         <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
         <echo message="${app.name}: update zip-distribution with own stuff"/>
         <zip destfile="${dist.dir}/${app.name}.zip" update="true">
-            <!--            <zipfileset dir="res/language/etc" prefix="${app.name}/etc"/>-->
+          
             <zipfileset dir="${harness.dir}/../platform/core/locale" prefix="${app.name}/platform/core/locale"/>
             <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
             <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
@@ -111,11 +111,14 @@
                 <fileset dir="branding/core/core.jar/org/netbeans/core/startup/" />
                 <globmapper from="frame*.gif" to="${app.name}/bin/ancestris*.gif"/>
             </mappedresources>
-             <mappedresources>
+            <mappedresources>
                 <fileset dir="branding/core/core.jar/org/netbeans/core/startup/" />
 		<globmapper from="frame*.ico" to="${app.name}/bin/ancestris*.ico"/>
             </mappedresources>
-            <!--            <zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/>-->
+            <mappedresources>
+                <fileset file="ancestris.icns" />
+                <globmapper from="ancestris.icns" to="${app.name}/bin/ancestris.icns"/>
+            </mappedresources>
         </zip>
     </target>
 
@@ -123,11 +126,11 @@
         <echo message=" "/>
         <echo message=" "/>
         <echo message="BUILDING INSTALLER FOR WINDOWS..." />
-   <!--     <exec executable="svnversion" failonerror="false"
+        <exec executable="svnversion" failonerror="false"
               outputproperty="svnversion" errorproperty="svnerror">
             <arg value="-n"/>
         </exec>
-      -->  <property name="inst.version" value="0.3-1_r${svnversion}"/>
+        <property name="inst.version" value="0.3-1_r${svnversion}"/>
         <echo message="version = ${inst.version}" />
         <property name="nbdist.dir" value="dist"/>
         <property name="nbdist-app.dir" value="${nbdist.dir}/${app.name}"/>
