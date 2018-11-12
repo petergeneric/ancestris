@@ -111,6 +111,10 @@
                 <fileset dir="branding/core/core.jar/org/netbeans/core/startup/" />
                 <globmapper from="frame*.gif" to="${app.name}/bin/ancestris*.gif"/>
             </mappedresources>
+             <mappedresources>
+                <fileset dir="branding/core/core.jar/org/netbeans/core/startup/" />
+		<globmapper from="frame*.ico" to="${app.name}/bin/ancestris*.ico"/>
+            </mappedresources>
             <!--            <zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/>-->
         </zip>
     </target>
