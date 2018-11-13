@@ -47,7 +47,7 @@ import static java.lang.Math.max;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
-import static java.util.logging.Level.FINER;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.logging.Logger.getLogger;
 import javax.swing.text.Element;
@@ -58,18 +58,21 @@ import javax.swing.text.Element;
  * @author forhan
  */
 public class PropertyView extends MyView {
+
     /**
      * Logger.
      */
     private final static Logger LOG = getLogger("ancestris.renderer");
-    
+
     private final static Stroke DEBUG_STROKE = new BasicStroke(1.0f, CAP_SQUARE, JOIN_MITER, 10.0f, new float[]{1, 2}, 0.0f);
-    
+
     private final static String STARS = "*****";
 
     private final static int IMAGE_GAP = 4;
-    
-     /**
+
+    private final static String POS_SEPA = "?";
+
+    /**
      * Hint for text.
      */
     private static final String HINT_KEY_TXT = "txt";
@@ -94,13 +97,13 @@ public class PropertyView extends MyView {
      */
     private static final String HINT_VALUE_FALSE = "no";
 
-
     /**
      * configuration
      */
-    private Map<String, String> attributes;
-    private TagPath path = null;
-    private TagPath elsePath = null;
+    private final Map<String, String> attributes;
+    private String path = null;
+    private String elsePath = null;
+    private Integer pos = null;
 
     /**
      * cached information
@@ -125,44 +128,87 @@ public class PropertyView extends MyView {
         }
 
         // grab path
-        Object p = elem.getAttributes().getAttribute("path");
-        if (p != null) {
-            try {
-                path = new TagPath((String) p);
-            } catch (IllegalArgumentException e) {
-                if (LOG.isLoggable(FINER)) {
-                    LOG.log(FINER, "got wrong path {0}", p);
-                }
-            }
-        }
+        path = attributes.get("path");
 
         // grab default path
-        Object ep = elem.getAttributes().getAttribute("default");
-        if (ep != null) {
-            try {
-                elsePath = new TagPath((String) ep);
-            } catch (IllegalArgumentException e) {
-                if (LOG.isLoggable(FINER)) {
-                    LOG.log(FINER, "got wrong path {0}", ep);
-                }
-            }
-            // done
-        }
+        elsePath = attributes.get("default");
+
     }
 
     /**
      * Get Property
      */
-    private Property getProperty(TagPath thePath) {
+    private Property getProperty(String thePath) {
         // still looking for property?
         if (cachedProperty != null) {
             return cachedProperty;
         }
-        if (getRenderer().getEntity() == null || thePath == null) {
+
+        final Property entity = getRenderer().getEntity();
+
+        if (entity == null || thePath == null) {
             return null;
         }
-        cachedProperty = getRenderer().getProperty(getRenderer().getEntity(), thePath);
+
+        TagPath pathBefore = null;
+        String pathAfter = null;
+        if (thePath.contains(POS_SEPA)) {
+            int sepa = thePath.indexOf(POS_SEPA);
+            pathBefore = createPath(thePath.substring(0, sepa));
+            int next = thePath.indexOf(TagPath.SEPARATOR, sepa);
+            try {
+                if (next != -1) {
+                    pos = Integer.valueOf(thePath.substring(sepa + 1, next));
+                    pathAfter = thePath.substring(next + 1);
+                } else {
+                    pos = Integer.valueOf(thePath.substring(sepa + 1));
+                }
+            } catch (NumberFormatException e) {
+                if (LOG.isLoggable(Level.FINER)) {
+                    LOG.log(Level.FINER, "Unable to retrieve pos {0}", thePath);
+                }
+            }
+        }
+
+        if (pos != null) {
+            final Property[] props = entity.getProperties(pathBefore);
+            // User always use 1 for the first occurrence
+            final Integer thePos = pos - 1 >= 0 ? pos - 1 : 0;
+
+            // Check if there is several values.
+            if (props.length > thePos) {
+                cachedProperty = props[thePos];
+            } else {
+                cachedProperty = props[0];
+            }
+            //Get end of tag, place at current entity tag.
+            if (pathAfter != null) {
+                cachedProperty = cachedProperty.getProperty(createPath(cachedProperty.getTag()+ TagPath.SEPARATOR_STRING + pathAfter));
+            }
+
+        } else {
+            cachedProperty = entity.getProperty(createPath(thePath));
+        }
         return cachedProperty;
+    }
+
+    private TagPath createPath(String thePath) {
+        try {
+            return new TagPath((String) thePath);
+        } catch (IllegalArgumentException e) {
+            if (LOG.isLoggable(Level.FINER)) {
+                LOG.log(Level.FINER, "got wrong path {0}", thePath);
+            }
+        }
+        return null;
+    }
+
+    private Property getProperty() {
+        Property prop = getProperty(path);
+        if (prop == null) {
+            prop = getProperty(elsePath);
+        }
+        return prop;
     }
 
     /**
@@ -171,12 +217,9 @@ public class PropertyView extends MyView {
     @Override
     public void paint(Graphics g, Shape allocation) {
 
-        Property prop = getProperty(path);
+        Property prop = getProperty();
         if (prop == null) {
-            prop = getProperty(elsePath);
-            if (prop == null) {
-                return;
-            }
+            return;
         }
 
         Graphics2D graphics = (Graphics2D) g;
@@ -347,12 +390,9 @@ public class PropertyView extends MyView {
     }
 
     private Dimension2D getSize() {
-        Property prop = getProperty(path);
+        Property prop = getProperty();
         if (prop == null) {
-            prop = getProperty(elsePath);
-            if (prop == null) {
-                return new Dimension();
-            }
+            return new Dimension();
         }
 
         if (!(prop instanceof Entity) && prop instanceof MultiLineProperty) {

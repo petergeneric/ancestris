@@ -238,7 +238,7 @@ public class BlueprintRenderer {
     public Property getProperty(Property entity, TagPath path) {
         return entity.getProperty(path);
     }
-
+    
     /**
      * Getter.
      *
