@@ -179,7 +179,7 @@ public class PropertyView extends MyView {
             if (props.length > thePos) {
                 cachedProperty = props[thePos];
             } else {
-                cachedProperty = props[0];
+                return null;
             }
             //Get end of tag, place at current entity tag.
             if (pathAfter != null) {
