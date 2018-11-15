@@ -305,12 +305,9 @@ public class GeneanetExport {
          }
          
           // Convert _URL to URL
-         for (Entity entity : gedcom.getEntities()) {
+         for (Entity entity : gedcom.getEntities("SOUR")) {
             for (Property p : entity.getAllProperties("_URL")) {
                 final Property parent = p.getParent();
-                if (!"SOUR".equals(parent.getTag())) {
-                    continue;
-                }
                 final int pos = parent.getPropertyPosition(p);
                 final String value = p.getValue();
                 parent.delProperty(p);
@@ -320,6 +317,17 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during _URL conversion", ex);
                 }
             }
+         }
+         
+           // Convert Others names to remove slash
+         for (Entity entity : gedcom.getEntities("INDI")) {
+             final Property[] props = entity.getProperties("NAME");
+             // Begin at the second name.
+             for (int i=1;i<props.length;i++) {
+                 final Property p = props[i];
+                 final String newValue = p.getValue().replace("/", " ").trim();
+                 p.setValue(newValue);
+             }
          }
          
           // Remove all "_TAG"
