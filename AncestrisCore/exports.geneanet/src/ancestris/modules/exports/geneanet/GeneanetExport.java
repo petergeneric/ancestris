@@ -294,12 +294,30 @@ public class GeneanetExport {
             for (Property p : entity.getAllProperties("_TIME")) {
                 final Property parent = p.getParent();
                 final int pos = parent.getPropertyPosition(p);
-                String value = p.getValue();
+                final String value = p.getValue();
                 parent.delProperty(p);
                 try {
                     parent.addProperty("TIME", value, pos);
                 } catch (GedcomException ex) {
                     LOG.log(Level.WARNING, "Error during _TIME conversion", ex);
+                }
+            }
+         }
+         
+          // Convert _URL to URL
+         for (Entity entity : gedcom.getEntities()) {
+            for (Property p : entity.getAllProperties("_URL")) {
+                final Property parent = p.getParent();
+                if (!"SOUR".equals(parent.getTag())) {
+                    continue;
+                }
+                final int pos = parent.getPropertyPosition(p);
+                final String value = p.getValue();
+                parent.delProperty(p);
+                try {
+                    parent.addProperty("URL", value, pos);
+                } catch (GedcomException ex) {
+                    LOG.log(Level.WARNING, "Error during _URL conversion", ex);
                 }
             }
          }
