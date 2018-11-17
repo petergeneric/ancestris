@@ -305,7 +305,7 @@ public class GeneanetExport {
          }
          
           // Convert _URL to URL
-         for (Entity entity : gedcom.getEntities("SOUR")) {
+         for (Entity entity : gedcom.getEntities()) {
             for (Property p : entity.getAllProperties("_URL")) {
                 final Property parent = p.getParent();
                 final int pos = parent.getPropertyPosition(p);
