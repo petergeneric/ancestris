@@ -211,7 +211,7 @@ public class GeneanetExport {
                 final Property prop = p.getProperty("TYPE");
                 if (prop != null) {
                     final String rela = prop.getValue();
-                    if (rela.equals("Relation")) {
+                    if ("Relation".equals(rela)) {
                         prop.setValue("unmarried");
                     }
                 }
@@ -287,10 +287,20 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during NSFX conversion", ex);
                 }
             }
+            
+            // Convert Others names to remove slash
+            final Property[] props = entity.getProperties("NAME");
+             // Begin at the second name.
+             for (int i=1;i<props.length;i++) {
+                 final Property p = props[i];
+                 final String newValue = p.getValue().replace("/", " ").trim();
+                 p.setValue(newValue);
+             }
         }
         
-         // Convert _TIME to TIME
+         // Adjust others tags
          for (Entity entity : gedcom.getEntities()) {
+             // Convert _TIME to TIME
             for (Property p : entity.getAllProperties("_TIME")) {
                 final Property parent = p.getParent();
                 final int pos = parent.getPropertyPosition(p);
@@ -302,10 +312,8 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during _TIME conversion", ex);
                 }
             }
-         }
-         
-          // Convert _URL to URL
-         for (Entity entity : gedcom.getEntities()) {
+            
+            // Convert _URL to URL
             for (Property p : entity.getAllProperties("_URL")) {
                 final Property parent = p.getParent();
                 final int pos = parent.getPropertyPosition(p);
@@ -317,28 +325,14 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during _URL conversion", ex);
                 }
             }
-         }
-         
-           // Convert Others names to remove slash
-         for (Entity entity : gedcom.getEntities("INDI")) {
-             final Property[] props = entity.getProperties("NAME");
-             // Begin at the second name.
-             for (int i=1;i<props.length;i++) {
-                 final Property p = props[i];
-                 final String newValue = p.getValue().replace("/", " ").trim();
-                 p.setValue(newValue);
-             }
-         }
-         
-          // Remove all "_TAG"
-         for (Entity entity : gedcom.getEntities()) {
+            
+            //At the end :  Remove all "_TAG"
             for (Property p : entity.getAllSpecificProperties()) {
                 final Property parent = p.getParent();
-                final int pos = parent.getPropertyPosition(p);
                 parent.delProperty(p);
             }
          }
-
+         
         return true;
     }
 }
