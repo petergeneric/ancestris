@@ -20,11 +20,13 @@ import java.awt.Frame;
 import java.awt.Toolkit;
 import java.math.BigInteger;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
+import java.util.Map;
+import java.util.Queue;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -33,10 +35,8 @@ import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 import javax.swing.ProgressMonitor;
-import javax.swing.SwingWorker;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -46,8 +46,8 @@ import org.openide.util.NbBundle;
 public class SosaNumbersGenerator implements Constants {
 
     private final static Logger LOG = Logger.getLogger(SosaNumbersGenerator.class.getName(), null);
+    private final static Comparator SOSA_COMPARE = new SosaComparator();
     private Gedcom gedcom = null;
-    private Registry registry = null;
     private int mode = MODE_GENERATE;
     private int numbering = NUMBERING_SOSADABOVILLE;
     private boolean allSosa = false;
@@ -58,7 +58,7 @@ public class SosaNumbersGenerator implements Constants {
     private boolean runBlank = false;
     private int maxCounter = 0;
     private int stoppedCounter = 0;
-    private String title = "";
+    // private String title = "";
 
     private ProgressMonitor progressMonitor = null;
     private Task fullTask = null;
@@ -69,7 +69,8 @@ public class SosaNumbersGenerator implements Constants {
         // Get parameters:
         // ---------------
         this.gedcom = gedcom;
-        registry = gedcom.getRegistry();
+        final Registry registry = gedcom.getRegistry();
+        final String title;
 
         // Action : generate or delete
         mode = registry.get(ACTION, MODE_GENERATE);
@@ -80,7 +81,7 @@ public class SosaNumbersGenerator implements Constants {
 
         // Individual : decujus or all
         this.indiDeCujus = indiDeCujus;
-        changedIndis = new HashSet<Indi>();
+        changedIndis = new HashSet<>();
 
         // Save in gedcom : true of false
         save = registry.get(SAVE, true);
@@ -89,32 +90,26 @@ public class SosaNumbersGenerator implements Constants {
         // ---------------------------
         // Clean existing numbering if mode is erase and no decujus 
         if (mode == MODE_ERASE && indiDeCujus == null) {
-            task = new Runnable() {
-                @Override
-                public void run() {
-                    title = NbBundle.getMessage(getClass(), "SosaNumbersGenerator.taskErase");
-                    eraseAll();
-                }
+            title = NbBundle.getMessage(getClass(), "SosaNumbersGenerator.taskErase");
+            task = () -> {
+                eraseAll();
             };
         } else if (indiDeCujus == null) {
             // Otherwise, if sosadabo or sosa, go "up" the tree by first erasing and then, if mode is generate, generating numbering. Flag set to guessed along the way if save is false
+            title = "";
         } else if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE || numbering == NUMBERING_SOSA) {
-            task = new Runnable() {
-                @Override
-                public void run() {
-                    title = NbBundle.getMessage(getClass(), mode != MODE_ERASE ? "SosaNumbersGenerator.taskNb" : "SosaNumbersGenerator.taskErase");
-                    numberUp();
-                }
+            title = NbBundle.getMessage(getClass(), mode != MODE_ERASE ? "SosaNumbersGenerator.taskNb" : "SosaNumbersGenerator.taskErase");
+            task = () -> {
+                numberUp();
             };
             // Otherwise if dabo, go "down" the tree by by first erasing and then, if mode is generate, generating numbering. Flag set to guessed along the way if save is false
         } else if (numbering == NUMBERING_DABOVILLE) {
-            task = new Runnable() {
-                @Override
-                public void run() {
-                    title = NbBundle.getMessage(getClass(), mode != MODE_ERASE ? "SosaNumbersGenerator.taskNb" : "SosaNumbersGenerator.taskErase");
-                    numberDown(indiDeCujus, BigInteger.ZERO);
-                }
+            title = NbBundle.getMessage(getClass(), mode != MODE_ERASE ? "SosaNumbersGenerator.taskNb" : "SosaNumbersGenerator.taskErase");
+            task = () -> {
+                numberDown(indiDeCujus, BigInteger.ZERO);
             };
+        } else {
+            title = "";
         }
 
         // Calculates number of expected changes 
@@ -144,7 +139,7 @@ public class SosaNumbersGenerator implements Constants {
         };
         fullTask.execute();
         dialog.setVisible(true);
-        
+
         // Run main task while displaying progress bar
         // -------------------------------------------
         progressMonitor = new ProgressMonitor(null, title, "", 0, maxCounter);
@@ -176,6 +171,12 @@ public class SosaNumbersGenerator implements Constants {
         // done
     }
 
+    /**
+     * Update progress bar.
+     *
+     * @param progress current progress
+     * @return true if progressbar upgraded, false if cancelled or finished.
+     */
     public boolean setProgress(int progress) {
         if (progress % 10 != 0) {
             return true;
@@ -185,7 +186,6 @@ public class SosaNumbersGenerator implements Constants {
         progressMonitor.setProgress(progress);
         if (progressMonitor.isCanceled() || fullTask.isDone()) {
             if (progressMonitor.isCanceled()) {
-                //fullTask.cancel(true);
                 stoppedCounter = progress;
                 return false;
             }
@@ -205,62 +205,54 @@ public class SosaNumbersGenerator implements Constants {
             }
         }
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
-            if (!deleteTags(Indi.TAG_DABOVILLE)) {
-                return;
-            }
+            deleteTags(Indi.TAG_DABOVILLE);
         }
     }
 
     /**
-     * @param indiDeCujus
-     * @param sosaValue
+     * Number Sosa from de Cujus.
+     *
      */
-    private boolean numberUp() {
-
-        final List<Pair> sosaPairs = new ArrayList<Pair>();   // list used to store and iterate up the tree
-        Pair pair;
-        Indi wife, husband;
-        BigInteger sosaCounter = BigInteger.ONE;
-        Fam famc;
-        ListIterator<Pair> listIter = sosaPairs.listIterator();
+    private void numberUp() {
+        final Map<String, Pair> sosaPairs = new HashMap<>();   // list used to store and iterate up the tree
+        Queue<Pair> listIter = new LinkedList<>();
 
         // Iterate on the list to go up the tree for the sosa part.
-        updateIndi(indiDeCujus, sosaCounter, listIter, sosaPairs, null);
-        while (listIter.hasNext()) {
-            pair = listIter.next();
-            sosaCounter = new BigInteger(pair.value);
-            // Get father and mother
-            famc = pair.indi.getFamilyWhereBiologicalChild();
-            if (famc != null) {
-                husband = famc.getHusband();
-                BigInteger sosa = sosaCounter.shiftLeft(1);
-                if (husband != null) {
-                    if (!updateIndi(husband, sosa, listIter, sosaPairs, null)) {
-                        return false;
-                    }
-                }
-                wife = famc.getWife();
-                sosa = sosaCounter.shiftLeft(1).add(BigInteger.ONE);
-                if (wife != null) {
-                    if (!updateIndi(wife, sosa, listIter, sosaPairs, null)) {
-                        return false;
-                    }
-                }
-            }
+        updateIndi(indiDeCujus, BigInteger.ONE, listIter, sosaPairs, null);
+        if (treeup(listIter, sosaPairs)) {
+            return;
         }
 
         // Iterate on ascending sosa for the Sosa d'Aboville part
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE) {
-            TreeSet<Pair> sosaSet = new TreeSet<Pair>(new SosaComparator());
-            sosaSet.addAll(sosaPairs);
+            TreeSet<Pair> sosaSet = new TreeSet<>(SOSA_COMPARE);
+            sosaSet.addAll(sosaPairs.values());
             for (Pair p : sosaSet) {
-                if (p.indi.getSex() == PropertySex.MALE && !numberDown(p.indi, new BigInteger(p.value))) {
-                    return false;
+                if (!numberDown(p.getIndi(), new BigInteger(p.getValue())) && PropertySex.MALE == p.getIndi().getSex()) {
+                    return;
                 }
             }
         }
+    }
 
-        return true;
+    private boolean treeup(Queue<Pair> iter, Map<String, Pair> listCurrent) {
+        final Pair pair = iter.poll();
+        if (pair != null) {
+            final BigInteger sosa = new BigInteger(pair.getValue());
+            final Fam famc = pair.getIndi().getFamilyWhereBiologicalChild();
+            if (famc != null) {
+                final Indi husband = famc.getHusband();
+                if (husband != null && !updateIndi(husband, sosa.shiftLeft(1), iter, listCurrent, null)) {
+                    return true;
+                }
+                final Indi wife = famc.getWife();
+                if (wife != null && !updateIndi(wife, sosa.shiftLeft(1).add(BigInteger.ONE), iter, listCurrent, null)) {
+                    return true;
+                }
+            }
+            return treeup(iter, listCurrent);
+        }
+        return false;
     }
 
     /**
@@ -268,25 +260,30 @@ public class SosaNumbersGenerator implements Constants {
      * @param sosaValue
      */
     private boolean numberDown(Indi indiFrom, BigInteger sosaValue) {
-        final List<Pair> dabovillePairs = new ArrayList<Pair>();
-        Pair pair;
-        String daboCounter;
+        final Map<String, Pair> dabovillePairs = new HashMap<>();
 
         // Iterate on the list to go down the tree.
-        ListIterator<Pair> listIter = null;
+        final Queue<Pair> listIter = new LinkedList<>();
         if (numbering == NUMBERING_ALL || numbering == NUMBERING_DABOVILLE) {
-            listIter = dabovillePairs.listIterator();
             updateIndi(indiFrom, sosaValue, listIter, dabovillePairs, "1");
         } else {
-            dabovillePairs.add(new Pair(indiFrom, sosaValue == BigInteger.ZERO ? "1" : ""));
-            listIter = dabovillePairs.listIterator();
+            final Pair newPair = new Pair(indiFrom, sosaValue == BigInteger.ZERO ? "1" : "");
+            listIter.offer(newPair);
+            dabovillePairs.put(indiFrom.getId(), newPair);
         }
-        while (listIter.hasNext()) {
-            pair = listIter.next();
-            Character suffix = 'a';
-            daboCounter = pair.value;
+        return treedown(sosaValue, listIter, dabovillePairs);
+    }
 
-            Fam[] families = pair.indi.getFamiliesWhereSpouse();
+    private boolean treedown(BigInteger sosaValue, Queue<Pair> listIter, Map<String, Pair> dabovillePairs) {
+        final Pair current = listIter.poll();
+        if (current != null) {
+            Character suffix = 'a';
+            final String daboCounter = current.getValue();
+            // Remove spouse not Sosa or d'Aboville
+            if (daboCounter != null && !"".equals(daboCounter) && Character.isLetter(daboCounter.charAt(daboCounter.length() - 1))) {
+                return treedown(sosaValue, listIter, dabovillePairs);
+            }
+            final Fam[] families = current.getIndi().getFamiliesWhereSpouse();
             for (Fam family : families) {
                 int childOrder = 0;
                 for (Indi child : family.getChildren(true)) {
@@ -302,18 +299,34 @@ public class SosaNumbersGenerator implements Constants {
                         return false;
                     }
                 }
+                if (NUMBERING_SOSADABOVILLE == numbering) {
+                    // Try to number spouse not numbered.
+                    final Indi husband = family.getHusband();
+                    if (husband != null && !husband.getId().equals(current.getIndi().getId())) {
+                        if (!changedIndis.contains(husband) && !updateIndi(husband, sosaValue, listIter, dabovillePairs, daboCounter + suffix.toString())) {
+                            return false;
+                        }
+                    } else {
+                        final Indi wife = family.getWife();
+                        if (wife != null && !changedIndis.contains(wife) && !wife.getId().equals(current.getIndi().getId())
+                                && !updateIndi(wife, sosaValue, listIter, dabovillePairs, daboCounter + suffix.toString())) {
+                            return false;
+                        }
+                    }
+                }
                 suffix++;
             }
+            return treedown(sosaValue, listIter, dabovillePairs);
         }
         return true;
     }
 
-    private boolean updateIndi(Indi indi, BigInteger sosaNumber, ListIterator<Pair> listIter, List<Pair> list, String daboValue) {
+    private boolean updateIndi(Indi indi, BigInteger sosaNumber, Queue<Pair> listIter, Map<String, Pair> list, String daboValue) {
 
         int nbErased = 0;
-        
+
         // Check if indi is new in the list
-        boolean isNew = !contains(list, indi);
+        boolean isNew = !list.containsKey(indi.getId());
 
         // Clean numbering all or one numbering if individual not in list yet
         if (isNew && (numbering == NUMBERING_ALL || numbering == NUMBERING_SOSADABOVILLE)) {
@@ -337,8 +350,18 @@ public class SosaNumbersGenerator implements Constants {
 
         // Update list to keep going up the tree
         if (isNew || allSosa) {
-            listIter.add(new Pair(indi, daboValue == null ? nbToString(sosaNumber) : daboValue));
-            listIter.previous();
+            final Pair newPair = new Pair(indi, daboValue == null ? nbToString(sosaNumber) : daboValue);
+            listIter.offer(newPair);
+            if (isNew) {
+                list.put(indi.getId(), newPair);
+            } else {
+                // replace SOSA value with smallest one.
+                final Pair current = list.get(indi.getId());
+                if (SOSA_COMPARE.compare(newPair, current) < 0) {
+                    list.remove(indi.getId());
+                    list.put(indi.getId(), newPair);
+                }
+            }
         }
 
         // 3. Generate one numbering
@@ -353,41 +376,42 @@ public class SosaNumbersGenerator implements Constants {
                 return true;
             }
         }
-        
-        
+
         // Quit if just erasing
-        if ((isNew || allSosa) && mode != MODE_ERASE) {
+        if (mode != MODE_ERASE && (isNew || allSosa)) {
             Property prop = null;
             try {
                 String value = nbToString(sosaNumber, "", true, daboValue);
-                if (numbering == NUMBERING_SOSADABOVILLE) {
-                    prop = indi.addProperty(Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
-                } else if (numbering == NUMBERING_SOSA) {
-                    prop = indi.addProperty(Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
-                } else if (numbering == NUMBERING_DABOVILLE) {
-                    prop = indi.addProperty(Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
+                switch (numbering) {
+                    case NUMBERING_SOSADABOVILLE:
+                        prop = indi.addProperty(Indi.TAG_SOSADABOVILLE, value, getNumberPosition(indi, Indi.TAG_SOSADABOVILLE, sosaNumber));
+                        break;
+                    case NUMBERING_SOSA:
+                        prop = indi.addProperty(Indi.TAG_SOSA, value, getNumberPosition(indi, Indi.TAG_SOSA, sosaNumber));
+                        break;
+                    case NUMBERING_DABOVILLE:
+                        prop = indi.addProperty(Indi.TAG_DABOVILLE, value, setPropertyPosition(indi, Indi.TAG_DABOVILLE));
+                        break;
+                    default:
+                        break;
                 }
                 LOG.log(Level.FINER, "{0} -> {1}", new Object[]{indi.toString(true), value});
-            } catch (Exception ex) {
-                Exceptions.printStackTrace(ex);
+            } catch (GedcomException ex) {
+                LOG.log(Level.WARNING, "Error during Numbering.", ex);
             }
             if (prop != null) {
                 prop.setGuessed(!save);
             }
         }
-        
-        if ((isNew) && !setProgress(maxCounter)) {
-            return false;
-        }
-
-        return true;
+        return !isNew || setProgress(maxCounter);
         // done
     }
 
     /**
-     * Define our own delete method in order to monitor progress and speed up performance
-     * (rather than using GedcomUtilities.deleTags)
-     * @param tagToRemove 
+     * Define our own delete method in order to monitor progress and speed up
+     * performance. (rather than using GedcomUtilities.deleTags)
+     *
+     * @param tagToRemove Tag to remove
      */
     public boolean deleteTags(String tagToRemove) {
         if (runBlank) {
@@ -414,15 +438,6 @@ public class SosaNumbersGenerator implements Constants {
         return true;
     }
 
-    private boolean contains(List<Pair> list, Indi indi) {
-        for (Pair pair : list) {
-            if (pair.indi == indi) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     /**
      * Get sosa position order by number
      *
@@ -435,14 +450,13 @@ public class SosaNumbersGenerator implements Constants {
             return 1;
         }
         // Put after tag based on sosa order 
-        BigInteger bi = BigInteger.ZERO;
         Property[] props = prop.getProperties(tag);
         if (props != null && props.length != 0) {
             for (Property p : props) {
-               bi = extractNumber(p.getDisplayValue());
-               if (bi.compareTo(value) > 0) {
-                   return prop.getPropertyPosition(p);
-               }
+                final BigInteger bi = extractNumber(p.getDisplayValue());
+                if (bi.compareTo(value) > 0) {
+                    return prop.getPropertyPosition(p);
+                }
             }
             return prop.getPropertyPosition(props[props.length - 1]) + 1;
         }
@@ -484,14 +498,13 @@ public class SosaNumbersGenerator implements Constants {
         return 1;
     }
 
-    
     private BigInteger extractNumber(String str) {
 
-        int start = 0, end = 0;
+        int start = 0;
         while (start <= str.length() - 1 && !Character.isDigit(str.charAt(start))) {
             start++;
         }
-        end = start;
+        int end = start;
         while ((end <= str.length() - 1) && Character.isDigit(str.charAt(end))) {
             end++;
         }
@@ -501,9 +514,7 @@ public class SosaNumbersGenerator implements Constants {
             return new BigInteger(str.substring(start, end));
         }
     }
-    
-    
-    
+
     /**
      *
      * @param sosa
@@ -544,69 +555,19 @@ public class SosaNumbersGenerator implements Constants {
         return sosaStr + suffix + dabo + genStr;
     }
 
-    
-    
     private void commit(final Runnable change) {
         try {
             if (gedcom.isWriteLocked()) {
                 change.run();
             } else {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        change.run();
-                    }
+                gedcom.doUnitOfWork((Gedcom gedcom1) -> {
+                    change.run();
                 });
             }
 
-        } catch (Throwable t) {
+        } catch (GedcomException t) {
             LOG.log(Level.WARNING, "Error committing sosa generator", t);
         } finally {
         }
     }
-
-    private class SosaComparator implements Comparator<Pair> {
-
-        @Override
-        public int compare(Pair p1, Pair p2) {
-            BigInteger bi1 = new BigInteger(p1.value);
-            BigInteger bi2 = new BigInteger(p2.value);
-            return bi1.compareTo(bi2);
-        }
-    }
-
-    private class Pair {
-
-        Indi indi;
-        String value;
-
-        public Pair(Indi indi, String value) {
-            this.indi = indi;
-            this.value = value;
-        }
-    }
-
-    private class Task extends SwingWorker<Void, Void> {
-
-        private ProgressMonitor pm;
-        private int maxp = 0;
-
-        public Task(ProgressMonitor progressMonitor, int maxProgress) {
-            pm = progressMonitor;
-            maxp = maxProgress;
-        }
-
-        @Override
-        public Void doInBackground() {
-            return null;
-        }
-
-        @Override
-        public void done() {
-            if (pm != null) {
-                pm.setProgress(maxp);
-            }
-        }
-    }
-
 }

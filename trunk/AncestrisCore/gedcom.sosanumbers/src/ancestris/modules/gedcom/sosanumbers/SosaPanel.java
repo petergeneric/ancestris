@@ -404,8 +404,8 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
     }
 
     public String getResultMessage() {
-        Indi indi = getSelection();
-        String numbering = "";
+        final Indi indi = getSelection();
+        final String numbering;
         if (sosadabovilleRadioButton.isSelected()) {
             numbering = sosadabovilleRadioButton.getText();
         } else if (sosaRadioButton.isSelected()) {

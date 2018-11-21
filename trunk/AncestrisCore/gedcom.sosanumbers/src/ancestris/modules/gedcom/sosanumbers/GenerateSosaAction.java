@@ -70,8 +70,7 @@ public final class GenerateSosaAction extends AbstractAncestrisContextAction imp
         }
         
         // Perform selected action
-        Indi indiDeCujus = null;
-        indiDeCujus = (Indi) sosaPanel.getSelection();
+        final Indi indiDeCujus = sosaPanel.getSelection();
         sosaPanel.savePreferences();
         new SosaNumbersGenerator().run(context.getGedcom(), indiDeCujus, sosaPanel.getResultMessage());
         return true;
