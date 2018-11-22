@@ -43,10 +43,11 @@ public class SosaNumbersPlugin extends AncestrisPlugin implements Constants, Ged
         if (!selectedEntityID.isEmpty()) {
             indiDeCujus = (Indi) gedcom.getEntity(Gedcom.INDI, selectedEntityID);
         }
-        Boolean saved = gedcom.getRegistry().get(SAVE, true);
-        if (indiDeCujus != null && !saved) {
-            sosaNumbers = new SosaNumbersGenerator();
-            sosaNumbers.run(gedcom, indiDeCujus, null);
-        }
+      //Desactivate numering on flight
+      //  Boolean saved = gedcom.getRegistry().get(SAVE, true);
+      //  if (indiDeCujus != null && !saved) {
+      //      sosaNumbers = new SosaNumbersGenerator();
+      //      sosaNumbers.run(gedcom, indiDeCujus, null);
+      //  }
     }
 }
