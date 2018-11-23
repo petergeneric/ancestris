@@ -76,6 +76,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         dabovilleRadioButton.setSelected(n == NUMBERING_DABOVILLE);
         allNumberingRadioButton.setSelected(n == NUMBERING_ALL);
         allSosaCheckBox.setSelected(registry.get(ALLSOSA, false));
+        numberSpouseCheckBox.setSelected(registry.get(NUMBERING_SPOUSE, false));
         int s = registry.get(SELECTION, 1);
         saveCheckBox.setSelected(registry.get(SAVE, true));
         
@@ -122,6 +123,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         saveCheckBox.setText(NbBundle.getMessage(SosaPanel.class, mode == MODE_GENERATE ? "SosaPanel.saveCheckBox.text" : "SosaPanel.saveCheckBox.text2"));
         allNumberingRadioButton.setVisible(mode == MODE_ERASE);
         allSosaCheckBox.setVisible(mode == MODE_GENERATE);
+        numberSpouseCheckBox.setVisible(mode == MODE_GENERATE);
         selectIndiPanel.setVisible(otherIndividualRadioButton.isSelected());
         allIndividualRadioButton.setVisible(mode == MODE_ERASE);
         if (mode == MODE_GENERATE && allNumberingRadioButton.isSelected()) {
@@ -157,6 +159,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         selectIndiPanel = new javax.swing.JPanel();
         allIndividualRadioButton = new javax.swing.JRadioButton();
         saveCheckBox = new javax.swing.JCheckBox();
+        numberSpouseCheckBox = new javax.swing.JCheckBox();
 
         addComponentListener(new java.awt.event.ComponentAdapter() {
             public void componentResized(java.awt.event.ComponentEvent evt) {
@@ -249,6 +252,9 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         org.openide.awt.Mnemonics.setLocalizedText(saveCheckBox, org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.saveCheckBox.text")); // NOI18N
         saveCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.saveCheckBox.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(numberSpouseCheckBox, org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.numberSpouseCheckBox.text")); // NOI18N
+        numberSpouseCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SosaPanel.class, "SosaPanel.numberSpouseCheckBox.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -264,25 +270,26 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(otherIndividualRadioButton)
                                     .addComponent(selectedIndividualRadioButton)
-                                    .addComponent(sosadabovilleRadioButton)
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(generateRadioButton)
                                         .addGap(18, 18, 18)
                                         .addComponent(eraseRadioButton))
-                                    .addComponent(sosaRadioButton)
-                                    .addComponent(dabovilleRadioButton)
-                                    .addComponent(allNumberingRadioButton)
                                     .addComponent(currentDecujusRadioButton)
-                                    .addComponent(allIndividualRadioButton)
-                                    .addComponent(allSosaCheckBox))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                    .addComponent(allIndividualRadioButton))
+                                .addGap(0, 291, Short.MAX_VALUE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(numberSpouseCheckBox)
+                            .addComponent(allSosaCheckBox)
+                            .addComponent(sosadabovilleRadioButton)
+                            .addComponent(sosaRadioButton)
+                            .addComponent(dabovilleRadioButton)
+                            .addComponent(allNumberingRadioButton)
                             .addComponent(actionLabel)
                             .addComponent(numberingLabel)
                             .addComponent(individualLabel)
                             .addComponent(saveCheckBox))
-                        .addGap(0, 203, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -294,7 +301,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(generateRadioButton)
                     .addComponent(eraseRadioButton))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(numberingLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(sosadabovilleRadioButton)
@@ -304,9 +311,11 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
                 .addComponent(dabovilleRadioButton)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(allNumberingRadioButton)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(allSosaCheckBox)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(numberSpouseCheckBox)
+                .addGap(7, 7, 7)
                 .addComponent(individualLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selectedIndividualRadioButton)
@@ -366,6 +375,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
     private javax.swing.JRadioButton generateRadioButton;
     private javax.swing.ButtonGroup individualButtonGroup;
     private javax.swing.JLabel individualLabel;
+    private javax.swing.JCheckBox numberSpouseCheckBox;
     private javax.swing.ButtonGroup numberingButtonGroup;
     private javax.swing.JLabel numberingLabel;
     private javax.swing.JRadioButton otherIndividualRadioButton;
@@ -394,6 +404,7 @@ public class SosaPanel extends javax.swing.JPanel implements Constants {
         int s = selectedIndividualRadioButton.isSelected() ? 1 : (currentDecujusRadioButton.isSelected() ? 2 : (otherIndividualRadioButton.isSelected() ? 3 : 4));
         registry.put(SELECTION, s);
         registry.put(ALLSOSA, allSosaCheckBox.isSelected());
+        registry.put(NUMBERING_SPOUSE, numberSpouseCheckBox.isSelected());
         registry.put(SAVE, saveCheckBox.isSelected());
 
         if (mode == MODE_GENERATE) {
