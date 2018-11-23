@@ -27,7 +27,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
@@ -38,31 +38,32 @@
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="otherIndividualRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="selectedIndividualRadioButton" min="-2" max="-2" attributes="0"/>
-                                  <Component id="sosadabovilleRadioButton" min="-2" max="-2" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="generateRadioButton" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="eraseRadioButton" min="-2" max="-2" attributes="0"/>
                                   </Group>
-                                  <Component id="sosaRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="dabovilleRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="allNumberingRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="currentDecujusRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="allIndividualRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="allSosaCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="291" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="numberSpouseCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="allSosaCheckBox" min="-2" max="-2" attributes="0"/>
+                          <Component id="sosadabovilleRadioButton" min="-2" max="-2" attributes="0"/>
+                          <Component id="sosaRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="dabovilleRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="allNumberingRadioButton" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="actionLabel" min="-2" max="-2" attributes="0"/>
                           <Component id="numberingLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="individualLabel" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="saveCheckBox" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="203" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -79,7 +80,7 @@
                   <Component id="generateRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="eraseRadioButton" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Component id="numberingLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="sosadabovilleRadioButton" min="-2" max="-2" attributes="0"/>
@@ -89,9 +90,11 @@
               <Component id="dabovilleRadioButton" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="allNumberingRadioButton" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
               <Component id="allSosaCheckBox" min="-2" max="-2" attributes="0"/>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="numberSpouseCheckBox" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
               <Component id="individualLabel" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="selectedIndividualRadioButton" min="-2" max="-2" attributes="0"/>
@@ -306,6 +309,16 @@
         </Property>
         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
           <ResourceString bundle="ancestris/modules/gedcom/sosanumbers/Bundle.properties" key="SosaPanel.saveCheckBox.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JCheckBox" name="numberSpouseCheckBox">
+      <Properties>
+        <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/gedcom/sosanumbers/Bundle.properties" key="SosaPanel.numberSpouseCheckBox.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+          <ResourceString bundle="ancestris/modules/gedcom/sosanumbers/Bundle.properties" key="SosaPanel.numberSpouseCheckBox.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
         </Property>
       </Properties>
     </Component>

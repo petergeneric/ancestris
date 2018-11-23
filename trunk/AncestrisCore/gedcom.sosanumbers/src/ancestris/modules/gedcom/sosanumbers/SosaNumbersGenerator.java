@@ -13,7 +13,13 @@
 package ancestris.modules.gedcom.sosanumbers;
 
 import static ancestris.modules.gedcom.sosanumbers.Constants.MODE_ERASE;
-import genj.gedcom.*;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertySex;
 import genj.util.Registry;
 import java.awt.Dimension;
 import java.awt.Frame;
@@ -51,6 +57,7 @@ public class SosaNumbersGenerator implements Constants {
     private int mode = MODE_GENERATE;
     private int numbering = NUMBERING_SOSADABOVILLE;
     private boolean allSosa = false;
+    private boolean numberSpouse = false;
     private Indi indiDeCujus = null;
     private boolean save = true;
     private Set<Indi> changedIndis = null; // no duplicates, hashed
@@ -78,6 +85,7 @@ public class SosaNumbersGenerator implements Constants {
         // Number : sosa, dabo, sosa_dabo, all
         numbering = registry.get(NUMBERING, NUMBERING_SOSADABOVILLE);
         allSosa = registry.get(ALLSOSA, false);
+        numberSpouse = registry.get(NUMBERING_SPOUSE, false);
 
         // Individual : decujus or all
         this.indiDeCujus = indiDeCujus;
@@ -299,7 +307,7 @@ public class SosaNumbersGenerator implements Constants {
                         return false;
                     }
                 }
-                if (NUMBERING_SOSADABOVILLE == numbering) {
+                if (numberSpouse) {
                     // Try to number spouse not numbered.
                     final Indi husband = family.getHusband();
                     if (husband != null && !husband.getId().equals(current.getIndi().getId())) {
