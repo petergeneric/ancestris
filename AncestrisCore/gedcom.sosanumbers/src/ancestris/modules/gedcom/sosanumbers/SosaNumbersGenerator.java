@@ -159,16 +159,22 @@ public class SosaNumbersGenerator implements Constants {
                 maxCounter = 0;
                 changedIndis.clear();
                 stoppedCounter = 0;
-                commit(task);
                 String msg = "<html>";
-                if (stoppedCounter == 0) {
-                    if (message == null) {
-                        msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                try {
+                    commit(task);
+
+                    if (stoppedCounter == 0) {
+                        if (message == null) {
+                            msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                        } else {
+                            msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                        }
                     } else {
-                        msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                        msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>";
                     }
-                } else {
-                    msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>";
+                } catch (Throwable e) {
+                    LOG.log(Level.WARNING, "Error with numbering", e);
+                    msg += "Error during numbering unable to complete task </html>";
                 }
                 DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
                 return null;
@@ -425,17 +431,21 @@ public class SosaNumbersGenerator implements Constants {
         if (runBlank) {
             for (Entity entity : gedcom.getIndis()) {
                 List<Property> props = entity.getAllProperties(tagToRemove);
-                maxCounter += props.size();
+                maxCounter++;
             }
         } else {
             for (Entity entity : gedcom.getIndis()) {
+                boolean counterPlus = true;
                 List<Property> props = entity.getAllProperties(tagToRemove);
                 for (Property prop : props) {
                     Property parent = prop.getParent();
                     if (parent != null) {
                         LOG.log(Level.FINER, "Tag {0} {1} deleted for {1}", new Object[]{tagToRemove, prop.getDisplayValue(), entity.toString(true)});
                         parent.delProperty(prop);
-                        maxCounter++;
+                        if (counterPlus) {
+                            maxCounter++;
+                            counterPlus = false;
+                        }
                         if (!setProgress(maxCounter)) {
                             return false;
                         }
