@@ -165,43 +165,6 @@ public class GedcomUtilities {
             }
         }
         
-          // Update linked entities  : if source entity is removed, entities pointing to it will point in the vaccum.
-          // So make these pointers point to the copied entity.
-// FL : 2017-12-12 : this is not neccessarily what the user wants. If he wants to do so, he needs to select the properties before pressing the merge button.        
-//        for (Entity reference : PropertyXRef.getReferences(src)) {
-//            for (Iterator<PropertyXRef> it = reference.getProperties(PropertyXRef.class).iterator(); it.hasNext();) {
-//                PropertyXRef propertyXRef = it.next();
-//                Entity targetEntity = propertyXRef.getTargetEntity();
-//                if (targetEntity != null && targetEntity.equals(src)) {
-//                    propertyXRef.unlink();
-//                    Property parent = propertyXRef.getParent();
-//                    boolean alreadyLinked = false;
-//                    for (PropertyXRef PropertyXRef : parent.getProperties(PropertyXRef.class)) {
-//                        if (PropertyXRef.getValue().replaceAll("@","").equals(dest.getId())) {
-//                            alreadyLinked = true;
-//                        }
-//                    }
-//                    if (alreadyLinked == false) {
-//                        propertyXRef.setValue(dest.getId());
-//                    }
-//
-//                    /*
-//                     * Try to cope with PropertyForeignXRef exception on link as
-//                     * the visibility of the class is restricted to gedcom
-//                     * package use this workaround as it seem to be the unique
-//                     * Xref properties for which transient property true
-//                     */
-//                    if (propertyXRef.isTransient() == false) {
-//                        try {
-//                            propertyXRef.link();
-//                        } catch (GedcomException e) {
-//                            LOG.log(Level.SEVERE, "unexpected", e);
-//                        }
-//                    }
-//                }
-//            }
-//        }
-
         // Delete merged entity
         gedcom.deleteEntity(src);
     }
