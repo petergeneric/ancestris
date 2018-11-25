@@ -317,11 +317,13 @@ public class GedcomMerge extends AncestrisPlugin implements Runnable {
             if (child.getTag().equals("CHAN")) {
                 Property addedProperty = destProperty.addProperty(child.getTag(), child.getValue());
                 ((PropertyChange) addedProperty).setTime(((PropertyChange) child).getTime());
+            } else if (child instanceof PropertyName) {
+                Property addedProperty;
+                addedProperty = destProperty.addProperty(child.getTag(), "", i);    // FL: for propertyname, subtags are generated automatically
+                addedProperty.setValue(child.getValue());                           // FL : put value here
             } else if (!child.getTag().equals("XREF")) { // Xref properties shall not be copied
                 Property addedProperty;
-                addedProperty = destProperty.addProperty(child.getTag(), "", i);    // FL: Do not put value here ; for propertyname it would generate subtags and
-                                                                                    // a property can only be added without subtags
-                addedProperty.setValue(child.getValue());  // FL : put value here instead
+                addedProperty = destProperty.addProperty(child.getTag(), child.getValue(), i);
                 copyPropertiesCluster(child, addedProperty);
             }
         }
