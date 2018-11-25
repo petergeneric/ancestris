@@ -147,8 +147,9 @@ class ProposalRuleList extends AbstractTableModel implements ProposalRuleTableMo
      */
     private void checkSubRule(ProposalRule rule, boolean state) {
         for (ProposalRule subRule : rule.getSubRules()) {
-            int index = dataList.indexOf(subRule);
-            if(index != -1 ) {
+            int index = dataList.indexOf(subRule);  // <=== 2018-11-25 - FIXME (FL) : why do we need to check it is in the list here when it is not verified durng copy !!!
+                                                    //                                so remove this test. Apply change to all subRules, regardless.
+            if (index != -1 || true) {
                 if (state == true) {
                     // je restaure l'etat initial de la ligne fille
                     subRule.restoreInitialMerge();
