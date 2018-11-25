@@ -147,6 +147,13 @@ public class GedcomUtilities {
         for (Property prop : properties) {
             TagPath tagPath = prop.getParent().getPath();
             Property propDest = dest.getProperty(tagPath);
+            // If destination is null, create it
+            if (propDest == null) {
+                dest.setValue(tagPath, "");
+                propDest = dest.getProperty(tagPath);
+            }
+        
+
             try {
                 if (prop instanceof PropertyXRef && !(prop instanceof PropertyForeignXRef)) {   // unlink FAMS for instance, but do not unlink pointers to ASSO
                     ((PropertyXRef) prop).unlink();
