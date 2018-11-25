@@ -139,7 +139,11 @@ public class SosaNumbersGenerator implements Constants {
                 runBlank = true;
                 changedIndis.clear();
                 maxCounter = 0;
-                task.run();
+                try {
+                    task.run();
+                } catch (Throwable e) {
+                    LOG.log(Level.WARNING, "Error with numbering", e);
+                }
                 runBlank = false;
                 dialog.dispose();
                 return null;
@@ -250,21 +254,23 @@ public class SosaNumbersGenerator implements Constants {
     }
 
     private boolean treeup(Queue<Pair> iter, Map<String, Pair> listCurrent) {
-        final Pair pair = iter.poll();
-        if (pair != null) {
-            final BigInteger sosa = new BigInteger(pair.getValue());
-            final Fam famc = pair.getIndi().getFamilyWhereBiologicalChild();
-            if (famc != null) {
-                final Indi husband = famc.getHusband();
-                if (husband != null && !updateIndi(husband, sosa.shiftLeft(1), iter, listCurrent, null)) {
-                    return true;
-                }
-                final Indi wife = famc.getWife();
-                if (wife != null && !updateIndi(wife, sosa.shiftLeft(1).add(BigInteger.ONE), iter, listCurrent, null)) {
-                    return true;
+        while (!iter.isEmpty()) {
+         //   LOG.log(Level.INFO, "UP Nombre éléments : {0}", iter.size());
+            final Pair pair = iter.poll();
+            if (pair != null) {
+                final BigInteger sosa = new BigInteger(pair.getValue());
+                final Fam famc = pair.getIndi().getFamilyWhereBiologicalChild();
+                if (famc != null) {
+                    final Indi husband = famc.getHusband();
+                    if (husband != null && !updateIndi(husband, sosa.shiftLeft(1), iter, listCurrent, null)) {
+                        return true;
+                    }
+                    final Indi wife = famc.getWife();
+                    if (wife != null && !updateIndi(wife, sosa.shiftLeft(1).add(BigInteger.ONE), iter, listCurrent, null)) {
+                        return true;
+                    }
                 }
             }
-            return treeup(iter, listCurrent);
         }
         return false;
     }
@@ -289,48 +295,50 @@ public class SosaNumbersGenerator implements Constants {
     }
 
     private boolean treedown(BigInteger sosaValue, Queue<Pair> listIter, Map<String, Pair> dabovillePairs) {
-        final Pair current = listIter.poll();
-        if (current != null) {
-            Character suffix = 'a';
-            final String daboCounter = current.getValue();
-            // Remove spouse not Sosa or d'Aboville
-            if (daboCounter != null && !"".equals(daboCounter) && Character.isLetter(daboCounter.charAt(daboCounter.length() - 1))) {
-                return treedown(sosaValue, listIter, dabovillePairs);
-            }
-            final Fam[] families = current.getIndi().getFamiliesWhereSpouse();
-            for (Fam family : families) {
-                int childOrder = 0;
-                for (Indi child : family.getChildren(true)) {
-                    childOrder++;
-                    // Do not duplicate (sosa)/daboville numbers
-                    if (changedIndis.contains(child)) {
-                        continue;
-                    }
-                    String counter = daboCounter + (families.length > 1 ? suffix.toString() : "");
-                    counter += counter.length() > 0 ? "." : "";
-                    counter += childOrder;
-                    if (!updateIndi(child, sosaValue, listIter, dabovillePairs, counter)) {
-                        return false;
-                    }
+        while (!listIter.isEmpty()) {
+        //     LOG.log(Level.INFO, "DOWN Nombre éléments : {0}", listIter.size());
+            final Pair current = listIter.poll();
+            if (current != null) {
+                Character suffix = 'a';
+                final String daboCounter = current.getValue();
+                // Remove spouse not Sosa or d'Aboville
+                if (daboCounter != null && !"".equals(daboCounter) && Character.isLetter(daboCounter.charAt(daboCounter.length() - 1))) {
+                    return treedown(sosaValue, listIter, dabovillePairs);
                 }
-                if (numberSpouse) {
-                    // Try to number spouse not numbered.
-                    final Indi husband = family.getHusband();
-                    if (husband != null && !husband.getId().equals(current.getIndi().getId())) {
-                        if (!changedIndis.contains(husband) && !updateIndi(husband, sosaValue, listIter, dabovillePairs, daboCounter + suffix.toString())) {
-                            return false;
+                final Fam[] families = current.getIndi().getFamiliesWhereSpouse();
+                for (Fam family : families) {
+                    int childOrder = 0;
+                    for (Indi child : family.getChildren(true)) {
+                        childOrder++;
+                        // Do not duplicate (sosa)/daboville numbers
+                        if (changedIndis.contains(child)) {
+                            continue;
                         }
-                    } else {
-                        final Indi wife = family.getWife();
-                        if (wife != null && !changedIndis.contains(wife) && !wife.getId().equals(current.getIndi().getId())
-                                && !updateIndi(wife, sosaValue, listIter, dabovillePairs, daboCounter + suffix.toString())) {
+                        String counter = daboCounter + (families.length > 1 ? suffix.toString() : "");
+                        counter += counter.length() > 0 ? "." : "";
+                        counter += childOrder;
+                        if (!updateIndi(child, sosaValue, listIter, dabovillePairs, counter)) {
                             return false;
                         }
                     }
+                    if (numberSpouse) {
+                        // Try to number spouse not numbered.
+                        final Indi husband = family.getHusband();
+                        if (husband != null && !husband.getId().equals(current.getIndi().getId())) {
+                            if (!changedIndis.contains(husband) && !updateIndi(husband, sosaValue, listIter, dabovillePairs, daboCounter + suffix.toString())) {
+                                return false;
+                            }
+                        } else {
+                            final Indi wife = family.getWife();
+                            if (wife != null && !changedIndis.contains(wife) && !wife.getId().equals(current.getIndi().getId())
+                                    && !updateIndi(wife, sosaValue, listIter, dabovillePairs, daboCounter + suffix.toString())) {
+                                return false;
+                            }
+                        }
+                    }
+                    suffix++;
                 }
-                suffix++;
             }
-            return treedown(sosaValue, listIter, dabovillePairs);
         }
         return true;
     }
