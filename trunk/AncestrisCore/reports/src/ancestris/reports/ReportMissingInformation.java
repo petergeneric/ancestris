@@ -45,7 +45,7 @@ public class ReportMissingInformation extends Report {
 
 	
 	//column widths etc
-	private int colName = 50;
+	private int colName = 60;
 	private int colData = 6;
 	private int numDataCols = 9;
   
@@ -71,7 +71,7 @@ public class ReportMissingInformation extends Report {
 
 	
     //clear any previous data and align
-    strNameID = indi.getName() + " " + indi.getId();
+    strNameID = String.format("%-10s", indi.getId()) + " " + indi.getName();
     strDataRow = align(strNameID, colName, 3); 
 
     //NOTE: the order of the following tests corresponds with the display column order
