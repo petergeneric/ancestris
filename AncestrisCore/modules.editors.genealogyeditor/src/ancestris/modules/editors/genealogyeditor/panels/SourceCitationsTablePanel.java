@@ -151,6 +151,9 @@ public class SourceCitationsTablePanel extends javax.swing.JPanel {
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
                             sourceCitationEditor.commit();
+                            if (mSource != mSourceCitation.getTargetEntity()) {
+                                gedcom.deleteEntity(mSource);
+                            }
                         }
                     });
                     if (mSourceCitationsTableModel.indexOf(mSourceCitation) == -1) {
