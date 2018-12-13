@@ -155,9 +155,6 @@ public class GedcomUtilities {
         
 
             try {
-                if (prop instanceof PropertyXRef && !(prop instanceof PropertyForeignXRef)) {   // unlink FAMS for instance, but do not unlink pointers to ASSO
-                    ((PropertyXRef) prop).unlink();
-                }
                 movePropertyRecursively(prop, propDest);
             } catch (GedcomException ex) {
                 LOG.log(Level.SEVERE, "Unexpected Gedcom exception {0}", ex);
@@ -207,6 +204,8 @@ public class GedcomUtilities {
         else {
             int n = parentPropertyDest.getNoOfProperties();
             propertyDest = parentPropertyDest.addProperty(propertySrc.getTag(), propertySrc.getValue(), n);  // add to the end
+            
+            // If xref, link new
             if (propertyDest instanceof PropertyXRef) {
                 ((PropertyXRef) propertyDest).link();
             }
@@ -216,8 +215,17 @@ public class GedcomUtilities {
                 movePropertyRecursively(children, propertyDest);
             }
             
+            // unlink FAMS for instance, but do not unlink pointers to ASSO (ex: PropertyForeignXRef)
+            if (propertySrc instanceof PropertyXRef) {
+                PropertyXRef pxref = (PropertyXRef) propertySrc;
+                Entity ent = pxref.getTargetEntity();
+                ent.delProperty(pxref.getTarget());
+                //pxref.unlink();   // FL : this line does not unlink the target, just sets it to zero, which is not what we want. FIXME : Change the unlink method instead ?
+                propertySrc = null;
+            } else {
             // Remove src property
             propertySrc.getParent().delProperty(propertySrc);
+            }
             
         }
 
