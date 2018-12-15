@@ -19,11 +19,13 @@
 package ancestris.gedcom;
 
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
 import genj.io.Filter;
@@ -39,9 +41,11 @@ import java.util.Set;
 import java.util.StringTokenizer;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
@@ -55,6 +59,9 @@ import javax.swing.JTextField;
      * components
      */
     private JCheckBox[] checkEntities = new JCheckBox[Gedcom.ENTITIES.length];
+    private JRadioButton checkEntityInclude;
+    private JRadioButton checkEntityExclude;
+    private TextFieldWidget textEntityTag;
     private JCheckBox[] checkFilters;
     private JTextField textTags, textValues;
     private TextFieldWidget textPassword;
@@ -86,26 +93,26 @@ import javax.swing.JTextField;
 
     /*package*/ public SaveOptionsWidget(Gedcom gedcom, Filter[] filters) {
         isGedcom = false;
-        // Allow for files moves to another directory
-        int nbFiles = 0;
-        Box directories = new Box(BoxLayout.Y_AXIS);
-        if (gedcom != null) {
-            List<PropertyFile> files = (List<PropertyFile>) gedcom.getPropertiesByClass(PropertyFile.class);
-            nbFiles = files.size();
-            directories.add(new JLabel(" "));
-            checkMediaDirectory = new JCheckBox(resources.getString("save.options.files.check"));
-            directories.add(checkMediaDirectory);
-            directories.add(new JLabel(" "));
-            directories.add(new JLabel(resources.getString("save.options.files.label")));
-            directories.add(new JLabel(" "));
-        }
-
         // Entity filter    
         Box types = new Box(BoxLayout.Y_AXIS);
         for (int t = 0; t < Gedcom.ENTITIES.length; t++) {
             checkEntities[t] = new JCheckBox(Gedcom.getName(Gedcom.ENTITIES[t], true), true);
             types.add(checkEntities[t]);
         }
+        types.add(new JLabel(" "));
+        types.add(new JLabel(" "));
+        ButtonGroup group = new ButtonGroup();
+        checkEntityInclude = new JRadioButton(resources.getString("save.options.entities.include"));
+        checkEntityInclude.setSelected(true);
+        checkEntityExclude = new JRadioButton(resources.getString("save.options.entities.exclude"));
+        group.add(checkEntityInclude);
+        group.add(checkEntityExclude);
+        types.add(checkEntityInclude);
+        types.add(checkEntityExclude);
+        types.add(new JLabel(resources.getString("save.options.entities.tag")));
+        textEntityTag = new TextFieldWidget("");
+        textEntityTag.setEditable(true);
+        types.add(textEntityTag);
 
         // Property filter
         Box props = new Box(BoxLayout.Y_AXIS);
@@ -137,6 +144,20 @@ import javax.swing.JTextField;
             }
         }
 
+        // Allow for files moves to another directory
+        int nbFiles = 0;
+        Box directories = new Box(BoxLayout.Y_AXIS);
+        if (gedcom != null) {
+            List<PropertyFile> files = (List<PropertyFile>) gedcom.getPropertiesByClass(PropertyFile.class);
+            nbFiles = files.size();
+            directories.add(new JLabel(" "));
+            checkMediaDirectory = new JCheckBox(resources.getString("save.options.files.check"));
+            directories.add(checkMediaDirectory);
+            directories.add(new JLabel(" "));
+            directories.add(new JLabel(resources.getString("save.options.files.label")));
+            directories.add(new JLabel(" "));
+        }
+
         // Hide options tab if gedcom is null (used for other types of file)
         Box options = new Box(BoxLayout.Y_AXIS);
         if (gedcom != null) {
@@ -156,12 +177,12 @@ import javax.swing.JTextField;
         }
 
         // layout
+        add(resources.getString("save.options.filter.entities"), types);
+        add(resources.getString("save.options.filter.views"), new JScrollPane(others));
+        add(resources.getString("save.options.filter.properties"), props);
         if (gedcom != null && nbFiles > 0) {
             add(resources.getString("save.options.files"), directories);
         }
-        add(resources.getString("save.options.filter.entities"), types);
-        add(resources.getString("save.options.filter.properties"), props);
-        add(resources.getString("save.options.filter.views"), new JScrollPane(others));
         if (gedcom != null) {
             add(resources.getString("save.options"), options);
         }
@@ -208,7 +229,7 @@ import javax.swing.JTextField;
         List<Filter> result = new ArrayList<Filter>(10);
 
         // create one for the types
-        FilterByType fbt = FilterByType.get(checkEntities);
+        FilterByType fbt = FilterByType.get(checkEntities, checkEntityInclude.isSelected(), textEntityTag.getText().trim());
         if (fbt != null) {
             result.add(fbt);
         }
@@ -525,11 +546,14 @@ import javax.swing.JTextField;
          * the enabled types
          */
         private Set<String> types = new HashSet<String>();
+        private String tag = new String();
+        private boolean includes = true;
+        private Set<Indi> indis = new HashSet<Indi>();
 
         /**
          * Create an instance
          */
-        protected static FilterByType get(JCheckBox[] checks) {
+        protected static FilterByType get(JCheckBox[] checks, boolean includes, String tag) {
 
             FilterByType result = new FilterByType();
 
@@ -538,7 +562,9 @@ import javax.swing.JTextField;
                     result.types.add(Gedcom.ENTITIES[t]);
                 }
             }
-            return result.types.size() < Gedcom.ENTITIES.length ? result : null;
+            result.includes = includes;
+            result.tag = tag;
+            return (result.types.size() < Gedcom.ENTITIES.length) || (!tag.isEmpty()) ? result : null;
         }
 
         /**
@@ -547,8 +573,51 @@ import javax.swing.JTextField;
          * @see genj.io.Filter#accept(genj.gedcom.Property)
          */
         @Override
-        public boolean veto(Entity entity) {
-            if (!types.contains(entity.getTag())) {
+        public boolean veto(Entity ent) {
+            // If entity tag is excluded, veto is true
+            if (!types.contains(ent.getTag())) {
+                return true;
+            }
+            // if a tag parameter is given, check if entity is linked to an individual with that tag
+            if (!tag.isEmpty()) {
+                // indi?
+                if (ent instanceof Indi) {
+                    return !keepIndi(ent);
+                }
+                
+                // fam?
+                if (ent instanceof Fam) {
+                    Fam fam = (Fam) ent;
+                    boolean father = keepIndi(fam.getHusband()),
+                            mother = keepIndi(fam.getWife()),
+                            child = false;
+                    Indi[] children = fam.getChildren();
+                    for (int i = 0; child == false && i < children.length; i++) {
+                        if (keepIndi(children[i])) {
+                            child = true;
+                        }
+                    }
+                    // father and mother or parent and child
+                    return !((father && mother) || (father && child) || (mother && child));
+                }
+                // let submitter through if it's THE one
+                if (ent.getGedcom().getSubmitter() == ent) {
+                    return !includes;
+                }
+                // maybe a referenced other type?
+                Entity[] refs = PropertyXRef.getReferences(ent);
+                for (Entity ref : refs) {
+                    if (keepIndi(ref)) {
+                        return !includes;
+                    }
+                    Entity[] refs2 = PropertyXRef.getReferences(ref);
+                    for (Entity ref2 : refs2) {
+                        if (keepIndi(ref2)) {
+                            return !includes;
+                        }
+
+                    }
+                }
                 return true;
             }
             return false;
@@ -568,6 +637,15 @@ import javax.swing.JTextField;
         public boolean canApplyTo(Gedcom gedcom) {
             return true;
         }
+        
+        private boolean keepIndi(Entity ent) {
+            if (ent == null) {
+                return false;
+            }
+            boolean hasTag = !ent.getAllProperties(tag).isEmpty(); 
+            return (hasTag && includes) || (!hasTag && !includes);
+        }
+        
     } //FilterByType
 
 } //SaveOptionsWidget
