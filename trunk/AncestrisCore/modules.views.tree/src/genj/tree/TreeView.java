@@ -1961,6 +1961,13 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             if (ents.contains(ref)) {
                 return false;
             }
+            Entity[] refs2 = PropertyXRef.getReferences(ref);
+            for (Entity ref2 : refs2) {
+                if (ents.contains(ref2)) {
+                    return false;
+                }
+
+            }
         }
         // not
         return true;
