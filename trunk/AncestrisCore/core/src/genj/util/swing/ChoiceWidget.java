@@ -304,7 +304,7 @@ public class ChoiceWidget extends JComboBox {
             String pre = getText();
             for (int i = 0; i < getItemCount(); i++) {
                 String item = getItemAt(i).toString();
-                if (item.regionMatches(isIgnoreCase, 0, pre, 0, pre.length())) {
+                if (matchItem(item, pre)) {
                     setSelectedIndex(i);
                     break;
                 }
@@ -313,6 +313,17 @@ public class ChoiceWidget extends JComboBox {
         // done
     }
 
+    private boolean matchItem(String value, String prefix) {
+        //return (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length()));
+        if (isIgnoreCase) {
+            return value.toLowerCase().contains(prefix.toLowerCase());
+        } else {
+            return value.contains(prefix);
+        }
+    }
+    
+    
+    
     /**
      * @see javax.swing.JComponent#requestFocus()
      */
@@ -622,23 +633,13 @@ public class ChoiceWidget extends JComboBox {
          */
         private String setSelectedPrefix(String prefix) {
 
-//            String strA = prefix;
-//            if (isIgnoreCase) {
-//                strA = prefix.toLowerCase();
-//            }
-            
             if (values.length == 0)
                 updateValues();
 
             // try to find a match
             for (int i = 0; i < values.length; i++) {
                 String value = values[i].toString();
-//                String strB = value;
-//                if (isIgnoreCase) {
-//                    strB = value.toLowerCase();
-//                }
-                if (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length())) {
-                //if (strB.contains(strA)) {
+                if (matchItem(value, prefix)) {
                     setSelectedItem(value);
                     return value;
                 }
