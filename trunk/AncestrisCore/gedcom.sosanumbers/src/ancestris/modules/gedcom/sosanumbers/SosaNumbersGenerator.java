@@ -13,6 +13,7 @@
 package ancestris.modules.gedcom.sosanumbers;
 
 import static ancestris.modules.gedcom.sosanumbers.Constants.MODE_ERASE;
+import ancestris.util.swing.DialogManager;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -52,6 +53,7 @@ import org.openide.util.NbBundle;
 public class SosaNumbersGenerator implements Constants {
 
     private final static Logger LOG = Logger.getLogger(SosaNumbersGenerator.class.getName(), null);
+    private final static int STOP_COUNTER = 5000;
     private final static Comparator SOSA_COMPARE = new SosaComparator();
     private Gedcom gedcom = null;
     private int mode = MODE_GENERATE;
@@ -65,7 +67,6 @@ public class SosaNumbersGenerator implements Constants {
     private boolean runBlank = false;
     private int maxCounter = 0;
     private int stoppedCounter = 0;
-    // private String title = "";
 
     private ProgressMonitor progressMonitor = null;
     private Task fullTask = null;
@@ -151,41 +152,47 @@ public class SosaNumbersGenerator implements Constants {
         };
         fullTask.execute();
         dialog.setVisible(true);
+        boolean cont = true;
+        if (maxCounter >= STOP_COUNTER && DialogManager.YES_OPTION != DialogManager.create(NbBundle.getMessage(getClass(), "SosanNumberGenerator.longOpTitle"), NbBundle.getMessage(getClass(), "SosanNumberGenerator.longOpConfirm", STOP_COUNTER))
+                .setMessageType(DialogManager.WARNING_MESSAGE).setOptionType(DialogManager.YES_NO_OPTION).show()) {
+            cont = false;
+        }
 
-        // Run main task while displaying progress bar
-        // -------------------------------------------
-        progressMonitor = new ProgressMonitor(null, title, "", 0, maxCounter);
-        progressMonitor.setProgress(0);
-        progressMonitor.setMillisToPopup(1);
-        fullTask = new Task(progressMonitor, maxCounter) {
-            @Override
-            public Void doInBackground() {
-                maxCounter = 0;
-                changedIndis.clear();
-                stoppedCounter = 0;
-                String msg = "<html>";
-                try {
-                    commit(task);
+        if (cont) {
+            // Run main task while displaying progress bar
+            // -------------------------------------------
+            progressMonitor = new ProgressMonitor(null, title, "", 0, maxCounter);
+            progressMonitor.setProgress(0);
+            progressMonitor.setMillisToPopup(1);
+            fullTask = new Task(progressMonitor, maxCounter) {
+                @Override
+                public Void doInBackground() {
+                    maxCounter = 0;
+                    changedIndis.clear();
+                    stoppedCounter = 0;
+                    String msg = "<html>";
+                    try {
+                        commit(task);
 
-                    if (stoppedCounter == 0) {
-                        if (message == null) {
-                            msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                        if (stoppedCounter == 0) {
+                            if (message == null) {
+                                msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.autogen") + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                            } else {
+                                msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                            }
                         } else {
-                            msg += message + "<br>" + NbBundle.getMessage(getClass(), "SosaNumbersGenerator.changes", maxCounter) + "</html>";
+                            msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>";
                         }
-                    } else {
-                        msg += NbBundle.getMessage(getClass(), "SosaNumbersGenerator.stopped", stoppedCounter) + "</html>";
+                    } catch (Throwable e) {
+                        LOG.log(Level.WARNING, "Error with numbering", e);
+                        msg += "Error during numbering unable to complete task </html>";
                     }
-                } catch (Throwable e) {
-                    LOG.log(Level.WARNING, "Error with numbering", e);
-                    msg += "Error during numbering unable to complete task </html>";
+                    DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
+                    return null;
                 }
-                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(msg, NotifyDescriptor.INFORMATION_MESSAGE));
-                return null;
-            }
-        };
-        fullTask.execute();
-
+            };
+            fullTask.execute();
+        }
         // done
     }
 
@@ -255,7 +262,9 @@ public class SosaNumbersGenerator implements Constants {
 
     private boolean treeup(Queue<Pair> iter, Map<String, Pair> listCurrent) {
         while (!iter.isEmpty()) {
-         //   LOG.log(Level.INFO, "UP Nombre éléments : {0}", iter.size());
+            if (runBlank && iter.size() >= STOP_COUNTER) {
+                return false;
+            }
             final Pair pair = iter.poll();
             if (pair != null) {
                 final BigInteger sosa = new BigInteger(pair.getValue());
@@ -296,7 +305,9 @@ public class SosaNumbersGenerator implements Constants {
 
     private boolean treedown(BigInteger sosaValue, Queue<Pair> listIter, Map<String, Pair> dabovillePairs) {
         while (!listIter.isEmpty()) {
-        //     LOG.log(Level.INFO, "DOWN Nombre éléments : {0}", listIter.size());
+            if (runBlank && listIter.size() >= STOP_COUNTER) {
+                return false;
+            }
             final Pair current = listIter.poll();
             if (current != null) {
                 Character suffix = 'a';
