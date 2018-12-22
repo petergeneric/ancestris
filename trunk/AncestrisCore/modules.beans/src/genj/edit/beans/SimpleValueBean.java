@@ -67,6 +67,7 @@ public class SimpleValueBean extends PropertyBean {
                     Desktop.getDesktop().browse(new URI(link));
                 } catch (Exception ex) {
                     DialogManager.createError(RESOURCES.getString("link.error"), link).show();
+                    LOG.severe("Error accessing link. Exception="+ex.getLocalizedMessage());
                 }
             }
         });
