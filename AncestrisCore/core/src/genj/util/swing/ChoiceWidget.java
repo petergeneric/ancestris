@@ -314,11 +314,15 @@ public class ChoiceWidget extends JComboBox {
     }
 
     private boolean matchItem(String value, String prefix) {
-        //return (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length()));
-        if (isIgnoreCase) {
-            return value.toLowerCase().contains(prefix.toLowerCase());
+        if (prefix != null && prefix.startsWith("*")) {
+            String pf = prefix.substring(1);
+            if (isIgnoreCase) {
+                return value.toLowerCase().contains(pf.toLowerCase());
+            } else {
+                return value.contains(pf);
+            }
         } else {
-            return value.contains(prefix);
+            return (value.regionMatches(isIgnoreCase, 0, prefix, 0, prefix.length()));
         }
     }
     
