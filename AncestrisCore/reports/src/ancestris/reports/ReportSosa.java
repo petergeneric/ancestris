@@ -3,24 +3,22 @@ package ancestris.reports;
 /**
  * Reports are Freeware Code Snippets
  *
- * This report is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+ * This report is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE.
  */
+import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.fo.Document;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Indi;
-import ancestris.gedcom.privacy.PrivacyPolicy;
 import genj.gedcom.Property;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
 import genj.report.Report;
-
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.SortedSet;
@@ -35,10 +33,12 @@ import org.openide.util.lookup.ServiceProvider;
  * ReportSosa
  */
 @SuppressWarnings("unchecked")
-@ServiceProvider(service=Report.class)
+@ServiceProvider(service = Report.class)
 public class ReportSosa extends Report {
 
-    /** option - our report types defined, the value and choices */
+    /**
+     * option - our report types defined, the value and choices
+     */
     private final static int SOSA_REPORT = 0,
             TABLE_REPORT = 1,
             LINEAGE_REPORT = 2,
@@ -50,7 +50,9 @@ public class ReportSosa extends Report {
         translate("LineageReport"),
         translate("AgnaticReport")
     };
-    /** option - individual per line or event per line */
+    /**
+     * option - individual per line or event per line
+     */
     private final static int ONE_LINE = 0,
             ONE_EVT_PER_LINE = 1;
     public int reportFormat = ONE_LINE;
@@ -59,12 +61,17 @@ public class ReportSosa extends Report {
         translate("EventPerLine")
     };
     public boolean displayBullet = true;
-    public int startSosa = 1;
-    /** option - number of generations from root considered to be private and to display */
+    public Integer startSosa = 1;
+    /**
+     * option - number of generations from root considered to be private and to
+     * display
+     */
     public int privateGen = 0;
     public int reportMinGenerations = 1;
     public int reportMaxGenerations = 999;
-    /** option - Events to display */
+    /**
+     * option - Events to display
+     */
     public boolean reportPlaceOfBirth = true;
     public boolean reportDateOfBirth = true;
     public boolean reportPlaceOfBaptism = true;
@@ -82,7 +89,9 @@ public class ReportSosa extends Report {
     public boolean reportPlaceOfResi = true;
     public boolean reportDateOfResi = true;
     public boolean reportIndiNumber = true;
-    /** option - Information to display for each event */
+    /**
+     * option - Information to display for each event
+     */
     public boolean showAllPlaceJurisdictions = false;
     private final static int SRC_NO = 0,
             SRC_TITLE_NO_TEXT = 1,
@@ -106,7 +115,9 @@ public class ReportSosa extends Report {
     public boolean displayEmpty = true;
     public boolean prefixEvent = false;
     public String prefixSource = "Src: ";
-    /** Formatting COLORs */
+    /**
+     * Formatting COLORs
+     */
     private static String format_one_line = "";
     private static String format_multi_lines = "";
     private final static int COLOR_BLACK = 0,
@@ -130,7 +141,9 @@ public class ReportSosa extends Report {
         translate("Orange"),
         translate("Red")
     };
-    /** Globale variables */
+    /**
+     * Globale variables
+     */
     // Logic of sources:
     // ----------------
     // If 2 individuals (I34 and I928) are associated for an event to source S21, each one with a note under the source like "abc" for one, and "xyz" for the other; if source title is "title_of_source"; if the text of the source is "text_of_source", and if there is a note to the source "note_of_source", then the following would be displayed for the list of sources:
@@ -140,8 +153,8 @@ public class ReportSosa extends Report {
     // I34:BIRT: abc
     // I928:DEAT: xyz
     // We will store sources in a global list for display at end of generation or end of report; we will store text and note in a list of strings mapped to a source.
-    private static SortedSet globalSrcList = new TreeSet();  // list of source
-    private static Map globalSrcNotes = new TreeMap();  // map of sources to a list of strings
+    private final static SortedSet<Source> GLOBAL_SRC_LIST = new TreeSet<>();  // list of source
+    private final static Map<Source, List<String>> GLOBAL_SRC_NOTES = new TreeMap<>();  // map of sources to a list of strings
     // Events (BIRT and BAPM will be lumped together in terms of options to display)
     String[] events = {"BIRT", "BAPM", "MARR", "DEAT", "BURI", "OCCU", "RESI"};
     boolean[] dispEv = {true, true, true, true, false, false, false};
@@ -154,8 +167,8 @@ public class ReportSosa extends Report {
             srcTextAtGen = false,
             srcTextAtEnd = false,
             srcDisplay = false;
-    private static String NOTE = ".:NOTE";       // Notes tag in Sources (SOUR and INDI)
-    private static String DATA = ".:DATA:TEXT";  // Data tag in Sources (INDI)
+    private final static String NOTE = ".:NOTE";       // Notes tag in Sources (SOUR and INDI)
+    private final static String DATA = ".:DATA:TEXT";  // Data tag in Sources (INDI)
 
     /**
      * Main for argument individual
@@ -211,11 +224,14 @@ public class ReportSosa extends Report {
     }
 
     /**
-     * base type for our rescursion into ancestors  - either Sosa, Lineage, Agnatic or Table
+     * base type for our rescursion into ancestors - either Sosa, Lineage,
+     * Agnatic or Table
      */
     abstract class Recursion {
 
-        /** start the recursion */
+        /**
+         * start the recursion
+         */
         abstract void start(Indi indi, PrivacyPolicy policy, Document doc);
 
         /**
@@ -224,17 +240,20 @@ public class ReportSosa extends Report {
         abstract String getTitle(Indi root);
 
         /**
-         * recursion step for formatting the start of the recursion - implement in sub-classes
+         * recursion step for formatting the start of the recursion - implement
+         * in sub-classes
          */
         abstract void formatStart(Indi indi, Document doc);
 
         /**
-         * recursion step for formatting an individual - implement in sub-classes
+         * recursion step for formatting an individual - implement in
+         * sub-classes
          */
         abstract void formatIndi(Indi indi, Fam fam, int gen, int sosa, PrivacyPolicy policy, Document doc);
 
         /**
-         * recursion step for formatting the end of the recursion - implement in sub-classes
+         * recursion step for formatting the end of the recursion - implement in
+         * sub-classes
          */
         abstract void formatEnd(Document doc);
 
@@ -253,26 +272,26 @@ public class ReportSosa extends Report {
         /**
          * Get source information about an entity's event
          */
-        List getSources(Entity entity, String tagPath, String description) {
+        List<Source> getSources(Entity entity, String tagPath, String description) {
             String descStr = entity.toString();
-            List src = new ArrayList();
+            List<Source> src = new ArrayList<>();
             if (description.length() != 0) {
                 descStr += " " + description + " :$#@ ";
             }
-            Property prop[] = entity.getProperties(new TagPath(tagPath));
-            for (int p = 0; p < prop.length; p++) {
-                if ((prop[p] != null) && (prop[p].toString().trim().length() != 0) && (prop[p] instanceof PropertySource)) {
-                    PropertySource propSrc = (PropertySource) prop[p];
+
+            for (Property p : entity.getProperties(new TagPath(tagPath))) {
+                if ((p != null) && (p.toString().trim().length() != 0) && (p instanceof PropertySource)) {
+                    PropertySource propSrc = (PropertySource) p;
                     Source source = (Source) (propSrc.getTargetEntity());
                     src.add(source);
                     // Add source to global list
-                    globalSrcList.add(source);
+                    GLOBAL_SRC_LIST.add(source);
                     // Add individual notes to global notes list:
                     //  1. First get list of notes for this source
-                    List listOfNotes = (List) globalSrcNotes.get(source);
+                    List<String> listOfNotes = GLOBAL_SRC_NOTES.get(source);
                     //  2. If no list found for this source, create one and initialise it
                     if (listOfNotes == null) {
-                        listOfNotes = new ArrayList();
+                        listOfNotes = new ArrayList<>();
                         String sText = source.getText();
                         if ((sText != null) && (sText.trim().length() > 0)) {
                             listOfNotes.add(sText);
@@ -285,7 +304,7 @@ public class ReportSosa extends Report {
                         if ((sNote != null) && (sNote.trim().length() > 0)) {
                             listOfNotes.add(sNote);
                         }
-                        globalSrcNotes.put(source, listOfNotes);
+                        GLOBAL_SRC_NOTES.put(source, listOfNotes);
                     }
                     //  3. Then get individual notes and if it exists, add it to the list
                     // if it is not already in there (for Family entities, both
@@ -325,23 +344,22 @@ public class ReportSosa extends Report {
 
         /**
          * resolve standard set of properties of an individual
+         *
          * @param indi the individual to get properties for
          * @param fam the family to consider as THE spousal family
          * @param privacy privacy policy
          * @param usePrefixes whether to user prefixes in info generation
          * @param returnEmpties whether to return or skip empty values
          */
-        void getProperties(Indi indi, Fam fam, PrivacyPolicy privacy, boolean usePrefixes, boolean returnEmpties, Map eDesc, Map eSrc) {
+        void getProperties(Indi indi, Fam fam, PrivacyPolicy privacy, boolean usePrefixes, boolean returnEmpties, Map<String, String> eDesc, Map<String, List<Source>> eSrc) {
 
             // Variables
-            String event = "";
-            String description = "";
-            List sources = new ArrayList();
-            int ev = 0;
+            String description;
+            List<Source> sources;
 
             // birth?
-            ev = 0;
-            event = "BIRT";
+            int ev = 0;
+            String event = "BIRT";
             if (dispEv[ev]) {
                 description = getProperty(indi, event, usePrefixes ? symbols[ev] : "", reportDateOfBirth, reportPlaceOfBirth, privacy);
                 if (returnEmpties || description.length() > 0) {
@@ -381,7 +399,16 @@ public class ReportSosa extends Report {
                     String prefix = "";
                     description = getProperty(fam, event, prefix, reportDateOfMarriage, reportPlaceOfMarriage, privacy);
                     if (usePrefixes) {
-                        prefix = symbols[ev] + (fam.getOtherSpouse(indi) != null ? " " + fam.getOtherSpouse(indi).getName() : "");
+                        final Indi otherSpouse = fam.getOtherSpouse(indi);
+                        String otherSpouseName = "";
+                        if (otherSpouse != null) {
+                            if (privacy.isPrivate(otherSpouse)) {
+                                otherSpouseName = privacy.getPrivateMask();
+                            } else {
+                                otherSpouseName = otherSpouse.getName();
+                            }
+                        }
+                        prefix = symbols[ev] + " " + otherSpouseName;
                     }
                     if (returnEmpties || description.length() > 0) {
                         eDesc.put(event, prefix + " " + description);
@@ -462,22 +489,24 @@ public class ReportSosa extends Report {
                     }
                 }
             }
-
             // done
-            return;
         }
     } //Layout
 
     /**
-     * base type for our rescursion into ancestors  - either Sosa, Lineage, Agnatic or Table
+     * base type for our rescursion into ancestors - either Sosa, Lineage,
+     * Agnatic or Table
      */
     abstract class DepthFirst extends Recursion {
 
-        /** start */
+        /**
+         * start
+         */
+        @Override
         void start(Indi indi, PrivacyPolicy policy, Document doc) {
             formatStart(indi, doc);
             Fam[] fams = indi.getFamiliesWhereSpouse();
-            Fam fam = null;
+            Fam fam;
             if ((fams != null) && (fams.length > 0)) {
                 fam = fams[0];
             } else {
@@ -488,10 +517,12 @@ public class ReportSosa extends Report {
         }
 
         /**
-         * each layout iterates over all individuals starting with the root
-         * up to the maximum number of generations
+         * each layout iterates over all individuals starting with the root up
+         * to the maximum number of generations
+         *
          * @param indi the current individual
-         * @param fam the family that this individual was pulled out of (null for root)
+         * @param fam the family that this individual was pulled out of (null
+         * for root)
          * @param gen the current generation
          * @param sosa the sosa index
          * @param policy the privacy policy
@@ -504,7 +535,7 @@ public class ReportSosa extends Report {
             }
 
             // let implementation handle individual
-            formatIndi(indi, fam, gen, sosa, gen < privateGen ? PrivacyPolicy.getDefault().getAllPrivate() : policy, doc);
+            formatIndi(indi, fam, gen, sosa, gen < privateGen ? PrivacyPolicy.getDefault().getAllPrivate() : PrivacyPolicy.getDefault().getAllPublic(), doc);
 
             // go one generation up to father and mother
             Fam famc = indi.getFamilyWhereBiologicalChild();
@@ -538,11 +569,14 @@ public class ReportSosa extends Report {
      */
     abstract class BreadthFirst extends Recursion {
 
-        /** start */
+        /**
+         * start
+         */
+        @Override
         void start(Indi indi, PrivacyPolicy policy, Document doc) {
             formatStart(indi, doc);
-            List list = new ArrayList(3);
-            list.add(new Integer(startSosa));
+            List<Object> list = new ArrayList<>(3);
+            list.add(startSosa);
             list.add(indi);
             Fam[] fams = indi.getFamiliesWhereSpouse();
             if ((fams != null) && (fams.length > 0)) {
@@ -555,14 +589,16 @@ public class ReportSosa extends Report {
         }
 
         /**
-         * recurse over a generation list
-         * up to the maximum number of generations
-         * @param generation the current generation (sosa,indi,fam)*
+         * recurse over a generation list up to the maximum number of
+         * generations
+         *
+         * @param generation the current generation (sosa,indi,fam)
+         *
          * @param gen the current generation
          * @param policy the privacy policy
          * @param doc the document to fill
          */
-        void recursion(List generation, int gen, PrivacyPolicy policy, Document doc) {
+        void recursion(List<Object> generation, int gen, PrivacyPolicy policy, Document doc) {
 
             // stop here?
             if (gen > reportMaxGenerations) {
@@ -573,11 +609,11 @@ public class ReportSosa extends Report {
             formatGeneration(gen, doc);
 
             // report the whole generation from 'left to right'
-            List nextGeneration = new ArrayList();
+            List<Object> nextGeneration = new ArrayList<>();
             for (int i = 0; i < generation.size();) {
 
                 // next triplet
-                int sosa = ((Integer) generation.get(i++)).intValue();
+                int sosa = ((Integer) generation.get(i++));
                 Indi indi = (Indi) generation.get(i++);
                 Fam fam = (Fam) generation.get(i++);
 
@@ -599,7 +635,7 @@ public class ReportSosa extends Report {
                 }
 
                 // let implementation handle individual
-                formatIndi(indi, fam, gen, sosa, gen < privateGen ? PrivacyPolicy.getDefault().getAllPrivate() : policy, doc);
+                formatIndi(indi, fam, gen, sosa, gen < privateGen ? PrivacyPolicy.getDefault().getAllPrivate() : PrivacyPolicy.getDefault().getAllPublic(), doc);
             } // end of scanning generations
 
             // recurse into next generation
@@ -607,7 +643,7 @@ public class ReportSosa extends Report {
                 if (gen >= reportMinGenerations - 1) {
                     writeSourceList(doc, gen, srcAtGen, srcTextAtGen);
                 } else {
-                    globalSrcList.clear();
+                    GLOBAL_SRC_LIST.clear();
                 }
             }
             if (!nextGeneration.isEmpty()) {
@@ -623,30 +659,29 @@ public class ReportSosa extends Report {
         abstract void formatGeneration(int gen, Document doc);
     } //BreadthFirst
 
-    /** ********************************************************************************
+    /**
+     * ********************************************************************************
      * The pretties report with breadth first
      *
-     * GENERATION 1
-     * 1 root
-     * GENERATION 2
-     * 2 father
-     * 3 mother
-     * GENERATION 3
-     * 4 grandfather 1
-     * 5 grandmother 1
-     * 6 grandfather 2
-     * 7 grandfather 2
-     * GENERATION 4
-     * ...
+     * GENERATION 1 1 root GENERATION 2 2 father 3 mother GENERATION 3 4
+     * grandfather 1 5 grandmother 1 6 grandfather 2 7 grandfather 2 GENERATION
+     * 4 ...
      */
     class Sosa extends BreadthFirst {
 
-        /** our title - simply the column header values */
+        /**
+         * our title - simply the column header values
+         */
+        @Override
         String getTitle(Indi root) {
             return translate("title.sosa", root.getName());
         }
 
-        /** this is called once at the beginning of the recursion - we add our table around it */
+        /**
+         * this is called once at the beginning of the recursion - we add our
+         * table around it
+         */
+        @Override
         void formatStart(Indi root, Document doc) {
             // open table first
             doc.startTable("width=100%");
@@ -654,7 +689,10 @@ public class ReportSosa extends Report {
             doc.addTableColumn("");
         }
 
-        /** called at each generation add a generation info row*/
+        /**
+         * called at each generation add a generation info row
+         */
+        @Override
         void formatGeneration(int gen, Document doc) {
             if (gen < reportMinGenerations - 1) {
                 return;
@@ -667,7 +705,10 @@ public class ReportSosa extends Report {
             doc.addText(translate("Generation") + " " + (gen + 1));
         }
 
-        /** this is called at each recursion step - output table rows */
+        /**
+         * this is called at each recursion step - output table rows
+         */
+        @Override
         void formatIndi(Indi indi, Fam fam, int gen, int sosa, PrivacyPolicy policy, Document doc) {
 
             // Go back if generation too low
@@ -676,8 +717,8 @@ public class ReportSosa extends Report {
             }
 
             // For each individual, we will store list of events, their descriptions and sources
-            Map eventDesc = new TreeMap();     // Maps event to their descriptions
-            Map eventSources = new TreeMap();  // Maps event to GenJ source list
+            Map<String, String> eventDesc = new TreeMap<>();     // Maps event to their descriptions
+            Map<String, List<Source>> eventSources = new TreeMap<>();  // Maps event to GenJ source list
 
             // start with a new row
             doc.nextTableRow();
@@ -695,7 +736,10 @@ public class ReportSosa extends Report {
             // done for now
         }
 
-        /** called at the end of the recursion - end our table */
+        /**
+         * called at the end of the recursion - end our table
+         */
+        @Override
         void formatEnd(Document doc) {
             if ((srcDisplay) && (srcAtEnd || srcTextAtEnd)) {
                 writeSourceList(doc, -1, srcAtEnd, srcTextAtEnd);
@@ -705,31 +749,36 @@ public class ReportSosa extends Report {
         }
     } //Sosa
 
-    /** ********************************************************************************
-     * A Lineage recursion goes depth first and generates a nested tree of ancestors and their properties
+    /**
+     * ********************************************************************************
+     * A Lineage recursion goes depth first and generates a nested tree of
+     * ancestors and their properties
      *
-     * 1 root
-     *  2 father
-     *   4 grandfather
-     *   5 grandmother
-     *  3 mother
-     *   6 grandfrather
-     *   7 grandmother
-     *  ...
+     * 1 root 2 father 4 grandfather 5 grandmother 3 mother 6 grandfrather 7
+     * grandmother ...
      */
     class Lineage extends DepthFirst {
 
-        /** our title */
+        /**
+         * our title
+         */
+        @Override
         String getTitle(Indi root) {
             return translate("title.lineage", root.getName());
         }
 
-        /** start formatting */
+        /**
+         * start formatting
+         */
+        @Override
         void formatStart(Indi indi, Document doc) {
             // noop
         }
 
-        /** how we format an individual */
+        /**
+         * how we format an individual
+         */
+        @Override
         void formatIndi(Indi indi, Fam fam, int gen, int sosa, PrivacyPolicy policy, Document doc) {
 
             if (gen < reportMinGenerations - 1) {
@@ -743,8 +792,8 @@ public class ReportSosa extends Report {
 
             // dump its properties
             // For each individual, we will store list of events, their descriptions and sources
-            Map eventDesc = new TreeMap();     // Maps event to their descriptions
-            Map eventSources = new TreeMap();  // Maps event to GenJ source list
+            Map<String, String> eventDesc = new TreeMap<>();     // Maps event to their descriptions
+            Map<String, List<Source>> eventSources = new TreeMap<>();  // Maps event to GenJ source list
 
             getProperties(indi, fam, policy, true, false, eventDesc, eventSources);
             if (eventDesc.size() > 0) {
@@ -753,7 +802,10 @@ public class ReportSosa extends Report {
             // done
         }
 
-        /** end formatting */
+        /**
+         * end formatting
+         */
+        @Override
         void formatEnd(Document doc) {
             if ((srcDisplay) && (srcAtEnd || srcTextAtEnd)) {
                 writeSourceList(doc, -1, srcAtEnd, srcTextAtEnd);
@@ -762,24 +814,24 @@ public class ReportSosa extends Report {
         }
     } //Lineage
 
-    /** ********************************************************************************
-     * 1 root
-     * 2 father
-     * 4 grandfather
-     * 8 great grandfather
-     * ...
+    /**
+     * ********************************************************************************
+     * 1 root 2 father 4 grandfather 8 great grandfather ...
      */
     class Agnatic extends DepthFirst {
 
         /**
-         * each layout iterates over all individuals starting with the root
-         * up to the maximum number of generations
+         * each layout iterates over all individuals starting with the root up
+         * to the maximum number of generations
+         *
          * @param indi the current individual
-         * @param fam the family that this individual was pulled out of (null for root)
+         * @param fam the family that this individual was pulled out of (null
+         * for root)
          * @param gen the current generation
          * @param sosa the sosa index
          * @param policy the privacy policy
          */
+        @Override
         void recursion(Indi indi, Fam fam, int gen, int sosa, PrivacyPolicy policy, Document doc) {
 
             // stop here?
@@ -788,7 +840,7 @@ public class ReportSosa extends Report {
             }
 
             // let implementation handle individual
-            formatIndi(indi, fam, gen, sosa, gen < privateGen ? PrivacyPolicy.getDefault().getAllPrivate() : policy, doc);
+            formatIndi(indi, fam, gen, sosa, gen < privateGen ? PrivacyPolicy.getDefault().getAllPrivate() : PrivacyPolicy.getDefault().getAllPublic(), doc);
 
             // go one generation up to father and mother
             Fam famc = indi.getFamilyWhereBiologicalChild();
@@ -806,17 +858,26 @@ public class ReportSosa extends Report {
             // done
         }
 
-        /** our title */
+        /**
+         * our title
+         */
+        @Override
         String getTitle(Indi root) {
             return translate("title.agnatic", root.getName());
         }
 
-        /** start formatting */
+        /**
+         * start formatting
+         */
+        @Override
         void formatStart(Indi indi, Document doc) {
             // noop
         }
 
-        /** how we format an individual */
+        /**
+         * how we format an individual
+         */
+        @Override
         void formatIndi(Indi indi, Fam fam, int gen, int sosa, PrivacyPolicy policy, Document doc) {
             if (gen < reportMinGenerations - 1) {
                 return;
@@ -834,8 +895,8 @@ public class ReportSosa extends Report {
 
             // dump its properties
             // For each individual, we will store list of events, their descriptions and sources
-            Map eventDesc = new TreeMap();     // Maps event to their descriptions
-            Map eventSources = new TreeMap();  // Maps event to GenJ source list
+            Map<String, String> eventDesc = new TreeMap<>();     // Maps event to their descriptions
+            Map<String, List<Source>> eventSources = new TreeMap<>();  // Maps event to GenJ source list
 
             getProperties(indi, fam, policy, true, false, eventDesc, eventSources);
 
@@ -845,7 +906,10 @@ public class ReportSosa extends Report {
             // done
         }
 
-        /** end formatting */
+        /**
+         * end formatting
+         */
+        @Override
         void formatEnd(Document doc) {
             if ((srcDisplay) && (srcAtEnd || srcTextAtEnd)) {
                 writeSourceList(doc, -1, srcAtEnd, srcTextAtEnd);
@@ -854,28 +918,32 @@ public class ReportSosa extends Report {
         }
     }
 
-    /** ********************************************************************************
-     * A Sosa Table goes breadth first and generates a sosa-ascending table of properties
+    /**
+     * ********************************************************************************
+     * A Sosa Table goes breadth first and generates a sosa-ascending table of
+     * properties
      *
-     * 1;root;...
-     * 2;father;...
-     * 3;mother;...
-     * 4;grandfather 1;...
-     * 5;grandmother 1;...
-     * 6;grandfather 2;...
-     * 7;grandfather 3;...
+     * 1;root;... 2;father;... 3;mother;... 4;grandfather 1;... 5;grandmother
+     * 1;... 6;grandfather 2;... 7;grandfather 3;...
      */
     class Table extends BreadthFirst {
 
         String[] header = {"#", Gedcom.getName("NAME"), Gedcom.getName("BIRT"), Gedcom.getName("BAPM"), Gedcom.getName("MARR"), Gedcom.getName("DEAT"), Gedcom.getName("BURI"), Gedcom.getName("OCCU"), Gedcom.getName("RESI")};
         int[] widths = {3, 22, 12, 10, 10, 10, 10, 10, 10};
 
-        /** our title - simply the column header values */
+        /**
+         * our title - simply the column header values
+         */
+        @Override
         String getTitle(Indi root) {
             return translate("title.sosa", root.getName());
         }
 
-        /** this is called once at the beginning of the recursion - we add our table around it */
+        /**
+         * this is called once at the beginning of the recursion - we add our
+         * table around it
+         */
+        @Override
         void formatStart(Indi root, Document doc) {
             // open CSV compatible table
             //doc.startTable("border=0.5pt solid black,genj:csv=true,width=100%");
@@ -894,12 +962,18 @@ public class ReportSosa extends Report {
             }
         }
 
-        /** called at each generation - ignored */
+        /**
+         * called at each generation - ignored
+         */
+        @Override
         void formatGeneration(int gen, Document doc) {
             // noop
         }
 
-        /** this is called at each recursion step - output table rows */
+        /**
+         * this is called at each recursion step - output table rows
+         */
+        @Override
         void formatIndi(Indi indi, Fam fam, int gen, int sosa, PrivacyPolicy policy, Document doc) {
 
             if (gen < reportMinGenerations - 1) {
@@ -907,9 +981,9 @@ public class ReportSosa extends Report {
             }
 
             // grab properties - no prefixes, but all properties empty or not
-            Map eventDesc = new TreeMap();     // Maps event to their descriptions
-            Map eventSources = new TreeMap();  // Maps event to GenJ source list
-            String[] props = {""};
+            Map<String, String> eventDesc = new TreeMap<>();     // Maps event to their descriptions
+            Map<String, List<Source>> eventSources = new TreeMap<>();  // Maps event to GenJ source list
+
             getProperties(indi, fam, policy, false, true, eventDesc, eventSources);
 
             // start with a new row, sosa and name
@@ -925,7 +999,10 @@ public class ReportSosa extends Report {
             // done for now
         }
 
-        /** called at the end of the recursion - end our table */
+        /**
+         * called at the end of the recursion - end our table
+         */
+        @Override
         void formatEnd(Document doc) {
             // close table
             doc.endTable();
@@ -935,8 +1012,12 @@ public class ReportSosa extends Report {
         }
     } //Table
 
-    /** ********************************************************************************/
-    /** Initialises variables for all displays   */
+    /**
+     * *******************************************************************************
+     */
+    /**
+     * Initialises variables for all displays
+     */
     void InitVariables() {
         // Assign events to consider and their characteristics
         symbols[0] = OPTIONS.getBirthSymbol();
@@ -1026,10 +1107,12 @@ public class ReportSosa extends Report {
 
     }
 
-    /** Assign format of colors  */
+    /**
+     * Assign format of colors
+     */
     void assignColor(int srcColor) {
         // init color formats
-        String cs = "#000000";
+        String cs;
 
         switch (srcColor) {
             case COLOR_BLACK:
@@ -1066,8 +1149,10 @@ public class ReportSosa extends Report {
         format_multi_lines = "margin-left=0px,font-style=italic,color=" + cs;
     }
 
-    /** Display functions */
-    void writeEvents(Document doc, int gen, Map eventDesc, Map eventSources, boolean isIndented) {
+    /**
+     * Display functions
+     */
+    void writeEvents(Document doc, int gen, Map<String, String> eventDesc, Map<String, List<Source>> eventSources, boolean isIndented) {
         // Calculate indent if any
         String indent = "";
         if (isIndented) {
@@ -1081,13 +1166,13 @@ public class ReportSosa extends Report {
         }
         for (int ev = 0; ev < events.length; ev++) {
             String evStr = events[ev];
-            String description = (String) eventDesc.get(evStr);
+            String description = eventDesc.get(evStr);
             if (description == null) {
                 description = "";
             }
-            List sources = (List) eventSources.get(evStr);
+            List<Source> sources = eventSources.get(evStr);
             boolean noSrc = false;
-            if ((sources == null) || (sources.size() == 0)) {
+            if ((sources == null) || (sources.isEmpty())) {
                 noSrc = true;
             }
             String preSrc = " ";
@@ -1103,8 +1188,7 @@ public class ReportSosa extends Report {
             writeDescription(doc, description);
             // Display source if any and required
             if (!noSrc && srcDisplay) {
-                for (Iterator s = sources.iterator(); s.hasNext();) {
-                    Source source = (Source) s.next();
+                for (Source source : sources) { // NPE not possible due to definition of noSrc
                     String sId = source.getId();
                     if (srcTitle) {
                         if (!isValidText(source)) {
@@ -1132,8 +1216,6 @@ public class ReportSosa extends Report {
         if ((reportFormat == ONE_EVT_PER_LINE) && (displayBullet) && (reportType != TABLE_REPORT)) {
             doc.endList();
         }
-
-        return;
     }
 
     void writeStartNextItem(Document doc, int format, boolean bullet, boolean isDescription, String style) {
@@ -1153,7 +1235,6 @@ public class ReportSosa extends Report {
         } else {
             doc.addText(", ");
         }
-        return;
     }
 
     void writeStartNextParagraph(Document doc, int format, String style) {
@@ -1162,18 +1243,16 @@ public class ReportSosa extends Report {
         } else {
             doc.addText(", ");
         }
-        return;
     }
 
     void writeDescription(Document doc, String text) {
         if (text.length() != 0) {
             doc.addText(text);
         }
-        return;
     }
 
     void writeSourceWithEvent(Document doc, int format, boolean noSrcFound, String link, String source, int gen, String id) {
-        String formatText = "";
+        String formatText;
         if (format == ONE_EVT_PER_LINE) {
             formatText = format_multi_lines;
         } else {
@@ -1201,30 +1280,22 @@ public class ReportSosa extends Report {
         if (srcTitle) {
             doc.addText(source, formatText);
         }
-        return;
     }
 
     boolean isValidText(Source source) {
         // Text associated with source is valid if corresponding list is not empty
-        List listOfNotes = (List) globalSrcNotes.get(source);
+        List<String> listOfNotes = GLOBAL_SRC_NOTES.get(source);
         return (!listOfNotes.isEmpty());
     }
 
-    boolean isAlreadyIn(List listOfStr, String strNote) {
-        for (Iterator n = listOfStr.iterator(); n.hasNext();) {
-            String str = (String) n.next();
-            if (str.indexOf(strNote) != -1) {
-                return true;
-            }
-        }
-        return false;
+    boolean isAlreadyIn(List<String> listOfStr, String strNote) {
+        return listOfStr.stream().anyMatch((str) -> (str.contains(strNote)));
     }
 
     void writeSourceNotes(Document doc, Source source, String format) {
-        List listOfNotes = (List) globalSrcNotes.get(source);
+        List<String> listOfNotes = GLOBAL_SRC_NOTES.get(source);
         format += ",margin-left=8px,font-style=italic,color=#707070";
-        for (Iterator n = listOfNotes.iterator(); n.hasNext();) {
-            String strNote = (String) n.next();
+        for (String strNote : listOfNotes) {
             doc.nextParagraph(format);
             // Write straight before $#@ mark, italic afterwards
             int i = strNote.indexOf("$#@");
@@ -1237,7 +1308,6 @@ public class ReportSosa extends Report {
                 doc.addText(strNote);
             }
         }
-        return;
     }
 
     void writeSourceList(Document doc, int gen, boolean isTitle, boolean isText) {
@@ -1245,14 +1315,13 @@ public class ReportSosa extends Report {
         // This function writes all sources from the global source list and then clears the list
         // The logic is to display first all sources that have valid text and then the list of source ids that have no text associated to them
         // (if title is to be displayed, given there is always a valid one, the list is the normal one; it is only in the case of displaying text only that the invalid list needs to be displayed).
-
         // Return if nothing to display
-        if (globalSrcList.size() == 0) {
+        if (GLOBAL_SRC_LIST.isEmpty()) {
             return;
         }
 
         // Will hold string ids of sources with nothing to display
-        List noTextSources = new ArrayList();
+        List<String> noTextSources = new ArrayList<>();
 
         // The start depends on the reportType (whether there is a table or not)
         String format = "space-after=8pt";
@@ -1281,8 +1350,7 @@ public class ReportSosa extends Report {
         }
 
         // Display sources, storing the "invalid" ones along the way
-        for (Iterator s = globalSrcList.iterator(); s.hasNext();) {
-            Source source = (Source) s.next();
+        for (Source source : GLOBAL_SRC_LIST) {
             String sId = source.getId();
             String sTitle = source.getTitle();
             if (isTitle) {
@@ -1310,16 +1378,15 @@ public class ReportSosa extends Report {
         if (noTextSources.size() > 0) {
             doc.nextParagraph("space-after=0pt");
             doc.addAnchor((gen + 1) + "-none");
-            for (Iterator n = noTextSources.iterator(); n.hasNext();) {
-                doc.addText("(" + (String) n.next() + ") ");
+            for (String n : noTextSources) {
+                doc.addText("(" + n + ") ");
             }
             doc.nextParagraph(format);
             doc.addText(translate("noText"));
             doc.nextParagraph(format);
         }
 
-        globalSrcList.clear();
-        globalSrcNotes.clear();
-        return;
+        GLOBAL_SRC_LIST.clear();
+        GLOBAL_SRC_NOTES.clear();
     }
 }
