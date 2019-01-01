@@ -1,5 +1,5 @@
 /*
- * Ancestris - http://www.ancestris.org
+ * Ancestris - https://www.ancestris.org
  * 
  * Copyright 2018 Ancestris
  * 

@@ -252,7 +252,7 @@ public class WebBook {
         if (wp.param_FTP_upload.equals("1")) {
             int i = wp.param_FTP_site.indexOf("ftp");
             String siteStr = i == -1 ? wp.param_FTP_site : wp.param_FTP_site.substring(3);
-            fileStr = "http://www" + siteStr;
+            fileStr = "https://www" + siteStr;
         } else if (!wp.param_PHP_Support.equals("1")) {
             fileStr = "file://" + wp.param_localWebDir + File.separator + "index.html";
         }

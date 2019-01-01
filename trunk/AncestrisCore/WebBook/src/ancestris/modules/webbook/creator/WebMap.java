@@ -118,7 +118,7 @@ public class WebMap extends WebSection {
         if (mapKey == null || mapKey.equals("#") || mapKey.equals(NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGoogleKey"))) {
             mapKey = DEFAULT_KEY;
         }
-        out.println("<script src=\"http://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
+        out.println("<script src=\"https://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
 
         // include javascript
         String javascriptDir = "js/";
