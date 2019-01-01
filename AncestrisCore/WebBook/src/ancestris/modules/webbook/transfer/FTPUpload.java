@@ -256,7 +256,7 @@ public class FTPUpload {
 
     private boolean checkConnection() {
         try {
-            new URL("http://www.ancestris.org/").openStream();
+            new URL("https://www.ancestris.org/").openStream();
         } catch (IOException ex) {
             DialogManager.createError(
                         NbBundle.getMessage(this.getClass(), "fb.title"), 
