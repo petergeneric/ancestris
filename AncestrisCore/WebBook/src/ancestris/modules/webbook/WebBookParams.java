@@ -46,7 +46,6 @@ public class WebBookParams {
     public String param_media_CopyMedia;
     public String param_media_GeneMap;
     public String param_media_DispUnknownLoc;
-    public String param_media_GoogleKey;
     // panel 4
     public String param_dispAncestors;
     public String param_ancestorMinGen;
@@ -116,7 +115,6 @@ public class WebBookParams {
         param_media_CopyMedia = gedcomSettings.get(WB_PREFIX + ".media_CopyMedia", "");
         param_media_GeneMap = gedcomSettings.get(WB_PREFIX + ".media_GeneMap", "");
         param_media_DispUnknownLoc = gedcomSettings.get(WB_PREFIX + ".media_DispUnknownLoc", "");
-        param_media_GoogleKey = gedcomSettings.get(WB_PREFIX + ".media_GoogleKey", "");
 
         // panel 4
         param_dispAncestors = gedcomSettings.get(WB_PREFIX + ".dispAncestors", "");
@@ -162,9 +160,11 @@ public class WebBookParams {
         log.write("param_phone = " + param_phone);
         log.write("param_email = " + param_email);
         log.write("param_dispMsg = " + param_dispMsg);
-        log.write("param_dispStatAncestor = " + param_dispStatAncestor);
-        log.write("param_dispStatLoc = " + param_dispStatLoc);
-        log.write("param_message = " + param_message);
+        if (!param_dispMsg.equals("0")) {
+            log.write("param_dispStatAncestor = " + param_dispStatAncestor);
+            log.write("param_dispStatLoc = " + param_dispStatLoc);
+            log.write("param_message = " + param_message);
+        }
         // panel 2
         log.write("param_decujus = " + param_decujus);
         log.write("param_unknown = " + param_unknown);
@@ -184,7 +184,6 @@ public class WebBookParams {
         log.write("param_media_CopyMedia = " + param_media_CopyMedia);
         log.write("param_media_GeneMap = " + param_media_GeneMap);
         log.write("param_media_DispUnknownLoc = " + param_media_DispUnknownLoc);
-        log.write("param_media_GoogleKey = " + param_media_GoogleKey);
         // panel 4
         log.write("param_dispAncestors = " + param_dispAncestors);
         log.write("param_ancestorMinGen = " + param_ancestorMinGen);
@@ -195,27 +194,31 @@ public class WebBookParams {
         log.write("param_logFile = " + param_logFile);
         // panel 6
         log.write("param_FTP_upload = " + param_FTP_upload);
-        log.write("param_FTP_site = " + param_FTP_site);
-        log.write("param_FTP_dir = " + param_FTP_dir);
-        log.write("param_FTP_user = *******");
-        log.write("param_FTP_password = *******");
-        log.write("param_FTP_siteDesc = " + param_FTP_siteDesc);
-        log.write("param_FTP_transfertType = " + param_FTP_transfertType);
-        log.write("param_FTP_resetHistory = " + param_FTP_resetHistory);
-        log.write("param_FTP_exec = " + param_FTP_exec);
-        log.write("param_FTP_log = " + param_FTP_log);
+        if (!param_FTP_upload.equals("0")) {
+            log.write("param_FTP_site = " + param_FTP_site);
+            log.write("param_FTP_dir = " + param_FTP_dir);
+            log.write("param_FTP_user = *******");
+            log.write("param_FTP_password = *******");
+            log.write("param_FTP_siteDesc = " + param_FTP_siteDesc);
+            log.write("param_FTP_transfertType = " + param_FTP_transfertType);
+            log.write("param_FTP_resetHistory = " + param_FTP_resetHistory);
+            log.write("param_FTP_exec = " + param_FTP_exec);
+            log.write("param_FTP_log = " + param_FTP_log);
+        }
         // panel 7
         log.write("param_PHP_Support = " + param_PHP_Support);
-        log.write("param_PHP_Profil = " + param_PHP_Profil);
-        log.write("param_PHP_Code = *******");
-        log.write("param_PHP_Integrate = " + param_PHP_Integrate);
-        log.write("param_PHP_Test = " + param_PHP_Test);
-        log.write("param_PHP_Init = " + param_PHP_Init);
-        log.write("param_PHP_MyScript = " + param_PHP_MyScript);
-        log.write("param_PHP_HeadStart = " + param_PHP_HeadStart);
-        log.write("param_PHP_HeadCSS = " + param_PHP_HeadCSS);
-        log.write("param_PHP_HeadEnd = " + param_PHP_HeadEnd);
-        log.write("param_PHP_Footer = " + param_PHP_Footer);
+        if (!param_PHP_Support.equals("0")) {
+            log.write("param_PHP_Profil = " + param_PHP_Profil);
+            log.write("param_PHP_Code = *******");
+            log.write("param_PHP_Integrate = " + param_PHP_Integrate);
+            log.write("param_PHP_Test = " + param_PHP_Test);
+            log.write("param_PHP_Init = " + param_PHP_Init);
+            log.write("param_PHP_MyScript = " + param_PHP_MyScript);
+            log.write("param_PHP_HeadStart = " + param_PHP_HeadStart);
+            log.write("param_PHP_HeadCSS = " + param_PHP_HeadCSS);
+            log.write("param_PHP_HeadEnd = " + param_PHP_HeadEnd);
+            log.write("param_PHP_Footer = " + param_PHP_Footer);
+        }
         log.write("----------- ");
     }
 }

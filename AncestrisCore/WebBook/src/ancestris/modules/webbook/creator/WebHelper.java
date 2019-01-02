@@ -130,7 +130,7 @@ public class WebHelper {
             }
         }
         // The directory is now empty so delete it
-        if (removeDir) {
+        if (removeDir && !dir.getAbsolutePath().equals(wp.param_logFile)) {
             return dir.delete();
         }
         return true;
