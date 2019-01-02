@@ -7,6 +7,8 @@
  */
 package ancestris.modules.webbook.creator;
 
+import ancestris.api.place.Place;
+import ancestris.api.place.PlaceFactory;
 import genj.gedcom.Indi;
 import genj.gedcom.Fam;
 import genj.gedcom.Entity;
@@ -19,7 +21,6 @@ import genj.gedcom.GedcomException;
 import ancestris.core.pluginservice.PluginInterface;
 import ancestris.modules.webbook.WebBook;
 import ancestris.modules.webbook.WebBookParams;
-import ancestris.modules.webbook.WebBookWizardAction;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,10 +33,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import java.text.DecimalFormat;
-import java.util.StringTokenizer;
 import org.openide.util.Lookup;
-import org.openide.util.NbBundle;
-import org.openide.util.NbPreferences;
 
 /**
  * Ancestris
@@ -109,16 +107,7 @@ public class WebMap extends WebSection {
             return;
         }
 
-        printOpenHTMLHead(out, "TXT_Map", this);
-
-        // include style element to ensure vertical sizing of maps in conjunction with body height
-        // Example of key : "ABQIAAAAflGR5fqP8WaEJouBa4XUoBQgBZxvXovzViDdLVeChhhy44iFxBQxMqr4ELXy1eFn1ZT_X5RiFrBIHA"
-        String DEFAULT_KEY = "ABQIAAAAflGR5fqP8WaEJouBa4XUoBQgBZxvXovzViDdLVeChhhy44iFxBQxMqr4ELXy1eFn1ZT_X5RiFrBIHA";
-        String mapKey = wp.param_media_GoogleKey.isEmpty() ? DEFAULT_KEY : wp.param_media_GoogleKey;
-        if (mapKey == null || mapKey.equals("#") || mapKey.equals(NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGoogleKey"))) {
-            mapKey = DEFAULT_KEY;
-        }
-        out.println("<script src=\"https://maps.google.com/maps?file=api&amp;v=2&amp;key=" + mapKey + "\" type=\"text/javascript\"></script>");
+        printOpenHTMLHead(out, "TXT_Map", this, true);
 
         // include javascript
         String javascriptDir = "js/";
@@ -138,46 +127,6 @@ public class WebMap extends WebSection {
 
         // Include page itself
         out.println("<div id=\"map\" class=\"map\" style=\"height: 600px\"></div>");
-        out.println("<div class=\"mapctrl\">");
-        out.println("<p class=\"mapctrlbox\">");
-        out.println("<span class=\"gras\">" + htmlText(trs("map_ancestors")) + "</span>&nbsp;&nbsp;<input id=\"anca\" name=\"ancestor\" type=\"radio\" value=\"all\" onclick=\"boxclick()\" checked=\"checked\" />" + htmlText(trs("map_all")));
-        out.println("&nbsp;&nbsp;<input id=\"ancs\" name=\"ancestor\" type=\"radio\" value=\"sosa\" onclick=\"boxclick()\" />" + htmlText(trs("map_ascendants")));
-        out.println("&nbsp;&nbsp;<input id=\"ancc\" name=\"ancestor\" type=\"radio\" value=\"cousins\" onclick=\"boxclick()\" />" + htmlText(trs("map_cousins")));
-        out.println("&nbsp;&nbsp;<input id=\"anco\" name=\"ancestor\" type=\"radio\" value=\"others\" onclick=\"boxclick()\" />" + htmlText(trs("map_others")));
-        out.println("</p>");
-        out.println("<p class=\"mapctrlbox\">");
-        out.println("<span class=\"gras\">" + htmlText(trs("map_events")) + "</span>&nbsp;&nbsp;<input id=\"evea\" name=\"event\" type=\"radio\" value=\"all\" onclick=\"boxclick()\"  checked=\"checked\" />" + htmlText(trs("map_all")));
-        out.println("&nbsp;&nbsp;<input id=\"even\" name=\"event\" type=\"radio\" value=\"births\" onclick=\"boxclick()\" />" + htmlText(trs("map_birth")));
-        out.println("&nbsp;&nbsp;<input id=\"evem\" name=\"event\" type=\"radio\" value=\"marriages\" onclick=\"boxclick()\" />" + htmlText(trs("map_marriages")));
-        out.println("&nbsp;&nbsp;<input id=\"eved\" name=\"event\" type=\"radio\" value=\"deaths\" onclick=\"boxclick()\" />" + htmlText(trs("map_deaths")));
-        out.println("</p>");
-        out.println("<p class=\"mapctrlbox\">");
-        out.println("<span class=\"gras\">" + htmlText(trs("map_years")) + "</span>&nbsp;<input id=\"min\" name=\"min\" type=\"text\" size=\"4\" value=\"0\" onchange=\"boxclick()\" style=\"text-align: center\" />");
-        out.println("&nbsp;" + htmlText(trs("map_to")) + "&nbsp;<input id=\"max\" name=\"max\" type=\"text\" size=\"4\" value=\"2100\" onchange=\"boxclick()\" style=\"text-align: center\" />");
-        out.println("</p>");
-        out.println("<p class=\"mapctrlbox\">");
-        out.println("<span class=\"gras\">" + htmlText(trs("map_volume")) + "</span>&nbsp;&nbsp;<input id=\"vola\" name=\"volume\" type=\"radio\" value=\"all\" onclick=\"boxclick()\"  checked=\"checked\" />" + htmlText(trs("map_all")));
-        out.println("&nbsp;&nbsp;<input id=\"volh\" name=\"volume\" type=\"radio\" value=\"high\" onclick=\"boxclick()\" />" + htmlText(trs("map_high")));
-        out.println("&nbsp;&nbsp;<input id=\"volm\" name=\"volume\" type=\"radio\" value=\"medium\" onclick=\"boxclick()\" />" + htmlText(trs("map_medium")));
-        out.println("&nbsp;&nbsp;<input id=\"voll\" name=\"volume\" type=\"radio\" value=\"low\" onclick=\"boxclick()\" />" + htmlText(trs("map_low")));
-        out.println("</p>");
-        out.println("<p class=\"mapctrlbox\">");
-        out.println("<span class=\"gras\">" + htmlText(trs("map_density")) + "</span>&nbsp;&nbsp;<input id=\"den1\" name=\"density\" type=\"radio\" value=\"dense\" onclick=\"boxclick()\"  checked=\"checked\" />" + htmlText(trs("map_high")));
-        out.println("&nbsp;&nbsp;<input id=\"den2\" name=\"density\" type=\"radio\" value=\"spread\" onclick=\"boxclick()\" />" + htmlText(trs("map_medium")));
-        out.println("&nbsp;&nbsp;<input id=\"den3\" name=\"density\" type=\"radio\" value=\"scarce\" onclick=\"boxclick()\" />" + htmlText(trs("map_low")));
-        out.println("</p>");
-        out.println("<p class=\"mapctrlbox\">");
-        out.println("<span class=\"gras\">" + htmlText(trs("map_markersize")) + "</span>&nbsp;&nbsp;");
-        out.println("<input type=\"button\" onclick=\"sub()\" style=\"font-weight: bold; height:15px; vertical-align: middle; background: url('../theme/p.gif')\"  />");
-        out.println("<input type=\"text\" value=\"32\" size=\"3\" id=\"markersize\" name=\"markersize\" onchange=\"chg();\" style=\"text-align: center\" />");
-        out.println("<input type=\"button\" onclick=\"add()\" style=\"font-weight: bold; height:15px; vertical-align: middle; background: url('../theme/n.gif')\"  />");
-        out.println("</p>");
-        out.println("</div>");
-        out.println(" ");
-        out.println("<script>");
-        out.println("displayMap();");
-        out.println("displayMarkers();");
-        out.println("</script>");
 
         // Closes page
         printCloseHTML(out);
@@ -340,31 +289,21 @@ public class WebMap extends WebSection {
             return false;
         }
         // Get location from gedcom itsel
-        PropertyPlace place = (PropertyPlace) prop;
-        if (place.getLongitude(true) != null && place.getLatitude(true) != null) {
-            cf.lat = place.getLatitude(true).getDoubleValue();
-            cf.lng = place.getLongitude(true).getDoubleValue();
+        PropertyPlace pPlace = (PropertyPlace) prop;
+        if (pPlace.getLongitude(true) != null && pPlace.getLatitude(true) != null) {
+            cf.lat = pPlace.getLatitude(true).getDoubleValue();
+            cf.lng = pPlace.getLongitude(true).getDoubleValue();
             return true;
         }
         
         // If not found, get location from local file
-        String searchedPlace = place.getPlaceToLocalFormat();
-        String code = NbPreferences.forModule(clazz).get(searchedPlace, null);
-        if (code == null || code.isEmpty()) {
+        String searchedPlace = pPlace.getPlaceToLocalFormat();
+        Place place = PlaceFactory.findPlace(searchedPlace);
+        if (place == null) {
             return false;
         }
-        // Get coordinates
-        String sep = ";";
-        try {
-            StringTokenizer tokens = new StringTokenizer(code, sep);
-            if (tokens.hasMoreTokens()) {
-                cf.lat = Double.parseDouble(tokens.nextToken());
-            }
-            if (tokens.hasMoreTokens()) {
-                cf.lng = Double.parseDouble(tokens.nextToken());
-            }
-        } catch (Throwable t) {
-        }
+        cf.lat = place.getLatitude();
+        cf.lng = place.getLongitude();
         return true;
 
 
