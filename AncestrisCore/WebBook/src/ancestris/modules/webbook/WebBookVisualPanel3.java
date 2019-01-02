@@ -26,7 +26,6 @@ public final class WebBookVisualPanel3 extends JPanel {
         jCheckBox2.setEnabled(jCheckBox1.isSelected());
         jCheckBox4.setEnabled(jCheckBox3.isSelected());
         jCheckBox6.setEnabled(jCheckBox5.isSelected());
-        jTextField1.setEnabled(jCheckBox5.isSelected());
 
     }
 
@@ -53,8 +52,6 @@ public final class WebBookVisualPanel3 extends JPanel {
         jLabel3 = new javax.swing.JLabel();
         jCheckBox5 = new javax.swing.JCheckBox();
         jCheckBox6 = new javax.swing.JCheckBox();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jLabel1.text")); // NOI18N
 
@@ -97,11 +94,6 @@ public final class WebBookVisualPanel3 extends JPanel {
         org.openide.awt.Mnemonics.setLocalizedText(jCheckBox6, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jCheckBox6.text")); // NOI18N
         jCheckBox6.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_DisplayEmptyLoc")); // NOI18N
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel4, org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jLabel4.text")); // NOI18N
-
-        jTextField1.setText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "WebBookVisualPanel3.jTextField1.text")); // NOI18N
-        jTextField1.setToolTipText(org.openide.util.NbBundle.getMessage(WebBookVisualPanel3.class, "TTT_GoogleKey")); // NOI18N
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -114,10 +106,6 @@ public final class WebBookVisualPanel3 extends JPanel {
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE))
                     .addComponent(jCheckBox6)
                     .addComponent(jCheckBox5)
                     .addComponent(jCheckBox4)
@@ -150,10 +138,6 @@ public final class WebBookVisualPanel3 extends JPanel {
                     .addComponent(jCheckBox5))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jCheckBox6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel4)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -171,7 +155,6 @@ public final class WebBookVisualPanel3 extends JPanel {
 
     private void jCheckBox5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCheckBox5ActionPerformed
         jCheckBox6.setEnabled(jCheckBox5.isSelected());
-        jTextField1.setEnabled(jCheckBox5.isSelected());
     }//GEN-LAST:event_jCheckBox5ActionPerformed
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox jCheckBox1;
@@ -184,8 +167,6 @@ public final class WebBookVisualPanel3 extends JPanel {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 
     public String getPref01() {
@@ -263,7 +244,6 @@ public final class WebBookVisualPanel3 extends JPanel {
         jCheckBox5.setEnabled(false);
         jCheckBox5.setSelected(false);
         jCheckBox6.setEnabled(jCheckBox5.isSelected());
-        jTextField1.setEnabled(jCheckBox5.isSelected());
     }
 
     public String getPref07() {
@@ -281,20 +261,5 @@ public final class WebBookVisualPanel3 extends JPanel {
         jCheckBox6.setSelected(str.equals("1"));
     }
 
-    public String getPref08() {
-        if (jTextField1.isEnabled()) {
-            return jTextField1.getText();
-        } else {
-            return "";
-        }
-        }
 
-    public
-
-     void setPref08(String str) {
-        if (str.isEmpty()) {
-            str = NbBundle.getMessage(WebBookWizardAction.class, "PREF_defaultGoogleKey");
-        }
-        jTextField1.setText(str);
-    }
 }

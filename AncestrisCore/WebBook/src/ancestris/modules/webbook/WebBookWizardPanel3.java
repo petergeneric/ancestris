@@ -117,7 +117,6 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         if (isGeoFound) {
             ((WebBookVisualPanel3) getComponent()).setPref06(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GeneMap", ""));
             ((WebBookVisualPanel3) getComponent()).setPref07(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_DispUnknownLoc", ""));
-            ((WebBookVisualPanel3) getComponent()).setPref08(gedcomSettings.get(WebBookParams.WB_PREFIX + ".media_GoogleKey", ""));
         } else {
             ((WebBookVisualPanel3) getComponent()).disablePref06();
         }
@@ -137,7 +136,6 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
         gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_CopyMedia", ((WebBookVisualPanel3) getComponent()).getPref05());
         gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_GeneMap", ((WebBookVisualPanel3) getComponent()).getPref06());
         gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_DispUnknownLoc", ((WebBookVisualPanel3) getComponent()).getPref07());
-        gedcomSettings.put(WebBookParams.WB_PREFIX + ".media_GoogleKey", ((WebBookVisualPanel3) getComponent()).getPref08());
     }
 
     /*
@@ -148,11 +146,7 @@ public class WebBookWizardPanel3 implements WizardDescriptor.ValidatingPanel, Wi
     }
 
     public void validate() throws WizardValidationException {
-        String name = component.getPref08();
         String geoSelected = component.getPref06();
-        if (name.trim().isEmpty() && geoSelected.equals("1")) {
-            throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_Mandatory_GoogleKey"), null);
-        }
         if (geoSelected.equals("1") && !isGeoFound) {
             throw new WizardValidationException(null, NbBundle.getMessage(WebBookWizardAction.class, "CTRL_GeoModuleNotFound"), null);
         }
