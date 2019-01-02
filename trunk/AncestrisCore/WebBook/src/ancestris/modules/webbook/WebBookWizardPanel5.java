@@ -156,7 +156,7 @@ public class WebBookWizardPanel5 implements WizardDescriptor.ValidatingPanel, Wi
             int foundWebbookFiles = 0;
             for (int i = 0; i < expectedFilesArray.length; i++) {
                 file = new File(name + File.separator + expectedFilesArray[i]);
-                if (file != null && file.exists() && file.isDirectory()) {
+                if (file.exists() && file.isDirectory()) {
                     foundWebbookFiles++;
                 }
             }
