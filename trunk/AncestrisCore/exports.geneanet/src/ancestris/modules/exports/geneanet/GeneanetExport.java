@@ -152,9 +152,9 @@ public class GeneanetExport {
         String rela = null;
 
         LOG.log(Level.INFO, NbBundle.getMessage(GeneanetExportAction.class, "GeneanetExportAction.ConvertingAssos"));
-        
+
         boolean is55 = Grammar.V55.equals(gedcom.getGrammar());
-          final String type = "INDI"; // in geneanet, type is always INDI, not "prop.getTargetType()"
+        final String type = "INDI"; // in geneanet, type is always INDI, not "prop.getTargetType()"
 
         final List<PropertyAssociation> list = (List<PropertyAssociation>) gedcom.getPropertiesByClass(PropertyAssociation.class);
         for (PropertyAssociation prop : list) {
@@ -162,7 +162,7 @@ public class GeneanetExport {
             LOG.log(Level.INFO, prop.getDisplayValue());
             final Indi indiRela = (Indi) prop.getEntity();
             final Property propAsso = prop.getTarget().getParent();
-          
+
             final Property relaProp = prop.getProperty("RELA");
             if (relaProp != null) {
                 rela = relaProp.getDisplayValue();
@@ -173,9 +173,9 @@ public class GeneanetExport {
 
             // Add to second asso entity
             Property parent = propAsso.addProperty("ASSO", "@" + indiRela.getId() + "@");
-           if (is55){
-               parent.addProperty("TYPE", type);
-           }
+            if (is55) {
+                parent.addProperty("TYPE", type);
+            }
             parent.addProperty("RELA", rela);
         }
 
@@ -195,7 +195,7 @@ public class GeneanetExport {
             entity.addProperty("NOTE", note);
         }
         // File for Geneanet.
-       gedcom1.setDestination("Geneanet");
+        gedcom1.setDestination("Geneanet");
         LOG.log(Level.INFO, note);
         return true;
     }
@@ -287,20 +287,20 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during NSFX conversion", ex);
                 }
             }
-            
+
             // Convert Others names to remove slash
             final Property[] props = entity.getProperties("NAME");
-             // Begin at the second name.
-             for (int i=1;i<props.length;i++) {
-                 final Property p = props[i];
-                 final String newValue = p.getValue().replace("/", " ").trim();
-                 p.setValue(newValue);
-             }
+            // Begin at the second name.
+            for (int i = 1; i < props.length; i++) {
+                final Property p = props[i];
+                final String newValue = p.getValue().replace("/", " ").trim();
+                p.setValue(newValue);
+            }
         }
-        
-         // Adjust others tags
-         for (Entity entity : gedcom.getEntities()) {
-             // Convert _TIME to TIME
+
+        // Adjust others tags
+        for (Entity entity : gedcom.getEntities()) {
+            // Convert _TIME to TIME
             for (Property p : entity.getAllProperties("_TIME")) {
                 final Property parent = p.getParent();
                 final int pos = parent.getPropertyPosition(p);
@@ -312,7 +312,7 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during _TIME conversion", ex);
                 }
             }
-            
+
             // Convert _URL to URL
             for (Property p : entity.getAllProperties("_URL")) {
                 final Property parent = p.getParent();
@@ -325,14 +325,19 @@ public class GeneanetExport {
                     LOG.log(Level.WARNING, "Error during _URL conversion", ex);
                 }
             }
-            
+
             //At the end :  Remove all "_TAG"
             for (Property p : entity.getAllSpecificProperties()) {
-                final Property parent = p.getParent();
-                parent.delProperty(p);
+                if (entity.contains(p)) {
+                    p.delProperties();
+                    final Property parent = p.getParent();
+                    if (parent != null) {
+                        parent.delProperty(p);
+                    }
+                }
             }
-         }
-         
+        }
+
         return true;
     }
 }
