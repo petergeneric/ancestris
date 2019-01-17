@@ -31,10 +31,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.imageio.spi.ServiceRegistry;
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -312,7 +312,7 @@ public abstract class Format {
     List<Format> list = new ArrayList<Format>(10);
     list.add(DEFAULT);
     
-    Iterator it = ServiceRegistry.lookupProviders(Format.class);
+    Iterator it = ServiceLoader.load(Format.class).iterator();
     while (it.hasNext()) {
       try {
         Format f = (Format)it.next();
