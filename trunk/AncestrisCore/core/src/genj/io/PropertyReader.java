@@ -219,7 +219,7 @@ public class PropertyReader {
     
     try {
         if (prop instanceof PropertyName){
-            Property p = prop.addProperty(tag, "", pos);
+            Property p = prop.addProperty(tag, value, pos);
             p.setValue(value);
             return p;
         } else {
