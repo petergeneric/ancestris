@@ -67,7 +67,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
         nameEditorPanel = new javax.swing.JPanel();
         jCheckBox1 = new javax.swing.JCheckBox();
         nameTypeLabel = new javax.swing.JLabel();
-        nameTypeComboBox = new javax.swing.JComboBox<String>();
+        nameTypeComboBox = new javax.swing.JComboBox<>();
         firstNamePrefixLabel = new javax.swing.JLabel();
         firstNamePrefixTextField = new javax.swing.JTextField();
         firstNameChoiceWidget = new genj.util.swing.ChoiceWidget();
@@ -272,7 +272,7 @@ public class NameEditorPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(firstNameSuffixLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(firstNameSuffixTextField, javax.swing.GroupLayout.DEFAULT_SIZE, 98, Short.MAX_VALUE))
+                        .addComponent(firstNameSuffixTextField))
                     .addComponent(firstNameChoiceWidget, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         nameEditorPanelLayout.setVerticalGroup(
@@ -399,6 +399,9 @@ public class NameEditorPanel extends javax.swing.JPanel {
             nameTypeComboBox.setVisible(false);
         }
 
+        firstNameChoiceWidget.setValues(PropertyName.getFirstNames(mRoot.getGedcom(), true));
+        familyNameChoiceWidget.setValues(PropertyName.getLastNames(mRoot.getGedcom(), true));
+        
         if (mName != null) {
             /*
              * Indicates the mName type, for example the mName issued or assumed
@@ -425,7 +428,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * GIVN Given mName or earned mName. Different given names are
              * separated by a comma.
              */
-            firstNameChoiceWidget.setValues(PropertyName.getFirstNames(mRoot.getGedcom(), true));
             firstNameChoiceWidget.setText(mName.getFirstName());
             firstNameModified = false;
 
@@ -449,7 +451,6 @@ public class NameEditorPanel extends javax.swing.JPanel {
              * SURN Surname or family mName. Different surnames are separated by
              * a comma.
              */
-            familyNameChoiceWidget.setValues(PropertyName.getLastNames(mRoot.getGedcom(), true));
             familyNameChoiceWidget.setText(mName.getLastName());
             familyNameModified = false;
 
