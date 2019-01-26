@@ -894,6 +894,11 @@ public class Comm {
                     continue;
                 } 
                 contentObj = Arrays.copyOfRange(bytesReceived, COMM_CMD_SIZE + contentMemberBytes.length + STR_DELIMITER.length(), bytesReceived.length);
+                if (contentObj == null || contentObj.length == 0) {
+                    LOG.log(Level.FINE, "...Member " + member + " has sent an empty packet. Break process.");
+                    continue;
+                }
+
                 ExpectedResponse response = new ExpectedResponse(aMember, command);
                 
                 
