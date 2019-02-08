@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.ChildrenTreeTableModel;
 import ancestris.util.swing.DialogManager;
@@ -213,8 +214,11 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                             IndividualEditor individualEditor = new IndividualEditor();
                             individualEditor.setContext(new Context(child));
                             individualEditor.addChangeListener(changeListner);
+                            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                            atc.getOpenEditors().add(individualEditor);
                             individualEditor.showPanel();
                             individualEditor.removeChangeListener(changeListner);
+                            atc.getOpenEditors().remove(individualEditor);
                         }
                     }
                 }
@@ -242,8 +246,11 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                                 IndividualEditor individualEditor = new IndividualEditor();
                                 individualEditor.setContext(new Context(child));
                                 individualEditor.addChangeListener(changeListner);
+                                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                                atc.getOpenEditors().add(individualEditor);
                                 individualEditor.showPanel();
                                 individualEditor.removeChangeListener(changeListner);
+                                atc.getOpenEditors().remove(individualEditor);
                             }
                         }
                     }
@@ -308,6 +315,8 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
             individualEditor.setContext(new Context(mIndividual));
 
             individualEditor.addChangeListener(changeListner);
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(individualEditor);
             if (individualEditor.showPanel()) {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -324,6 +333,7 @@ public class ChildrenTreeTablePanel extends javax.swing.JPanel {
                 }
             }
             individualEditor.removeChangeListener(changeListner);
+            atc.getOpenEditors().remove(individualEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }

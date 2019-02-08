@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.FamilyReferencesTreeTableModel;
@@ -210,6 +211,8 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
             familyEditor.setContext(new Context(mCreateFamily));
 
             familyEditor.addChangeListener(changeListner);
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(familyEditor);
             if (familyEditor.showPanel()) {
                 ((FamilyReferencesTreeTableModel) familiesTreeTable.getTreeTableModel()).clear();
                 if (mFamilyEditingType == EDIT_FAMC) {
@@ -224,6 +227,7 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                 }
             }
             familyEditor.removeChangeListener(changeListner);
+            atc.getOpenEditors().remove(familyEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -291,16 +295,22 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                         FamilyEditor familyEditor = new FamilyEditor();
                         familyEditor.setContext(new Context(family));
                         familyEditor.addChangeListener(changeListner);
+                        final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                        atc.getOpenEditors().add(familyEditor);
                         familyEditor.showPanel();
                         familyEditor.removeChangeListener(changeListner);
+                        atc.getOpenEditors().remove(familyEditor);
                     } else if (entity instanceof Indi) {
                         Indi child = (Indi) entity;
                         if (!child.equals(mRoot)) {
                             IndividualEditor individualEditor = new IndividualEditor();
                             individualEditor.setContext(new Context(child));
                             individualEditor.addChangeListener(changeListner);
+                            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                            atc.getOpenEditors().add(individualEditor);
                             individualEditor.showPanel();
                             individualEditor.removeChangeListener(changeListner);
+                            atc.getOpenEditors().remove(individualEditor);
                         }
                     }
                 }
@@ -406,16 +416,22 @@ public class FamiliesReferenceTreeTablePanel extends javax.swing.JPanel {
                             FamilyEditor familyEditor = new FamilyEditor();
                             familyEditor.setContext(new Context(family));
                             familyEditor.addChangeListener(changeListner);
+                            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                            atc.getOpenEditors().add(familyEditor);
                             familyEditor.showPanel();
                             familyEditor.removeChangeListener(changeListner);
+                            atc.getOpenEditors().add(familyEditor);
                         } else if (entity instanceof Indi) {
                             Indi child = (Indi) entity;
                             if (!child.equals(mRoot)) {
                                 IndividualEditor individualEditor = new IndividualEditor();
                                 individualEditor.setContext(new Context(child));
                                 individualEditor.addChangeListener(changeListner);
+                                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                                atc.getOpenEditors().add(individualEditor);
                                 individualEditor.showPanel();
                                 individualEditor.removeChangeListener(changeListner);
+                                atc.getOpenEditors().remove(individualEditor);
                             }
                         }
                     }

@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.models.SourcesTableModel;
 import genj.gedcom.Context;
@@ -129,6 +130,8 @@ public class SourcesTablePanel extends javax.swing.JPanel {
 
             SourceEditor sourceEditor = new SourceEditor();
             sourceEditor.setContext(new Context(mSource));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mGedcom);
+            atc.getOpenEditors().add(sourceEditor);
             if (sourceEditor.showPanel()) {
                 mSourcesTableModel.add(mSource);
                 editSourceButton.setEnabled(true);
@@ -139,6 +142,7 @@ public class SourcesTablePanel extends javax.swing.JPanel {
                     mGedcom.undoUnitOfWork(false);
                 }
             }
+            atc.getOpenEditors().remove(sourceEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -152,6 +156,8 @@ public class SourcesTablePanel extends javax.swing.JPanel {
             Source source = mSourcesTableModel.getValueAt(rowIndex);
             SourceEditor sourceEditor = new SourceEditor();
             sourceEditor.setContext(new Context(source));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mGedcom);
+            atc.getOpenEditors().add(sourceEditor);
             if (sourceEditor.showPanel()) {
                 mSourcesTableModel.add(source);
             } else {
@@ -159,6 +165,7 @@ public class SourcesTablePanel extends javax.swing.JPanel {
                     mGedcom.undoUnitOfWork(false);
                 }
             }
+            atc.getOpenEditors().remove(sourceEditor);
         }
     }//GEN-LAST:event_editSourceButtonActionPerformed
 
@@ -194,11 +201,14 @@ public class SourcesTablePanel extends javax.swing.JPanel {
                 SourceEditor sourceEditor = new SourceEditor();
                 Source source = mSourcesTableModel.getValueAt(rowIndex);
                 sourceEditor.setContext(new Context(source));
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mGedcom);
+                atc.getOpenEditors().add(sourceEditor);
                 if (!sourceEditor.showPanel()) {
                     while (mGedcom.getUndoNb() > undoNb && mGedcom.canUndo()) {
                         mGedcom.undoUnitOfWork(false);
                     }
                 }
+                atc.getOpenEditors().remove(sourceEditor);
             }
         }
     }//GEN-LAST:event_sourcesTableMouseClicked

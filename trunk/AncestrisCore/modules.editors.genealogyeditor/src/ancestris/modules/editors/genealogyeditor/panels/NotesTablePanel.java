@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.modules.editors.genealogyeditor.models.NotesTableModel;
 import ancestris.util.swing.DialogManager;
@@ -142,6 +143,8 @@ public class NotesTablePanel extends javax.swing.JPanel {
 
             NoteEditor noteEditor = new NoteEditor();
             noteEditor.setContext(new Context(mNote));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(noteEditor);
             if (noteEditor.showPanel()) {
                 mNotesTableModel.add(mNote);
                 changeListner.stateChanged(null);
@@ -159,6 +162,7 @@ public class NotesTablePanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            atc.getOpenEditors().remove(noteEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -170,7 +174,10 @@ public class NotesTablePanel extends javax.swing.JPanel {
             int rowIndex = notesTable.convertRowIndexToModel(selectedRow);
             NoteEditor noteEditor = new NoteEditor();
             noteEditor.setContext(new Context(mNotesTableModel.getValueAt(rowIndex)));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mRoot.getGedcom());
+            atc.getOpenEditors().add(noteEditor);
             noteEditor.showPanel();
+            atc.getOpenEditors().remove(noteEditor);
         }
     }//GEN-LAST:event_editNoteButtonActionPerformed
 
@@ -242,8 +249,11 @@ public class NotesTablePanel extends javax.swing.JPanel {
                 NoteEditor noteEditor = new NoteEditor();
                 noteEditor.setContext(new Context(mNotesTableModel.getValueAt(rowIndex)));
                 noteEditor.addChangeListener(changeListner);
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mRoot.getGedcom());
+                atc.getOpenEditors().add(noteEditor);
                 noteEditor.showPanel();
                 noteEditor.removeChangeListener(changeListner);
+                atc.getOpenEditors().remove(noteEditor);
             }
         }
     }//GEN-LAST:event_notesTableMouseClicked

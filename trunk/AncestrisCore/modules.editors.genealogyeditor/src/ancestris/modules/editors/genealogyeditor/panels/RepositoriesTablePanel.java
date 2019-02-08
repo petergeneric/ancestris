@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.models.RepositoriesTableModel;
 import ancestris.util.swing.DialogManager;
@@ -120,6 +121,8 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
 
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepository));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(repositoryEditor);
             if (repositoryEditor.showPanel()) {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -138,6 +141,7 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            atc.getOpenEditors().remove(repositoryEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -151,7 +155,10 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
             int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepositoriesTableModel.getValueAt(rowIndex)));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(repositoryEditor);
             repositoryEditor.showPanel();
+            atc.getOpenEditors().remove(repositoryEditor);
         }
     }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
@@ -162,7 +169,7 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             Repository repository = mRepositoriesTableModel.getValueAt(repositoriesTable.convertRowIndexToModel(selectedRow));
             DialogManager createYesNo = DialogManager.createYesNo(NbBundle.getMessage(RepositoriesTablePanel.class, "RepositoriesTableDialog.deleteRepository.title",
-                            repository),
+                    repository),
                     NbBundle.getMessage(RepositoriesTablePanel.class, "RepositoriesTableDialog.deleteRepository.text",
                             repository,
                             mRoot));
@@ -195,7 +202,10 @@ public class RepositoriesTablePanel extends javax.swing.JPanel {
                 int rowIndex = repositoriesTable.convertRowIndexToModel(selectedRow);
                 RepositoryEditor repositoryEditor = new RepositoryEditor();
                 repositoryEditor.setContext(new Context(mRepositoriesTableModel.getValueAt(rowIndex)));
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                atc.getOpenEditors().add(repositoryEditor);
                 repositoryEditor.showPanel();
+                atc.getOpenEditors().remove(repositoryEditor);
             }
         }
     }//GEN-LAST:event_repositoriesTableMouseClicked

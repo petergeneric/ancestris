@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.IndividualsTableModel;
 import genj.gedcom.*;
@@ -34,7 +35,7 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
 
         initComponents();
         individualsTable.setID(IndividualsTablePanel.class.getName());
-        mPlaceTableSorter = new TableRowSorter<TableModel>(individualsTable.getModel());
+        mPlaceTableSorter = new TableRowSorter<>(individualsTable.getModel());
         individualsTable.setRowSorter(mPlaceTableSorter);
     }
 
@@ -203,7 +204,10 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
             Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
             IndividualEditor individualEditor = new IndividualEditor();
             individualEditor.setContext(new Context(individual));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(individualEditor);
             individualEditor.showPanel();
+            atc.getOpenEditors().remove(individualEditor);
         }
     }//GEN-LAST:event_editIndividualButtonActionPerformed
 
@@ -219,7 +223,10 @@ public class IndividualsTablePanel extends javax.swing.JPanel {
                 Indi individual = mIndividualsTableModel.getValueAt(rowIndex);
                 IndividualEditor individualEditor = new IndividualEditor();
                 individualEditor.setContext(new Context(individual));
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                atc.getOpenEditors().add(individualEditor);
                 individualEditor.showPanel();
+                atc.getOpenEditors().remove(individualEditor);
             }
         }
     }//GEN-LAST:event_individualsTableMouseClicked

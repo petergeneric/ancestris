@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.models.ShelfNumberTableModel;
 import ancestris.util.swing.DialogManager;
@@ -264,6 +265,8 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
 
             RepositoryEditor repositoryEditor = new RepositoryEditor();
             repositoryEditor.setContext(new Context(mRepository));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(repositoryEditor);
             if (repositoryEditor.showPanel()) {
                 mParentProperty.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -297,6 +300,7 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+             atc.getOpenEditors().remove(repositoryEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -307,8 +311,11 @@ public class RepositoryCitationEditorPanel extends javax.swing.JPanel {
         RepositoryEditor repositoryEditor = new RepositoryEditor();
         repositoryEditor.setContext(new Context(mRepositoryCitation.getTargetEntity()));
         repositoryEditor.addChangeListener(changeListner);
+        final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mRepositoryCitation.getGedcom());
+            atc.getOpenEditors().add(repositoryEditor);
         repositoryEditor.showPanel();
         repositoryEditor.removeChangeListener(changeListner);
+        atc.getOpenEditors().remove(repositoryEditor);
     }//GEN-LAST:event_editRepositoryButtonActionPerformed
 
     private void deleteRepositoryButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteRepositoryButtonActionPerformed
