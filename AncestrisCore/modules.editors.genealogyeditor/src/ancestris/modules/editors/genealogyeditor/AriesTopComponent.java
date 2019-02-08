@@ -13,6 +13,7 @@ package ancestris.modules.editors.genealogyeditor;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
+import ancestris.modules.editors.genealogyeditor.editors.EntityEditor;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
@@ -23,6 +24,7 @@ import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
+import com.sun.glass.ui.Window;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -38,7 +40,9 @@ import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -79,6 +83,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
     private JLabel titleLabel;
     private int undoNb;
     UndoRedoListener undoRedoListener;
+    private final List<EntityEditor> openEditors = new ArrayList<>();
     
     private static final Map<Class<? extends Property>, Editor> panels;
 
@@ -196,6 +201,20 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
         UndoRedo undoRedo = getUndoRedo();
         undoRedo.addChangeListener(undoRedoListener);
     }
+    
+    /**
+     * Accessor to liste of Editors.
+     * @return List of editors opened
+     */
+     public List<EntityEditor> getOpenEditors() {
+        return openEditors;
+    }
+    
+    private void commitAllEditors() throws GedcomException {
+        for (EntityEditor ee : openEditors){
+            ee.commit();
+        }
+    }
 
     public void commit() {
         commit(true);
@@ -224,14 +243,17 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
 
             isChangeSource = true;
 
+            
             if (gedcom.isWriteLocked()) {
                 editor.commit();
+                commitAllEditors();
             } else {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         editor.commit();
+                        commitAllEditors();
                     }
                 });
             }

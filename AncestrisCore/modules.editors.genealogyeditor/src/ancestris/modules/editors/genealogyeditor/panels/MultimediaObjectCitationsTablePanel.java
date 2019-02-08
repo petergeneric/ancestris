@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
 import ancestris.modules.editors.genealogyeditor.models.MultiMediaObjectCitationsTableModel;
 import ancestris.util.swing.DialogManager;
@@ -170,6 +171,8 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             multiMediaObjectEditor.setContext(new Context(mMultiMediaObject));
 
             multiMediaObjectEditor.addChangeListener(changeListner);
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(multiMediaObjectEditor);
             if (multiMediaObjectEditor.showPanel()) {
                 multiMediaObjectCitationsTableModel.clear();
                 multiMediaObjectCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("OBJE")));
@@ -183,6 +186,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                 }
             }
             multiMediaObjectEditor.removeChangeListener(changeListner);
+            atc.getOpenEditors().remove(multiMediaObjectEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -243,10 +247,13 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             multiMediaObjectEditor.setContext(new Context(multiMediaObject));
 
             multiMediaObjectEditor.addChangeListener(changeListner);
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mRoot.getGedcom());
+            atc.getOpenEditors().add(multiMediaObjectEditor);
             if (multiMediaObjectEditor.showPanel()) {
                 multiMediaObjectCitationsTable.tableChanged(null);
             }
             multiMediaObjectEditor.removeChangeListener(changeListner);
+            atc.getOpenEditors().remove(multiMediaObjectEditor);
         }
     }//GEN-LAST:event_editMMObjecButtonActionPerformed
 
@@ -261,11 +268,14 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
                 multiMediaObjectEditor.setContext(new Context(multiMediaObject));
 
                 multiMediaObjectEditor.addChangeListener(changeListner);
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(mRoot.getGedcom());
+                atc.getOpenEditors().add(multiMediaObjectEditor);
                 if (multiMediaObjectEditor.showPanel()) {
                     multiMediaObjectCitationsTable.tableChanged(null);
                 }
 
                 multiMediaObjectEditor.removeChangeListener(changeListner);
+                atc.getOpenEditors().remove(multiMediaObjectEditor);
             }
         }
     }//GEN-LAST:event_multiMediaObjectCitationsTableMouseClicked
@@ -310,7 +320,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
         if (selectedRow != -1) {
             int rowIndex = multiMediaObjectCitationsTable.convertRowIndexToModel(selectedRow);
             final Property selectedMultimediaObject = multiMediaObjectCitationsTableModel.getValueAt(rowIndex);
-            
+
             try {
                 mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
 
@@ -334,9 +344,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             } catch (GedcomException ex) {
                 Exceptions.printStackTrace(ex);
             }
-            
-            
-            
+
         }
     }//GEN-LAST:event_prefMediaEventButtonActionPerformed
 

@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.models.FamiliesTableModel;
 import ancestris.util.swing.DialogManager;
@@ -157,6 +158,8 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
 
             FamilyEditor familyEditor = new FamilyEditor();
             familyEditor.setContext(new Context(mCreateFamily));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(familyEditor);
             if (familyEditor.showPanel()) {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -182,6 +185,7 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            atc.getOpenEditors().remove(familyEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -195,7 +199,10 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
             Fam family = mFamiliesTableModel.getValueAt(rowIndex);
             FamilyEditor familyEditor = new FamilyEditor();
             familyEditor.setContext(new Context(family));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(familyEditor);
             familyEditor.showPanel();
+            atc.getOpenEditors().remove(familyEditor);
         }
     }//GEN-LAST:event_editFamilyNameButtonActionPerformed
 
@@ -282,7 +289,10 @@ public class FamiliesTablePanel extends javax.swing.JPanel {
                 Fam family = mFamiliesTableModel.getValueAt(rowIndex);
                 FamilyEditor familyEditor = new FamilyEditor();
                 familyEditor.setContext(new Context(family));
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                atc.getOpenEditors().add(familyEditor);
                 familyEditor.showPanel();
+                atc.getOpenEditors().remove(familyEditor);
             }
         }
     }//GEN-LAST:event_familyNamesTableMouseClicked

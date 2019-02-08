@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.ConfidenceLevelComboBoxModel;
@@ -90,7 +91,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         initComponents();
 
         referencedEventChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
-        
+
     }
 
     /**
@@ -419,7 +420,8 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             SourceEditor sourceEditor = new SourceEditor();
             sourceEditor.setContext(new Context(mReferencedSource));
-
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(sourceEditor);
             if (sourceEditor.showPanel()) {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
@@ -437,6 +439,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     gedcom.undoUnitOfWork(false);
                 }
             }
+            atc.getOpenEditors().remove(sourceEditor);
         } catch (GedcomException ex) {
             Exceptions.printStackTrace(ex);
         }
@@ -448,7 +451,10 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
             SourceEditor sourceEditor = new SourceEditor();
             sourceEditor.setContext(new Context(mReferencedSource));
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            atc.getOpenEditors().add(sourceEditor);
             sourceEditor.showPanel();
+            atc.getOpenEditors().remove(sourceEditor);
         }
     }//GEN-LAST:event_editSourceButtonActionPerformed
 
@@ -550,7 +556,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
 
         mRoot = root;
         mSourceCitation = sourceCitation;
-        
+
         updateLocalizedEvents();
 
         if (sourceCitation instanceof PropertySource) {
@@ -607,13 +613,12 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
             }
             mEventTypeModified = false;
 
-
             mEventRoleModified = false;
 
             final Property sourceData = sourceCitation.getProperty("DATA");
             if (sourceData != null) {
-                final Property p =sourceData.getProperty("DATE",false);
-                PropertyDate date = (PropertyDate) (p instanceof PropertyDate?p:null);
+                final Property p = sourceData.getProperty("DATE", false);
+                PropertyDate date = (PropertyDate) (p instanceof PropertyDate ? p : null);
                 if (date == null) {
 //                    try {
 //                        mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
@@ -685,7 +690,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         int qualityIndex = 0;
         if (propertyQuality != null) {
             try {
-            qualityIndex = Integer.parseInt(propertyQuality.getValue()) + 1;
+                qualityIndex = Integer.parseInt(propertyQuality.getValue()) + 1;
             } catch (NumberFormatException ex) {
                 qualityIndex = 0;
             }
@@ -824,7 +829,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         for (String tag : mEventsTags) {
             localizedEventsList.add(PropertyTag2Name.getTagName(tag));
         }
-        
+
         if (mRoot != null) {
             for (Indi indi : mRoot.getGedcom().getIndis()) {
                 List<PropertySource> sources = indi.getProperties(PropertySource.class);
@@ -845,25 +850,23 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
         referencedEventChoiceWidget.setValues(localizedEventsList);
 
     }
-    
-    
+
     public class ChangeListner implements DocumentListener {
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                mEventTypeModified = true;
-            }
 
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                mEventTypeModified = true;
-            }
+        @Override
+        public void insertUpdate(DocumentEvent e) {
+            mEventTypeModified = true;
+        }
 
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                mEventTypeModified = true;
-            }
+        @Override
+        public void removeUpdate(DocumentEvent e) {
+            mEventTypeModified = true;
+        }
+
+        @Override
+        public void changedUpdate(DocumentEvent e) {
+            mEventTypeModified = true;
+        }
     }
-    
+
 }
-    
-    

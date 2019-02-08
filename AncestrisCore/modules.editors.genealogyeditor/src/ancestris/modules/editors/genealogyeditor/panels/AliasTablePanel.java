@@ -1,5 +1,6 @@
 package ancestris.modules.editors.genealogyeditor.panels;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
 import ancestris.modules.editors.genealogyeditor.models.IndividualReferencesTableModel;
 import ancestris.util.swing.DialogManager;
@@ -121,8 +122,11 @@ public class AliasTablePanel extends javax.swing.JPanel {
             IndividualEditor individualEditor = new IndividualEditor();
             individualEditor.setContext(new Context((Indi) individualRef.getTargetEntity()));
             individualEditor.addChangeListener(changeListner);
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(individualRef.getGedcom());
+            atc.getOpenEditors().add(individualEditor);
             individualEditor.showPanel();
             individualEditor.removeChangeListener(changeListner);
+            atc.getOpenEditors().remove(individualEditor);
         }
     }//GEN-LAST:event_editAliasButtonActionPerformed
 
@@ -207,8 +211,11 @@ public class AliasTablePanel extends javax.swing.JPanel {
                 IndividualEditor individualEditor = new IndividualEditor();
                 individualEditor.setContext(new Context((Indi) individualRef.getTargetEntity()));
                 individualEditor.addChangeListener(changeListner);
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(individualRef.getGedcom());
+                atc.getOpenEditors().add(individualEditor);
                 individualEditor.showPanel();
                 changeListner.stateChanged(null);
+                atc.getOpenEditors().remove(individualEditor);
             }
         }
     }//GEN-LAST:event_aliasTableMouseClicked
