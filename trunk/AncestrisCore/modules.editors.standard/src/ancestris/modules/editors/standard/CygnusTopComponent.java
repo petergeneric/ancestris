@@ -273,7 +273,8 @@ public class CygnusTopComponent extends AncestrisTopComponent implements TopComp
     }
 
     
-    private void commit(boolean ask) {
+    @Override
+    public void commit(boolean ask) {
         // Is busy committing ?
         if (isBusyCommitting) {
             return;

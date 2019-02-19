@@ -24,7 +24,6 @@ import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
-import com.sun.glass.ui.Window;
 import genj.gedcom.Context;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
@@ -220,7 +219,8 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
         commit(true);
     }
 
-    private void commit(boolean ask) {
+    @Override
+    public void commit(boolean ask) {
         // changes?
         if (confirmPanel == null || !confirmPanel.hasChanged()) {
             return;
@@ -334,10 +334,12 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
         repaint();
     }
 
+    @Override
     public void okCallBack(ActionEvent event) {
         commit(false);
     }
 
+    @Override
     public void cancelCallBack(ActionEvent event) {
         cancel();
         // re-set for cancel
