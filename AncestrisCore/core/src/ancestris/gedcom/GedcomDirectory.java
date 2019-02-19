@@ -21,6 +21,7 @@
 package ancestris.gedcom;
 
 import ancestris.api.imports.Import;
+import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.core.pluginservice.PluginInterface;
 import static ancestris.gedcom.Bundle.*;
@@ -1030,7 +1031,11 @@ public abstract class GedcomDirectory {
             Timer timer = new Timer(min * 1000 * 60, new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    // Save gedcom has changed, save it
+                    // Commit all editors without confirmation
+                    for (ConfirmChangeWidget.ConfirmChangeCallBack widget : AncestrisPlugin.lookupAll(ConfirmChangeWidget.ConfirmChangeCallBack.class)) {
+                        widget.commit(false);
+                    }
+                    // If gedcom has changed, save it
                     if (context.getGedcom().hasChanged()) {
                         GedcomDirectory.getDefault().saveGedcom(context);
                     }

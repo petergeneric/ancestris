@@ -80,7 +80,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
 //    mode.setSelected(REGISTRY.get("advanced", false));
         mode.setSelected(true);
         focus.setSelected(REGISTRY.get("focus", false));
-
+        
         // Done
     }
 
@@ -150,7 +150,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         commit(true);
     }
 
-    private void commit(boolean ask) {
+    public void commit(boolean ask) {
 
         // changes?
         if (!confirmPanel.hasChanged()) {

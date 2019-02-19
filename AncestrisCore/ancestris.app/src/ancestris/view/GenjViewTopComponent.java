@@ -11,6 +11,7 @@
  */
 package ancestris.view;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomFileListener;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
@@ -107,6 +108,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
     public boolean createPanel() {
         if (view == null && getViewFactory() != null) {
             view = getViewFactory().createView();
+            AncestrisPlugin.register(view);
         }
         if (view == null) {
             return false;
@@ -123,6 +125,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
     public boolean canClose() {
         if (view != null) {
             view.closing();
+            AncestrisPlugin.unregister(view);
         }
         return super.canClose();
     }

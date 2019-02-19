@@ -205,5 +205,7 @@ public class ConfirmChangeWidget extends JPanel implements ChangeListener {
         public void okCallBack(ActionEvent event);
 
         public void cancelCallBack(ActionEvent event);
+        
+        public void commit(boolean ask);
     }
 }
