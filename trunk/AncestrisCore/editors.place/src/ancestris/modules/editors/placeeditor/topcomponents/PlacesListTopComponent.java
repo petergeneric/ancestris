@@ -128,7 +128,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                             Object[] options = new Object[]{OKButton, cancelButton};
                             Object o = DialogManager.create(NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.edit.all", propertyPlaces.iterator().next().getGeoValue()), placesEditor).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
                             placesEditor.close();
-                            if (o == DialogManager.OK_OPTION) {
+                            if (o == OKButton) {
                                 commit();
                                 updateGedcomPlaceTable();
                             }
