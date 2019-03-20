@@ -1084,6 +1084,7 @@ public abstract class Property implements Comparable<Property> {
 
         WordBuffer result = new WordBuffer(" ");
         result.append(getPropertyName());
+        result.append(":");
 
         String val = getDisplayValue();
         if (val.length() > 0) {
