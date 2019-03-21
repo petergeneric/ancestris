@@ -9,6 +9,7 @@ import ancestris.modules.editors.genealogyeditor.editors.NoteEditor;
 import ancestris.modules.editors.genealogyeditor.editors.RepositoryEditor;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
 import ancestris.modules.editors.genealogyeditor.editors.SubmitterEditor;
+import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -61,46 +62,54 @@ public class GenealogyEditorAction extends AncestrisEditor {
         }
 
         if (contextToOpen != null) {
-            if (!(property instanceof Entity)) {
-                property = property.getEntity();
-            }
-            if (property instanceof Indi) {
-                IndividualEditor individualEditor = new IndividualEditor(isNew);
-                individualEditor.setContext(contextToOpen);
-                individualEditor.showPanel();
-                return property;
-            } else if (property instanceof Fam) {
-                FamilyEditor familyEditor = new FamilyEditor(isNew);
-                familyEditor.setContext(contextToOpen);
-                familyEditor.showPanel();
-                return property;
-            } else if (property instanceof Note) {
-                NoteEditor noteEditor = new NoteEditor(isNew);
-                noteEditor.setContext(contextToOpen);
-                noteEditor.showPanel();
-                return property;
-            } else if (property instanceof Media) {
-                MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor(isNew);
-                multiMediaObjectEditor.setContext(contextToOpen);
-                multiMediaObjectEditor.showPanel();
-                return property;
-            } else if (property instanceof Source) {
-                SourceEditor sourceEditor = new SourceEditor(isNew);
-                sourceEditor.setContext(contextToOpen);
-                sourceEditor.showPanel();
-                return property;
-            } else if (property instanceof Repository) {
-                RepositoryEditor repositoryEditor = new RepositoryEditor(isNew);
-                repositoryEditor.setContext(contextToOpen);
-                repositoryEditor.showPanel();
-                return property;
-            } else if (property instanceof Submitter) {
-                SubmitterEditor submitterEditor = new SubmitterEditor(isNew);
-                submitterEditor.setContext(contextToOpen);
-                submitterEditor.showPanel();
-                return property;
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(contextToOpen.getGedcom());
+            if (atc == null) {
+                AncestrisTopComponent win = new AriesTopComponent().create(contextToOpen);
+                win.open();
+                win.requestActive();
             } else {
-                return null;
+
+                if (!(property instanceof Entity)) {
+                    property = property.getEntity();
+                }
+                if (property instanceof Indi) {
+                    IndividualEditor individualEditor = new IndividualEditor(isNew);
+                    individualEditor.setContext(contextToOpen);
+                    individualEditor.showPanel();
+                    return property;
+                } else if (property instanceof Fam) {
+                    FamilyEditor familyEditor = new FamilyEditor(isNew);
+                    familyEditor.setContext(contextToOpen);
+                    familyEditor.showPanel();
+                    return property;
+                } else if (property instanceof Note) {
+                    NoteEditor noteEditor = new NoteEditor(isNew);
+                    noteEditor.setContext(contextToOpen);
+                    noteEditor.showPanel();
+                    return property;
+                } else if (property instanceof Media) {
+                    MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor(isNew);
+                    multiMediaObjectEditor.setContext(contextToOpen);
+                    multiMediaObjectEditor.showPanel();
+                    return property;
+                } else if (property instanceof Source) {
+                    SourceEditor sourceEditor = new SourceEditor(isNew);
+                    sourceEditor.setContext(contextToOpen);
+                    sourceEditor.showPanel();
+                    return property;
+                } else if (property instanceof Repository) {
+                    RepositoryEditor repositoryEditor = new RepositoryEditor(isNew);
+                    repositoryEditor.setContext(contextToOpen);
+                    repositoryEditor.showPanel();
+                    return property;
+                } else if (property instanceof Submitter) {
+                    SubmitterEditor submitterEditor = new SubmitterEditor(isNew);
+                    submitterEditor.setContext(contextToOpen);
+                    submitterEditor.showPanel();
+                    return property;
+                } else {
+                    return null;
+                }
             }
         }
         return null;
