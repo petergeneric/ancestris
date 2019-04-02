@@ -28,7 +28,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Stack;
 import java.util.TreeMap;
-import java.util.Vector;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -46,24 +45,24 @@ public class ReportAncestorStatistics extends Report {
     "--------------------------------------------------------------------------------";
 
     private double dImplexFactor;
-    Vector<GenerationInfo> vecGenerationInfo = new Vector<GenerationInfo>();
-    private HashSet<String> setIndi = new HashSet<String>();
-    private HashSet<String> setCommonAncestor = new HashSet<String>();
-    private TreeMap<String,Indi> mapImplexCommonIndi = new TreeMap<String,Indi>();
+    private final List<GenerationInfo> vecGenerationInfo = new ArrayList<>();
+    private final HashSet<String> setIndi = new HashSet<>();
+    private final HashSet<String> setCommonAncestor = new HashSet<>();
+    private final TreeMap<String,Indi> mapImplexCommonIndi = new TreeMap<>();
 
     private double dConsanguinityFactor;
-    private TreeMap<String,ConsanguinityInfo> mapConsanguinityCommonIndi = new TreeMap<String,ConsanguinityInfo>();
+    private final TreeMap<String,ConsanguinityInfo> mapConsanguinityCommonIndi = new TreeMap<>();
 
     private class GenerationInfo {
         int iLevel;
 
-        int iPossibleCount;
-        int iKnownCount;
-        int iDiffCount;
+        long iPossibleCount;
+        long iKnownCount;
+        long iDiffCount;
 
-        int iPossibleCumul;
-        int iKnownCumul;
-        int iDiffCumul;
+        long iPossibleCumul;
+        long iKnownCumul;
+        long iDiffCumul;
 
         double dCoverage;
         double dCoverageCumul;
@@ -78,7 +77,7 @@ public class ReportAncestorStatistics extends Report {
         public Indi indi;
         public int count;
         public double consanguinityFactor;
-        public Stack<String> stackIndi = new Stack<String>();
+        public Stack<String> stackIndi = new Stack<>();
     }
 
     /**
@@ -142,8 +141,8 @@ public class ReportAncestorStatistics extends Report {
         println();
 
         // Print factors
-        println(translate("implex_factor", new Double(dImplexFactor)));
-        println(translate("consanguinity_factor", new Double(dConsanguinityFactor)));
+        println(translate("implex_factor", dImplexFactor));
+        println(translate("consanguinity_factor", dConsanguinityFactor));
         println();
     }
 
@@ -236,28 +235,28 @@ public class ReportAncestorStatistics extends Report {
      */
     private void computeImplexFactor(Indi indi) {
         // Initialize the first generation with the selected individual
-        List<Indi> listIndi = new ArrayList<Indi>();
+        List<Indi> listIndi = new ArrayList<>();
         listIndi.add(indi);
 
         // Compute statistics one generation after the other
         int iLevel = 1;
         while (!listIndi.isEmpty()) {
-            List<Indi> listParent = new ArrayList<Indi>();
+            List<Indi> listParent = new ArrayList<>();
             computeGeneration(iLevel, listIndi, listParent);
             listIndi = listParent;
             iLevel++;
         }
 
         // Compute cumul statistics
-        int iPossibleCumul = 0;
-        int iKnownCumul = 0;
-        int iDiffCumul = 0;
+        long iPossibleCumul = 0;
+        long iKnownCumul = 0;
+        long iDiffCumul = 0;
         Iterator<GenerationInfo> itr = vecGenerationInfo.iterator();
         while (itr.hasNext()) {
             GenerationInfo info = (GenerationInfo) itr.next();
 
             // Compute possible
-            info.iPossibleCount = (int) Math.pow(2.0f, info.iLevel - 1);
+            info.iPossibleCount = (long) Math.pow(2.0f, info.iLevel - 1);
 
             // Compute cumuls
             iPossibleCumul += info.iPossibleCount;
@@ -362,8 +361,8 @@ public class ReportAncestorStatistics extends Report {
         if (famc == null)
             return;
 
-        Stack<String> vecWife = new Stack<String>();
-        Stack<String> vecHusband = new Stack<String>();
+        Stack<String> vecWife = new Stack<>();
+        Stack<String> vecHusband = new Stack<>();
         checkRightTree(famc.getWife(), 0, vecWife, famc.getHusband(), 0, vecHusband);
     }
 
@@ -429,7 +428,7 @@ public class ReportAncestorStatistics extends Report {
         // Get ID of the reference individual and check if the current individual
         // is the same.
         String strIdRight = indiRight.getId();
-        if (strIdRight == strIdLeft) {
+        if (strIdRight.equals(strIdLeft)) {
             // Check if indivividual is already in list
             ConsanguinityInfo info = mapConsanguinityCommonIndi.get(strIdRight);
             if (info == null) {
