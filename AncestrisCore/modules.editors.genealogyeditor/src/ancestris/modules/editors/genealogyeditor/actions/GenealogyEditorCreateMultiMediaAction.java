@@ -1,6 +1,8 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.MultiMediaObjectEditor;
+import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -41,6 +43,14 @@ public final class GenealogyEditorCreateMultiMediaAction implements ActionListen
 
         if ((gedcomContext = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = gedcomContext.getGedcom();
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            if (atc == null) {
+
+                AncestrisTopComponent win = new AriesTopComponent().create(gedcomContext);
+                win.open();
+                win.requestActive();
+            }
+
             int undoNb = gedcom.getUndoNb();
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {

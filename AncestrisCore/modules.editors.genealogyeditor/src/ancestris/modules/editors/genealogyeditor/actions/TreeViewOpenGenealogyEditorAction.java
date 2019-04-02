@@ -1,9 +1,11 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import static ancestris.modules.editors.genealogyeditor.actions.Bundle.*;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
+import ancestris.view.AncestrisTopComponent;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -54,9 +56,15 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
         public void actionPerformed(ActionEvent e) {
             SelectionDispatcher.muteSelection(true);
             if (entity != null) {
-                    Gedcom gedcom = entity.getGedcom();
-                    int undoNb = gedcom.getUndoNb();
+                Gedcom gedcom = entity.getGedcom();
+                int undoNb = gedcom.getUndoNb();
 
+                final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+                if (atc == null) {
+                    AncestrisTopComponent win = new AriesTopComponent().create(new Context(entity));
+                    win.open();
+                    win.requestActive();
+                } else {
                     if (entity instanceof Indi) {
                         IndividualEditor individualEditor = new IndividualEditor();
                         individualEditor.setContext(new Context(entity));
@@ -67,7 +75,7 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                         }
                     } else if (entity instanceof Fam) {
                         FamilyEditor familyEditor = new FamilyEditor();
-                        familyEditor.setContext(new Context( entity));
+                        familyEditor.setContext(new Context(entity));
 
                         if (!familyEditor.showPanel()) {
                             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
@@ -75,9 +83,10 @@ public class TreeViewOpenGenealogyEditorAction extends AbstractAction implements
                             }
                         }
                     }
-
-                    SelectionDispatcher.muteSelection(false);
                 }
+
+                SelectionDispatcher.muteSelection(false);
             }
         }
     }
+}

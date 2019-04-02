@@ -1,6 +1,8 @@
 package ancestris.modules.editors.genealogyeditor.actions;
 
+import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
+import ancestris.view.AncestrisTopComponent;
 import genj.gedcom.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -36,6 +38,13 @@ public final class GenealogyEditorCreateSourceAction implements ActionListener {
 
         if ((gedcomContext = Utilities.actionsGlobalContext().lookup(Context.class)) != null) {
             Gedcom gedcom = gedcomContext.getGedcom();
+            final AriesTopComponent atc = AriesTopComponent.findEditorWindow(gedcom);
+            if (atc == null) {
+
+                AncestrisTopComponent win = new AriesTopComponent().create(gedcomContext);
+                win.open();
+                win.requestActive();
+            }
             try {
                 gedcom.doUnitOfWork(new UnitOfWork() {
 
