@@ -47,6 +47,7 @@ public final class DatuTopComponent extends TopComponent {
         initComponents();
         putClientProperty(TopComponent.PROP_KEEP_PREFERRED_SIZE_WHEN_SLIDED_IN, Boolean.TRUE);
         putClientProperty("TopComponentAllowDockAnywhere", Boolean.TRUE);
+        
         jSliderGap.setMajorTickSpacing(50);
         jSliderGap.setMinorTickSpacing(10);
         jSliderGap.setPaintTicks(true);
