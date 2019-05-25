@@ -23,13 +23,10 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.util.swing.DialogManager;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
-import com.sun.awt.AWTUtilities;
 import genj.gedcom.Context;
 import genj.gedcom.Gedcom;
 import gj.awt.geom.Path;
 import java.awt.BasicStroke;
-import java.awt.GraphicsDevice;
-import java.awt.GraphicsEnvironment;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -38,6 +35,8 @@ import java.awt.Dimension;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
 import java.awt.Point;
 import java.awt.Shape;
 import java.awt.Toolkit;
@@ -609,7 +608,7 @@ public class TourAction  implements ActionListener {
         w.setSize(width, height);
         if (transluscentIsSupported) {
             w.setBackground(color);
-            AWTUtilities.setWindowOpacity(w, 0.3f);
+            w.setOpacity(0.3f);
         }
         return w;
     }
