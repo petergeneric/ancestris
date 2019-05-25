@@ -25,7 +25,6 @@ import genj.gedcom.GedcomOptions.GedcomDateFormat;
 import genj.util.DirectAccessTokenizer;
 import genj.util.Resources;
 import genj.util.WordBuffer;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 
@@ -371,7 +370,7 @@ public class PointInTime implements Comparable<PointInTime> {
     }
     
     // grab third
-    String third = tokens.get(cont++);
+    String third = tokens.get(cont);
     
     // only two tokens? either MMM YYYY or french R calendar 'An Y'
     if (third==null) {
@@ -388,7 +387,7 @@ public class PointInTime implements Comparable<PointInTime> {
     }
 
     // everything after third is now combined to YYYY
-    third = txt.substring(tokens.getStart());
+    third = tokens.getSubstringFrom(cont);
     
     try {
       set( Integer.parseInt(first) - 1, calendar.parseMonth(second), addc(calendar.getYear(third), bc));

@@ -3,19 +3,18 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.gedcom;
 
@@ -30,19 +29,27 @@ import genj.util.WordBuffer;
  */
 public class PropertyDate extends Property {
 
-    /** time values */
+    /**
+     * time values
+     */
     private final PIT start = new PIT(),
             end = new PIT();
     private boolean isAdjusting = false;
     private String valueAsString = null;
 
-    /** the format of the contained date */
+    /**
+     * the format of the contained date
+     */
     private Format format = DATE;
 
-    /** as string */
+    /**
+     * as string
+     */
     private String phrase = "";
 
-    /** format definitions */
+    /**
+     * format definitions
+     */
     public final static Format DATE = new Format("", ""),
             FROM_TO = new Format("FROM", "TO"),
             FROM = new Format("FROM", ""),
@@ -113,7 +120,8 @@ public class PropertyDate extends Property {
         }
 
         /**
-         * return start year padded with 0 to allow comparison using string comparison.
+         * return start year padded with 0 to allow comparison using string
+         * comparison.
          *
          * @param p
          *
@@ -504,29 +512,25 @@ public class PropertyDate extends Property {
 
             DirectAccessTokenizer tokens = new DirectAccessTokenizer(text, " ", true);
             int afterFirst = 0;
-
             // check start
             if (start.length() > 0) {
                 String first = tokens.get(0);
-                afterFirst = tokens.getEnd();
                 if (!first.equalsIgnoreCase(start)) {
                     return false;
                 }
+                afterFirst = 1;
             }
 
             // no range?
             if (!isRange()) {
-                return date.start.set(text.substring(afterFirst));
+                return date.start.set(tokens.getSubstringFrom(afterFirst));
             }
 
             // find end
-            for (int pos = 1;; pos++) {
+            for (int pos = 1; pos < tokens.count(); pos++) {
                 String token = tokens.get(pos);
-                if (token == null) {
-                    break;
-                }
                 if (token.equalsIgnoreCase(end)) {
-                    return date.start.set(text.substring(afterFirst, tokens.getStart())) && date.end.set(text.substring(tokens.getEnd()));
+                    return date.start.set(tokens.getSubstring(afterFirst, pos)) && date.end.set(tokens.getSubstringFrom(pos + 1));
                 }
             }
 

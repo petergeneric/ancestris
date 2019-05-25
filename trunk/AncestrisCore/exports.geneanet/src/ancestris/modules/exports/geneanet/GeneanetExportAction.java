@@ -91,6 +91,7 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
             Lookup.getDefault().lookupAll(Filter.class).stream().filter((f) -> (f.canApplyTo(myGedcom))).forEachOrdered((f) -> {
                 theFilters.add(f);
             });
+            theFilters.add(new FilterPlaceOption());
 
             SaveOptionsWidget options = new SaveOptionsWidget(theFilters.toArray(new Filter[]{}));
 
@@ -123,7 +124,7 @@ public final class GeneanetExportAction extends AbstractAncestrisContextAction {
                 DialogDisplayer.getDefault().notify(nd);
 
                 try {
-                    String fileStr = "http://www.geneanet.org/creer-votre-arbre/gedcom";
+                    String fileStr = "https://my.geneanet.org/arbre/";
                     URI uri = new URI(fileStr);
                     if (Desktop.isDesktopSupported()) {
                         Desktop.getDesktop().browse(uri);
