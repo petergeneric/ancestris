@@ -82,7 +82,7 @@ public class ReportGenealogyStatus extends Report {
                 // extract big integer from sosa number, grabing siblings of sosa, thus extracting the next number after '-', and stripping out generation number
                 sosaStr = prop.getValue();
                 int index = sosaStr.indexOf(".");
-                if (index != -1) {
+                if (index != -1 || sosaStr.matches(".*[a-z].*")) {
                     continue;
                 }
                 index = sosaStr.indexOf(" ");

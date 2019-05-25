@@ -117,14 +117,14 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     /**
      * language we're trying to use
      */
-    private final static String userLanguage = Locale.getDefault().getLanguage();
+    private final static String USER_LANGUAGE = Locale.getDefault().getLanguage();
 
     /**
      * translation resources common to all reports
      */
-    static final Resources COMMON_RESOURCES = ReportResources.get(Report.class);
+    private static final Resources COMMON_RESOURCES = ReportResources.get(Report.class);
 
-    private Map<Locale, Resources> locale2resources = new HashMap<Locale, Resources>(3);
+    private final Map<Locale, Resources> LOCALE_2_RESOURCES = new HashMap<Locale, Resources>(3);
 
     /**
      * options
@@ -158,6 +158,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
 
     /**
      * Get a logging out
+     * @return writer
      */
     public PrintWriter getOut() {
         return out;
@@ -382,7 +383,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
                 .showSaveDialog(askForOverwrite);
         
         if (file != null) {
-            registry.put("file", file.getParent().toString());
+            registry.put("file", file.getParent());
         }
         return file;
     }
@@ -677,7 +678,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     /*protected*/
 
     public Resources getResources(Locale locale) {
-        Resources resources = locale2resources.get(locale);
+        Resources resources = LOCALE_2_RESOURCES.get(locale);
         if (resources == null) {
             // initialize resources with old way of pulling from .properties file
             InputStream in = getClass().getResourceAsStream(getTypeName() + ".properties");
@@ -688,7 +689,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
             if (resources == null) {
                 resources = ReportResources.get(this.getClass(), locale);
             }
-            locale2resources.put(locale, resources);
+            LOCALE_2_RESOURCES.put(locale, resources);
         }
 
         return resources;
@@ -703,11 +704,11 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      * @param prefix String in front of the indented text (can be null)
      */
     public static String getIndent(int level, int spacesPerLevel, String prefix) {
-        StringBuffer oneLevel = new StringBuffer();
+        final StringBuilder oneLevel = new StringBuilder();
         while (oneLevel.length() != spacesPerLevel) {
             oneLevel.append(" ");
         }
-        StringBuffer buffer = new StringBuffer(256);
+        final StringBuilder buffer = new StringBuilder(256);
         while (--level > 0) {
             buffer.append(oneLevel);
         }
@@ -731,6 +732,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      * @param txt the text to align
      * @param length the length of the result
      * @param alignment one of LEFT,CENTER,RIGHT
+     * @return string aligned.
      */
     public static String align(String txt, int length, int alignment) {
 
@@ -742,7 +744,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         n = length - n;
 
         // prepare result
-        StringBuffer buffer = new StringBuffer(length);
+        final StringBuilder buffer = new StringBuilder(length);
 
         int before, after;
         switch (alignment) {
@@ -891,13 +893,13 @@ public abstract class Report implements Cloneable, ResourcesProvider {
     /**
      * Whether the report allows to be run on a given context - default checks
      * for methods called
-     * <il>
+     * <ul>
      * <li>start(Gedcom|Object)
      * <li>start(Property)
      * <li>start(Entity)
      * <li>start(Indi[])
      * <li>...
-     * </il>
+     * </ul>
      *
      * @return title of action for given context or null for n/a
      */
@@ -954,7 +956,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
         private static final Category DEFAULT_CATEGORY = createCategory("Other");
         private String name;
         private String displayName;
-        private ImageIcon image;
+        private final ImageIcon image;
 
         private Category(String name, ImageIcon image) {
             this.name = name.toLowerCase();
@@ -1029,18 +1031,18 @@ public abstract class Report implements Cloneable, ResourcesProvider {
             }
             return out;
         }
-        private static final TreeMap<String, Category> categories = new TreeMap<String, Category>();
+        private static final TreeMap<String, Category> CATEGORIES = new TreeMap<String, Category>();
 
         static {
             // Default category when category isn't defined in properties file
-            categories.put(DEFAULT_CATEGORY.name, DEFAULT_CATEGORY);
+            CATEGORIES.put(DEFAULT_CATEGORY.name, DEFAULT_CATEGORY);
         }
 
         private static Category get(String name) {
-            Category category = (Category) categories.get(name);
+            Category category = (Category) CATEGORIES.get(name);
             if (category == null) {
                 category = createCategory(name);
-                categories.put(name, category);
+                CATEGORIES.put(name, category);
             }
             return category;
         }
@@ -1051,7 +1053,7 @@ public abstract class Report implements Cloneable, ResourcesProvider {
      */
     private static class FileExtensionFilter extends FileFilter {
 
-        private String extension;
+        private final String extension;
 
         public FileExtensionFilter(String extension) {
             this.extension = extension != null ? extension.toLowerCase() : FileChooserBuilder.getHtmlFilter().getExtensions()[0];

@@ -31,14 +31,19 @@ import genj.gedcom.PropertyAlias;
 import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyChild;
 import genj.gedcom.PropertyFamilyChild;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyXRef;
+import genj.io.Filter;
 import genj.io.GedcomReader;
 import genj.io.GedcomReaderContext;
 import genj.io.GedcomReaderFactory;
+import genj.util.DirectAccessTokenizer;
 import genj.util.Origin;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -298,6 +303,13 @@ public class GeneanetExport {
             }
         }
 
+        for (Filter fil : options.getFilters()) {
+            if (fil instanceof FilterPlaceOption) {
+                manageGeneanetPlaceFormat(gedcom);
+                break;
+            }
+        }        
+
         // Adjust others tags
         for (Entity entity : gedcom.getEntities()) {
             // Convert _TIME to TIME
@@ -339,5 +351,54 @@ public class GeneanetExport {
         }
 
         return true;
+    }
+
+    private void manageGeneanetPlaceFormat(Gedcom gedcom) {
+        final String format = gedcom.getPlaceFormat();
+        final String cityTag = PropertyPlace.getCityTag(gedcom);
+
+        final DirectAccessTokenizer datForm = new DirectAccessTokenizer(format, PropertyPlace.JURISDICTION_SEPARATOR);
+
+        int pos = datForm.contains(cityTag);
+
+        final StringBuilder sbForm = new StringBuilder(format.length() + 5);
+
+        if (pos == -1) {
+            return;
+        }
+        sbForm.append('[');
+        for (int i = 0; i < pos; i++) {
+            sbForm.append(datForm.get(i));
+            if (i != pos - 1) {
+                sbForm.append(PropertyPlace.JURISDICTION_SEPARATOR);
+            }
+        }
+        sbForm.append("] - ");
+        sbForm.append(datForm.getSubstringFrom(pos));
+        gedcom.setPlaceFormat(sbForm.toString());
+
+        final List<Property> allPlaces = (List<Property>) gedcom.getPropertiesByClass(PropertyPlace.class);
+        final Map<String, String> allUniquePlaces = new HashMap<>();
+        for (Property place : allPlaces) {
+            if (allUniquePlaces.containsKey(place.getValue())) {
+                place.setValue(allUniquePlaces.get(place.getValue()));
+            } else {
+                final DirectAccessTokenizer dat = new DirectAccessTokenizer(place.getValue(), PropertyPlace.JURISDICTION_SEPARATOR);
+                final StringBuilder sb = new StringBuilder(place.getValue().length() + 5);
+                String subdivision = dat.getSubstring(0, pos).trim();
+                if (subdivision.startsWith(",")) {
+                    subdivision = subdivision.substring(1);
+                }
+                if (!"".equals(subdivision.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, "").trim())) {
+                    sb.append('[').append(subdivision).append("] - ");
+                }
+                sb.append(dat.getSubstringFrom(pos));
+
+                final String result = sb.toString();
+                allUniquePlaces.put(place.getValue(), result);
+                place.setValue(result);
+            }
+
+        }
     }
 }

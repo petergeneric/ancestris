@@ -22,11 +22,8 @@ import genj.util.DirectAccessTokenizer;
 import genj.util.ReferenceSet;
 import genj.util.swing.ImageIcon;
 import java.text.Collator;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 /**
  * PLAC a choice value with brains for understanding sub-property FORM
@@ -200,21 +197,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     private static String[] toJurisdictions(String value) {
-        ArrayList<String> result = new ArrayList<String>(10);
-        String lastToken = JURISDICTION_SEPARATOR;
-        for (StringTokenizer tokens = new StringTokenizer(value, ",", true); tokens.hasMoreTokens();) {
-            String token = tokens.nextToken().trim();
-            if (!JURISDICTION_SEPARATOR.equals(token)) {
-                result.add(token);
-            } else if (JURISDICTION_SEPARATOR.equals(lastToken)) {
-                result.add("");
-            }
-            lastToken = token;
-        }
-        if (JURISDICTION_SEPARATOR.equals(lastToken)) {
-            result.add("");
-        }
-        return result.toArray(new String[result.size()]);
+        final DirectAccessTokenizer dat = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
+       return dat.getTokens(true);
     }
 
     /**
@@ -405,7 +389,7 @@ public class PropertyPlace extends PropertyChoiceValue {
             return result;
         }
         // grab sub
-        return new DirectAccessTokenizer(result, JURISDICTION_SEPARATOR).getSubstring(cityIndex);
+        return new DirectAccessTokenizer(result, JURISDICTION_SEPARATOR).getSubstringFrom(cityIndex);
     }
 
     /**
