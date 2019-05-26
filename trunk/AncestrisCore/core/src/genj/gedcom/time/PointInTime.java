@@ -325,7 +325,7 @@ public class PointInTime implements Comparable<PointInTime> {
       int i = txt.indexOf("@", 1);
       if (i<0)  return false;
       String esc = txt.substring(0,i+1);
-      txt = txt.substring(i+1);
+      txt = txt.substring(i+1).trim();
       
       // .. has to be one of our calendar escapes
       for (int c=0;c<CALENDARS.length;c++) {
