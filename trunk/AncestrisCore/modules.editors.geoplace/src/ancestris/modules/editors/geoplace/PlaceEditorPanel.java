@@ -22,6 +22,7 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -141,13 +142,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         placeEditorTabbedPane = new javax.swing.JTabbedPane();
         gedcomListPanel = new javax.swing.JPanel();
         gedcomListScrollPane = new javax.swing.JScrollPane();
-        gedcomPlacesListResult = new javax.swing.JList<String>();
+        gedcomPlacesListResult = new javax.swing.JList<>();
         eventsLabel = new javax.swing.JLabel();
         placeReferenceScrollPane = new javax.swing.JScrollPane();
         placeReferencesTable = new javax.swing.JTable();
         internetListPanel = new javax.swing.JPanel();
         geonamesScrollPane = new javax.swing.JScrollPane();
-        geonamesPlacesListResult = new javax.swing.JList<String>();
+        geonamesPlacesListResult = new javax.swing.JList<>();
         replacePlaceButton = new javax.swing.JButton();
         completePlaceButton = new javax.swing.JButton();
         mapPanel = new javax.swing.JPanel();
@@ -325,9 +326,13 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         splitPane.setLeftComponent(listPanel);
 
+        jXMapKit1.setDefaultProvider(org.jdesktop.swingx.JXMapKit.DefaultProviders.OpenStreetMaps);
         jXMapKit1.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
+        jXMapKit1.setAddressLocationShown(false);
+        jXMapKit1.setDataProviderCreditShown(true);
         jXMapKit1.setPreferredSize(new java.awt.Dimension(250, 218));
         MapScrollPane.setViewportView(jXMapKit1);
+        jXMapKit1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.jXMapKit1.AccessibleContext.accessibleName")); // NOI18N
 
         tipLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(tipLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.tipLabel.text")); // NOI18N
@@ -442,9 +447,10 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         if (isConnectionOn) {
             jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         } else {
-            String txt = NbBundle.getMessage(PlaceEditorPanel.class, "MSG_RefreshingError");
-            DialogManager.createError(NbBundle.getMessage(PlaceEditorPanel.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ConnectionError"), txt).show();
-            return;
+            jXMapKit1.setTileFactory(new EmptyTileFactory());
+//            String txt = NbBundle.getMessage(PlaceEditorPanel.class, "MSG_RefreshingError");
+//            DialogManager.createError(NbBundle.getMessage(PlaceEditorPanel.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ConnectionError"), txt).show();
+//            return;
         }
         String searchedPlace = searchPlaceTextField.getText();
             if (!searchedPlace.isEmpty()) {
@@ -890,7 +896,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 return;
             }
             isBusyChecking = true;
-            osmUrl.openStream();
+            URLConnection uc = osmUrl.openConnection();
+ //           uc.setRequestProperty("User-Agent", "Ancestris/0.10");
+            uc.getInputStream();
         } catch (IOException ex) {
             if (!mute) {
                 DialogManager.createError(
