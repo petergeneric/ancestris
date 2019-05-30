@@ -9,7 +9,7 @@ import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.io.IOException;
 import org.geonames.Toponym;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.GeoPosition;
 
 /**
  *
@@ -17,7 +17,7 @@ import org.jdesktop.swingx.mapviewer.GeoPosition;
  */
 public class GeoToken implements Transferable {
 
-    static public DataFlavor geoPosFlavor = new DataFlavor(GeoPosition.class, "X-data/geocoord; class=<org.jdesktop.swingx.mapviewer.GeoPosition>; Geographic coordinates");
+    static public DataFlavor geoPosFlavor = new DataFlavor(GeoPosition.class, "X-data/geocoord; class=<org.jxmapviewer.viewer.GeoPosition>; Geographic coordinates");
     static public DataFlavor topoFlavor = new DataFlavor(Toponym.class, "X-data/toponym; class=<org.geonames.Toponym>; Geographic location");
     private GeoPosition geoPosition = null;
     private Toponym topo = null;

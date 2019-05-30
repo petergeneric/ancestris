@@ -31,7 +31,7 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import org.geonames.InsufficientStyleException;
 import org.geonames.Toponym;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.ImageUtilities;
 import org.openide.util.NbBundle;

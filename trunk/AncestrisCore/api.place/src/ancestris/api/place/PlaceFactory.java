@@ -17,7 +17,7 @@ import genj.gedcom.PropertyLongitude;
 import genj.gedcom.PropertyPlace;
 import java.util.StringTokenizer;
 import org.geonames.Toponym;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.openide.util.NbPreferences;
 
 /**

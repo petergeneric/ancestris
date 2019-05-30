@@ -21,7 +21,7 @@ import genj.gedcom.PropertyPlace;
 import genj.gedcom.UnitOfWork;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;

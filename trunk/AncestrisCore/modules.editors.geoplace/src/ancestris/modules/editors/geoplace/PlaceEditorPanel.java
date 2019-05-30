@@ -41,10 +41,11 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.event.MouseInputListener;
 import javax.swing.table.TableRowSorter;
-import org.jdesktop.swingx.JXMapKit;
-import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.util.ProjectProperties;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.empty.EmptyTileFactory;
 import org.openide.util.NbBundle;
 import org.openide.util.Task;
 import org.openide.util.TaskListener;
@@ -111,9 +112,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         searchPlaceTextField.getDocument().addDocumentListener(new FilterListener());
         jXMapKit1.setDataProviderCreditShown(true);
-        jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
         jXMapKit1.setMiniMapVisible(false);
-        jXMapKit1.getZoomSlider().setValue(5);
         setMouseListener();
         
         TableRowSorter sorter = new TableRowSorter<ReferencesTableModel>((ReferencesTableModel) placeReferencesTable.getModel());
@@ -153,7 +152,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         completePlaceButton = new javax.swing.JButton();
         mapPanel = new javax.swing.JPanel();
         MapScrollPane = new javax.swing.JScrollPane();
-        jXMapKit1 = new org.jdesktop.swingx.JXMapKit();
+        jXMapKit1 = new org.jxmapviewer.JXMapKit();
         tipLabel = new javax.swing.JLabel();
         placeDetailsLabel = new javax.swing.JLabel();
         separator = new javax.swing.JSeparator();
@@ -326,13 +325,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
         splitPane.setLeftComponent(listPanel);
 
-        jXMapKit1.setDefaultProvider(org.jdesktop.swingx.JXMapKit.DefaultProviders.OpenStreetMaps);
-        jXMapKit1.setToolTipText(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "RightClicOnMap")); // NOI18N
-        jXMapKit1.setAddressLocationShown(false);
         jXMapKit1.setDataProviderCreditShown(true);
-        jXMapKit1.setPreferredSize(new java.awt.Dimension(250, 218));
+        jXMapKit1.setZoom(8);
         MapScrollPane.setViewportView(jXMapKit1);
-        jXMapKit1.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.jXMapKit1.AccessibleContext.accessibleName")); // NOI18N
 
         tipLabel.setFont(new java.awt.Font("DejaVu Sans", 0, 10)); // NOI18N
         org.openide.awt.Mnemonics.setLocalizedText(tipLabel, org.openide.util.NbBundle.getMessage(PlaceEditorPanel.class, "PlaceEditorPanel.tipLabel.text")); // NOI18N
@@ -448,9 +443,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         } else {
             jXMapKit1.setTileFactory(new EmptyTileFactory());
-//            String txt = NbBundle.getMessage(PlaceEditorPanel.class, "MSG_RefreshingError");
-//            DialogManager.createError(NbBundle.getMessage(PlaceEditorPanel.class, "OpenIDE-Module-Name") + " - " + NbBundle.getMessage(PlaceEditorPanel.class, "TITL_ConnectionError"), txt).show();
-//            return;
         }
         String searchedPlace = searchPlaceTextField.getText();
             if (!searchedPlace.isEmpty()) {
@@ -533,7 +525,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private javax.swing.JList<String> geonamesPlacesListResult;
     private javax.swing.JScrollPane geonamesScrollPane;
     private javax.swing.JPanel internetListPanel;
-    private org.jdesktop.swingx.JXMapKit jXMapKit1;
+    private org.jxmapviewer.JXMapKit jXMapKit1;
     private javax.swing.JPanel listPanel;
     private javax.swing.JPanel mapPanel;
     private javax.swing.JLabel placeDetailsLabel;
@@ -897,7 +889,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
             }
             isBusyChecking = true;
             URLConnection uc = osmUrl.openConnection();
- //           uc.setRequestProperty("User-Agent", "Ancestris/0.10");
+            uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
             uc.getInputStream();
         } catch (IOException ex) {
             if (!mute) {
@@ -913,15 +905,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
         isConnectionOn = true;
         isBusyChecking = false;
-        return;
     }
-
-    
-
-
-    
-    
-    
     
     
     /**
@@ -1002,7 +986,6 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         }
 
         @Override
-        @SuppressWarnings("deprecation")
         public void actionPerformed(ActionEvent e) {
             if (actionName.equals("ACTION_MapCopyPoint")) {
                 // rounds to 5 decimal places
