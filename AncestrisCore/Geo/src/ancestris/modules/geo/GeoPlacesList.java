@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
+import org.jxmapviewer.viewer.GeoPosition;
 import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 import org.openide.util.NbPreferences;

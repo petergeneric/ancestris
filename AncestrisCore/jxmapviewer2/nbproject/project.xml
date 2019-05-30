@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://www.netbeans.org/ns/project/1">
+    <type>org.netbeans.modules.apisupport.project</type>
+    <configuration>
+        <data xmlns="http://www.netbeans.org/ns/nb-module-project/3">
+            <code-name-base>org.jxmapviewer</code-name-base>
+            <suite-component/>
+            <module-dependencies/>
+            <public-packages>
+                <package>org.jxmapviewer</package>
+                <package>org.jxmapviewer.beans</package>
+                <package>org.jxmapviewer.cache</package>
+                <package>org.jxmapviewer.google</package>
+                <package>org.jxmapviewer.input</package>
+                <package>org.jxmapviewer.painter</package>
+                <package>org.jxmapviewer.util</package>
+                <package>org.jxmapviewer.viewer</package>
+                <package>org.jxmapviewer.viewer.bmng</package>
+                <package>org.jxmapviewer.viewer.empty</package>
+                <package>org.jxmapviewer.viewer.esri</package>
+                <package>org.jxmapviewer.viewer.util</package>
+                <package>org.jxmapviewer.viewer.wms</package>
+            </public-packages>
+        </data>
+    </configuration>
+</project>

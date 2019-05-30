@@ -8,6 +8,8 @@ import ancestris.api.search.SearchCommunicator;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.libs.geonames.GeonamesOptions;
+import ancestris.modules.geo.renderer.NameWaypointRenderer;
+import ancestris.modules.geo.renderer.NoNameWaypointRenderer;
 import ancestris.modules.utilities.search.SearchTopComponent;
 import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
@@ -22,7 +24,10 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyXRef;
 import genj.io.Filter;
 import genj.view.ScreenshotAction;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,20 +36,30 @@ import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.*;
-import javax.swing.*;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
+import javax.swing.AbstractAction;
+import javax.swing.JMenu;
+import javax.swing.JOptionPane;
+import javax.swing.JPopupMenu;
+import javax.swing.ToolTipManager;
 import javax.swing.event.MouseInputListener;
 import org.geonames.Toponym;
 import org.geonames.WebService;
-import org.jdesktop.swingx.JXMapKit;
-import org.jdesktop.swingx.JXMapViewer;
-import org.jdesktop.swingx.mapviewer.GeoPosition;
-import org.jdesktop.swingx.mapviewer.Waypoint;
-import org.jdesktop.swingx.mapviewer.WaypointPainter;
-import org.jdesktop.swingx.mapviewer.WaypointRenderer;
-import org.jdesktop.swingx.mapviewer.empty.EmptyTileFactory;
+import org.jxmapviewer.JXMapKit;
+import org.jxmapviewer.JXMapViewer;
+import org.jxmapviewer.util.ProjectProperties;
+import org.jxmapviewer.viewer.GeoPosition;
+import org.jxmapviewer.viewer.WaypointPainter;
+import org.jxmapviewer.viewer.empty.EmptyTileFactory;
 import org.netbeans.api.javahelp.Help;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.util.HelpCtx;
@@ -82,7 +97,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     //
     private GeoPlacesList gpl = null;
     private GeoNodeObject[] markers = null;
-    private List<GeoPoint> geoPoints = new LinkedList<GeoPoint>();
+    private List<GeoPoint> geoPoints = new LinkedList<>();
     private HoverPanel hoverPanel = null;
     private int markersSizeMax = 50;
     private MapPopupMenu popupMenu;
@@ -110,7 +125,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private Lookup.Result<SelectionActionEvent> result;
     private DialogManager settingsDialog;
     //
-    private HashSet<Entity> connectedEntities = new HashSet<Entity>();
+    private Set<Entity> connectedEntities = new HashSet<>();
 
 
     public GeoMapTopComponent() {
@@ -176,8 +191,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         } else {
             jXMapKit1.setTileFactory(new EmptyTileFactory());
         }
-        jXMapKit1.setDataProviderCreditShown(true);
-        jXMapKit1.getMainMap().setRecenterOnClickEnabled(true);
         jXMapKit1.getMainMap().add(hoverPanel);
         
         // Add listener for zoom adapter
@@ -196,6 +209,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jRefreshButton.setEnabled(false);
         initMarkersList();
         applyFilters();
+        jXMapKit1.setDataProviderCreditShown(true);
         return true;
     }
 
@@ -282,7 +296,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         blankLabel = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         jPanel6 = new javax.swing.JPanel();
-        jXMapKit1 = new org.jdesktop.swingx.JXMapKit();
+        jXMapKit1 = new org.jxmapviewer.JXMapKit();
 
         setPreferredSize(new java.awt.Dimension(906, 627));
 
@@ -468,19 +482,18 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jPanel6.setFont(new java.awt.Font("Cantarell", 0, 12)); // NOI18N
         jPanel6.setPreferredSize(new java.awt.Dimension(905, 300));
 
-        jXMapKit1.setPreferredSize(new java.awt.Dimension(902, 218));
+        jXMapKit1.setDataProviderCreditShown(true);
+        jXMapKit1.setZoom(8);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
         jPanel6Layout.setHorizontalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel6Layout.createSequentialGroup()
-                .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(3, 3, 3))
+            .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, 905, Short.MAX_VALUE)
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jXMapKit1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
+            .addComponent(jXMapKit1, javax.swing.GroupLayout.DEFAULT_SIZE, 574, Short.MAX_VALUE)
         );
 
         jScrollPane1.setViewportView(jPanel6);
@@ -608,6 +621,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if ("zoom".equals(pn) || "center".equals(pn)) {
             saveSettings();
         }
+        jXMapKit1.setDataProviderCreditShown(true);
     }                                        
 
 
@@ -636,7 +650,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     private javax.swing.JToggleButton jToggleSliderButton;
     private javax.swing.JToolBar jToolBar;
     private javax.swing.JButton jViewAllButton;
-    private org.jdesktop.swingx.JXMapKit jXMapKit1;
+    private org.jxmapviewer.JXMapKit jXMapKit1;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -763,7 +777,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         isBusyRecalc = true;
         String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.inprogress");
         jActiveFilters.setToolTipText(msg);
-        //StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+       
         geoPoints.clear();
         boolean filterIsOn = false;
         if (markers != null) {
@@ -783,13 +797,13 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             displayMarkers();
             jActiveFilters.setVisible(filterIsOn);
             jActiveFilters.setToolTipText(msg);
-            //StatusDisplayer.getDefault().setStatusText(" ", StatusDisplayer.IMPORTANCE_ANNOTATION);
+            
             if (geoPoints.size() < markers.length) {
                 msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
                 msg += geoFilter.getShortDescription();
                 jActiveFilters.setToolTipText(msg);
-                //StatusDisplayer.getDefault().setStatusText(msg, StatusDisplayer.IMPORTANCE_ANNOTATION);
+    
             }
         }
         hoverPanel.setVisible(false); 
@@ -797,62 +811,26 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         isBusyRecalc = false;
     }
 
-    @SuppressWarnings("unchecked")
     private void displayMarkers() {
         WaypointPainter painter = new WaypointPainter();
         if (displayMarkers) {
             painter.setWaypoints(new HashSet(geoPoints));
             if (useNames) {
-                painter.setRenderer(new WaypointRenderer() {
-
-                    public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
-                        // get name
-                        double coex = ((double) markersSize) / 10;
-                        String name = ((GeoPoint) wp).getGeoNodeObject().getCity();
-                        g.setFont(new Font("Dialog", Font.PLAIN, (int) (12 * coex)));
-                        double width = (int) g.getFontMetrics().getStringBounds(name, g).getWidth();
-                        //draw tab
-                        GradientPaint colortowhite = new GradientPaint(0, 0, markersColor, 0, (int) (20 * coex), Color.WHITE, true);
-                        g.setPaint(markersColor);
-                        Polygon triangle = new Polygon();
-                        triangle.addPoint(0, 0);
-                        triangle.addPoint((int) (7 * coex), (int) (-11 * coex));
-                        triangle.addPoint((int) (-7 * coex), (int) (-11 * coex));
-                        g.fill(triangle);
-                        g.setPaint(colortowhite);
-                        g.fillRoundRect((int) ((-width / 2 - 5)), (int) (-30 * coex), (int) ((width + 10)), (int) (20 * coex), 10, 10);
-                        //draw text w/ shadow
-                        //g.setPaint(Color.GRAY);
-                        //g.drawString(name, -width / 2 + 2, -16 + 2); //shadow
-                        g.setPaint(markersColor);
-                        g.drawString(name, (int) ((-width / 2)), (int) ((-16) * coex)); //text
-                        return false;
-                    }
-                });
+                painter.setRenderer(new NameWaypointRenderer(markersSize, markersColor));
             } else {
-                painter.setRenderer(new WaypointRenderer() {
-
-                    public boolean paintWaypoint(Graphics2D g, JXMapViewer map, Waypoint wp) {
-                        g.setStroke(new BasicStroke((int) (((double) markersSize) / 8 + 1)));
-                        g.setColor(markersColor);
-                        g.drawOval(-markersSize, -markersSize, 2 * markersSize, 2 * markersSize);
-                        g.setStroke(new BasicStroke(1f));
-                        g.drawLine(-markersSize, 0, markersSize, 0);
-                        g.drawLine(0, -markersSize, 0, markersSize);
-                        return false;
-                    }
-                });
+               // painter.setRenderer(new DefaultWaypointRenderer());
+                painter.setRenderer(new NoNameWaypointRenderer(markersSize, markersColor)); 
             }
         }
         jXMapKit1.getMainMap().setOverlayPainter(painter);
-        jXMapKit1.getMainMap().repaint();
+        jXMapKit1.repaint();
     }
 
     Set<GeoPosition> getPositionsFromMarkers() {
         if (markers == null) {
             return null;
         }
-        Set<GeoPosition> set = new HashSet<GeoPosition>();
+        Set<GeoPosition> set = new HashSet<>();
         for (int i = 0; i < markers.length; i++) {
             GeoNodeObject geoNodeObject = markers[i];
             set.add(new GeoPosition(geoNodeObject.getLatitude(), geoNodeObject.getLongitude()));
@@ -890,7 +868,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     public void setZoom(int zoom) {
-        jXMapKit1.getMainMap().setZoomEnabled(true);
         jXMapKit1.getMainMap().setZoom(zoom);
     }
 
@@ -1033,12 +1010,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                         JOptionPane.INFORMATION_MESSAGE);
                 searchWindow.requestActive();
                 settingsDialog.cancel();  // close geo settings
-//                // Trick to run the Advanced Research View in an Undocked mode
-//                for (Action a : searchWindow.getActions()) {
-//                    if (a != null && a.getClass().toString().equals("class org.netbeans.core.windows.actions.UndockWindowAction")) {
-//                        a.actionPerformed(new ActionEvent(this, 0, "undock"));
-//                    }
-//                }
             }
         }
         geoFilter.selectedSearch = selected;
@@ -1296,7 +1267,9 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
             isBusyChecking = true;
             lastCheckTimeStamp = System.currentTimeMillis();
-            osmUrl.openStream();
+            URLConnection uc = osmUrl.openConnection();
+            uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
+            uc.getInputStream();
         } catch (IOException ex) {
             if (!mute) {
                 DialogManager.createError(
@@ -1450,13 +1423,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                     if (localGeoPoint == null) {
                         return null;
                     }
-                    List<Toponym> topoList = new ArrayList<Toponym>();
+                    List<Toponym> topoList = new ArrayList<>();
                     try {
                         WebService.setUserName(GeonamesOptions.getInstance().getUserName());
                         topoList = WebService.findNearbyPlaceName(localGeoPoint.getLatitude(), localGeoPoint.getLongitude(),
                                 8, 15); // radius, maxrows
-//                                FeatureClass.Style.FULL, // style
-//                                Locale.getDefault().toString()); // language
                     } catch (Exception ex) {
                         return null;
                     }

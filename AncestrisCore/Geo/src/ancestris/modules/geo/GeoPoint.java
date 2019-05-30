@@ -7,14 +7,14 @@ package ancestris.modules.geo;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import org.jdesktop.swingx.mapviewer.Waypoint;
+import org.jxmapviewer.viewer.DefaultWaypoint;
 import org.openide.util.WeakListeners;
 
 /**
  *
  * @author frederic
  */
-public class GeoPoint extends Waypoint implements PropertyChangeListener {
+public class GeoPoint extends DefaultWaypoint implements PropertyChangeListener {
 
     GeoNodeObject gno = null;
 
