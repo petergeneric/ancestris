@@ -367,7 +367,7 @@
           <SubComponents>
             <Component class="org.jxmapviewer.JXMapKit" name="jXMapKit1">
               <Properties>
-                <Property name="dataProviderCreditShown" type="boolean" value="true"/>
+                <Property name="miniMapVisible" type="boolean" value="false"/>
                 <Property name="zoom" type="int" value="8"/>
               </Properties>
             </Component>
