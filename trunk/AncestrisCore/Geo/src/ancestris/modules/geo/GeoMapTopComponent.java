@@ -482,7 +482,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         jPanel6.setFont(new java.awt.Font("Cantarell", 0, 12)); // NOI18N
         jPanel6.setPreferredSize(new java.awt.Dimension(905, 300));
 
-        jXMapKit1.setDataProviderCreditShown(true);
+        jXMapKit1.setMiniMapVisible(false);
         jXMapKit1.setZoom(8);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
@@ -822,7 +822,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
                 painter.setRenderer(new NoNameWaypointRenderer(markersSize, markersColor)); 
             }
         }
-        jXMapKit1.getMainMap().setOverlayPainter(painter);
+        jXMapKit1.setAddressLocationPainter(painter);
         jXMapKit1.repaint();
     }
 

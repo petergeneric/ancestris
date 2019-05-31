@@ -22,6 +22,7 @@ import java.awt.image.BufferedImage;
 import java.beans.DesignMode;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.io.IOException;
 import java.net.URL;
 import java.util.Set;
 import javax.imageio.ImageIO;
@@ -127,7 +128,7 @@ public class JXMapViewer extends JPanel implements DesignMode
             URL url = JXMapViewer.class.getResource("/org/jxmapviewer/images/loading.png");
             this.setLoadingImage(ImageIO.read(url));
         }
-        catch (Exception ex)
+        catch (IOException ex)
         {
             System.out.println("could not load 'loading.png'");
             BufferedImage img = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
@@ -761,21 +762,6 @@ public class JXMapViewer extends JPanel implements DesignMode
                 if (tile.getZoom() == getZoom())
                 {
                     repaint();
-                    /* this optimization doesn't save much and it doesn't work if you
-                    * wrap around the world
-                    Rectangle viewportBounds = getViewportBounds();
-                    TilePoint tilePoint = t.getLocation();
-                    Point point = new Point(tilePoint.getX() * getTileFactory().getTileSize(), tilePoint.getY() * getTileFactory().getTileSize());
-                    Rectangle tileRect = new Rectangle(point, new Dimension(getTileFactory().getTileSize(), getTileFactory().getTileSize()));
-                    if (viewportBounds.intersects(tileRect)) {
-                    //convert tileRect from world space to viewport space
-                    repaint(new Rectangle(
-                        tileRect.x - viewportBounds.x,
-                        tileRect.y - viewportBounds.y,
-                        tileRect.width,
-                        tileRect.height
-                        ));
-                    }*/
                 }
             }
 
