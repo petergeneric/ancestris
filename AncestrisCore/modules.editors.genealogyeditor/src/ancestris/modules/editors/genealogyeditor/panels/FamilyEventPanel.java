@@ -566,7 +566,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             husbandAgeTextField.setText(husbandAge.getDisplayValue());
             Indi husband = ((Fam) mRoot).getHusband();
             Property pBirth = husband != null ? husband.getBirthDate() : null;
-            if (mDate.isValid() && pBirth != null && pBirth.isValid()) {
+            if (mDate != null && mDate.isValid() && pBirth != null && pBirth.isValid()) {
                 husbandAgeTextField.setEditable(false);
             } else {
                 husbandAgeTextField.setText("");
@@ -599,7 +599,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
             wifeAgeTextField.setText(wifeAge.getDisplayValue());
             Indi wife = ((Fam) mRoot).getWife();
             Property pBirth = wife != null ? wife.getBirthDate() : null;
-            if (mDate.isValid() && pBirth != null && pBirth.isValid()) {
+            if (mDate != null && mDate.isValid() && pBirth != null && pBirth.isValid()) {
                 wifeAgeTextField.setEditable(false);
             } else {
                 wifeAgeTextField.setText("");
@@ -787,8 +787,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     }
 
     private String displayAddressValue(Property address) {
-        String addressValue = "";
-        addressValue = address.getDisplayValue();
+        String addressValue = address.getDisplayValue();
         if (addressValue.length() == 0) {
             Property propertyAdr1 = address.getProperty("ADR1");
             addressValue = (propertyAdr1 != null ? propertyAdr1.getValue() : "") + ", ";
