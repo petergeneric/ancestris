@@ -290,7 +290,7 @@ public class EventWrapper {
         eventAge = df.format(d);
         
         // age
-        age = "(" + PropertyAge.getLabelForAge() + ": " + (d<0 ? "-" : "") + delta.toString() + (readAge != null ? " - " + foundAge + ": " + readAge : "") +")";
+        age = "(" + PropertyAge.getLabelForAge().toLowerCase() + ": " + (d<0 ? "-" : "") + delta.toString() + (readAge != null ? " - " + foundAge + ": " + readAge : "") +")";
     }
     
     
