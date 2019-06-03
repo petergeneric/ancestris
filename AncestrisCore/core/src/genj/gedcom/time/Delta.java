@@ -176,7 +176,12 @@ public class Delta implements Comparable<Delta> {
           // decrease months
           months --;
           // increase days with days in previous month
-          days = days + calendar.getDays(mearlier+months, yearlier);
+          // check month 
+          if (mearlier+months<0) {
+            days = days + calendar.getDays(calendar.getMonths()-1, yearlier-1);
+            } else {
+            days = days + calendar.getDays(mearlier+months, yearlier);  
+          }
         }
 
       }
