@@ -8,10 +8,9 @@
 
 package ancestris.report.svgtree.output;
 
-import java.awt.Graphics2D;
-
 import ancestris.report.svgtree.FamBox;
 import ancestris.report.svgtree.IndiBox;
+import java.awt.Graphics2D;
 
 /**
  * Produces a mirror image of the tree, preserving information boxes in readable form.
@@ -41,6 +40,7 @@ public class FlipTreeElements extends FilterTreeElements {
      * @param y  y coordinate
      * @param gen generation number
      */
+    @Override
     public void drawIndiBox(IndiBox indibox, int x, int y, int gen) {
         if (!flip)
         {
@@ -61,6 +61,7 @@ public class FlipTreeElements extends FilterTreeElements {
      * @param y  y coordinate
      * @param gen generation number
      */
+    @Override
     public void drawFamBox(FamBox fambox, int x, int y, int gen) {
         if (!flip)
         {
@@ -77,6 +78,7 @@ public class FlipTreeElements extends FilterTreeElements {
     /**
      * Initializes the graphics.
      */
+    @Override
     public void header(int width, int height) {
         if (flip)
         {
@@ -90,6 +92,7 @@ public class FlipTreeElements extends FilterTreeElements {
     /**
      * Footer.
      */
+    @Override
     public void footer() {
         elements.footer();
     }

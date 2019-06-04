@@ -21,6 +21,7 @@ public abstract class TreeFilterBase implements TreeFilter {
     /**
      * Runs preFilter(), then filter on all child nodes and postFilter() in the end.
      */
+    @Override
     public final void filter(IndiBox indibox) {
         if (indibox == null)
             return;
@@ -31,8 +32,9 @@ public abstract class TreeFilterBase implements TreeFilter {
         filter(indibox.spouse);
         filter(indibox.nextMarriage);
         if (indibox.hasChildren())
-            for (int i = 0; i < indibox.children.length; i++)
-                filter(indibox.children[i]);
+            for (IndiBox children : indibox.children) {
+                filter(children);
+        }
 
         postFilter(indibox);
     }

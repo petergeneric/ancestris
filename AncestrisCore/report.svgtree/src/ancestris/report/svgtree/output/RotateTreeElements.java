@@ -8,11 +8,10 @@
 
 package ancestris.report.svgtree.output;
 
-import java.awt.Graphics2D;
-import java.awt.geom.AffineTransform;
-
 import ancestris.report.svgtree.FamBox;
 import ancestris.report.svgtree.IndiBox;
+import java.awt.Graphics2D;
+import java.awt.geom.AffineTransform;
 
 /**
  * Rotates information boxes, preserving their position.
@@ -51,6 +50,7 @@ public class RotateTreeElements extends FilterTreeElements {
      * @param y  y coordinate
      * @param gen generation number
      */
+    @Override
     public void drawIndiBox(IndiBox indibox, int x, int y, int gen) {
         AffineTransform transform = graphics.getTransform();
         transform(x, y, indibox.width, indibox.height);
@@ -67,6 +67,7 @@ public class RotateTreeElements extends FilterTreeElements {
      * @param y  y coordinate
      * @param gen generation number
      */
+    @Override
     public void drawFamBox(FamBox fambox, int x, int y, int gen) {
         AffineTransform transform = graphics.getTransform();
         transform(x, y, fambox.width, fambox.height);
@@ -115,12 +116,14 @@ public class RotateTreeElements extends FilterTreeElements {
         fambox.height = tmp;
     }
 
+    @Override
     public void getIndiBoxSize(IndiBox indibox)
     {
         elements.getIndiBoxSize(indibox);
         transpose(indibox);
     }
 
+    @Override
     public void getFamBoxSize(FamBox fambox)
     {
         elements.getFamBoxSize(fambox);

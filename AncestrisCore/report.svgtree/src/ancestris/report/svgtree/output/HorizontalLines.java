@@ -8,12 +8,11 @@
 
 package ancestris.report.svgtree.output;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.filter.TreeFilter;
 import ancestris.report.svgtree.filter.TreeFilterBase;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Converts line numbers to coordinates.
@@ -35,20 +34,21 @@ public class HorizontalLines implements TreeFilter {
     /**
      * Heights of levels.
      */
-    private Map<Integer, Integer> levelHeight = new HashMap<Integer, Integer>();
+    private final Map<Integer, Integer> levelHeight = new HashMap<>();
 
     /**
      * Y coordinates of levels.
      */
-    private Map<Integer, Integer> levelCoord = new HashMap<Integer, Integer>();
+    private final Map<Integer, Integer> levelCoord = new HashMap<>();
 
-    private int spacing;
+    private final int spacing;
 
     public HorizontalLines(int spacing)
     {
         this.spacing = spacing;
     }
 
+    @Override
     public void filter(IndiBox indibox)
     {
         // Reset variables
@@ -90,6 +90,7 @@ public class HorizontalLines implements TreeFilter {
          */
         private int level = 0;
 
+        @Override
         protected void preFilter(IndiBox indibox) {
             if (indibox.prev != null)
                 level += indibox.y;
@@ -109,6 +110,7 @@ public class HorizontalLines implements TreeFilter {
                 levelHeight.put(level, newHeight);
         }
 
+        @Override
         protected void postFilter(IndiBox indibox) {
             if (indibox.prev != null)
                 level -= indibox.y;
@@ -125,11 +127,13 @@ public class HorizontalLines implements TreeFilter {
          */
         private int level = 0;
 
+        @Override
         protected void preFilter(IndiBox indibox) {
             if (indibox.prev != null)
                 level += indibox.y;
         }
 
+        @Override
         protected void postFilter(IndiBox indibox) {
             int thisLevel = level;
             if (indibox.prev != null) {

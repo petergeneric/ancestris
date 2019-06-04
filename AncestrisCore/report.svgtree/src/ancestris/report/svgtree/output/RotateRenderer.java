@@ -8,10 +8,9 @@
 
 package ancestris.report.svgtree.output;
 
+import ancestris.report.svgtree.graphics.GraphicsRenderer;
 import java.awt.Graphics2D;
 import java.awt.geom.AffineTransform;
-
-import ancestris.report.svgtree.graphics.GraphicsRenderer;
 
 /**
  * Rotates the whole image.
@@ -25,7 +24,7 @@ public class RotateRenderer implements GraphicsRenderer
     public static final int ROTATE_180 = 2;
     public static final int ROTATE_90 = 3;
 
-    private GraphicsRenderer renderer;
+    private final GraphicsRenderer renderer;
 
     /**
      * Image rotation.
@@ -38,6 +37,7 @@ public class RotateRenderer implements GraphicsRenderer
         this.renderer = renderer;
     }
 
+    @Override
     public int getImageHeight()
     {
         if (rotation == ROTATE_0 || rotation == ROTATE_180)
@@ -45,6 +45,7 @@ public class RotateRenderer implements GraphicsRenderer
         return renderer.getImageWidth();
     }
 
+    @Override
     public int getImageWidth()
     {
         if (rotation == ROTATE_0 || rotation == ROTATE_180)
@@ -52,6 +53,7 @@ public class RotateRenderer implements GraphicsRenderer
         return renderer.getImageHeight();
     }
 
+    @Override
     public void render(Graphics2D graphics)
     {
         AffineTransform transform = graphics.getTransform();

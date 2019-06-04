@@ -5,11 +5,9 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.filter;
 
 import ancestris.report.svgtree.IndiBox;
-
 
 /**
  * A filter chain executes a list of filters one after another.
@@ -18,16 +16,16 @@ import ancestris.report.svgtree.IndiBox;
  */
 public class FilterChain implements TreeFilter {
 
-    private TreeFilter[] filters;
+    private final TreeFilter[] filters;
 
-    public FilterChain(TreeFilter[] filters)
-    {
+    public FilterChain(TreeFilter[] filters) {
         this.filters = filters;
     }
 
-	public void filter(IndiBox indibox)
-    {
-        for (int i = 0; i < filters.length; i++)
-            filters[i].filter(indibox);
+    @Override
+    public void filter(IndiBox indibox) {
+        for (TreeFilter filter : filters) {
+            filter.filter(indibox);
+        }
     }
 }

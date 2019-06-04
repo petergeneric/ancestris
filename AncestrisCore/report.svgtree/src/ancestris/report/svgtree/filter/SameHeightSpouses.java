@@ -16,6 +16,7 @@ import ancestris.report.svgtree.IndiBox;
  * @author Przemek Wiech <pwiech@losthive.org>
  */
 public class SameHeightSpouses extends TreeFilterBase {
+    @Override
     protected void preFilter(IndiBox indibox) {
         if (indibox.spouse != null) {
             if (indibox.spouse.height > indibox.height)

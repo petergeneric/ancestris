@@ -18,12 +18,13 @@ import ancestris.report.svgtree.output.TreeElements;
  */
 public class DetermineBoxSizes extends TreeFilterBase {
 
-    private TreeElements elements;
+    private final TreeElements elements;
 
     public DetermineBoxSizes(TreeElements elements) {
         this.elements = elements;
     }
 
+    @Override
     public void preFilter(IndiBox indibox) {
         elements.getIndiBoxSize(indibox);
         if (indibox.family != null)

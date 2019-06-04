@@ -8,14 +8,12 @@
 
 package ancestris.report.svgtree.graphics;
 
+import ancestris.report.svgtree.IndiBox;
+import ancestris.report.svgtree.output.GraphicsTreeElements;
 import genj.gedcom.Indi;
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-
-import ancestris.report.svgtree.IndiBox;
-import ancestris.report.svgtree.output.GraphicsTreeElements;
 
 /**
  * Displays a title above the rendered image.
@@ -35,6 +33,8 @@ public class TitleRenderer implements GraphicsRenderer
      */
     public String title = "$n ($i)";
     private String formattedTitle;
+    
+    public String fontNameTitle = "verdana";
 
     /**
      * Title font height. If set to 0, the height is determined automatically.
@@ -50,6 +50,7 @@ public class TitleRenderer implements GraphicsRenderer
         this.renderer = renderer;
     }
 
+    @Override
     public int getImageHeight()
     {
         if (title.equals(""))
@@ -64,6 +65,7 @@ public class TitleRenderer implements GraphicsRenderer
         return (renderer.getImageHeight() + renderer.getImageWidth()) / 40; // auto-size
     }
 
+    @Override
     public int getImageWidth()
     {
         return renderer.getImageWidth();
@@ -72,6 +74,7 @@ public class TitleRenderer implements GraphicsRenderer
     /**
      * Renders the title and calls the enclosed renderer to render the image.
      */
+    @Override
     public void render(Graphics2D graphics)
     {
         if (!title.equals(""))
@@ -81,12 +84,19 @@ public class TitleRenderer implements GraphicsRenderer
 
             int height = getTitleHeight();
             graphics.setColor(Color.BLACK);
-            graphics.setFont(new Font("verdana", Font.BOLD, height));
+            checkFont();
+            graphics.setFont(new Font(fontNameTitle, Font.BOLD, height));
             GraphicsTreeElements.centerString(graphics, formattedTitle, getImageWidth() / 2, height * 3/4 + VERTICAL_MARGIN);
 
             graphics.translate(0, height + VERTICAL_MARGIN); // Move rendered image below the title
         }
         renderer.render(graphics);
+    }
+    
+    private void checkFont(){
+        if (!GraphicsUtil.checkFont(fontNameTitle)) {
+            fontNameTitle = "verdana";
+        }        
     }
     
     /**

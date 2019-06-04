@@ -8,11 +8,6 @@
 
 package ancestris.report.svgtree;
 
-import genj.gedcom.Indi;
-import genj.report.Report;
-
-import java.io.IOException;
-
 import ancestris.report.svgtree.arrange.LayoutFactory;
 import ancestris.report.svgtree.build.BasicTreeBuilder;
 import ancestris.report.svgtree.build.TreeBuilder;
@@ -24,6 +19,9 @@ import ancestris.report.svgtree.graphics.GraphicsRenderer;
 import ancestris.report.svgtree.output.RendererFactory;
 import ancestris.report.svgtree.output.TreeElements;
 import ancestris.report.svgtree.output.TreeElementsFactory;
+import genj.gedcom.Indi;
+import genj.report.Report;
+import java.io.IOException;
 import org.openide.util.lookup.ServiceProvider;
 
 /**
@@ -45,7 +43,7 @@ public class ReportGraphicalTree extends Report
     /**
      * Object used for translating strings.
      */
-    private Translator translator = new Translator(this);
+    private final Translator translator = new Translator(this);
 
     /**
      * Builds the tree structure.
@@ -72,20 +70,6 @@ public class ReportGraphicalTree extends Report
      */
     public GraphicsOutputFactory outputs = new GraphicsOutputFactory();
 
-    public ReportGraphicalTree()
-    {
-//        // Add options from all components
-//        addOptions(builder, BUILDER_CATEGORY);
-//        addOptions(layouts, LAYOUT_CATEGORY);
-//        addOptions(treeElements, ELEMENTS_CATEGORY);
-//        addOptions(renderers, RENDERER_CATEGORY);
-//        addOptions(outputs, OUTPUT_CATEGORY);
-//
-//        // Override categories for these options
-//        setCategory("flip", LAYOUT_CATEGORY);
-//        setCategory("rotation", LAYOUT_CATEGORY);
-    }
-
     /**
      * The report's entry point
      */
@@ -99,7 +83,7 @@ public class ReportGraphicalTree extends Report
         new DetermineBoxSizes(elements).filter(indibox);
 
         // Arrange the tree boxes
-        TreeFilter arranger = layouts.createLayout();;
+        TreeFilter arranger = layouts.createLayout();
         arranger.filter(indibox);
 
         // Create renderer

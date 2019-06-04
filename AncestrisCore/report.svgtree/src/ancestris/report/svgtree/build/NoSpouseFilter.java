@@ -8,14 +8,12 @@
 
 package ancestris.report.svgtree.build;
 
+import ancestris.report.svgtree.IndiBox;
+import ancestris.report.svgtree.filter.TreeFilterBase;
 import genj.gedcom.Indi;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import ancestris.report.svgtree.IndiBox;
-import ancestris.report.svgtree.filter.TreeFilterBase;
 
 /**
  * Filters out all spouses (except ancestors).
@@ -29,6 +27,7 @@ public class NoSpouseFilter extends TreeFilterBase {
     /**
      * Runs the filter on the given individual.
      */
+    @Override
     protected void preFilter(IndiBox indibox) {
 
         if (indibox.getDir() != IndiBox.Direction.PARENT &&
@@ -67,7 +66,7 @@ public class NoSpouseFilter extends TreeFilterBase {
             return b;
         if (b == null)
             return a;
-        List<IndiBox> list = new ArrayList<IndiBox>(Arrays.asList(a));
+        List<IndiBox> list = new ArrayList<>(Arrays.asList(a));
         list.addAll(Arrays.asList(b));
         return list.toArray(new IndiBox[0]);
     }

@@ -8,9 +8,8 @@
 
 package ancestris.report.svgtree.graphics;
 
-import genj.report.Report;
 import ancestris.core.actions.AbstractAncestrisAction;
-
+import genj.report.Report;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -32,8 +31,8 @@ public class GraphicsOutputFactory {
 
     public String[] output_types = null;
 
-    private Map<String, GraphicsOutput> outputs = new LinkedHashMap<String, GraphicsOutput>();
-    public List<GraphicsOutput> outputList = new ArrayList<GraphicsOutput>();
+    private final Map<String, GraphicsOutput> outputs = new LinkedHashMap<>();
+    public List<GraphicsOutput> outputList = new ArrayList<>();
 
     /**
      * Creates the object
@@ -80,7 +79,7 @@ public class GraphicsOutputFactory {
         return output;
     }
 
-    public void add(String name, GraphicsOutput output)
+    public final void add(String name, GraphicsOutput output)
     {
         outputs.put(name, output);
         outputList.add(output);
