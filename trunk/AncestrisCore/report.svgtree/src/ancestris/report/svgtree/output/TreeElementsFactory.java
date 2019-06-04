@@ -8,10 +8,6 @@
 
 package ancestris.report.svgtree.output;
 
-import java.util.ArrayList;
-import java.util.List;
-
-
 /**
  * Creates classes that generate individual and family boxes.
  *

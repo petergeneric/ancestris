@@ -18,7 +18,7 @@ import genj.report.Report;
  */
 public class Translator
 {
-    private Report report;
+    private final Report report;
 
     public Translator(Report report)
     {

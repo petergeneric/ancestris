@@ -8,16 +8,14 @@
 
 package ancestris.report.svgtree.graphics;
 
-import genj.gedcom.PropertyChange;
-
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.Translator;
 import ancestris.report.svgtree.filter.TreeFilterBase;
 import ancestris.report.svgtree.output.GraphicsTreeElements;
+import genj.gedcom.PropertyChange;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
 
 /**
  * Displays a footer below the rendered image.
@@ -38,7 +36,9 @@ public class FooterRenderer implements GraphicsRenderer
     /**
      * Footer font size.
      */
-    private static int FONT_SIZE = 10;
+    private final static int FONT_SIZE = 10;
+    
+    public String fontNameFooter = "verdana";
 
     /**
      * Footer mode. Changes the contents of the footer.
@@ -55,12 +55,12 @@ public class FooterRenderer implements GraphicsRenderer
     /**
      * The renderer that renders the actual image.
      */
-    private GraphicsRenderer renderer;
+    private final GraphicsRenderer renderer;
 
     /**
      * Translates strings using the report.
      */
-    private Translator translator;
+    private final Translator translator;
 
     /**
      * Creates the object.
@@ -103,6 +103,7 @@ public class FooterRenderer implements GraphicsRenderer
             displayDate = translator.translate("not_available");
     }
 
+    @Override
     public int getImageHeight()
     {
         if (footer_mode == 0)
@@ -110,6 +111,7 @@ public class FooterRenderer implements GraphicsRenderer
         return renderer.getImageHeight() + FONT_SIZE + MARGIN;
     }
 
+    @Override
     public int getImageWidth()
     {
         return renderer.getImageWidth();
@@ -118,6 +120,7 @@ public class FooterRenderer implements GraphicsRenderer
     /**
      * Renders the footer and calls the enclosed renderer to render the image.
      */
+    @Override
     public void render(Graphics2D graphics)
     {
         if (footer_mode != 0)
@@ -126,11 +129,17 @@ public class FooterRenderer implements GraphicsRenderer
             graphics.clearRect(0, 0, getImageWidth(), getImageHeight());
 
             graphics.setColor(Color.BLACK);
-            graphics.setFont(new Font("verdana", Font.PLAIN, FONT_SIZE));
+            checkFont();
+            graphics.setFont(new Font(fontNameFooter, Font.PLAIN, FONT_SIZE));
             String caption = translator.translate(FOOTER_PREFIX + footer_modes[footer_mode]) + ": " + displayDate;
             GraphicsTreeElements.alignRightString(graphics, caption, getImageWidth() - MARGIN, getImageHeight() - FONT_SIZE / 4 - MARGIN);
         }
         renderer.render(graphics);
+    }
+     private void checkFont(){
+        if (!GraphicsUtil.checkFont(fontNameFooter)) {
+            fontNameFooter = "verdana";
+        }        
     }
 
     /**

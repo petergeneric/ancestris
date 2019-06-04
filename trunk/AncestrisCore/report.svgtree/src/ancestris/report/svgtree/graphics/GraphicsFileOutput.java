@@ -9,7 +9,6 @@
 package ancestris.report.svgtree.graphics;
 
 import genj.report.Report;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -38,15 +37,17 @@ public abstract class GraphicsFileOutput implements GraphicsOutput {
     /**
      * Writes the family tree to the output file.
      */
+    @Override
     public void output(GraphicsRenderer renderer) throws IOException {
-        OutputStream out = new FileOutputStream(file);
-        write(out, renderer);
-        out.close();
+        try (OutputStream out = new FileOutputStream(file)) {
+            write(out, renderer);
+        }
     }
 
     /**
      * Displays the generated file.
      */
+    @Override
     public Object result(Report report) {
         return file;
     }

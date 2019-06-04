@@ -5,16 +5,14 @@
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-
 package ancestris.report.svgtree.output;
-
-import java.awt.Dimension;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.IndiBox.Direction;
 import ancestris.report.svgtree.arrange.LayoutFactory;
+import java.awt.Dimension;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Vertical family tree rendering.
@@ -25,12 +23,14 @@ public class VerticalTreeRenderer extends TreeRendererBase {
 
     /**
      * Outputs the family tree starting from the given IndiBox.
+     *
      * @param indibox root individual box
-     * @param baseX  x coordinate
-     * @param baseY  y coordinate
-     * @param gen  generation number
+     * @param baseX x coordinate
+     * @param baseY y coordinate
+     * @param gen generation number
      */
-	protected void drawLines(IndiBox indibox, int baseX, int baseY) {
+    @Override
+    protected void drawLines(IndiBox indibox, int baseX, int baseY) {
 
         int midX = baseX + getMidX(indibox);
 
@@ -40,65 +40,75 @@ public class VerticalTreeRenderer extends TreeRendererBase {
         if (indibox.hasChildren() || indibox.getDir() == Direction.PARENT) {
             int midY = baseY + indibox.height;
 
-            if (indibox.spouse != null)
+            if (indibox.spouse != null) {
                 midY -= indibox.height / 2;
+            }
 
-            if (indibox.family != null)
+            if (indibox.family != null) {
                 midY = baseY + indibox.height + indibox.family.height;
+            }
 
             elements.drawLine(midX, midY, midX, lineY);
 
-            SortedSet<Integer> xSet = new TreeSet<Integer>();
+            SortedSet<Integer> xSet = new TreeSet<>();
             xSet.add(midX);
-            if (indibox.getDir() == Direction.PARENT)
+            if (indibox.getDir() == Direction.PARENT) {
                 xSet.add(baseX - indibox.x + indibox.prev.width / 2);
-            if (indibox.hasChildren())
-                for (int i = 0; i < indibox.children.length; i++)
-                    xSet.add(baseX + indibox.children[i].x + indibox.children[i].width / 2);
+            }
+            if (indibox.hasChildren()) {
+                for (IndiBox children : indibox.children) {
+                    xSet.add(baseX + children.x + children.width / 2);
+                }
+            }
             int x1 = xSet.first();
             int x2 = xSet.last();
 
             elements.drawLine(x1, lineY, x2, lineY);
         }
 
-		// Parent
-		if (indibox.parent != null) {
+        // Parent
+        if (indibox.parent != null) {
             int parentLineY = baseY + indibox.parent.y + getChildrenLineY(indibox.parent);
             elements.drawLine(baseX + indibox.width / 2, baseY, baseX + indibox.width / 2, parentLineY);
-		}
+        }
 
-		// Children
-		if (indibox.hasChildren())
-			for (int i = 0; i < indibox.children.length; i++) {
-                int x = baseX + indibox.children[i].x + indibox.children[i].width / 2;
-                elements.drawLine(x, baseY + indibox.children[i].y, x, lineY);
-			}
+        // Children
+        if (indibox.hasChildren()) {
+            for (IndiBox children : indibox.children) {
+                int x = baseX + children.x + children.width / 2;
+                elements.drawLine(x, baseY + children.y, x, lineY);
+            }
+        }
 
-		// Next marriage
-		if (indibox.nextMarriage != null) {
+        // Next marriage
+        if (indibox.nextMarriage != null) {
             lineY = indibox.height / 2;
-            if (indibox.nextMarriage.height < indibox.height)
+            if (indibox.nextMarriage.height < indibox.height) {
                 lineY = indibox.nextMarriage.height / 2;
-			if (indibox.nextMarriage.x > 0)
+            }
+            if (indibox.nextMarriage.x > 0) {
                 elements.drawDashedLine(baseX + indibox.width, baseY + lineY,
-				        baseX + indibox.nextMarriage.x, baseY + lineY);
-			else
+                        baseX + indibox.nextMarriage.x, baseY + lineY);
+            } else {
                 elements.drawDashedLine(baseX, baseY + lineY,
-				        baseX + indibox.nextMarriage.x + indibox.nextMarriage.width, baseY + lineY);
-		}
-	}
+                        baseX + indibox.nextMarriage.x + indibox.nextMarriage.width, baseY + lineY);
+            }
+        }
+    }
 
     private int getChildrenLineY(IndiBox indibox) {
         int lineY;
         if (indibox.hasChildren()) {
             lineY = indibox.children[0].y;
-            for (int i = 1; i < indibox.children.length; i++)
+            for (int i = 1; i < indibox.children.length; i++) {
                 lineY = Math.min(lineY, indibox.children[i].y);
+            }
             lineY -= LayoutFactory.SPACING;
         } else {
             lineY = indibox.height + LayoutFactory.SPACING;
-            if (indibox.family != null)
+            if (indibox.family != null) {
                 lineY += indibox.family.height;
+            }
         }
         return lineY;
     }
@@ -106,6 +116,7 @@ public class VerticalTreeRenderer extends TreeRendererBase {
     /**
      * Returns the position of the family box relative to the individual box.
      */
+    @Override
     protected Dimension getFamboxCoords(IndiBox indibox) {
         int x = getMidX(indibox) - indibox.family.width / 2;
         int y = indibox.height;
@@ -113,14 +124,16 @@ public class VerticalTreeRenderer extends TreeRendererBase {
     }
 
     private int getMidX(IndiBox indibox) {
-        if (indibox.spouse == null)
+        if (indibox.spouse == null) {
             return indibox.width / 2;
+        }
 
         int x;
-        if (indibox.spouse.x > 0)
+        if (indibox.spouse.x > 0) {
             x = (indibox.spouse.x + indibox.width) / 2;
-        else
+        } else {
             x = (indibox.spouse.x + indibox.spouse.width) / 2;
+        }
 
         if (indibox.family != null) {
             if (indibox.spouse.x > 0) {

@@ -8,11 +8,10 @@
 
 package ancestris.report.svgtree.output;
 
-import java.awt.Dimension;
-import java.awt.Graphics2D;
-
 import ancestris.report.svgtree.IndiBox;
 import ancestris.report.svgtree.graphics.GraphicsRenderer;
+import java.awt.Dimension;
+import java.awt.Graphics2D;
 
 /**
  * Common code for family tree rendering classes.
@@ -46,6 +45,7 @@ public abstract class TreeRendererBase implements GraphicsRenderer {
     /**
      * Renders the family tree to the given Graphics2D object.
      */
+    @Override
 	public void render(Graphics2D graphics)
 	{
         elements.setGraphics(graphics);
@@ -64,6 +64,7 @@ public abstract class TreeRendererBase implements GraphicsRenderer {
     /**
      * Returns the image width (in pixels, including margins)
      */
+        @Override
     public int getImageWidth() {
         return firstIndi.wMinus + firstIndi.wPlus + 2 * PAGE_MARGIN;
     }
@@ -71,6 +72,7 @@ public abstract class TreeRendererBase implements GraphicsRenderer {
     /**
      * Returns the image height (in pixels, including margins)
      */
+    @Override
     public int getImageHeight() {
         return firstIndi.hMinus + firstIndi.hPlus + 2 * PAGE_MARGIN;
     }
@@ -123,8 +125,9 @@ public abstract class TreeRendererBase implements GraphicsRenderer {
 
         // Children
         if (indibox.hasChildren())
-            for (int i = 0; i < indibox.children.length; i++)
-                drawTree(indibox.children[i], baseX, baseY, gen + 1);
+            for (IndiBox children : indibox.children) {
+                drawTree(children, baseX, baseY, gen + 1);
+        }
 
         // Next marriage
         if (indibox.nextMarriage != null)

@@ -8,10 +8,9 @@
 
 package ancestris.report.svgtree.output;
 
-import java.awt.Graphics2D;
-
 import ancestris.report.svgtree.FamBox;
 import ancestris.report.svgtree.IndiBox;
+import java.awt.Graphics2D;
 
 /**
  * Base class for classes modifying/filtering another TreeElements class.
@@ -43,6 +42,7 @@ public class FilterTreeElements implements TreeElements {
     /**
      * Sets the Graphics2D object to draw on.
      */
+    @Override
     public void setGraphics(Graphics2D graphics) {
         this.graphics = graphics;
         elements.setGraphics(graphics);
@@ -55,6 +55,7 @@ public class FilterTreeElements implements TreeElements {
      * @param y  y coordinate
      * @param gen generation number
      */
+    @Override
     public void drawIndiBox(IndiBox indibox, int x, int y, int gen) {
         elements.drawIndiBox(indibox, x, y, gen);
     }
@@ -66,6 +67,7 @@ public class FilterTreeElements implements TreeElements {
      * @param y  y coordinate
      * @param gen generation number
      */
+    @Override
     public void drawFamBox(FamBox fambox, int x, int y, int gen) {
         elements.drawFamBox(fambox, x, y, gen);
     }
@@ -77,6 +79,7 @@ public class FilterTreeElements implements TreeElements {
      * @param x2 end x
      * @param y2 end y
      */
+    @Override
     public void drawLine(int x1, int y1, int x2, int y2) {
         elements.drawLine(x1, y1, x2, y2);
     }
@@ -88,6 +91,7 @@ public class FilterTreeElements implements TreeElements {
      * @param x2 end x
      * @param y2 end y
      */
+    @Override
     public void drawDashedLine(int x1, int y1, int x2, int y2) {
         elements.drawDashedLine(x1, y1, x2, y2);
     }
@@ -95,6 +99,7 @@ public class FilterTreeElements implements TreeElements {
     /**
      * Initializes the graphics.
      */
+    @Override
     public void header(int width, int height) {
         elements.header(width, height);
     }
@@ -102,15 +107,18 @@ public class FilterTreeElements implements TreeElements {
     /**
      * Footer.
      */
+    @Override
     public void footer() {
         elements.footer();
     }
 
+    @Override
     public void getIndiBoxSize(IndiBox indibox)
     {
         elements.getIndiBoxSize(indibox);
     }
 
+    @Override
     public void getFamBoxSize(FamBox fambox)
     {
         elements.getFamBoxSize(fambox);

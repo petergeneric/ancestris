@@ -27,6 +27,7 @@ public class PdfWriter extends GraphicsFileOutput {
      * @param out      destination output stream
      * @param renderer this object renders the drawing
      */
+    @Override
     public void write(OutputStream out, GraphicsRenderer renderer) throws IOException {
 
         // Limit to 14400 x 14400 (see 
@@ -59,6 +60,7 @@ public class PdfWriter extends GraphicsFileOutput {
         pdfGraphics.finish();
     }
 
+    @Override
     public String getFileExtension() {
         return "pdf";
     }

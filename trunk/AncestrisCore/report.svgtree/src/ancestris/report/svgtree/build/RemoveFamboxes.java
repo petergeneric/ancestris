@@ -17,6 +17,7 @@ import ancestris.report.svgtree.filter.TreeFilterBase;
  * @author Przemek Wiech <pwiech@losthive.org>
  */
 public class RemoveFamboxes extends TreeFilterBase {
+    @Override
     protected void preFilter(IndiBox indibox) {
         indibox.family = null;
     }
