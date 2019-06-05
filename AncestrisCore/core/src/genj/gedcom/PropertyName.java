@@ -23,7 +23,6 @@ import genj.crypto.Enigma;
 import genj.util.ReferenceSet;
 import genj.util.WordBuffer;
 import java.text.Collator;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -577,9 +576,9 @@ public class PropertyName extends Property {
         if (! namePiece.matches(".*[^, ] +[^, ].*")) {
             return namePiece.replaceAll(" *, *", " ");
         }
-        if (!namePiece.contains(",")){
-            namePiece = namePiece+",";
-        }
+     //   if (!namePiece.contains(",")){
+       //     namePiece = namePiece+",";
+       // }
         return namePiece;
     }
     
