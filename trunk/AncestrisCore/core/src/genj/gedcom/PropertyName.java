@@ -570,26 +570,44 @@ public class PropertyName extends Property {
         return sub.getValue();
     }
 
-    // si pas espace sans virgule, remplace  '*, *' par ' '
-    // sinon ajoute une virgule à la fin si pas de virgule
+    /**
+     * Convert a gedcom sequence of names pieces separated by commas to an editable value for future editing.
+     * <ul>
+     *   <li/>Rule is to remove all commas only if all spaces include commas (this means we have a string made only of single words name pieces)
+     *   <li/>If we have space without commas, this space is part of a name piece made of several words, because in gedcom format, name pieces should be separated by commas.
+     *   Therefore do not modify commas in this case. 
+     *   Rather add one at the end to remember that the space must remain as a space later, and not be turned into a comma.
+     * </ul>
+     *  
+     * <ul>
+     *   <li/>If all spaces include a comma, remove all comas with replace '*, *' by ' '. We'll assume all name pieces are made of single words
+     *   <li/>Else, at least one space does not include a comma. It is part of a several-word-name piece. Leave it as is.
+     *   <li/>In this case, if no comma is found, it means we have a string made of only one single name piece, made of several words. To remember this, we add a comma at the end.
+     * </ul>
+     * 
+     * @param namePiece from user input (eb NameBean)
+     * @return compliant gedcom value (with comma where applicable)
+     */
     private static String gedcomToValue(String namePiece){
-        if (! namePiece.matches(".*[^, ] +[^, ].*")) {
+        if (!namePiece.matches(".*[^, ] +[^, ].*")) {
             return namePiece.replaceAll(" *, *", " ");
         }
-     //   if (!namePiece.contains(",")){
-       //     namePiece = namePiece+",";
-       // }
+        if (!namePiece.contains(",")) {
+            namePiece = namePiece + ",";
+        }
         return namePiece;
     }
     
     /**
      * Convert a namePiece from a user input to a gedcom compliant String value.
      * <ul>
-     *   <li/>First replace all multiple spaces by one space
-     *   <li/>If there is at least one comma, 
-     *   <li/>Remove any space before a comma
-     *   <li/>If namePiece does not contain commas, replace all space by ', '
-     *   <li/>Remove trailing comma if any
+     *   <li/>Rule is to store comma separated name pieces because it is the requirement of the gedocm format
+     *   <li/>We must allow any one of the name pieces to be made of several words (name pieces can be separated by spaces)
+     * </ul>
+     * <ul>
+     *   <li/>If namePiece does not contain commas, replace all space by ', ', it means we have only one single word name pieces
+     *   <li/>Remove any space before a comma to trim spaces
+     *   <li/>Remove trailing comma if any (comma used when editing a string of one name piece made of several words)
      * </ul>
      * 
      * @param namePiece from user input (eb NameBean)
