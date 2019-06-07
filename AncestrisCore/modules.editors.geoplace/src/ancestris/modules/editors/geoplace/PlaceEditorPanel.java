@@ -58,7 +58,7 @@ import org.openide.windows.WindowManager;
  */
 public class PlaceEditorPanel extends javax.swing.JPanel {
 
-    private final static Logger logger = Logger.getLogger(PlaceEditorPanel.class.getName(), null);
+    private final static Logger LOG = Logger.getLogger(PlaceEditorPanel.class.getName(), null);
 
     private final static int DEFAULT_LAT = 45; // same default as in Geo module, i.e. in the middle of the sea
     private final static int DEFAULT_LON = -4; // same default as in Geo module, i.e. in the middle of the sea
@@ -75,7 +75,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
     private Map<String, Set<PropertyPlace>> placesMap = null;
     
     // List of places found in the gedcom file and model in the list window
-    private final DefaultListModel<String> gedcomPlacesListModel = new DefaultListModel<String>();
+    private final DefaultListModel<String> gedcomPlacesListModel = new DefaultListModel<>();
     private boolean listIsBusy = false;
     
     // Model of list of references (events) corresponding to each place
@@ -115,9 +115,9 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
         jXMapKit1.setMiniMapVisible(false);
         setMouseListener();
         
-        TableRowSorter sorter = new TableRowSorter<ReferencesTableModel>((ReferencesTableModel) placeReferencesTable.getModel());
+        TableRowSorter sorter = new TableRowSorter<>((ReferencesTableModel) placeReferencesTable.getModel());
         placeReferencesTable.setRowSorter(sorter);
-        List<SortKey> sortKeys = new ArrayList<SortKey>();
+        List<SortKey> sortKeys = new ArrayList<>();
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sortKeys.add(new RowSorter.SortKey(1, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
@@ -558,7 +558,8 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
 
     /**
      * @param gedcom
-     * @param place 
+     * @param place
+     * @param allPlaces 
      */
     public void set(Gedcom gedcom, PropertyPlace place, boolean allPlaces) {
         
@@ -687,7 +688,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      */
     public void setGeoPoint(GeoPosition geoPoint) {
         geonamePlacesListModel.clear();
-        Place place = null;
+        final Place place;
         if (geoPoint == null) {
             place = new PlaceFactory(mPlace);
         } else {
@@ -736,7 +737,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * Used for saving coordinates into gedcom directly, for one single place or all places in set
      */
     public void commit() {
-        Set<PropertyPlace> tmpList = new HashSet<PropertyPlace>();
+        Set<PropertyPlace> tmpList = new HashSet<>();
         tmpList.addAll(mPropertyPlaces);
         if (gedcomPlaceEditorPanel.isModified()) {
             for (PropertyPlace propertyPlace : tmpList) {
@@ -859,7 +860,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
      * @return 
      */
     private Map<String, Set<PropertyPlace>> getGeoPlaces() {
-        Map<String, Set<PropertyPlace>> ret = new TreeMap<String, Set<PropertyPlace>>();
+        Map<String, Set<PropertyPlace>> ret = new TreeMap<>();
         
         for (String placeStr : mGedcom.getReferenceSet("PLAC").getKeys(mGedcom.getCollator())) {
             Set<Property> props = mGedcom.getReferenceSet("PLAC").getReferences(placeStr);
@@ -867,7 +868,7 @@ public class PlaceEditorPanel extends javax.swing.JPanel {
                 String geoPlace = ((PropertyPlace) prop).getGeoValue();
                 Set<PropertyPlace> set = ret.get(geoPlace);
                 if (set == null) {
-                    set = new HashSet<PropertyPlace>();
+                    set = new HashSet<>();
                     ret.put(geoPlace, set);
                 }
                 set.add((PropertyPlace) prop);

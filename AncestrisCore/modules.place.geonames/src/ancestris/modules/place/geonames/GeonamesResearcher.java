@@ -1,16 +1,19 @@
 package ancestris.modules.place.geonames;
 
-import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.api.place.Place;
 import ancestris.api.place.SearchPlace;
+import ancestris.libs.geonames.GeonamesOptions;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyPlace;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
 import org.geonames.*;
@@ -24,15 +27,17 @@ import org.openide.util.TaskListener;
  */
 public class GeonamesResearcher implements SearchPlace {
 
-    private static Toponym DEFAULT_TOPONYM = defaultToponym();
+    private final static Toponym DEFAULT_TOPONYM = defaultToponym();
     private final static int DEFAULT_LAT = 45; // in the middle of the sea
     private final static int DEFAULT_LON = -4; // in the middle of the sea
     
-    private final static Logger logger = Logger.getLogger(GeonamesResearcher.class.getName(), null);
+    private final static Logger LOG = Logger.getLogger(GeonamesResearcher.class.getName(), null);
     private RequestProcessor.Task theTask;
     private RequestProcessor RP = null;
     
-    private static String KEYMAP = "geonamesPlaceConversionMap";
+    private final static String KEYMAP = "geonamesPlaceConversionMap";
+    
+    private final Map<String, PostalCode> tmpPostalCode = new HashMap<>();
 
     
     public GeonamesResearcher() {
@@ -52,7 +57,7 @@ public class GeonamesResearcher implements SearchPlace {
      * @param code       : code looked for (optional)
      * @param placesList : list to which results will be added
      * @param maxResults : "0" for all results, the max number of results otherwise
-     * @param task       : if not null, search is performed through another thread and task is used when thread is finished
+     * @param taskListener       : if not null, search is performed through another thread and task is used when thread is finished
      */
     @Override
     public void searchPlace(String place, String city, String code, final List<Place> placesList, final int maxResults, TaskListener taskListener) {
@@ -97,11 +102,8 @@ public class GeonamesResearcher implements SearchPlace {
     
     private List<Place> doSearch(String searchedPlace, String searchedCity, String searchedCode, int maxResults) {
         
-        List<Place> mPlacesList = new ArrayList<Place>();
-        
-        ToponymSearchResult toponymSearchResult;
-        Set<String> tmpListDedup = new HashSet<String>();
-        Place place = null;
+        final List<Place> mPlacesList = new ArrayList<>();
+        final Set<String> tmpListDedup = new HashSet<>();
     
         try {
             WebService.setUserName(GeonamesOptions.getInstance().getUserName());
@@ -112,64 +114,59 @@ public class GeonamesResearcher implements SearchPlace {
             // try search with all elements of place name to be more precise, separating the words
             if (!searchedPlace.isEmpty()) {
                 searchCriteria.setQ(searchedPlace);
-                toponymSearchResult = WebService.search(searchCriteria);
-                for (Toponym iTopo : toponymSearchResult.getToponyms()) {
-                    PostalCode pc = new PostalCode();
-                    pc.setPostalCode(iTopo.getAdminCode4());
-                    place = new GeonamesPlace(iTopo, pc);
-                    String str = place.toString();
-                    if (!tmpListDedup.contains(str)) {
-                        mPlacesList.add(place);
-                        tmpListDedup.add(str);
-                    }
-                    if (maxResults == 1) {
-                        break;
-                    }
-                }
+                searchPlace(searchCriteria, searchedPlace, tmpListDedup, mPlacesList, maxResults);
             }
-            if (!searchedCode.isEmpty() && (mPlacesList.isEmpty() || maxResults != 1)) { // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
+            // try with numbers only (i.e. Martinique is not in France according to 'geonames' so country fails the search)
+            if (!searchedCode.isEmpty() && (mPlacesList.isEmpty() || maxResults != 1)) { 
                 searchCriteria.setQ(searchedCode);
-                toponymSearchResult = WebService.search(searchCriteria);
-                for (Toponym iTopo : toponymSearchResult.getToponyms()) {
-                    PostalCode pc = new PostalCode();
-                    pc.setPostalCode(iTopo.getAdminCode4());
-                    place = new GeonamesPlace(iTopo, pc);
-                    String str = place.toString();
-                    if (matches(str, searchedPlace) && !tmpListDedup.contains(str)) {
-                        mPlacesList.add(place);
-                        tmpListDedup.add(str);
-                    }
-                    if (maxResults == 1) {
-                        break;
-                    }
-                }
+                searchPlace(searchCriteria, searchedPlace, tmpListDedup, mPlacesList, maxResults);
             }
-            if (!searchedCity.isEmpty() && (mPlacesList.isEmpty() || maxResults != 1)) { // try without "q" so only with namestartswith
+            // try without "q" so only with namestartswith
+            if (!searchedCity.isEmpty() && (mPlacesList.isEmpty() || maxResults != 1)) { 
                 searchCriteria.setNameStartsWith(searchedCity);
                 searchCriteria.setQ(null);
-                toponymSearchResult = WebService.search(searchCriteria);
-                for (Toponym iTopo : toponymSearchResult.getToponyms()) {
-                    PostalCode pc = new PostalCode();
-                    pc.setPostalCode(iTopo.getAdminCode4());
-                    place = new GeonamesPlace(iTopo, pc);
-                    String str = place.toString();
-                    if (matches(str, searchedPlace) && !tmpListDedup.contains(str)) {
-                        mPlacesList.add(place);
-                        tmpListDedup.add(str);
-                    }
-                    if (maxResults == 1) {
-                        break;
-                    }
-                }
+                searchPlace(searchCriteria, searchedPlace, tmpListDedup, mPlacesList, maxResults);
             }
             if (mPlacesList.isEmpty()) { // if still not found, default topo
-                place = defaultPlace();
-                mPlacesList.add(place);
+                mPlacesList.add(defaultPlace());
             }
         } catch (Exception e) {
+            LOG.log(Level.SEVERE, "Error during geonames search.", e);
         }
 
         return mPlacesList;
+    }
+
+    private void searchPlace(ToponymSearchCriteria searchCriteria, String searchedPlace, Set<String> tmpListDedup, List<Place> mPlacesList, int maxResults) throws Exception {
+        final ToponymSearchResult toponymSearchResult = WebService.search(searchCriteria);
+        for (Toponym iTopo : toponymSearchResult.getToponyms()) {
+            final PostalCode pc = lookForPostalCode(iTopo.getName());
+            final Place place = new GeonamesPlace(iTopo, pc);
+            String str = place.toString();
+            if (matches(str, searchedPlace) && !tmpListDedup.contains(str)) {
+                mPlacesList.add(place);
+                tmpListDedup.add(str);
+            }
+            if (maxResults == 1) {
+                break;
+            }
+        }
+    }
+    
+    private PostalCode lookForPostalCode(String placeName) throws Exception {
+        if (tmpPostalCode.containsKey(placeName)) {
+            return tmpPostalCode.get(placeName);
+        }
+        final PostalCodeSearchCriteria pcsc = new PostalCodeSearchCriteria();
+        pcsc.setPlaceName(placeName);
+        pcsc.setMaxRows(1);
+        final List<PostalCode> lpc = WebService.postalCodeSearch(pcsc);
+        if (!lpc.isEmpty()) {
+            final PostalCode retour = lpc.get(0);
+            tmpPostalCode.put(placeName, retour);
+            return retour;
+        }
+        return null;
     }
     
     public Place defaultPlace() {
@@ -197,8 +194,6 @@ public class GeonamesResearcher implements SearchPlace {
     }
         
     public static String[] getGeonamesMap(Gedcom gedcom) {
-        
-        String map = "";
         String[] format = null;
         String placeMap = getGeonamesMapString(gedcom);
         PlaceFormatConverterPanel pfc = new PlaceFormatConverterPanel(GeonamesPlace.getPlaceFormat(), gedcom.getPlaceFormat(), placeMap);
@@ -208,7 +203,7 @@ public class GeonamesResearcher implements SearchPlace {
         // Display parameter panel asking user to map geonames fields to his/her gedcom fields
         Object o = DialogManager.create(NbBundle.getMessage(GeonamesResearcher.class, "TITL_PlaceFormatConversion"), pfc).setMessageType(DialogManager.PLAIN_MESSAGE).show();
         if (o == DialogManager.OK_OPTION) {
-            map = pfc.getConversionMapAsString();
+            final String map = pfc.getConversionMapAsString();
             if (!map.replace(PropertyPlace.JURISDICTION_SEPARATOR, "").trim().isEmpty()) {
                 gedcom.getRegistry().put(KEYMAP, map);
                 format = PropertyPlace.getFormat(map);
@@ -279,7 +274,8 @@ public class GeonamesResearcher implements SearchPlace {
                 return true;
             }
         }
-        return false;
+        // There is only one element to match return true if there is a match
+        return bits.length == matches && matches > 0;
     }
 
 
