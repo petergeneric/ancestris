@@ -39,7 +39,7 @@ public class DirectAccessTokenizer {
         this.skipEmpty = skipEmpty;
         this.string = string;
         this.separator = separator;
-        this.valeur = this.string.split(separator);
+        this.valeur = this.string.split(separator, -1);
       
     }
 
