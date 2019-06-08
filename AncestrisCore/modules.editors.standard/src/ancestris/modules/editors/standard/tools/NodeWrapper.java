@@ -174,6 +174,9 @@ public class NodeWrapper {
         if (fn.trim().isEmpty()) {
             fn = NO_NAME;
         }
+        if (fn.endsWith(",")) {
+            fn = fn.replaceAll("\\s*,\\s*$", "");
+        }
         String bd = (indi.getBirthAsString() != null) ? indi.getBirthAsString() : NO_NAME;
         if (bd.trim().isEmpty()) {
             bd = NO_DATE;
