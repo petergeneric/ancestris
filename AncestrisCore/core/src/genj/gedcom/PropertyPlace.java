@@ -36,16 +36,20 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     public final static String JURISDICTION_SEPARATOR = ",";
 
-    private final static String JURISDICTION_RESOURCE_PREFIX = "prop.plac.jurisdiction.";
+    private final static String JURISDICTION_FORMAT = GedcomOptions.getInstance().getPlaceFormat();
 
     public final static String TAG = "PLAC",
             FORM = "FORM";
+
+    private final int numberFormat;
 
     /**
      * need tag-argument constructor for all properties
      */
     public PropertyPlace(String tag) {
         super(tag);
+        numberFormat = JURISDICTION_FORMAT.split(JURISDICTION_SEPARATOR, -1).length;
+
     }
 
     /**
@@ -81,30 +85,32 @@ public class PropertyPlace extends PropertyChoiceValue {
         // trim each jurisdiction separately
         StringBuilder buf = new StringBuilder(value.length());
         DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
-        for (int i = 0;; i++) {
+        for (int i = 0; i < numberFormat; i++) {
             String jurisdiction = jurisdictions.get(i, true);
-            if (jurisdiction == null) {
-                break;
-            }
             if (i > 0) {
                 buf.append(JURISDICTION_SEPARATOR);
                 if (USE_SPACES) {
                     buf.append(' ');
                 }
             }
-            buf.append(jurisdiction);
+            if (jurisdiction != null) {
+                buf.append(jurisdiction);
+            }
         }
-        return buf.toString().intern();
+        final String retour = buf.toString().intern();
+        if ("".equals(retour.replaceAll(JURISDICTION_SEPARATOR, "").trim())) {
+            return "";
+        }
+        return retour;
     }
 
     static public String formatSpaces(String str) {
-        boolean USE_SPACES = GedcomOptions.getInstance().isUseSpacedPlaces();
         String addStr = PropertyPlace.JURISDICTION_SEPARATOR + (USE_SPACES ? " " : "");
         String[] placeFormatList = PropertyPlace.getFormat(str);
         String value = "";
         for (int i = 0; i < placeFormatList.length; i++) {
             String p = placeFormatList[i].trim();
-            if (i == placeFormatList.length-1) {
+            if (i == placeFormatList.length - 1) {
                 addStr = "";
             }
             value += p + addStr;
@@ -112,8 +118,6 @@ public class PropertyPlace extends PropertyChoiceValue {
         return value;
     }
 
-    
-    
     /**
      * Remember a jurisdiction's value
      */
@@ -198,7 +202,7 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     private static String[] toJurisdictions(String value) {
         final DirectAccessTokenizer dat = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
-       return dat.getTokens(true);
+        return dat.getTokens(true);
     }
 
     /**
@@ -245,7 +249,7 @@ public class PropertyPlace extends PropertyChoiceValue {
         Collection<Property> places = getGedcom().getReferenceSet(TAG + "." + hierarchyLevel).getReferences(jurisdiction);
         return places.toArray(new PropertyPlace[places.size()]);
     }
-   
+
     /**
      * Accessor - all places with the same jurisdiction for given hierarchy
      * level
@@ -325,14 +329,14 @@ public class PropertyPlace extends PropertyChoiceValue {
             setValue(arrayToString(locs));
             return true;
         }
-        
+
         // If too short, fill in first jurisdictions
         if (locs.length < nbLocs) {
             String[] newLocs = new String[nbLocs];
             for (int i = 0; i < nbLocs - locs.length; i++) {
                 newLocs[i] = "";
             }
-            for (int i = nbLocs - locs.length; i < nbLocs ; i++) {
+            for (int i = nbLocs - locs.length; i < nbLocs; i++) {
                 newLocs[i] = locs[i - (nbLocs - locs.length)];
             }
             setValue(arrayToString(newLocs));
@@ -342,13 +346,13 @@ public class PropertyPlace extends PropertyChoiceValue {
         // If too long, truncate first jurisdictions
         if (locs.length > nbLocs) {
             String[] newLocs = new String[nbLocs];
-            for (int i = 0; i < nbLocs ; i++) {
+            for (int i = 0; i < nbLocs; i++) {
                 newLocs[i] = locs[locs.length - nbLocs + i];
             }
             setValue(arrayToString(newLocs));
             return false;
         }
-        
+
         return true;
     }
 
@@ -363,8 +367,6 @@ public class PropertyPlace extends PropertyChoiceValue {
         return result.toString();
     }
 
-    
-    
     /**
      * Accessor - jurisdictions that is the city
      */
@@ -404,7 +406,7 @@ public class PropertyPlace extends PropertyChoiceValue {
                 + (latitude != null ? latitude.getValue() : "")
                 + PropertyPlace.JURISDICTION_SEPARATOR
                 + (longitude != null ? longitude.getValue() : "");
-        
+
         return gedcomPlace;
     }
 
@@ -415,7 +417,7 @@ public class PropertyPlace extends PropertyChoiceValue {
         String str = "";
         String[] juris = toJurisdictions(getValue());
         for (int i = 0; i < juris.length; i++) {
-            String juri = juris[i].replace(" ","");
+            String juri = juris[i].replace(" ", "");
             if (juri.matches("-?\\d+(\\.\\d+)?")) {         //match a number with optional '-' and decimal.
                 str += juri + JURISDICTION_SEPARATOR;
             }
@@ -458,7 +460,7 @@ public class PropertyPlace extends PropertyChoiceValue {
         }
         return "";
     }
-    
+
     /**
      * Return PropertyMap for this Place. Resolve aginst gedcom version
      *
@@ -534,7 +536,7 @@ public class PropertyPlace extends PropertyChoiceValue {
             delProperty(map);
             return;
         }
-        
+
         PropertyMap map = getMap();
         boolean is55 = isVersion55();
         if (map == null) {
@@ -559,8 +561,8 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
-     * Set coordinates as global change (look for the property place which value is the same and where
-     * coordinates exist)
+     * Set coordinates as global change (look for the property place which value
+     * is the same and where coordinates exist)
      */
     public void setCoordinates(boolean global) {
 
@@ -573,14 +575,14 @@ public class PropertyPlace extends PropertyChoiceValue {
                 }
             }
         }
-        
+
         // set coordinates of this place
         setCoordinates();
     }
 
-    
     /**
-     * Set coordinates from first matching place with coordinates in the gedcom with same value
+     * Set coordinates from first matching place with coordinates in the gedcom
+     * with same value
      */
     public void setCoordinates() {
         // Get first place with same value where coordinates exist
@@ -594,7 +596,7 @@ public class PropertyPlace extends PropertyChoiceValue {
                 }
             }
         }
-        
+
         // Put these found coordinates to this place
         if (source != null) {
             PropertyLatitude lat = source.getLatitude(false);
@@ -603,11 +605,9 @@ public class PropertyPlace extends PropertyChoiceValue {
                 setCoordinates(lat.getValue(), lon.getValue());
             }
         }
-        
+
     }
 
-
-    
     /**
      * Display value for a place where format is one of
      * <pre>
@@ -692,12 +692,9 @@ public class PropertyPlace extends PropertyChoiceValue {
             return shortcut(value, 1);
         }
     }
-    
+
     public String getPlaceToLocalFormat() {
         return getValueStartingWithCity().replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, " ").replaceAll(" +", " ").trim();
     }
 
-    
-    
-    
 } //PropertyPlace
