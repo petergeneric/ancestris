@@ -100,7 +100,7 @@ public class GeneanetExport {
             }
         }
 
-        // Convert to geneanet format (only associations are to be converted)
+        // Convert to geneanet format
         if (ok && copyGedcom != null) {
             ok = convertAssociations(copyGedcom);
             ok &= convertOther(copyGedcom);
@@ -293,13 +293,21 @@ public class GeneanetExport {
                 }
             }
 
-            // Convert Others names to remove slash
+            // Convert Others names to remove slash and remove GIVN and SURN
             final Property[] props = entity.getProperties("NAME");
-            // Begin at the second name.
-            for (int i = 1; i < props.length; i++) {
+            // Loop on NAMEs
+            for (int i = 0; i < props.length; i++) {
                 final Property p = props[i];
-                final String newValue = p.getValue().replace("/", " ").trim();
-                p.setValue(newValue);
+
+                // Remove GIVN and SURN (geneanet does not need them)
+                p.delProperties("GIVN");
+                p.delProperties("SURN");
+                
+                // Begin at the second name.
+                if (i > 0) {
+                    final String newValue = p.getValue().replace("/", " ").trim();
+                    p.setValue(newValue);
+                }
             }
         }
 
