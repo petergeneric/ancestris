@@ -37,6 +37,7 @@ final public class Images {
     imgReplace      = new ImageIcon(Images.class,"images/Replace"),
     imgAbout        = new ImageIcon(Images.class,"images/About"),
     imgHelp         = new ImageIcon(Images.class,"images/Help"),
+    imgAncestris    = new ImageIcon(Images.class,"images/AncestrisSite"),
     imgOnlineHelp   = new ImageIcon(Images.class,"images/OnlineHelp"),
     imgProperties   = new ImageIcon(Images.class,"images/Properties"),
     imgNext         = new ImageIcon(Images.class,"images/Next");
