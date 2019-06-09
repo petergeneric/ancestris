@@ -163,6 +163,10 @@
                 <attr name="delegate" newvalue="ancestris.app.ActionOnlineHelp"/>
                 <attr name="iconBase" stringvalue="ancestris/view/images/OnlineHelp.png"/>
             </file>
+            <file name="ancestris-app-ActionAncestrisSite.instance">
+                <attr name="delegate" newvalue="ancestris.app.ActionAncestrisSite"/>
+                <attr name="iconBase" stringvalue="ancestris/view/images/AncestrisSite.png"/>
+            </file>
             <file name="ancestris-app-ActionAPropos.instance">
                 <attr name="delegate" newvalue="ancestris.app.ActionAPropos"/>
                 <attr name="displayName" bundlevalue="ancestris.app.Bundle#CTL_ActionAPropos"/>
@@ -251,6 +255,10 @@
                 <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionHelp.instance"/>
                 <attr name="position" intvalue="-100"/>
             </file>
+            <file name="ancestris-app-ActionOnlineHelp.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
+                <attr name="position" intvalue="-90"/>
+            </file>
             <file name="SeparatorFeedBack.instance">
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="40"/>
@@ -259,8 +267,8 @@
                 <attr name="instanceClass" stringvalue="javax.swing.JSeparator"/>
                 <attr name="position" intvalue="49"/>
             </file>
-            <file name="ancestris-app-ActionOnlineHelp.shadow">
-                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionOnlineHelp.instance"/>
+            <file name="ancestris-app-ActionAncestrisSite.shadow">
+                <attr name="originalFile" stringvalue="Actions/Help/ancestris-app-ActionAncestrisSite.instance"/>
                 <attr name="position" intvalue="50"/>
             </file>
             <file name="ancestris-app-ActionAPropos.shadow">
