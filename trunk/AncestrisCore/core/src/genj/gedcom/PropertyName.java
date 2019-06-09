@@ -339,21 +339,31 @@ public class PropertyName extends Property {
     public void fixNameValue(){
         nameTagValue = computeNameValue();
     }
-
+    
+    /*
+     * Build NAME value as "NAME_PIECE_PREFIX NAME_PIECE_GIVEN1 NAME_PIECE_GIVEN2 /NAME_PIECE_SURNAME_PREFIX NAME_PIECE_SURNAME/ NAME_PIECE_SUFFIX"
+    */
     private String computeNameValue(String npfx, String first, String spfx, String last, String nsfx) {
+
+        // Prepare string with standard filler (a space)
         WordBuffer wb = new WordBuffer();
 
+        // Add NAME_PIECE_PREFIX and NAME_PIECE_GIVEN without any lasting comma
         first = first.replaceAll(",$", ""); // remove first name's ending comma if any
         wb.append(npfx).append(first);
 
+        // Build surname parts : NAME_PIECE_SURNAME_PREFIX NAME_PIECE_SURNAME
         WordBuffer wpname = new WordBuffer();
         wpname.append(spfx).append(last).setFiller("");
-        
         String name = wpname.toString();
+        
+        // Add surname part between slashes
         // 20050328 need last name //'s if there's a suffix
         if (name.length() > 0 || nsfx.length() > 0) {
-            wb.append("/" + name + "/");
+            wb.append(" /" + name + "/");
         }
+        
+        // Add NAME_PIECE_SUFFIX
         wb.append(nsfx);
 
         return wb.toString();
