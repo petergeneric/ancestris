@@ -300,8 +300,8 @@ public class GeneanetExport {
                 final Property p = props[i];
 
                 // Remove GIVN and SURN (geneanet does not need them)
-                p.delProperties("GIVN");
-                p.delProperties("SURN");
+                p.getProperty("GIVN").setGuessed(true);
+                p.getProperty("SURN").setGuessed(true);
                 
                 // Begin at the second name.
                 if (i > 0) {
