@@ -36,20 +36,14 @@ public class PropertyPlace extends PropertyChoiceValue {
 
     public final static String JURISDICTION_SEPARATOR = ",";
 
-    private final static String JURISDICTION_FORMAT = GedcomOptions.getInstance().getPlaceFormat();
-
     public final static String TAG = "PLAC",
             FORM = "FORM";
-
-    private final int numberFormat;
 
     /**
      * need tag-argument constructor for all properties
      */
     public PropertyPlace(String tag) {
         super(tag);
-        numberFormat = JURISDICTION_FORMAT.split(JURISDICTION_SEPARATOR, -1).length;
-
     }
 
     /**
@@ -83,6 +77,11 @@ public class PropertyPlace extends PropertyChoiceValue {
          make the choice - internally getValue()-wize we handle this uniformly then
          */
         // trim each jurisdiction separately
+        int numberValue = value.split(JURISDICTION_SEPARATOR, -1).length;
+        int numberFormat = getFormatAsString().split(JURISDICTION_SEPARATOR, -1).length;
+        if (numberFormat < numberValue) {
+            numberFormat = numberValue;
+        }
         StringBuilder buf = new StringBuilder(value.length());
         DirectAccessTokenizer jurisdictions = new DirectAccessTokenizer(value, JURISDICTION_SEPARATOR);
         for (int i = 0; i < numberFormat; i++) {
