@@ -356,10 +356,12 @@ public class PropertyPlace extends PropertyChoiceValue {
                 idx--;
             }
 
-            // Now group on the right the first jurisdictions
+            // Now group the necessary number of first jurisdictions on the left side
             int tmp = end - nbLocs;
             while (tmp > 0) {
-                locs[end - nbLocs] += " - " + locs[tmp - 1];
+                if (!locs[tmp - 1].trim().isEmpty()) {
+                    locs[end - nbLocs] += " - " + locs[tmp - 1];
+                }
                 tmp--;
             }
             
