@@ -954,6 +954,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return geoFilter;
     }
 
+    public void setShownUnknown(boolean selected) {
+        geoFilter.showUnknown = selected;
+        applyFilters();        
+    }
+
     public void setFilterAscendants(boolean selected) {
         geoFilter.ascendants = selected;
         applyFilters();        
@@ -1086,6 +1091,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     public void setFilterEvents(boolean selected) {
         geoFilter.otherEvents = selected;
         applyFilters();
+    }
+
+    public boolean getShowUnknown() {
+        return geoFilter.showUnknown;
     }
 
     public boolean getFilterAscendants() {

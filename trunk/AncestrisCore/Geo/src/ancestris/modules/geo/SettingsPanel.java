@@ -44,6 +44,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         
         rootIndividual.setText(gmtc.getFilerRootIndi());
         
+        jShownUnknownCheckBox.setSelected(!gmtc.getShowUnknown());
         jAncestorCheckBox.setSelected(gmtc.getFilterAscendants());
         jDescendantCheckBox.setSelected(gmtc.getFilterDescendants());
         jCousinCheckBox.setSelected(gmtc.getFilterCousins());
@@ -104,6 +105,8 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         jWeddingCheckBox = new javax.swing.JCheckBox();
         jDeathCheckBox1 = new javax.swing.JCheckBox();
         jOtherEventCheckBox1 = new javax.swing.JCheckBox();
+        jIndividualLabel1 = new javax.swing.JLabel();
+        jShownUnknownCheckBox = new javax.swing.JCheckBox();
         jPanel1 = new javax.swing.JPanel();
         jSizeLabel = new javax.swing.JLabel();
         jSizeSpinner = new javax.swing.JSpinner(new SpinnerNumberModel(10, 0, markersSizeMax, 1));
@@ -293,6 +296,17 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
             }
         });
 
+        jIndividualLabel1.setFont(new java.awt.Font("DejaVu Sans", 1, 12)); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jIndividualLabel1, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jIndividualLabel1.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jShownUnknownCheckBox, org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jShownUnknownCheckBox.text")); // NOI18N
+        jShownUnknownCheckBox.setToolTipText(org.openide.util.NbBundle.getMessage(SettingsPanel.class, "SettingsPanel.jShownUnknownCheckBox.toolTipText")); // NOI18N
+        jShownUnknownCheckBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jShownUnknownCheckBoxActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -344,7 +358,9 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                                                 .addComponent(jMenRadioButton)
                                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                                .addComponent(jWomenRadioButton))))))
+                                                                .addComponent(jWomenRadioButton))
+                                                            .addComponent(jIndividualLabel1)
+                                                            .addComponent(jShownUnknownCheckBox)))))
                                             .addGroup(jPanel2Layout.createSequentialGroup()
                                                 .addGap(18, 18, 18)
                                                 .addComponent(jOthersCheckBox))))
@@ -394,7 +410,11 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jSelectedRadioButton)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jSearchedRadioButton))
+                        .addComponent(jSearchedRadioButton)
+                        .addGap(18, 18, 18)
+                        .addComponent(jIndividualLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jShownUnknownCheckBox))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(jEventsLabel)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -567,6 +587,10 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
         setRadioButtons();
     }//GEN-LAST:event_jAllRadioButtonActionPerformed
 
+    private void jShownUnknownCheckBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jShownUnknownCheckBoxActionPerformed
+        gmtc.setShownUnknown(!jShownUnknownCheckBox.isSelected());
+    }//GEN-LAST:event_jShownUnknownCheckBoxActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup buttonGroup1;
@@ -585,6 +609,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private javax.swing.JLabel jEventsLabel;
     private javax.swing.JTextField jFromTextField;
     private javax.swing.JLabel jIndividualLabel;
+    private javax.swing.JLabel jIndividualLabel1;
     private javax.swing.JRadioButton jMenRadioButton;
     private javax.swing.JCheckBox jOtherEventCheckBox1;
     private javax.swing.JCheckBox jOthersCheckBox;
@@ -596,6 +621,7 @@ public class SettingsPanel extends javax.swing.JPanel implements ChangeListener 
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JRadioButton jSearchedRadioButton;
     private javax.swing.JRadioButton jSelectedRadioButton;
+    private javax.swing.JCheckBox jShownUnknownCheckBox;
     private javax.swing.JLabel jSizeLabel;
     private javax.swing.JSpinner jSizeSpinner;
     private javax.swing.JTabbedPane jTabbedPane1;
