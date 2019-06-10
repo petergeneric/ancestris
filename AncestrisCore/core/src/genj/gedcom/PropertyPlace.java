@@ -342,11 +342,30 @@ public class PropertyPlace extends PropertyChoiceValue {
             return false;
         }
 
-        // If too long, truncate first jurisdictions
+        // If too long, truncate empty jurisdictions on the right, then group them on the right
         if (locs.length > nbLocs) {
             String[] newLocs = new String[nbLocs];
+            int end = locs.length;
+            // Trim on the right first
+            int idx = end - 1;
+            while (idx >= 0 && locs[idx].trim().isEmpty()) {
+                end--;
+                if (end == nbLocs) {
+                    break;
+                }
+                idx--;
+            }
+
+            // Now group on the right the first jurisdictions
+            int tmp = end - nbLocs;
+            while (tmp > 0) {
+                locs[end - nbLocs] += " - " + locs[tmp - 1];
+                tmp--;
+            }
+            
+            // Now allocate
             for (int i = 0; i < nbLocs; i++) {
-                newLocs[i] = locs[locs.length - nbLocs + i];
+                newLocs[i] = locs[end - nbLocs + i];
             }
             setValue(arrayToString(newLocs));
             return false;
