@@ -662,7 +662,7 @@ public final class GedcomPropertiesPlaceFormatPanel extends JPanel implements Co
         Set<String> ret = new TreeSet<String>();
         for (String place : places) {
             if (place.isEmpty()) {
-                ret.add(EMPTY_PLACE);
+                //ret.add(EMPTY_PLACE);
                 continue;
             }
             if (PropertyPlace.getFormat(place).length != nbExpected) {
