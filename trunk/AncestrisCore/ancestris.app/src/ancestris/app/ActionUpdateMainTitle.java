@@ -14,7 +14,6 @@ package ancestris.app;
 import ancestris.core.actions.AbstractAncestrisContextAction;
 import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
-import java.util.ResourceBundle;
 import javax.swing.JFrame;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
@@ -33,9 +32,8 @@ public final class ActionUpdateMainTitle extends AbstractAncestrisContextAction 
 
     @Override
     protected void contextChanged() {
-        ResourceBundle rb = NbBundle.getBundle("org/netbeans/core/windows/view/ui/Bundle");
         String gedcomName = "";
-        String title = rb.getString("CTL_MainWindow_Title");
+        String title = NbBundle.getBundle("org/netbeans/core/windows/view/ui/Bundle").getString("CTL_MainWindow_Title");
         Context localContext = getContext();
         if (localContext != null) {
             gedcomName = localContext.getGedcom().getName();
