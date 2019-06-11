@@ -107,7 +107,7 @@ public class FlyerPanel extends javax.swing.JPanel {
         try {
             String ext = ".pdf";
             String prefix = "resources/Flyer_page_";
-            String filename = prefix + TextOptions.getInstance().getOutputLocale(Locale.getDefault()) + ext;
+            String filename = prefix + TextOptions.getInstance().getOutputLocale(Locale.getDefault()).toString().substring(0,2) + ext;
             File file = Utilities.getResourceAsFile(getClass(), filename, ext);
             if (file == null || !file.exists()) {
                 filename = prefix + "en" + ext;
