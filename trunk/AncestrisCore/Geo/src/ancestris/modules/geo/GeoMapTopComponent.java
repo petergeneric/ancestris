@@ -787,6 +787,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             geoFilter.calculatesIndividuals(getGedcom());
             for (int i = 0; i < markers.length; i++) {
                 GeoNodeObject geoNodeObject = markers[i];
+                // Reject if node is an event (we are filtering locations here, not events)
+                if (geoNodeObject.isEvent) {
+                    continue;
+                }
                 if (geoFilter.compliesNode(geoNodeObject)) {
                     GeoPoint wp = new GeoPoint(geoNodeObject);
                     geoPoints.add(wp);

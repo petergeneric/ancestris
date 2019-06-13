@@ -127,11 +127,6 @@ public class GeoFilter {
     }
 
     public boolean compliesNode(GeoNodeObject node) {
-        // Reject if node is an event (we are filtering locations here, not events)
-        if (node.isEvent) {
-            return false;
-        }
-
         // Filter on location : reject node if location not included in location's description
         if (!location.isEmpty()) { // there is a location filter
             if (node.toString().equals(NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty"))) {   // exclude empty locations
