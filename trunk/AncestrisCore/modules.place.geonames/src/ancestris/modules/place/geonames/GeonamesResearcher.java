@@ -18,7 +18,13 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import modules.editors.gedcomproperties.utils.PlaceFormatConverterPanel;
-import org.geonames.*;
+import org.geonames.PostalCode;
+import org.geonames.PostalCodeSearchCriteria;
+import org.geonames.Style;
+import org.geonames.Toponym;
+import org.geonames.ToponymSearchCriteria;
+import org.geonames.ToponymSearchResult;
+import org.geonames.WebService;
 import org.openide.util.NbBundle;
 import org.openide.util.RequestProcessor;
 import org.openide.util.TaskListener;
@@ -32,6 +38,8 @@ public class GeonamesResearcher implements SearchPlace {
     private final static Toponym DEFAULT_TOPONYM = defaultToponym();
     private final static int DEFAULT_LAT = 45; // in the middle of the sea
     private final static int DEFAULT_LON = -4; // in the middle of the sea
+    
+    private static final int MAX_ROWS = 100; // Maximum return by geonames.
 
     private final static Logger LOG = Logger.getLogger(GeonamesResearcher.class.getName(), null);
     private RequestProcessor.Task theTask;
@@ -87,11 +95,8 @@ public class GeonamesResearcher implements SearchPlace {
         }
 
         if (taskListener != null) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public synchronized void run() {
-                    placesList.addAll(doSearch(searchedPlace, searchedCity, searchedCode, maxResults));
-                }
+            Runnable runnable = () -> {
+                placesList.addAll(doSearch(searchedPlace, searchedCity, searchedCode, maxResults));
             };
 
             theTask = RP.create(runnable); //the task is not started yet
@@ -113,7 +118,7 @@ public class GeonamesResearcher implements SearchPlace {
             ToponymSearchCriteria searchCriteria = new ToponymSearchCriteria();
             searchCriteria.setStyle(Style.FULL);
             searchCriteria.setLanguage(Locale.getDefault().toString());
-            searchCriteria.setMaxRows(maxResults == 0 ? 99 : Math.min(maxResults, 99));
+            searchCriteria.setMaxRows(maxResults == 0 ? MAX_ROWS : Math.min(maxResults, MAX_ROWS));
             // try search with all elements of place name to be more precise, separating the words
             if (!searchedPlace.isEmpty()) {
                 searchCriteria.setQ(searchedPlace);
@@ -164,7 +169,8 @@ public class GeonamesResearcher implements SearchPlace {
         final PostalCodeSearchCriteria pcsc = new PostalCodeSearchCriteria();
         pcsc.setPlaceName(placeName.getName());
         pcsc.setCountryCode(placeName.getCountryCode());
-        pcsc.setMaxRows(maxRows);
+        pcsc.setMaxRows(maxRows == 0 ? MAX_ROWS : Math.min(maxRows
+                , MAX_ROWS));
         final PostalCode reference = new PostalCode();
         reference.setPlaceName(placeName.getName());
         reference.setCountryCode(placeName.getCountryCode());
