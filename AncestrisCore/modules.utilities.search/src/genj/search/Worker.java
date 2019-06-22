@@ -21,7 +21,6 @@ package genj.search;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,8 +45,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
      * current search state
      */
     public Gedcom gedcom;
-    public Set<Entity> entities = new HashSet<Entity>();
-    public List<Hit> hits = new ArrayList<Hit>();
+    public Set<Entity> entities = new HashSet<>();
+    protected List<Hit> hits = new ArrayList<>();
     public int hitCount = 0;
     public Matcher matcher;
 

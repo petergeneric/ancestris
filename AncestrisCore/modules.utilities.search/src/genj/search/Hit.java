@@ -20,10 +20,11 @@ package genj.search;
 
 import genj.gedcom.Entity;
 import genj.gedcom.Property;
-
 import java.awt.Color;
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.DefaultStyledDocument;
 import javax.swing.text.SimpleAttributeSet;
 import javax.swing.text.StyleConstants;
@@ -33,18 +34,20 @@ import javax.swing.text.StyledDocument;
  * A search hit
  */
 /*package*/ class Hit {
+    
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     private final static SimpleAttributeSet PLAIN = new SimpleAttributeSet(),
                                             RED = new SimpleAttributeSet(),
                                             BOLD = new SimpleAttributeSet();
     
     /** background colors */
-    private final static Color[] fgColors = new Color[2];
+    private final static Color[] FG_COLORS = new Color[2];
     static {
         StyleConstants.setForeground(RED, Color.RED);
         StyleConstants.setBold(BOLD, true);
-        fgColors[0] = Color.BLACK;
-        fgColors[1] = new Color(0, 51, 241);
+        FG_COLORS[0] = Color.BLACK;
+        FG_COLORS[1] = new Color(0, 51, 241);
     }
 
     /**
@@ -74,14 +77,14 @@ import javax.swing.text.StyledDocument;
     public Hit(Property setProp, String value, Matcher.Match[] matches, int setEntity, boolean isID) {
         // keep property
         property = setProp;
-        // cache img
+        // cache localImg
         img = property.getImage(false);
         // keep sequence
         entity = setEntity;
         // prepare document
         doc = new DefaultStyledDocument();
         
-        Color c = fgColors[setEntity & 1];
+        Color c = FG_COLORS[setEntity & 1];
         StyleConstants.setForeground(PLAIN, c);
         StyleConstants.setForeground(BOLD, c);
         
@@ -116,13 +119,14 @@ import javax.swing.text.StyledDocument;
                 doc.insertString(offset, tag, BOLD);
             }
             // keep image
-            SimpleAttributeSet img = new SimpleAttributeSet();
-            StyleConstants.setIcon(img, setProp.getImage(false));
-            doc.insertString(0, " ", img);
+            SimpleAttributeSet localImg = new SimpleAttributeSet();
+            StyleConstants.setIcon(localImg, setProp.getImage(false));
+            doc.insertString(0, " ", localImg);
             
             // prefix with entity id
             doc.insertString(0, "["+setProp.getEntity().getId()+"] ", PLAIN);
-        } catch (Throwable t) {
+        } catch (BadLocationException e) {
+            LOG.log(Level.INFO, "Error during hit creation", e);
         }
         // done
     }

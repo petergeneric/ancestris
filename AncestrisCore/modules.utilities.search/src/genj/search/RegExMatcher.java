@@ -42,6 +42,7 @@ public class RegExMatcher extends Matcher {
   /**
    * @see genj.search.Matcher#init(java.lang.String)
    */
+  @Override
   public void init(String pattern) {
     try {
       compiled = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE|Pattern.UNICODE_CASE|Pattern.DOTALL);
@@ -53,6 +54,7 @@ public class RegExMatcher extends Matcher {
   /**
    * @see genj.search.Matcher#match(java.lang.String, java.util.List)
    */
+  @Override
   protected void match(String input, List<Match> result) {
     // try to match anything
     String removedAccents = Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "");  

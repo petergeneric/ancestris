@@ -9,7 +9,6 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package genj.search;
 
 import genj.edit.beans.DateBean;
@@ -26,19 +25,18 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import java.text.Normalizer;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WorkerMulti extends Worker {
 
-    private static int MT_EQ = 0;
-    private static int MT_GT = 1;
-    private static int MT_LT = 2;
+    private final static int MT_EQ = 0;
+    private final static int MT_GT = 1;
+    private final static int MT_LT = 2;
 
     private String lastnameText;
     private String firstnameText;
-    
+
     private DateBean birthDateBean;
     private DateBean deathDateBean;
 
@@ -52,7 +50,7 @@ public class WorkerMulti extends Worker {
     private boolean isSingle;
 
     private boolean isAllBut;
-    
+
     public WorkerMulti(WorkerListener listener) {
         super(listener);
     }
@@ -71,7 +69,7 @@ public class WorkerMulti extends Worker {
         isMarried = (Boolean) args[9];
         isSingle = (Boolean) args[10];
         isAllBut = (Boolean) args[11];
-        
+
         // sync up
         synchronized (lock) {
 
@@ -91,28 +89,26 @@ public class WorkerMulti extends Worker {
 
             lock.set(true);
 
-            thread = new Thread(new Runnable() {
-                public void run() {
+            thread = new Thread(() -> {
+                try {
+                    WorkerMulti.this.listener.started();
+                    search(WorkerMulti.this.gedcom);
+                    flush();
+                } catch (Throwable t) {
+                    Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
+                } finally {
+                    synchronized (lock) {
+                        thread = null;
+                        lock.set(false);
+                        lock.notifyAll();
+                    }
                     try {
-                        WorkerMulti.this.listener.started();
-                        search(WorkerMulti.this.gedcom);
-                        flush();
+                        WorkerMulti.this.listener.stopped();
                     } catch (Throwable t) {
-                        Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
-                        t.printStackTrace();
-                    } finally {
-                        synchronized (lock) {
-                            thread = null;
-                            lock.set(false);
-                            lock.notifyAll();
-                        }
-                        try {
-                            WorkerMulti.this.listener.stopped();
-                        } catch (Throwable t) {
-                            // this will happen if we are being interrupted
-                            // going through Spin's transition to EDT
-                            // and we don't care about the result
-                        }
+                        // this will happen if we are being interrupted
+                        // going through Spin's transition to EDT
+                        // and we don't care about the result
+                        Logger.getLogger("ancestris.search").log(Level.FINEST, "worker stopped", t);
                     }
                 }
             });
@@ -121,18 +117,17 @@ public class WorkerMulti extends Worker {
         }
     }
 
-
     @Override
     public void search(Entity entity, Property prop) {
-        
+
         if (isEmptyCriteria()) {
             return;
         }
-        
+
         if (!(entity instanceof Indi) && !(entity instanceof Fam)) {
             return;
         }
-        
+
         // Get elements when entity corresponds
         if (entity instanceof Indi) {
             Indi indi = (Indi) entity;
@@ -147,7 +142,7 @@ public class WorkerMulti extends Worker {
             }
         }
     }
-    
+
     private boolean isMatch(Indi indi) {
         return (isCommonString(indi.getLastNames(), lastnameText)
                 && isCommonString(indi.getFirstNames(), firstnameText)
@@ -158,7 +153,6 @@ public class WorkerMulti extends Worker {
                 && isSameSex(indi.getSex(), isMale, isFemale, isUnknown)
                 && isSameStatus(indi.getFamiliesWhereSpouse(), isMarried, isSingle));
     }
-
 
     private boolean isCommonString(String[] names, String nameText) {
         if (nameText == null || nameText.isEmpty()) {
@@ -180,66 +174,51 @@ public class WorkerMulti extends Worker {
         return false;
     }
 
-    
     /**
-     * Compares dateFound with datebean taking into account their respective calendar
+     * Compares dateFound with datebean taking into account their respective
+     * calendar
+     *
      * @param dateFound : date to be tested, spot date or range
      * @param dateBean : date criteria, spot date or range
-     * @return : true if dateFound is between date bits boundaries (if range) or matches date bits if not range
-     * 
-     * => test pointInTime (pit), so convert all four dates into pits and then compare
-     * 
-     * Part 1 : Extract pits
-     *      - pit1 = point in time of dateFound start date
-     *      - pit2 = point in time of dateFound end date
-     *      - pitFrom = point in time of dateBean start date
-     *      - pitTo = point in time of dateBean end date
-     *      Default pit is (unknown day, unknown month, unknown year, gregorian)
-     *      Swap certain ranges to make sure pitFrom is always the start date if one is null
-     * 
-     * Part 2 : Eliminate obvious cases
-     *      - null criteria => always true
-     *      - null date to be tested but criteria not null => always false
-     * 
-     * Part 3 : compare pits
-     *      - Because pits can have null values for either day, month or year, do not use pit compare built in function, 
-     *              use specific function : match(pit, EQ/GT/LT, pitRef)
-     *      - Comparison will have to take into account non filled in bits of dates
-     *      - Comparison of spot or range dates are the following:
-     * 
-     *                         dateFound
-     *                    spot     |    range
-     *          --------------------------------------
-     *               |      D      |       C        |
-     *               | match(pit1, |                |
-     *          spot | EQ, pitFrom)|  FALSE         |
-     *               |             |                |
-     * dateBean --------------------------------------
-     *               |      B      |       A        |
-     *               | match(pit1, | match(pit1,    |
-     *               | GT, pitFrom)| GT, pitFrom)   |
-     *               | &&          | &&             |
-     *               | match(pit1, | match(pit1,    |
-     *               | LT, pitTo)  | LT, pitTo)     |
-     *         range |             |      or        |
-     *               | (pit1       | match(pitFrom, |
-     *               |  between    | GT, pit1)      |
-     *               |  pitFrom    | &&             |
-     *               |  and        | match(pitFrom, |
-     *               |  pitTo)     | LT, pit2)      |
-     *               |             |                |
-     *          --------------------------------------
-     * 
-     * 
+     * @return : true if dateFound is between date bits boundaries (if range) or
+     * matches date bits if not range
+     *
+     * => test pointInTime (pit), so convert all four dates into pits and then
+     * compare
+     *
+     * Part 1 : Extract pits - pit1 = point in time of dateFound start date -
+     * pit2 = point in time of dateFound end date - pitFrom = point in time of
+     * dateBean start date - pitTo = point in time of dateBean end date Default
+     * pit is (unknown day, unknown month, unknown year, gregorian) Swap certain
+     * ranges to make sure pitFrom is always the start date if one is null
+     *
+     * Part 2 : Eliminate obvious cases - null criteria => always true - null
+     * date to be tested but criteria not null => always false
+     *
+     * Part 3 : compare pits - Because pits can have null values for either day,
+     * month or year, do not use pit compare built in function, use specific
+     * function : match(pit, EQ/GT/LT, pitRef) - Comparison will have to take
+     * into account non filled in bits of dates - Comparison of spot or range
+     * dates are the following:
+     *
+     * dateFound spot | range -------------------------------------- | D | C | |
+     * match(pit1, | | spot | EQ, pitFrom)| FALSE | | | | dateBean
+     * -------------------------------------- | B | A | | match(pit1, |
+     * match(pit1, | | GT, pitFrom)| GT, pitFrom) | | && | && | | match(pit1, |
+     * match(pit1, | | LT, pitTo) | LT, pitTo) | range | | or | | (pit1 |
+     * match(pitFrom, | | between | GT, pit1) | | pitFrom | && | | and |
+     * match(pitFrom, | | pitTo) | LT, pit2) | | | |
+     * --------------------------------------
+     *
+     *
      */
     private boolean isCommonDate(PropertyDate dateFound, DateBean dateBean) {
-        
+
         PointInTime nullPit = new PointInTime();
-        
+
         // Part 1&2 : Extract pits && Eliminate obvious cases
         //     - null criteria => always true
         //     - null date to be tested but criteria not null => always false
-        
         // Criteria
         if (dateBean == null) {
             return true;
@@ -260,7 +239,7 @@ public class WorkerMulti extends Worker {
         }
         PointInTime pit1 = dateFound.getStart();
         PointInTime pit2 = dateFound.getEnd();
-        
+
         if (isToBeSwapped(dateFound.getFormat())) { // Swap From and To in case of Range for certain ranges
             pit2 = pit1;
             pit1 = nullPit;
@@ -268,7 +247,7 @@ public class WorkerMulti extends Worker {
         if (isEqual(pit1, nullPit) && isEqual(pit2, nullPit)) {
             return false;
         }
-        
+
         // Part 3 : Compare pits
         if (isRange(dateBean.getFormat())) {
             if (isRange(dateFound.getFormat())) {
@@ -282,8 +261,7 @@ public class WorkerMulti extends Worker {
                 // B
                 return match(pit1, MT_GT, pitFrom) && match(pit1, MT_LT, pitTo);
             }
-        } 
-        else {
+        } else {
             if (isRange(dateFound.getFormat())) {
                 // C
                 return false;
@@ -294,50 +272,35 @@ public class WorkerMulti extends Worker {
         }
     }
 
-    
     /**
      * Compares pit with pitRef for matchType (GT, LT, or EQ)
+     *
      * @param pit
      * @param matchType
      * @param pitRef
      * @return true if pit EQ/LT/GT pitRef
-     * 
-     * Because pit bits can be null, caparison has to be interpreted in different ways. 
-     * For instance, if day is 5, is to be tested for day 10, it is lower.
-     * But if date 5th of april is to be tested against 10th of march, it is larger. 
-     * So the day test depends on the month if a month is indicated.
-     * The full matrix of comparisons based on all 64 cases is below. 
+     *
+     * Because pit bits can be null, caparison has to be interpreted in
+     * different ways. For instance, if day is 5, is to be tested for day 10, it
+     * is lower. But if date 5th of april is to be tested against 10th of march,
+     * it is larger. So the day test depends on the month if a month is
+     * indicated. The full matrix of comparisons based on all 64 cases is below.
      * Legend of pitRef and pit values: 0 means field is null, 1 means it is not
-     * Legend of intersection: 0 means false, 1 means true, C means compare, for each case (A, B, C, etc.)
-     * 
-     *                                            pitRef
-     *                           
-     *                 year  |                    0     1
-     *                       |                    |     |
-     *                 month |        0-----------1     0-----------1
-     *                       |        |           |     |           |
-     *                 day   |  0-----1     0-----1     0-----1     0-----1    
-     *  ---------------------+----------------------------------------------------                    
-     *   year  month   day   |
-     *         +-0---+-0     |  1     0     0     0     0     0     0     0
-     *         |     |       |
-     *         |     +-1     |  1    C-A    0     0     0     0     0     0
-     *         |             |
-     *     0---+-1---+-0     |  1     0    C-B    0     0     0     0     0
-     *               |       | 
-     *  pit          +-1     |  1    C-A   C-B   C-F    0     0     0     0
-     *                       | 
-     *     1---+-0---+-0     |  1     0     0     0    C-C    0     0     0
-     *         |     |       | 
-     *         |     +-1     |  1    C-A    0     0    C-C   C-D    0     0
-     *         |             | 
-     *         +-1---+-0     |  1     0    C-B    0    C-C    0    C-H    0
-     *               |       | 
-     *               +-1     |  1    C-A   C-B   C-E   C-C   C-D   C-G   C-I 
-     *                       |
-     * 
-     *  Test spot               X     X     X     X     X     X     X     X
-     *       range              X     X     X     X     X     X     X     X
+     * Legend of intersection: 0 means false, 1 means true, C means compare, for
+     * each case (A, B, C, etc.)
+     *
+     * pitRef
+     *
+     * year | 0 1 | | | month | 0-----------1 0-----------1 | | | | | day |
+     * 0-----1 0-----1 0-----1 0-----1
+     * ---------------------+----------------------------------------------------
+     * year month day | +-0---+-0 | 1 0 0 0 0 0 0 0 | | | | +-1 | 1 C-A 0 0 0 0
+     * 0 0 | | 0---+-1---+-0 | 1 0 C-B 0 0 0 0 0 | | pit +-1 | 1 C-A C-B C-F 0 0
+     * 0 0 | 1---+-0---+-0 | 1 0 0 0 C-C 0 0 0 | | | | +-1 | 1 C-A 0 0 C-C C-D 0
+     * 0 | | +-1---+-0 | 1 0 C-B 0 C-C 0 C-H 0 | | +-1 | 1 C-A C-B C-E C-C C-D
+     * C-G C-I |
+     *
+     * Test spot X X X X X X X X range X X X X X X X X
      */
     private boolean match(PointInTime pit, int matchType, PointInTime pitRef) {
         int N = PointInTime.UNKNOWN;
@@ -349,7 +312,7 @@ public class WorkerMulti extends Worker {
         int m = pit.getMonth();
         int d = pit.getDay();
         Calendar cal = pit.getCalendar();
-        
+
         // Convert all elements to gregorian if calendars non Gregorian 
         if (calR != PointInTime.GREGORIAN || cal != PointInTime.GREGORIAN) {
             try {
@@ -372,53 +335,53 @@ public class WorkerMulti extends Worker {
                 return false;
             }
         }
-        
+
         // True cases (8)
         if (yR == N && mR == N && dR == N) {
             return true;
         }
-        
+
         // False cases (7)
         if (y == N && m == N && d == N) {
             return false;
         }
-        
+
         // False cases (12)
         if (yR != N && y == N) {
             return false;
         }
-        
+
         // False cases (10)
         if (mR != N && m == N) {
             return false;
         }
-        
+
         // False cases (8)
         if (dR != N && d == N) {
             return false;
         }
-        
+
         // Comparison cases 
         // C-A (4)
         if (yR == N && mR == N && dR != N && d != N) {
             return compare(d, matchType, dR);
         }
-        
+
         // C-B (4)
         if (yR == N && mR != N && dR == N && m != N) {
             return compare(m, matchType, mR);
         }
-        
+
         // C-C (4)
         if (yR != N && mR == N && dR == N && y != N) {
             return compare(y, matchType, yR);
         }
-        
+
         // C-D (2)
         if (yR != N && mR == N && dR != N && y != N && d != N) {
             return compare(y, matchType, yR) && compare(d, matchType, dR);
         }
-        
+
         // C-E (1) and C-F (1)
         if (mR != N && dR != N) {
             if (yR == N && y != N) {
@@ -432,7 +395,7 @@ public class WorkerMulti extends Worker {
             }
             return compare(new PointInTime(d, m, y, cal), matchType, new PointInTime(dR, mR, yR, calR));
         }
-        
+
         // C-G (1) and C-H (1)
         if (yR != N && mR != N && dR == N) {
             if (d != N) {
@@ -443,46 +406,45 @@ public class WorkerMulti extends Worker {
             }
             return compare(new PointInTime(d, m, y, cal), matchType, new PointInTime(dR, mR, yR, calR));
         }
-        
+
         // C-I (1)
         if (yR != N && mR != N && dR != N && y != N && m != N && d != N) {
             return compare(pit, matchType, pitRef);
         }
-        
+
         return false;
     }
-        
+
     private boolean isEqual(PointInTime pit1, PointInTime pit2) {
         return (pit1.getDay() == pit2.getDay() && pit1.getMonth() == pit2.getMonth() && pit1.getYear() == pit2.getYear() && pit1.getCalendar().getName().equals(pit2.getCalendar().getName()));
     }
-    
+
     private boolean compare(int i, int matchType, int ref) {
-        if (matchType == MT_EQ) {
-            return i == ref;
-        } else if (matchType == MT_GT) {
-            return i >= ref;
-        } else if (matchType == MT_LT) {
-            return i <= ref;
+        switch (matchType) {
+            case MT_EQ:
+                return i == ref;
+            case MT_GT:
+                return i >= ref;
+            case MT_LT:
+                return i <= ref;
+            default:
+                return false;
         }
-        return false;
     }
-    
+
     private boolean compare(PointInTime pit, int matchType, PointInTime pitRef) {
-        if (matchType == MT_EQ) {
-            return pit.compareTo(pitRef) == 0;
-        } else if (matchType == MT_GT) {
-            return pit.compareTo(pitRef) >= 0;
-        } else if (matchType == MT_LT) {
-            return pit.compareTo(pitRef) <= 0;
+        switch (matchType) {
+            case MT_EQ:
+                return pit.compareTo(pitRef) == 0;
+            case MT_GT:
+                return pit.compareTo(pitRef) >= 0;
+            case MT_LT:
+                return pit.compareTo(pitRef) <= 0;
+            default:
+                return false;
         }
-        return false;
     }
-    
-    
-    
-    
-    
-    
+
     private boolean isCommonPlace(Indi indi, String placeText) {
         if (placeText.isEmpty()) {
             return true;
@@ -499,7 +461,7 @@ public class WorkerMulti extends Worker {
                 }
             }
         }
-        
+
         Fam fams[] = indi.getFamiliesWhereSpouse();
         for (Fam fam : fams) {
             for (PropertyPlace prop : fam.getProperties(PropertyPlace.class)) {
@@ -515,7 +477,7 @@ public class WorkerMulti extends Worker {
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -535,7 +497,7 @@ public class WorkerMulti extends Worker {
                 }
             }
         }
-        
+
         return false;
     }
 
@@ -553,11 +515,10 @@ public class WorkerMulti extends Worker {
         return (married && (familiesWhereSpouse != null && familiesWhereSpouse.length != 0)) || (single && (familiesWhereSpouse == null || familiesWhereSpouse.length == 0));
     }
 
-    
     private void addHit(Entity entity) {
-        
+
         Matcher.Match[] matches = matcher.match(entity.toString(true));
-        
+
         // too many?
         if (hitCount >= max_hits) {
             return;
@@ -579,15 +540,12 @@ public class WorkerMulti extends Worker {
     }
 
     private boolean isEmptyCriteria() {
-        return (lastnameText.isEmpty() && firstnameText.isEmpty() 
-//                && birthFrom == minDate && birthTo == maxDate 
-//                && deathFrom == minDate && deathTo == maxDate 
+        return (lastnameText.isEmpty() && firstnameText.isEmpty()
+                //                && birthFrom == minDate && birthTo == maxDate 
+                //                && deathFrom == minDate && deathTo == maxDate 
                 && placeText.isEmpty() && !isMale && !isFemale && !isUnknown && !isMarried && !isSingle);
     }
 
-
-    
-    
     //    FROM_TO = new Format("FROM", "TO"),
     //    FROM = new Format("FROM", ""),
     //    TO = new Format("TO", ""),
@@ -595,16 +553,13 @@ public class WorkerMulti extends Worker {
     //    BEFORE = new Format("BEF", ""),
     //    AFTER = new Format("AFT", ""),
     private boolean isRange(Format format) {
-        return format.equals(PropertyDate.FROM_TO) || format.equals(PropertyDate.FROM) 
-                || format.equals(PropertyDate.TO) || format.equals(PropertyDate.BETWEEN_AND) 
+        return format.equals(PropertyDate.FROM_TO) || format.equals(PropertyDate.FROM)
+                || format.equals(PropertyDate.TO) || format.equals(PropertyDate.BETWEEN_AND)
                 || format.equals(PropertyDate.BEFORE) || format.equals(PropertyDate.AFTER);
     }
-
 
     private boolean isToBeSwapped(Format format) {
         return format.equals(PropertyDate.TO) || format.equals(PropertyDate.BEFORE);
     }
 
-    
-    
 }
