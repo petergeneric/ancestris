@@ -15,12 +15,18 @@ import ancestris.api.search.SearchCommunicator;
 import ancestris.awt.FilteredMouseAdapter;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.pluginservice.AncestrisPlugin;
+import ancestris.swing.ToolBar;
+import ancestris.util.Utilities;
+import ancestris.util.swing.DialogManager;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyXRef;
+import genj.io.Filter;
 import genj.util.GridBagHelper;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -28,12 +34,6 @@ import genj.util.WordBuffer;
 import genj.util.swing.ChoiceWidget;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.PopupWidget;
-import ancestris.swing.ToolBar;
-import ancestris.util.Utilities;
-import ancestris.util.swing.DialogManager;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyXRef;
-import genj.io.Filter;
 import genj.view.Images;
 import genj.view.View;
 import genj.view.ViewContext;
@@ -74,113 +74,127 @@ import spin.Spin;
  */
 public class SearchView extends View implements Filter {
 
-    
-    /** default values */
+    /**
+     * default values
+     */
     private int max_hits;
     private boolean case_sensitive;
-    
+
     private final static String[] DEFAULT_VALUES = {
         "L(a|e)pe(i|y)re", "Paris.+France", "^(M|F)"
     },
             DEFAULT_TAGS = {
-        "NAME", "BIRT", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI", "PLAC"
-    },
-            DEFAULT_STR = {
-        
-    };
-    
+                "NAME", "BIRT", "BIRT, PLAC", "OCCU", "NOTE", "BIRT, NOTE", "RESI", "PLAC"
+            },
+            DEFAULT_STR = {};
+
     private final static ImageIcon IMG_START = new ImageIcon(SearchView.class, "images/Start"),
             IMG_STOP = new ImageIcon(SearchView.class, "images/Stop"),
             IMG_CLEAN = new ImageIcon(SearchView.class, "images/Clean"),
             IMG_CLEAR = new ImageIcon(SearchView.class, "images/ClearHistory"),
             IMG_SETTINGS = Images.imgSettings;
-    
-    /** how many old values we remember */
+
+    /**
+     * how many old values we remember
+     */
     private final static int MAX_OLD = 16;
-    
-    /** resources */
+
+    /**
+     * resources
+     */
     /* package */ final static Resources RESOURCES = Resources.get(SearchView.class);
 
-    /** registry */
+    /**
+     * registry
+     */
     private final static Registry REGISTRY = Registry.get(SearchView.class);
-    
-    /** current context */
+
+    /**
+     * current context
+     */
     private Context context = null;
-    
-    /** shown results */
+
+    /**
+     * shown results
+     */
     private Results results1 = new Results();
     private Results results2 = new Results();
     private ResultWidget listResults1 = new ResultWidget(results1);
     private ResultWidget listResults2 = new ResultWidget(results2);
-    
-    /** criterias */
+
+    /**
+     * criterias
+     */
     private ChoiceWidget choiceLastname, choiceFirstname, choicePlace, choiceOccu;
     private ChoiceWidget choiceTag, choiceValue;
     private JCheckBox checkRegExp;
     private JLabel labelCount2;
-    
-    /** history */
+
+    /**
+     * history
+     */
     private LinkedList<String> oldLastnames, oldFirstnames, oldPlaces, oldOccupations;
     private LinkedList<String> oldTags, oldValues;
-    
-    /** worker */
-    private AbstractAncestrisAction actionStart = new ActionStart(), 
-            actionStop = new ActionStop(), 
-            actionClean = new ActionClean(), 
+
+    /**
+     * worker
+     */
+    private AbstractAncestrisAction actionStart = new ActionStart(),
+            actionStop = new ActionStop(),
+            actionClean = new ActionClean(),
             actionClearHistory = new ActionClearHistory(),
             actionSettings = new ActionSettings();
     private WorkerMulti worker1;
     private WorkerTag worker2;
-    
+
     private SearchCommunicator searchCommunicator = null;
-    
-    /** for filter */
+
+    /**
+     * for filter
+     */
     Set<Entity> connectedEntities = null;
-    
+
     /**
      * Constructor
      */
     public SearchView() {
-        
-        // prepare an action listener connecting to click
-        ActionListener aclick = new ActionListener() {
 
-            /** button */
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (actionStop.isEnabled()) {
-                    stop();
-                }
-                if (actionStart.isEnabled()) {
-                    start();
-                }
+        // prepare an action listener connecting to click
+        ActionListener aclick = (ActionEvent e) -> {
+            if (actionStop.isEnabled()) {
+                stop();
             }
-        };
+            if (actionStart.isEnabled()) {
+                start();
+            }
+        } /**
+         * button
+         */ ;
 
         // Settings
         SettingsPanel settingsPanel = new SettingsPanel(REGISTRY);
         max_hits = settingsPanel.getMaxHits();
         case_sensitive = settingsPanel.getCaseSensitive();
-        
+
         // prepare search criteria for MultiCriteria panel
-        oldLastnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
+        oldLastnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
         choiceLastname = new ChoiceWidget(oldLastnames);
         choiceLastname.addActionListener(aclick);
-        oldFirstnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
+        oldFirstnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
         choiceFirstname = new ChoiceWidget(oldFirstnames);
         choiceFirstname.addActionListener(aclick);
-        oldPlaces = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
+        oldPlaces = new LinkedList<>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
         choicePlace = new ChoiceWidget(oldPlaces);
         choicePlace.addActionListener(aclick);
-        oldOccupations = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
+        oldOccupations = new LinkedList<>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
         choiceOccu = new ChoiceWidget(oldOccupations);
         choiceOccu.addActionListener(aclick);
-        
+
         initComponents();
-        
+
         birthDateBean.addActionListener(aclick);
         deathDateBean.addActionListener(aclick);
-        
+
         // setup worker
         worker1 = new WorkerMulti((WorkerListener) Spin.over(new WorkerListener() {
 
@@ -233,10 +247,9 @@ public class SearchView extends View implements Filter {
             }
         }));
 
-
         // prepare search criteria for tag panel
-        oldTags = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
-        oldValues = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
+        oldTags = new LinkedList<>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
+        oldValues = new LinkedList<>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
         boolean useRegEx = REGISTRY.get("regexp", false);
 
         JLabel labelValue = new JLabel(RESOURCES.getString("label.value"));
@@ -279,8 +292,6 @@ public class SearchView extends View implements Filter {
         gh.add(popupTags, 0, 3, 1, 1);
         gh.add(choiceTag, 1, 3, 3, 1, GridBagHelper.GROW_HORIZONTAL | GridBagHelper.FILL_HORIZONTAL, new Insets(0, 3, 3, 3));
 
-        
-        
         // prepare layout1
         birthDateBean.setPropertyImpl(null);
         deathDateBean.setPropertyImpl(null);
@@ -289,7 +300,6 @@ public class SearchView extends View implements Filter {
         result1Panel.setLayout(new BorderLayout());
         result1Panel.add(BorderLayout.CENTER, new JScrollPane(listResults1));
         labelCount1.setText("");
-        
 
         // prepare layout2
         tabTag.setLayout(new BorderLayout());
@@ -300,15 +310,11 @@ public class SearchView extends View implements Filter {
         // FIXME: right clic doesn't work because selection is handled by ListSelectionListener rather than MouseListener
 //        setExplorerHelper(new ExplorerHelper(listResults2));
         // done
-        
-        connectedEntities = new HashSet<Entity>();
-        
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            @Override
-            public void run() {
-                notifyResults();
-                choiceLastname.requestFocusInWindow();
-            }
+        connectedEntities = new HashSet<>();
+
+        WindowManager.getDefault().invokeWhenUIReady(() -> {
+            notifyResults();
+            choiceLastname.requestFocusInWindow();
         });
     }
 
@@ -514,7 +520,6 @@ public class SearchView extends View implements Filter {
         SearchCommunicator.unregister(searchCommunicator);
     }
 
-
     public void start() {
 
         // if context
@@ -532,10 +537,10 @@ public class SearchView extends View implements Filter {
             remember(choicePlace, oldPlaces, choicePlace.getText());
             remember(choiceOccu, oldOccupations, choiceOccu.getText());
             worker.start(context.getGedcom(), max_hits, case_sensitive,
-                    choiceLastname.getText(), choiceFirstname.getText(), 
-                    birthDateBean, 
+                    choiceLastname.getText(), choiceFirstname.getText(),
+                    birthDateBean,
                     deathDateBean,
-                    choicePlace.getText(),choiceOccu.getText(),
+                    choicePlace.getText(), choiceOccu.getText(),
                     maleCb.isSelected(), femaleCb.isSelected(), unknownCb.isSelected(),
                     marrCb.isSelected(), singleCb.isSelected(), allButCb.isSelected()
             );
@@ -547,7 +552,7 @@ public class SearchView extends View implements Filter {
             worker.start(context.getGedcom(), max_hits, case_sensitive,
                     tags, value, checkRegExp.isSelected());
         }
-        
+
         connectedEntities.clear();
     }
 
@@ -582,16 +587,13 @@ public class SearchView extends View implements Filter {
     }
 
     private void notifyResults() {
-        WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
-            @Override
-            public void run() {
-                if (searchCommunicator != null) {
-                    searchCommunicator.fireNewResults();
-                }
+        WindowManager.getDefault().invokeWhenUIReady(() -> {
+            if (searchCommunicator != null) {
+                searchCommunicator.fireNewResults();
             }
         });
     }
-    
+
     public void clearHistory() {
         if (DialogManager.YES_OPTION != DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ConfirmClear"), NbBundle.getMessage(getClass(), "MSG_ConfirmClear"))
                 .setMessageType(DialogManager.YES_NO_OPTION)
@@ -602,10 +604,10 @@ public class SearchView extends View implements Filter {
             REGISTRY.remove("old.lastnames");
             REGISTRY.remove("old.firstnames");
             REGISTRY.remove("old.places");
-            oldLastnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
-            oldFirstnames = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
-            oldPlaces = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
-            oldOccupations = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
+            oldLastnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.lastnames", DEFAULT_STR)));
+            oldFirstnames = new LinkedList<>(Arrays.asList(REGISTRY.get("old.firstnames", DEFAULT_STR)));
+            oldPlaces = new LinkedList<>(Arrays.asList(REGISTRY.get("old.places", DEFAULT_STR)));
+            oldOccupations = new LinkedList<>(Arrays.asList(REGISTRY.get("old.occupations", DEFAULT_STR)));
             choiceLastname.setValues(oldLastnames);
             choiceFirstname.setValues(oldFirstnames);
             choicePlace.setValues(oldPlaces);
@@ -614,8 +616,8 @@ public class SearchView extends View implements Filter {
             REGISTRY.remove("regexp");
             REGISTRY.remove("old.values");
             REGISTRY.remove("old.tags");
-            oldTags = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
-            oldValues = new LinkedList<String>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
+            oldTags = new LinkedList<>(Arrays.asList(REGISTRY.get("old.tags", DEFAULT_TAGS)));
+            oldValues = new LinkedList<>(Arrays.asList(REGISTRY.get("old.values", DEFAULT_VALUES)));
             choiceTag.setValues(oldValues);
             choiceValue.setValues(oldTags);
         }
@@ -655,10 +657,10 @@ public class SearchView extends View implements Filter {
         if (newContext == null || context != null) {
             return;
         }
-        
+
         //Gedcom oldGedcom = context.getGedcom();
         Gedcom newGedcom = newContext.getGedcom();
-        
+
         // init 
         stop();
         results1.clear();
@@ -679,7 +681,7 @@ public class SearchView extends View implements Filter {
             searchCommunicator = new SearchCommunicator() {
                 @Override
                 public List<Property> getResults() {
-                    List<Property> props = new ArrayList<Property>();
+                    List<Property> props = new ArrayList<>();
                     for (Hit hit : getSelectedResults().hits) {
                         props.add(hit.getProperty());
                     }
@@ -730,7 +732,7 @@ public class SearchView extends View implements Filter {
     private List<AbstractAncestrisAction> createTagActions() {
 
         // loop through DEFAULT_TAGS
-        List<AbstractAncestrisAction> result = new ArrayList<AbstractAncestrisAction>();
+        List<AbstractAncestrisAction> result = new ArrayList<>();
         for (String tag : DEFAULT_TAGS) {
             result.add(new ActionTag(tag));
         }
@@ -744,7 +746,7 @@ public class SearchView extends View implements Filter {
      */
     private List<AbstractAncestrisAction> createPatternActions() {
         // loop until ...
-        List<AbstractAncestrisAction> result = new ArrayList<AbstractAncestrisAction>();
+        List<AbstractAncestrisAction> result = new ArrayList<>();
         for (int i = 0;; i++) {
             // check text and pattern
             String key = "regexp." + i,
@@ -765,7 +767,7 @@ public class SearchView extends View implements Filter {
     }
 
     private Worker getSelectedWorker() {
-        Worker worker = null;
+        final Worker worker;
         if (jTabbedPane1.getSelectedComponent() == tabMulti) {
             worker = worker1;
         } else {
@@ -773,9 +775,9 @@ public class SearchView extends View implements Filter {
         }
         return worker;
     }
-    
+
     private Results getSelectedResults() {
-        Results results = null;
+        final Results results;
         if (jTabbedPane1.getSelectedComponent() == tabMulti) {
             results = results1;
         } else {
@@ -783,8 +785,7 @@ public class SearchView extends View implements Filter {
         }
         return results;
     }
-    
-    
+
     private void displaySettings() {
         SettingsPanel settingsPanel = new SettingsPanel(REGISTRY);
         DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChangeSettings"), settingsPanel)
@@ -800,8 +801,6 @@ public class SearchView extends View implements Filter {
         return NbBundle.getMessage(SearchView.class, "TTL_Filter", getSelectedResults().getSize(), RESOURCES.getString("title"));
     }
 
-
-    
     // Include all entities included in the list and all indis connected to them 
     @Override
     public boolean veto(Entity entity) {
@@ -811,11 +810,7 @@ public class SearchView extends View implements Filter {
                 connectedEntities.addAll(Utilities.getDependingEntitiesRecursively(hit.getProperty().getEntity()));
             }
         }
-        if (connectedEntities.contains(entity)) {
-            return false;
-        }
-
-        return true;
+        return !connectedEntities.contains(entity);
     }
 
     // Exclude all properties pointing to an entity which is not part of the results
@@ -835,9 +830,6 @@ public class SearchView extends View implements Filter {
         return (gedcom != null && gedcom.equals(context.getGedcom()));
     }
 
-
-    
-    
     /**
      * Action - select predefined paths
      */
@@ -867,20 +859,15 @@ public class SearchView extends View implements Filter {
         }
     } //ActionPath
 
-    
-    
-    
-    
     /**
-     * Action - insert regexp construct
-     * {0} all text
-     * {1} before selection
-     * {2} (selection)
-     * {3} after selection
+     * Action - insert regexp construct {0} all text {1} before selection {2}
+     * (selection) {3} after selection
      */
     private class ActionPattern extends AbstractAncestrisAction {
 
-        /** pattern */
+        /**
+         * pattern
+         */
         private final String pattern;
 
         /**
@@ -924,37 +911,30 @@ public class SearchView extends View implements Filter {
             final String result = MessageFormat.format(pattern, new Object[]{all, before, selection, after});
 
             // invoke this later - selection might otherwise not work correctly
-            SwingUtilities.invokeLater(new Runnable() {
+            SwingUtilities.invokeLater(() -> {
+                int pos = result.indexOf('#');
 
-                @Override
-                public void run() {
+                // show
+                field.setText(result.substring(0, pos) + result.substring(pos + 1));
+                field.select(0, 0);
+                field.setCaretPosition(pos);
 
-                    int pos = result.indexOf('#');
-
-                    // show
-                    field.setText(result.substring(0, pos) + result.substring(pos + 1));
-                    field.select(0, 0);
-                    field.setCaretPosition(pos);
-
-                    // make sure regular expressions are enabled now
-                    checkRegExp.setSelected(true);
-                }
+                // make sure regular expressions are enabled now
+                checkRegExp.setSelected(true);
             });
 
             // done
         }
     } //ActionInsert
 
-    
-    
-    
-    
     /**
      * Action - trigger search
      */
     private class ActionStart extends AbstractAncestrisAction {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private ActionStart() {
             setImage(IMG_START);
             setTip(RESOURCES.getString("start.tip"));
@@ -972,14 +952,18 @@ public class SearchView extends View implements Filter {
      */
     private class ActionStop extends AbstractAncestrisAction {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private ActionStop() {
             setImage(IMG_STOP);
             setTip(RESOURCES.getString("stop.tip"));
             setEnabled(false);
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
             stop();
@@ -991,34 +975,41 @@ public class SearchView extends View implements Filter {
      */
     private class ActionClean extends AbstractAncestrisAction {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private ActionClean() {
             setImage(IMG_CLEAN);
             setTip(RESOURCES.getString("clean.tip"));
             //setEnabled(false);
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
             clean();
         }
     } //ActionStop
 
-    
     /**
      * Action - clear history of values
      */
     private class ActionClearHistory extends AbstractAncestrisAction {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private ActionClearHistory() {
             setImage(IMG_CLEAR);
             setTip(RESOURCES.getString("clearHistory.tip"));
             //setEnabled(false);
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
             clearHistory();
@@ -1026,37 +1017,38 @@ public class SearchView extends View implements Filter {
         }
     } //ActionStop
 
-    
     /**
      * Action - clear history of values
      */
     private class ActionSettings extends AbstractAncestrisAction {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         private ActionSettings() {
             setImage(IMG_SETTINGS);
             setTip(RESOURCES.getString("settings.tip"));
             //setEnabled(false);
         }
 
-        /** run */
+        /**
+         * run
+         */
         @Override
         public void actionPerformed(ActionEvent event) {
             displaySettings();
         }
     } //ActionStop
 
-    
-    
-    
-    
     /**
      * Our result bucket
      */
     private static class Results extends AbstractListModel implements GedcomListener {
 
-        /** the results */
-        private List<Hit> hits = new ArrayList<Hit>();
+        /**
+         * the results
+         */
+        private List<Hit> hits = new ArrayList<>();
 
         /**
          * clear the results (sync to EDT)
@@ -1150,10 +1142,6 @@ public class SearchView extends View implements Filter {
         }
     } //Results
 
-    
-    
-    
-    
     /**
      * our specialized list
      */
@@ -1169,8 +1157,14 @@ public class SearchView extends View implements Filter {
             super(results);
             this.results = results;
 
+            init();
+        }
+
+        private void init() {
             // rendering
             setCellRenderer(this);
+            // Default size doesn't work in Java 11, set 2 pixels up and down from icon size.
+            setFixedCellHeight(18);
             addListSelectionListener(this);
             text.setOpaque(true);
             addMouseListener(new FilteredMouseAdapter() {
@@ -1187,19 +1181,18 @@ public class SearchView extends View implements Filter {
                 }
             });
         }
-        
+
         /**
          * ContextProvider - callback
          */
         public ViewContext getContext() {
-            
+
             if (context == null) {
                 return null;
             }
 
-            List<Property> properties = new ArrayList<Property>();
-            Object[] selection = getSelectedValues();
-            for (Object selection1 : selection) {
+            List<Property> properties = new ArrayList<>();
+            for (Object selection1 : getSelectedValuesList()) {
                 Hit hit = (Hit) selection1;
                 properties.add(hit.getProperty());
             }
@@ -1219,7 +1212,8 @@ public class SearchView extends View implements Filter {
         }
 
         /**
-         * @see javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
+         * @see
+         * javax.swing.event.ListSelectionListener#valueChanged(javax.swing.event.ListSelectionEvent)
          */
         @Override
         public void valueChanged(ListSelectionEvent e) {
@@ -1229,8 +1223,8 @@ public class SearchView extends View implements Filter {
             }
         }
     } //ResultWidget
-    
-    
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JCheckBox allButCb;
     private genj.edit.beans.DateBean birthDateBean;

@@ -20,7 +20,7 @@ import genj.util.Registry;
 public class SettingsPanel extends javax.swing.JPanel {
 
     private final static int DEFAULT_MAX_HITS = 5000;
-    private Registry registry;
+    private final Registry registry;
     private int max_hits;
     private boolean case_sensitive = false;
     

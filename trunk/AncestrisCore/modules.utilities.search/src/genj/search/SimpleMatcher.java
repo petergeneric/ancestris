@@ -36,6 +36,7 @@ public class SimpleMatcher extends Matcher {
   /**
    * @see genj.search.Matcher#init(java.lang.String)
    */
+  @Override
   public void init(String pattern) {
     StringTokenizer tokens = new StringTokenizer(pattern.toLowerCase());
     words = new String[tokens.countTokens()];
@@ -46,11 +47,12 @@ public class SimpleMatcher extends Matcher {
   /**
    * @see genj.search.Matcher#match(java.lang.String, java.util.List)
    */
+  @Override
   protected void match(String input, List<Match> result) {
     
     String removedAccents = Normalizer.normalize(input, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();  
     
-    ArrayList<Match> matches = new ArrayList<Match>(words.length);
+    ArrayList<Match> matches = new ArrayList<>(words.length);
     
     // search for matches
     for (int i=0;i<words.length;i++) {

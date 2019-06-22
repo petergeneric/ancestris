@@ -22,7 +22,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.TagPath;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -44,7 +43,7 @@ public class WorkerTag extends Worker {
      */
     @Override
     public void start(Gedcom gedcom, int max_hits, boolean case_sensitive, Object... args) {
-        String tags = (String) args[0];
+        String localTags = (String) args[0];
         String value = (String) args[1];
         Boolean regexp = (Boolean) args[2];
 
@@ -61,34 +60,32 @@ public class WorkerTag extends Worker {
             this.max_hits = max_hits;
             this.case_sensitive = case_sensitive;
             this.matcher = getMatcher(value, regexp);
-            this.tags = split(tags);
+            this.tags = split(localTags);
             this.hits.clear();
             this.entities.clear();
             this.hitCount = 0;
 
             lock.set(true);
 
-            thread = new Thread(new Runnable() {
-                public void run() {
+            thread = new Thread(() -> {
+                try {
+                    WorkerTag.this.listener.started();
+                    search(WorkerTag.this.gedcom);
+                    flush();
+                } catch (Throwable t) {
+                    Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
+                } finally {
+                    synchronized (lock) {
+                        thread = null;
+                        lock.set(false);
+                        lock.notifyAll();
+                    }
                     try {
-                        WorkerTag.this.listener.started();
-                        search(WorkerTag.this.gedcom);
-                        flush();
+                        WorkerTag.this.listener.stopped();
                     } catch (Throwable t) {
-                        Logger.getLogger("ancestris.search").log(Level.FINE, "worker bailed", t);
-                    } finally {
-                        synchronized (lock) {
-                            thread = null;
-                            lock.set(false);
-                            lock.notifyAll();
-                        }
-                        try {
-                            WorkerTag.this.listener.stopped();
-                        } catch (Throwable t) {
-              // this will happen if we are being interrupted
-                            // going through Spin's transition to EDT
-                            // and we don't care about the result
-                        }
+                        // this will happen if we are being interrupted
+                        // going through Spin's transition to EDT
+                        // and we don't care about the result
                     }
                 }
             });
@@ -101,7 +98,7 @@ public class WorkerTag extends Worker {
 
     private List<String> split(String tags) {
         String[] ss = tags.split(",|\\s");
-        ArrayList<String> result = new ArrayList<String>(ss.length);
+        ArrayList<String> result = new ArrayList<>(ss.length);
         for (String s : ss) {
             s = s.trim();
             if (s.length() > 0 && !result.contains(s)) {
@@ -112,13 +109,10 @@ public class WorkerTag extends Worker {
     }
 
     private boolean checkPath(Entity entity, Property prop) {
-        // Fix 2017-11-03 : FL : Why are entities always OK ???? It would mean that entity.getValue() are always matched regardless of the tag chosen by user ???????? => remove
-        // entities are always ok, no path all good as well
-//        if (entity == prop || tags.isEmpty()) {
         if (tags.isEmpty()) {
             return true;
         }
-        // all tags in path?
+        // all localTags in path?
         TagPath path = prop.getPath();
         for (String tag : tags) {
             if (!path.contains(tag)) {
@@ -136,11 +130,6 @@ public class WorkerTag extends Worker {
     public void search(Entity entity, Property prop) {
         // parse all where path ok and not transient
         if (checkPath(entity, prop) && !prop.isTransient()) {
-            // Fix 2017-11-03 : FL : Why check Ids regardless of the tag chosen by user ???????? => remove
-//            // check entity's id
-//            if (entity == prop) {
-//                search(entity, entity, entity.getId(), true);
-//            }
             // check prop's value
             search(entity, prop, prop.getDisplayValue(), false);
         }

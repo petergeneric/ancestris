@@ -35,6 +35,7 @@ public class SearchViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#createView(java.lang.String, genj.gedcom.Gedcom, genj.util.Registry, genj.view.ViewManager)
    */
+  @Override
   public View createView() {
     return new SearchView();
   }
@@ -42,6 +43,7 @@ public class SearchViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getImage()
    */
+  @Override
   public ImageIcon getImage() {
     return IMG;
   }
@@ -49,6 +51,7 @@ public class SearchViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getTitle(boolean)
    */
+  @Override
   public String getTitle() {
     return SearchView.RESOURCES.getString("title");
   }

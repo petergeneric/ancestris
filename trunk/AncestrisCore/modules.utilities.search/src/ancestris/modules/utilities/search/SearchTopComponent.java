@@ -4,9 +4,9 @@
  */
 package ancestris.modules.utilities.search;
 
-import ancestris.view.GenjViewTopComponent;
 import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisViewInterface;
+import ancestris.view.GenjViewTopComponent;
 import genj.search.SearchViewFactory;
 import genj.view.ViewFactory;
 import org.netbeans.api.settings.ConvertAsProperties;
@@ -24,11 +24,11 @@ public final class SearchTopComponent extends GenjViewTopComponent {
 
     private static final String PREFERRED_ID = "SearchTopComponent";
     private static SearchTopComponent factory;
-    private static ViewFactory viewfactory = new SearchViewFactory();
+    private final static ViewFactory VIEW_FACTORY = new SearchViewFactory();
 
     @Override
     public ViewFactory getViewFactory() {
-        return viewfactory;
+        return VIEW_FACTORY;
     }
 
     /**
