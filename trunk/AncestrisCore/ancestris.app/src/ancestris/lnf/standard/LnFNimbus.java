@@ -28,7 +28,7 @@ public class LnFNimbus extends LookAndFeelProvider{
 
     @Override
     public String getName() {
-        return "Nimbus";
+        return "javax.swing.plaf.nimbus.NimbusLookAndFeel";
     }
 
     @Override
