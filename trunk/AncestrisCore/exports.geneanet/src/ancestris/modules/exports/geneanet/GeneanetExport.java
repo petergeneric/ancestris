@@ -221,6 +221,13 @@ public class GeneanetExport {
                     }
                 }
             }
+            
+            // In case of MARC and no MARR create a MARR without date.
+            final Property[] marc = entity.getProperties("MARC");
+            final Property[] marr = entity.getProperties("MARR");
+            if (marc.length > 0 && marr.length == 0) {
+                entity.addProperty("MARR", "Y");
+            }
 
             // Process adoptions (remove adopted child from their adopting family)
             props = entity.getProperties("CHIL");
