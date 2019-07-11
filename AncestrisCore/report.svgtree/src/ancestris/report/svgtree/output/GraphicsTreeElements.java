@@ -14,6 +14,7 @@ import ancestris.report.svgtree.graphics.GraphicsUtil;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySex;
 import genj.gedcom.TagPath;
@@ -351,14 +352,17 @@ public class GraphicsTreeElements implements TreeElements {
         // Name
         int currentY = y + 14;
         String[] firstNames = getFirstNames(i);
-        String lastName;
+        String lastName ="";
 
         // generate LastName + Title
+        PropertyName prop = i.getNamePropery();
+        if (prop.getSurnamePrefix() != null) {
+            lastName= prop.getSurnamePrefix() + " ";
+        } 
+        lastName = lastName + prop.getLastName();
         if (draw_title && i.getProperty(PATH_INDITITL) != null) {
-            lastName = i.getLastName() + " " + i.getProperty(PATH_INDITITL);
-        } else {
-            lastName = i.getLastName();
-        }
+            lastName = lastName + " " + i.getProperty(PATH_INDITITL);
+        } 
 
         if (swap_names) { // last name
             graphics.setFont(nameFont);
