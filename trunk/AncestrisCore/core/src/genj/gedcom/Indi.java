@@ -24,7 +24,6 @@ import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.ImageIcon;
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -502,6 +501,18 @@ public class Indi extends Entity {
             return "";
         }
         return p.getDisplayValue();
+    }
+    
+    /**
+     * Returns indi's name property.
+     * @return The propertyName.
+     */
+    public PropertyName getNamePropery() {
+        PropertyName p = (PropertyName) getProperty("NAME", true);
+        if (p == null) {
+            return null;
+        }
+        return p;
     }
 
     /**
