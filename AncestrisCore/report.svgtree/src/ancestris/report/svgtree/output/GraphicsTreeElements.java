@@ -265,13 +265,13 @@ public class GraphicsTreeElements implements TreeElements {
      * line and last name is in the second.
      */
     public boolean swap_names = false;
-    
+
     public String fontNameDetails = "verdana";
-    
+
     private Font detailsFont;
     private Font nameFont;
     private Font idFont;
-    
+
     private void checkFont() {
         if (detailsFont != null) {
             return;
@@ -352,17 +352,19 @@ public class GraphicsTreeElements implements TreeElements {
         // Name
         int currentY = y + 14;
         String[] firstNames = getFirstNames(i);
-        String lastName ="";
+        String lastName = "";
 
         // generate LastName + Title
         PropertyName prop = i.getNamePropery();
-        if (prop.getSurnamePrefix() != null) {
-            lastName= prop.getSurnamePrefix() + " ";
-        } 
-        lastName = lastName + prop.getLastName();
+        if (prop != null) {
+            if (prop.getSurnamePrefix() != null) {
+                lastName = prop.getSurnamePrefix() + " ";
+            }
+            lastName = lastName + prop.getLastName();
+        }
         if (draw_title && i.getProperty(PATH_INDITITL) != null) {
             lastName = lastName + " " + i.getProperty(PATH_INDITITL);
-        } 
+        }
 
         if (swap_names) { // last name
             graphics.setFont(nameFont);
@@ -807,10 +809,20 @@ public class GraphicsTreeElements implements TreeElements {
         if (width + 2 * TEXT_MARGIN > indibox.width) {
             indibox.width = width + 2 * TEXT_MARGIN;
         }
+        
+        String lastName = "";
+         PropertyName prop = i.getNamePropery();
+        if (prop != null) {
+            if (prop.getSurnamePrefix() != null) {
+                lastName = prop.getSurnamePrefix() + " ";
+            }
+            lastName = lastName + prop.getLastName();
+        }
+        
         if (draw_title && i.getProperty(PATH_INDITITL) != null) {
-            width = getTextWidth(i.getLastName() + " " + i.getProperty(PATH_INDITITL), nameFont);
+            width = getTextWidth(lastName + " " + i.getProperty(PATH_INDITITL), nameFont);
         } else {
-            width = getTextWidth(i.getLastName(), nameFont);
+            width = getTextWidth(lastName, nameFont);
         }
 
         if (width + 2 * TEXT_MARGIN > indibox.width) {
