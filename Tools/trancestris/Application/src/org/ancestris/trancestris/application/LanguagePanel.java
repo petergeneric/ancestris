@@ -14,11 +14,12 @@ final class LanguagePanel extends javax.swing.JPanel {
     // Values
     Locale[] locales = {
         new Locale("br"),
+        new Locale("es"),
+        new Locale("ca"),
         new Locale("cs"),
         new Locale("da"),
         Locale.GERMAN,
         Locale.ENGLISH,
-        new Locale("es"),
         new Locale("el"),
         new Locale("fi"),
         Locale.FRENCH,
@@ -135,7 +136,11 @@ final class LanguagePanel extends javax.swing.JPanel {
         ArrayList<String> langDescr = new ArrayList<String>(locales.length);
         langDescr.add(NbBundle.getMessage(LanguagePanel.class, "options.lang.system"));
         for (Locale locale:locales){
-            langDescr.add(locale.getDisplayName(locale));
+            if (locale.getDisplayName(locale).equals("español")) {
+                langDescr.add("Castellano");
+            } else {
+                langDescr.add(locale.getDisplayName(locale));
+            }
         }
         return langDescr.toArray(new String[0]);
     }
