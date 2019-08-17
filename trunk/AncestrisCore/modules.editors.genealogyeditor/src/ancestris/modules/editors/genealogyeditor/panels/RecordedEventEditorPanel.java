@@ -123,7 +123,7 @@ public class RecordedEventEditorPanel extends javax.swing.JPanel {
 
         placeTextField.setText(org.openide.util.NbBundle.getMessage(RecordedEventEditorPanel.class, "RecordedEventEditorPanel.placeTextField.text")); // NOI18N
 
-        editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Place.png"))); // NOI18N
+        editPlaceButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/place.png"))); // NOI18N
         editPlaceButton.setToolTipText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("RecordedEventEditorPanel.editPlaceButton.toolTipText"), new Object[] {})); // NOI18N
         editPlaceButton.setFocusable(false);
         editPlaceButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
