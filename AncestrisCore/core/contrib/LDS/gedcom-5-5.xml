@@ -45,14 +45,14 @@
                     <FORM default="1" hide="2" xref="0" type="PropertyChoiceValue" img="Format" cardinality="1:1"/>
                     <FILE default="1" xref="0" type="PropertyFile" img="Disk" cardinality="0:M">
                     </FILE>
-                    <NOTE default="1" xref="0" type="PropertyNote|PropertyMultilineValue" img="Note" cardinality="0:1"/>
+                    <NOTE default="1" xref="0" type="PropertyNote|PropertyMultilineValue" img="Note" cardinality="0:M">
+                        <SOUR super="INDI:NAME:SOUR"/>
+                    </NOTE>
                 </OBJE>
                 <TEXT xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:M"/>
-                <NOTE type="PropertyNote|PropertyMultilineValue" img="Note"/>
+                <NOTE super="INDI:NAME:SOUR:OBJE:NOTE"/>
             </SOUR>
-            <NOTE type="PropertyNote|PropertyMultilineValue" img="Note">
-                <SOUR super="INDI:NAME:SOUR"/>
-            </NOTE>
+            <NOTE super="INDI:NAME:SOUR:OBJE:NOTE"/>
         </NAME>
         <SEX default="1" cardinality="0:1" type="PropertySex" img="Sex" img.male="Male" img.female="Female"/>
         +++++++++++++ Events +++++++++++++
@@ -157,7 +157,7 @@
             <FAMC hide="1" type="PropertyFamilyChild" img="Fam" cardinality="1:1"/>
         </SLGC>
         +++++++++++++ Relationships +++++++++++++
-        <NOTE super="INDI:NAME:NOTE"/>
+        <NOTE super="INDI:NAME:SOUR:OBJE:NOTE"/>
         <FAMC hide="1" type="PropertyFamilyChild" img="Fam">
             <PEDI type="PropertyChoiceValue" img="Type" cardinality="0:1"/>
             <NOTE super="INDI:NAME:NOTE"/>
@@ -253,7 +253,7 @@
         +++++++++++++ References +++++++++++++
         <NOTE super="INDI:NOTE"/>
         <SOUR super="INDI:SOUR"/>
-          <REFN super="INDI:REFN"/>
+        <REFN super="INDI:REFN"/>
         <RIN super="INDI:RIN"/>
         +++++++++++++ change +++++++++++++
         <CHAN hide="1" super="INDI:CHAN"/>
@@ -266,7 +266,7 @@
         <NAME default="1" type="PropertySimpleValue" img="Attribute" cardinality="1:1"/>
         <ADDR default="1" super="INDI:BIRT:ADDR"/>
         <PHON cardinality="0:3" type="PropertySimpleValue" img="Phone"/>
-        <NOTE type="PropertyMultilineValue" img="Note"/>
+        <NOTE super="INDI:NAME:SOUR:OBJE:NOTE"/>
         +++++++++++++ References +++++++++++++
         <REFN super="INDI:REFN"/>
         <RIN super="INDI:RIN"/>
@@ -295,7 +295,7 @@
         <OBJE super="INDI:OBJE"/>
         <NOTE super="INDI:NOTE"/>
         <REPO hide="1" type="PropertyRepository" img="Repository" cardinality="0:M">
-            <NOTE xref="1" type="PropertyNote|PropertyMultilineValue" img="Note"/>
+            <NOTE super="INDI:NOTE"/>
             <CALN xref="1" type="PropertySimpleValue" img="Attribute" cardinality="0:M">
                 <MEDI type="PropertyChoiceValue" img="Attribute" cardinality="0:1"/>
             </CALN>
