@@ -902,7 +902,7 @@ public abstract class Import implements ImportRunner {
 
         int nbLocs = PropertyPlace.getFormat(gedcom.getPlaceFormat()).length;
         List<PropertyPlace> places = (List<PropertyPlace>) gedcom.getPropertiesByClass(PropertyPlace.class);
-        int increment = places.size() / 10;
+        int increment = places.size() / 10 + 1;
         int counter = 0;
         for (PropertyPlace place : places) {
             // increment progress
@@ -1153,6 +1153,7 @@ public abstract class Import implements ImportRunner {
     }
 
     private class ImportEnt {
+
         protected boolean seen = false;
     }
 
