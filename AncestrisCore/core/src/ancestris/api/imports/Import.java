@@ -486,7 +486,10 @@ public abstract class Import implements ImportRunner {
         // Determine destination type : missing or invalid or correct
         if ((input.getLevel() == 1) && input.getTag().equals("DEST")) {
             String value = input.getValue();
-            if (value != null && (value.equals("ANSTFILE") || value.equals("TempleReady"))) {
+            // Add ANY as valid value : ancestris set this value, 
+            // a file created buy ancestris and imported will create a modification
+            // and define this tag as invalid.....
+            if (value != null && (value.equals("ANSTFILE") || value.equals("TempleReady") || value.equals("ANY"))) {
                 destination_found = TAG_VALID;
             } else {
                 destination_found = TAG_INVALID;
@@ -630,42 +633,49 @@ public abstract class Import implements ImportRunner {
         for (String k : hashIndis.keySet()) {
             if (!hashIndis.get(k).seen) {
                 output.writeLine(0, k, "INDI", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
         for (String k : hashFams.keySet()) {
             if (!hashFams.get(k).seen) {
                 output.writeLine(0, k, "FAM", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
         for (String k : hashNotes.keySet()) {
             if (!hashNotes.get(k).seen) {
                 output.writeLine(0, k, "NOTE", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
         for (String k : hashObjes.keySet()) {
             if (!hashObjes.get(k).seen) {
                 output.writeLine(0, k, "OBJE", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
         for (String k : hashSours.keySet()) {
             if (!hashSours.get(k).seen) {
                 output.writeLine(0, k, "SOUR", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
         for (String k : hashRepos.keySet()) {
             if (!hashRepos.get(k).seen) {
                 output.writeLine(0, k, "REPO", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
         for (String k : hashSubms.keySet()) {
             if (!hashSubms.get(k).seen) {
                 output.writeLine(0, k, "SUBM", null);
+                console.println(NbBundle.getMessage(Import.class, "Import.addMissingEntity", k));
                 nbChanges++;
             }
         }
@@ -701,6 +711,7 @@ public abstract class Import implements ImportRunner {
                 output.writeLine(input.getLevel(), input.getTag(), input.getValue());
                 output.writeLine(2, "FORM", getPlaceFormat(false));
                 place_found = TAG_VALID;
+                console.println(NbBundle.getMessage(Import.class, "Import.fixPlaceTag"));
                 nbChanges++;
                 return true;
             }
@@ -709,6 +720,7 @@ public abstract class Import implements ImportRunner {
                 output.writeLine(2, "FORM", getPlaceFormat(false));
                 output.writeLine(input.getLevel(), input.getXref(), input.getTag(), input.getValue());
                 place_found = TAG_VALID;
+                console.println(NbBundle.getMessage(Import.class, "Import.fixPlaceTag"));
                 nbChanges++;
                 return true;
             }
@@ -719,6 +731,7 @@ public abstract class Import implements ImportRunner {
                 input.getNextLine(true);
                 output.writeLine(input.getLevel(), input.getTag(), input.getValue());
                 place_found = TAG_VALID;
+                console.println(NbBundle.getMessage(Import.class, "Import.fixPlaceTag"));
                 nbChanges++;
                 return true;
             }
@@ -808,7 +821,8 @@ public abstract class Import implements ImportRunner {
             String date = input.getValue();
             if (date.contains("/")) {
                 date = convertDate(date);
-                output.writeLine(input.getLevel(), "DATE", date);
+                String result = output.writeLine(input.getLevel(), "DATE", date);
+                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidTag", input.getLine() + " ==> " + result));
                 nbChanges++;
                 return true;
             }
@@ -875,6 +889,7 @@ public abstract class Import implements ImportRunner {
                 if (!propName.isValid() || propName.hasWarning()) {
                     propName.fixNameValue();
                     hasErrors = true;
+                    console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", propName.getDisplayValue()));  
                     nbChanges++;
                 }
             }
@@ -918,6 +933,7 @@ public abstract class Import implements ImportRunner {
             }
             if (!place.setJurisdictions(gedcom, locs)) {
                 hasErrors = true;
+                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", place.getDisplayValue()));  
                 nbChanges++;
             }
         }
@@ -1024,6 +1040,7 @@ public abstract class Import implements ImportRunner {
             }
 
             // Delete from first asso entity
+            console.println(NbBundle.getMessage(Import.class, "Import.adjustAssos", id));
             prop.getParent().delProperty(prop);
             nbChanges++;
         }
@@ -1079,6 +1096,7 @@ public abstract class Import implements ImportRunner {
             for (Property p : event.getProperties()) {
                 movePropertiesRecursively(p, host);
             }
+            console.println(NbBundle.getMessage(Import.class, "Import.reduceEvents", event.getTag() + " : " + entity.getId()));  
             nbChanges++;
             entity.delProperty(event);
         }
