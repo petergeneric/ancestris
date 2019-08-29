@@ -2,9 +2,9 @@ package ancestris.modules.editors.genealogyeditor.panels;
 
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.editors.SourceEditor;
-import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.ConfidenceLevelComboBoxModel;
 import ancestris.modules.editors.genealogyeditor.models.EventsRoleComboBoxModel;
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager.ADialog;
 import genj.gedcom.*;
 import java.util.ArrayList;
@@ -620,17 +620,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 final Property p = sourceData.getProperty("DATE", false);
                 PropertyDate date = (PropertyDate) (p instanceof PropertyDate ? p : null);
                 if (date == null) {
-//                    try {
-//                        mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-//                            @Override
-//                            public void perform(Gedcom gedcom) throws GedcomException {
                     recordingDate.setContext(sourceData, null);
-//                            }
-//                        }); // end of doUnitOfWork
-//                    } catch (GedcomException ex) {
-//                        Exceptions.printStackTrace(ex);
-//                    }
                 } else {
                     recordingDate.setContext(date);
                 }
@@ -643,18 +633,7 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                     mSourceTextModified = false;
                 }
             } else {
-//                try {
-//                    mRoot.getGedcom().doUnitOfWork(new UnitOfWork() {
-
-//                        @Override
-//                        public void perform(Gedcom gedcom) throws GedcomException {
-//                            Property sourceData = sourceCitation.addProperty("DATA", "");
                 recordingDate.setContext(sourceCitation, new TagPath(".:DATA"), (Property) null, (String) null);
-//                        }
-//                    }); // end of doUnitOfWork
-//                } catch (GedcomException ex) {
-//                    Exceptions.printStackTrace(ex);
-//               }
             }
         } else {
             addSourceButton.setVisible(false);
@@ -723,38 +702,41 @@ public class SourceCitationEditorPanel extends javax.swing.JPanel {
                 mEventRoleModified = false;
                 Property eventType = mSourceCitation.getProperty("EVEN");
                 Property eventRole = eventType.getProperty("ROLE");
-                if (eventRole == null) {
-                    if (eventRoleComboBox.getSelectedIndex() == 0) {
-                        eventType.addProperty("ROLE", eventRoleComboBox.getSelectedItem().toString());
-                    } else if (eventRoleComboBox.getSelectedIndex() == 1) {
-                        eventType.addProperty("ROLE", "CHIL");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 2) {
-                        eventType.addProperty("ROLE", "HUSB");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 3) {
-                        eventType.addProperty("ROLE", "WIFE");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 4) {
-                        eventType.addProperty("ROLE", "MOTH");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 5) {
-                        eventType.addProperty("ROLE", "FATH");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 6) {
-                        eventType.addProperty("ROLE", "SPOU");
+                final String roleValue;
+                switch (eventRoleComboBox.getSelectedIndex()) {
+                    case -1:
+                        roleValue = eventRoleComboBox.getSelectedItem().toString();
+                        break;
+                    case 1:
+                        roleValue = "CHIL";
+                        break;
+                    case 2:
+                        roleValue = "HUSB";
+                        break;
+                    case 3:
+                        roleValue = "WIFE";
+                        break;
+                    case 4:
+                        roleValue = "MOTH";
+                        break;
+                    case 5:
+                        roleValue = "FATH";
+                        break;
+                    case 6:
+                        roleValue = "SPOU";
+                        break;
+                    default:
+                        roleValue = null;
+                        break;
+                }
+                if (roleValue != null && !"".equals(roleValue)) {
+                    if (eventRole == null) {
+                        eventType.addProperty("ROLE", roleValue);
+                    } else {
+                        eventRole.setValue(roleValue);
                     }
-                } else {
-                    if (eventRoleComboBox.getSelectedIndex() == 0) {
-                        eventRole.setValue(eventRoleComboBox.getSelectedItem().toString());
-                    } else if (eventRoleComboBox.getSelectedIndex() == 1) {
-                        eventRole.setValue("CHIL");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 2) {
-                        eventRole.setValue("HUSB");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 3) {
-                        eventRole.setValue("WIFE");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 4) {
-                        eventRole.setValue("MOTH");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 5) {
-                        eventRole.setValue("FATH");
-                    } else if (eventRoleComboBox.getSelectedIndex() == 6) {
-                        eventRole.setValue("SPOU");
-                    }
+                } else if (eventRole != null) {
+                    eventType.delProperty(eventRole);
                 }
             }
 
