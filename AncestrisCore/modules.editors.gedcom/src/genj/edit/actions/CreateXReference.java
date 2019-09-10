@@ -57,7 +57,7 @@ public class CreateXReference extends CreateRelationship {
             return null;
         // ask a sample
         try {
-            Property sample = source.getMetaProperty().getNested(sourceTag, false).create("@@");
+            Property sample = source.getMetaProperty().getNested(sourceTag, false).create("@@@");
             if (!(sample instanceof PropertyXRef)) {
                 return null;
             }

@@ -288,7 +288,9 @@ public class MetaProperty implements Comparable<MetaProperty> {
       result = new PropertySimpleValue(getTag()); 
     }
     
-    result.setValue(value);
+    final String escapedValue = value.replaceAll("@@","@");
+    
+    result.setValue(escapedValue);
     
     // increate count
     isInstantiated = true;
@@ -356,8 +358,13 @@ public class MetaProperty implements Comparable<MetaProperty> {
     for (Class<? extends Property> type : getTypes()) {
       
       // check for valid xref values (20070104 since values are not trimmed by loaders we do this here) 
-      if (PropertyXRef.class.isAssignableFrom(type) && !(value.trim().startsWith("@")&&value.trim().endsWith("@")) ) 
+      if (PropertyXRef.class.isAssignableFrom(type) && !(value.trim().startsWith("@")&&value.trim().endsWith("@")) ) {
         continue;
+      }
+      // Check for double @ which is escape sequence
+      if (PropertyXRef.class.isAssignableFrom(type) && (value.trim().startsWith("@@")) ) {
+        continue;
+      }
       
       // use that
       return type;

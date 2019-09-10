@@ -1075,7 +1075,8 @@ public abstract class Import implements ImportRunner {
     }
 
     private void memorizeProperty(String tag, HashMap<String, ImportEnt> hashEntities) {
-        if (input.getTag().equals(tag) && input.getValue().startsWith("@") && input.getValue().endsWith("@")) {
+        // if begin with 2@ this is an escape and note a key
+        if (input.getTag().equals(tag) && input.getValue().startsWith("@") && input.getValue().endsWith("@")&& !input.getValue().startsWith("@@")) {
             String value = input.getValue();
             value = value.substring(1, value.length() - 1);
             if (!hashEntities.containsKey(value)) {
