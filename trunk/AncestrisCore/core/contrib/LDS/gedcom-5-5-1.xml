@@ -16,6 +16,7 @@
     *************************************
     <HEAD type="Entity">
         <NOTE default="0" xref="0" type="PropertyMultilineValue" img="Note" cardinality="0:1"/>
+        <SUBM hide="1" type="PropertySubmitter" img="Submitter"/>
     </HEAD>
 
     *************************************

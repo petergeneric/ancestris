@@ -22,6 +22,7 @@ package genj.io;
 import genj.gedcom.Entity;
 import genj.gedcom.MultiLineProperty;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyXRef;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -84,8 +85,12 @@ public class PropertyWriter {
     // multiline or one-line?
     if (prop instanceof MultiLineProperty)
       writeMultiLine(level, prop);
-    else
+    else if (prop instanceof PropertyXRef) {
       writeLine(level, getTag(prop), getValue(prop));
+    } else {
+        String value = getValue(prop);
+        writeLine(level, getTag(prop), value.replaceAll("@", "@@"));
+    }
 
     // sub properties
     int num = prop.getNoOfProperties();
@@ -120,7 +125,7 @@ public class PropertyWriter {
     
     // prep an iterator to loop through lines in this property
     MultiLineProperty.Iterator lines = ((MultiLineProperty)prop).getLineIterator();
-    lines.setValue(getValue(prop));
+    lines.setValue(getValue(prop).replaceAll("@", "@@"));
     
     // loop it
     writeLine(level + lines.getIndent(), getTag(prop), lines.getValue());

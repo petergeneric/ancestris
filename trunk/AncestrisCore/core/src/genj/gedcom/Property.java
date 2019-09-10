@@ -927,85 +927,7 @@ public abstract class Property implements Comparable<Property> {
 
         return Property.toArray(result);
     }
-
-//  private static Property getPropertyRecursively(Property prop, TagPath path, int pos, List listAll, boolean checkPropsTagFirst) {
-//    
-//    while (true) {
-//
-//      // traversed path?
-//      if (pos==path.length()) {
-//        if (listAll!=null)
-//          listAll.add(prop);
-//        return prop;
-//      }
-//      
-//      // a '..'?
-//      if (path.equals(pos, "..")) {
-//        Property parent = prop.getParent();
-//        // no parent?
-//        if (parent==null)
-//          return null;
-//        // continue with parent
-//        prop = parent;
-//        pos++;
-//        checkPropsTagFirst = false;
-//        continue;
-//      }
-//      
-//      // a '.'?
-//      if (path.equals(pos, ".")) {
-//        // continue with self
-//        pos++;
-//        checkPropsTagFirst = false;
-//        continue;
-//      }
-//
-//      // a '*'?
-//      if (path.equals(pos, "*")) {
-//        // check out target
-//        if (!(prop instanceof PropertyXRef))
-//          return null;
-//        prop = ((PropertyXRef)prop).getTarget();
-//        if (prop==null)
-//          return null;
-//        // continue with prop
-//        pos++;
-//        checkPropsTagFirst = false;
-//        continue;
-//      }
-//
-//      // still have to match prop's tag?
-//      if (checkPropsTagFirst) {
-//        if (!path.equals(pos, prop.getTag()))
-//          return null;
-//        // go with prop then
-//        pos++;
-//        checkPropsTagFirst = false;
-//        continue;
-//      }
-//      
-//      // Search for appropriate tag in children
-//      for (int i=0;i<prop.getNoOfProperties();i++) {
-//
-//        Property ith = prop.getProperty(i);
-//
-//        // tag is good?
-//        if (path.equals(pos, ith.getTag())) {
-//          // find all or select one specific based on (tag, selector)?
-//          if (listAll!=null) {
-//            getPropertyRecursively(ith, path, pos+1, listAll, false);
-//          } else {
-//            return getPropertyRecursively(ith, path, pos+1, null, false);
-//          }
-//        }
-//      }
-//      
-//      // no recursion left
-//      return null;
-//          
-//    }
-//    
-//  }
+    
     /**
      * Returns the Gedcom-Tag of this property
      */
@@ -1604,7 +1526,7 @@ public abstract class Property implements Comparable<Property> {
                 prop = property;
                 value = property.getValue();
                 // remove @ chars (ie in PropertyXRef)
-                if (value.startsWith("@") && value.endsWith("@")) {
+                if (prop instanceof PropertyXRef && value.startsWith("@") && value.endsWith("@")) {
                     value = value.substring(1, value.length() - 1);
                 }
                 break;
