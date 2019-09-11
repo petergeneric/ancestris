@@ -209,7 +209,7 @@ public class AssoWrapper {
 
         // If association is null, create it
         if (assoProp == null) {
-            PropertyXRef assoXref = (PropertyXRef) assoIndi.addProperty("ASSO", "@@");
+            PropertyXRef assoXref = (PropertyXRef) assoIndi.addProperty("ASSO", "@");
             assoProp = (PropertyAssociation) assoXref;
         } else {
             removeLink(assoProp);

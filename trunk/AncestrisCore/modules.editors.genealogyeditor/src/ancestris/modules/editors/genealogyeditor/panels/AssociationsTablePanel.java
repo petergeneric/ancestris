@@ -123,7 +123,7 @@ public class AssociationsTablePanel extends javax.swing.JPanel {
 
                 @Override
                 public void perform(Gedcom gedcom) throws GedcomException {
-                    mAssociation = (PropertyAssociation) mRootEntity.addProperty("ASSO", "@@");
+                    mAssociation = (PropertyAssociation) mRootEntity.addProperty("ASSO", "@");
                 }
             });
             associationEditorPanel.set(mRootEntity, mAssociation, null);
