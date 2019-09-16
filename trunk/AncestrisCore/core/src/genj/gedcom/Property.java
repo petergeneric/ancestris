@@ -296,6 +296,15 @@ public abstract class Property implements Comparable<Property> {
     public Property addSimpleProperty(String tag, String value, int pos) {
         return addProperty(new PropertySimpleValue(tag, value), pos);
     }
+    
+    /**
+     * Adds a sub-property to this property
+     */
+    public Property addPropertyXref(String tag, String value, int pos) {
+        PropertyAssociation myProp = new PropertyAssociation(tag);
+        myProp.setValue(value);
+        return addProperty(myProp, pos);
+    }
 
     /**
      * Adds a sub-property to this property
