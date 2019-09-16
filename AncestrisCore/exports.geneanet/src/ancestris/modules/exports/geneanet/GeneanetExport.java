@@ -177,7 +177,8 @@ public class GeneanetExport {
             prop.getParent().delProperty(prop);
 
             // Add to second asso entity
-            Property parent = propAsso.addProperty("ASSO", "@" + indiRela.getId() + "@");
+            // Need to be XRef to avoid duplication of @            
+            Property parent = propAsso.addPropertyXref("ASSO", indiRela.getId(), -1);
             if (is55) {
                 parent.addProperty("TYPE", type);
             }
