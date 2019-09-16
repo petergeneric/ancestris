@@ -391,7 +391,7 @@ public class GeneanetExport {
             }
         }
         sbForm.append("] - ");
-        sbForm.append(datForm.getSubstringFrom(pos));
+        sbForm.append(datForm.getSubstringFrom(pos).trim());
         gedcom.setPlaceFormat(sbForm.toString());
 
         final List<Property> allPlaces = (List<Property>) gedcom.getPropertiesByClass(PropertyPlace.class);
@@ -409,7 +409,7 @@ public class GeneanetExport {
                 if (!"".equals(subdivision.replaceAll(PropertyPlace.JURISDICTION_SEPARATOR, "").trim())) {
                     sb.append('[').append(subdivision).append("] - ");
                 }
-                sb.append(dat.getSubstringFrom(pos));
+                sb.append(dat.getSubstringFrom(pos).trim());
 
                 final String result = sb.toString();
                 allUniquePlaces.put(place.getValue(), result);
