@@ -22,8 +22,8 @@ package genj.io;
 import genj.gedcom.Entity;
 import genj.gedcom.MultiLineProperty;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyXRef;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.Writer;
@@ -85,7 +85,7 @@ public class PropertyWriter {
     // multiline or one-line?
     if (prop instanceof MultiLineProperty)
       writeMultiLine(level, prop);
-    else if (prop instanceof PropertyXRef) {
+    else if (prop instanceof PropertyXRef || prop instanceof PropertyDate) {
       writeLine(level, getTag(prop), getValue(prop));
     } else {
         String value = getValue(prop);
