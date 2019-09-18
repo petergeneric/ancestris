@@ -70,7 +70,7 @@ public class Gedcom implements Comparable {
         UNICODE = "UNICODE",    // Multiple international languages at the same time. Larger space. Diacritic characters appear clearly in raw gedcom file.
                                 // ***International character set enabling more than 110,000 characters covering 100 scripts
                                 //    With WriteBOM, corresponds to UTF-16
-        ANSEL = "ANSEL",        // Obsolete since 14-feb-2013, remplaced by unicode - extension of latin alphabet. Only one international alphabet at a time. 
+        ANSEL = "ANSEL",        // Obsolete since 14-feb-2013, replaced by unicode - extension of latin alphabet. Only one international alphabet at a time. 
                                 // ***American National Standard for Extended Latin Alphabet Coded Character Set for Bibliographic Use
                                 // => enable accentuation being displayed correctly, but accentuation characters are stored over two bytes. 
                                 //    Gedcom file not displaying accentuation properly
@@ -79,7 +79,7 @@ public class Gedcom implements Comparable {
         ANSI = "ANSI",          // Obsolete - American National Standard Institute
                                 // a.k.a. Windows-1252 (@see http://www.hclrss.demon.co.uk/demos/ansi.html)
         LATIN1 = "LATIN1",      // Obsolete - Western Europe languages (a.k.a ISO-8859-1)
-        ASCII = "ASCII";        // No diacritic characters possible / Aucun caractère accentué (ASCII). Converted to ISO-8859-1 in Ancestris
+        ASCII = "ASCII";        // No diacritic characters possible. Converted to ISO-8859-1 in Ancestris
                                 // we're using ISO-8859-1 actually to make extended characters possible - the spec is grayish on that one
 
     /** encodings including the non Gedcom-standard encodings LATIN1 and ANSI */
