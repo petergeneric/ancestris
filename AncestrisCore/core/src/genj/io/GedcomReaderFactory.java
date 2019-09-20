@@ -34,7 +34,6 @@ import genj.util.EnvironmentChecker;
 import genj.util.MeteredInputStream;
 import genj.util.Origin;
 import genj.util.Resources;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -498,7 +497,7 @@ public class GedcomReaderFactory {
                     }
 
                     // preserve value for those who care
-                    result.setValue(value);
+                    result.setValue(value.replaceAll("@@","@"));
 
                     // continue into properties
                     readProperties(result, 0, 0);

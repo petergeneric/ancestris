@@ -26,7 +26,6 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyXRef;
 import genj.util.Resources;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
@@ -135,7 +134,7 @@ public class PropertyReader {
         // next line
       } 
       // commit collected value
-      prop.setValue(collector.getValue());
+      prop.setValue(collector.getValue().replaceAll("@@", "@"));
     }
     
   
