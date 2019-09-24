@@ -197,7 +197,7 @@ public class ReportLinesCirc extends Report {
         initUserOptions();
 
         // ask for file
-        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true, FileChooserBuilder.getPdfFilter().getExtensions()[0]);
+        File file = getFileFromUser(translate("output.file"), AbstractAncestrisAction.TXT_OK, true, FileChooserBuilder.getPdfFilter().getExtensions()[1]);
         if (file == null) {
             return null;
         }
@@ -1108,183 +1108,12 @@ public class ReportLinesCirc extends Report {
 
     private void main(Indi person, Fam fam) {
         int psex = (person.getSex() == PropertySex.MALE) ? 0 : 1;
-        /*	monthformat(4)
-        stddate(0)
-        dayformat(2)
-
-        set(version, "ps-circle.ll version 2.6.2, 10 December 2003 - code by Henry Sikkema")
-         */
-        //numindilines=-1;
-        //    nummarr=-1;
-	  /*
-        set(mc, -1)
-
-        while (lt(mc,0)){
-        list(options)
-        setel(options,1,"Family in centre (husband/wife).")
-        setel(options,2,"Individual in centre")
-        set(mc,menuchoose(options, "Select the number of generations you want printed:"))
-        if(eq(mc,0)){break()}
-        if(eq(mc,1)){set(indicentre,0)	getfam(fam)}
-        if(eq(mc,2)){set(indicentre,1)	getindi(person)}
-        }*/
-        //indicentre=1;
-	/*
-        list(options)
-        setel(options,1,"5 generations.")
-        setel(options,2,"6 generations.")
-        setel(options,3,"7 generations.")
-        setel(options,4,"8 generations.")
-        setel(options,5,"9 generations.")
-        setel(options,6,"10 generations.")
-        set(maxlevel,menuchoose(options, "Select the numbers of generation you want printed:"))
-        if(eq(maxlevel,0)){break()}
-        set(maxlevel,add(maxlevel,4))
-         */
-        //maxlevel = 6;
-	/*
-        list(options)
-        setel(options,1,"Full birth date info if no date is given: ex b:11 Oct 1758")
-        setel(options,2,"Year only format:  example (1758-1823)")
-        setel(options,3,"Year only format (spaces for unknown date) ex: (    -1823)")
-        set(mc, menuchoose(options, "Select date format:"))
-        if(eq(mc,0)){break()}
-        if(eq(mc,1)){set(dateformat,1)}
-        if(eq(mc,2)){set(dateformat,2)}
-        if(eq(mc,3)){set(dateformat,3)}
-         */
-        //dateformat = 1;
-	/*
-        list(options)
-        setel(options,1,"Yes, print marriage dates only if exact date is known.")
-        setel(options,2,"Yes, print marriage date even when estimate is found in file")
-        setel(options,3,"No, do not print marriage dates.")
-        set(mc, menuchoose(options, "Print marriage dates?"))
-        if(eq(mc,0)){break()}
-        if(eq(mc,1)){set(printmarr,1)set(marrest,0)}
-        if(eq(mc,3)){set(printmarr,0)}
-        if(eq(mc,2)){set(printmarr,1)set(marrest,1)}
-         */
-        //printmarr=0;
-	/*	list(options)
-        setel(options,1,"Colour text (default: blue for males, red for females)")
-        setel(options,2,"Black Text  (best for printing on non-colour printers)")
-        set(mc, menuchoose(options, "Select text colour option:"))
-        if(eq(mc,0)){break()}
-        if(eq(mc,1)){set(colourtext,1)}
-        if(eq(mc,2)){set(colourtext,0)}
-         */
-        //colourtext = 0;
-	/*
-        list(options)
-        setel(options,1,"Gender Specific Colour scheme (default: pink for males, light blue for females)")
-        setel(options,2,"Transparent Background (best for printing on non-colour printers)")
-        setel(options,3,"Gradient Colour scheme")
-        set(mc,menuchoose(options, "Select text colour option:"))
-        if (eq(mc,0)){break()}
-        if (eq(mc,1)){set(alternating,1)set(gradient,0)}
-        if (eq(mc,2)){set(alternating,0)set(gradient,0)}
-        if (eq(mc,3)){set(alternating,0)set(gradient,1)}
-         */
-        //alternating = 0; gradient = 1;
-        //alternating = 0; gradient = 0;
-	/*	list(options)
-        setel(options,1,"Yes, put on today's date.")
-        setel(options,2,"No, do not put on today's date.")
-        set(mc,menuchoose(options, "Do you want today's date printed on the circle?"))
-        if (eq(mc,0)){break()}
-        if (eq(mc,1)){set(printdate,1)}
-        if (eq(mc,2)){set(printdate,0)}
-         */
-        //printdate = 0;
-	/*	list(options)
-        setel(options,1,"Helvetica/Arial")
-        setel(options,2,"Times-Roman")
-        setel(options,3,"Courier")
-        setel(options,4,"AvantGarde-Book")
-        setel(options,5,"Times-Roman")
-        setel(options,6,"ZapfChancery")
-
-        set(mc,menuchoose(options, "Choose a font to use:"))
-        if (eq(mc,0)){break()}
-        if (eq(mc,1)){set(font_name,"Helvetica")}
-        if (eq(mc,2)){set(font_name,"Times-Roman")}
-        if (eq(mc,3)){set(font_name,"Courier")}
-        if (eq(mc,4)){set(font_name,"AvantGarde-Book")}
-        if (eq(mc,5)){set(font_name,"Palatino-Roman")}
-        if (eq(mc,6)){set(font_name,"ZapfChancery")}
-         */
-        //font_name = "Times-Roman";
-
-        /*	list(options)
-        setel(options,1,"Single page (maximum circle size on a single page)")
-        setel(options,2,"Multipage according to number of pages selected")
-        setel(options,3,"Multipage according to radius of chart")
-        set(mc,menuchoose(options, "Select page type: "))
-        if (eq(mc,0)){break()}
-        if (eq(mc,1)){
-        set(x_pages,1)set(y_pages,1)set(radius,0)
-        }
-        if(gt(mc,1)){
-        print(   "Radius (inches)  # of pages  Radius (inches)  # of pages"
-        ,nl(),"  0-8               1x1=1     32-33             4x4=16"
-        ,nl(),"  8-10              2x1=2     33-42             5x4=20"
-        ,nl()," 10-16              2x2=4     42-43             6x4=24"
-        ,nl()," 16-21              3x2=6     43-50             6x5=30"
-        ,nl()," 21-25              3x3=9     50-54             7x5=35"
-        ,nl()," 25-32              4x3=12    54-59             7x6=42",nl()
-        )
-        }
-        if (eq(mc,2)){
-        getint( x_pages, "Number of horizontal portrait pages on chart")
-        getint( y_pages, "Number of vertical portrait pages on chart")
-        set(radius,0)
-        }
-        if (eq(mc,3)){
-        getint(radius, "Enter desired radius in inches:")
-        if (le(radius,8)){set(x_pages,1)set(y_pages,1)}
-        if (and(ge(radius,8),lt(radius,10))){set(x_pages,2)set(y_pages,1)}
-        if (and(ge(radius,10),lt(radius,16))){set(x_pages,2)set(y_pages,2)}
-        if (and(ge(radius,16),lt(radius,21))){set(x_pages,3)set(y_pages,2)}
-        if (and(ge(radius,21),lt(radius,25))){set(x_pages,3)set(y_pages,3)}
-        if (and(ge(radius,25),lt(radius,32))){set(x_pages,4)set(y_pages,3)}
-        if (and(ge(radius,32),lt(radius,33))){set(x_pages,4)set(y_pages,4)}
-        if (and(ge(radius,33),lt(radius,42))){set(x_pages,5)set(y_pages,4)}
-        if (and(ge(radius,42),lt(radius,43))){set(x_pages,6)set(y_pages,4)}
-        if (and(ge(radius,43),lt(radius,50))){set(x_pages,6)set(y_pages,5)}
-        if (and(ge(radius,50),lt(radius,54))){set(x_pages,7)set(y_pages,5)}
-        if (and(ge(radius,54),lt(radius,59))){set(x_pages,7)set(y_pages,6)}
-        }
-         */
-        //	x_pages=1; y_pages=1; radius=8;
-	/*
-         **  ISO-Latin 1, or ISO 8859-1, is a world-wide standard for most languages
-         **  of Latin origin: Albanian, Basque, Breton, Catalan, Cornish, Danish, Dutch
-         **  English, Faroese, Finish (exc. S,s,Z,z with caron),
-         **  French (exc. OE, oe, Y with dieresis), Frisian, Galician, German,
-         **  Greenlandic, Icelandic, Irish Gaelic (new orthography), Italian, Latin,
-         **  Luxemburgish, Norwegian, Portuguese, Rhaeto-Romanic, Scottish Gaelic,
-         **  Spanish, Swedish.
-         **
-         **  ISO Latin 2, or ISO 8859-2, covers these languages:  Albanian, Croatian,
-         **  Czech, English, German, Hungarian, Latin, Polish, Romanian (cedilla below
-         **  S,s,T,t instead of comma), Slovak, Sloverian, Sorbian.
-         */
-        /*	 list(options)
-        setel(options, 1, "ISO Latin 1 most West European languages")
-        setel(options, 2, "ISO Latin 2 Central and East European languages")
-        setel(options, 3, "IBM PC (covers at least the international chars)")
-        set(enc_choice, menuchoose(options,
-        "Select font reencoding, or (q) to use what's in the fonts"))
-        if (eq(enc_choice,0)){break()}
-         */
-        //	enc_choice=1;
+        
+       
         printfile();
 
         if (printdate) {
-            //		monthformat(6) /*capitalized full word (eg, January, February) */
             writer.println("/datetoday (Date: " + PointInTime.getNow().toString() + ") def\n\n");
-            //monthformat(4) /*capitalized abbreviation (eg, Jan, Feb) */
         }
 
         writer.println("/indicentre " + d(indicentre) + " def %1=put individual in centre,0=family at centre");
