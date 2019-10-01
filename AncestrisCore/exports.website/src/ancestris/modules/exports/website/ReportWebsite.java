@@ -1471,6 +1471,18 @@ public class ReportWebsite extends Report {
             Element appendTo, Html html, List<String> handledProperties) {
         // List who is referencing this source, not part of the source file but exists when running the code
         List<PropertyXRef> refs = ent.getProperties(PropertyXRef.class);
+        // SUBM in HEAD is now XREF but HEAD has no ID. Remove it from references.
+        PropertyXRef head = null;
+        for (PropertyXRef ref : refs) {
+            Entity e = ref.getTargetEntity();
+            if (e != null && "HEAD".equals(e.getTag())) {
+                head = ref;
+                break;
+            }
+        }
+        if (head != null) {
+            refs.remove(head);
+        }
         if (refs.size() > 0) {
             appendTo.appendChild(html.h2(translateLocal("references")));
             Element p = html.p();
