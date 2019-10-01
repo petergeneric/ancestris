@@ -37,8 +37,11 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -46,6 +49,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JOptionPane;
@@ -82,6 +86,8 @@ autostore = false)
 @ServiceProvider(service=AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, Filter {
+    
+     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     private genj.util.Registry registry = null;
     
@@ -149,6 +155,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public void init(Context context) {
+        LOG.info("GeoMap enter init : "+ displayTime(System.currentTimeMillis()));
         super.init(context);
         ToolTipManager.sharedInstance().setDismissDelay(10000);
 
@@ -170,11 +177,13 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (result == null) {
             result = addLookupListener(context);
         }
+        LOG.info("GeoMap exit init : "+ displayTime(System.currentTimeMillis()));
 
     }
 
     @Override
     public boolean createPanel() {
+        LOG.info("GeoMap enter createPanel : "+ displayTime(System.currentTimeMillis()));
         try {
             osmUrl = new URL("http://tile.openstreetmap.org/");
         } catch (MalformedURLException ex) {
@@ -210,6 +219,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         initMarkersList();
         applyFilters();
         jXMapKit1.setDataProviderCreditShown(true);
+        
+        LOG.info("GeoMap exit CreatePanel : "+ displayTime(System.currentTimeMillis()));
         return true;
     }
 
@@ -1274,15 +1285,18 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     // Check access to map tiles
     private void checkConnection(boolean mute) {
+        LOG.info("GeoMap enter checkConnection : "+ displayTime(System.currentTimeMillis()));
         try {
             if (isBusyChecking) {
                 return;
             }
             isBusyChecking = true;
             lastCheckTimeStamp = System.currentTimeMillis();
+            LOG.info("GeoMap check server : "+ displayTime(System.currentTimeMillis()));
             URLConnection uc = osmUrl.openConnection();
             uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
             uc.getInputStream();
+            LOG.info("GeoMap end check server : "+ System.currentTimeMillis());
         } catch (IOException ex) {
             if (!mute) {
                 DialogManager.createError(
@@ -1297,7 +1311,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         isConnectionOn = true;
         isBusyChecking = false;
+        LOG.info("GeoMap exit checkConnexion : "+ displayTime(System.currentTimeMillis()));
         return;
+    }
+    
+    private static String displayTime(long time) {
+        final DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
+        final Date d = new Date(time);
+        return df.format(d);
     }
 
 
