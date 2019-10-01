@@ -782,6 +782,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     private void applyFiltersNow() {
+        LOG.info("GeoMap enter geopointList : "+ displayTime(System.currentTimeMillis()));
         if (isBusyRecalc) {
             return;
         }
@@ -824,9 +825,11 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         hoverPanel.setVisible(false); 
         jRefreshButton.setEnabled(true);
         isBusyRecalc = false;
+        LOG.info("GeoMap exit GeopointList : "+ displayTime(System.currentTimeMillis()));
     }
 
     private void displayMarkers() {
+        LOG.info("GeoMap enter displayList : "+ displayTime(System.currentTimeMillis()));
         WaypointPainter painter = new WaypointPainter();
         if (displayMarkers) {
             painter.setWaypoints(new HashSet(geoPoints));
@@ -839,6 +842,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         jXMapKit1.setAddressLocationPainter(painter);
         jXMapKit1.repaint();
+        LOG.info("GeoMap exit DisplayList : "+ displayTime(System.currentTimeMillis()));
     }
 
     Set<GeoPosition> getPositionsFromMarkers() {
@@ -1296,7 +1300,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             URLConnection uc = osmUrl.openConnection();
             uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
             uc.getInputStream();
-            LOG.info("GeoMap end check server : "+ System.currentTimeMillis());
+            LOG.info("GeoMap end check server : "+ displayTime(System.currentTimeMillis()));
         } catch (IOException ex) {
             if (!mute) {
                 DialogManager.createError(
