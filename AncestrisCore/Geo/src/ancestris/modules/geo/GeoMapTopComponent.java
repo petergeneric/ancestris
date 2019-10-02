@@ -82,22 +82,26 @@ import org.openide.windows.WindowManager;
  * Top component which displays something.
  */
 @ConvertAsProperties(dtd = "-//ancestris.modules.geo//GeoMap//EN",
-autostore = false)
-@ServiceProvider(service=AncestrisViewInterface.class)
+        autostore = false)
+@ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GeoMapTopComponent extends AncestrisTopComponent implements GeoPlacesListener, Filter {
-    
-     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
+
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     private genj.util.Registry registry = null;
-    
-    /** Handle internet connection */
+
+    /**
+     * Handle internet connection
+     */
     private boolean isConnectionOn = true;
     private URL osmUrl;
     private boolean isBusyChecking = false;
     private long lastCheckTimeStamp = 0;
-    
-    /** path to the icon used by the component and its open action */
+
+    /**
+     * path to the icon used by the component and its open action
+     */
     static final String ICON_PATH = "ancestris/modules/geo/geo.png";
     private static final String PREFERRED_ID = "GeoMapTopComponent";
     //
@@ -133,7 +137,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     //
     private Set<Entity> connectedEntities = new HashSet<>();
 
-
     public GeoMapTopComponent() {
         super();
     }
@@ -155,7 +158,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     @Override
     public void init(Context context) {
-        LOG.info("GeoMap enter init : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap enter init : " + displayTime(System.currentTimeMillis()));
         super.init(context);
         ToolTipManager.sharedInstance().setDismissDelay(10000);
 
@@ -165,6 +168,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             public void changedResults(Gedcom gedcom) {
                 applyFilters();
             }
+
             @Override
             public void closing(Gedcom gedcom) {
                 geoFilter.selectedSearch = false;
@@ -172,42 +176,46 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             }
         };
         searchCommunicator.setGedcom(context.getGedcom());
-        
+
         // Listener to selected individual
         if (result == null) {
             result = addLookupListener(context);
         }
-        LOG.info("GeoMap exit init : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap exit init : " + displayTime(System.currentTimeMillis()));
 
     }
 
     @Override
     public boolean createPanel() {
-        LOG.info("GeoMap enter createPanel : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap enter createPanel : " + displayTime(System.currentTimeMillis()));
         try {
             osmUrl = new URL("http://tile.openstreetmap.org/");
         } catch (MalformedURLException ex) {
         }
         checkConnection(false);
         // TopComponent window parameters
+        LOG.info("GeoMap enter initComponents : " + displayTime(System.currentTimeMillis()));
         initComponents();
+        LOG.info("GeoMap exit initComponents : " + displayTime(System.currentTimeMillis()));
         loadSettings();
         geoFilter.setGedcom(getGedcom());
         hoverPanel = new HoverPanel(this);
         hoverPanel.setVisible(false);
+        LOG.info("GeoMap enter JMapKit : " + displayTime(System.currentTimeMillis()));
         if (isConnectionOn) {
             jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps);
         } else {
             jXMapKit1.setTileFactory(new EmptyTileFactory());
         }
         jXMapKit1.getMainMap().add(hoverPanel);
-        
+
         // Add listener for zoom adapter
         jXMapKit1.getMainMap().addPropertyChangeListener(new java.beans.PropertyChangeListener() {
             public void propertyChange(java.beans.PropertyChangeEvent evt) {
                 jXMapKit1PropertyChange(evt);
             }
         });
+        LOG.info("GeoMap exit JMapKit : " + displayTime(System.currentTimeMillis()));
 
         // Set settings
         customiseFromSettings();
@@ -219,8 +227,8 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         initMarkersList();
         applyFilters();
         jXMapKit1.setDataProviderCreditShown(true);
-        
-        LOG.info("GeoMap exit CreatePanel : "+ displayTime(System.currentTimeMillis()));
+
+        LOG.info("GeoMap exit CreatePanel : " + displayTime(System.currentTimeMillis()));
         return true;
     }
 
@@ -245,9 +253,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return markers;
     }
 
-    
-    
-    
     // FL : code taken from TreeView.java
     private Lookup.Result<SelectionActionEvent> addLookupListener(Context context) {
         Lookup.Result<SelectionActionEvent> r;
@@ -274,12 +279,10 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return returnValue;
     }
 
-    
-    
-    /** This method is called from within the constructor to
-     * initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is
-     * always regenerated by the Form Editor.
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
      */
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -599,44 +602,46 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }//GEN-LAST:event_jToggleShowUnknownActionPerformed
 
     /**
-     * Detect property change to zoom and save settings
-     * In addition, include Internet connection detection : with no connection, the tiles retrieval from the internet crashes with many messages.
-     * FL 2018-06-16 - : I cannot grab the exception from within JXMapKit, therefore I retest connection every time.
-     * It is a bit time consumming but otherwise, in case of lost connection, there would be many error messages (1 for each tile).
-     * To avoid slow map movements, leave 5 seconds between 2 checks.
-     * 
-     * @param evt 
+     * Detect property change to zoom and save settings In addition, include
+     * Internet connection detection : with no connection, the tiles retrieval
+     * from the internet crashes with many messages. FL 2018-06-16 - : I cannot
+     * grab the exception from within JXMapKit, therefore I retest connection
+     * every time. It is a bit time consumming but otherwise, in case of lost
+     * connection, there would be many error messages (1 for each tile). To
+     * avoid slow map movements, leave 5 seconds between 2 checks.
+     *
+     * @param evt
      */
-    private void jXMapKit1PropertyChange(java.beans.PropertyChangeEvent evt) {                                         
-        
+    private void jXMapKit1PropertyChange(java.beans.PropertyChangeEvent evt) {
+
         // Get property
         String pn = evt.getPropertyName();
-        
-        // Detect internet connection status and dynamic
-        boolean isBeforeOn = isConnectionOn;
-        if (System.currentTimeMillis() - lastCheckTimeStamp > 5000) {
-            checkConnection(true);
-        }
-        if (isConnectionOn) {
-            if (!isBeforeOn) {
-                jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps); // Connection is back, set tiles back on
-            }
-            if ("zoom".equals(pn) && resizeWithZoom) {
-                resizeWithZoom();
-            }
-        } else if (isBeforeOn) {
-            jXMapKit1.setTileFactory(new EmptyTileFactory());  // Connection has been lost, prevent tile retrieval from the Internet
-        }
-        
-        // Save settings regardless
+
+        // No need to check in others cases.
         if ("zoom".equals(pn) || "center".equals(pn)) {
+
+            // Detect internet connection status and dynamic
+            boolean isBeforeOn = isConnectionOn;
+            if (System.currentTimeMillis() - lastCheckTimeStamp > 5000) {
+                checkConnection(true);
+            }
+            if (isConnectionOn) {
+                if (!isBeforeOn) {
+                    jXMapKit1.setDefaultProvider(JXMapKit.DefaultProviders.OpenStreetMaps); // Connection is back, set tiles back on
+                }
+                if ("zoom".equals(pn) && resizeWithZoom) {
+                    resizeWithZoom();
+                }
+            } else if (isBeforeOn) {
+                jXMapKit1.setTileFactory(new EmptyTileFactory());  // Connection has been lost, prevent tile retrieval from the Internet
+            }
             saveSettings();
         }
+
         jXMapKit1.setDataProviderCreditShown(true);
-    }                                        
+    }
 
 
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel blankLabel;
     private javax.swing.Box.Filler filler1;
@@ -755,7 +760,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public void geoPlacesChanged(GeoPlacesList gpl, String change) {
         if (change.equals(GeoPlacesList.TYPEOFCHANGE_COORDINATES) || (change.equals(GeoPlacesList.TYPEOFCHANGE_NAME)) || (change.equals(GeoPlacesList.TYPEOFCHANGE_GEDCOM))) {
-            hoverPanel.setVisible(false); 
+            hoverPanel.setVisible(false);
             markers = gpl.getPlaces();
             applyFilters();
         }
@@ -782,14 +787,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     private void applyFiltersNow() {
-        LOG.info("GeoMap enter geopointList : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap enter geopointList : " + displayTime(System.currentTimeMillis()));
         if (isBusyRecalc) {
             return;
         }
         isBusyRecalc = true;
         String msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.inprogress");
         jActiveFilters.setToolTipText(msg);
-       
+
         geoPoints.clear();
         boolean filterIsOn = false;
         if (markers != null) {
@@ -813,36 +818,36 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
             displayMarkers();
             jActiveFilters.setVisible(filterIsOn);
             jActiveFilters.setToolTipText(msg);
-            
+
             if (geoPoints.size() < markers.length) {
                 msg = org.openide.util.NbBundle.getMessage(GeoMapTopComponent.class, "filters.Applied");
                 msg += " - ";
                 msg += geoFilter.getShortDescription();
                 jActiveFilters.setToolTipText(msg);
-    
+
             }
         }
-        hoverPanel.setVisible(false); 
+        hoverPanel.setVisible(false);
         jRefreshButton.setEnabled(true);
         isBusyRecalc = false;
-        LOG.info("GeoMap exit GeopointList : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap exit GeopointList : " + displayTime(System.currentTimeMillis()));
     }
 
     private void displayMarkers() {
-        LOG.info("GeoMap enter displayList : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap enter displayList : " + displayTime(System.currentTimeMillis()));
         WaypointPainter painter = new WaypointPainter();
         if (displayMarkers) {
             painter.setWaypoints(new HashSet(geoPoints));
             if (useNames) {
                 painter.setRenderer(new NameWaypointRenderer(markersSize, markersColor));
             } else {
-               // painter.setRenderer(new DefaultWaypointRenderer());
-                painter.setRenderer(new NoNameWaypointRenderer(markersSize, markersColor)); 
+                // painter.setRenderer(new DefaultWaypointRenderer());
+                painter.setRenderer(new NoNameWaypointRenderer(markersSize, markersColor));
             }
         }
         jXMapKit1.setAddressLocationPainter(painter);
         jXMapKit1.repaint();
-        LOG.info("GeoMap exit DisplayList : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap exit DisplayList : " + displayTime(System.currentTimeMillis()));
     }
 
     Set<GeoPosition> getPositionsFromMarkers() {
@@ -925,7 +930,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     public void setMarkersSize(int s) {
         markersSize = s;
-        if (s>1 && s <= markersSizeMax) {
+        if (s > 1 && s <= markersSizeMax) {
             registry.put("GEO.markers.size", markersSize);
             displayMarkers();
         }
@@ -943,49 +948,76 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
     }
 
-    
     public void resizeWithZoom() {
         int z = jXMapKit1.getMainMap().getZoom();
         int s = markersSize;
         switch (z) {
-            case 1: s = 50; break;
-            case 2: s = 49; break;
-            case 3: s = 47; break;
-            case 4: s = 45; break;
-            case 5: s = 40; break;
-            case 6: s = 35; break;
-            case 7: s = 30; break;
-            case 8: s = 20; break;
-            case 9: s = 12; break;
-            case 10: s = 8; break;
-            case 11: s = 6; break;
-            case 12: s = 5; break;
-            case 13: s = 4; break;
-            case 14: s = 3; break;
-            case 15: s = 2; break;
+            case 1:
+                s = 50;
+                break;
+            case 2:
+                s = 49;
+                break;
+            case 3:
+                s = 47;
+                break;
+            case 4:
+                s = 45;
+                break;
+            case 5:
+                s = 40;
+                break;
+            case 6:
+                s = 35;
+                break;
+            case 7:
+                s = 30;
+                break;
+            case 8:
+                s = 20;
+                break;
+            case 9:
+                s = 12;
+                break;
+            case 10:
+                s = 8;
+                break;
+            case 11:
+                s = 6;
+                break;
+            case 12:
+                s = 5;
+                break;
+            case 13:
+                s = 4;
+                break;
+            case 14:
+                s = 3;
+                break;
+            case 15:
+                s = 2;
+                break;
         }
         setMarkersSize(s);
     }
 
-
-    
     public GeoFilter getFilter() {
         return geoFilter;
     }
 
     public void setShownUnknown(boolean selected) {
         geoFilter.showUnknown = selected;
-        applyFilters();        
+        applyFilters();
     }
 
     public void setFilterAscendants(boolean selected) {
         geoFilter.ascendants = selected;
-        applyFilters();        
+        applyFilters();
     }
 
     void setFilterDescendants(boolean selected) {
         geoFilter.descendants = selected;
-        applyFilters();        
+        applyFilters();
     }
 
     public void setFilterCousins(boolean selected) {
@@ -1003,7 +1035,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         applyFilters();
     }
 
-    
     private SearchTopComponent findSearchWindow() {
         SearchTopComponent searchWindow = null;
         for (TopComponent tc : WindowManager.getDefault().getRegistry().getOpened()) {
@@ -1017,8 +1048,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         return searchWindow;
     }
-    
-    
+
     public void setFilterSelectedSearch(boolean selected) {
         if (selected) {
             SearchTopComponent searchWindow = findSearchWindow();
@@ -1040,8 +1070,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         applyFilters();
     }
 
-    
-    
     public void setFilterMales(boolean selected) {
         geoFilter.males = selected;
         applyFilters();
@@ -1052,7 +1080,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (indi != null) {
             geoFilter.rootIndi = indi;
         }
-        applyFilters();  
+        applyFilters();
         return indi.toString(true);
     }
 
@@ -1064,7 +1092,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (indi != null) {
             geoFilter.rootIndi = indi;
         }
-        applyFilters();  
+        applyFilters();
         return indi != null ? indi.toString(true) : "";
     }
 
@@ -1073,7 +1101,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (indi != null) {
             geoFilter.rootIndi = indi;
         }
-        applyFilters();  
+        applyFilters();
         return indi.toString(true);
     }
 
@@ -1215,9 +1243,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         } else {
             tmpList.showLocation(gno);
         }
-        
-        
-        
+
     }
 
     public String getFilterName() {
@@ -1236,7 +1262,7 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         if (filteredIndis == null) {
             filteredIndis = getIndisFromGeoPoints();
         }
-        
+
         // Check if belongs to connected entities
         if (connectedEntities.isEmpty()) {
             for (Entity hit : filteredIndis) {
@@ -1250,23 +1276,23 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return true;
     }
 
-        /**
-         * Exclude properties that reference individuals which are not part of
-         * the tree
-         *
-         * @param property
-         * @return
-         */
-        @Override
-        public boolean veto(Property property) {
-            if (property instanceof PropertyXRef) {
-                PropertyXRef xref = (PropertyXRef) property;
-                if (xref.isValid() && !connectedEntities.contains(xref.getTargetEntity())) {
-                    return true;
-                }
+    /**
+     * Exclude properties that reference individuals which are not part of the
+     * tree
+     *
+     * @param property
+     * @return
+     */
+    @Override
+    public boolean veto(Property property) {
+        if (property instanceof PropertyXRef) {
+            PropertyXRef xref = (PropertyXRef) property;
+            if (xref.isValid() && !connectedEntities.contains(xref.getTargetEntity())) {
+                return true;
             }
-            return false;
         }
+        return false;
+    }
 
     public boolean canApplyTo(Gedcom gedcom) {
         return (gedcom != null && gedcom.equals(getGedcom()));
@@ -1289,23 +1315,23 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
 
     // Check access to map tiles
     private void checkConnection(boolean mute) {
-        LOG.info("GeoMap enter checkConnection : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap enter checkConnection : " + displayTime(System.currentTimeMillis()));
         try {
             if (isBusyChecking) {
                 return;
             }
             isBusyChecking = true;
             lastCheckTimeStamp = System.currentTimeMillis();
-            LOG.info("GeoMap check server : "+ displayTime(System.currentTimeMillis()));
+            LOG.info("GeoMap check server : " + displayTime(System.currentTimeMillis()));
             URLConnection uc = osmUrl.openConnection();
             uc.setRequestProperty("User-Agent", ProjectProperties.INSTANCE.getName() + '/' + ProjectProperties.INSTANCE.getVersion());
             uc.getInputStream();
-            LOG.info("GeoMap end check server : "+ displayTime(System.currentTimeMillis()));
+            LOG.info("GeoMap end check server : " + displayTime(System.currentTimeMillis()));
         } catch (IOException ex) {
             if (!mute) {
                 DialogManager.createError(
-                        NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent") +  " - " 
-                                + NbBundle.getMessage(GeoMapTopComponent.class, "TITL_ConnectionError"), 
+                        NbBundle.getMessage(GeoMapTopComponent.class, "CTL_GeoMapTopComponent") + " - "
+                        + NbBundle.getMessage(GeoMapTopComponent.class, "TITL_ConnectionError"),
                         NbBundle.getMessage(GeoMapTopComponent.class, "MSG_ConnectionError"))
                         .show();
             }
@@ -1315,21 +1341,16 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
         isConnectionOn = true;
         isBusyChecking = false;
-        LOG.info("GeoMap exit checkConnexion : "+ displayTime(System.currentTimeMillis()));
+        LOG.info("GeoMap exit checkConnexion : " + displayTime(System.currentTimeMillis()));
         return;
     }
-    
+
     private static String displayTime(long time) {
         final DateFormat df = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss:SSS");
         final Date d = new Date(time);
         return df.format(d);
     }
 
-
-
-
-    
-    
     private class GeoMouseInputListener implements MouseInputListener {
 
         public void mouseClicked(MouseEvent e) {
@@ -1483,7 +1504,6 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         return c;
     }
 
-    
     private class MapPopupAction extends AbstractAction {
 
         private String actionName = "";
@@ -1515,4 +1535,3 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
         }
     }
 }
-
