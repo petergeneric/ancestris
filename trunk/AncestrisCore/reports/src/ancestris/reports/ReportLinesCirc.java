@@ -78,6 +78,8 @@ Future:  - color coding based on country of origin.  (Robert Simms)
 - proper zooming in Ghostview
 - eliminate blank pages with small radius
  */
+import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
 import genj.gedcom.Property;
@@ -85,10 +87,6 @@ import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertySex;
 import genj.gedcom.time.PointInTime;
 import genj.report.Report;
-import ancestris.core.actions.AbstractAncestrisAction;
-import ancestris.util.swing.FileChooserBuilder;
-import org.openide.util.lookup.ServiceProvider;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -98,6 +96,7 @@ import java.io.PrintWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.List;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  * Ancestris - ReportPSCirc
@@ -175,10 +174,10 @@ public class ReportLinesCirc extends Report {
     public boolean printdate = false;
     /******************/
     private PrintWriter writer;
-    private int indicentre = 1;
+    private final int indicentre = 1;
     private int numindilines = 0;
     private int nummarr = -1;
-    private static final String version = "genj 1.0";
+    private static final String VERSION = "genj 1.0";
     private boolean transparent;
 
     /**
@@ -223,8 +222,8 @@ public class ReportLinesCirc extends Report {
     }
 
     private void initUserOptions() {
-        /*	marrest=(uprintmarr == 1);
-        printmarr=(uprintmarr != 0);*/
+        numindilines = 0;
+        nummarr = -1;
         marrest = false;
         printmarr = true;
         alternating = (colouroption == 0);
@@ -541,7 +540,7 @@ public class ReportLinesCirc extends Report {
     private void printfile() {
         writer.println("%!PS-Adobe-3.0");
         writer.println("%%Title: (PS-CIRCLE.PS - Circular Genealogical Pedigree Chart in Postscript format)");
-        writer.println("%%Creator: " + version + " - a Lifelines circle ancestry chart report generator");
+        writer.println("%%Creator: " + VERSION + " - a Lifelines circle ancestry chart report generator");
         writer.println("%%CreationDate: "/*+ stddate(gettoday())*/);
         writer.println("%%Pages: " + d(mul(x_pages, y_pages)));
         writer.println("%%PageOrder: Ascend");
