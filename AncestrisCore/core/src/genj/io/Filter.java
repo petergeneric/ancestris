@@ -61,6 +61,7 @@ public interface Filter {
         for (PropertyXRef xref : property.getProperties(PropertyXRef.class)) {
           if (!xref.isValid()) continue;
           PropertyXRef target = xref.getTarget();
+          if (target == null) continue;
           if (!vetoed.add(target)) continue;
           transitive.add(target);
         }
