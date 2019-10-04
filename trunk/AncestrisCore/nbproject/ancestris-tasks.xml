@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="ancestris-tasks" basedir=".." >
     <target name="-svn-check">
-   <!--     <exec executable="svn" failonerror="false"
+        <exec executable="svn" failonerror="false"
               outputproperty="buildversion" errorproperty="erroroutput">
             <arg value="info"/>
             <arg value="- -xml"/>
         </exec>
-       --> <condition property="svn-no-error">
+        <condition property="svn-no-error">
             <length string="${erroroutput}" length="0"/>
         </condition>
     </target>
