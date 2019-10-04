@@ -11,9 +11,8 @@ package ancestris.modules.commonAncestor.graphics;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.OutputStream;
-
-import org.apache.batik.ext.awt.g2d.GraphicContext;
 import org.apache.fop.svg.PDFDocumentGraphics2D;
+import org.apache.xmlgraphics.java2d.GraphicContext;
 
 
 /**
