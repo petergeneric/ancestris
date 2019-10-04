@@ -593,10 +593,15 @@ public class AssoManager extends javax.swing.JPanel implements TableModelListene
         if (row >= 0 && row < awtm.getRowCount() && column >= 0 && column < awtm.getColumnCount()) {
             Object data = awtm.getValueAt(row, column);
             if (data != null && !isBusy) {
-                if (column == 2 && data instanceof Indi) {
+                if (column == 2) {
+                    if (data instanceof Indi) {
                     isBusy = true;
                     awtm.setIndiValues((Indi) data, row);
                     isBusy = false;
+                    } else {
+                        // Indi not selected, delete area.
+                        data = null;
+                    }
                 }
                 if (column >=3 && column <= 6) {
                     isBusy = true;

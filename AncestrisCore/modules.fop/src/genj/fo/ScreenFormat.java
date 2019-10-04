@@ -19,11 +19,14 @@
  */
 package genj.fo;
 
+import java.io.File;
 import java.io.OutputStream;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.sax.SAXResult;
+import org.apache.fop.apps.FopFactory;
+import org.apache.fop.fo.FOTreeBuilder;
+import org.xml.sax.ContentHandler;
 
 /**
  * Format  for rendering on screen - using FOP
@@ -41,9 +44,11 @@ public class ScreenFormat extends Format {
    * our format logic
    */
   protected void formatImpl(Document doc, OutputStream out) throws Throwable {
+      
+      final FopFactory fopF = FopFactory.newInstance(new File(".").toURI());
 
     // create FOP tree builder that handles the document content and generates out
-    org.xml.sax.ContentHandler handler = new org.apache.fop.fo.FOTreeBuilder("application/X-fop-awt-preview", new org.apache.fop.apps.FOUserAgent(), out);
+      ContentHandler handler = new FOTreeBuilder("application/X-fop-awt-preview", fopF.newFOUserAgent(), out);
 
     // grab xsl transformer
     Transformer transformer = TransformerFactory.newInstance().newTransformer();

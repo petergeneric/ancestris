@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.xml.transform.Templates;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -193,7 +192,7 @@ public abstract class Format {
       LOG.log(Level.WARNING, "unexpected expection formatting "+doc.getTitle(), t);
       if (t instanceof OutOfMemoryError) throw new IOException("out of memory");
       if (t instanceof IOException) throw (IOException)t;
-      throw new IOException(t.getMessage());
+      throw new IOException(t.getMessage(), t);
     } finally {
       try { out.close(); } catch (Throwable t) {}
     }
