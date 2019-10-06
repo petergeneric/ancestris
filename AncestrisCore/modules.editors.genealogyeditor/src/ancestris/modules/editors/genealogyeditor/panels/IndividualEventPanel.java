@@ -118,12 +118,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             add("RESI");
             add("SSN");
             add("TITL");
-//            add("FACT"); not defined in gedcom xml definition files
         }
     };
     private Property mEvent = null;
     private Property mRoot;
-    //private Property mAddress;
     private PropertyPlace mPlace;
     private PropertyDate mDate;
     private PropertyAssociation mAssociation;
@@ -135,6 +133,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
     private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
     private boolean mPlaceModified = false;
+    private boolean mAddressModified = false;
     private boolean mResponsibleAgencyModified = false;
 
     /**
@@ -155,6 +154,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         placeChoiceWidget.getTextEditor().getDocument().putProperty("name", "placeChoiceWidget");
         placeChoiceWidget.setIgnoreCase(true);
         placeChoiceWidget.setHorizontalScrollBar();
+        addressTextField.getDocument().addDocumentListener(changeListner);
+        addressTextField.getDocument().putProperty("name", "addressTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
         sourceCitationsTablePanel.addChangeListener(changeListner);
@@ -194,6 +195,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         responsibleAgencyLabel = new JLabel();
         responsibleAgencyTextField = new JTextField();
         associateButton = new JButton();
+        addressLabel = new JLabel();
+        addressTextField = new JTextField();
         sourcesPanel = new JPanel();
         sourceCitationsTablePanel = new SourceCitationsTablePanel();
         notesPanel = new JPanel();
@@ -264,6 +267,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         eventCauseTextArea.setWrapStyleWord(true);
         jScrollPane2.setViewportView(eventCauseTextArea);
 
+        responsibleAgencyLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         responsibleAgencyLabel.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.responsibleAgencyLabel.text")); // NOI18N
 
         responsibleAgencyTextField.setToolTipText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.responsibleAgencyTextField.toolTipText")); // NOI18N
@@ -279,36 +283,46 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             }
         });
 
+        addressLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        addressLabel.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.addressLabel.text")); // NOI18N
+
+        addressTextField.setText(NbBundle.getMessage(IndividualEventPanel.class, "IndividualEventPanel.addressTextField.text")); // NOI18N
+
         GroupLayout EventDetailEditorPanelLayout = new GroupLayout(EventDetailEditorPanel);
         EventDetailEditorPanel.setLayout(EventDetailEditorPanelLayout);
         EventDetailEditorPanelLayout.setHorizontalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
-                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                    .addComponent(responsibleAgencyLabel)
-                    .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                        .addComponent(eventCauseLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(placeLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(dateLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(eventDescriptorLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(IndividualAgeLabel, GroupLayout.PREFERRED_SIZE, 117, GroupLayout.PREFERRED_SIZE)))
+                .addGap(10, 10, 10)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                    .addComponent(eventDescriptorLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eventCauseLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(eventNameLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(dateLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(placeLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(addressLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(responsibleAgencyLabel, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(IndividualAgeLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 439, Short.MAX_VALUE)
                     .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
-                        .addComponent(placeChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
-                        .addComponent(eventNameChoiceWidget, GroupLayout.PREFERRED_SIZE, 261, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
-                        .addComponent(associateButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                    .addComponent(jScrollPane2, GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1)
-                    .addComponent(responsibleAgencyTextField)
-                    .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(individualAgeTextField)))
+                        .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
+                                .addComponent(eventNameChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGap(18, 18, 18)
+                                .addComponent(associateButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(privateRecordToggleButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
+                                .addComponent(placeChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(responsibleAgencyTextField)
+                            .addComponent(addressTextField)
+                            .addComponent(jScrollPane1)
+                            .addComponent(jScrollPane2)
+                            .addComponent(individualAgeTextField, GroupLayout.Alignment.TRAILING))
+                        .addContainerGap())))
         );
         EventDetailEditorPanelLayout.setVerticalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
@@ -332,20 +346,27 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     .addComponent(placeChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(addressTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(addressLabel))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(responsibleAgencyLabel)
                     .addComponent(responsibleAgencyTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(eventCauseLabel)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
+                        .addComponent(eventCauseLabel)
+                        .addGap(27, 27, 27))
                     .addComponent(jScrollPane2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(eventDescriptorLabel)
                     .addComponent(jScrollPane1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(12, 12, 12)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(IndividualAgeLabel)
-                    .addComponent(individualAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(individualAgeTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addComponent(IndividualAgeLabel))
+                .addContainerGap())
         );
 
         GroupLayout EventDetailPanelLayout = new GroupLayout(EventDetailPanel);
@@ -364,7 +385,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -377,7 +398,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -390,7 +411,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 461, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -404,53 +425,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             .addComponent(eventInformationTabbedPane)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 454, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void editPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
-        Gedcom gedcom = mRoot.getGedcom();
-        int undoNb = gedcom.getUndoNb();
-        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
-        
-        JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
-        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { OKButton, cancelButton };
-        placeEditorPanel.setOKButton(OKButton);
-        placeEditorPanel.set(gedcom, mPlace, false);  //mAdress not used
-
-        ADialog eventEditorDialog = new ADialog(
-                NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
-                placeEditorPanel);
-        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
-        eventEditorDialog.setOptions(options);
-        Object o = eventEditorDialog.show();
-        
-        placeEditorPanel.close();
-        if (o == OKButton) {
-            placeChoiceWidget.getTextEditor().getDocument().removeDocumentListener(changeListner);
-            try {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        placeEditorPanel.commit(mEvent, mPlace);
-                    }
-                });
-            } catch (GedcomException ex) {
-                Exceptions.printStackTrace(ex);
-            }
-            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            //mAddress = mEvent.getProperty("ADDR", false);
-            placeChoiceWidget.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
-            changeSupport.fireChange();
-            placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
-        } else {
-            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
-                gedcom.undoUnitOfWork(false);
-            }
-        }
-    }//GEN-LAST:event_editPlaceButtonActionPerformed
 
     private void associateButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_associateButtonActionPerformed
         Gedcom gedcom = mRoot.getGedcom();
@@ -467,8 +444,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             associationEditorPanel.set((Indi) mRoot, mAssociation, mEvent);
 
             DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
-                    associationEditorPanel);
+                NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
+                associationEditorPanel);
             associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -494,11 +471,57 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_associateButtonActionPerformed
 
+    private void editPlaceButtonActionPerformed(ActionEvent evt) {//GEN-FIRST:event_editPlaceButtonActionPerformed
+        Gedcom gedcom = mRoot.getGedcom();
+        int undoNb = gedcom.getUndoNb();
+        final PlaceEditorPanel placeEditorPanel = new PlaceEditorPanel();
+
+        JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
+        JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
+        Object[] options = new Object[] { OKButton, cancelButton };
+        placeEditorPanel.setOKButton(OKButton);
+        placeEditorPanel.set(gedcom, mPlace, false);  //mAdress not used
+
+        ADialog eventEditorDialog = new ADialog(
+            NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
+            placeEditorPanel);
+        eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
+        eventEditorDialog.setOptions(options);
+        Object o = eventEditorDialog.show();
+
+        placeEditorPanel.close();
+        if (o == OKButton) {
+            placeChoiceWidget.getTextEditor().getDocument().removeDocumentListener(changeListner);
+            try {
+                gedcom.doUnitOfWork(new UnitOfWork() {
+
+                    @Override
+                    public void perform(Gedcom gedcom) throws GedcomException {
+                        placeEditorPanel.commit(mEvent, mPlace);
+                    }
+                });
+            } catch (GedcomException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+            mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
+            //mAddress = mEvent.getProperty("ADDR", false);
+            placeChoiceWidget.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
+        changeSupport.fireChange();
+        placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+        } else {
+            while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
+                gedcom.undoUnitOfWork(false);
+            }
+        }
+    }//GEN-LAST:event_editPlaceButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private JPanel EventDetailEditorPanel;
     private JPanel EventDetailPanel;
     private JLabel IndividualAgeLabel;
     private ADateBean aDateBean;
+    private JLabel addressLabel;
+    private JTextField addressTextField;
     private JButton associateButton;
     private JLabel dateLabel;
     private JButton editPlaceButton;
@@ -699,6 +722,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         multimediaObjectCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
 
+        Property address = mEvent.getProperty("ADDR");
+        if (address != null) {
+            addressTextField.setText(address.getValue());
+        } else {
+            addressTextField.setText("");
+        }
+
         Property responsibleAgency = mEvent.getProperty("AGNC");
         if (responsibleAgency != null) {
             responsibleAgencyTextField.setText(responsibleAgency.getValue());
@@ -712,6 +742,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         mEventNameModified = false;
         mEventTypeModified = false;
         mPlaceModified = false;
+        mAddressModified = false;
         mResponsibleAgencyModified = false;
 
         changeListner.unmute();
@@ -842,6 +873,16 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                 }
 
+                if (mAddressModified) {
+                    mAddressModified = false;
+                    Property address = mEvent.getProperty("ADDR", false);
+                    if (address != null) {
+                        address.setValue(addressTextField.getText());
+                    } else {
+                        mEvent.addProperty("ADDR", addressTextField.getText());
+                    }
+                }
+
                 if (mResponsibleAgencyModified) {
                     mResponsibleAgencyModified = false;
                     Property responsibleAgency = mEvent.getProperty("AGNC", false);
@@ -912,6 +953,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
                     }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -942,6 +986,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
                     }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -971,6 +1018,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                     if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
+                    }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
