@@ -45,7 +45,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.event.ChangeEvent;
@@ -79,7 +78,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
     private Gedcom gedcom;
     private Context context = null;
     private JScrollPane editorContainer;
-    private JLabel titleLabel;
+    private TitlePanel titlePanel;
     private int undoNb;
     UndoRedoListener undoRedoListener;
     private final List<EntityEditor> openEditors = new ArrayList<>();
@@ -106,13 +105,12 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
                         new AC().grow().fill()));
         editorContainer = new JScrollPane();
         editorPanel.add(editorContainer, new CC().grow());
-        titleLabel = new JLabel("");
 
         confirmPanel = new ConfirmChangeWidget(this);
         confirmPanel.setChanged(false);
 
-        titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
-        editorPanel.add(titleLabel, new CC().dockNorth());
+        titlePanel = new TitlePanel();
+        editorPanel.add(titlePanel, new CC().dockNorth());
         editorPanel.add(confirmPanel, new CC().dockSouth());
 
         // retrigger a context change
@@ -176,15 +174,15 @@ public class AriesTopComponent extends AncestrisTopComponent implements TopCompo
             String title = editor.getTitle();
             if (!title.isEmpty()) {
                 int len = title.length();
-                if (len > 80) {
-                    int cut = title.indexOf(" ", 80);
+                if (len > 120) {
+                    int cut = title.indexOf(" ", 120);
                     if (cut != -1) {
                         title = title.substring(0, cut) + "...";
                     }
                 }
             }
 
-            titleLabel.setText("<html>  " + title + " </html>");
+            titlePanel.setTitle("<html><center>" + title + "</center></html>");
             editor.getExplorerHelper().setPopupAllowed(true);
             editor.addChangeListener(confirmPanel);
         }
