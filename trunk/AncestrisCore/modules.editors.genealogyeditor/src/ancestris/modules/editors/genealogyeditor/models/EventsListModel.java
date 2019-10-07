@@ -60,7 +60,12 @@ public class EventsListModel extends AbstractListModel<String> {
                 Property eventType = propertyEvent.getProperty("TYPE");
                 return PropertyTag2Name.getTagName(propertyEvent.getTag()) + (eventType != null ? " " + eventType.getValue() : "") + (date != null ? " - " + date : "");
             } else if (mIndividualAttributesTags.contains(propertyEvent.getTag())) {
-                return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue() + (date != null ? " - " + date : "");
+                if (propertyEvent.getTag().equals("RESI")) {
+                    Property eventType = propertyEvent.getProperty("ADDR");
+                    return PropertyTag2Name.getTagName(propertyEvent.getTag()) + (eventType != null ? " " + eventType.getValue() : "") + (date != null ? " - " + date : "");
+                } else {
+                    return PropertyTag2Name.getTagName(propertyEvent.getTag()) + " " + propertyEvent.getValue() + (date != null ? " - " + date : "");
+                }
             } else {
                 return PropertyTag2Name.getTagName(propertyEvent.getTag()) + (date != null ? " - " + date : "");
             }
