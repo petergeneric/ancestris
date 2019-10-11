@@ -29,6 +29,8 @@ import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.SafeProxy;
 import genj.util.swing.ImageIcon;
+import java.io.File;
+import java.io.IOException;
 
 import java.text.Collator;
 import java.util.ArrayList;
@@ -1465,6 +1467,25 @@ public class Gedcom implements Comparable {
 
     public void setName(String noName) {
         this.noName = noName;
+    }
+    
+    /**
+     * Complete path with name of the GEDCOM file.
+     * @return The complete name with path.
+     */
+    public String getFilePath() {
+        if (origin == null) {
+            return noName;
+        }
+        final File file = origin.getFile();
+        if (file != null) {
+            try {
+                return origin.getFile().getCanonicalPath();
+            } catch (IOException e) {
+                LOG.log(Level.FINE, "Unexpected IOException during name retrieval", e);
+            }
+        }
+        return noName;
     }
 
     /**
