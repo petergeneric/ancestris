@@ -36,7 +36,7 @@ public final class ActionUpdateMainTitle extends AbstractAncestrisContextAction 
         String title = NbBundle.getBundle("org/netbeans/core/windows/view/ui/Bundle").getString("CTL_MainWindow_Title");
         Context localContext = getContext();
         if (localContext != null) {
-            gedcomName = localContext.getGedcom().getName();
+            gedcomName = localContext.getGedcom().getFilePath();
         }
         if (!gedcomName.isEmpty()) {
             title = gedcomName + " - " + title;
