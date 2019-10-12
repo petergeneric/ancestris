@@ -64,7 +64,7 @@ public class EditorHyperlinkSupport implements HyperlinkListener {
   
   protected void handleHyperlink(String link) throws IOException, URISyntaxException {
     try {
-      Desktop.getDesktop().browse(new URI(link));
+      Desktop.getDesktop().browse(new URI(link.replaceAll(" ", "%20")));
     } catch (Throwable t) {
       LOG.log(Level.INFO, "can't browse link "+link, t);
     }

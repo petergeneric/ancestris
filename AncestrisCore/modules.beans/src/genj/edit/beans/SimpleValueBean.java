@@ -62,9 +62,10 @@ public class SimpleValueBean extends PropertyBean {
         webLink.addActionListener(new ActionListener() {
 
             public void actionPerformed(ActionEvent e) {
-                String link = property.getDisplayValue();
+                String link = property.getDisplayValue().replaceAll(" ", "%20");
                 try {
-                    Desktop.getDesktop().browse(new URI(link));
+                    URI uri = new URI(link);
+                    Desktop.getDesktop().browse(uri);
                 } catch (Exception ex) {
                     DialogManager.createError(RESOURCES.getString("link.error"), link).show();
                     LOG.severe("Error accessing link. Exception="+ex.getLocalizedMessage());
