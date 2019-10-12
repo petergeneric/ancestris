@@ -550,6 +550,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     /**
      * Whether the bean has changed since first listener was attached
+     * @return 
      */
     public boolean hasChanged() {
         return mEventModified;
@@ -557,6 +558,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     /**
      * Listener
+     * @param l
      */
     public void addChangeListener(ChangeListener l) {
         changeSupport.addChangeListener(l);
@@ -564,12 +566,25 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     /**
      * Listener
+     * @param l
      */
     public void removeChangeListener(ChangeListener l) {
         changeSupport.removeChangeListener(l);
     }
 
+    public void clear(Property root) {
+        eventNameChoiceWidget.setText("");
+        eventDescriptorTextArea.setText("");
+        eventCauseTextArea.setText("");
+        aDateBean.setContext(root, null);
+        individualAgeTextField.setText("");
+        placeChoiceWidget.setText("");
+        addressTextField.setText("");
+        responsibleAgencyTextField.setText("");
+    }
+
     /**
+     * @param root
      * @param event the event to set
      */
     public void set(Property root, Property event) {
@@ -893,8 +908,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                     }
                 }
             }
-//        gedcomPlacePanel.commit();
-//        addressPanel.commit();
         }
     }
 
