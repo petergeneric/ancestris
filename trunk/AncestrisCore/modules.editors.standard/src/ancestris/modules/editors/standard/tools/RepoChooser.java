@@ -981,8 +981,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
             okButton.setEnabled(!flag && okButton.isEnabled());
             cancelButton.setEnabled(!flag);
             repoEmailLinkButton.setEnabled(jTextEmail.getText().toLowerCase().contains("@"));
-            repoWebLinkButton.setEnabled(jTextWeb.getText().toLowerCase().contains("http://"));
-            noteLinkButton.setEnabled(noteText.getText().toLowerCase().contains("http://"));
+            repoWebLinkButton.setEnabled(jTextWeb.getText().toLowerCase().contains("http"));
+            noteLinkButton.setEnabled(noteText.getText().toLowerCase().contains("http"));
         }
     }
 
@@ -1069,23 +1069,23 @@ public class RepoChooser extends JPanel implements DocumentListener {
         
         value = jTextEmail.getText().trim();
         String tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "EMAIL" : "_EMAIL";
-        p = prop.getProperty(tag);
+        p = repoToSave.getProperty(tag);
         if (p != null) {
             p.setValue(value);
         } else {
             if (!value.isEmpty()) {
-                prop.addProperty(tag, value);
+                repoToSave.addProperty(tag, value);
             }
         }
         
         value = jTextWeb.getText().trim();
         tag = gedcom.getGrammar().getVersion().startsWith("5.5.1") ? "WWW" : "_WWW";
-        p = prop.getProperty(tag);
+        p = repoToSave.getProperty(tag);
         if (p != null) {
             p.setValue(value);
         } else {
             if (!value.isEmpty()) {
-                prop.addProperty(tag, value);
+                repoToSave.addProperty(tag, value);
             }
         }
         
@@ -1154,8 +1154,8 @@ public class RepoChooser extends JPanel implements DocumentListener {
 
     private void gotoLink(String text) {
         try {
-            String link = text.toLowerCase();
-            int i = link.indexOf("http://");
+            String link = text.toLowerCase().replaceAll(" ", "%20");
+            int i = link.indexOf("http");
             Desktop.getDesktop().browse(new URI(link.substring(i)));
         } catch (IOException ex) {
             //Exceptions.printStackTrace(ex);
