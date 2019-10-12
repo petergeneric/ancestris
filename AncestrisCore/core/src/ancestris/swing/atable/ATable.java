@@ -352,7 +352,8 @@ public class ATable extends JTable {
 
         private void init() {
             setBorderPainted(false);
-            setAlignmentX(RIGHT_ALIGNMENT);
+            //setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+            setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
         }
 
         public static Dimension sampleDimension() {
@@ -372,6 +373,8 @@ public class ATable extends JTable {
             if (!sd.containsKey(label)) {
                 JButton sample = new JButton(label);
                 sample.setBorderPainted(false);
+                //sample.setFont(new java.awt.Font("DejaVu Sans", 0, 11)); // NOI18N
+                sample.setBorder(javax.swing.BorderFactory.createEmptyBorder(6, 8, 6, 8));
                 sd.put(label, sample.getPreferredSize());
             }
             return sd.get(label);
