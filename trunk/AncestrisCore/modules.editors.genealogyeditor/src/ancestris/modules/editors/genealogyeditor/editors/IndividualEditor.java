@@ -890,7 +890,11 @@ public final class IndividualEditor extends EntityEditor {
                     index = 0;
                 }
             }
-            eventsList.setSelectedIndex(index);
+            if (eventsList.getModel().getSize() > 0) {
+                eventsList.setSelectedIndex(index);
+            } else {
+                individualEventEditorPanel.clear(mIndividual);
+            }
             changeListInProgress = false;
 
             /*
