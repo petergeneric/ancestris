@@ -122,8 +122,8 @@ public abstract class CreateRelationship extends AbstractChange {
 
         // In some instances, existing should be ignored (set to null), in other instances should be used
         // Used: non indi
-        // Ignored : Indi
-        if (targetType.equals(Gedcom.INDI)) {
+        // Ignored : Indi or Fam
+        if (targetType.equals(Gedcom.INDI) || targetType.equals(Gedcom.FAM)) {
             existing = null;
         } else {
             existing = getGedcom().getEntity(REGISTRY.get("select." + getGedcom().getName() + "." + targetType, (String) null));
