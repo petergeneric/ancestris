@@ -79,32 +79,28 @@
                               <Component id="responsibleAgencyLabel" alignment="1" max="32767" attributes="0"/>
                               <Component id="IndividualAgeLabel" max="32767" attributes="0"/>
                           </Group>
-                          <EmptySpace max="-2" attributes="0"/>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="aDateBean" pref="439" max="32767" attributes="0"/>
                               <Group type="102" alignment="1" attributes="0">
-                                  <Group type="103" groupAlignment="0" attributes="0">
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="eventNameChoiceWidget" max="32767" attributes="0"/>
-                                          <EmptySpace type="separate" max="-2" attributes="0"/>
-                                          <Component id="associateButton" min="-2" max="-2" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Group type="102" alignment="1" attributes="0">
-                                          <Component id="placeChoiceWidget" max="32767" attributes="0"/>
-                                          <EmptySpace max="-2" attributes="0"/>
-                                          <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <Component id="responsibleAgencyTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
-                                      <Component id="individualAgeTextField" alignment="1" max="32767" attributes="0"/>
-                                  </Group>
+                                  <Component id="eventNameChoiceWidget" max="32767" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="associateButton" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace min="-2" max="-2" attributes="0"/>
+                                  <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
                               </Group>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Component id="placeChoiceWidget" max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="editPlaceButton" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="responsibleAgencyTextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="addressTextField" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jScrollPane1" alignment="0" max="32767" attributes="0"/>
+                              <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                              <Component id="individualAgeTextField" alignment="1" max="32767" attributes="0"/>
+                              <Component id="aDateBean" pref="433" max="32767" attributes="0"/>
                           </Group>
+                          <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
                 </DimensionLayout>
@@ -112,19 +108,20 @@
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" alignment="0" attributes="0">
                           <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                  <Component id="eventNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="eventNameChoiceWidget" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="associateButton" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="privateRecordToggleButton" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="102" attributes="0">
-                                  <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                                   <Component id="dateLabel" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Group type="102" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="3" attributes="0">
+                                          <Component id="eventNameChoiceWidget" alignment="3" min="-2" max="-2" attributes="0"/>
+                                          <Component id="eventNameLabel" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="associateButton" min="-2" max="-2" attributes="0"/>
+                                      <Component id="privateRecordToggleButton" min="-2" max="-2" attributes="0"/>
+                                  </Group>
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="aDateBean" min="-2" max="-2" attributes="0"/>
                               </Group>
@@ -158,7 +155,7 @@
                               <Component id="eventDescriptorLabel" min="-2" max="-2" attributes="0"/>
                               <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="3" attributes="0">
                               <Component id="individualAgeTextField" alignment="3" min="-2" max="-2" attributes="0"/>
                               <Component id="IndividualAgeLabel" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -193,6 +190,9 @@
                   <Properties>
                     <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
                       <Image iconType="3" name="/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"/>
+                    </Property>
+                    <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+                      <ResourceString bundle="ancestris/modules/editors/genealogyeditor/panels/Bundle.properties" key="IndividualEventPanel.privateRecordToggleButton.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                     </Property>
                     <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[26, 26]"/>

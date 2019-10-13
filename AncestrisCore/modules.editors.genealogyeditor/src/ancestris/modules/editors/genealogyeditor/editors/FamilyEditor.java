@@ -162,7 +162,7 @@ public class FamilyEditor extends EntityEditor {
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
         eventsListToolBar = new javax.swing.JToolBar();
-        eventTypeComboBox = new javax.swing.JComboBox<String>();
+        eventTypeComboBox = new javax.swing.JComboBox<>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         deleteEventButton = new javax.swing.JButton();
         eventsListScrollPane = new javax.swing.JScrollPane();
@@ -186,6 +186,7 @@ public class FamilyEditor extends EntityEditor {
         familyIDLabel.setText(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("FamilyEditor.familyIDLabel.text"), new Object[] {})); // NOI18N
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setToolTipText(org.openide.util.NbBundle.getMessage(FamilyEditor.class, "FamilyEditor.privateRecordToggleButton.toolTipText")); // NOI18N
         privateRecordToggleButton.setMaximumSize(new java.awt.Dimension(26, 26));
         privateRecordToggleButton.setMinimumSize(new java.awt.Dimension(26, 26));
         privateRecordToggleButton.setPreferredSize(new java.awt.Dimension(26, 26));
@@ -198,12 +199,13 @@ public class FamilyEditor extends EntityEditor {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(507, Short.MAX_VALUE)
                 .addComponent(familyIDLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(familyIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,7 +558,7 @@ public class FamilyEditor extends EntityEditor {
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(familyEventPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 310, Short.MAX_VALUE)
+            .addComponent(familyEventPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 310, Short.MAX_VALUE)
         );
 
         eventsSplitPane.setRightComponent(jPanel2);
