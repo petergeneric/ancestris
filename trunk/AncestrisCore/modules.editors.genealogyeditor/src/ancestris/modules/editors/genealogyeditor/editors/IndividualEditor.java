@@ -146,8 +146,8 @@ public final class IndividualEditor extends EntityEditor {
         privateRecordToggleButton.addActionListener(changes);
         JTabbedPane nameEditorTabbedPane = nameEditorPanel.getNameEditorTabbedPane();
         namesTablePanel = new ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel();
-        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.namesTablePanel.TabConstraints.tabTitle"), namesTablePanel); // NOI18N
-
+        nameEditorTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.namesTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/names.png")), namesTablePanel); // NOI18N
+        
         JComboBox.KeySelectionManager manager = new JComboBox.KeySelectionManager() {
             @Override
             public int selectionForKey(char aKey, ComboBoxModel aModel) {
