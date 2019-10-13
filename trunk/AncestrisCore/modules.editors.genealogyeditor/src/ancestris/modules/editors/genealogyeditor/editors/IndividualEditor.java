@@ -186,7 +186,7 @@ public final class IndividualEditor extends EntityEditor {
         eventsSplitPane = new javax.swing.JSplitPane();
         eventsListPanel = new javax.swing.JPanel();
         jToolBar1 = new javax.swing.JToolBar();
-        eventTypeComboBox = new javax.swing.JComboBox<String>();
+        eventTypeComboBox = new javax.swing.JComboBox<>();
         filler3 = new javax.swing.Box.Filler(new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12), new java.awt.Dimension(12, 12));
         deleteEventButton = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -253,6 +253,7 @@ public final class IndividualEditor extends EntityEditor {
         );
 
         privateRecordToggleButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/lock_open.png"))); // NOI18N
+        privateRecordToggleButton.setToolTipText(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.privateRecordToggleButton.toolTipText")); // NOI18N
         privateRecordToggleButton.setMaximumSize(new java.awt.Dimension(26, 26));
         privateRecordToggleButton.setMinimumSize(new java.awt.Dimension(26, 26));
         privateRecordToggleButton.setPreferredSize(new java.awt.Dimension(26, 26));
@@ -287,7 +288,8 @@ public final class IndividualEditor extends EntityEditor {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(individualIDTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(privateRecordToggleButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
                     .addComponent(nameEditorPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         generalPanelLayout.setVerticalGroup(
