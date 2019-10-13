@@ -96,6 +96,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private boolean mEventNameModified = false;
     private boolean mEventTypeModified = false;
     private boolean mPlaceModified = false;
+    private boolean mAddressModified = false;
     private boolean mResponsibleAgencyModified = false;
 
     /**
@@ -118,6 +119,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         placeChoiceWidget.getTextEditor().getDocument().putProperty("name", "placeChoiceWidget");
         placeChoiceWidget.setIgnoreCase(true);
         placeChoiceWidget.setHorizontalScrollBar();
+        addressTextField.getDocument().addDocumentListener(changeListner);
+        addressTextField.getDocument().putProperty("name", "addressTextField");
         responsibleAgencyTextField.getDocument().addDocumentListener(changeListner);
         responsibleAgencyTextField.getDocument().putProperty("name", "responsibleAgencyTextField");
         sourceCitationsTablePanel.addChangeListener(changeListner);
@@ -158,6 +161,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         responsibleAgencyLabel = new JLabel();
         responsibleAgencyTextField = new JTextField();
         placeChoiceWidget = new ChoiceWidget();
+        jLabel1 = new JLabel();
+        addressTextField = new JTextField();
         sourcesPanel = new JPanel();
         sourceCitationsTablePanel = new SourceCitationsTablePanel();
         notesPanel = new JPanel();
@@ -247,18 +252,24 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         placeChoiceWidget.setToolTipText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.placeChoiceWidget.toolTipText")); // NOI18N
         placeChoiceWidget.setPrototypeDisplayValue("MMMMMMMMMMMMMMMMMMMMMM");
 
+        jLabel1.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.jLabel1.text")); // NOI18N
+
+        addressTextField.setText(NbBundle.getMessage(FamilyEventPanel.class, "FamilyEventPanel.addressTextField.text")); // NOI18N
+
         GroupLayout EventDetailEditorPanelLayout = new GroupLayout(EventDetailEditorPanel);
         EventDetailEditorPanel.setLayout(EventDetailEditorPanelLayout);
         EventDetailEditorPanelLayout.setHorizontalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
-                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(dateLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(placeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(eventCauseLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(husbandAgeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(EventTypeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(responsibleAgencyLabel))
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel1)
+                    .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(dateLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(placeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(eventCauseLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(husbandAgeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(EventTypeLabel, GroupLayout.Alignment.LEADING, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(eventNameLabel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(responsibleAgencyLabel)))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
@@ -272,7 +283,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     .addComponent(responsibleAgencyTextField)
                     .addGroup(GroupLayout.Alignment.TRAILING, EventDetailEditorPanelLayout.createSequentialGroup()
                         .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                            .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 288, Short.MAX_VALUE)
+                            .addComponent(aDateBean, GroupLayout.DEFAULT_SIZE, 387, Short.MAX_VALUE)
                             .addComponent(placeChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -280,7 +291,8 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                             .addComponent(editPlaceButton, GroupLayout.Alignment.TRAILING, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
                     .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
                         .addComponent(eventNameChoiceWidget, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addContainerGap())))
+                        .addContainerGap())
+                    .addComponent(addressTextField)))
         );
         EventDetailEditorPanelLayout.setVerticalGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addGroup(EventDetailEditorPanelLayout.createSequentialGroup()
@@ -298,6 +310,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     .addComponent(editPlaceButton, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeLabel, GroupLayout.PREFERRED_SIZE, 15, GroupLayout.PREFERRED_SIZE)
                     .addComponent(placeChoiceWidget, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(addressTextField, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EventDetailEditorPanelLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(responsibleAgencyLabel)
@@ -340,7 +356,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout sourcesPanelLayout = new GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
         sourcesPanelLayout.setHorizontalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
         sourcesPanelLayout.setVerticalGroup(sourcesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(sourceCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -355,7 +371,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout notesPanelLayout = new GroupLayout(notesPanel);
         notesPanel.setLayout(notesPanelLayout);
         notesPanelLayout.setHorizontalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
         notesPanelLayout.setVerticalGroup(notesPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(noteCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -370,7 +386,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout galleryPanelLayout = new GroupLayout(galleryPanel);
         galleryPanel.setLayout(galleryPanelLayout);
         galleryPanelLayout.setHorizontalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
+            .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
         );
         galleryPanelLayout.setVerticalGroup(galleryPanelLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
             .addComponent(multimediaObjectCitationsTablePanel, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -381,10 +397,10 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         GroupLayout layout = new GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 554, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-            .addComponent(eventInformationTabbedPane)
+            .addComponent(eventInformationTabbedPane, GroupLayout.DEFAULT_SIZE, 479, Short.MAX_VALUE)
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -437,6 +453,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private JPanel EventDetailPanel;
     private JLabel EventTypeLabel;
     private ADateBean aDateBean;
+    private JTextField addressTextField;
     private JLabel dateLabel;
     private JButton editPlaceButton;
     private JLabel eventCauseLabel;
@@ -448,6 +465,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
     private JPanel galleryPanel;
     private JLabel husbandAgeLabel;
     private JTextField husbandAgeTextField;
+    private JLabel jLabel1;
     private JScrollPane jScrollPane1;
     private JScrollPane jScrollPane2;
     private MultimediaObjectCitationsTablePanel multimediaObjectCitationsTablePanel;
@@ -646,6 +664,13 @@ public class FamilyEventPanel extends javax.swing.JPanel {
 
         multimediaObjectCitationsTablePanel.set(mEvent, Arrays.asList(mEvent.getProperties("OBJE")));
 
+        Property address = mEvent.getProperty("ADDR");
+        if (address != null) {
+            addressTextField.setText(address.getValue());
+        } else {
+            addressTextField.setText("");
+        }
+
         Property responsibleAgency = mEvent.getProperty("AGNC");
         if (responsibleAgency != null) {
             responsibleAgencyTextField.setText(responsibleAgency.getValue());
@@ -660,6 +685,7 @@ public class FamilyEventPanel extends javax.swing.JPanel {
         mEventNameModified = false;
         mEventTypeModified = false;
         mPlaceModified = false;
+        mAddressModified = false;
         mResponsibleAgencyModified = false;
 
         changeListner.unmute();
@@ -771,6 +797,16 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                 }
 
+                if (mAddressModified) {
+                    mAddressModified = false;
+                    Property address = mEvent.getProperty("ADDR", false);
+                    if (address != null) {
+                        address.setValue(addressTextField.getText());
+                    } else {
+                        mEvent.addProperty("ADDR", addressTextField.getText());
+                    }
+                }
+
                 if (mResponsibleAgencyModified) {
                     mResponsibleAgencyModified = false;
                     Property responsibleAgency = mEvent.getProperty("AGNC", false);
@@ -843,6 +879,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("placeChoiceWidget")) {
                         mPlaceModified = true;
                     }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -876,6 +915,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     if (propertyName.equals("placeTextField")) {
                         mPlaceModified = true;
                     }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
+                    }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
                     }
@@ -908,6 +950,9 @@ public class FamilyEventPanel extends javax.swing.JPanel {
                     }
                     if (propertyName.equals("placeTextField")) {
                         mPlaceModified = true;
+                    }
+                    if (propertyName.equals("addressTextField")) {
+                        mAddressModified = true;
                     }
                     if (propertyName.equals("responsibleAgencyTextField")) {
                         mResponsibleAgencyModified = true;
