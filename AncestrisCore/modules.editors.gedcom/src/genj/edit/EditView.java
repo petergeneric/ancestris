@@ -63,6 +63,8 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     private ConfirmChangeWidget confirmPanel;
     private ToolBar toolbar;
     private Gedcom gedcom;
+    private TitlePanel titlePanel;
+
 
     /**
      * Constructor
@@ -282,11 +284,14 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         toolbar.addSeparator();
 
         // add sticky/focus/mode
-        toolbar.add(new JToggleButton((Action)sticky));
         toolbar.add(new JToggleButton((Action)focus));
+        toolbar.add(new JToggleButton((Action)sticky));
 //        if (REGISTRY.get("showstandard", false)) {
 //            toolbar.add(new JToggleButton(mode));  // FL 2018-03-29 - mode is not used apparently : it displays an editor which has never been used and is not completeed apparently.
 //        }
+        titlePanel = new TitlePanel();
+        titlePanel.setTitle(getEntity().getDisplayTitle());
+        toolbar.add(titlePanel);
 
         // done
         toolbar.endUpdate();
