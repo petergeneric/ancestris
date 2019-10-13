@@ -426,7 +426,7 @@ public final class IndividualEditor extends EntityEditor {
             .addComponent(familiesSpouseTreeTablePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), familiesSpousePanel); // NOI18N
+        individualInformationTabbedPane.addTab(java.text.MessageFormat.format(java.util.ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/editors/Bundle").getString("IndividualEditor.familiesSpousePanel.TabConstraints.tabTitle"), new Object[] {}), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/child.png")), familiesSpousePanel); // NOI18N
 
         javax.swing.GroupLayout sourcesPanelLayout = new javax.swing.GroupLayout(sourcesPanel);
         sourcesPanel.setLayout(sourcesPanelLayout);
@@ -466,7 +466,7 @@ public final class IndividualEditor extends EntityEditor {
         );
 
         individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "FamilyEditor.galleryPanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png")), galleryPanel); // NOI18N
-        individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.aliasTablePanel.TabConstraints.tabTitle"), aliasTablePanel); // NOI18N
+        individualInformationTabbedPane.addTab(org.openide.util.NbBundle.getMessage(IndividualEditor.class, "IndividualEditor.aliasTablePanel.TabConstraints.tabTitle"), new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/Description.png")), aliasTablePanel); // NOI18N
 
         javax.swing.GroupLayout associationsPanelLayout = new javax.swing.GroupLayout(associationsPanel);
         associationsPanel.setLayout(associationsPanelLayout);
