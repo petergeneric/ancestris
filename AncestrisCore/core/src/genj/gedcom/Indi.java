@@ -688,11 +688,15 @@ public class Indi extends Entity {
      */
     @Override
     public String getDisplayTitle() {
+        return getDisplayTitle(true);
+    }
+    
+    public String getDisplayTitle(boolean showid) {
         String lastNames[] = getLastName().split(",");
         String firstNames[] = getFirstName().split(",");
         String lastname = lastNames.length > 0 ? lastNames[0] : "?";
         String firstname = firstNames.length > 0 ? firstNames[0] : "?";
-        return getId() + " - " + firstname + " " + lastname;
+        return (showid ? getId() + " - " : "") + firstname + " " + lastname + " (" + getBirthAsString() + " - " + getDeathAsString() + ")";
     }
 
     
