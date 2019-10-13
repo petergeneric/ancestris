@@ -1476,7 +1476,7 @@ public class FamilyEditor extends EntityEditor {
 
             mFamily = (Fam) entity;
 
-            setTitle(NbBundle.getMessage(FamilyEditor.class, isNew() ? "FamilyEditor.create.title" : "FamilyEditor.edit.title", mFamily));
+            setTitle(NbBundle.getMessage(FamilyEditor.class, isNew() ? "FamilyEditor.create.title" : "FamilyEditor.edit.title", mFamily.getDisplayTitle(false)));
             if (!mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                 privateRecordToggleButton.setVisible(false);
             }

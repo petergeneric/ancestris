@@ -786,7 +786,7 @@ public final class IndividualEditor extends EntityEditor {
 
             mIndividual = (Indi) entity;
 
-            setTitle(NbBundle.getMessage(IndividualEditor.class, isNew() ? "IndividualEditor.create.title" : "IndividualEditor.edit.title", mIndividual));
+            setTitle(NbBundle.getMessage(IndividualEditor.class, isNew() ? "IndividualEditor.create.title" : "IndividualEditor.edit.title", mIndividual.getDisplayTitle(false)));
 
             String gedcomVersion = mIndividual.getGedcom().getGrammar().getVersion();
             if (!gedcomVersion.equals("5.5.1")) {

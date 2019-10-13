@@ -38,7 +38,7 @@ public class TitlePanel extends javax.swing.JPanel {
 
         titleLabel = new javax.swing.JLabel();
 
-        titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 13)); // NOI18N
+        titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(titleLabel, org.openide.util.NbBundle.getMessage(TitlePanel.class, "TitlePanel.titleLabel.text")); // NOI18N
 

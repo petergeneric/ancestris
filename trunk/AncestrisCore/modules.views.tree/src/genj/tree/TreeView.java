@@ -1698,25 +1698,18 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
 
             // calculate a name
             String name = entity.getDisplayTitle();
-//            if (entity instanceof Indi) {
-//                name = ((Indi) entity).getDisplayTitle();
-//            }
-//            if (entity instanceof Fam) {
-//                Indi husb = ((Fam) entity).getHusband();
-//                Indi wife = ((Fam) entity).getWife();
-//                if (husb == null && wife == null) {
-//                    name = entity.getId();
-//                } else {
-//                    name = (husb == null ? "" : husb.getName()) + " & " + (wife == null ? "" : wife.getName());
-//                }
-//            }
 
             // Ask for name of bookmark
-            name = DialogManager.create(TITLE, RESOURCES.getString("bookmark.name"), name).show();
-            if (name == null) {
+            String text = RESOURCES.getString("bookmark.name");
+            // FL : 10/2019. 
+            // We need imput field to be long. DialogID does not work for InputLine
+            // => trick : make string longer that 81 characteres to force dialog to display 2 lines
+            text += "                                                                                 ".substring(text.length()); 
+            if (DialogManager.create(TITLE, text, name).show() == null) {
                 return;
-            }
+            } 
 
+            
             // create it
             model.addBookmark(new Bookmark(name, entity));
 

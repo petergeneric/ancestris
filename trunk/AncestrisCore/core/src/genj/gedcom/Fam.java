@@ -512,6 +512,10 @@ public class Fam extends Entity {
      */
     @Override
     public String getDisplayTitle() {
+        return getDisplayTitle(true);
+    }
+    
+    public String getDisplayTitle(boolean showid) {
         String husbname = "?";
         if (getHusband() != null) {
             String lastNames[] = getHusband().getLastName().split(",");
@@ -524,7 +528,7 @@ public class Fam extends Entity {
             wifename = lastNames.length > 0 ? lastNames[0] : "?";
         }
 
-        return getId() + " - " + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() +  " " + wifename;
+        return (showid ? getId() + " - " : "") + husbname + " " + GedcomOptions.getInstance().getTxtMarriageSymbol() + " " + wifename + " (" +  getMarriageAsString() + ")";
     }
 
     /**
@@ -565,6 +569,22 @@ public class Fam extends Entity {
         return getMarriageDate(false);
         // Calculate MARR|DATE
     }
+    
+    /**
+     * Calculate fam's Marriage date as string
+     */
+    public String getMarriageAsString() {
+
+        PropertyDate p = getMarriageDate();
+        if (p == null) {
+            return "";
+        }
+
+        // Return string value
+        return p.getDisplayValue();
+    }
+
+    
 
     /**
      * returns a PropertyDate view on the marriage date of this family
