@@ -38,6 +38,8 @@ public class TitlePanel extends javax.swing.JPanel {
 
         titleLabel = new javax.swing.JLabel();
 
+        setPreferredSize(new java.awt.Dimension(500, 30));
+
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(titleLabel, org.openide.util.NbBundle.getMessage(TitlePanel.class, "TitlePanel.titleLabel.text")); // NOI18N
@@ -48,7 +50,7 @@ public class TitlePanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 133, Short.MAX_VALUE)
+                .addComponent(titleLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(

@@ -44,6 +44,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
 import javax.swing.JToggleButton;
+import javax.swing.JToolBar;
 
 /**
  * Component for editing genealogic entity properties
@@ -289,9 +290,12 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
 //        if (REGISTRY.get("showstandard", false)) {
 //            toolbar.add(new JToggleButton(mode));  // FL 2018-03-29 - mode is not used apparently : it displays an editor which has never been used and is not completeed apparently.
 //        }
-        titlePanel = new TitlePanel();
-        titlePanel.setTitle(getEntity().getDisplayTitle());
-        toolbar.add(titlePanel);
+        if (false && toolbar.getOrientation() == JToolBar.HORIZONTAL) {
+            titlePanel = new TitlePanel();
+            titlePanel.setPreferredSize(new Dimension(256, 30));
+            titlePanel.setTitle("<html>" + getEntity().getDisplayTitle() + "</html>");
+            toolbar.add(titlePanel);
+        }
 
         // done
         toolbar.endUpdate();
