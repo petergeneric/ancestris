@@ -40,6 +40,8 @@ import genj.view.ViewContext;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -267,7 +269,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
      * @see genj.view.ToolBarSupport#populate(JToolBar)
      */
     @Override
-    public void populate(ToolBar toolbar) {
+    public void populate(final ToolBar toolbar) {
 
         this.toolbar = toolbar;
         if (toolbar == null) {
@@ -281,22 +283,39 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
             for (Action a : editor.getActions()) {
                 toolbar.add(a);
             }
+            if (editor.getActions().size() > 0) {
+                toolbar.addSeparator();
+            }
         }
-        toolbar.addSeparator();
 
         // add sticky/focus/mode
         toolbar.add(new JToggleButton((Action)focus));
         toolbar.add(new JToggleButton((Action)sticky));
+        toolbar.addSeparator();
 //        if (REGISTRY.get("showstandard", false)) {
 //            toolbar.add(new JToggleButton(mode));  // FL 2018-03-29 - mode is not used apparently : it displays an editor which has never been used and is not completeed apparently.
 //        }
-        if (false && toolbar.getOrientation() == JToolBar.HORIZONTAL) {
-            titlePanel = new TitlePanel();
-            titlePanel.setPreferredSize(new Dimension(256, 30));
-            titlePanel.setTitle("<html>" + getEntity().getDisplayTitle() + "</html>");
-            toolbar.add(titlePanel);
-        }
 
+        titlePanel = new TitlePanel();
+        toolbar.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                if ("orientation".equals(evt.getPropertyName())) {
+                    setTitleBar();
+                }
+            }
+        });
+        
+        editor.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                setTitleBar();
+            }
+        });
+
+        toolbar.add(titlePanel);
+        setTitleBar();
+        
         // done
         toolbar.endUpdate();
     }
@@ -309,6 +328,20 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         return new Dimension(256, 480);
     }
 
+    public void setTitleBar() {
+        if (toolbar.getOrientation() == JToolBar.HORIZONTAL) {
+            titlePanel.setTitle("<html>" + getEntity().getDisplayTitle() + "</html>");
+            titlePanel.setPreferredSize(new java.awt.Dimension(editor.getSize().width, 17));
+            titlePanel.setVisible(true);
+        } else {
+            titlePanel.setTitle(" ");
+            titlePanel.setPreferredSize(new java.awt.Dimension(10, 0));
+            titlePanel.setVisible(false);
+
+        }
+    }
+    
+    
     /**
      * Current entity
      */
