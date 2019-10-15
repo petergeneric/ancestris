@@ -289,8 +289,8 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         }
 
         // add sticky/focus/mode
-        toolbar.add(new JToggleButton((Action)focus));
         toolbar.add(new JToggleButton((Action)sticky));
+        toolbar.add(new JToggleButton((Action)focus));
         toolbar.addSeparator();
 //        if (REGISTRY.get("showstandard", false)) {
 //            toolbar.add(new JToggleButton(mode));  // FL 2018-03-29 - mode is not used apparently : it displays an editor which has never been used and is not completeed apparently.
@@ -312,7 +312,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
                 setTitleBar();
             }
         });
-
+        
         toolbar.add(titlePanel);
         setTitleBar();
         
@@ -331,7 +331,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     public void setTitleBar() {
         if (toolbar.getOrientation() == JToolBar.HORIZONTAL) {
             titlePanel.setTitle("<html>" + getEntity().getDisplayTitle() + "</html>");
-            titlePanel.setPreferredSize(new java.awt.Dimension(editor.getSize().width, 17));
+            titlePanel.setPreferredSize(new java.awt.Dimension(Math.max(editor.getSize().width, 2000), 17));
             titlePanel.setVisible(true);
         } else {
             titlePanel.setTitle(" ");

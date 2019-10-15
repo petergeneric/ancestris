@@ -39,7 +39,7 @@ public class TitlePanel extends javax.swing.JPanel {
         titleLabel = new javax.swing.JLabel();
 
         setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        setPreferredSize(new java.awt.Dimension(290, 10));
+        setPreferredSize(new java.awt.Dimension(290, 17));
 
         titleLabel.setFont(new java.awt.Font("DejaVu Sans", 1, 14)); // NOI18N
         titleLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
