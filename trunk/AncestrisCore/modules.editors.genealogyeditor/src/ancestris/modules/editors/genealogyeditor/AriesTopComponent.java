@@ -65,7 +65,7 @@ import org.openide.windows.WindowManager;
  */
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.EDITOR)
-public class AriesTopComponent extends AncestrisTopComponent implements TopComponent.Cloneable, ConfirmChangeWidget.ConfirmChangeCallBack {
+public class AriesTopComponent extends AncestrisTopComponent implements ConfirmChangeWidget.ConfirmChangeCallBack {
 
     private static final String PREFERRED_ID = "AriesTopComponent";  // NOI18N
     private static AriesTopComponent factory;
