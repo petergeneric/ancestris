@@ -156,7 +156,11 @@ public class ToolBar extends JToolBar {
     
     @Override
     public void addSeparator() {
-        addSeparator(new Dimension(3, 32));
+        if (getOrientation() == JToolBar.VERTICAL) {
+            addSeparator(new Dimension(28, 3));
+        } else {
+            addSeparator(new Dimension(3, 28));
+        }
     }
     
     private class ToolBarLayout
@@ -230,7 +234,7 @@ public class ToolBar extends JToolBar {
         public void propertyChange(PropertyChangeEvent e) {
             String name = e.getPropertyName();
             if (name.equals("orientation")) {
-                int o = ((Integer) e.getNewValue()).intValue();
+                int o = ((Integer) e.getNewValue());
                 setLm(o);
             }
         }
