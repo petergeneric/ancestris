@@ -507,7 +507,7 @@ public class Indi extends Entity {
      * Returns indi's name property.
      * @return The propertyName.
      */
-    public PropertyName getNamePropery() {
+    public PropertyName getNameProperty() {
         PropertyName p = (PropertyName) getProperty("NAME", true);
         if (p == null) {
             return null;
