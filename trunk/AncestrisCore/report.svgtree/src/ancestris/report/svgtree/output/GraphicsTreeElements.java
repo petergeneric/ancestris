@@ -355,7 +355,7 @@ public class GraphicsTreeElements implements TreeElements {
         String lastName = "";
 
         // generate LastName + Title
-        PropertyName prop = i.getNamePropery();
+        PropertyName prop = i.getNameProperty();
         if (prop != null) {
             if (prop.getSurnamePrefix() != null) {
                 lastName = prop.getSurnamePrefix() + " ";
@@ -811,7 +811,7 @@ public class GraphicsTreeElements implements TreeElements {
         }
         
         String lastName = "";
-         PropertyName prop = i.getNamePropery();
+         PropertyName prop = i.getNameProperty();
         if (prop != null) {
             if (prop.getSurnamePrefix() != null) {
                 lastName = prop.getSurnamePrefix() + " ";
