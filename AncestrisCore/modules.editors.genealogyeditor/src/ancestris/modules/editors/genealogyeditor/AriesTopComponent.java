@@ -13,6 +13,7 @@ package ancestris.modules.editors.genealogyeditor;
 
 import ancestris.api.editor.Editor;
 import ancestris.core.beans.ConfirmChangeWidget;
+import ancestris.gedcom.PropertyNode;
 import ancestris.modules.editors.genealogyeditor.editors.EntityEditor;
 import ancestris.modules.editors.genealogyeditor.editors.FamilyEditor;
 import ancestris.modules.editors.genealogyeditor.editors.IndividualEditor;
@@ -25,6 +26,7 @@ import ancestris.view.AncestrisDockModes;
 import ancestris.view.AncestrisTopComponent;
 import ancestris.view.AncestrisViewInterface;
 import genj.gedcom.Context;
+import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
@@ -39,6 +41,7 @@ import genj.gedcom.Submitter;
 import genj.gedcom.UnitOfWork;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
+import java.beans.PropertyVetoException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -54,6 +57,9 @@ import net.miginfocom.layout.CC;
 import net.miginfocom.layout.LC;
 import net.miginfocom.swing.MigLayout;
 import org.openide.awt.UndoRedo;
+import org.openide.nodes.AbstractNode;
+import org.openide.nodes.Children;
+import org.openide.util.Exceptions;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.windows.RetainLocation;
 import org.openide.windows.TopComponent;
@@ -287,13 +293,14 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         if (newContext == null) {
             return;
         }
+
+        setManagerContext(newContext.getEntity());
         
         // Quit if context is the same  
         if (newContext.equals(this.context)) {
             return;
         }
         this.context = newContext;
-
         
         // disconnect from last gedcom?
         if (newContext.getGedcom() != gedcom && gedcom != null) {
@@ -390,6 +397,25 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         return topComponent;
     }
 
+    
+    // Force content of manager lookup to be on the entity level, not sub-properties
+    private void setManagerContext(Entity entity) {
+        if (entity == null || entity.getGedcom() == null) {
+            return;
+        }
+        try {
+            Children children = PropertyNode.getChildren(new Context(entity));
+            getExplorerManager().setRootContext(new AbstractNode(children));
+            getExplorerManager().setSelectedNodes(children.getNodes());
+        } catch (PropertyVetoException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+        
+    }
+    
+    
+    
+    
     private class Callback extends GedcomListenerAdapter {
 
         @Override
@@ -401,18 +427,6 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
             }
 
         }
-//        @Override
-//        //XXX: this is commented out to help finding a race condition in toolbox
-//        public void gedcomWriteLockReleased(Gedcom gedcom) {
-//
-//            // foreign change while we're looking?
-//            if (editor != null && !isChangeSource) {
-//                Context ctx = editor.getContext();
-//                editor.setContext(new Context());
-//                editor.setContext(ctx);
-////                populate(toolbar);
-//            }
-//        }
     }
 
     private class UndoRedoListener implements ChangeListener {
@@ -422,6 +436,7 @@ public class AriesTopComponent extends AncestrisTopComponent implements ConfirmC
         public void stateChanged(ChangeEvent e) {
             Context ctx = editor.getContext();
             editor.setContext(ctx);
+            setManagerContext(ctx.getEntity());
         }
     }
     
