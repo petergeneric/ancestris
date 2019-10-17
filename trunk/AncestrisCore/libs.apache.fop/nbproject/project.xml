@@ -362,6 +362,10 @@
                 <binary-origin>release/modules/ext/xml-apis-1.3.04.jar</binary-origin>
             </class-path-extension>
             <class-path-extension>
+                <runtime-relative-path>ext/batik-codec-1.10.jar</runtime-relative-path>
+                <binary-origin>release/modules/ext/batik-codec-1.10.jar</binary-origin>
+            </class-path-extension>
+            <class-path-extension>
                 <runtime-relative-path>ext/commons-logging-1.0.4.jar</runtime-relative-path>
                 <binary-origin>release/modules/ext/commons-logging-1.0.4.jar</binary-origin>
             </class-path-extension>
