@@ -62,7 +62,7 @@ import spin.Spin;
 @ServiceProvider(service = AncestrisViewInterface.class)
 @RetainLocation(AncestrisDockModes.OUTPUT)
 public final class GraphTopComponent extends AncestrisTopComponent {
-    
+
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     static final String ICON_PATH = "ancestris/modules/views/graph/resources/graphe.png";
@@ -75,6 +75,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private static final String UI_CLASS = "ui.class";
     private static final String STICKED = "sticked";
     private static final String SOSA = "sosa";
+     private static final String MARRIAGE_SOSA = "mariagesosa";
     private static final String LAYOUTWEIGHT = "layout.weight";
     private static final String UISTYLESHEET = "ui.stylesheet";
     private static final String FAM = "famille";
@@ -85,6 +86,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             + "}"
             + "node.mariage {"
             + "    fill-color:%s;"
+            + "}"
+            + "node.mariagesosa {"
+            + "    fill-color:%s;"
+            + "    size: %s;"
             + "}"
             + "edge.sosa {"
             + "    fill-color:%s;"
@@ -114,6 +119,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             + "}"
             + "edge.sticked {"
             + "	fill-color:%s;"
+            + "}"
+            + "graph {"
+            + "	fill-color:%s;"
             + "}";
 
     private static GraphTopComponent factory;
@@ -142,6 +150,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private String colorChild = "#708090";
     private String colorCujus = "#FF00FF";
     private String colorSticked = "#0000FF";
+    private String colorBack = "#FFFFFF";
+    private String colorMariageSosa = "#FFCC33";
     private String sizeEdge = "2";
     private String sizeNode = "8";
     private String sizeCujus = "20";
@@ -209,6 +219,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         leViewer.enableAutoLayout();
 
         graphPanel.add(laVue, BorderLayout.CENTER);
+        laVue.setMouseManager(new AncestrisMouseManager());
         laVue.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -216,7 +227,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
         });
         laVue.getCamera().setAutoFitView(true);
-       
+
         fillGraph();
 
         return true;
@@ -267,8 +278,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         boolean husbandSosa = calcSosa(husband);
         boolean wifeSosa = calcSosa(wife);
         if ((husbandSosa && wifeSosa) || (husbandSosa && wife == null) || (wifeSosa && husband == null)) {
-            noeudCourant.addAttribute(UI_CLASS, SOSA);
-            noeudCourant.addAttribute(CLASSE_ORIGINE, SOSA);
+            noeudCourant.addAttribute(UI_CLASS, MARRIAGE_SOSA);
+            noeudCourant.addAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
             famSosa = true;
         }
 
@@ -457,7 +468,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         zoomSlider.setOrientation(javax.swing.JSlider.VERTICAL);
         zoomSlider.setPaintTicks(true);
         zoomSlider.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.zoomSlider.toolTipText")); // NOI18N
-        zoomSlider.setValue(100);
+        zoomSlider.setValue(1);
         zoomSlider.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         zoomSlider.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         zoomSlider.setMaximumSize(new java.awt.Dimension(50, 150));
@@ -615,7 +626,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void zoomSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zoomSliderStateChanged
-        laVue.getCamera().setViewPercent(zoomSlider.getValue() * 0.01D);
+        laVue.getCamera().setViewPercent(0.01D * zoomSlider.getValue());
     }//GEN-LAST:event_zoomSliderStateChanged
 
     private void graphPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_graphPanelMouseClicked
@@ -738,10 +749,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             try (FileOutputStream fos = new FileOutputStream(file)) {
                 final FileSink fs = new AncestrisFileSinkSvg();
                 fs.writeAll(leViewer.getGraphicGraph(), fos);
-                
-                Desktop.getDesktop().open(file);    
+
+                Desktop.getDesktop().open(file);
             } catch (IOException e) {
-                 LOG.log(Level.WARNING, "Unable to write Graph File or open it.", e);
+                LOG.log(Level.WARNING, "Unable to write Graph File or open it.", e);
             }
             hideWaitCursor();
         }
@@ -917,6 +928,22 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         this.colorSticked = colorSticked;
     }
 
+    public String getColorBack() {
+        return colorBack;
+    }
+
+    public void setColorBack(String colorBack) {
+        this.colorBack = colorBack;
+    }
+
+    public String getColorMariageSosa() {
+        return colorMariageSosa;
+    }
+
+    public void setColorMariageSosa(String colorMariageSosa) {
+        this.colorMariageSosa = colorMariageSosa;
+    }
+
     public String getSizeEdge() {
         return sizeEdge;
     }
@@ -992,9 +1019,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     public void updateCss() {
         StringBuilder sb = new StringBuilder();
         Formatter fmt = new Formatter(sb);
-        fmt.format(CSS, colorSosa, sizeNodeSosa, colorMariage, colorSosa,
+        fmt.format(CSS, colorSosa, sizeNodeSosa, colorMariage, colorMariageSosa, sizeNodeSosa, colorSosa,
                 sizeEdgeSosa, colorMariage, colorChild, colorCujus, sizeCujus,
-                sizeEdge, colorDef, sizeNode, colorDef, colorSticked, colorSticked);
+                sizeEdge, colorDef, sizeNode, colorDef, colorSticked, colorSticked, colorBack);
         leGraphe.setAttribute(UISTYLESHEET, sb.toString());
 
     }
@@ -1023,6 +1050,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         colorChild = registry.get("GRAPH.color.child", "#708090");
         colorCujus = registry.get("GRAPH.color.cujus", "#FF00FF");
         colorSticked = registry.get("GRAPH.color.sticked", "#0000FF");
+        colorBack = registry.get("GRAPH.color.back", "#FFFFFF");
+        colorMariageSosa = registry.get("GRAPH.color.marriage.sosa", "#FFCC33");
         sizeEdge = registry.get("GRAPH.size.edge", "2");
         sizeNode = registry.get("GRAPH.size.node", "8");
         sizeCujus = registry.get("GRAPH.size.cujus", "20");
@@ -1032,7 +1061,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         mariageNodeWeight = Double.valueOf(registry.get("GRAPH.weight.node.fam", "5.0"));
         edgeWeight = Double.valueOf(registry.get("GRAPH.weight.edge", "1.0"));
     }
-    
+
     public void saveSettings() {
         WindowManager.getDefault().invokeWhenUIReady(() -> {
             if (registry == null) {
@@ -1044,6 +1073,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             registry.put("GRAPH.color.child", colorChild);
             registry.put("GRAPH.color.cujus", colorCujus);
             registry.put("GRAPH.color.sticked", colorSticked);
+            registry.put("GRAPH.color.back", colorBack);
+            registry.put("GRAPH.color.marriage.sosa", colorMariageSosa);
             registry.put("GRAPH.size.edge", sizeEdge);
             registry.put("GRAPH.size.node", sizeNode);
             registry.put("GRAPH.size.cujus", sizeCujus);
