@@ -3,19 +3,18 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.io;
 
@@ -43,15 +42,17 @@ import org.openide.util.Lookup;
 
 /**
  * GedcomWriter is a custom write for Gedcom compatible information. Normally
- * it's used by GenJ's application when trying to save to a file. This type 
- * can be used by 3rd parties that are interested in writing Gedcom from
- * a GenJ object-representation managed outside of GenJ as well.
+ * it's used by GenJ's application when trying to save to a file. This type can
+ * be used by 3rd parties that are interested in writing Gedcom from a GenJ
+ * object-representation managed outside of GenJ as well.
  */
 public class GedcomWriter implements IGedcomWriter {
 
     private final static Resources RESOURCES = Resources.get(GedcomWriter.class);
     private static Logger LOG = Logger.getLogger("ancestris.io");
-    /** lots of state */
+    /**
+     * lots of state
+     */
     private Gedcom gedcom;
     private BufferedWriter out;
     private String file;
@@ -66,8 +67,9 @@ public class GedcomWriter implements IGedcomWriter {
     private Enigma enigma = null;
 
     /**
-     * Constructor for a writer that will write gedcom-formatted output
-     * on writeGedcom()
+     * Constructor for a writer that will write gedcom-formatted output on
+     * writeGedcom()
+     *
      * @param ged object to write out
      * @param stream the stream to write to
      */
@@ -83,7 +85,7 @@ public class GedcomWriter implements IGedcomWriter {
         time = new SimpleDateFormat("HH:mm:ss").format(now.getTime());
         filter = new Filter.Union(gedcom, Collections.<Filter>emptyList());
 
-        CharsetEncoder encoder = getCharset(false, stream, ged.getEncoding()).newEncoder();
+        CharsetEncoder encoder = getCharset(stream, ged.getEncoding()).newEncoder();
         encoder.onUnmappableCharacter(CodingErrorAction.REPORT);
         out = new BufferedWriter(new OutputStreamWriter(stream, encoder));
 
@@ -93,29 +95,27 @@ public class GedcomWriter implements IGedcomWriter {
     /**
      * Create the charset we're using for out
      */
-    private Charset getCharset(boolean writeBOM, OutputStream out, String encoding) throws GedcomEncodingException {
+    private Charset getCharset(OutputStream out, String encoding) throws GedcomEncodingException {
 
         // Attempt encoding
         try {
             // Unicode
             if (Gedcom.UNICODE.equals(encoding)) {
-                if (writeBOM) {
-                    try {
-                        out.write(GedcomEncodingSniffer.BOM_UTF16BE);
-                    } catch (Throwable t) {
-                        // ignored
-                    }
+
+                try {
+                    out.write(GedcomEncodingSniffer.BOM_UTF16BE);
+                } catch (Throwable t) {
+                    // ignored
                 }
                 return Charset.forName("UTF-16BE");
             }
             // UTF8
             if (Gedcom.UTF8.equals(encoding)) {
-                if (writeBOM) {
-                    try {
-                        out.write(GedcomEncodingSniffer.BOM_UTF8);
-                    } catch (Throwable t) {
-                        // ignored
-                    }
+
+                try {
+                    out.write(GedcomEncodingSniffer.BOM_UTF8);
+                } catch (Throwable t) {
+                    // ignored
                 }
                 return Charset.forName("UTF-8");
             }
@@ -152,6 +152,7 @@ public class GedcomWriter implements IGedcomWriter {
 
     /**
      * Returns progress of save in %
+     *
      * @return percent as 0 to 100
      */
     public int getProgress() {
@@ -175,13 +176,12 @@ public class GedcomWriter implements IGedcomWriter {
         if (gedcom != null) {
             return RESOURCES.getString("writer.title", gedcom.getName());
         }
-        return"";
+        return "";
     }
 
-
     /**
-     * Sets filters to use for checking whether to write
-     * entities/properties or not
+     * Sets filters to use for checking whether to write entities/properties or
+     * not
      */
     public void setFilters(Collection<Filter> fs) {
         filter = new Filter.Union(gedcom, fs);
@@ -196,6 +196,7 @@ public class GedcomWriter implements IGedcomWriter {
 
     /**
      * Actually writes the gedcom-information
+     *
      * @exception GedcomIOException
      */
     public void write() throws GedcomIOException {
@@ -232,7 +233,9 @@ public class GedcomWriter implements IGedcomWriter {
         // Done
     }
 
-    /** write line for header and footer */
+    /**
+     * write line for header and footer
+     */
     private void writeLine(String line) throws IOException {
         out.write(line);
         out.newLine();
@@ -241,6 +244,7 @@ public class GedcomWriter implements IGedcomWriter {
 
     /**
      * Write Header information
+     *
      * @exception IOException
      */
     private Entity writeHeader() throws IOException, GedcomException {
@@ -291,6 +295,7 @@ public class GedcomWriter implements IGedcomWriter {
 
     /**
      * Write Entities information
+     *
      * @exception IOException
      */
     private void writeEntities(List<Entity> entities) throws IOException {
@@ -327,6 +332,7 @@ public class GedcomWriter implements IGedcomWriter {
 
     /**
      * Write Tail information
+     *
      * @exception IOException
      */
     private void writeTail() throws IOException {
@@ -344,12 +350,16 @@ public class GedcomWriter implements IGedcomWriter {
      */
     private class EntityWriter extends PropertyWriter {
 
-        /** constructor */
+        /**
+         * constructor
+         */
         EntityWriter() {
             super(out, false);
         }
 
-        /** intercept prop decoding to check filters */
+        /**
+         * intercept prop decoding to check filters
+         */
         protected void writeProperty(int level, Property prop) throws IOException {
 
             // check against filters
@@ -363,7 +373,9 @@ public class GedcomWriter implements IGedcomWriter {
             super.writeProperty(level, prop);
         }
 
-        /** intercept value decoding to facilitate encryption */
+        /**
+         * intercept value decoding to facilitate encryption
+         */
         protected String getValue(Property prop) throws IOException {
             return prop.isPrivate() ? encrypt(prop.getValue()) : super.getValue(prop);
         }
