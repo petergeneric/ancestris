@@ -210,14 +210,14 @@ public class AncestrisFileSinkSvg implements FileSink {
 
     private static double getY(Node n) {
         if (n.hasNumber("y")) {
-            return n.getNumber("y");
+            return 1000 - n.getNumber("y");
         }
 
         if (n.hasArray("xy")) {
             Object[] xy = n.getArray("xy");
 
             if (xy != null && xy.length > 1 && xy[1] instanceof Number) {
-                return ((Number) xy[1]).doubleValue();
+                return 1000 - ((Number) xy[1]).doubleValue();
             }
         }
 
@@ -225,7 +225,7 @@ public class AncestrisFileSinkSvg implements FileSink {
             Object[] xyz = n.getArray("xyz");
 
             if (xyz != null && xyz.length > 1 && xyz[1] instanceof Number) {
-                return ((Number) xyz[1]).doubleValue();
+                return 1000 - ((Number) xyz[1]).doubleValue();
             }
         }
 
@@ -330,7 +330,7 @@ public class AncestrisFileSinkSvg implements FileSink {
 
             out.open("g");
             out.attribute("id", "elements");
-            out.attribute("transform", "matrix(1,0,0,-1,0,1000)");
+ //           out.attribute("transform", "matrix(1,0,0,-1,0,1000)");
 
             while (it.hasNext()) {
                 HashSet<StyleGroup> set = it.next();
@@ -379,10 +379,10 @@ public class AncestrisFileSinkSvg implements FileSink {
             out.attribute("d", getPath(e, style));
             out.close();
 
-//            if (e.hasLabel("label")) {
-//                writeElementText(out, (String) e.getAttribute("label"), e,
-//                        style.group);
-//            }
+            if (e.hasLabel("label")) {
+                writeElementText(out, (String) e.getAttribute("label"), e,
+                        style.group);
+            }
 
             out.close();
         }
