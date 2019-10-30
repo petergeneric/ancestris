@@ -30,6 +30,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -58,6 +59,12 @@ import org.graphstream.ui.graphicGraph.stylesheet.Values;
  * @author Zurga
  */
 public class AncestrisFileSinkSvg implements FileSink {
+
+    private final Graph leGraph;
+
+    public AncestrisFileSinkSvg(Graph graph) {
+        leGraph = graph;
+    }
 
     /*
 	 * (non-Javadoc)
@@ -131,7 +138,7 @@ public class AncestrisFileSinkSvg implements FileSink {
      */
     @Override
     public void writeAll(Graph graph, OutputStream stream) throws IOException {
-        OutputStreamWriter out = new OutputStreamWriter(stream);
+        OutputStreamWriter out = new OutputStreamWriter(stream, StandardCharsets.UTF_8);
         writeAll(graph, out);
     }
 
@@ -372,10 +379,10 @@ public class AncestrisFileSinkSvg implements FileSink {
             out.attribute("d", getPath(e, style));
             out.close();
 
-            if (e.hasLabel("label")) {
-                writeElementText(out, (String) e.getAttribute("label"), e,
-                        style.group);
-            }
+//            if (e.hasLabel("label")) {
+//                writeElementText(out, (String) e.getAttribute("label"), e,
+//                        style.group);
+//            }
 
             out.close();
         }
@@ -457,7 +464,6 @@ public class AncestrisFileSinkSvg implements FileSink {
                             break;
                     }
                 }
-
                 out.characters(text);
                 out.close();
                 out.close();
