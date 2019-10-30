@@ -619,6 +619,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         );
 
         graphPanel.setPreferredSize(new java.awt.Dimension(600, 600));
+        graphPanel.addMouseWheelListener(new java.awt.event.MouseWheelListener() {
+            public void mouseWheelMoved(java.awt.event.MouseWheelEvent evt) {
+                graphPanelMouseWheelMoved(evt);
+            }
+        });
         graphPanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 graphPanelMouseClicked(evt);
@@ -803,6 +808,20 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             hideWaitCursor();
         }
     }//GEN-LAST:event_jButtonGEXFActionPerformed
+
+    private void graphPanelMouseWheelMoved(java.awt.event.MouseWheelEvent evt) {//GEN-FIRST:event_graphPanelMouseWheelMoved
+        double changeZoom = 5 * evt.getPreciseWheelRotation();
+        int newValue = zoomSlider.getValue() + Double.valueOf(changeZoom).intValue();
+        if (newValue > 100) {
+            newValue = 100;
+        }
+        if (newValue <1) {
+            newValue = 1;
+        }
+        zoomSlider.setValue(newValue);
+        
+        
+    }//GEN-LAST:event_graphPanelMouseWheelMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
