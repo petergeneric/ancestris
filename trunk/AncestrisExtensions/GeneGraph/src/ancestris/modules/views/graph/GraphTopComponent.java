@@ -30,16 +30,20 @@ import java.awt.Image;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.ToolTipManager;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
 import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.stream.file.FileSink;
+import org.graphstream.stream.file.FileSinkGEXF;
 import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicNode;
@@ -68,14 +72,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     static final String ICON_PATH = "ancestris/modules/views/graph/resources/graphe.png";
     private static final String PREFERRED_ID = "GraphTopComponent";
     private static final String UI_STYLE = "ui.style";
-    private static final String UI_LABEL = "ui.label";
+    private static final String UI_LABEL = "label";
     private static final String CHILD = "child";
     private static final String MARIAGE = "mariage";
     private static final String CLASSE_ORIGINE = "classe.origine";
     private static final String UI_CLASS = "ui.class";
     private static final String STICKED = "sticked";
     private static final String SOSA = "sosa";
-     private static final String MARRIAGE_SOSA = "mariagesosa";
+    private static final String MARRIAGE_SOSA = "mariagesosa";
     private static final String LAYOUTWEIGHT = "layout.weight";
     private static final String UISTYLESHEET = "ui.stylesheet";
     private static final String FAM = "famille";
@@ -456,6 +460,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jButtonLabel = new javax.swing.JToggleButton();
         jButtonSettings = new javax.swing.JButton();
         jButtonPrint = new javax.swing.JButton();
+        jButtonGEXF = new javax.swing.JButton();
         graphPanel = new javax.swing.JPanel();
 
         buttonPanel.setMaximumSize(new java.awt.Dimension(50, 32767));
@@ -548,10 +553,28 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
         });
 
+        jButtonGEXF.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/export.png"))); // NOI18N
+        jButtonGEXF.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonGEXF.toolTipText")); // NOI18N
+        jButtonGEXF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonGEXFActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanelLayout.setHorizontalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
+                    .addGap(15, 15, 15)
+                    .addComponent(jToogleButtonCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
+                    .addComponent(jButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(jToogleButtonDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -565,18 +588,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                             .addGroup(buttonPanelLayout.createSequentialGroup()
                                 .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(2, 2, 2))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                            .addGap(10, 10, 10)
-                            .addComponent(jToogleButtonCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                            .addComponent(jButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(jToogleButtonDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jButtonGEXF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                    .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(2, 2, 2))))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -598,6 +613,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButtonSave))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButtonGEXF)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -626,7 +643,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }// </editor-fold>//GEN-END:initComponents
 
     private void zoomSliderStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_zoomSliderStateChanged
-        laVue.getCamera().setViewPercent(0.01D * zoomSlider.getValue());
+        laVue.getCamera().setViewPercent(Math.pow(0.01D * zoomSlider.getValue(), 2));
     }//GEN-LAST:event_zoomSliderStateChanged
 
     private void graphPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_graphPanelMouseClicked
@@ -746,9 +763,38 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
         if (file != null) {
             showWaitCursor();
-            try (FileOutputStream fos = new FileOutputStream(file)) {
-                final FileSink fs = new AncestrisFileSinkSvg();
-                fs.writeAll(leViewer.getGraphicGraph(), fos);
+            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+                final FileSink fs = new AncestrisFileSinkSvg(leGraphe);
+                fs.writeAll(leViewer.getGraphicGraph(), writer);
+
+                Desktop.getDesktop().open(file);
+            } catch (IOException e) {
+                LOG.log(Level.WARNING, "Unable to write Graph File or open it.", e);
+            }
+
+            hideWaitCursor();
+        }
+    }//GEN-LAST:event_jButtonPrintActionPerformed
+
+    private void jButtonGEXFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonGEXFActionPerformed
+        String gedcomName = removeExtension(getGedcom().getName());
+        File file = new FileChooserBuilder(GraphTopComponent.class)
+                .setFilesOnly(true)
+                .setDefaultBadgeProvider()
+                .setTitle(NbBundle.getMessage(GraphTopComponent.class, "FileChooserTitle"))
+                .setApproveText(NbBundle.getMessage(GraphTopComponent.class, "FileChooserOKButton"))
+                .setFileFilter(new FileNameExtensionFilter("GEXF", "gexf"))
+                .setAcceptAllFileFilterUsed(false)
+                .setDefaultExtension("gexf")
+                .setFileHiding(true)
+                .setSelectedFile(new File(gedcomName + "-graph"))
+                .showSaveDialog();
+
+        if (file != null) {
+            showWaitCursor();
+            try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
+                final FileSink fs = new FileSinkGEXF();
+                fs.writeAll(leGraphe, writer);
 
                 Desktop.getDesktop().open(file);
             } catch (IOException e) {
@@ -756,11 +802,12 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
             hideWaitCursor();
         }
-    }//GEN-LAST:event_jButtonPrintActionPerformed
+    }//GEN-LAST:event_jButtonGEXFActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel graphPanel;
+    private javax.swing.JButton jButtonGEXF;
     private javax.swing.JToggleButton jButtonLabel;
     private javax.swing.JButton jButtonLoad;
     private javax.swing.JButton jButtonPrint;
