@@ -70,39 +70,36 @@ package ancestris.util.swing;
 import ancestris.core.resources.Images;
 import genj.util.Registry;
 import java.awt.Component;
+import java.awt.Container;
+import java.awt.Dimension;
 import java.awt.FileDialog;
 import java.awt.Frame;
 import java.awt.HeadlessException;
+import java.awt.Image;
 import java.awt.KeyboardFocusManager;
+import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
-import javax.swing.Icon;
-import javax.swing.JFileChooser;
-import static javax.swing.JFileChooser.APPROVE_OPTION;
-import javax.swing.SwingUtilities;
-import javax.swing.filechooser.FileFilter;
-import javax.swing.filechooser.FileSystemView;
-import javax.swing.filechooser.FileView;
-import org.openide.util.*;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Image;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JFileChooser;
+import static javax.swing.JFileChooser.APPROVE_OPTION;
 import javax.swing.JLabel;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
+import javax.swing.filechooser.FileView;
 import org.openide.filesystems.MIMEResolver;
-//import org.netbeans.modules.openide.filesystems.FileFilterSupport;
-
+import org.openide.util.*;
 /**
  * Utility class for working with JFileChoosers.  In particular, remembering
  * the last-used directory for a given file is made transparent.  You pass an
@@ -114,7 +111,7 @@ import org.openide.filesystems.MIMEResolver;
  * &ldquo;remember&rdquo; where the user keeps particular types of files, and
  * saves the user from having to navigate through the same set of directories
  * every time they need to locate a file from a particular place.
- * <p/>
+ * <p></p>
  * <code>FileChooserBuilder</code>'s methods each return <code>this</code>, so
  * it is possible to chain invocations to simplify setting up a file chooser.
  * Example usage:
@@ -130,16 +127,16 @@ import org.openide.filesystems.MIMEResolver;
  *          //do something
  *      }
  *</pre>
- * <p/>
+ * <p></p>
  * Instances of this class are intended to be thrown away after use.  Typically
  * you create a builder, set it to create file choosers as you wish, then
  * use it to show a dialog or create a file chooser you then do something
  * with.
- * <p/>
+ * <p></p>
  * Supports the most common subset of JFileChooser functionality;  if you
  * need to do something exotic with a file chooser, you are probably better
  * off creating your own.
- * <p/>
+ * <p></p>
  * <b>Note:</b> If you use the constructor that takes a <code>Class</code> object,
  * please use <code>new FileChooserBuilder(MyClass.class)</code>, not
  * <code>new FileChooserBuilder(getClass())</code>.  This avoids unexpected
@@ -162,7 +159,7 @@ public class FileChooserBuilder {
     private boolean filesOnly;
     private static final boolean DONT_STORE_DIRECTORIES = false; // Boolean.getBoolean("forget.recent.dirs");
     private SelectionApprover approver;
-    private final List<FileFilter> filters = new ArrayList<FileFilter>(3);
+    private final List<FileFilter> filters = new ArrayList<>(3);
     private boolean useAcceptAllFileFilter = true;
     private boolean imagePreviewer = false;
     private JComponent accessory;
@@ -267,6 +264,7 @@ public class FileChooserBuilder {
 
     /**
      * Provide an implementation of an accessory.
+     * @param accessory add accessory
      * @return this
      */
     public FileChooserBuilder setAccessory(JComponent accessory) {
@@ -286,7 +284,6 @@ public class FileChooserBuilder {
 
     /**
      * Set default title
-     * @param val A localized given string
      * @return this
      */
     public FileChooserBuilder setDefaultTitle() {
@@ -337,7 +334,7 @@ public class FileChooserBuilder {
      * @param Format[]
      * @return this
      */
-    private Map<String, String> formats = new HashMap<String, String>();   // description, extension
+    private Map<String, String> formats = new HashMap<>();   // description, extension
     public FileChooserBuilder setFileFilters (Map<String, String> formats) {
         this.formats = formats;
         for (String key : formats.keySet()) {
@@ -348,7 +345,7 @@ public class FileChooserBuilder {
 
     /**
      * Force filter to be only the file filter provided while file chooser is already open.
-     * @param FileFilter A file filter 
+     * @param filter A file filter 
      * @return this
      */
     public FileChooserBuilder forceFileFilter (FileFilter filter) {
@@ -418,7 +415,6 @@ public class FileChooserBuilder {
 
     /**
      * Set the current directory to the default report directory.
-     * @param dir Default report directory
      * @return this
      */
     public FileChooserBuilder setDefaultDirAsReportDirectory () {
@@ -1173,18 +1169,15 @@ public class FileChooserBuilder {
             setBorder(BorderFactory.createEtchedBorder());
             setHorizontalAlignment(JLabel.CENTER);
             setHorizontalTextPosition(JLabel.CENTER);
-            chooser.addPropertyChangeListener(new PropertyChangeListener() {
-                @Override
-                public void propertyChange(PropertyChangeEvent evt) {
-                    if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
-                        File f = (File) evt.getNewValue();
-                        if (f != null) {
-                            ImageIcon icon = new ImageIcon(f.getPath());
-                            if (icon.getIconWidth() > size) {
-                                icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
-                            }
-                            setIcon(icon);
+            chooser.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+                if (evt.getPropertyName().equals(JFileChooser.SELECTED_FILE_CHANGED_PROPERTY)) {
+                    File f = (File) evt.getNewValue();
+                    if (f != null) {
+                        ImageIcon icon = new ImageIcon(f.getPath());
+                        if (icon.getIconWidth() > size) {
+                            icon = new ImageIcon(icon.getImage().getScaledInstance(size, -1, Image.SCALE_DEFAULT));
                         }
+                        setIcon(icon);
                     }
                 }
             });

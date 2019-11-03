@@ -32,7 +32,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
-import java.util.Formatter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -43,7 +42,6 @@ import org.graphstream.graph.Graph;
 import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.stream.file.FileSink;
-import org.graphstream.stream.file.FileSinkGEXF;
 import org.graphstream.ui.geom.Point3;
 import org.graphstream.ui.graphicGraph.GraphicElement;
 import org.graphstream.ui.graphicGraph.GraphicNode;
@@ -83,50 +81,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private static final String LAYOUTWEIGHT = "layout.weight";
     private static final String UISTYLESHEET = "ui.stylesheet";
     private static final String FAM = "famille";
-
-    private static final String CSS = "node.sosa {"
-            + "    fill-color:%s;"
-            + "    size: %s;"
-            + "}"
-            + "node.mariage {"
-            + "    fill-color:%s;"
-            + "}"
-            + "node.mariagesosa {"
-            + "    fill-color:%s;"
-            + "    size: %s;"
-            + "}"
-            + "edge.sosa {"
-            + "    fill-color:%s;"
-            + "    size: %s;"
-            + "}"
-            + "edge.mariage {"
-            + "    fill-color:%s;"
-            + "}"
-            + "edge.child {"
-            + "    fill-color:%s; "
-            + "    shape:cubic-curve;"
-            + "}"
-            + "node.cujus {"
-            + "    fill-color:%s;"
-            + "	   size: %s;"
-            + "}"
-            + "edge {"
-            + "    size: %s;"
-            + "    fill-color:%s;"
-            + "}"
-            + "node {"
-            + "	   size: %s;"
-            + "    fill-color:%s;"
-            + "}"
-            + "node.sticked {"
-            + "	fill-color:%s;"
-            + "}"
-            + "edge.sticked {"
-            + "	fill-color:%s;"
-            + "}"
-            + "graph {"
-            + "	fill-color:%s;"
-            + "}";
+    private static final String LABEL_FAM_LIEU = "FAM:MARR:PLACE";
+    private static final String LABEL_FAM_SIGN = "S_FAM:MARR:DATE";
+    private static final String LABEL_FAM_ID = "FAM_ID_DATE";
+    private static final String LABEL_FAM_DATE = "FAM:MARR:DATE";
+    private static final String LABEL_INDI_GIVN = "INDI:NAME:GIVN";
+    private static final String LABEL_INDI_NAME = "INDI:NAME:SURN";
+    private static final String GENERATION = "generation";
+    private static final String SOSA_NUMBER = "sosa";
 
     private static GraphTopComponent factory;
 
@@ -138,32 +100,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
     private final GrapheGedcomListenerAdapter listener;
 
-    // Display Labels ?
-    private boolean showLabel = false;
-    // Auto Layoyt ?
-    private boolean autoDisplay = true;
-    // Center on click ?
-    private boolean centerGraph = false;
+    private GraphParameter graphParam = new GraphParameter();
+
     // Should recenter when select ?
     private boolean recenter = true;
-
-    // Colors and sizes
-    private String colorDef = "#000000";
-    private String colorSosa = "#006400";
-    private String colorMariage = "#FF4500";
-    private String colorChild = "#708090";
-    private String colorCujus = "#FF00FF";
-    private String colorSticked = "#0000FF";
-    private String colorBack = "#FFFFFF";
-    private String colorMariageSosa = "#FFCC33";
-    private String sizeEdge = "2";
-    private String sizeNode = "8";
-    private String sizeCujus = "20";
-    private String sizeNodeSosa = "8";
-    private String sizeEdgeSosa = "2";
-    private double indiNodeWeight = 10.0;
-    private double mariageNodeWeight = 5.0;
-    private double edgeWeight = 1.0;
 
     public GraphTopComponent() {
         super();
@@ -233,6 +173,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         laVue.getCamera().setAutoFitView(true);
 
         fillGraph();
+        manageLabels();
 
         return true;
     }
@@ -268,14 +209,19 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
-        noeudCourant.addAttribute(LAYOUTWEIGHT, mariageNodeWeight);
+        noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
         noeudCourant.addAttribute(UI_CLASS, MARIAGE);
         noeudCourant.addAttribute(CLASSE_ORIGINE, MARIAGE);
         noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
         noeudCourant.addAttribute(FAM);
 
         if (fam.getMarriageDate() != null) {
-            noeudCourant.addAttribute(UI_LABEL, fam.getMarriageDate().getDisplayValue());
+            noeudCourant.addAttribute(LABEL_FAM_DATE, fam.getMarriageDate().getDisplayValue());
+            noeudCourant.addAttribute(LABEL_FAM_SIGN, "x " + fam.getMarriageDate().getDisplayValue());
+            noeudCourant.addAttribute(LABEL_FAM_ID, fam.getId() + " " + fam.getMarriageDate().getDisplayValue());
+        }
+        if (fam.getMarriagePlace() != null) {
+            noeudCourant.addAttribute(LABEL_FAM_LIEU, fam.getMarriagePlace().getCity());
         }
         Indi husband = fam.getSpouses().size() > 0 ? fam.getSpouse(0) : null;
         Indi wife = fam.getSpouses().size() > 1 ? fam.getSpouse(1) : null;
@@ -327,7 +273,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             arcCourant = leGraphe.getEdge(fam.getId() + " - " + indi.getId());
             arcCourant.addAttribute(UI_CLASS, uiClass);
             arcCourant.addAttribute(CLASSE_ORIGINE, uiClass);
-            arcCourant.addAttribute(LAYOUTWEIGHT, edgeWeight);
+            arcCourant.addAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
             if (indiSosa && famSosa) {
                 arcCourant.addAttribute(UI_CLASS, SOSA);
                 arcCourant.addAttribute(CLASSE_ORIGINE, SOSA);
@@ -352,11 +298,15 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
-        noeudCourant.addAttribute(LAYOUTWEIGHT, indiNodeWeight);
+        noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getIndiNodeWeight());
         noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
 
         final SosaParser parsing = new SosaParser(indi.getSosaString());
         if (parsing.getSosa() != null) {
+            noeudCourant.addAttribute(SOSA_NUMBER, indi.getSosaString());
+            if (parsing.getGeneration() != null) {
+                noeudCourant.addAttribute(GENERATION, parsing.getGeneration());
+            }
             if (parsing.getDaboville() == null) {
                 noeudCourant.addAttribute(UI_CLASS, SOSA);
                 noeudCourant.addAttribute(CLASSE_ORIGINE, SOSA);
@@ -367,7 +317,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
         }
         if (indi.getNameProperty() != null) {
-            noeudCourant.addAttribute(UI_LABEL, indi.getNameProperty().getLastName());
+            noeudCourant.addAttribute(LABEL_INDI_NAME, indi.getNameProperty().getLastName());
+            noeudCourant.addAttribute(LABEL_INDI_GIVN, indi.getNameProperty().getDisplayValue());
         }
 
         for (Fam f : indi.getFamiliesWhereChild()) {
@@ -388,7 +339,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     private String getDisplayLabelMode() {
-        if (showLabel) {
+        if (graphParam.isShowLabel()) {
             return "text-visibility-mode:normal;";
         }
         return "text-visibility-mode:hidden;";
@@ -652,7 +603,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }//GEN-LAST:event_zoomSliderStateChanged
 
     private void graphPanelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_graphPanelMouseClicked
-        if (centerGraph) {
+        if (graphParam.isCenterGraph()) {
             Point3 p = laVue.getCamera().getViewCenter();
             Point3 p2 = laVue.getCamera().transformPxToGu(evt.getX(), evt.getY());
             laVue.getCamera().setViewCenter(p2.x, p2.y, p.z);
@@ -668,30 +619,30 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
 
     private void jToogleButtonDisplayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToogleButtonDisplayActionPerformed
-        if (autoDisplay) {
-            autoDisplay = false;
+        if (graphParam.isAutoDisplay()) {
+            graphParam.setAutoDisplay(false);
             leViewer.disableAutoLayout();
         } else {
-            autoDisplay = true;
+            graphParam.setAutoDisplay(true);
             leViewer.enableAutoLayout();
         }
     }//GEN-LAST:event_jToogleButtonDisplayActionPerformed
 
     private void jButtonLabelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonLabelActionPerformed
-        showLabel = !showLabel;
+        graphParam.setShowLabel(!graphParam.isShowLabel());
         manageDisplayLabels();
     }//GEN-LAST:event_jButtonLabelActionPerformed
 
     private void jToogleButtonCenterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToogleButtonCenterActionPerformed
-        centerGraph = !centerGraph;
+        graphParam.setCenterGraph(!graphParam.isCenterGraph());
     }//GEN-LAST:event_jToogleButtonCenterActionPerformed
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
         laVue.getCamera().resetView();
         zoomSlider.setValue(100);
-        centerGraph = false;
+        graphParam.setCenterGraph(false);
         jToogleButtonCenter.setSelected(false);
-        showLabel = false;
+        graphParam.setShowLabel(false);
         jButtonLabel.setSelected(false);
         manageDisplayLabels();
     }//GEN-LAST:event_jButtonResetActionPerformed
@@ -798,7 +749,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (file != null) {
             showWaitCursor();
             try (OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8)) {
-                final FileSink fs = new FileSinkGEXF();
+                final FileSink fs = new AncestrisFileSinkGEXF();
                 fs.writeAll(leGraphe, writer);
 
                 Desktop.getDesktop().open(file);
@@ -815,12 +766,12 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (newValue > 100) {
             newValue = 100;
         }
-        if (newValue <1) {
+        if (newValue < 1) {
             newValue = 1;
         }
         zoomSlider.setValue(newValue);
-        
-        
+
+
     }//GEN-LAST:event_graphPanelMouseWheelMoved
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -954,155 +905,130 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         });
     }
 
-    public String getColorSosa() {
-        return colorSosa;
-    }
-
-    public void setColorSosa(String colorSosa) {
-        this.colorSosa = colorSosa;
-    }
-
-    public String getColorMariage() {
-        return colorMariage;
-    }
-
-    public void setColorMariage(String colorMariage) {
-        this.colorMariage = colorMariage;
-    }
-
-    public String getColorChild() {
-        return colorChild;
-    }
-
-    public void setColorChild(String colorChild) {
-        this.colorChild = colorChild;
-    }
-
-    public String getColorCujus() {
-        return colorCujus;
-    }
-
-    public void setColorCujus(String colorCujus) {
-        this.colorCujus = colorCujus;
-    }
-
-    public String getColorSticked() {
-        return colorSticked;
-    }
-
-    public void setColorSticked(String colorSticked) {
-        this.colorSticked = colorSticked;
-    }
-
-    public String getColorBack() {
-        return colorBack;
-    }
-
-    public void setColorBack(String colorBack) {
-        this.colorBack = colorBack;
-    }
-
-    public String getColorMariageSosa() {
-        return colorMariageSosa;
-    }
-
-    public void setColorMariageSosa(String colorMariageSosa) {
-        this.colorMariageSosa = colorMariageSosa;
-    }
-
-    public String getSizeEdge() {
-        return sizeEdge;
-    }
-
-    public void setSizeEdge(String sizeEdge) {
-        this.sizeEdge = sizeEdge;
-    }
-
-    public String getSizeNode() {
-        return sizeNode;
-    }
-
-    public void setSizeNode(String sizeNode) {
-        this.sizeNode = sizeNode;
-    }
-
-    public String getSizeCujus() {
-        return sizeCujus;
-    }
-
-    public void setSizeCujus(String sizeCujus) {
-        this.sizeCujus = sizeCujus;
-    }
-
-    public String getSizeNodeSosa() {
-        return sizeNodeSosa;
-    }
-
-    public void setSizeNodeSosa(String sizeNodeSosa) {
-        this.sizeNodeSosa = sizeNodeSosa;
-    }
-
-    public String getSizeEdgeSosa() {
-        return sizeEdgeSosa;
-    }
-
-    public void setSizeEdgeSosa(String sizeEdgeSosa) {
-        this.sizeEdgeSosa = sizeEdgeSosa;
-    }
-
-    public String getColorDef() {
-        return colorDef;
-    }
-
-    public void setColorDef(String colorDef) {
-        this.colorDef = colorDef;
-    }
-
-    public double getIndiNodeWeight() {
-        return indiNodeWeight;
-    }
-
-    public void setIndiNodeWeight(double indiNodeWeight) {
-        this.indiNodeWeight = indiNodeWeight;
-    }
-
-    public double getMariageNodeWeight() {
-        return mariageNodeWeight;
-    }
-
-    public void setMariageNodeWeight(double mariageNodeWeight) {
-        this.mariageNodeWeight = mariageNodeWeight;
-    }
-
-    public double getEdgeWeight() {
-        return edgeWeight;
-    }
-
-    public void setEdgeWeight(double edgeWeight) {
-        this.edgeWeight = edgeWeight;
-    }
-
     public void updateCss() {
-        StringBuilder sb = new StringBuilder();
-        Formatter fmt = new Formatter(sb);
-        fmt.format(CSS, colorSosa, sizeNodeSosa, colorMariage, colorMariageSosa, sizeNodeSosa, colorSosa,
-                sizeEdgeSosa, colorMariage, colorChild, colorCujus, sizeCujus,
-                sizeEdge, colorDef, sizeNode, colorDef, colorSticked, colorSticked, colorBack);
-        leGraphe.setAttribute(UISTYLESHEET, sb.toString());
+        leGraphe.setAttribute(UISTYLESHEET, graphParam.getCss());
+        manageLabels();
+    }
+
+    private void manageLabels() {
+        for (Node n : leGraphe.getNodeSet()) {
+            if (n.hasAttribute(FAM)) {
+                switch (graphParam.getLabelFam()) {
+                    case FAM_DATE:
+                        manageLabels(n, LABEL_FAM_DATE);
+                        break;
+                    case FAM_ID_DATE:
+                        manageLabels(n, LABEL_FAM_ID);
+                        break;
+                    case FAM_PLACE:
+                        manageLabels(n, LABEL_FAM_LIEU);
+                        break;
+                    case FAM_SIGNE:
+                        manageLabels(n, LABEL_FAM_SIGN);
+                        break;
+                }
+            } else {
+                switch (graphParam.getLabelIndi()) {
+                    case INDI_NAME:
+                        manageLabels(n, LABEL_INDI_NAME);
+                        break;
+                    case INDI_GIVE_NAME:
+                        manageLabels(n, LABEL_INDI_GIVN);
+                        break;
+                    case INDI_NAME_GENE:
+                        manageNameGeneLabels(n);
+                        break;
+                    case INDI_NAME_ID:
+                        manageNameIdLabels(n);
+                        break;
+                    case INDI_ID_NAME_GENE:
+                        manageIdNameGeneLabels(n);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void manageLabels(Node n, String attribute) {
+        if (n.hasAttribute(attribute)) {
+            String myLabel = n.getAttribute(attribute);
+            n.setAttribute(UI_LABEL, myLabel);
+        } else if (n.hasAttribute(UI_LABEL)) {
+            n.removeAttribute(UI_LABEL);
+        }
+    }
+
+    private void manageNameGeneLabels(Node n) {
+        String geneLabel = "";
+        String nameLabel = "";
+        if (n.hasAttribute(GENERATION)) {
+             final Integer generation = n.getAttribute(GENERATION);
+            geneLabel = generation.toString();
+        }
+        if (n.hasAttribute(LABEL_INDI_NAME)) {
+            nameLabel = n.getAttribute(LABEL_INDI_NAME);
+        }
+        final StringBuilder sb = new StringBuilder();
+        if (!"".equals(nameLabel)) {
+            sb.append(nameLabel);
+        }
+        if (!"".equals(geneLabel)) {
+            sb.append(" (").append(geneLabel).append(")");
+        }
+        if (sb.length() > 0) {
+            n.setAttribute(UI_LABEL, sb.toString());
+        } else if (n.hasAttribute(UI_LABEL)) {
+            n.removeAttribute(UI_LABEL);
+        }
+    }
+
+    private void manageNameIdLabels(Node n) {
+        String nameLabel = "";
+        if (n.hasAttribute(LABEL_INDI_NAME)) {
+            nameLabel = n.getAttribute(LABEL_INDI_NAME);
+        }
+        final StringBuilder sb = new StringBuilder();
+        if (!"".equals(nameLabel)) {
+            sb.append(nameLabel);
+        }
+
+        sb.append(" (").append(n.getId()).append(")");
+        n.setAttribute(UI_LABEL, sb.toString());
+    }
+
+    private void manageIdNameGeneLabels(Node n) {
+        String geneLabel = "";
+        String nameLabel = "";
+        if (n.hasAttribute(GENERATION)) {
+            final Integer generation = n.getAttribute(GENERATION);
+            geneLabel = generation.toString();
+        }
+        if (n.hasAttribute(LABEL_INDI_NAME)) {
+            nameLabel = n.getAttribute(LABEL_INDI_NAME);
+        }
+        final StringBuilder sb = new StringBuilder();
+        sb.append(n.getId()).append(' ');
+        if (!"".equals(nameLabel)) {
+            sb.append(nameLabel);
+        }
+        if (!"".equals(geneLabel)) {
+            sb.append(" (").append(geneLabel).append(")");
+        }
+        n.setAttribute(UI_LABEL, sb.toString());
 
     }
 
     public void updateWeight() {
         for (Node n : leGraphe.getEachNode()) {
             if (n.hasAttribute(FAM)) {
-                n.setAttribute(LAYOUTWEIGHT, mariageNodeWeight);
+                n.setAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
             } else {
-                n.setAttribute(LAYOUTWEIGHT, indiNodeWeight);
+                n.setAttribute(LAYOUTWEIGHT, graphParam.getIndiNodeWeight());
             }
         }
 
         for (Edge e : leGraphe.getEachEdge()) {
-            e.setAttribute(LAYOUTWEIGHT, edgeWeight);
+            e.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
         }
     }
 
@@ -1110,22 +1036,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (registry == null) {
             registry = getGedcom().getRegistry();
         }
-        colorDef = registry.get("GRAPH.color.default", "#000000");
-        colorSosa = registry.get("GRAPH.color.sosa", "#006400");
-        colorMariage = registry.get("GRAPH.color.marriage", "#FF4500");
-        colorChild = registry.get("GRAPH.color.child", "#708090");
-        colorCujus = registry.get("GRAPH.color.cujus", "#FF00FF");
-        colorSticked = registry.get("GRAPH.color.sticked", "#0000FF");
-        colorBack = registry.get("GRAPH.color.back", "#FFFFFF");
-        colorMariageSosa = registry.get("GRAPH.color.marriage.sosa", "#FFCC33");
-        sizeEdge = registry.get("GRAPH.size.edge", "2");
-        sizeNode = registry.get("GRAPH.size.node", "8");
-        sizeCujus = registry.get("GRAPH.size.cujus", "20");
-        sizeNodeSosa = registry.get("GRAPH.size.node.sosa", "8");
-        sizeEdgeSosa = registry.get("GRAPH.size.edge.sosa", "2");
-        indiNodeWeight = Double.valueOf(registry.get("GRAPH.weight.node.indi", "10.0"));
-        mariageNodeWeight = Double.valueOf(registry.get("GRAPH.weight.node.fam", "5.0"));
-        edgeWeight = Double.valueOf(registry.get("GRAPH.weight.edge", "1.0"));
+        graphParam.loadSettings(registry);
     }
 
     public void saveSettings() {
@@ -1133,22 +1044,16 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             if (registry == null) {
                 return;
             }
-            registry.put("GRAPH.color.default", colorDef);
-            registry.put("GRAPH.color.sosa", colorSosa);
-            registry.put("GRAPH.color.marriage", colorMariage);
-            registry.put("GRAPH.color.child", colorChild);
-            registry.put("GRAPH.color.cujus", colorCujus);
-            registry.put("GRAPH.color.sticked", colorSticked);
-            registry.put("GRAPH.color.back", colorBack);
-            registry.put("GRAPH.color.marriage.sosa", colorMariageSosa);
-            registry.put("GRAPH.size.edge", sizeEdge);
-            registry.put("GRAPH.size.node", sizeNode);
-            registry.put("GRAPH.size.cujus", sizeCujus);
-            registry.put("GRAPH.size.node.sosa", sizeNodeSosa);
-            registry.put("GRAPH.size.edge.sosa", sizeEdgeSosa);
-            registry.put("GRAPH.weight.node.indi", String.valueOf(indiNodeWeight));
-            registry.put("GRAPH.weight.node.fam", String.valueOf(mariageNodeWeight));
-            registry.put("GRAPH.weight.edge", String.valueOf(edgeWeight));
+            graphParam.saveSettings(registry);
         });
     }
+
+    public void setGraphParam(GraphParameter graphParam) {
+        this.graphParam = graphParam;
+    }
+
+    public GraphParameter getGraphParam() {
+        return graphParam;
+    }
+
 }

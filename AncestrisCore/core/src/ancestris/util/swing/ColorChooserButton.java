@@ -9,18 +9,18 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-package ancestris.modules.views.graph;
+package ancestris.util.swing;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
+import org.openide.util.NbBundle;
 
 /**
  *
@@ -32,7 +32,7 @@ public class ColorChooserButton extends JButton {
      private final List<ColorChangedListener> listeners = new ArrayList<>();
     
     /**
-     * Défulat Constructor for Netbeans design.
+     * Default Constructor for Netbeans design editor.
      */
     public ColorChooserButton() {
         this(Color.GREEN);
@@ -40,12 +40,9 @@ public class ColorChooserButton extends JButton {
 
     public ColorChooserButton(Color c) {
         setSelectedColor(c);
-        addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent arg0) {
-                Color newColor = JColorChooser.showDialog(null, "Choose a color", current);
-                setSelectedColor(newColor);
-            }
+        addActionListener((ActionEvent arg0) -> {
+            Color newColor = JColorChooser.showDialog(null, NbBundle.getMessage(ColorChooserButton.class, "ColorChooser.title"), current);
+            setSelectedColor(newColor);
         });
     }
 
