@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Component id="jPanel1" alignment="1" max="32767" attributes="0"/>
+          <Component id="jPanel1" alignment="1" pref="845" max="32767" attributes="0"/>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
@@ -40,40 +40,47 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace max="32767" attributes="0"/>
+                  <Component id="jButtonApply" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="58" max="-2" attributes="0"/>
+                  <Component id="jButtonReset" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="33" max="-2" attributes="0"/>
+              </Group>
               <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                      <Group type="102" attributes="0">
-                          <Component id="labelColorBackground" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Component id="colorButtonBackground" min="-2" pref="52" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Component id="labelColorDefault" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="labelColorSelected" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <Component id="labelColorSosa" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelColorMariage" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelColorMariageSosa" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelColorFiliation" linkSize="1" min="-2" max="-2" attributes="0"/>
-                              <Component id="labelColorCujus" linkSize="1" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                          <EmptySpace max="32767" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="colorButtonSosa" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="colorButtonCujus" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="colorButtonMarriage" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="colorButtonFiliation" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="colorButtonSelected" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
-                              <Component id="colorButtonDefault" linkSize="2" alignment="0" max="32767" attributes="0"/>
-                              <Component id="colorButtonMarriageSosa" alignment="0" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Component id="jLabelColor" alignment="0" max="32767" attributes="0"/>
-                  </Group>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Group type="102" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Group type="102" attributes="0">
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="labelColorDefault" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="labelColorSelected" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <Component id="labelColorSosa" linkSize="1" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelColorMariage" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelColorMariageSosa" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelColorFiliation" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                      <Component id="labelColorCujus" linkSize="1" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="colorButtonSosa" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="colorButtonCujus" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="colorButtonMarriage" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="colorButtonFiliation" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="colorButtonSelected" linkSize="2" alignment="0" min="-2" pref="31" max="-2" attributes="0"/>
+                                      <Component id="colorButtonDefault" linkSize="2" alignment="0" max="32767" attributes="0"/>
+                                      <Component id="colorButtonMarriageSosa" alignment="0" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="jLabelColor" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="labelColorBackground" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="colorButtonBackground" min="-2" pref="52" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
@@ -120,14 +127,14 @@
                                               </Group>
                                               <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                                                   <Group type="102" attributes="0">
-                                                      <Component id="labelFamNodeWeight" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace max="-2" attributes="0"/>
-                                                      <Component id="jTextFieldFamNodeWeght" min="-2" pref="48" max="-2" attributes="0"/>
-                                                  </Group>
-                                                  <Group type="102" attributes="0">
                                                       <Component id="labelIndiNodeWeight" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
                                                       <Component id="jTextFieldIndiNodeWeght" min="-2" max="-2" attributes="0"/>
+                                                  </Group>
+                                                  <Group type="102" alignment="1" attributes="0">
+                                                      <Component id="labelFamNodeWeight" min="-2" max="-2" attributes="0"/>
+                                                      <EmptySpace max="-2" attributes="0"/>
+                                                      <Component id="jTextFieldFamNodeWeght" min="-2" pref="48" max="-2" attributes="0"/>
                                                   </Group>
                                               </Group>
                                           </Group>
@@ -150,16 +157,24 @@
                                   </Group>
                               </Group>
                           </Group>
-                          <EmptySpace max="32767" attributes="0"/>
                       </Group>
-                      <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          <Component id="jButtonApply" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="-2" pref="86" max="-2" attributes="0"/>
-                          <Component id="jButtonReset" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace min="38" pref="38" max="-2" attributes="0"/>
+                      <Group type="102" attributes="0">
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" attributes="0">
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel6" min="-2" pref="156" max="-2" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Component id="jComboBoxIndiLabels" min="-2" pref="438" max="-2" attributes="0"/>
+                              </Group>
+                              <Group type="102" alignment="0" attributes="0">
+                                  <Component id="jLabel7" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                  <Component id="jComboBoxFamLabels" min="-2" pref="438" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
+                  <EmptySpace pref="93" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -279,12 +294,22 @@
                       <Component id="jTextFieldFamNodeWeght" alignment="0" min="-2" max="-2" attributes="0"/>
                       <Component id="labelFamNodeWeight" alignment="0" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="jButtonReset" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jButtonApply" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jComboBoxIndiLabels" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel6" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <EmptySpace min="-2" pref="122" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jComboBoxFamLabels" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jLabel7" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="28" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="3" attributes="0">
+                      <Component id="jButtonApply" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="jButtonReset" alignment="3" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <EmptySpace min="-2" pref="74" max="-2" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -346,7 +371,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonDefault">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonDefault">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonDefault.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -467,7 +492,7 @@
             </Property>
           </AccessibilityProperties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonSosa">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonSosa">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonSosa.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -588,7 +613,7 @@
             </Property>
           </AccessibilityProperties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonMarriage">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonMarriage">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonMarriage.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -618,7 +643,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonMarriageSosa">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonMarriageSosa">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonMarriageSosa.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -648,7 +673,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonFiliation">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonFiliation">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonFiliation.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -669,7 +694,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonCujus">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonCujus">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonCujus.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -742,7 +767,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonSelected">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonSelected">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonSelected.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -763,7 +788,7 @@
             </Property>
           </Properties>
         </Component>
-        <Component class="ancestris.modules.views.graph.ColorChooserButton" name="colorButtonBackground">
+        <Component class="ancestris.util.swing.ColorChooserButton" name="colorButtonBackground">
           <Properties>
             <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
               <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.colorButtonBackground.toolTipText_1" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
@@ -885,6 +910,60 @@
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButtonResetActionPerformed"/>
           </Events>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jComboBoxIndiLabels">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.jComboBoxIndiLabels.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox(labelIndi)"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JComboBox" name="jComboBoxFamLabels">
+          <Properties>
+            <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.jComboBoxFamLabels.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+          </Properties>
+          <AuxValues>
+            <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JComboBox(labelFam)"/>
+            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+          </AuxValues>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel6">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.jLabel6.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 25]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 25]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 25]"/>
+            </Property>
+          </Properties>
+        </Component>
+        <Component class="javax.swing.JLabel" name="jLabel7">
+          <Properties>
+            <Property name="text" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
+              <ResourceString bundle="ancestris/modules/views/graph/Bundle.properties" key="GraphSettings.jLabel7.text" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
+            </Property>
+            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 25]"/>
+            </Property>
+            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 25]"/>
+            </Property>
+            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+              <Dimension value="[150, 25]"/>
+            </Property>
+          </Properties>
         </Component>
       </SubComponents>
     </Container>

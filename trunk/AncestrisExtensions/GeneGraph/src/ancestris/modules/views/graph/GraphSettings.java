@@ -19,8 +19,12 @@ import java.awt.Color;
  * @author Zurga
  */
 public class GraphSettings extends javax.swing.JPanel {
-
+    
     private final GraphTopComponent theGTC;
+    
+    private final LabelIndiEnum[] labelIndi = LabelIndiEnum.values();
+    
+    private final LabelFamEnum[] labelFam = LabelFamEnum.values();
 
     /**
      * Creates new form GraphSettings
@@ -29,68 +33,74 @@ public class GraphSettings extends javax.swing.JPanel {
         theGTC = gtc;
         initComponents();
         initValues();
-
+        
         colorButtonSosa.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorSosa(toHexString(newColor));
+            getParam().setColorSosa(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonDefault.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorDef(toHexString(newColor));
+            getParam().setColorDef(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonMarriage.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorMariage(toHexString(newColor));
+            getParam().setColorMariage(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonFiliation.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorChild(toHexString(newColor));
+            getParam().setColorChild(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonCujus.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorCujus(toHexString(newColor));
+            getParam().setColorCujus(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonSelected.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorSticked(toHexString(newColor));
+            getParam().setColorSticked(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonBackground.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorBack(toHexString(newColor));
+            getParam().setColorBack(toHexString(newColor));
             theGTC.updateCss();
         });
         
-         colorButtonMarriageSosa.addColorChangedListener((Color newColor) -> {
-            theGTC.setColorMariageSosa(toHexString(newColor));
+        colorButtonMarriageSosa.addColorChangedListener((Color newColor) -> {
+            getParam().setColorMariageSosa(toHexString(newColor));
             theGTC.updateCss();
         });
-
+        
     }
-
+    
     private void initValues() {
-        colorButtonSosa.setSelectedColor(Color.decode(theGTC.getColorSosa()), false);
-        colorButtonDefault.setSelectedColor(Color.decode(theGTC.getColorDef()), false);
-        colorButtonMarriage.setSelectedColor(Color.decode(theGTC.getColorMariage()), false);
-        colorButtonFiliation.setSelectedColor(Color.decode(theGTC.getColorChild()), false);
-        colorButtonCujus.setSelectedColor(Color.decode(theGTC.getColorCujus()), false);
-        colorButtonSelected.setSelectedColor(Color.decode(theGTC.getColorSticked()), false);
-        colorButtonBackground.setSelectedColor(Color.decode(theGTC.getColorBack()), false);
-        colorButtonMarriageSosa.setSelectedColor(Color.decode(theGTC.getColorMariageSosa()), false);
-        jTextFieldDefaultNodeSize.setText(theGTC.getSizeNode());
-        jTextFieldDefaultEdgeSize.setText(theGTC.getSizeEdge());
-        jTextFieldSosaNodeSize.setText(theGTC.getSizeNodeSosa());
-        jTextFieldSosaEdgeSize.setText(theGTC.getSizeEdgeSosa());
-        jTextFieldCujusNodeSize.setText(theGTC.getSizeCujus());
-        jTextFieldEdgeWeight.setText(String.valueOf(theGTC.getEdgeWeight()));
-        jTextFieldIndiNodeWeght.setText(String.valueOf(theGTC.getIndiNodeWeight()));
-        jTextFieldFamNodeWeght.setText(String.valueOf(theGTC.getMariageNodeWeight()));
+        colorButtonSosa.setSelectedColor(Color.decode(getParam().getColorSosa()), false);
+        colorButtonDefault.setSelectedColor(Color.decode(getParam().getColorDef()), false);
+        colorButtonMarriage.setSelectedColor(Color.decode(getParam().getColorMariage()), false);
+        colorButtonFiliation.setSelectedColor(Color.decode(getParam().getColorChild()), false);
+        colorButtonCujus.setSelectedColor(Color.decode(getParam().getColorCujus()), false);
+        colorButtonSelected.setSelectedColor(Color.decode(getParam().getColorSticked()), false);
+        colorButtonBackground.setSelectedColor(Color.decode(getParam().getColorBack()), false);
+        colorButtonMarriageSosa.setSelectedColor(Color.decode(getParam().getColorMariageSosa()), false);
+        jTextFieldDefaultNodeSize.setText(getParam().getSizeNode());
+        jTextFieldDefaultEdgeSize.setText(getParam().getSizeEdge());
+        jTextFieldSosaNodeSize.setText(getParam().getSizeNodeSosa());
+        jTextFieldSosaEdgeSize.setText(getParam().getSizeEdgeSosa());
+        jTextFieldCujusNodeSize.setText(getParam().getSizeCujus());
+        jTextFieldEdgeWeight.setText(String.valueOf(getParam().getEdgeWeight()));
+        jTextFieldIndiNodeWeght.setText(String.valueOf(getParam().getIndiNodeWeight()));
+        jTextFieldFamNodeWeght.setText(String.valueOf(getParam().getMariageNodeWeight()));
+        jComboBoxFamLabels.setSelectedItem(getParam().getLabelFam());
+        jComboBoxIndiLabels.setSelectedItem(getParam().getLabelIndi());
     }
-
+    
     public final static String toHexString(Color colour) {
         String hexColour = Integer.toHexString(colour.getRGB() & 0xffffff);
         if (hexColour.length() < 6) {
             hexColour = "000000".substring(0, 6 - hexColour.length()) + hexColour;
         }
         return "#" + hexColour;
+    }
+    
+    private GraphParameter getParam() {
+        return theGTC.getGraphParam();
     }
 
     /**
@@ -107,7 +117,7 @@ public class GraphSettings extends javax.swing.JPanel {
         jLabelNode = new javax.swing.JLabel();
         jLabelEdge = new javax.swing.JLabel();
         labelColorDefault = new java.awt.Label();
-        colorButtonDefault = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonDefault = new ancestris.util.swing.ColorChooserButton();
         labelDefaultNodeSize = new java.awt.Label();
         jTextFieldDefaultNodeSize = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
@@ -115,7 +125,7 @@ public class GraphSettings extends javax.swing.JPanel {
         jTextFieldDefaultEdgeSize = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         labelColorSosa = new java.awt.Label();
-        colorButtonSosa = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonSosa = new ancestris.util.swing.ColorChooserButton();
         labelSosaNodeSize = new java.awt.Label();
         jTextFieldSosaNodeSize = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
@@ -123,20 +133,20 @@ public class GraphSettings extends javax.swing.JPanel {
         jTextFieldSosaEdgeSize = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         labelColorMariage = new java.awt.Label();
-        colorButtonMarriage = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonMarriage = new ancestris.util.swing.ColorChooserButton();
         labelColorMariageSosa = new java.awt.Label();
-        colorButtonMarriageSosa = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonMarriageSosa = new ancestris.util.swing.ColorChooserButton();
         labelColorFiliation = new java.awt.Label();
-        colorButtonFiliation = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonFiliation = new ancestris.util.swing.ColorChooserButton();
         labelColorCujus = new java.awt.Label();
-        colorButtonCujus = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonCujus = new ancestris.util.swing.ColorChooserButton();
         labelCujusNodeSize = new java.awt.Label();
         jTextFieldCujusNodeSize = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         labelColorSelected = new java.awt.Label();
-        colorButtonSelected = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonSelected = new ancestris.util.swing.ColorChooserButton();
         labelColorBackground = new java.awt.Label();
-        colorButtonBackground = new ancestris.modules.views.graph.ColorChooserButton();
+        colorButtonBackground = new ancestris.util.swing.ColorChooserButton();
         labelIndiNodeWeight = new java.awt.Label();
         jTextFieldIndiNodeWeght = new javax.swing.JTextField();
         jTextFieldEdgeWeight = new javax.swing.JTextField();
@@ -145,6 +155,10 @@ public class GraphSettings extends javax.swing.JPanel {
         jTextFieldFamNodeWeght = new javax.swing.JTextField();
         jButtonApply = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
+        jComboBoxIndiLabels = new javax.swing.JComboBox(labelIndi);
+        jComboBoxFamLabels = new javax.swing.JComboBox(labelFam);
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
 
         jPanel1.setPreferredSize(new java.awt.Dimension(750, 500));
 
@@ -350,38 +364,58 @@ public class GraphSettings extends javax.swing.JPanel {
             }
         });
 
+        jComboBoxIndiLabels.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jComboBoxIndiLabels.toolTipText")); // NOI18N
+
+        jComboBoxFamLabels.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jComboBoxFamLabels.toolTipText")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabel6.text")); // NOI18N
+        jLabel6.setMaximumSize(new java.awt.Dimension(150, 25));
+        jLabel6.setMinimumSize(new java.awt.Dimension(150, 25));
+        jLabel6.setPreferredSize(new java.awt.Dimension(150, 25));
+
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabel7.text")); // NOI18N
+        jLabel7.setMaximumSize(new java.awt.Dimension(150, 25));
+        jLabel7.setMinimumSize(new java.awt.Dimension(150, 25));
+        jLabel7.setPreferredSize(new java.awt.Dimension(150, 25));
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButtonApply)
+                .addGap(58, 58, 58)
+                .addComponent(jButtonReset)
+                .addGap(33, 33, 33))
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(colorButtonBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(labelColorDefault, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(labelColorSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(labelColorSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelColorMariage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelColorMariageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelColorFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelColorCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(colorButtonSosa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonCujus, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonMarriage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonDefault, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(colorButtonMarriageSosa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                    .addComponent(jLabelColor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                        .addComponent(labelColorDefault, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(labelColorSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(labelColorSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelColorMariage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelColorMariageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelColorFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(labelColorCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(colorButtonSosa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorButtonCujus, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorButtonMarriage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorButtonFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorButtonSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(colorButtonDefault, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(colorButtonMarriageSosa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                            .addComponent(jLabelColor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(colorButtonBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(34, 34, 34)
@@ -421,13 +455,13 @@ public class GraphSettings extends javax.swing.JPanel {
                                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                                 .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
                                                     .addComponent(labelIndiNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(jTextFieldIndiNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                                    .addComponent(jTextFieldIndiNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                                .addGroup(jPanel1Layout.createSequentialGroup()
+                                                    .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                    .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addGroup(jPanel1Layout.createSequentialGroup()
@@ -439,14 +473,19 @@ public class GraphSettings extends javax.swing.JPanel {
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(jTextFieldSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButtonApply)
-                        .addGap(86, 86, 86)
-                        .addComponent(jButtonReset)
-                        .addGap(38, 38, 38))))
+                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jComboBoxIndiLabels, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jComboBoxFamLabels, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(93, Short.MAX_VALUE))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {labelColorCujus, labelColorDefault, labelColorFiliation, labelColorMariage, labelColorSelected, labelColorSosa});
@@ -540,11 +579,19 @@ public class GraphSettings extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(60, 60, 60)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButtonReset)
-                    .addComponent(jButtonApply))
-                .addGap(122, 122, 122))
+                    .addComponent(jComboBoxIndiLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jComboBoxFamLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButtonApply)
+                    .addComponent(jButtonReset))
+                .addGap(74, 74, 74))
         );
 
         jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jTextFieldDefaultNodeSize, labelCujusNodeSize, labelDefaultNodeSize, labelSosaNodeSize});
@@ -556,7 +603,7 @@ public class GraphSettings extends javax.swing.JPanel {
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 845, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -568,57 +615,53 @@ public class GraphSettings extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButtonResetActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonResetActionPerformed
-        theGTC.setSizeCujus("20");
-        theGTC.setSizeEdge("2");
-        theGTC.setSizeEdgeSosa("2");
-        theGTC.setSizeNode("8");
-        theGTC.setSizeNodeSosa("8");
-        theGTC.setColorDef("#000000");
-        theGTC.setColorSosa("#006400");
-        theGTC.setColorMariage("#FF4500");
-        theGTC.setColorChild("#708090");
-        theGTC.setColorCujus("#FF00FF");
-        theGTC.setColorSticked("#0000FF");
-        theGTC.setColorBack("#FFFFFF");
-        theGTC.setColorMariageSosa("#FFCC33");
-        theGTC.setIndiNodeWeight(10.0);
-        theGTC.setMariageNodeWeight(5.0);
-        theGTC.setEdgeWeight(1.0);
+        final GraphParameter gp = new GraphParameter();
+        gp.setAutoDisplay(getParam().isAutoDisplay());
+        gp.setCenterGraph(getParam().isCenterGraph());
+        gp.setShowLabel(getParam().isShowLabel());
+        theGTC.setGraphParam(gp);
         theGTC.updateCss();
         theGTC.updateWeight();
         initValues();
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonApplyActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonApplyActionPerformed
-        theGTC.setSizeCujus(jTextFieldCujusNodeSize.getText());
-        theGTC.setSizeEdgeSosa(jTextFieldSosaEdgeSize.getText());
-        theGTC.setSizeNodeSosa(jTextFieldSosaNodeSize.getText());
-        theGTC.setSizeEdge(jTextFieldDefaultEdgeSize.getText());
-        theGTC.setSizeNode(jTextFieldDefaultNodeSize.getText());
+        getParam().setSizeCujus(jTextFieldCujusNodeSize.getText());
+        getParam().setSizeEdgeSosa(jTextFieldSosaEdgeSize.getText());
+        getParam().setSizeNodeSosa(jTextFieldSosaNodeSize.getText());
+        getParam().setSizeEdge(jTextFieldDefaultEdgeSize.getText());
+        getParam().setSizeNode(jTextFieldDefaultNodeSize.getText());
+        getParam().setLabelFam((LabelFamEnum) jComboBoxFamLabels.getSelectedItem());
+        getParam().setLabelIndi((LabelIndiEnum) jComboBoxIndiLabels.getSelectedItem());
         theGTC.updateCss();
-        theGTC.setEdgeWeight(Double.parseDouble(jTextFieldEdgeWeight.getText()));
-        theGTC.setIndiNodeWeight(Double.parseDouble(jTextFieldIndiNodeWeght.getText()));
-        theGTC.setMariageNodeWeight(Double.parseDouble(jTextFieldFamNodeWeght.getText()));
+        getParam().setEdgeWeight(Double.parseDouble(jTextFieldEdgeWeight.getText()));
+        getParam().setIndiNodeWeight(Double.parseDouble(jTextFieldIndiNodeWeght.getText()));
+        getParam().setMariageNodeWeight(Double.parseDouble(jTextFieldFamNodeWeght.getText()));
         theGTC.updateWeight();
+        
     }//GEN-LAST:event_jButtonApplyActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonBackground;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonCujus;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonDefault;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonFiliation;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonMarriage;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonMarriageSosa;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonSelected;
-    private ancestris.modules.views.graph.ColorChooserButton colorButtonSosa;
+    private ancestris.util.swing.ColorChooserButton colorButtonBackground;
+    private ancestris.util.swing.ColorChooserButton colorButtonCujus;
+    private ancestris.util.swing.ColorChooserButton colorButtonDefault;
+    private ancestris.util.swing.ColorChooserButton colorButtonFiliation;
+    private ancestris.util.swing.ColorChooserButton colorButtonMarriage;
+    private ancestris.util.swing.ColorChooserButton colorButtonMarriageSosa;
+    private ancestris.util.swing.ColorChooserButton colorButtonSelected;
+    private ancestris.util.swing.ColorChooserButton colorButtonSosa;
     private javax.swing.JButton jButtonApply;
     private javax.swing.JButton jButtonReset;
+    private javax.swing.JComboBox<String> jComboBoxFamLabels;
+    private javax.swing.JComboBox<String> jComboBoxIndiLabels;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabelColor;
     private javax.swing.JLabel jLabelEdge;
     private javax.swing.JLabel jLabelNode;
