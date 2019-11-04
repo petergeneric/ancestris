@@ -71,6 +71,8 @@ public class GraphParameter {
     private boolean autoDisplay = true;
     // Center on click ?
     private boolean centerGraph = false;
+   // Cacher sur click
+    private boolean hideNodes = false;
   
 
     // Colors and sizes
@@ -120,6 +122,8 @@ public class GraphParameter {
         indiNodeWeight = Double.valueOf(registry.get("GRAPH.weight.node.indi", "10.0"));
         mariageNodeWeight = Double.valueOf(registry.get("GRAPH.weight.node.fam", "5.0"));
         edgeWeight = Double.valueOf(registry.get("GRAPH.weight.edge", "1.0"));
+        labelFam = LabelFamEnum.valueOf(registry.get("GRAPH.fam.labels", "FAM_DATE"));
+        labelIndi = LabelIndiEnum.valueOf(registry.get("GRAPH.indi.labels", "INDI_NAME"));
     }
 
     public void saveSettings(Registry registry) {
@@ -139,6 +143,8 @@ public class GraphParameter {
         registry.put("GRAPH.weight.node.indi", String.valueOf(indiNodeWeight));
         registry.put("GRAPH.weight.node.fam", String.valueOf(mariageNodeWeight));
         registry.put("GRAPH.weight.edge", String.valueOf(edgeWeight));
+        registry.put("GRAPH.fam.labels", labelFam.name());
+        registry.put("GRAPH.indi.labels", labelIndi.name());
     }
 
     // Getters / Setters
@@ -310,5 +316,12 @@ public class GraphParameter {
         this.labelIndi = labelIndi;
     }
 
+    public boolean isHideNodes() {
+        return hideNodes;
+    }
+
+    public void setHideNodes(boolean hideNodes) {
+        this.hideNodes = hideNodes;
+    }
     
 }
