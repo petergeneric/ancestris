@@ -619,6 +619,7 @@ public class GraphSettings extends javax.swing.JPanel {
         gp.setAutoDisplay(getParam().isAutoDisplay());
         gp.setCenterGraph(getParam().isCenterGraph());
         gp.setShowLabel(getParam().isShowLabel());
+        gp.setHideNodes(getParam().isHideNodes());
         theGTC.setGraphParam(gp);
         theGTC.updateCss();
         theGTC.updateWeight();

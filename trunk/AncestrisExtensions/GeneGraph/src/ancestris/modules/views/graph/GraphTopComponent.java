@@ -27,6 +27,7 @@ import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Desktop;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -35,6 +36,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import javax.swing.ToolTipManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.graphstream.graph.Edge;
@@ -89,6 +92,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private static final String LABEL_INDI_NAME = "INDI:NAME:SURN";
     private static final String GENERATION = "generation";
     private static final String SOSA_NUMBER = "sosa";
+    private static final String HIDE = "ui.hide";
 
     private static GraphTopComponent factory;
 
@@ -101,6 +105,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private final GrapheGedcomListenerAdapter listener;
 
     private GraphParameter graphParam = new GraphParameter();
+    
+    private JPopupMenu hidePopup;
+    private Node hideNode;
 
     // Should recenter when select ?
     private boolean recenter = true;
@@ -108,6 +115,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     public GraphTopComponent() {
         super();
         listener = new GrapheGedcomListenerAdapter(this);
+        hidePopup = new JPopupMenu();
     }
 
     /**
@@ -173,7 +181,18 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         laVue.getCamera().setAutoFitView(true);
 
         fillGraph();
-        manageLabels();
+        
+        // prepare popupMenu
+        final JMenuItem itemAsc = new JMenuItem(NbBundle.getMessage(GraphTopComponent.class, "Popup.ascendency"));
+        itemAsc.addActionListener((ActionEvent e) -> {
+            hideNode(true);
+        });
+        hidePopup.add(itemAsc);
+        final JMenuItem itemDesc = new JMenuItem(NbBundle.getMessage(GraphTopComponent.class, "Popup.descendency"));
+        itemDesc.addActionListener((ActionEvent e) -> {
+            hideNode(false);
+        });
+        hidePopup.add(itemDesc);
 
         return true;
     }
@@ -186,7 +205,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         for (Fam fam : gedcom.getFamilies()) {
             addFamNode(fam);
         }
-
+        manageLabels();
     }
 
     private void addFamNode(Fam fam) {
@@ -412,6 +431,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jButtonSettings = new javax.swing.JButton();
         jButtonPrint = new javax.swing.JButton();
         jButtonGEXF = new javax.swing.JButton();
+        jToogleButtonHide = new javax.swing.JToggleButton();
         graphPanel = new javax.swing.JPanel();
 
         buttonPanel.setMaximumSize(new java.awt.Dimension(50, 32767));
@@ -490,6 +510,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         });
 
         jButtonSettings.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/Settings.png"))); // NOI18N
+        jButtonSettings.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jButtonSettings.toolTipText")); // NOI18N
         jButtonSettings.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonSettingsActionPerformed(evt);
@@ -512,37 +533,52 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
         });
 
+        jToogleButtonHide.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/fantome.png"))); // NOI18N
+        jToogleButtonHide.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToogleButtonHide.toolTipText")); // NOI18N
+        jToogleButtonHide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToogleButtonHideActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanelLayout.setHorizontalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                    .addGap(15, 15, 15)
-                    .addComponent(jToogleButtonCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                    .addComponent(jButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                    .addComponent(jToogleButtonDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
+                .addGap(0, 14, Short.MAX_VALUE)
+                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
+                        .addComponent(jToogleButtonCenter, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
+                        .addComponent(jButtonLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jToogleButtonDisplay, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
             .addGroup(buttonPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(zoomSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(buttonPanelLayout.createSequentialGroup()
+                        .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(zoomSlider, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
+                                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addGroup(buttonPanelLayout.createSequentialGroup()
+                                        .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(buttonPanelLayout.createSequentialGroup()
+                                        .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jButtonGEXF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                                            .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(2, 2, 2)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
-                        .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(buttonPanelLayout.createSequentialGroup()
-                                .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(buttonPanelLayout.createSequentialGroup()
-                                .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jButtonGEXF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                    .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(2, 2, 2))))
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jToogleButtonHide, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         buttonPanelLayout.setVerticalGroup(
             buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -556,7 +592,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jToogleButtonCenter)
                     .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(90, 90, 90)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jToogleButtonHide)
+                .addGap(58, 58, 58)
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonSettings)
                     .addComponent(jButtonPrint))
@@ -614,6 +652,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             // Don't recenter on select.
             recenter = false;
             SelectionDispatcher.fireSelection(evt, new Context(getContext().getGedcom().getEntity(clicked.getId())));
+            
+            if (graphParam.isHideNodes()) {
+                hideNode = leGraphe.getNode(clicked.getId());
+                hidePopup.show(this, evt.getX(), evt.getY());
+            }
         }
     }//GEN-LAST:event_graphPanelMouseClicked
 
@@ -644,6 +687,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jToogleButtonCenter.setSelected(false);
         graphParam.setShowLabel(false);
         jButtonLabel.setSelected(false);
+        graphParam.setHideNodes(false);
+        jToogleButtonHide.setSelected(false);
+        displayNodes();
         manageDisplayLabels();
     }//GEN-LAST:event_jButtonResetActionPerformed
 
@@ -774,6 +820,10 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
     }//GEN-LAST:event_graphPanelMouseWheelMoved
 
+    private void jToogleButtonHideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToogleButtonHideActionPerformed
+        graphParam.setHideNodes(!graphParam.isHideNodes());
+    }//GEN-LAST:event_jToogleButtonHideActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel graphPanel;
@@ -786,6 +836,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private javax.swing.JButton jButtonSettings;
     private javax.swing.JToggleButton jToogleButtonCenter;
     private javax.swing.JToggleButton jToogleButtonDisplay;
+    private javax.swing.JToggleButton jToogleButtonHide;
     private javax.swing.JSlider zoomSlider;
     // End of variables declaration//GEN-END:variables
     @Override
@@ -803,10 +854,49 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             gedcom.removeGedcomListener((GedcomListener) Spin.over(listener));
         }
     }
+    
+    private void hideNode(boolean ascendency) {
+        if (hideNode == null) {
+            return;
+        }
+        hideNode(hideNode, ascendency);
+    }
+    
+    private void hideNode(Node n, boolean ascendency) {
+        n.addAttribute(HIDE);
+        for (Edge e: n.getEdgeSet()) {
+            e.addAttribute(HIDE);
+        }
+        if (ascendency) {
+            for (Edge e : n.getEachEnteringEdge()) {
+                hideNode(e.getNode0(), ascendency);
+            }
+        } else {
+             for (Edge e : n.getEachLeavingEdge()) {
+                hideNode(e.getNode1(), ascendency);
+            }
+        }
+    }
 
     private void manageDisplayLabels() {
         for (Node noeud : leGraphe.getNodeSet()) {
             noeud.addAttribute(UI_STYLE, getDisplayLabelMode());
+        }
+    }
+    
+    /**
+     * Remove hide attribute.
+     */
+    private void displayNodes() {
+        for (Node n : leGraphe.getNodeSet()) {
+            if (n.hasAttribute(HIDE)) {
+                n.removeAttribute(HIDE);
+                for (Edge e: n.getEdgeSet()) {
+                    if (e.hasAttribute(HIDE)) {
+                     e.removeAttribute(HIDE);
+                    }
+                }
+            }
         }
     }
 
