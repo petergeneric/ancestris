@@ -20,7 +20,6 @@
 package genj.gedcom;
 
 import genj.util.swing.ImageIcon;
-
 import java.text.Collator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -71,7 +70,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
   private String info;
   
   /** whether this has been instantiated */
-  boolean isInstantiated = false;
+  private boolean isInstantiated = false;
   
   /** whether this is grammar conform */
   private boolean isGrammar;
@@ -305,6 +304,16 @@ public class MetaProperty implements Comparable<MetaProperty> {
   public boolean isInstantiated() {
     return isInstantiated;
   }
+
+  /**
+   * Setter.
+   * @param isInstantiated 
+   */
+    public void setIsInstantiated(boolean isInstantiated) {
+        this.isInstantiated = isInstantiated;
+    }
+  
+  
   
   /**
    * Accessor - image
