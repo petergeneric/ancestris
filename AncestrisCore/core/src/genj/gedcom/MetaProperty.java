@@ -79,8 +79,8 @@ public class MetaProperty implements Comparable<MetaProperty> {
   private Map<String,String> attrs;
   
   /** subs */
-  private Map<String,MetaProperty> tag2nested = new HashMap<String,MetaProperty>();
-  List<MetaProperty> nested = new ArrayList<MetaProperty>();
+  private Map<String,MetaProperty> tag2nested = new HashMap<>();
+  List<MetaProperty> nested = new ArrayList<>();
 
   /**
    * Constructor
@@ -100,7 +100,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
   
   private void copyAttributesFrom(MetaProperty supr) {
 
-    for (MetaProperty sub : new ArrayList<MetaProperty>(supr.nested)) {
+    for (MetaProperty sub : new ArrayList<>(supr.nested)) {
       if (!"0".equals(sub.attrs.get("inherit"))) {
         addNested(sub);
       }
@@ -154,7 +154,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
   /*package*/ MetaProperty[] getAllNested(Property parent, int filter) {
     
     // Loop over subs
-    List<MetaProperty> result = new ArrayList<MetaProperty>(nested.size());
+    List<MetaProperty> result = new ArrayList<>(nested.size());
     for (int s=0;s<nested.size();s++) {
         
       // .. next sub
@@ -496,7 +496,7 @@ public class MetaProperty implements Comparable<MetaProperty> {
     // current tag in map?
     MetaProperty result = tag2nested.get(tag);
     if (result==null) {
-      result = new MetaProperty(grammar, tag, new HashMap<String,String>(), false);
+      result = new MetaProperty(grammar, tag, new HashMap<>(), false);
       if (persist) addNested(result);
     }
     // done
