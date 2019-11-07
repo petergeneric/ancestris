@@ -122,7 +122,7 @@ public class Grammar {
     }
 
     private TagPath[] getPathsRecursively(String etag, Class<? extends Property> property) {
-        LOG.log(Level.FINE, "Enter Tag Entity : " + etag);
+        LOG.log(Level.FINE, "Enter Tag Entity : {0}", etag);
 
         // prepare result
         List<TagPath> result = new ArrayList<>();
@@ -138,7 +138,7 @@ public class Grammar {
     }
 
     private void getPathsRecursively(MetaProperty meta, Class<? extends Property> property, TagPath path, Collection<TagPath> result) {
-        LOG.log(Level.FINE, "TagPath : " + path.toString());
+        LOG.log(Level.FINE, "TagPath : {0}", path.toString());
 
         // something worthwhile to dive into?
         if (!meta.isInstantiated()) {
@@ -152,8 +152,12 @@ public class Grammar {
 
         // recurse into
         for (MetaProperty nested : meta.nested) {
-            LOG.log(Level.FINE, "Go recusrive : " + nested.getTag());
-            getPathsRecursively(nested, property, new TagPath(path, nested.getTag()), result);
+            LOG.log(Level.FINE, "Tag nested : {0}", nested.getTag());
+            //Stop recursive if tag already visited
+            if (!path.contains(nested.getTag())) {
+                LOG.log(Level.FINE, "Go recursive : {0}", nested.getTag());
+                getPathsRecursively(nested, property, new TagPath(path, nested.getTag()), result);
+            }
         }
         // done
     }
@@ -210,7 +214,7 @@ public class Grammar {
                 if (version == null) {
                     throw new RuntimeException("expected GEDCOM version");
                 }
-                stack = new Stack<MetaProperty>();
+                stack = new Stack<>();
                 return;
             }
 
@@ -231,7 +235,7 @@ public class Grammar {
 
             // a property root (a.k.a entity) or a nested one?
             if (stack.isEmpty()) {
-                LOG.log(Level.FINE, "Instanciate meta :" + meta.getName() + " " + meta.getTag());
+                LOG.log(Level.FINE, "Instantiate meta :" + meta.getName() + " " + meta.getTag());
                 meta.setIsInstantiated(true);
                 tag2root.put(qName, meta);
             } else {
