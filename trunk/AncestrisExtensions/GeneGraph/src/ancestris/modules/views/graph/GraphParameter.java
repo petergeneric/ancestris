@@ -39,9 +39,8 @@ public class GraphParameter {
             + "edge.mariage {"
             + "    fill-color:%s;"
             + "}"
-            + "edge.child {"
+            + "edge.asso {"
             + "    fill-color:%s; "
-            + "    shape:cubic-curve;"
             + "}"
             + "node.cujus {"
             + "    fill-color:%s;"
@@ -71,15 +70,16 @@ public class GraphParameter {
     private boolean autoDisplay = true;
     // Center on click ?
     private boolean centerGraph = false;
-   // Cacher sur click
+    // Cacher sur click
     private boolean hideNodes = false;
-  
+    // Display associaiton link ?
+    private boolean showAsso = false;
 
     // Colors and sizes
     private String colorDef = "#000000";
     private String colorSosa = "#006400";
     private String colorMariage = "#FF4500";
-    private String colorChild = "#708090";
+    private String colorAsso = "#708090";
     private String colorCujus = "#FF00FF";
     private String colorSticked = "#0000FF";
     private String colorBack = "#FFFFFF";
@@ -92,7 +92,7 @@ public class GraphParameter {
     private double indiNodeWeight = 10.0;
     private double mariageNodeWeight = 5.0;
     private double edgeWeight = 1.0;
-    
+
     private LabelFamEnum labelFam = LabelFamEnum.FAM_DATE;
     private LabelIndiEnum labelIndi = LabelIndiEnum.INDI_NAME;
 
@@ -100,7 +100,7 @@ public class GraphParameter {
         StringBuilder sb = new StringBuilder();
         Formatter fmt = new Formatter(sb);
         fmt.format(CSS, colorSosa, sizeNodeSosa, colorMariage, colorMariageSosa, sizeNodeSosa, colorSosa,
-                sizeEdgeSosa, colorMariage, colorChild, colorCujus, sizeCujus,
+                sizeEdgeSosa, colorMariage, colorAsso, colorCujus, sizeCujus,
                 sizeEdge, colorDef, sizeNode, colorDef, colorSticked, colorSticked, colorBack);
         return sb.toString();
     }
@@ -109,7 +109,7 @@ public class GraphParameter {
         colorDef = registry.get("GRAPH.color.default", "#000000");
         colorSosa = registry.get("GRAPH.color.sosa", "#006400");
         colorMariage = registry.get("GRAPH.color.marriage", "#FF4500");
-        colorChild = registry.get("GRAPH.color.child", "#708090");
+        colorAsso = registry.get("GRAPH.color.asso", "#708090");
         colorCujus = registry.get("GRAPH.color.cujus", "#FF00FF");
         colorSticked = registry.get("GRAPH.color.sticked", "#0000FF");
         colorBack = registry.get("GRAPH.color.back", "#FFFFFF");
@@ -130,7 +130,7 @@ public class GraphParameter {
         registry.put("GRAPH.color.default", colorDef);
         registry.put("GRAPH.color.sosa", colorSosa);
         registry.put("GRAPH.color.marriage", colorMariage);
-        registry.put("GRAPH.color.child", colorChild);
+        registry.put("GRAPH.color.child", colorAsso);
         registry.put("GRAPH.color.cujus", colorCujus);
         registry.put("GRAPH.color.sticked", colorSticked);
         registry.put("GRAPH.color.back", colorBack);
@@ -196,12 +196,12 @@ public class GraphParameter {
         this.colorMariage = colorMariage;
     }
 
-    public String getColorChild() {
-        return colorChild;
+    public String getColorAsso() {
+        return colorAsso;
     }
 
-    public void setColorChild(String colorChild) {
-        this.colorChild = colorChild;
+    public void setColorAsso(String colorAsso) {
+        this.colorAsso = colorAsso;
     }
 
     public String getColorCujus() {
@@ -323,5 +323,13 @@ public class GraphParameter {
     public void setHideNodes(boolean hideNodes) {
         this.hideNodes = hideNodes;
     }
-    
+
+    public boolean isShowAsso() {
+        return showAsso;
+    }
+
+    public void setShowAsso(boolean showAsso) {
+        this.showAsso = showAsso;
+    }
+
 }

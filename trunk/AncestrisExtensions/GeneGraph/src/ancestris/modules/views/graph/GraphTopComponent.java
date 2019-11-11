@@ -11,6 +11,10 @@
  */
 package ancestris.modules.views.graph;
 
+import ancestris.modules.views.graph.graphstream.AncestrisFileSinkGEXF;
+import ancestris.modules.views.graph.graphstream.AncestrisFileSinkSvg;
+import ancestris.modules.views.graph.graphstream.AncestrisMouseManager;
+import ancestris.modules.views.graph.graphstream.AncestrisMultiGraph;
 import ancestris.util.swing.DialogManager;
 import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.AncestrisDockModes;
@@ -23,6 +27,7 @@ import genj.gedcom.Fam;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomListener;
 import genj.gedcom.Indi;
+import genj.gedcom.PropertyAssociation;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -33,6 +38,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
@@ -75,6 +82,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private static final String UI_STYLE = "ui.style";
     private static final String UI_LABEL = "label";
     private static final String CHILD = "child";
+    private static final String ASSO = "asso";
     private static final String MARIAGE = "mariage";
     private static final String CLASSE_ORIGINE = "classe.origine";
     private static final String UI_CLASS = "ui.class";
@@ -105,9 +113,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private final GrapheGedcomListenerAdapter listener;
 
     private GraphParameter graphParam = new GraphParameter();
-    
-    private JPopupMenu hidePopup;
+
+    private final JPopupMenu hidePopup;
     private Node hideNode;
+    private final Set<Node> nodesHidden = new HashSet<>();
+    private final Set<Edge> edgesHidden = new HashSet<>();
 
     // Should recenter when select ?
     private boolean recenter = true;
@@ -181,7 +191,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         laVue.getCamera().setAutoFitView(true);
 
         fillGraph();
-        
+
         // prepare popupMenu
         final JMenuItem itemAsc = new JMenuItem(NbBundle.getMessage(GraphTopComponent.class, "Popup.ascendency"));
         itemAsc.addActionListener((ActionEvent e) -> {
@@ -206,6 +216,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             addFamNode(fam);
         }
         manageLabels();
+        manageAsso();
     }
 
     private void addFamNode(Fam fam) {
@@ -271,24 +282,19 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     private void createChildEdge(Fam fam, Indi child, boolean childSosa) {
-        createEdge(fam, child, true, childSosa, true);
+        createEdge(fam, child, true, childSosa, CHILD);
     }
 
     private void createSpouseEdge(Fam fam, Indi spouse, boolean spouseSosa, boolean famSosa) {
-        createEdge(fam, spouse, famSosa, spouseSosa, false);
+        createEdge(fam, spouse, famSosa, spouseSosa, MARIAGE);
     }
 
-    private void createEdge(Fam fam, Indi indi, boolean famSosa, boolean indiSosa, boolean childEdge) {
+    private void createEdge(Fam fam, Indi indi, boolean famSosa, boolean indiSosa, String uiClass) {
         Edge arcCourant = leGraphe.getEdge(fam.getId() + " - " + indi.getId());
         if (arcCourant == null && leGraphe.getNode(indi.getId()) != null) {
-            final String uiClass;
-            if (childEdge) {
-                leGraphe.addEdge(fam.getId() + " - " + indi.getId(), fam.getId(), indi.getId(), true);
-                uiClass = CHILD;
-            } else {
-                leGraphe.addEdge(fam.getId() + " - " + indi.getId(), indi.getId(), fam.getId(), true);
-                uiClass = MARIAGE;
-            }
+
+            leGraphe.addEdge(fam.getId() + " - " + indi.getId(), fam.getId(), indi.getId(), true);
+
             arcCourant = leGraphe.getEdge(fam.getId() + " - " + indi.getId());
             arcCourant.addAttribute(UI_CLASS, uiClass);
             arcCourant.addAttribute(CLASSE_ORIGINE, uiClass);
@@ -432,6 +438,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jButtonPrint = new javax.swing.JButton();
         jButtonGEXF = new javax.swing.JButton();
         jToogleButtonHide = new javax.swing.JToggleButton();
+        jToggleButtonAsso = new javax.swing.JToggleButton();
         graphPanel = new javax.swing.JPanel();
 
         buttonPanel.setMaximumSize(new java.awt.Dimension(50, 32767));
@@ -541,6 +548,17 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
         });
 
+        jToggleButtonAsso.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/views/graph/resources/asso.png"))); // NOI18N
+        jToggleButtonAsso.setToolTipText(org.openide.util.NbBundle.getMessage(GraphTopComponent.class, "GraphTopComponent.jToggleButtonAsso.toolTipText")); // NOI18N
+        jToggleButtonAsso.setMaximumSize(new java.awt.Dimension(49, 25));
+        jToggleButtonAsso.setMinimumSize(new java.awt.Dimension(49, 25));
+        jToggleButtonAsso.setPreferredSize(new java.awt.Dimension(49, 25));
+        jToggleButtonAsso.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jToggleButtonAssoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout buttonPanelLayout = new javax.swing.GroupLayout(buttonPanel);
         buttonPanel.setLayout(buttonPanelLayout);
         buttonPanelLayout.setHorizontalGroup(
@@ -565,19 +583,21 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
                                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addGroup(buttonPanelLayout.createSequentialGroup()
-                                        .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(buttonPanelLayout.createSequentialGroup()
                                         .addComponent(jButtonSave, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                             .addComponent(jButtonGEXF, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                            .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                            .addComponent(jButtonLoad, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addGroup(buttonPanelLayout.createSequentialGroup()
+                                        .addComponent(jButtonPrint, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButtonSettings, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                 .addGap(2, 2, 2)))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, buttonPanelLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jToggleButtonAsso, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jToogleButtonHide, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         buttonPanelLayout.setVerticalGroup(
@@ -593,7 +613,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                     .addComponent(jToogleButtonCenter)
                     .addComponent(jButtonReset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jToogleButtonHide)
+                .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jToogleButtonHide)
+                    .addComponent(jToggleButtonAsso, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(58, 58, 58)
                 .addGroup(buttonPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButtonSettings)
@@ -652,7 +674,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             // Don't recenter on select.
             recenter = false;
             SelectionDispatcher.fireSelection(evt, new Context(getContext().getGedcom().getEntity(clicked.getId())));
-            
+
             if (graphParam.isHideNodes()) {
                 hideNode = leGraphe.getNode(clicked.getId());
                 hidePopup.show(this, evt.getX(), evt.getY());
@@ -689,8 +711,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         jButtonLabel.setSelected(false);
         graphParam.setHideNodes(false);
         jToogleButtonHide.setSelected(false);
+        graphParam.setShowAsso(false);
+        jToggleButtonAsso.setSelected(false);
         displayNodes();
         manageDisplayLabels();
+        manageAsso();
     }//GEN-LAST:event_jButtonResetActionPerformed
 
     private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
@@ -824,6 +849,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         graphParam.setHideNodes(!graphParam.isHideNodes());
     }//GEN-LAST:event_jToogleButtonHideActionPerformed
 
+    private void jToggleButtonAssoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButtonAssoActionPerformed
+        graphParam.setShowAsso(!graphParam.isShowAsso());
+        manageAsso();
+    }//GEN-LAST:event_jToggleButtonAssoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel buttonPanel;
     private javax.swing.JPanel graphPanel;
@@ -834,6 +864,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private javax.swing.JButton jButtonReset;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonSettings;
+    private javax.swing.JToggleButton jToggleButtonAsso;
     private javax.swing.JToggleButton jToogleButtonCenter;
     private javax.swing.JToggleButton jToogleButtonDisplay;
     private javax.swing.JToggleButton jToogleButtonHide;
@@ -854,17 +885,17 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             gedcom.removeGedcomListener((GedcomListener) Spin.over(listener));
         }
     }
-    
+
     private void hideNode(boolean ascendency) {
         if (hideNode == null) {
             return;
         }
         hideNode(hideNode, ascendency);
     }
-    
+
     private void hideNode(Node n, boolean ascendency) {
         n.addAttribute(HIDE);
-        for (Edge e: n.getEdgeSet()) {
+        for (Edge e : n.getEdgeSet()) {
             e.addAttribute(HIDE);
         }
         if (ascendency) {
@@ -872,7 +903,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
                 hideNode(e.getNode0(), ascendency);
             }
         } else {
-             for (Edge e : n.getEachLeavingEdge()) {
+            for (Edge e : n.getEachLeavingEdge()) {
                 hideNode(e.getNode1(), ascendency);
             }
         }
@@ -883,7 +914,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             noeud.addAttribute(UI_STYLE, getDisplayLabelMode());
         }
     }
-    
+
     /**
      * Remove hide attribute.
      */
@@ -891,9 +922,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         for (Node n : leGraphe.getNodeSet()) {
             if (n.hasAttribute(HIDE)) {
                 n.removeAttribute(HIDE);
-                for (Edge e: n.getEdgeSet()) {
+                for (Edge e : n.getEdgeSet()) {
                     if (e.hasAttribute(HIDE)) {
-                     e.removeAttribute(HIDE);
+                        e.removeAttribute(HIDE);
                     }
                 }
             }
@@ -1052,7 +1083,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         String geneLabel = "";
         String nameLabel = "";
         if (n.hasAttribute(GENERATION)) {
-             final Integer generation = n.getAttribute(GENERATION);
+            final Integer generation = n.getAttribute(GENERATION);
             geneLabel = generation.toString();
         }
         if (n.hasAttribute(LABEL_INDI_NAME)) {
@@ -1119,6 +1150,55 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
         for (Edge e : leGraphe.getEachEdge()) {
             e.setAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
+        }
+    }
+
+    private void manageAsso() {
+        if (graphParam.isShowAsso()) {
+            displayAsso();
+        } else {
+            removeAsso();
+        }
+    }
+
+    private void displayAsso() {
+        for (Indi indi : getGedcom().getIndis()) {
+            final Node courant = leGraphe.getNode(indi.getId());
+            if (courant == null) {
+                continue;
+            }
+            for (PropertyAssociation asso : indi.getProperties(PropertyAssociation.class)) {
+                final Entity ent = asso.getTargetEntity();
+                final Node autre = leGraphe.getNode(ent.getId());
+                if (autre != null) {
+                    Edge e = leGraphe.getEdge("ASSO:" + indi.getId() + " - " + ent.getId());
+                    if (e == null) {
+                        e = leGraphe.addEdge("ASSO:" + indi.getId() + " - " + ent.getId(), courant, autre, false);
+                        e.addAttribute(UI_CLASS, ASSO);
+                        e.addAttribute(CLASSE_ORIGINE, ASSO);
+                    }
+
+                }
+            }
+        }
+    }
+
+    private void removeAsso() {
+        for (Indi indi : getGedcom().getIndis()) {
+            final Node courant = leGraphe.getNode(indi.getId());
+            if (courant == null) {
+                continue;
+            }
+            for (PropertyAssociation asso : indi.getProperties(PropertyAssociation.class)) {
+                final Entity ent = asso.getTargetEntity();
+                final Node autre = leGraphe.getNode(ent.getId());
+                if (autre != null) {
+                    final Edge e = leGraphe.getEdge("ASSO:" + indi.getId() + " - " + ent.getId());
+                    if (e != null) {
+                        leGraphe.removeEdge(e);
+                    }
+                }
+            }
         }
     }
 
