@@ -46,8 +46,8 @@ public class GraphSettings extends javax.swing.JPanel {
             getParam().setColorMariage(toHexString(newColor));
             theGTC.updateCss();
         });
-        colorButtonFiliation.addColorChangedListener((Color newColor) -> {
-            getParam().setColorChild(toHexString(newColor));
+        colorButtonAssociation.addColorChangedListener((Color newColor) -> {
+            getParam().setColorAsso(toHexString(newColor));
             theGTC.updateCss();
         });
         colorButtonCujus.addColorChangedListener((Color newColor) -> {
@@ -74,7 +74,7 @@ public class GraphSettings extends javax.swing.JPanel {
         colorButtonSosa.setSelectedColor(Color.decode(getParam().getColorSosa()), false);
         colorButtonDefault.setSelectedColor(Color.decode(getParam().getColorDef()), false);
         colorButtonMarriage.setSelectedColor(Color.decode(getParam().getColorMariage()), false);
-        colorButtonFiliation.setSelectedColor(Color.decode(getParam().getColorChild()), false);
+        colorButtonAssociation.setSelectedColor(Color.decode(getParam().getColorAsso()), false);
         colorButtonCujus.setSelectedColor(Color.decode(getParam().getColorCujus()), false);
         colorButtonSelected.setSelectedColor(Color.decode(getParam().getColorSticked()), false);
         colorButtonBackground.setSelectedColor(Color.decode(getParam().getColorBack()), false);
@@ -112,74 +112,83 @@ public class GraphSettings extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jPanel1 = new javax.swing.JPanel();
         jLabelColor = new javax.swing.JLabel();
         jLabelNode = new javax.swing.JLabel();
         jLabelEdge = new javax.swing.JLabel();
+        jPanel1 = new javax.swing.JPanel();
         labelColorDefault = new java.awt.Label();
         colorButtonDefault = new ancestris.util.swing.ColorChooserButton();
+        labelColorSosa = new java.awt.Label();
+        colorButtonSosa = new ancestris.util.swing.ColorChooserButton();
+        labelColorMariage = new java.awt.Label();
+        colorButtonMarriage = new ancestris.util.swing.ColorChooserButton();
+        labelColorMariageSosa = new java.awt.Label();
+        colorButtonMarriageSosa = new ancestris.util.swing.ColorChooserButton();
+        labelColorAssociation = new java.awt.Label();
+        colorButtonAssociation = new ancestris.util.swing.ColorChooserButton();
+        labelColorCujus = new java.awt.Label();
+        colorButtonCujus = new ancestris.util.swing.ColorChooserButton();
+        labelColorSelected = new java.awt.Label();
+        colorButtonSelected = new ancestris.util.swing.ColorChooserButton();
+        labelColorBackground = new java.awt.Label();
+        colorButtonBackground = new ancestris.util.swing.ColorChooserButton();
+        jPanel2 = new javax.swing.JPanel();
         labelDefaultNodeSize = new java.awt.Label();
         jTextFieldDefaultNodeSize = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
         labelDefaultEdgeSize = new java.awt.Label();
         jTextFieldDefaultEdgeSize = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        labelColorSosa = new java.awt.Label();
-        colorButtonSosa = new ancestris.util.swing.ColorChooserButton();
         labelSosaNodeSize = new java.awt.Label();
         jTextFieldSosaNodeSize = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         labelSosaEdgeSize = new java.awt.Label();
         jTextFieldSosaEdgeSize = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
-        labelColorMariage = new java.awt.Label();
-        colorButtonMarriage = new ancestris.util.swing.ColorChooserButton();
-        labelColorMariageSosa = new java.awt.Label();
-        colorButtonMarriageSosa = new ancestris.util.swing.ColorChooserButton();
-        labelColorFiliation = new java.awt.Label();
-        colorButtonFiliation = new ancestris.util.swing.ColorChooserButton();
-        labelColorCujus = new java.awt.Label();
-        colorButtonCujus = new ancestris.util.swing.ColorChooserButton();
         labelCujusNodeSize = new java.awt.Label();
         jTextFieldCujusNodeSize = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
-        labelColorSelected = new java.awt.Label();
-        colorButtonSelected = new ancestris.util.swing.ColorChooserButton();
-        labelColorBackground = new java.awt.Label();
-        colorButtonBackground = new ancestris.util.swing.ColorChooserButton();
         labelIndiNodeWeight = new java.awt.Label();
         jTextFieldIndiNodeWeght = new javax.swing.JTextField();
-        jTextFieldEdgeWeight = new javax.swing.JTextField();
         labelEdgeWeight = new java.awt.Label();
-        labelFamNodeWeight = new java.awt.Label();
+        jTextFieldEdgeWeight = new javax.swing.JTextField();
         jTextFieldFamNodeWeght = new javax.swing.JTextField();
+        labelFamNodeWeight = new java.awt.Label();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        jComboBoxIndiLabels = new javax.swing.JComboBox(labelIndi);
+        jLabel7 = new javax.swing.JLabel();
+        jComboBoxFamLabels = new javax.swing.JComboBox(labelFam);
         jButtonApply = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
-        jComboBoxIndiLabels = new javax.swing.JComboBox(labelIndi);
-        jComboBoxFamLabels = new javax.swing.JComboBox(labelFam);
-        jLabel6 = new javax.swing.JLabel();
-        jLabel7 = new javax.swing.JLabel();
 
-        jPanel1.setPreferredSize(new java.awt.Dimension(750, 500));
+        setMaximumSize(new java.awt.Dimension(700, 500));
+        setMinimumSize(new java.awt.Dimension(700, 500));
+        setPreferredSize(new java.awt.Dimension(700, 500));
 
         jLabelColor.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabelColor, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabelColor.text")); // NOI18N
-        jLabelColor.setMaximumSize(new java.awt.Dimension(230, 40));
-        jLabelColor.setPreferredSize(new java.awt.Dimension(230, 40));
+        jLabelColor.setMaximumSize(new java.awt.Dimension(500, 40));
+        jLabelColor.setMinimumSize(new java.awt.Dimension(220, 40));
+        jLabelColor.setPreferredSize(new java.awt.Dimension(220, 40));
 
         jLabelNode.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabelNode, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabelNode.text")); // NOI18N
-        jLabelNode.setMaximumSize(new java.awt.Dimension(230, 40));
-        jLabelNode.setPreferredSize(new java.awt.Dimension(230, 40));
+        jLabelNode.setMaximumSize(new java.awt.Dimension(500, 40));
+        jLabelNode.setMinimumSize(new java.awt.Dimension(220, 40));
+        jLabelNode.setPreferredSize(new java.awt.Dimension(220, 40));
 
         jLabelEdge.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         org.openide.awt.Mnemonics.setLocalizedText(jLabelEdge, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabelEdge.text")); // NOI18N
-        jLabelEdge.setMaximumSize(new java.awt.Dimension(230, 40));
-        jLabelEdge.setPreferredSize(new java.awt.Dimension(230, 40));
+        jLabelEdge.setMaximumSize(new java.awt.Dimension(500, 40));
+        jLabelEdge.setMinimumSize(new java.awt.Dimension(220, 40));
+        jLabelEdge.setPreferredSize(new java.awt.Dimension(220, 40));
 
-        labelColorDefault.setAlignment(java.awt.Label.CENTER);
-        labelColorDefault.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorDefault.setPreferredSize(new java.awt.Dimension(150, 25));
+        jPanel1.setPreferredSize(new java.awt.Dimension(220, 220));
+
+        labelColorDefault.setAlignment(java.awt.Label.RIGHT);
+        labelColorDefault.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorDefault.setMinimumSize(new java.awt.Dimension(150, 25));
         labelColorDefault.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorDefault.text")); // NOI18N
 
         colorButtonDefault.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonDefault.toolTipText")); // NOI18N
@@ -187,8 +196,139 @@ public class GraphSettings extends javax.swing.JPanel {
         colorButtonDefault.setMinimumSize(new java.awt.Dimension(50, 25));
         colorButtonDefault.setPreferredSize(new java.awt.Dimension(50, 25));
 
-        labelDefaultNodeSize.setAlignment(java.awt.Label.CENTER);
-        labelDefaultNodeSize.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelColorSosa.setAlignment(java.awt.Label.RIGHT);
+        labelColorSosa.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorSosa.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorSosa.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSosa.text")); // NOI18N
+
+        colorButtonSosa.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonSosa.toolTipText")); // NOI18N
+        colorButtonSosa.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonSosa.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonSosa.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelColorMariage.setAlignment(java.awt.Label.RIGHT);
+        labelColorMariage.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorMariage.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorMariage.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorMariage.text")); // NOI18N
+
+        colorButtonMarriage.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonMarriage.toolTipText")); // NOI18N
+        colorButtonMarriage.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonMarriage.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonMarriage.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelColorMariageSosa.setAlignment(java.awt.Label.RIGHT);
+        labelColorMariageSosa.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorMariageSosa.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorMariageSosa.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorMariageSosa.text")); // NOI18N
+
+        colorButtonMarriageSosa.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonMarriageSosa.toolTipText")); // NOI18N
+        colorButtonMarriageSosa.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonMarriageSosa.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonMarriageSosa.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelColorAssociation.setAlignment(java.awt.Label.RIGHT);
+        labelColorAssociation.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorAssociation.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorAssociation.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorAssociation.text")); // NOI18N
+
+        colorButtonAssociation.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonAssociation.toolTipText")); // NOI18N
+        colorButtonAssociation.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonAssociation.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonAssociation.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelColorCujus.setAlignment(java.awt.Label.RIGHT);
+        labelColorCujus.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorCujus.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorCujus.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorCujus.text")); // NOI18N
+
+        colorButtonCujus.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonCujus.toolTipText")); // NOI18N
+        colorButtonCujus.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonCujus.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonCujus.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelColorSelected.setAlignment(java.awt.Label.RIGHT);
+        labelColorSelected.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorSelected.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorSelected.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSelected.text")); // NOI18N
+
+        colorButtonSelected.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonSelected.toolTipText")); // NOI18N
+        colorButtonSelected.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonSelected.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonSelected.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelColorBackground.setAlignment(java.awt.Label.RIGHT);
+        labelColorBackground.setMaximumSize(new java.awt.Dimension(250, 25));
+        labelColorBackground.setMinimumSize(new java.awt.Dimension(150, 25));
+        labelColorBackground.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorBackground.text_1")); // NOI18N
+
+        colorButtonBackground.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonBackground.toolTipText_1")); // NOI18N
+        colorButtonBackground.setMaximumSize(new java.awt.Dimension(50, 25));
+        colorButtonBackground.setMinimumSize(new java.awt.Dimension(50, 25));
+        colorButtonBackground.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(0, 7, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorDefault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorMariage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorMariageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorAssociation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(colorButtonDefault, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonSosa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonMarriage, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonMarriageSosa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonAssociation, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonCujus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonSelected, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonBackground, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(69, 69, 69))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(2, 2, 2)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorDefault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonDefault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorMariage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonMarriage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorMariageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonMarriageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorAssociation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonAssociation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(colorButtonBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(18, Short.MAX_VALUE))
+        );
+
+        labelColorSosa.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSosa.AccessibleContext.accessibleName")); // NOI18N
+
+        jPanel2.setPreferredSize(new java.awt.Dimension(500, 280));
+
+        labelDefaultNodeSize.setAlignment(java.awt.Label.RIGHT);
+        labelDefaultNodeSize.setMaximumSize(new java.awt.Dimension(500, 25));
         labelDefaultNodeSize.setPreferredSize(new java.awt.Dimension(150, 25));
         labelDefaultNodeSize.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelDefaultNodeSize.text")); // NOI18N
 
@@ -201,8 +341,8 @@ public class GraphSettings extends javax.swing.JPanel {
         jLabel1.setMaximumSize(new java.awt.Dimension(20, 25));
         jLabel1.setPreferredSize(new java.awt.Dimension(20, 25));
 
-        labelDefaultEdgeSize.setAlignment(java.awt.Label.CENTER);
-        labelDefaultEdgeSize.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelDefaultEdgeSize.setAlignment(java.awt.Label.RIGHT);
+        labelDefaultEdgeSize.setMaximumSize(new java.awt.Dimension(500, 25));
         labelDefaultEdgeSize.setPreferredSize(new java.awt.Dimension(150, 25));
         labelDefaultEdgeSize.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelDefaultEdgeSize.text")); // NOI18N
 
@@ -215,18 +355,8 @@ public class GraphSettings extends javax.swing.JPanel {
         jLabel2.setMaximumSize(new java.awt.Dimension(20, 25));
         jLabel2.setPreferredSize(new java.awt.Dimension(20, 25));
 
-        labelColorSosa.setAlignment(java.awt.Label.CENTER);
-        labelColorSosa.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorSosa.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorSosa.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSosa.text")); // NOI18N
-
-        colorButtonSosa.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonSosa.toolTipText")); // NOI18N
-        colorButtonSosa.setMaximumSize(new java.awt.Dimension(50, 25));
-        colorButtonSosa.setMinimumSize(new java.awt.Dimension(50, 25));
-        colorButtonSosa.setPreferredSize(new java.awt.Dimension(50, 25));
-
-        labelSosaNodeSize.setAlignment(java.awt.Label.CENTER);
-        labelSosaNodeSize.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelSosaNodeSize.setAlignment(java.awt.Label.RIGHT);
+        labelSosaNodeSize.setMaximumSize(new java.awt.Dimension(500, 25));
         labelSosaNodeSize.setPreferredSize(new java.awt.Dimension(150, 25));
         labelSosaNodeSize.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelSosaNodeSize.text")); // NOI18N
 
@@ -239,8 +369,8 @@ public class GraphSettings extends javax.swing.JPanel {
         jLabel3.setMaximumSize(new java.awt.Dimension(20, 25));
         jLabel3.setPreferredSize(new java.awt.Dimension(20, 25));
 
-        labelSosaEdgeSize.setAlignment(java.awt.Label.CENTER);
-        labelSosaEdgeSize.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelSosaEdgeSize.setAlignment(java.awt.Label.RIGHT);
+        labelSosaEdgeSize.setMaximumSize(new java.awt.Dimension(500, 25));
         labelSosaEdgeSize.setPreferredSize(new java.awt.Dimension(150, 25));
         labelSosaEdgeSize.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelSosaEdgeSize.text")); // NOI18N
 
@@ -253,45 +383,8 @@ public class GraphSettings extends javax.swing.JPanel {
         jLabel4.setMaximumSize(new java.awt.Dimension(20, 25));
         jLabel4.setPreferredSize(new java.awt.Dimension(20, 25));
 
-        labelColorMariage.setAlignment(java.awt.Label.CENTER);
-        labelColorMariage.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorMariage.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorMariage.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorMariage.text")); // NOI18N
-
-        colorButtonMarriage.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonMarriage.toolTipText")); // NOI18N
-        colorButtonMarriage.setMaximumSize(new java.awt.Dimension(50, 25));
-        colorButtonMarriage.setMinimumSize(new java.awt.Dimension(50, 25));
-        colorButtonMarriage.setPreferredSize(new java.awt.Dimension(50, 25));
-
-        labelColorMariageSosa.setAlignment(java.awt.Label.CENTER);
-        labelColorMariageSosa.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorMariageSosa.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorMariageSosa.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorMariageSosa.text")); // NOI18N
-
-        colorButtonMarriageSosa.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonMarriageSosa.toolTipText")); // NOI18N
-        colorButtonMarriageSosa.setMaximumSize(new java.awt.Dimension(50, 25));
-        colorButtonMarriageSosa.setMinimumSize(new java.awt.Dimension(50, 25));
-        colorButtonMarriageSosa.setPreferredSize(new java.awt.Dimension(50, 25));
-
-        labelColorFiliation.setAlignment(java.awt.Label.CENTER);
-        labelColorFiliation.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorFiliation.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorFiliation.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorFiliation.text")); // NOI18N
-
-        colorButtonFiliation.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonFiliation.toolTipText")); // NOI18N
-
-        labelColorCujus.setAlignment(java.awt.Label.CENTER);
-        labelColorCujus.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorCujus.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorCujus.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorCujus.text")); // NOI18N
-
-        colorButtonCujus.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonCujus.toolTipText")); // NOI18N
-        colorButtonCujus.setMaximumSize(new java.awt.Dimension(50, 25));
-        colorButtonCujus.setMinimumSize(new java.awt.Dimension(50, 25));
-        colorButtonCujus.setPreferredSize(new java.awt.Dimension(50, 25));
-
-        labelCujusNodeSize.setAlignment(java.awt.Label.CENTER);
-        labelCujusNodeSize.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelCujusNodeSize.setAlignment(java.awt.Label.RIGHT);
+        labelCujusNodeSize.setMaximumSize(new java.awt.Dimension(500, 25));
         labelCujusNodeSize.setPreferredSize(new java.awt.Dimension(150, 25));
         labelCujusNodeSize.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelCujusNodeSize.text")); // NOI18N
 
@@ -304,21 +397,7 @@ public class GraphSettings extends javax.swing.JPanel {
         jLabel5.setMaximumSize(new java.awt.Dimension(20, 25));
         jLabel5.setPreferredSize(new java.awt.Dimension(20, 25));
 
-        labelColorSelected.setAlignment(java.awt.Label.CENTER);
-        labelColorSelected.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorSelected.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorSelected.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSelected.text")); // NOI18N
-
-        colorButtonSelected.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonSelected.toolTipText")); // NOI18N
-
-        labelColorBackground.setAlignment(java.awt.Label.CENTER);
-        labelColorBackground.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelColorBackground.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelColorBackground.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorBackground.text_1")); // NOI18N
-
-        colorButtonBackground.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.colorButtonBackground.toolTipText_1")); // NOI18N
-
-        labelIndiNodeWeight.setAlignment(java.awt.Label.CENTER);
+        labelIndiNodeWeight.setAlignment(java.awt.Label.RIGHT);
         labelIndiNodeWeight.setMaximumSize(new java.awt.Dimension(150, 25));
         labelIndiNodeWeight.setPreferredSize(new java.awt.Dimension(150, 25));
         labelIndiNodeWeight.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelIndiNodeWeight.text")); // NOI18N
@@ -328,25 +407,143 @@ public class GraphSettings extends javax.swing.JPanel {
         jTextFieldIndiNodeWeght.setMaximumSize(new java.awt.Dimension(50, 25));
         jTextFieldIndiNodeWeght.setPreferredSize(new java.awt.Dimension(50, 25));
 
+        labelEdgeWeight.setAlignment(java.awt.Label.RIGHT);
+        labelEdgeWeight.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelEdgeWeight.setPreferredSize(new java.awt.Dimension(150, 25));
+        labelEdgeWeight.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelEdgeWeight.text")); // NOI18N
+
         jTextFieldEdgeWeight.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jTextFieldEdgeWeight.text")); // NOI18N
         jTextFieldEdgeWeight.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jTextFieldEdgeWeight.toolTipText")); // NOI18N
         jTextFieldEdgeWeight.setMaximumSize(new java.awt.Dimension(50, 25));
         jTextFieldEdgeWeight.setPreferredSize(new java.awt.Dimension(50, 25));
 
-        labelEdgeWeight.setAlignment(java.awt.Label.CENTER);
-        labelEdgeWeight.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelEdgeWeight.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelEdgeWeight.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelEdgeWeight.text")); // NOI18N
-
-        labelFamNodeWeight.setAlignment(java.awt.Label.CENTER);
-        labelFamNodeWeight.setMaximumSize(new java.awt.Dimension(150, 25));
-        labelFamNodeWeight.setPreferredSize(new java.awt.Dimension(150, 25));
-        labelFamNodeWeight.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelFamNodeWeight.text")); // NOI18N
-
         jTextFieldFamNodeWeght.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jTextFieldFamNodeWeght.text")); // NOI18N
         jTextFieldFamNodeWeght.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jTextFieldFamNodeWeght.toolTipText")); // NOI18N
         jTextFieldFamNodeWeght.setMaximumSize(new java.awt.Dimension(50, 25));
         jTextFieldFamNodeWeght.setPreferredSize(new java.awt.Dimension(50, 25));
+
+        labelFamNodeWeight.setAlignment(java.awt.Label.RIGHT);
+        labelFamNodeWeight.setMaximumSize(new java.awt.Dimension(150, 25));
+        labelFamNodeWeight.setPreferredSize(new java.awt.Dimension(150, 25));
+        labelFamNodeWeight.setText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelFamNodeWeight.text")); // NOI18N
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(1, 1, 1)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(1, 1, 1)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(labelIndiNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jTextFieldIndiNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(labelCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(jTextFieldCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(labelSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(jTextFieldSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(labelDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, 0)
+                                .addComponent(jTextFieldDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(labelDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(2, 2, 2)
+                                .addComponent(jTextFieldDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(labelEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel2Layout.createSequentialGroup()
+                                        .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(9, 9, 9)
+                                        .addComponent(labelSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(4, 4, 4)
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jTextFieldSosaEdgeSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jTextFieldEdgeWeight, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(77, 77, 77))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jTextFieldDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 83, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(labelCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jTextFieldCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(49, 49, 49)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelIndiNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jTextFieldIndiNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
+        );
+
+        jPanel3.setPreferredSize(new java.awt.Dimension(750, 100));
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabel6.text")); // NOI18N
+        jLabel6.setMaximumSize(new java.awt.Dimension(150, 25));
+        jLabel6.setMinimumSize(new java.awt.Dimension(150, 25));
+        jLabel6.setPreferredSize(new java.awt.Dimension(150, 25));
+
+        jComboBoxIndiLabels.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jComboBoxIndiLabels.toolTipText")); // NOI18N
+        jComboBoxIndiLabels.setPreferredSize(new java.awt.Dimension(440, 25));
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.TRAILING);
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabel7.text")); // NOI18N
+        jLabel7.setMaximumSize(new java.awt.Dimension(150, 25));
+        jLabel7.setMinimumSize(new java.awt.Dimension(150, 25));
+        jLabel7.setPreferredSize(new java.awt.Dimension(150, 25));
+
+        jComboBoxFamLabels.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jComboBoxFamLabels.toolTipText")); // NOI18N
+        jComboBoxFamLabels.setPreferredSize(new java.awt.Dimension(440, 25));
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonApply, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jButtonApply.text")); // NOI18N
         jButtonApply.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jButtonApply.toolTipText")); // NOI18N
@@ -364,253 +561,77 @@ public class GraphSettings extends javax.swing.JPanel {
             }
         });
 
-        jComboBoxIndiLabels.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jComboBoxIndiLabels.toolTipText")); // NOI18N
-
-        jComboBoxFamLabels.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jComboBoxFamLabels.toolTipText")); // NOI18N
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabel6.text")); // NOI18N
-        jLabel6.setMaximumSize(new java.awt.Dimension(150, 25));
-        jLabel6.setMinimumSize(new java.awt.Dimension(150, 25));
-        jLabel6.setPreferredSize(new java.awt.Dimension(150, 25));
-
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jLabel7.text")); // NOI18N
-        jLabel7.setMaximumSize(new java.awt.Dimension(150, 25));
-        jLabel7.setMinimumSize(new java.awt.Dimension(150, 25));
-        jLabel7.setPreferredSize(new java.awt.Dimension(150, 25));
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jComboBoxIndiLabels, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jComboBoxFamLabels, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(0, 14, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jButtonApply)
-                .addGap(58, 58, 58)
+                .addGap(108, 108, 108)
                 .addComponent(jButtonReset)
-                .addGap(33, 33, 33))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(labelColorDefault, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(labelColorSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(labelColorSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelColorMariage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelColorMariageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelColorFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(labelColorCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(colorButtonSosa, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(colorButtonCujus, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(colorButtonMarriage, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(colorButtonFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(colorButtonSelected, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(colorButtonDefault, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(colorButtonMarriageSosa, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                            .addComponent(jLabelColor, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(colorButtonBackground, javax.swing.GroupLayout.PREFERRED_SIZE, 52, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(34, 34, 34)
-                                .addComponent(jLabelNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
-                                .addComponent(jLabelEdge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(labelCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(labelDefaultNodeSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jTextFieldCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(jTextFieldDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(labelDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(labelSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addComponent(labelIndiNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(jTextFieldIndiNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                                .addGroup(jPanel1Layout.createSequentialGroup()
-                                                    .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                    .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(labelEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                                .addComponent(labelSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jTextFieldSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))))))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 156, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jComboBoxIndiLabels, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jComboBoxFamLabels, javax.swing.GroupLayout.PREFERRED_SIZE, 438, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addContainerGap(93, Short.MAX_VALUE))
+                .addGap(48, 48, 48))
         );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {labelColorCujus, labelColorDefault, labelColorFiliation, labelColorMariage, labelColorSelected, labelColorSosa});
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, new java.awt.Component[] {colorButtonCujus, colorButtonDefault, colorButtonFiliation, colorButtonMarriage, colorButtonSelected, colorButtonSosa});
-
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabelNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabelEdge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelColorDefault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonDefault, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(5, 5, 5))
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(labelDefaultNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(labelDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextFieldDefaultEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(labelColorFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                        .addGap(1, 1, 1)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(labelSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelColorSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextFieldSosaNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelColorMariage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonMarriage, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelColorMariageSosa, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(colorButtonMarriageSosa, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(colorButtonFiliation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextFieldSosaEdgeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(colorButtonCujus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(labelColorCujus, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(labelCujusNodeSize, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jTextFieldCujusNodeSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(labelColorSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(colorButtonSelected, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextFieldIndiNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelIndiNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelEdgeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(colorButtonBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(4, 4, 4)
-                        .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 0, 0)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jTextFieldFamNodeWeght, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(labelFamNodeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxIndiLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jComboBoxFamLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxIndiLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBoxFamLabels, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(28, 28, 28)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonApply)
                     .addComponent(jButtonReset))
-                .addGap(74, 74, 74))
+                .addContainerGap(26, Short.MAX_VALUE))
         );
-
-        jPanel1Layout.linkSize(javax.swing.SwingConstants.VERTICAL, new java.awt.Component[] {jLabel1, jTextFieldDefaultNodeSize, labelCujusNodeSize, labelDefaultNodeSize, labelSosaNodeSize});
-
-        labelColorSosa.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSosa.AccessibleContext.accessibleName")); // NOI18N
-        labelColorMariage.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorMariage.AccessibleContext.accessibleName")); // NOI18N
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 845, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabelEdge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 703, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabelColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabelEdge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -644,10 +665,10 @@ public class GraphSettings extends javax.swing.JPanel {
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private ancestris.util.swing.ColorChooserButton colorButtonAssociation;
     private ancestris.util.swing.ColorChooserButton colorButtonBackground;
     private ancestris.util.swing.ColorChooserButton colorButtonCujus;
     private ancestris.util.swing.ColorChooserButton colorButtonDefault;
-    private ancestris.util.swing.ColorChooserButton colorButtonFiliation;
     private ancestris.util.swing.ColorChooserButton colorButtonMarriage;
     private ancestris.util.swing.ColorChooserButton colorButtonMarriageSosa;
     private ancestris.util.swing.ColorChooserButton colorButtonSelected;
@@ -667,6 +688,8 @@ public class GraphSettings extends javax.swing.JPanel {
     private javax.swing.JLabel jLabelEdge;
     private javax.swing.JLabel jLabelNode;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JTextField jTextFieldCujusNodeSize;
     private javax.swing.JTextField jTextFieldDefaultEdgeSize;
     private javax.swing.JTextField jTextFieldDefaultNodeSize;
@@ -675,10 +698,10 @@ public class GraphSettings extends javax.swing.JPanel {
     private javax.swing.JTextField jTextFieldIndiNodeWeght;
     private javax.swing.JTextField jTextFieldSosaEdgeSize;
     private javax.swing.JTextField jTextFieldSosaNodeSize;
+    private java.awt.Label labelColorAssociation;
     private java.awt.Label labelColorBackground;
     private java.awt.Label labelColorCujus;
     private java.awt.Label labelColorDefault;
-    private java.awt.Label labelColorFiliation;
     private java.awt.Label labelColorMariage;
     private java.awt.Label labelColorMariageSosa;
     private java.awt.Label labelColorSelected;
