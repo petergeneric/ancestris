@@ -24,10 +24,9 @@
  */
 package ancestris.app;
 
-import ancestris.util.Utilities;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
-import java.util.Locale;
+
 
 /**
  * Application options
@@ -36,20 +35,20 @@ public class AppOptions {
 
     /** singleton */
         //XXX: preference path must be defined in core options namespace
-    private final static AncestrisPreferences appOptions = Registry.get(AppOptions.class);
+    private final static AncestrisPreferences APP_OPTIONS = Registry.get(AppOptions.class);
 
     /**
      * Instance access
      */
     public static AncestrisPreferences getInstance() {
-        return appOptions;
+        return APP_OPTIONS;
     }
 
     /**
      * Getter - maximum log size
      */
     public static int getMaxLogSizeKB() {
-        int size = appOptions.get("maxLogSizeKB", 128);
+        int size = APP_OPTIONS.get("maxLogSizeKB", 128);
         if (size > 16384) {
             return 16384;
         }
@@ -63,23 +62,23 @@ public class AppOptions {
         if (set > 16384) {
             set = 16384;
         }
-        appOptions.put("maxLogSizeKB", Math.max(128, set));
+        APP_OPTIONS.put("maxLogSizeKB", Math.max(128, set));
     }
 
     public static boolean isWriteBOM() {
-        return appOptions.get("isWriteBOM", true);
+        return APP_OPTIONS.get("isWriteBOM", true);
     }
 
     public static void setWriteBOM(boolean isWriteBOM) {
-        appOptions.put("isWriteBOM", isWriteBOM);
+        APP_OPTIONS.put("isWriteBOM", isWriteBOM);
     }
 
     public static boolean isRestoreViews() {
-        return appOptions.get("isRestoreViews", true);
+        return APP_OPTIONS.get("isRestoreViews", true);
     }
 
     public static void setRestoreViews(boolean isRestoreViews) {
-        appOptions.put("isRestoreViews", isRestoreViews);
+        APP_OPTIONS.put("isRestoreViews", isRestoreViews);
     }
 
 } 

@@ -156,9 +156,9 @@ public class GraphSettings extends javax.swing.JPanel {
         labelFamNodeWeight = new java.awt.Label();
         jPanel3 = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
-        jComboBoxIndiLabels = new javax.swing.JComboBox(labelIndi);
+        jComboBoxIndiLabels = new javax.swing.JComboBox<>(labelIndi);
         jLabel7 = new javax.swing.JLabel();
-        jComboBoxFamLabels = new javax.swing.JComboBox(labelFam);
+        jComboBoxFamLabels = new javax.swing.JComboBox<>(labelFam);
         jButtonApply = new javax.swing.JButton();
         jButtonReset = new javax.swing.JButton();
 
@@ -675,8 +675,8 @@ public class GraphSettings extends javax.swing.JPanel {
     private ancestris.util.swing.ColorChooserButton colorButtonSosa;
     private javax.swing.JButton jButtonApply;
     private javax.swing.JButton jButtonReset;
-    private javax.swing.JComboBox<String> jComboBoxFamLabels;
-    private javax.swing.JComboBox<String> jComboBoxIndiLabels;
+    private javax.swing.JComboBox<LabelFamEnum> jComboBoxFamLabels;
+    private javax.swing.JComboBox<LabelIndiEnum> jComboBoxIndiLabels;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
