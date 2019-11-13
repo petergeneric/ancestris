@@ -10,10 +10,21 @@ import ancestris.startup.settings.StartupOptions;
 import ancestris.util.Lifecycle;
 import genj.util.AncestrisPreferences;
 import genj.util.Registry;
+import java.lang.management.ManagementFactory;
+import java.lang.management.RuntimeMXBean;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
+import javax.management.MBeanServer;
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+import javax.management.ReflectionException;
 import javax.swing.ToolTipManager;
 import org.openide.awt.StatusDisplayer;
+import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 @SuppressWarnings(value = {"unchecked", "rawtypes"})
@@ -44,6 +55,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         new Locale("sv")
     };
     private static LookAndFeelProvider[] skins = LookAndFeelProvider.getProviders();
+
+    private long memTotal;
+    private long maxMem;
+    private String xmx;
 
     OptionDisplayPanel(OptionDisplayOptionsPanelController controller) {
         this.controller = controller;
@@ -201,15 +216,35 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
     void load() {
         AncestrisPreferences gedcomPrefs = Registry.get(genj.gedcom.GedcomOptions.class);
 
+        Runtime r = Runtime.getRuntime();
+
+        maxMem = 1 + r.maxMemory() / (1024 * 1024 * 1024);
+
+        RuntimeMXBean runtimeMxBean = ManagementFactory.getRuntimeMXBean();
+
+        List<String> arguments = runtimeMxBean.getInputArguments();
+        for (String s : arguments) {
+            if (s.contains("-Xmx")) {
+                xmx = s.substring(4);
+            }
+        }
+
+        MBeanServer mBeanServer = ManagementFactory.getPlatformMBeanServer();
+        try {
+            Object attribute = mBeanServer.getAttribute(new ObjectName("java.lang", "type", "OperatingSystem"), "TotalPhysicalMemorySize");
+            memTotal = 1 + Long.parseLong(attribute.toString()) / (1024 * 1024 * 1024);
+        } catch (MalformedObjectNameException | MBeanException | AttributeNotFoundException | InstanceNotFoundException | ReflectionException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
         StartupOptions stopts = new StartupOptions();
         setLanguage(stopts.getJvmLocale());
         setOutputLanguage(TextOptions.getInstance().getOutputLocale(null));
 
         jComboBox2.setSelectedItem(LookAndFeelProvider.getProviderFromName(stopts.getJvmParameter("--laf")));
         jCheckBox1.setSelected(ancestris.app.AppOptions.isRestoreViews());
-        String memory = stopts.getJvmParameter("-J-Xmx");
-        if (memory != null) {
-            jTextField1.setText(memory.replace('g', ' ').trim());
+        if (xmx != null) {
+            jTextField1.setText(xmx.replace('g', ' ').trim());
         }
     }
 
@@ -225,11 +260,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getName());
         stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getClassPath());
-        
-        
+
         try {
             Integer.valueOf(jTextField1.getText());
-        needRestart |= stopts.setJvmParameter("-J-Xmx",jTextField1.getText() + "g");
+            needRestart |= stopts.setJvmParameter("-J-Xmx", jTextField1.getText() + "g");
         } catch (NumberFormatException e) {
             // Nothing now Should not happen because Apply button desactivated
         }
@@ -237,10 +271,8 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
         ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
 
-
         StatusDisplayer.getDefault().setStatusText(org.openide.util.NbBundle.getMessage(OptionDisplayPanel.class, "OptionPanel.saved.statustext"));
-        if (needRestart) 
-        // the markForRestart is not applicable here as the restart process loop done in nbexec file
+        if (needRestart) // the markForRestart is not applicable here as the restart process loop done in nbexec file
         // doesn't reread app.conf file which is read once before the loop.
         // W/O modifying nbexec and windows dll, the startup  settings are not re-read
         // So, as in a basic usage of ancestris the language preference will not be set by the user,
@@ -252,7 +284,14 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
 
     boolean valid() {
         try {
-            Integer.valueOf(jTextField1.getText());
+            final Integer number = Integer.valueOf(jTextField1.getText());
+            if (number < 1) {
+                return false;
+            }
+            if (number > memTotal - 1) {
+                return false;
+            }
+
         } catch (NumberFormatException e) {
             return false;
         }
@@ -282,7 +321,7 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
             } else {
                 langDescr.add(locale.getDisplayName(locale));
             }
-            
+
         }
         return langDescr.toArray(new String[0]);
     }
