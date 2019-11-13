@@ -11,12 +11,14 @@
  */
 package ancestris.modules.views.graph;
 
+import java.math.BigInteger;
+
 /**
  * Parser for Sosa/D'Aboville String
  * @author Zurga
  */
 public class SosaParser {
-    private Long sosa;
+    private BigInteger sosa;
     private String daboville;
     private Integer generation;
     
@@ -37,10 +39,10 @@ public class SosaParser {
         if (espace[0] != null && !"".equals(espace[0])) {
             final int premierPoint = espace[0].indexOf('-');
             if (premierPoint > 0) {
-            sosa = Long.valueOf(espace[0].substring(0, premierPoint));
+            sosa = new BigInteger(espace[0].substring(0, premierPoint));
             daboville = "1"+ espace[0].substring(premierPoint);
             } else {
-                sosa = Long.valueOf(espace[0]);
+                sosa = new BigInteger(espace[0]);
             }
         }
         
@@ -50,7 +52,7 @@ public class SosaParser {
      * Getter.
      * @return The Sosa number 
      */
-     public Long getSosa() {
+     public BigInteger getSosa() {
         return sosa;
     }
 

@@ -47,7 +47,7 @@ import org.openide.util.Lookup;
  */
 public class EnvironmentChecker {
 
-    private static Logger LOG = Logger.getLogger("ancestris.util");
+    private static final Logger LOG = Logger.getLogger("ancestris.util");
 
     private final static String[] SYSTEM_PROPERTIES = {
         "user.name", "user.dir", "user.home", "all.home", "user.home.ancestris", "all.home.ancestris",
@@ -61,22 +61,6 @@ public class EnvironmentChecker {
 
     private static String getAncestrisVersion() {
         return Lookup.getDefault().lookup(Version.class).getBuildString();
-    }
-
-    /**
-     * Check for Java 1.6 and higher
-     */
-    public static boolean isJava16() {
-        String version = getProperty("java.version", "", "Checking Java VM version 1.6+");
-        return version.matches("1\\.[6789].*");
-    }
-
-    /**
-     * Check for Java 1.8 and higher
-     */
-    public static boolean isJava18() {
-        String version = getProperty("java.version", "", "Checking Java VM version 1.8+");
-        return version.matches("1\\.[89].*");
     }
 
     /**
@@ -120,9 +104,9 @@ public class EnvironmentChecker {
      */
     public static void log() {
 
-        LOG.info("Date = " + new Date());
+        LOG.log(Level.INFO, "Date = {0}", new Date());
 
-        LOG.info("Ancestris Version = " + getAncestrisVersion());
+        LOG.log(Level.INFO, "Ancestris Version = {0}", getAncestrisVersion());
 
         // Go through system properties
         for (int i = 0; i < SYSTEM_PROPERTIES.length; i++) {
@@ -136,11 +120,11 @@ public class EnvironmentChecker {
         remember(UsageManager.ACTION_ON);
 
         // Check locale specific stuff
-        LOG.info("Locale = " + Locale.getDefault());
-        LOG.info("DateFormat (short) = " + getDatePattern(DateFormat.SHORT));
-        LOG.info("DateFormat (medium) = " + getDatePattern(DateFormat.MEDIUM));
-        LOG.info("DateFormat (long) = " + getDatePattern(DateFormat.LONG));
-        LOG.info("DateFormat (full) = " + getDatePattern(DateFormat.FULL));
+        LOG.log(Level.INFO, "Locale = {0}", Locale.getDefault());
+        LOG.log(Level.INFO, "DateFormat (short) = {0}", getDatePattern(DateFormat.SHORT));
+        LOG.log(Level.INFO, "DateFormat (medium) = {0}", getDatePattern(DateFormat.MEDIUM));
+        LOG.log(Level.INFO, "DateFormat (long) = {0}", getDatePattern(DateFormat.LONG));
+        LOG.log(Level.INFO, "DateFormat (full) = {0}", getDatePattern(DateFormat.FULL));
 
         try {
 
@@ -150,23 +134,23 @@ public class EnvironmentChecker {
             while (tokens.hasMoreTokens()) {
                 String entry = tokens.nextToken();
                 String stat = checkClasspathEntry(entry) ? " (does exist)" : "";
-                LOG.info("Classpath = " + entry + stat);
+                LOG.log(Level.INFO, "Classpath = {0}{1}", new Object[]{entry, stat});
             }
 
             // Check classloaders
             ClassLoader cl = EnvironmentChecker.class.getClassLoader();
             while (cl != null) {
                 if (cl instanceof URLClassLoader) {
-                    LOG.info("URLClassloader " + cl + Arrays.asList(((URLClassLoader) cl).getURLs()));
+                    LOG.log(Level.INFO, "URLClassloader {0}{1}", new Object[]{cl, Arrays.asList(((URLClassLoader) cl).getURLs())});
                 } else {
-                    LOG.info("Classloader " + cl);
+                    LOG.log(Level.INFO, "Classloader {0}", cl);
                 }
                 cl = cl.getParent();
             }
 
             // Check memory
             Runtime r = Runtime.getRuntime();
-            LOG.log(Level.INFO, "Memory Max={0}/Total={1}/Free={2}", new Long[]{new Long(r.maxMemory()), new Long(r.totalMemory()), new Long(r.freeMemory())});
+            LOG.log(Level.INFO, "Memory Max={0}/Total={1}/Free={2}", new Long[]{r.maxMemory(), r.totalMemory(), r.freeMemory()});
 
             // DONE
         } catch (Throwable t) {
@@ -235,16 +219,16 @@ public class EnvironmentChecker {
                 val = System.getProperty(key);
                 // found it ?
                 if (val != null) {
-                    LOG.finer("Using system-property " + key + '=' + val + " (" + msg + ')');
+                    LOG.log(Level.FINER, "Using system-property {0}={1} ({2})", new Object[]{key, val, msg});
                     return val + postfix;
                 }
             }
         } catch (Throwable t) {
-            LOG.log(Level.INFO, "Couldn't access system property " + key + " (" + t.getMessage() + ")");
+            LOG.log(Level.INFO, "Couldn''t access system property {0} ({1})", new Object[]{key, t.getMessage()});
         }
         // fallback
         if (fallback != null) {
-            LOG.fine("Using fallback for system-property " + key + '=' + fallback + " (" + msg + ')');
+            LOG.log(Level.FINE, "Using fallback for system-property {0}={1} ({2})", new Object[]{key, fallback, msg});
         }
         return fallback;
     }
@@ -275,10 +259,10 @@ public class EnvironmentChecker {
     private static void setProperty(String key, String val) {
         String old = System.getProperty(key);
         if (old == null) {
-            LOG.fine("Setting system property " + key);
+            LOG.log(Level.FINE, "Setting system property {0}", key);
             System.setProperty(key, val);
         } else {
-            LOG.fine("Not overriding system property " + key);
+            LOG.log(Level.FINE, "Not overriding system property {0}", key);
             NOOVERRIDE.add(key);
         }
     }
@@ -291,6 +275,9 @@ public class EnvironmentChecker {
         try {
             EnvironmentChecker.loadSystemProperties(new FileInputStream(new File("system.properties")));
         } catch (IOException e) {
+            // At least display the error in the console.
+            // But display anxiety inducing message, todo : analyze and uncomment message.
+            //e.printStackTrace();
         }
     }
 
@@ -323,7 +310,10 @@ public class EnvironmentChecker {
                     }
                 }
                 in.close();
-            } catch (Throwable t) {
+            } catch (IOException t) {
+                //At least display the error in the console.
+                // But display anxiety inducing message, todo : analyze and uncomment message.
+                //t.printStackTrace();
             }
         }
         // done

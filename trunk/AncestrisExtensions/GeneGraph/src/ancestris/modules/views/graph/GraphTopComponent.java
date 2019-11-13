@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.Set;
@@ -338,7 +339,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             if (parsing.getDaboville() == null) {
                 noeudCourant.addAttribute(UI_CLASS, SOSA);
                 noeudCourant.addAttribute(CLASSE_ORIGINE, SOSA);
-                if (1L == parsing.getSosa()) {
+                if (BigInteger.ONE.equals(parsing.getSosa())) {
                     noeudCourant.addAttribute(UI_CLASS, "cujus");
                     noeudCourant.addAttribute(CLASSE_ORIGINE, "cujus");
                 }
