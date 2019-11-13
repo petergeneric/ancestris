@@ -292,8 +292,11 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private void createEdge(Fam fam, Indi indi, boolean famSosa, boolean indiSosa, String uiClass) {
         Edge arcCourant = leGraphe.getEdge(fam.getId() + " - " + indi.getId());
         if (arcCourant == null && leGraphe.getNode(indi.getId()) != null) {
-
-            leGraphe.addEdge(fam.getId() + " - " + indi.getId(), fam.getId(), indi.getId(), true);
+            if (CHILD.equals(uiClass)) {
+                leGraphe.addEdge(fam.getId() + " - " + indi.getId(), fam.getId(), indi.getId(), true);
+            } else {
+                leGraphe.addEdge(fam.getId() + " - " + indi.getId(), indi.getId(), fam.getId(), true);
+            }
 
             arcCourant = leGraphe.getEdge(fam.getId() + " - " + indi.getId());
             arcCourant.addAttribute(UI_CLASS, uiClass);
