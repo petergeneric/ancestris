@@ -180,6 +180,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         updateCss();
         leGraphe.setAttribute("ui.antialias");
         leViewer.enableAutoLayout();
+        leViewer.setCloseFramePolicy(Viewer.CloseFramePolicy.EXIT);
 
         graphPanel.add(laVue, BorderLayout.CENTER);
         laVue.setMouseManager(new AncestrisMouseManager());
@@ -887,7 +888,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         Gedcom gedcom = getContext().getGedcom();
         if (gedcom != null) {
             gedcom.removeGedcomListener((GedcomListener) Spin.over(listener));
-        }
+        }     
     }
 
     private void hideNode(boolean ascendency) {
@@ -1173,6 +1174,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
             for (PropertyAssociation asso : indi.getProperties(PropertyAssociation.class)) {
                 final Entity ent = asso.getTargetEntity();
+                if (ent == null || ent.getId()==null) {
+                    continue;
+                }
                 final Node autre = leGraphe.getNode(ent.getId());
                 if (autre != null) {
                     Edge e = leGraphe.getEdge("ASSO:" + indi.getId() + " - " + ent.getId());
