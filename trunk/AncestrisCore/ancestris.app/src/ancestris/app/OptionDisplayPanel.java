@@ -261,12 +261,10 @@ final class OptionDisplayPanel extends javax.swing.JPanel {
         needRestart |= stopts.setJvmParameter("--laf", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getName());
         stopts.setJvmParameter("--cp:p", ((LookAndFeelProvider) jComboBox2.getSelectedItem()).getClassPath());
 
-        try {
-            Integer.valueOf(jTextField1.getText());
+        if (valid()) {
             needRestart |= stopts.setJvmParameter("-J-Xmx", jTextField1.getText() + "g");
-        } catch (NumberFormatException e) {
-            // Nothing now Should not happen because Apply button desactivated
         }
+        
         stopts.applyChanges();
 
         ancestris.app.AppOptions.setRestoreViews(jCheckBox1.isSelected());
