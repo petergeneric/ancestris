@@ -888,7 +888,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         Gedcom gedcom = getContext().getGedcom();
         if (gedcom != null) {
             gedcom.removeGedcomListener((GedcomListener) Spin.over(listener));
-        }     
+        } 
+        leViewer.disableAutoLayout();
+        leViewer.removeView(Viewer.DEFAULT_VIEW_ID);
     }
 
     private void hideNode(boolean ascendency) {
