@@ -44,17 +44,17 @@
 
 package ancestris.welcome.ui;
 
+import ancestris.welcome.content.BundleSupport;
+import ancestris.welcome.content.CombinationRSSFeed;
+import ancestris.welcome.content.RSSFeed;
+import ancestris.welcome.content.RSSFeedReaderPanel;
+import ancestris.welcome.content.WebLink;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import ancestris.welcome.content.BundleSupport;
-import ancestris.welcome.content.CombinationRSSFeed;
-import ancestris.welcome.content.RSSFeed;
-import ancestris.welcome.content.RSSFeedReaderPanel;
-import ancestris.welcome.content.WebLink;
 
 /**
  *
@@ -68,34 +68,12 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
 
     public ArticlesAndNews() {
         super( "ArticlesAndNews", true ); // NOI18N
-        //add( buildBottomContent(), BorderLayout.SOUTH );
+       
     }
 
-//    @Override
-//    protected JComponent buildContent(String url, boolean showProxyButton) {
-//        final Preferences p = NbPreferences.root().node("/org/netbeans/modules/autoupdate"); // NOI18N
-//        if( null != p ) {
-//            String ideId = p.get ("ideIdentity", null); // NOI18N
-//            if( null != ideId && ideId.length() > 0 ) {
-//                if( url.contains("?") ) { // NOI18N
-//                    url += "&unique="; // NOI18N
-//                } else {
-//                    url +=  "?unique="; // NOI18N
-//                }
-//                url += ideId;
-//            }
-//        }
-//        feed = new ArticlesAndNewsRSSFeed( url, BundleSupport.getURL("News"), showProxyButton ); // NOI18N
-//        feed.addPropertyChangeListener( RSSFeed.FEED_CONTENT_PROPERTY, this );
-//        return feed;
-//    }
-//
     protected JComponent buildBottomContent() {
         WebLink news = new WebLink("ForumLists", true); // NOI18N
         BundleSupport.setAccessibilityProperties( news, "ForumLists" ); //NOI18N
-        
-//        WebLink articles = new WebLink( "AllArticles", true); // NOI18N
-//        BundleSupport.setAccessibilityProperties( articles, "AllArticles" ); //NOI18N
 
         JPanel panel = new JPanel( new GridBagLayout() );
         panel.setOpaque(false);
@@ -106,9 +84,6 @@ class ArticlesAndNews extends RSSFeedReaderPanel {
         panel.add( new JLabel(), new GridBagConstraints(1,1,1,1,1.0,0.0,
                 GridBagConstraints.CENTER,GridBagConstraints.HORIZONTAL,
                 new Insets(5,5,0,0),0,0) );
-//        panel.add( articles, new GridBagConstraints(2,1,1,1,0.0,0.0,
-//                GridBagConstraints.SOUTHEAST,GridBagConstraints.HORIZONTAL,
-//                new Insets(5,5,0,0),0,0) );
 
         return panel;
     }

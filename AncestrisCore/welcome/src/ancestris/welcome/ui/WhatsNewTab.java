@@ -69,7 +69,6 @@ class WhatsNewTab extends AbstractTab {
 
         main.add( new ContentSection( BundleSupport.getLabel("SectionDemosAndTutorials"), new GetStarted("WelcomePage/TutorialsLinks") ) ); // NOI18N
         main.add( new ContentSection( BundleSupport.getLabel("SectionContribute"), new GetStarted("WelcomePage/ContributeLinks")) ); // NOI18N
-        //main.add(new ContentSection(BundleSupport.getLabel("SectionVersions"), new Versions(), true, true));   //NOI18N
         
         add(new BottomBar(), BorderLayout.SOUTH);
     }
