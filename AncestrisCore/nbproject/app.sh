@@ -6,6 +6,9 @@
 
 PRG=$0
 
+echo " "
+echo " "
+echo "Identifying path and application name:"
 while [ -h "$PRG" ]; do
     ls=`ls -ld "$PRG"`
     link=`expr "$ls" : '^.*-> \(.*\)$' 2>/dev/null`
@@ -19,13 +22,28 @@ done
 progdir=`dirname "$PRG"`
 APPNAME=`basename "$PRG"`
 
+echo "   progdir=$progdir"
+echo "   APPNAME=$APPNAME"
+echo " "
+
+
+
+echo "Checking configuration file on progdir/../etc:"
 if [ -f "$progdir/../etc/$APPNAME".conf ] ; then
+    echo "   Configuration file found. Executing it."
     . "$progdir/../etc/$APPNAME".conf
+else
+    echo "   Configuration file not found."
 fi
+echo " "
+
+
 
 # XXX does not correctly deal with spaces in non-userdir params
 args=""
 
+
+echo "Identifying userdir from configuration file:"
 case "`uname`" in
     Darwin*)
         userdir="${default_mac_userdir}"
@@ -34,6 +52,8 @@ case "`uname`" in
         userdir="${default_userdir}"
         ;;
 esac
+echo "   userdir(from conf file)=$userdir"
+
 while [ $# -gt 0 ] ; do
     case "$1" in
         --userdir) shift; if [ $# -gt 0 ] ; then userdir="$1"; fi
@@ -43,15 +63,33 @@ while [ $# -gt 0 ] ; do
     esac
     shift
 done
+echo "   userdir(after argument overwrite)=$userdir"
+echo " "
 
+
+
+echo "Checking configuration file on userdir/etc:"
 if [ -f "${userdir}/etc/$APPNAME".conf ] ; then
+    echo "   Configuration file found. Executing It."
     . "${userdir}/etc/$APPNAME".conf
+else
+    echo "   Configuration file from userdir not found."
 fi
+echo " "
 
+
+echo "Checking if jdkhome is defined: (for MacOS, you might need to add /Contents/Home at the end)"
+echo "   jdkhome=$jdkhome"
+if [ -z "$jdkhome" ]; then
+    echo "   jdkhome not defined."
+fi
 if [ -n "$jdkhome" -a \! -d "$jdkhome" -a -d "$progdir/../$jdkhome" ]; then
     # #74333: permit jdkhome to be defined as relative to app dir
     jdkhome="$progdir/../$jdkhome"
+    echo "   jdkhome changed to:$jdkhome"
 fi
+echo " "
+
 
 readClusters() {
   if [ -x /usr/ucb/echo ]; then
@@ -76,17 +114,29 @@ absolutize_paths() {
     done
 }
 
+echo "Defining clusters:"
 clusters=`(cat "$progdir/../etc/$APPNAME".clusters; echo) | readClusters | absolutize_paths | tr '\012' ':'`
-
 if [ ! -z "$extra_clusters" ] ; then
     clusters="$clusters:$extra_clusters"
 fi
+echo "   clusters=$clusters"
+echo " "
 
+
+echo "Defining exec command:"
 nbexec=`echo "$progdir"/../platform*/lib/nbexec`
+echo "   nbexec=$nbexec"
+echo " "
 
+
+
+echo "Running exec command:"
 # On MAC OC appname should be displayed Ancestris and not ancestris
 case "`uname`" in
     Darwin*)
+       echo "   => MacOS system detected..."
+       echo " "
+       echo " "
         eval exec sh '"$nbexec"' \
             --jdkhome '"$jdkhome"' \
             -J-Dcom.apple.mrj.application.apple.menu.about.name='"$APPNAME"' \
@@ -98,6 +148,9 @@ case "`uname`" in
             "$args"
         ;;
     *)  
+       echo "   => Linux system detected..."
+       echo " "
+       echo " "
        sh=sh
        # #73162: Ubuntu uses the ancient Bourne shell, which does not implement trap well.
        if [ -x /bin/bash ]
@@ -113,3 +166,11 @@ case "`uname`" in
        exit 1
         ;;
 esac
+echo " "
+echo " "
+echo " "
+echo " "
+echo " "
+
+
+
