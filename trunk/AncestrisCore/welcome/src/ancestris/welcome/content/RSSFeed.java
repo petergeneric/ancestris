@@ -508,6 +508,7 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
     private String stripHtml( String htmlSnippet ) {
         String res = htmlSnippet.replaceAll( "<[^>]*>", "" ); // NOI18N // NOI18N
         res = res.replaceAll( "&nbsp;", " " ); // NOI18N // NOI18N
+        res = res.replaceAll("\n", "<br />"); // NOI18N // NOI18N
         return res.trim();
     }
     
@@ -729,7 +730,7 @@ public class RSSFeed extends JPanel implements Constants, PropertyChangeListener
                         currentItem.title = text;
                     } else if( "description".equals( localName )
                             || "content".equals(localName) ) { // NOI18N
-                        currentItem.description = text;
+                        currentItem.description = text != null ? text.replaceAll("<br />", "\n"):text; // NOI18N // NOI18N
                     }
                 }
             }
