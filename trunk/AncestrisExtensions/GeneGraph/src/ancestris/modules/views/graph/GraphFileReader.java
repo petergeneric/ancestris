@@ -33,7 +33,6 @@ public class GraphFileReader {
     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     private static final String COLON = ":";
-    private static final String ANULL = "null";
 
     private final File in;
     private final Graph leGraphe;
@@ -59,7 +58,7 @@ public class GraphFileReader {
                 manageLine(st);
             }
         } catch (IOException e) {
-            LOG.log(Level.WARNING, "Unable to write Graph File.", e);
+            LOG.log(Level.WARNING, "Unable to read Graph File.", e);
         }
         // reinit display attributes for all deriving graphs 
         Object style = leGraphe.getAttribute("ui.stylesheet");

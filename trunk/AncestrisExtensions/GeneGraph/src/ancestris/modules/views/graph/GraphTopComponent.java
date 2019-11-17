@@ -39,7 +39,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +52,6 @@ import javax.swing.ToolTipManager;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import org.graphstream.graph.Edge;
 import org.graphstream.graph.Graph;
-import org.graphstream.graph.IdAlreadyInUseException;
 import org.graphstream.graph.Node;
 import org.graphstream.stream.file.FileSink;
 import org.graphstream.ui.geom.Point3;
@@ -101,7 +102,6 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private static final String LABEL_INDI_NAME = "INDI:NAME:SURN";
     private static final String GENERATION = "generation";
     private static final String SOSA_NUMBER = "sosa";
-    private static final String HIDE = "ui.hide";
 
     private static GraphTopComponent factory;
 
@@ -117,8 +117,8 @@ public final class GraphTopComponent extends AncestrisTopComponent {
 
     private final JPopupMenu hidePopup;
     private Node hideNode;
-    private final Set<Node> nodesHidden = new HashSet<>();
-    private final Set<Edge> edgesHidden = new HashSet<>();
+    private final Map<String, double[]> nodesHidden = new HashMap<>();
+    private final Set<HideEdge> edgesHidden = new HashSet<>();
 
     // Should recenter when select ?
     private boolean recenter = true;
@@ -237,24 +237,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         }
 
         boolean famSosa = false;
-        noeudCourant = leGraphe.addNode(fam.getId());
-        if (x != 0 || y != 0 || z != 0) {
-            noeudCourant.setAttribute("xyz", x, y, z);
-        }
-        noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
-        noeudCourant.addAttribute(UI_CLASS, MARIAGE);
-        noeudCourant.addAttribute(CLASSE_ORIGINE, MARIAGE);
-        noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
-        noeudCourant.addAttribute(FAM);
-
-        if (fam.getMarriageDate() != null) {
-            noeudCourant.addAttribute(LABEL_FAM_DATE, fam.getMarriageDate().getDisplayValue());
-            noeudCourant.addAttribute(LABEL_FAM_SIGN, "x " + fam.getMarriageDate().getDisplayValue());
-            noeudCourant.addAttribute(LABEL_FAM_ID, fam.getId() + " " + fam.getMarriageDate().getDisplayValue());
-        }
-        if (fam.getMarriagePlace() != null) {
-            noeudCourant.addAttribute(LABEL_FAM_LIEU, fam.getMarriagePlace().getCity());
-        }
+        noeudCourant = createFamNode(fam, x, y, z);
         Indi husband = fam.getSpouses().size() > 0 ? fam.getSpouse(0) : null;
         Indi wife = fam.getSpouses().size() > 1 ? fam.getSpouse(1) : null;
         boolean husbandSosa = calcSosa(husband);
@@ -281,6 +264,28 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             boolean childSosa = calcSosa(child);
             createChildEdge(fam, child, childSosa);
         }
+    }
+
+    private Node createFamNode(Fam fam, double x, double y, double z) {
+        Node noeudCourant;
+        noeudCourant = leGraphe.addNode(fam.getId());
+        if (x != 0 || y != 0 || z != 0) {
+            noeudCourant.setAttribute("xyz", x, y, z);
+        }
+        noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getMariageNodeWeight());
+        noeudCourant.addAttribute(UI_CLASS, MARIAGE);
+        noeudCourant.addAttribute(CLASSE_ORIGINE, MARIAGE);
+        noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
+        noeudCourant.addAttribute(FAM);
+        if (fam.getMarriageDate() != null) {
+            noeudCourant.addAttribute(LABEL_FAM_DATE, fam.getMarriageDate().getDisplayValue());
+            noeudCourant.addAttribute(LABEL_FAM_SIGN, "x " + fam.getMarriageDate().getDisplayValue());
+            noeudCourant.addAttribute(LABEL_FAM_ID, fam.getId() + " " + fam.getMarriageDate().getDisplayValue());
+        }
+        if (fam.getMarriagePlace() != null) {
+            noeudCourant.addAttribute(LABEL_FAM_LIEU, fam.getMarriagePlace().getCity());
+        }
+        return noeudCourant;
     }
 
     private void createChildEdge(Fam fam, Indi child, boolean childSosa) {
@@ -311,7 +316,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         }
     }
 
-    private void addIndiNode(Indi indi) throws IdAlreadyInUseException {
+    private void addIndiNode(Indi indi) {
         Node noeudCourant = leGraphe.getNode(indi.getId());
         double x = 0;
         double y = 0;
@@ -324,13 +329,24 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             leGraphe.removeNode(indi.getId());
         }
 
-        noeudCourant = leGraphe.addNode(indi.getId());
+        createIndiNode(indi, x, y, z);
+
+        for (Fam f : indi.getFamiliesWhereChild()) {
+            addFamNode(f);
+        }
+
+        for (Fam f : indi.getFamiliesWhereSpouse()) {
+            addFamNode(f);
+        }
+    }
+
+    private void createIndiNode(Indi indi, double x, double y, double z) {
+        Node noeudCourant = leGraphe.addNode(indi.getId());
         if (x != 0 || y != 0 || z != 0) {
             noeudCourant.setAttribute("xyz", x, y, z);
         }
         noeudCourant.addAttribute(LAYOUTWEIGHT, graphParam.getIndiNodeWeight());
         noeudCourant.addAttribute(UI_STYLE, getDisplayLabelMode());
-
         final SosaParser parsing = new SosaParser(indi.getSosaString());
         if (parsing.getSosa() != null) {
             noeudCourant.addAttribute(SOSA_NUMBER, indi.getSosaString());
@@ -349,14 +365,6 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (indi.getNameProperty() != null) {
             noeudCourant.addAttribute(LABEL_INDI_NAME, indi.getNameProperty().getLastName());
             noeudCourant.addAttribute(LABEL_INDI_GIVN, indi.getNameProperty().getDisplayValue());
-        }
-
-        for (Fam f : indi.getFamiliesWhereChild()) {
-            addFamNode(f);
-        }
-
-        for (Fam f : indi.getFamiliesWhereSpouse()) {
-            addFamNode(f);
         }
     }
 
@@ -888,7 +896,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         Gedcom gedcom = getContext().getGedcom();
         if (gedcom != null) {
             gedcom.removeGedcomListener((GedcomListener) Spin.over(listener));
-        } 
+        }
         leViewer.disableAutoLayout();
         leViewer.removeView(Viewer.DEFAULT_VIEW_ID);
     }
@@ -897,45 +905,94 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (hideNode == null) {
             return;
         }
-        hideNode(hideNode, ascendency);
+        final Map<String, double[]> currentHidden = new HashMap<>();
+        hideNode(hideNode, currentHidden, ascendency);
+        
+        currentHidden.keySet().forEach((key) -> {
+            leGraphe.removeNode(key);
+        });
+        
+        nodesHidden.putAll(currentHidden);
     }
 
-    private void hideNode(Node n, boolean ascendency) {
-        n.addAttribute(HIDE);
-        for (Edge e : n.getEdgeSet()) {
-            e.addAttribute(HIDE);
+    private void hideNode(Node n, Map<String, double[]> currentHidden, boolean ascendency) {
+        GraphicNode gNode = leViewer.getGraphicGraph().getNode(n.getId());
+        double[] point = {gNode.getX(), gNode.getY(), gNode.getZ()};
+        currentHidden.put(n.getId(), point);
+        for (Edge e : n.getEachEdge()) {
+            edgesHidden.add(fillHiddenEdge(e));
         }
         if (ascendency) {
+
             for (Edge e : n.getEachEnteringEdge()) {
-                hideNode(e.getNode0(), ascendency);
+                hideNode(e.getNode0(),currentHidden, ascendency);
             }
         } else {
             for (Edge e : n.getEachLeavingEdge()) {
-                hideNode(e.getNode1(), ascendency);
+                hideNode(e.getNode1(), currentHidden, ascendency);
             }
         }
     }
 
+    private HideEdge fillHiddenEdge(Edge e) {
+        final HideEdge he = new HideEdge(e.getId());
+        he.setNodeInitial(e.getNode0().getId());
+        he.setNodeFinal(e.getNode1().getId());
+        he.setDirected(e.isDirected());
+        he.setClasse(e.getAttribute(UI_CLASS));
+        he.setClassOrigine(e.getAttribute(CLASSE_ORIGINE));
+        return he;
+    }
+
     private void manageDisplayLabels() {
-        for (Node noeud : leGraphe.getNodeSet()) {
+        leGraphe.getNodeSet().forEach((noeud) -> {
             noeud.addAttribute(UI_STYLE, getDisplayLabelMode());
-        }
+        });
     }
 
     /**
      * Remove hide attribute.
      */
     private void displayNodes() {
-        for (Node n : leGraphe.getNodeSet()) {
-            if (n.hasAttribute(HIDE)) {
-                n.removeAttribute(HIDE);
-                for (Edge e : n.getEdgeSet()) {
-                    if (e.hasAttribute(HIDE)) {
-                        e.removeAttribute(HIDE);
+        for (String key : nodesHidden.keySet()) {
+            if (leGraphe.getNode(key) != null) {
+                // Node already exists, nothing to do.
+                continue;
+            }
+            final Entity e = getGedcom().getEntity(key);
+            if (e != null) {
+                double[] point = nodesHidden.get(key);
+                if (e instanceof Indi) {
+                    createIndiNode((Indi) e, point[0], point[1], point[2]);
+                }
+                if (e instanceof Fam) {
+                    Fam fam = (Fam) e;
+                    Node noeudCourant = createFamNode(fam, point[0], point[1], point[2]);
+                    Indi husband = fam.getSpouses().size() > 0 ? fam.getSpouse(0) : null;
+                    Indi wife = fam.getSpouses().size() > 1 ? fam.getSpouse(1) : null;
+                    boolean husbandSosa = calcSosa(husband);
+                    boolean wifeSosa = calcSosa(wife);
+                    if ((husbandSosa && wifeSosa) || (husbandSosa && wife == null) || (wifeSosa && husband == null)) {
+                        noeudCourant.addAttribute(UI_CLASS, MARRIAGE_SOSA);
+                        noeudCourant.addAttribute(CLASSE_ORIGINE, MARRIAGE_SOSA);
                     }
                 }
             }
         }
+        nodesHidden.clear();
+
+        for (HideEdge he : edgesHidden) {
+            if (leGraphe.getEdge(he.getId()) != null) {
+                // Edge already exists, nothing to do
+                continue;
+            }
+            final Edge e = leGraphe.addEdge(he.getId(), he.getNodeInitial(), he.getNodeFinal(), he.isDirected());
+            e.addAttribute(UI_CLASS, he.getClasse());
+            e.addAttribute(CLASSE_ORIGINE, he.getClassOrigine());
+            e.addAttribute(LAYOUTWEIGHT, graphParam.getEdgeWeight());
+        }
+        edgesHidden.clear();
+
     }
 
     public void changeDisplay(ModifEntity entities) {
@@ -1176,7 +1233,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             }
             for (PropertyAssociation asso : indi.getProperties(PropertyAssociation.class)) {
                 final Entity ent = asso.getTargetEntity();
-                if (ent == null || ent.getId()==null) {
+                if (ent == null || ent.getId() == null) {
                     continue;
                 }
                 final Node autre = leGraphe.getNode(ent.getId());
