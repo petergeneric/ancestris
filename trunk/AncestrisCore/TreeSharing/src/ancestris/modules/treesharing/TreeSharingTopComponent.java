@@ -837,7 +837,7 @@ public class TreeSharingTopComponent extends TopComponent {
         }
 
         if (!error.isEmpty()) {
-            DialogManager.create("", "error")
+            DialogManager.create("", error)
                     .setOptionType(DialogManager.OK_ONLY_OPTION)
                     .setMessageType(DialogManager.ERROR_MESSAGE).show();
             settings.displayOptionsPanel();
