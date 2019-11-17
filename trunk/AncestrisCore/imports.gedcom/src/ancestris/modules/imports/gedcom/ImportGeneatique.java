@@ -19,7 +19,9 @@ import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import org.openide.util.lookup.ServiceProvider;
 import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
 import genj.gedcom.Grammar;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
@@ -176,7 +178,45 @@ public class ImportGeneatique extends Import {
         
         
         
-        // Add OBJE:FORM next to OBJE:FILE
+        for (Indi indi : gedcom.getIndis()) {
+
+
+            // Turn "1 NICK" into "1 NAME/NICK" (Put any NICK of level 1 to a NICK in the NAME tag
+            props = indi.getProperties("NICK");
+            for (Property nick : props) {
+                Property name = indi.getProperty("NAME");
+                if (name == null) {
+                    name = indi.addProperty("NAME", "");
+                }
+                name.addProperty("NICK", nick.getValue());
+                indi.delProperty(nick);
+                hasErrors = true;
+            }
+            
+            // Turn "_IMG/OBJE/FILE" into "OBJE/FILE" (form will be taken care of below)
+            props = indi.getProperties("_IMG");
+            for (Property img : props) {
+                int pos = indi.getPropertyPosition(img);
+                Property obje = img.getProperty("OBJE");
+                if (obje != null) {
+                    Property file = obje.getProperty("FILE");
+                    try {
+                        prop = indi.addProperty("OBJE", obje.getValue(), pos);
+                    } catch (GedcomException ex) {
+                        prop = indi.addProperty("OBJE", obje.getValue());
+                    }
+                    prop.addProperty("FILE", file.getValue());
+                }
+                indi.delProperty(img);
+                hasErrors = true;
+            }
+            
+            
+        }
+
+        
+        
+        // Add OBJE:FORM next to OBJE:FILE in 5,5 grammar if no FORM exists
         if (gedcom.getGrammar().equals(Grammar.V55)) {
             List<Property> fileList = (List<Property>) gedcom.getPropertiesByClass(PropertyFile.class);
             for (Property file : fileList) {
