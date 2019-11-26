@@ -25,6 +25,7 @@ import ancestris.api.editor.Editor;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.beans.ConfirmChangeWidget;
 import ancestris.core.resources.Images;
+import ancestris.swing.ToolBar;
 import ancestris.view.SelectionDispatcher;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
@@ -34,7 +35,6 @@ import genj.gedcom.GedcomListenerAdapter;
 import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
-import ancestris.swing.ToolBar;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.BorderLayout;
@@ -371,26 +371,6 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         return gedcom;
     }    
     
-//  /**
-//   * ContextMenu
-//   */
-//  private class ContextMenu extends PopupWidget {
-//    
-//    /** constructor */
-//    private ContextMenu() {
-//      setIcon(Gedcom.getImage());
-//      setToolTipText(resources.getString( "action.context.tip" ));
-//    }
-//    
-//    /** override - popup creation */
-//    protected JPopupMenu createPopup() {
-//      // force editor to commit
-//      editor.setContext(editor.getContext());
-//      // create popup
-//      return manager.getContextMenu(editor.getContext(), this);
-//    }
-//     
-//  } //ContextMenu
     /**
      * Action - toggle sticky mode
      */

@@ -205,4 +205,12 @@ public class TextOptions {
             textOptions.put("locale.output", outLoc.toString());
         }
     }
+    
+    public boolean isUseChr() {
+        return textOptions.get("useCHR", false);
+    }
+    
+    public void setUseChr(boolean value) {
+        textOptions.put("useCHR", value);
+    }
 } 

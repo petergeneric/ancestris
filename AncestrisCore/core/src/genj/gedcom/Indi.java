@@ -202,7 +202,7 @@ public class Indi extends Entity {
         Arrays.sort(siblings, new PropertyComparator("INDI:BIRT:DATE"));
 
         // grab everything up to me
-        List<Indi> result = new ArrayList<Indi>(siblings.length);
+        List<Indi> result = new ArrayList<>(siblings.length);
         for (int i = siblings.length - 1; i >= 0; i--) {
             if (siblings[i] == this) {
                 break;
@@ -679,7 +679,32 @@ public class Indi extends Entity {
      */
     @Override
     protected String getToStringPrefix(boolean showIds) {
-        return getName() + " (" + TextOptions.getInstance().getBirthSymbol() + getBirthAsString() + " " + TextOptions.getInstance().getDeathSymbol() + getDeathAsString() + ")";
+        StringBuilder sb = new StringBuilder();
+        sb.append(getName());
+        sb.append(" (");
+        String birth = getBirthAsString();
+        if ("".equals(birth) && TextOptions.getInstance().isUseChr() && !"".equals(getCHRAsString())) {
+            sb.append(TextOptions.getInstance().getBaptismSymbol());
+            birth = getCHRAsString();
+        } else {
+            sb.append(TextOptions.getInstance().getBirthSymbol());
+        }
+        sb.append(birth);
+        sb.append(' ');
+        sb.append(TextOptions.getInstance().getDeathSymbol());
+        sb.append(getDeathAsString());
+        sb.append(')');
+        return sb.toString();
+    }
+    
+    private String getCHRAsString() {
+        PropertyDate p = (PropertyDate) getProperty(new TagPath("INDI:CHR:DATE"));
+        if (p == null) {
+            return "";
+        }
+
+        // Return string value
+        return p.getDisplayValue();
     }
 
     /**
