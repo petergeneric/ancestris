@@ -64,6 +64,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jTextField2 = new javax.swing.JTextField();
+        jCheckBoxCHR = new javax.swing.JCheckBox();
 
         setPreferredSize(new java.awt.Dimension(691, 384));
 
@@ -144,6 +145,9 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         jTextField2.setText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionFormatPanel.jTextField2.text")); // NOI18N
         jTextField2.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionFormatPanel.jTextField2.toolTipText")); // NOI18N
 
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxCHR, org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionFormatPanel.jCheckBoxCHR.text")); // NOI18N
+        jCheckBoxCHR.setToolTipText(org.openide.util.NbBundle.getMessage(OptionFormatPanel.class, "OptionFormatPanel.jCheckBoxCHR.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -211,7 +215,8 @@ final class OptionFormatPanel extends javax.swing.JPanel {
                                 .addGap(160, 160, 160)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jComboBox4, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, 253, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jCheckBoxCHR)))
                             .addComponent(jLabel7)
                             .addComponent(jLabel5))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -277,7 +282,9 @@ final class OptionFormatPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(jCheckBoxCHR)
+                .addContainerGap(61, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -299,6 +306,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         setImageSize(gedcomPrefs.get("maxImageFileSizeKB", ""));
         jComboBox4.setSelectedItem(GedcomOptions.getInstance().getNameFormat());
         jComboBox3.setSelectedItem(GedcomOptions.getInstance().getDateFormat());
+        jCheckBoxCHR.setSelected(textPrefs.isUseChr());
     }
 
     void store() {
@@ -315,6 +323,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         reportPrefs.setResiSymbol(getSymbolResi());
         reportPrefs.setDeathSymbol(getSymbolDeat());
         reportPrefs.setBurialSymbol(getSymbolBuri());
+        reportPrefs.setUseChr(jCheckBoxCHR.isSelected());
         genj.gedcom.GedcomOptions.getInstance().setValueLineBreak(Integer.valueOf(jSpinner3.getValue().toString()));
         gedcomPrefs.put("maxImageFileSizeKB", getImageSize());
         GedcomOptions.getInstance().setNameFormat((GedcomOptions.NameFormat) jComboBox4.getSelectedItem());
@@ -328,6 +337,7 @@ final class OptionFormatPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxCHR;
     private javax.swing.JComboBox jComboBox3;
     private javax.swing.JComboBox jComboBox4;
     private javax.swing.JLabel jLabel1;
