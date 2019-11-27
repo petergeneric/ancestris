@@ -32,7 +32,6 @@ import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.GedcomListenerAdapter;
-import genj.gedcom.UnitOfWork;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.view.View;
@@ -41,7 +40,6 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.Action;
@@ -56,14 +54,14 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
     /* package */ final static Logger LOG = Logger.getLogger("ancestris.edit");
     private final static Registry REGISTRY = Registry.get(EditView.class);
     static final Resources RESOURCES = Resources.get(EditView.class);
-    private Mode mode = new Mode();
-    private Sticky sticky = new Sticky();
-    private Focus focus = new Focus();
-    private Callback callback = new Callback();
+    private final Mode mode = new Mode();
+    private final Sticky sticky = new Sticky();
+    private final Focus focus = new Focus();
+    private final Callback callback = new Callback();
     private boolean isIgnoreSetContext = false;
     private boolean isChangeSource = false;
     private Editor editor;
-    private ConfirmChangeWidget confirmPanel;
+    private final ConfirmChangeWidget confirmPanel;
     private ToolBar toolbar;
     private Gedcom gedcom;
     private TitlePanel titlePanel;
@@ -82,7 +80,6 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         add(BorderLayout.SOUTH, confirmPanel);
 
         // check for current modes
-//    mode.setSelected(REGISTRY.get("advanced", false));
         mode.setSelected(true);
         focus.setSelected(REGISTRY.get("focus", false));
         
@@ -155,6 +152,7 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         commit(true);
     }
 
+    @Override
     public void commit(boolean ask) {
 
         // changes?
@@ -186,16 +184,12 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
             if (gedcom.isWriteLocked()) {
                 editor.commit();
             } else {
-                gedcom.doUnitOfWork(new UnitOfWork() {
-
-                    @Override
-                    public void perform(Gedcom gedcom) throws GedcomException {
-                        editor.commit();
-                    }
+                gedcom.doUnitOfWork((Gedcom gedcom1) -> {
+                    editor.commit();
                 });
             }
 
-        } catch (Throwable t) {
+        } catch (GedcomException t) {
             LOG.log(Level.WARNING, "error committing editor", t);
         } finally {
             isChangeSource = false;
@@ -292,17 +286,11 @@ public class EditView extends View implements ConfirmChangeWidget.ConfirmChangeC
         toolbar.add(new JToggleButton((Action)sticky));
         toolbar.add(new JToggleButton((Action)focus));
         toolbar.addSeparator();
-//        if (REGISTRY.get("showstandard", false)) {
-//            toolbar.add(new JToggleButton(mode));  // FL 2018-03-29 - mode is not used apparently : it displays an editor which has never been used and is not completeed apparently.
-//        }
 
         titlePanel = new TitlePanel();
-        toolbar.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                if ("orientation".equals(evt.getPropertyName())) {
-                    setTitleBar();
-                }
+        toolbar.addPropertyChangeListener((PropertyChangeEvent evt) -> {
+            if ("orientation".equals(evt.getPropertyName())) {
+                setTitleBar();
             }
         });
         

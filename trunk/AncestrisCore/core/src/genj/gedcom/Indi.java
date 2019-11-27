@@ -721,7 +721,13 @@ public class Indi extends Entity {
         String firstNames[] = getFirstName().split(",");
         String lastname = lastNames.length > 0 ? lastNames[0] : "?";
         String firstname = firstNames.length > 0 ? firstNames[0] : "?";
-        return (showid ? getId() + " - " : "") + firstname + " " + lastname + " (" + getBirthAsString() + " - " + getDeathAsString() + ")";
+        
+        String birthDate = getBirthAsString();
+        if ("".equals(birthDate) && TextOptions.getInstance().isUseChr() && !"".equals(getCHRAsString())) {
+            birthDate = TextOptions.getInstance().getBaptismSymbol() + getCHRAsString();
+        } 
+        
+        return (showid ? getId() + " - " : "") + firstname + " " + lastname + " (" + birthDate+ " - " + getDeathAsString() + ")";
     }
 
     
