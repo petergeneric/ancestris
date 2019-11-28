@@ -1011,7 +1011,7 @@ public class ReplacePanel extends javax.swing.JPanel {
         String surn = "SURN".equals(tag) ? to : name.getLastName();
         String nsfx = "NSFX".equals(tag) ? to : name.getSuffix();
         String nick = "NICK".equals(tag) ? to : name.getNick();
-        name.setName(npfx, givn, spfx, surn, nsfx, false);
+        name.setName(npfx, givn, spfx, surn, nsfx);
         name.setNick(nick);
     }
 

@@ -150,7 +150,11 @@ public class ShortNameBean extends PropertyBean {
     }
 
     // ... store changed value
-    p.setName( first, last, suff, cAll.isSelected());
+    final String oldName = p.getLastName();
+    p.setName(first, last, suff);
+    if (cAll.isSelected()) {
+        p.replaceAllLastNames(oldName);
+    }
     
     // start fresh
     setPropertyImpl(p);

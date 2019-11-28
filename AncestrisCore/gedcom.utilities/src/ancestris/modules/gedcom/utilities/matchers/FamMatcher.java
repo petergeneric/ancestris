@@ -65,13 +65,17 @@ public class FamMatcher extends EntityMatcher<Fam, FamMatcherOptions> {
             husbandNames = entity.getHusband().getProperties(PropertyName.class);
         } else {
             husbandNames = new ArrayList<PropertyName>();
-            husbandNames.add(new PropertyName("?", "?"));
+            final PropertyName pN = new PropertyName();
+            pN.setName("?", "?");
+            husbandNames.add(pN);
         }
         if (entity.getWife() != null) {
             wifeNames = entity.getWife().getProperties(PropertyName.class);
         } else {
             wifeNames = new ArrayList<PropertyName>();
-            wifeNames.add(new PropertyName("?", "?"));
+            final PropertyName pN = new PropertyName();
+            pN.setName("?", "?");
+            wifeNames.add(pN);
         }
         for (Property husbandName : husbandNames) {
             for (Property wifeName : wifeNames) {
