@@ -9,7 +9,6 @@
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
-
 package ancestris.modules.editors.standard.tools;
 
 import ancestris.core.TextOptions;
@@ -23,7 +22,7 @@ import genj.gedcom.PropertySex;
  * @author frederic
  */
 public class NodeWrapper {
-    
+
     private static String NO_NAME = "?";
     private static String NO_DATE = "-";
 
@@ -42,23 +41,24 @@ public class NodeWrapper {
     private static String b = "";
     private static String m = "";
     private static String d = "";
-    
+    private static String c = "";
+
     private Entity entity = null;
     private int type = 0;
     private Object object = null;
     private Indi myIndi = null;
-    
-    
+
     public NodeWrapper(int type, Object o) {
         this.type = type;
         this.object = o;
-        
+
         b = TextOptions.getInstance().getBirthSymbol();
         m = TextOptions.getInstance().getMarriageSymbol();
         d = TextOptions.getInstance().getDeathSymbol();
+        c = TextOptions.getInstance().getBaptismSymbol();
 
         if (type == MEUNKNOWN) {
-            Indi indi = (Indi)o;
+            Indi indi = (Indi) o;
             this.entity = indi;
             if (indi.getSex() == PropertySex.MALE) {
                 this.type = MEMALE;
@@ -66,7 +66,7 @@ public class NodeWrapper {
                 this.type = MEFEMALE;
             }
         } else if (type == SIBLING) {
-            Indi indi = (Indi)o;
+            Indi indi = (Indi) o;
             this.entity = indi;
             if (indi.getSex() == PropertySex.MALE) {
                 this.type = BROTHER;
@@ -74,7 +74,7 @@ public class NodeWrapper {
                 this.type = SISTER;
             }
         } else if (type == CHILD) {
-            Indi indi = (Indi)o;
+            Indi indi = (Indi) o;
             this.entity = indi;
             if (indi.getSex() == PropertySex.MALE) {
                 this.type = BOY;
@@ -82,9 +82,9 @@ public class NodeWrapper {
                 this.type = GIRL;
             }
         } else if (type == PARENTS) {
-            this.entity = (Fam) o; 
+            this.entity = (Fam) o;
         } else if (type == SPOUSE) {
-            this.entity = (Fam) o; 
+            this.entity = (Fam) o;
         }
     }
 
@@ -98,19 +98,19 @@ public class NodeWrapper {
     public Entity getEntity() {
         return entity;
     }
-    
+
     public int getType() {
         return type;
     }
-    
+
     public String getDisplayValue() {
 
         if (object == null) {
             return "";
         }
-        
+
         StringBuilder ret = new StringBuilder("<html>");
-        
+
         if (type == PARENTS) {
             Fam fam = (Fam) object;
             Indi husband = fam.getHusband();
@@ -118,51 +118,52 @@ public class NodeWrapper {
             ret.append(getName(husband));
             ret.append(m).append(fam.getMarriageDate() != null ? fam.getMarriageDate().getDisplayValue() : "").append(" ");
             ret.append(getName(wife));
-            this.entity = husband; 
-            
+            this.entity = husband;
+
         } else if (type == SIBLING || type == BROTHER || type == SISTER) {
             Indi indi = (Indi) object;
             ret.append(getName(indi));
-            
+
         } else if (type == MEUNKNOWN || type == MEMALE || type == MEFEMALE) {
             Indi indi = (Indi) object;
             //ret.append("<b>");
             ret.append(getName(indi));
             //ret.append("</b>");
-            
+
         } else if (type == SPOUSE) {
             Fam fam = (Fam) object;
             Indi husband = fam.getHusband();
             Indi wife = fam.getWife();
             if (husband != null && husband.equals(myIndi)) {
                 ret.append(wife != null ? getName(wife) : "");
-                this.entity = wife; 
+                this.entity = wife;
             } else if (wife != null && wife.equals(myIndi)) {
                 ret.append(husband != null ? getName(husband) : "");
-                this.entity = husband; 
+                this.entity = husband;
             } else {
                 ret.append("");
-                this.entity = fam; 
+                this.entity = fam;
             }
             String dateStr = fam.getMarriageDate() != null ? fam.getMarriageDate().getDisplayValue() : NO_DATE;
             if (dateStr.trim().isEmpty()) {
                 dateStr = NO_DATE;
             }
             ret.append(m).append(dateStr).append(" ");
-            
+
         } else if (type == CHILD || type == BOY || type == GIRL) {
             Indi indi = (Indi) object;
             ret.append(getName(indi));
-            
+
         } else {
             ret.append(object.toString());
         }
-        
+
         ret.append("</html>");
         return ret.toString();
     }
 
     private String getName(Indi indi) {
+        boolean useChr = false;
         if (indi == null) {
             return "";
         }
@@ -179,16 +180,22 @@ public class NodeWrapper {
         }
         String bd = (indi.getBirthAsString() != null) ? indi.getBirthAsString() : NO_NAME;
         if (bd.trim().isEmpty()) {
-            bd = NO_DATE;
+            if (TextOptions.getInstance().isUseChr() && !"".equals(indi.getCHRAsString())) {
+                bd = indi.getCHRAsString();
+                useChr = true;
+            } else {
+                bd = NO_DATE;
+            }
+
         }
         String dd = (indi.getDeathAsString() != null) ? indi.getDeathAsString() : NO_NAME;
         if (dd.trim().isEmpty()) {
             dd = NO_DATE;
         }
-        
+
         StringBuilder ret = new StringBuilder("");
         ret.append(ln).append(", ").append(fn);
-        ret.append(" (").append(b).append(bd).append(" ");
+        ret.append(" (").append(useChr ? c : b).append(bd).append(" ");
         ret.append(d).append(dd).append(") ");
         return ret.toString();
     }
@@ -215,6 +222,4 @@ public class NodeWrapper {
         return null;
     }
 
-    
-    
 }
