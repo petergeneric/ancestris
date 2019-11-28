@@ -11,7 +11,6 @@
  */
 package genj.edit.beans;
 
-import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.CoreOptions;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
@@ -32,12 +31,14 @@ import net.miginfocom.swing.MigLayout;
 import org.openide.util.NbBundle;
 
 /**
- * A Proxy knows how to generate interaction components that the user
- * will use to change a property : NAME
+ * A Proxy knows how to generate interaction components that the user will use
+ * to change a property : NAME
  */
 public class FullNameBean extends PropertyBean {
 
-    /** our components */
+    /**
+     * our components
+     */
     private Property[] sameLastNames = new Property[0];
     private ChoiceWidget cLast, cFirst;
     private JCheckBox cAll;
@@ -68,14 +69,15 @@ public class FullNameBean extends PropertyBean {
 
         // Combo values are set only when used to improve response time
         cLast = new ChoiceWidget();
-        cLast.setUpdater( new Updateable() {
+        cLast.setUpdater(new Updateable() {
 
             @Override
             public Object[] getValues() {
-                if (getRoot() != null)
+                if (getRoot() != null) {
                     return PropertyName.getLastNames(getRoot().getGedcom(), true).toArray();
-                return null;
                 }
+                return null;
+            }
         });
         cLast.addChangeListener(changeSupport);
         cLast.addChangeListener(new ChangeListener() {
@@ -94,10 +96,12 @@ public class FullNameBean extends PropertyBean {
         cFirst.setUpdater(new Updateable() {
             @Override
             public Object[] getValues() {
-                if (getRoot() != null)
+                if (getRoot() != null) {
                     return (PropertyName.getFirstNames(getRoot().getGedcom(), true).toArray());
+                }
                 return null;
-        }});
+            }
+        });
         cFirst.addChangeListener(changeSupport);
         cFirst.setIgnoreCase(true);
 
@@ -123,51 +127,48 @@ public class FullNameBean extends PropertyBean {
             public void actionPerformed(ActionEvent e) {
                 String msg = getReplaceAllMsg();
                 if (msg != null && cAll.isSelected()) {
-            boolean yes = (DialogManager.YES_OPTION == 
-                    DialogManager.createYesNo(RESOURCES.getString("choice.global.enable"), msg)
-                    .show());
+                    boolean yes = (DialogManager.YES_OPTION
+                            == DialogManager.createYesNo(RESOURCES.getString("choice.global.enable"), msg)
+                                    .show());
                     cAll.setSelected(yes);
                 }
             }
         });
 
         // Layout the bean
-        add(BeanHelper.createTagLabel(this, "SURN", "", 0));
+        add(BeanHelper.createTagLabel("SURN", "", 0));
         add(cLast, new CC().split().growX().gapRight("0"));
         add(cAll, new CC().wrap());
 
-        add(BeanHelper.createTagLabel(this, "GIVN", "", 0));
+        add(BeanHelper.createTagLabel("GIVN", "", 0));
         add(cFirst, new CC().wrap());
 
-//        add(new JLabel(PropertyName.getLabelForSuffix()));
-//        add(tSuff, new CC().wrap());
-//
         extPanel = new JPanel(new MigLayout(
                 new LC().fillX(),
                 new AC().align("right").gap("rel").grow().fill()));
 
-        extPanel.add(BeanHelper.createTagLabel(this, "NICK", "", 10));
+        extPanel.add(BeanHelper.createTagLabel("NICK", "", 10));
         extPanel.add(tNick, new CC().wrap());
 
-        extPanel.add(BeanHelper.createTagLabel(this, "NPFX", "", 10));
+        extPanel.add(BeanHelper.createTagLabel("NPFX", "", 10));
         extPanel.add(tNPfx, new CC().wrap());
 
-        extPanel.add(BeanHelper.createTagLabel(this, "SPFX", "", 10));
+        extPanel.add(BeanHelper.createTagLabel("SPFX", "", 10));
         extPanel.add(tSPfx, new CC().wrap());
 
-        extPanel.add(BeanHelper.createTagLabel(this, "NSFX", "", 10));
+        extPanel.add(BeanHelper.createTagLabel("NSFX", "", 10));
         extPanel.add(tSuff, new CC().wrap());
 
         final JCheckBox showCb = BeanHelper.createShowHide(
                 NbBundle.getMessage(FullNameBean.class, "FullNameBean.showCb.text") // NOI18N
-                , NbBundle.getMessage(FullNameBean.class, "FullNameBean.showCb.hint") // NOI18N
-                , extPanel);
+                ,
+                 NbBundle.getMessage(FullNameBean.class, "FullNameBean.showCb.hint") // NOI18N
+                ,
+                 extPanel);
         extPanel.setVisible(showCb.isSelected());
-
 
         add(showCb, new CC().spanX().alignX("left").wrap());
         add(extPanel, new CC().grow().spanX().gapBefore("20").wrap());
-
 
         // we're done aside from declaring the default focus
         defaultFocus = cFirst;
@@ -206,11 +207,15 @@ public class FullNameBean extends PropertyBean {
         }
 
         // ... store changed value
+        final String oldName = p.getLastName();
         p.setName(
                 tNPfx.getText().trim(),
                 first,
                 tSPfx.getText().trim(),
-                last, suff, cAll.isSelected());
+                last, suff);
+        if (cAll.isSelected()) {
+            p.replaceAllLastNames(oldName);
+        }
         p.setNick(nick);
 
         // start fresh
@@ -228,9 +233,7 @@ public class FullNameBean extends PropertyBean {
         PropertyName name = (PropertyName) prop;
         if (name == null) {
             sameLastNames = new Property[0];
-//            cLast.setValues(PropertyName.getLastNames(getRoot().getGedcom(), true));
             cLast.setText("");
-//            cFirst.setValues(PropertyName.getFirstNames(getRoot().getGedcom(), true));
             cFirst.setText("");
             tSuff.setText("");
             tNick.setText("");
@@ -240,9 +243,7 @@ public class FullNameBean extends PropertyBean {
             // keep track of who has the same last name
             sameLastNames = name.getSameLastNames();
             // first, last, suff
-//            cLast.setValues(name.getLastNames(true));
             cLast.setText(name.getLastName());
-//            cFirst.setValues(name.getFirstNames(true));
             cFirst.setText(name.getFirstName());
             tSuff.setText(name.getSuffix());
 

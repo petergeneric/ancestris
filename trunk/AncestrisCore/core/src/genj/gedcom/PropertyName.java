@@ -69,16 +69,6 @@ public class PropertyName extends Property {
         super("NAME");
     }
 
-    /**
-     * Constructor
-     * @deprecated use new PropertyName().setName(first,last)
-     */
-    @Deprecated
-    public PropertyName(String first, String last) {
-        this();
-        setName(first, last);
-    }
-
     @Override
     public PropertyComparator2 getComparator() {
         return NAMEComparator.getInstance();
@@ -208,29 +198,7 @@ public class PropertyName extends Property {
     public String getLastName() {
         return lastName;
     }
-
-    /**
-     * the last name
-     * @deprecated  will be remove after commit
-     */
-    @Deprecated
-    public String getLastName(boolean displayValue) {
-        return getLastName();
-    }
-    
-    /**
-     * @param prefixPresentation
-     *
-     * @return 'de Vries' in case of PREFIX_AS_IS.
-     *         'Vries' in case of IGNORE_PREFIX.
-     *         'Vries, de' in case of PREFIX_LAST.
-     *
-     * @deprecated use gedLastName()
-     */
-    @Deprecated
-    public String getLastName(int prefixPresentation) {
-        return getLastName();
-    }
+  
 
     /**
      * nested nickname
@@ -279,30 +247,6 @@ public class PropertyName extends Property {
      */
     public String getSuffix() {
         return getPropertyValue("NSFX").trim();
-    }
-
-    /**
-     * @deprecated
-     * @param displayValue
-     * @return 
-     */
-    @Deprecated
-    public String getSuffix(boolean displayValue) {
-        if (displayValue) {
-            return getSuffix().replaceAll(" *, *", " ");
-        } else {
-            return getSuffix();
-        }
-    }
-
-    /**
-     * the name (e.g. "Meier, Nils")
-     *
-     * @deprecated use getDisplayValue instead
-     */
-    @Deprecated
-    public String getName() {
-        return getDisplayValue();
     }
 
     /**
@@ -437,41 +381,10 @@ public class PropertyName extends Property {
     /**
      * Sets name to a new value
      */
-    @Deprecated
-    private PropertyName setName(String setFirst, String setLast, String setSuffix) {
-        return setName(setFirst, setLast, setSuffix, false);
+    public PropertyName setName(String setFirst, String setLast, String setSuffix) {
+        return setName(getPropertyValue("NPFX"), setFirst, getPropertyValue("SPFX"), setLast, setSuffix);
     }
 
-    /**
-     * Sets name to a new value
-     * @deprecated used only in ShortNameBean which is never used.
-     */
-    @Deprecated
-    public PropertyName setName(String first, String last, String suff, boolean replaceAllLastNames) {
-        return setName(getPropertyValue("NPFX"), first, getPropertyValue("SPFX"), last, suff, replaceAllLastNames);
-    }
-
-    /**
-     * Sets name to a new value.
-     * @param nPfx
-     * @param first
-     * @param sPfx
-     * @param last
-     * @param suff
-     * @param replaceAllLastNames
-     * @return 
-     * @deprecated use {@link #setName(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
-     * and {@link #replaceAllLastNames(java.lang.String)} 
-     */
-    @Deprecated
-    public PropertyName setName(String nPfx, String first, String sPfx, String last, String suff, boolean replaceAllLastNames) {
-        String oldLast = getLastName();
-        setName(nPfx, first, sPfx, last, suff);
-        if (replaceAllLastNames){
-            replaceAllLastNames(oldLast);
-        }
-        return this;
-    }
     public PropertyName setName(String nPfx, String first, String sPfx, String last, String suff) {
 
         // 20070128 don't bother with calculating old if this is happening in init()
