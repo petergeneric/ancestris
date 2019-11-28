@@ -73,6 +73,7 @@ public class PropertyName extends Property {
      * Constructor
      * @deprecated use new PropertyName().setName(first,last)
      */
+    @Deprecated
     public PropertyName(String first, String last) {
         this();
         setName(first, last);
@@ -212,6 +213,7 @@ public class PropertyName extends Property {
      * the last name
      * @deprecated  will be remove after commit
      */
+    @Deprecated
     public String getLastName(boolean displayValue) {
         return getLastName();
     }
@@ -284,6 +286,7 @@ public class PropertyName extends Property {
      * @param displayValue
      * @return 
      */
+    @Deprecated
     public String getSuffix(boolean displayValue) {
         if (displayValue) {
             return getSuffix().replaceAll(" *, *", " ");
@@ -384,11 +387,6 @@ public class PropertyName extends Property {
             return nameAsString;
         }
 
-//        // if not valid, return name tag value
-//        if (!isValid() && nameTagValue != null) {
-//            return nameTagValue;
-//        }
-
         WordBuffer b = new WordBuffer();
         String last = getLastName().split(",")[0]; // Only first last name if many
         if (last.length() == 0) {
@@ -439,6 +437,7 @@ public class PropertyName extends Property {
     /**
      * Sets name to a new value
      */
+    @Deprecated
     private PropertyName setName(String setFirst, String setLast, String setSuffix) {
         return setName(setFirst, setLast, setSuffix, false);
     }
@@ -447,6 +446,7 @@ public class PropertyName extends Property {
      * Sets name to a new value
      * @deprecated used only in ShortNameBean which is never used.
      */
+    @Deprecated
     public PropertyName setName(String first, String last, String suff, boolean replaceAllLastNames) {
         return setName(getPropertyValue("NPFX"), first, getPropertyValue("SPFX"), last, suff, replaceAllLastNames);
     }
@@ -463,6 +463,7 @@ public class PropertyName extends Property {
      * @deprecated use {@link #setName(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String)}
      * and {@link #replaceAllLastNames(java.lang.String)} 
      */
+    @Deprecated
     public PropertyName setName(String nPfx, String first, String sPfx, String last, String suff, boolean replaceAllLastNames) {
         String oldLast = getLastName();
         setName(nPfx, first, sPfx, last, suff);
@@ -501,7 +502,6 @@ public class PropertyName extends Property {
             boolean isMuted = mutePropertyChange();
             // update GIVN|SURN - IF we have a parent
             if (hasParent && !isMuted) {
-    //        if (!mutePropertyChange) {
                 addNameSubProperty(true, "GIVN", first);
                 addNameSubProperty(true, "SURN", last);
                 addNameSubProperty(true, "NSFX", suff);
@@ -514,8 +514,6 @@ public class PropertyName extends Property {
             lastName = last;
             firstName = first;
             suffix = suff;
-            // clear NAME tag value
-//            this.nameTagValue = null;
 
             // tell about it
             if (old != null && !isMuted) {
@@ -560,7 +558,6 @@ public class PropertyName extends Property {
             if (!value.isEmpty()){
                 sub = addProperty(tag, value);
                 sub.setGuessed(!force);
-//                sub.setReadOnly(true); //FIXME: why RO?
                 return sub.getValue();
             }
             return "";
@@ -704,29 +701,9 @@ public class PropertyName extends Property {
             //TODO: should we show a warning?
         }
 
-//        _firstName = _firstName.replaceAll(",", " ");// remove commas
-//        _firstName = _firstName.replaceAll(" +", " ");// normalize
-        // rewrite name TAG value (normalize)
-//        newValue = computeNameValue("", f, "", l, s);
-
         _firstName = stripPrefix(_firstName, getNamePrefix());
 
         _lastName = stripPrefix(_lastName, getSurnamePrefix());
-        // Format GIVN Tag (' ' char replaced by ', ')
-//        _firstName = _firstName.replaceAll(" +", ", ");
-
-//        // Replace _firstName, last and suffix by tag values if present
-//        if (getProperty("SURN") != null && !getProperty("SURN").isGuessed()) {
-//            _lastName = gedcomToValue(getPropertyValue("SURN"));
-//        }
-//        if (getProperty("GIVN") != null && !getProperty("GIVN").isGuessed()) {
-//            _firstName = gedcomToValue(getPropertyValue("GIVN"));
-//        }
-//        if (getProperty("NSFX") != null && !getProperty("NSFX").isGuessed()) {
-//            _suffix = gedcomToValue(getPropertyValue("NSFX"));
-//        }
-        // keep
-//        setNameValue(getPropertyValue("NPFX"), _firstName, getPropertyValue("SPFX"), _lastName, _suffix);
 
         // remember us
         remember(_firstName, _lastName);
@@ -741,13 +718,6 @@ public class PropertyName extends Property {
             lastName = _lastName;
             firstName = _firstName;
             suffix = _suffix;
-            // clear NAME tag value
-    //        this.nameTagValue = null;
-
-//            // tell about it
-//            if (old != null && !isMuted) {
-//                propagatePropertyChanged(this, old);
-//            }
 
         } finally {
             // Done
@@ -784,13 +754,6 @@ public class PropertyName extends Property {
 //        String tag = property.getTag();
         try{
             if (!mutePropertyChange()) {
-    //            fixNameValue();
-//                nameTagValue = computeNameValue(
-//                        getPropertyValue("NPFX"), 
-//                        getPropertyValue("GIVN"), 
-//                        getPropertyValue("SPFX"), 
-//                        getPropertyValue("SURN"), 
-//                        getPropertyValue("NSFX"));
                 for (String tag:new String[]{"NPFX", "GIVN", "SPFX", "SURN", "NSFX"} ){
                     Property p = getProperty(tag);
                     if (p!=null)
@@ -921,9 +884,6 @@ public class PropertyName extends Property {
         }
         if (newFirst.length() > 0) {
             String f = newFirst;
-//            if (!replaceSpaceSeparatorWithComma) {
-//                f = f.replace(",", " ").replaceAll(" +", " ");
-//            }
             refSet.add(f, this);
         }
         // done

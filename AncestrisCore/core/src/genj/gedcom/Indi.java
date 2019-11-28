@@ -697,7 +697,7 @@ public class Indi extends Entity {
         return sb.toString();
     }
     
-    private String getCHRAsString() {
+    public String getCHRAsString() {
         PropertyDate p = (PropertyDate) getProperty(new TagPath("INDI:CHR:DATE"));
         if (p == null) {
             return "";
