@@ -74,6 +74,8 @@ public class GraphParameter {
     private boolean hideNodes = false;
     // Display associaiton link ?
     private boolean showAsso = false;
+    // Search for shortest Path ?
+    private boolean doPath = false;
 
     // Colors and sizes
     private String colorDef = "#000000";
@@ -331,5 +333,15 @@ public class GraphParameter {
     public void setShowAsso(boolean showAsso) {
         this.showAsso = showAsso;
     }
+
+    public boolean isDoPath() {
+        return doPath;
+    }
+
+    public void setDoPath(boolean doPath) {
+        this.doPath = doPath;
+    }
+    
+    
 
 }
