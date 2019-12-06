@@ -12,12 +12,17 @@
 package ancestris.modules.views.graph;
 
 import java.math.BigInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Parser for Sosa/D'Aboville String
  * @author Zurga
  */
 public class SosaParser {
+    
+     private final static Logger LOG = Logger.getLogger("ancestris.app", null);
+    
     private BigInteger sosa;
     private String daboville;
     private Integer generation;
@@ -41,8 +46,15 @@ public class SosaParser {
             if (premierPoint > 0) {
             sosa = new BigInteger(espace[0].substring(0, premierPoint));
             daboville = "1"+ espace[0].substring(premierPoint);
-            } else {
-                sosa = new BigInteger(espace[0]);
+            } else  {
+                try {
+                    sosa = new BigInteger(espace[0]);
+                } catch (NumberFormatException e) {
+                    LOG.log(Level.FINER, "Not a Sosa number (for the records) :", e);
+                    //Not a pure Sosa number
+                    daboville = espace[0];
+                }
+                
             }
         }
         
