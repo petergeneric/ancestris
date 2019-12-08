@@ -145,15 +145,15 @@ public class NoteCitationsTablePanel extends javax.swing.JPanel {
                     @Override
                     public void perform(Gedcom gedcom) throws GedcomException {
                         noteCitationEditorPanel.commit();
-                        Note note = (Note) noteCitationEditorPanel.get();
+                        Property note = noteCitationEditorPanel.get();
                         if (note instanceof Note) {
-                            mRoot.addNote(note);
+                            mRoot.addNote((Note)note);
                         }
                     }
                 }); // end of doUnitOfWork
                 mNoteCitationsTableModel.clear();
                 mNoteCitationsTableModel.addAll(Arrays.asList(mRoot.getProperties("NOTE")));
-                Note note = (Note) noteCitationEditorPanel.get();
+                Property note = noteCitationEditorPanel.get();
                 int row = mNoteCitationsTableModel.getRowOf(note);
                 noteCitationsTable.getSelectionModel().setSelectionInterval(row, row);
                 editNoteButton.setEnabled(true);
