@@ -105,6 +105,7 @@ public abstract class Import implements ImportRunner {
 
     // Header
     private boolean headerzone = false;
+    private boolean grammarZone = false;
 
     // Destination
     private final static int TAG_MISSING = 0;
@@ -477,9 +478,21 @@ public abstract class Import implements ImportRunner {
         if ((input.getLevel() == 0) && input.getTag().equals("HEAD")) {
             headerzone = true;
         }
+        
+        if (headerzone && (input.getLevel() == 1) && "GEDC".equals(input.getTag())) {
+            grammarZone = true;
+        }
+        
+        if (headerzone && (input.getLevel() == 1) && "SOUR".equals(input.getTag())) {
+            grammarZone = false;
+        }
+        
+         if (headerzone && (input.getLevel() == 1) && "CHAR".equals(input.getTag())) {
+            grammarZone = false;
+        }
 
         // Get gedcom version (default is 5.5 defined in declaration parameters)
-        if ((input.getLevel() == 2) && input.getTag().equals("VERS")) {
+        if (grammarZone && headerzone && (input.getLevel() == 2) && input.getTag().equals("VERS")) {
             GEDCOM_VERSION = input.getValue();
         }
 

@@ -99,6 +99,7 @@
             <ADDR type="PropertyMultilineValue" img="Addr" cardinality="0:1">
                 <ADR1 hide="2" cardinality="0:1" type="PropertySimpleValue" img="Addr"/>
                 <ADR2 hide="2" cardinality="0:1" type="PropertySimpleValue" img="Addr"/>
+                <ADR3 hide="2" cardinality="0:1" type="PropertySimpleValue" img="Addr"/>
                 <CITY default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
                 <POST default="1" cardinality="0:1" type="PropertyChoiceValue" img="Code"/>
                 <STAE default="1" cardinality="0:1" type="PropertyChoiceValue" img="Place"/>
