@@ -275,6 +275,14 @@ public class EventWrapper {
         PointInTime end = date.getStart();
         Delta delta = Delta.get(start, end);
         
+        // Prevent to parse null delta (end date valid but unparsable like INT)
+        if (delta == null) {
+             ageAsDouble = 0;
+            eventAge = "-";
+            age = "";
+            return;
+        }
+        
         // Double
         double d = delta.getYears();
         d += ((double) delta.getMonths()) / 12;
