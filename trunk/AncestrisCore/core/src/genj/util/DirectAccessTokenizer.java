@@ -144,6 +144,7 @@ public class DirectAccessTokenizer {
             indice++;
             while ("".equals(result.trim()) && indice < valeur.length) {
                 result = valeur[indice];
+                indice++;
 
             }
         }
