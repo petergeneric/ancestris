@@ -910,7 +910,7 @@
                                   <Component id="modificationLabel" max="32767" attributes="0"/>
                               </Group>
                               <Component id="eventScrollPane" alignment="0" pref="0" max="32767" attributes="0"/>
-                              <Component id="sourcePanel" alignment="0" pref="195" max="32767" attributes="0"/>
+                              <Component id="sourcePanel" alignment="0" pref="176" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="2" pref="2" max="-2" attributes="0"/>
                       </Group>
@@ -935,9 +935,9 @@
                               <Component id="eventRemoveButton" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventScrollPane" pref="122" max="32767" attributes="0"/>
+                          <Component id="eventScrollPane" pref="120" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="sourcePanel" pref="137" max="32767" attributes="0"/>
+                          <Component id="sourcePanel" pref="126" max="32767" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
                           <Component id="modificationLabel" min="-2" max="-2" attributes="0"/>
                       </Group>
@@ -1228,9 +1228,6 @@
                   <SubComponents>
                     <Container class="javax.swing.JPanel" name="sourceImagePanel">
                       <Properties>
-                        <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                          <Border info="null"/>
-                        </Property>
                         <Property name="toolTipText" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                           <ResourceString bundle="ancestris/modules/editors/standard/Bundle.properties" key="IndiPanel.sourceImagePanel.toolTipText" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                         </Property>
@@ -1384,7 +1381,7 @@
                                   <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                                   <Component id="eventPlaceButton" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <Component id="eventNotePanel" pref="307" max="32767" attributes="0"/>
+                              <Component id="eventNotePanel" pref="316" max="32767" attributes="0"/>
                               <Component id="eventSourcePanel" alignment="0" max="32767" attributes="0"/>
                           </Group>
                       </Group>
@@ -1415,7 +1412,7 @@
                               <Component id="eventPlaceCombo" alignment="2" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
-                          <Component id="eventNotePanel" pref="81" max="32767" attributes="0"/>
+                          <Component id="eventNotePanel" pref="85" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                           <Component id="eventSourcePanel" max="32767" attributes="0"/>
                           <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
@@ -1570,7 +1567,7 @@
                               </Group>
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="eventNoteScrollPane" pref="57" max="32767" attributes="0"/>
+                                  <Component id="eventNoteScrollPane" max="32767" attributes="0"/>
                                   <Group type="102" attributes="0">
                                       <Component id="scrollNotesEvent" max="32767" attributes="0"/>
                                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
