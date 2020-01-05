@@ -12,8 +12,6 @@
 
 package ancestris.modules.editors.standard;
 
-import ancestris.util.EventUsage;
-import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.api.editor.Editor;
 import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.privacy.standard.Options;
@@ -26,6 +24,7 @@ import ancestris.modules.editors.standard.tools.ErrorPanel;
 import ancestris.modules.editors.standard.tools.EventLabel;
 import ancestris.modules.editors.standard.tools.EventTableModel;
 import ancestris.modules.editors.standard.tools.EventWrapper;
+import ancestris.modules.editors.standard.tools.FamilyTreeRenderer;
 import ancestris.modules.editors.standard.tools.ImagePanel;
 import ancestris.modules.editors.standard.tools.IndiChooser;
 import ancestris.modules.editors.standard.tools.IndiCreator;
@@ -41,6 +40,7 @@ import ancestris.modules.editors.standard.tools.SourceChooser;
 import ancestris.modules.editors.standard.tools.SourceWrapper;
 import ancestris.modules.editors.standard.tools.Utils;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
+import ancestris.util.EventUsage;
 import ancestris.util.TimingUtility;
 import ancestris.util.Utilities;
 import ancestris.util.swing.DialogManager;
@@ -835,7 +835,7 @@ public class IndiPanel extends Editor implements DocumentListener {
             .addGroup(topPanelLayout.createSequentialGroup()
                 .addComponent(namePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
-                .addComponent(scrollPaneFamily, javax.swing.GroupLayout.DEFAULT_SIZE, 25, Short.MAX_VALUE))
+                .addComponent(scrollPaneFamily, javax.swing.GroupLayout.PREFERRED_SIZE, 25, Short.MAX_VALUE))
         );
 
         splitPane.setTopComponent(topPanel);
@@ -970,7 +970,6 @@ public class IndiPanel extends Editor implements DocumentListener {
         sourcePanel.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         sourcePanel.setPreferredSize(new java.awt.Dimension(197, 140));
 
-        sourceImagePanel.setBorder(null);
         sourceImagePanel.setToolTipText(org.openide.util.NbBundle.getMessage(IndiPanel.class, "IndiPanel.sourceImagePanel.toolTipText")); // NOI18N
         sourceImagePanel.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -1088,7 +1087,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addContainerGap()
                         .addComponent(modificationLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addComponent(eventScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 195, Short.MAX_VALUE))
+                    .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 176, Short.MAX_VALUE))
                 .addGap(2, 2, 2))
         );
         eventLeftLayout.setVerticalGroup(
@@ -1108,9 +1107,9 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventOthersButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventRemoveButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 122, Short.MAX_VALUE)
+                .addComponent(eventScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)
+                .addComponent(sourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 126, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(modificationLabel))
         );
@@ -1260,7 +1259,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(maxNoteEventButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
                 .addGroup(eventNotePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(eventNoteScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 57, Short.MAX_VALUE)
+                    .addComponent(eventNoteScrollPane)
                     .addGroup(eventNotePanelLayout.createSequentialGroup()
                         .addComponent(scrollNotesEvent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2))))
@@ -1494,7 +1493,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                         .addComponent(eventPlaceCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(2, 2, 2)
                         .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
+                    .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 316, Short.MAX_VALUE)
                     .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
         eventRightLayout.setVerticalGroup(
@@ -1518,7 +1517,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                     .addComponent(eventPlaceButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(eventPlaceCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(2, 2, 2)
-                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                .addComponent(eventNotePanel, javax.swing.GroupLayout.DEFAULT_SIZE, 85, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
                 .addComponent(eventSourcePanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(2, 2, 2)
@@ -2654,21 +2653,6 @@ public class IndiPanel extends Editor implements DocumentListener {
     public ChangeSupport getChangeSupport() {
         return changes;
     }
-
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
     
     private void loadData() {
         String str = "";
@@ -2747,6 +2731,30 @@ public class IndiPanel extends Editor implements DocumentListener {
         // Modification timestamp
         modificationLabel.setText(NbBundle.getMessage(IndiPanel.class, "IndiPanel.modificationLabel.text") + " : " + (indi.getLastChange() != null ? indi.getLastChange().getDisplayValue() : ""));
         //
+        
+        // ID on father and mother button
+        Indi dad = indi.getBiologicalFather();
+        if (dad != null) {
+            final String dadName = dad.getName();
+            if (dadName.length() > 15 ) {
+            fatherButton.setText(dadName.substring(0, 15)+" (...)");
+            } else {
+                fatherButton.setText(dadName);
+            }
+        } else {
+            fatherButton.setText("");
+        }
+        Indi mom = indi.getBiologicalMother();
+        if (mom != null){
+            final String momName = mom.getName();
+            if (momName.length() > 15) {
+                motherButton.setText(momName.substring(0,15) + " (...)");
+            } else {
+                motherButton.setText(momName);
+            }
+        } else {
+            motherButton.setText("");
+        }
 
     }
 
@@ -2791,7 +2799,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         // End
         
     }
-
+    
     
 
     /***************************************************************************
