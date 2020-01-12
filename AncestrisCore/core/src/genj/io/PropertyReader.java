@@ -340,6 +340,8 @@ public class PropertyReader {
                         level = 0;
                         while (line.charAt(level) == ' ') {
                             level++;
+                            // Level not indicated so move to next token.
+                            current_token++;
                         }
                         level++;
                     } else {
