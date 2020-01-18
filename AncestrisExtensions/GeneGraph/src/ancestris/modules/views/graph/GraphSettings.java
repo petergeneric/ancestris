@@ -89,6 +89,7 @@ public class GraphSettings extends javax.swing.JPanel {
         jTextFieldFamNodeWeght.setText(String.valueOf(getParam().getMariageNodeWeight()));
         jComboBoxFamLabels.setSelectedItem(getParam().getLabelFam());
         jComboBoxIndiLabels.setSelectedItem(getParam().getLabelIndi());
+        jCheckBoxColorScheme.setSelected(getParam().isUseGenerationScheme());
     }
     
     public final static String toHexString(Color colour) {
@@ -132,6 +133,7 @@ public class GraphSettings extends javax.swing.JPanel {
         colorButtonSelected = new ancestris.util.swing.ColorChooserButton();
         labelColorBackground = new java.awt.Label();
         colorButtonBackground = new ancestris.util.swing.ColorChooserButton();
+        jCheckBoxColorScheme = new javax.swing.JCheckBox();
         jPanel2 = new javax.swing.JPanel();
         labelDefaultNodeSize = new java.awt.Label();
         jTextFieldDefaultNodeSize = new javax.swing.JTextField();
@@ -266,6 +268,9 @@ public class GraphSettings extends javax.swing.JPanel {
         colorButtonBackground.setMinimumSize(new java.awt.Dimension(50, 25));
         colorButtonBackground.setPreferredSize(new java.awt.Dimension(50, 25));
 
+        org.openide.awt.Mnemonics.setLocalizedText(jCheckBoxColorScheme, org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jCheckBoxColorScheme.text")); // NOI18N
+        jCheckBoxColorScheme.setToolTipText(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.jCheckBoxColorScheme.toolTipText")); // NOI18N
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -291,6 +296,10 @@ public class GraphSettings extends javax.swing.JPanel {
                     .addComponent(colorButtonSelected, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorButtonBackground, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(69, 69, 69))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jCheckBoxColorScheme)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -320,7 +329,9 @@ public class GraphSettings extends javax.swing.JPanel {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(labelColorBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(colorButtonBackground, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(18, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jCheckBoxColorScheme)
+                .addGap(20, 20, 20))
         );
 
         labelColorSosa.getAccessibleContext().setAccessibleName(org.openide.util.NbBundle.getMessage(GraphSettings.class, "GraphSettings.labelColorSosa.AccessibleContext.accessibleName")); // NOI18N
@@ -595,7 +606,7 @@ public class GraphSettings extends javax.swing.JPanel {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonApply)
                     .addComponent(jButtonReset))
-                .addContainerGap(26, Short.MAX_VALUE))
+                .addContainerGap(53, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -626,11 +637,11 @@ public class GraphSettings extends javax.swing.JPanel {
                     .addComponent(jLabelNode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabelEdge, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 280, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 153, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -655,6 +666,7 @@ public class GraphSettings extends javax.swing.JPanel {
         getParam().setSizeNode(jTextFieldDefaultNodeSize.getText());
         getParam().setLabelFam((LabelFamEnum) jComboBoxFamLabels.getSelectedItem());
         getParam().setLabelIndi((LabelIndiEnum) jComboBoxIndiLabels.getSelectedItem());
+        getParam().setUseGenerationScheme(jCheckBoxColorScheme.isSelected());
         theGTC.updateCss();
         getParam().setEdgeWeight(Double.parseDouble(jTextFieldEdgeWeight.getText()));
         getParam().setIndiNodeWeight(Double.parseDouble(jTextFieldIndiNodeWeght.getText()));
@@ -675,6 +687,7 @@ public class GraphSettings extends javax.swing.JPanel {
     private ancestris.util.swing.ColorChooserButton colorButtonSosa;
     private javax.swing.JButton jButtonApply;
     private javax.swing.JButton jButtonReset;
+    private javax.swing.JCheckBox jCheckBoxColorScheme;
     private javax.swing.JComboBox<LabelFamEnum> jComboBoxFamLabels;
     private javax.swing.JComboBox<LabelIndiEnum> jComboBoxIndiLabels;
     private javax.swing.JLabel jLabel1;

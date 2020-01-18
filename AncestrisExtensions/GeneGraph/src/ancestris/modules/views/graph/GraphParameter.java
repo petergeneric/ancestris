@@ -63,6 +63,19 @@ public class GraphParameter {
             + "graph {"
             + "	fill-color:%s;"
             + "}";
+    
+     private static final String GEN_SCHEME = "node.sosa {"
+            + "    fill-color:lightgray, %s, black;"
+            + "    fill-mode: dyn-plain;"
+            + "}"
+            + "node {"
+            + "	   fill-mode: dyn-plain;"
+            + "    fill-color:lightgray, %s, black;"
+            + "}"
+            + "node.sticked {"
+           + "	   fill-mode: dyn-plain;"
+            + "    fill-color:lightgray, %s, black;"
+            + "}";
 
     // Display Labels ?
     private boolean showLabel = false;
@@ -94,6 +107,7 @@ public class GraphParameter {
     private double indiNodeWeight = 10.0;
     private double mariageNodeWeight = 5.0;
     private double edgeWeight = 1.0;
+    private boolean useGenerationScheme = false;
 
     private LabelFamEnum labelFam = LabelFamEnum.FAM_DATE;
     private LabelIndiEnum labelIndi = LabelIndiEnum.INDI_NAME;
@@ -104,6 +118,13 @@ public class GraphParameter {
         fmt.format(CSS, colorSosa, sizeNodeSosa, colorMariage, colorMariageSosa, sizeNodeSosa, colorSosa,
                 sizeEdgeSosa, colorMariage, colorAsso, colorCujus, sizeCujus,
                 sizeEdge, colorDef, sizeNode, colorDef, colorSticked, colorSticked, colorBack);
+        return sb.toString();
+    }
+    
+    public String getGenerationScheme() {
+        StringBuilder sb = new StringBuilder();
+        Formatter fmt = new Formatter(sb);
+        fmt.format(GEN_SCHEME, colorSticked, colorSticked, colorSticked);
         return sb.toString();
     }
 
@@ -126,6 +147,7 @@ public class GraphParameter {
         edgeWeight = Double.valueOf(registry.get("GRAPH.weight.edge", "1.0"));
         labelFam = LabelFamEnum.valueOf(registry.get("GRAPH.fam.labels", "FAM_DATE"));
         labelIndi = LabelIndiEnum.valueOf(registry.get("GRAPH.indi.labels", "INDI_NAME"));
+        useGenerationScheme = Boolean.valueOf(registry.get("GRAPH.color.scheme", "false"));
     }
 
     public void saveSettings(Registry registry) {
@@ -147,6 +169,7 @@ public class GraphParameter {
         registry.put("GRAPH.weight.edge", String.valueOf(edgeWeight));
         registry.put("GRAPH.fam.labels", labelFam.name());
         registry.put("GRAPH.indi.labels", labelIndi.name());
+        registry.put("GRAPH.color.scheme", useGenerationScheme);
     }
 
     // Getters / Setters
@@ -341,7 +364,13 @@ public class GraphParameter {
     public void setDoPath(boolean doPath) {
         this.doPath = doPath;
     }
-    
-    
+
+    public boolean isUseGenerationScheme() {
+        return useGenerationScheme;
+    }
+
+    public void setUseGenerationScheme(boolean useGenerationScheme) {
+        this.useGenerationScheme = useGenerationScheme;
+    }
 
 }
