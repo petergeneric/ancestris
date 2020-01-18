@@ -124,6 +124,9 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     private Node hideNode;
     private final Map<String, double[]> nodesHidden = new HashMap<>();
     private final Set<HideEdge> edgesHidden = new HashSet<>();
+    
+    private Integer maxGeneration = Integer.valueOf(0);
+    private Integer minGeneration = Integer.valueOf(0);
 
     private String pathNode;
 
@@ -358,7 +361,14 @@ public final class GraphTopComponent extends AncestrisTopComponent {
         if (parsing.getSosa() != null) {
             noeudCourant.addAttribute(SOSA_NUMBER, indi.getSosaString());
             if (parsing.getGeneration() != null) {
-                noeudCourant.addAttribute(GENERATION, parsing.getGeneration());
+                Integer generation = parsing.getGeneration();
+                noeudCourant.addAttribute(GENERATION, generation);
+                if (maxGeneration < generation) {
+                    maxGeneration = generation;
+                }
+                if (minGeneration > generation) {
+                    minGeneration = generation;
+                }
             }
             if (parsing.getDaboville() == null) {
                 noeudCourant.addAttribute(UI_CLASS, SOSA);
@@ -1167,8 +1177,29 @@ public final class GraphTopComponent extends AncestrisTopComponent {
     }
 
     public void updateCss() {
+        leGraphe.removeAttribute(UISTYLESHEET);
         leGraphe.setAttribute(UISTYLESHEET, graphParam.getCss());
+        if (graphParam.isUseGenerationScheme()){
+            leGraphe.setAttribute(UISTYLESHEET, graphParam.getGenerationScheme());
+            updateSchemeNode();
+        }
         manageLabels();
+    }
+    
+    private void updateSchemeNode() {
+        for (Node n : leGraphe.getNodeSet()) {
+            if (n.hasAttribute(GENERATION)) {
+                Integer generation = n.getAttribute(GENERATION);
+                
+                if (generation >= 0) {
+                    double value = generation.doubleValue() / maxGeneration.doubleValue();
+                    n.setAttribute("ui.color", 0.5 + value/2);
+                } else {
+                    double value = generation.doubleValue() / minGeneration.doubleValue();
+                    n.setAttribute("ui.color", 0.5 - value/2);
+                }
+            }
+        }
     }
 
     private void manageLabels() {
