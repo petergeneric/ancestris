@@ -329,7 +329,7 @@ public class PropertyReader {
             }
 
             // 20040322 use space and also \t for delim in case someone used tabs in file
-            String[] splitLine = line.split("[ \t]");
+            String[] splitLine = line.split("\\s", -1);
             // Keep track of element read.
             int current_token = 0;
             try {
@@ -398,11 +398,7 @@ public class PropertyReader {
                         value += " " + splitLine[current_token];
                         current_token++;
                     }
-                    // 20030609 strip leading space that forms delimiter to tag/xref
-                    // (this was trim() once but identified as too greedy)
-                    if (value.startsWith(" ")) {
-                        value = value.substring(1);
-                    }
+                   
                 } else {
                     value = "";
                 }
