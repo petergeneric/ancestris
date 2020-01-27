@@ -1,5 +1,7 @@
 package ancestris.modules.webbook.creator;
 
+import ancestris.modules.webbook.WebBook;
+import ancestris.modules.webbook.WebBookParams;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.GedcomException;
@@ -7,13 +9,12 @@ import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyNote;
+import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySource;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.time.PointInTime;
-import ancestris.modules.webbook.WebBook;
-import ancestris.modules.webbook.WebBookParams;
-import genj.gedcom.PropertyNote;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -30,6 +31,7 @@ import java.util.TreeMap;
 
 /**
  * Ancestris
+ *
  * @author Frederic Lapeyre <frederic@ancestris.org>
  * @version 0.1
  */
@@ -147,25 +149,25 @@ public class WebSection {
      */
     public void initEvents() {
         events = new String[]{// Events
-                    "BIRT", "CHR",
-                    "DEAT", "BURI", "CREM",
-                    "ADOP",
-                    "BAPM", "BARM", "BASM", "BLES",
-                    "CHRA", "CONF", "FCOM", "ORDN",
-                    "NATU", "EMIG", "IMMI",
-                    "CENS", "PROB", "WILL",
-                    "GRAD", "RETI",
-                    "EVEN",
-                    // Attributes
-                    "CAST", "DSCR", "EDUC", "IDNO", "NATI", "NCHI", "NMR", "OCCU", "PROP", "RELI", "RESI", "SSN", "TITL"
-                };
+            "BIRT", "CHR",
+            "DEAT", "BURI", "CREM",
+            "ADOP",
+            "BAPM", "BARM", "BASM", "BLES",
+            "CHRA", "CONF", "FCOM", "ORDN",
+            "NATU", "EMIG", "IMMI",
+            "CENS", "PROB", "WILL",
+            "GRAD", "RETI",
+            "EVEN",
+            // Attributes
+            "CAST", "DSCR", "EDUC", "IDNO", "NATI", "NCHI", "NMR", "OCCU", "PROP", "RELI", "RESI", "SSN", "TITL"
+        };
 
         eventsMarr = new String[]{// Events
-                    "ANUL", "CENS", "DIV", "DIVF",
-                    "ENGA", "MARR", "MARB", "MARC",
-                    "MARL", "MARS",
-                    "EVEN"
-                };
+            "ANUL", "CENS", "DIV", "DIVF",
+            "ENGA", "MARR", "MARB", "MARC",
+            "MARL", "MARS",
+            "EVEN"
+        };
     }
 
     public void create() {
@@ -410,7 +412,8 @@ public class WebSection {
 
     /**
      * Build link from one section to another
-     **/
+     *
+     */
     public String buildLink(WebSection wsFrom, WebSection wsTo, int nbItem) {
         String relPath = "";
         if ((wsFrom.sectionDir.length() == 0) && (wsTo.sectionDir.length() == 0)) {
@@ -544,7 +547,7 @@ public class WebSection {
      * Comparator to sort Individuals
      */
     @SuppressWarnings("unchecked")
-    public Comparator <Indi>sortIndividuals = new Comparator<Indi>() {
+    public Comparator<Indi> sortIndividuals = new Comparator<Indi>() {
 
         public int compare(Indi indi1, Indi indi2) {
             int sort = sortLastnames.compare(wh.getLastName(indi1, DEFCHAR), wh.getLastName(indi2, DEFCHAR));
@@ -674,23 +677,17 @@ public class WebSection {
     /**
      * Wrapper for name
      *
-     * In case of private individual, returned string depends on PHP support:
-     * - Without PHP support, provides hidden or cleared string for the name
-     * - With php support, provides both, using this formula:
-     *    <?php echo authgen() ? "madame Bidule&nbsp;(257)" : "... ...&nbsp;(...)" ?>
-     *    where:
-     *    - php support given by wp.param_PHP_Support.equals("1")
-     *    - authgen() is an example php instruction used as a test and provided by the user in the options
+     * In case of private individual, returned string depends on PHP support: -
+     * Without PHP support, provides hidden or cleared string for the name -
+     * With php support, provides both, using this formula:
+     * <?php echo authgen() ? "madame Bidule&nbsp;(257)" : "... ...&nbsp;(...)" ?>
+     * where: - php support given by wp.param_PHP_Support.equals("1") -
+     * authgen() is an example php instruction used as a test and provided by
+     * the user in the options
      *
-     * Logic:
-     *  - if private
-     *     - if PHP
-     *          string = php ? A : hidden
-     *       else
-     *          string = hidden
-     *    else
-     *       string = A
-     * 
+     * Logic: - if private - if PHP string = php ? A : hidden else string =
+     * hidden else string = A
+     *
      */
     public String wrapName(Indi indi) {
         return wrapName(indi, DT_LASTFIRST, DT_LINK, DT_SOSA, DT_ID);
@@ -894,7 +891,6 @@ public class WebSection {
         // Returned string
         String str = "";
 
-
         // Some strings to handle privacy
         String themeDirLink = buildLinkTheme(this, themeDir);
         String strHidden = "<img src='" + themeDirLink + picture + "' />";
@@ -914,13 +910,14 @@ public class WebSection {
 
     /**
      * Events wrapper
+     *
      * @param entity
      * @param includeFamilies
      * @param from2sourceDir
      * @param from2mediaDir
-     * @return
-     * if the whole entity is private, just replace the whole lot with privacy string
-     * (if it is not, individual private events will still show as private)
+     * @return if the whole entity is private, just replace the whole lot with
+     * privacy string (if it is not, individual private events will still show
+     * as private)
      */
     public String wrapEvents(Entity entity, boolean includeFamilies, String from2sourceDir, String from2mediaDir) {
 
@@ -1064,7 +1061,17 @@ public class WebSection {
                 if ("RESI".compareTo(ev[i]) == 0) {
                     Property city = props[j].getProperty(new TagPath(".:ADDR:CITY"));
                     Property ctry = props[j].getProperty(new TagPath(".:ADDR:CTRY"));
-                    format3 = " " + ((city == null) ? "" : city.getDisplayValue() + ", ") + ((ctry == null) ? "" : ctry.getDisplayValue());
+                    if (city == null && ctry == null) {
+                        PropertyPlace place = (PropertyPlace) props[j].getProperty(new TagPath(".:PLAC"));
+                        if (place != null) {
+                            String cityPlace = place.getCity();
+                            format3 = " " + cityPlace + ", ";
+                        } else {
+                            format3 = " , ";
+                        }
+                    } else {
+                        format3 = " " + ((city == null) ? "" : city.getDisplayValue() + ", ") + ((ctry == null) ? "" : ctry.getDisplayValue());
+                    }
                 }
                 String format = format1 + format2 + " : " + format3;
                 description = props[j].format(format).trim();
@@ -1145,29 +1152,37 @@ public class WebSection {
 
     /**
      * Buld media bloc (assuming media record included in property)
-     * @param dir           : section directory where WebBook is stored
-     * @param file          : property file in Gedcom
-     * @param from2mediaDir : path to go from current directory of section to media directory of picture
-     * @param toBeCopied    : true to copy media from gedcom location to webbook location
-     * @param useLink       : true to actually use a link rather than actual copy (works on Linux only)
-     * @param displayMin    : true if miniature picture is to be displayed, otherwise only a text title is displayed
-     * @param popup         : true if link to popup picture or else to move to media page
-     * @param forcedIcon    : forced icon to use
-     * @param defaultTitle  : default title in case none is associated with file
-     * @param displayTitle  : true if title is to be displayed below icon or miniture
-     * @param textPath      : text path to get text for tooltip
-     * @param style         : tooltip style
-     * @return              : html string to put on the web page
-     *                        <a class=[style]
-     *                        href='[javascript:popup('filename','DEFPOPUPWIDTH','DEFPOPUPLENGTH')'] | ['../media/media_file'] | [''] >
-     *                        [<img
+     *
+     * @param dir : section directory where WebBook is stored
+     * @param file : property file in Gedcom
+     * @param from2mediaDir : path to go from current directory of section to
+     * media directory of picture
+     * @param toBeCopied : true to copy media from gedcom location to webbook
+     * location
+     * @param useLink : true to actually use a link rather than actual copy
+     * (works on Linux only)
+     * @param displayMin : true if miniature picture is to be displayed,
+     * otherwise only a text title is displayed
+     * @param popup : true if link to popup picture or else to move to media
+     * page
+     * @param forcedIcon : forced icon to use
+     * @param defaultTitle : default title in case none is associated with file
+     * @param displayTitle : true if title is to be displayed below icon or
+     * miniture
+     * @param textPath : text path to get text for tooltip
+     * @param style : tooltip style
+     * @return : html string to put on the web page
+     * <a class=[style]
+     *                        href='[javascript:popup('filename','DEFPOPUPWIDTH','DEFPOPUPLENGTH')'] | ['../media/media_file'] | ['']
+     * >
+     * [<img
      *                           alt='htmlText(title)'
      *                           title='htmlText(title)'
      *                           src='miniature_pic' />]
-     *                        <span>
-     *                           <b>title</b><br>
-     *                           <i>text</i></span>
-     *                        </a><br />
+     * <span>
+     * <b>title</b><br>
+     * <i>text</i></span>
+     * </a><br />
      *
      */
     public String wrapMedia(File dir, PropertyFile file, String from2mediaDir, boolean toBeCopied, boolean useLink,
@@ -1314,7 +1329,7 @@ public class WebSection {
     private String wrapNote(String pictureFile, Property note) {
         // Get note entity if a property note
         if (note instanceof PropertyNote) {
-            note = ((PropertyNote)note).getTargetEntity();
+            note = ((PropertyNote) note).getTargetEntity();
         }
         // Get text
         String noteText = "<i>" + ((note == null || note.getValue().trim().isEmpty()) ? "" : htmlText(note.getValue())) + "</i>";
@@ -1864,6 +1879,4 @@ public class WebSection {
         return strOutput.toString();
     }
 } // End_of_Class
-
-
 
