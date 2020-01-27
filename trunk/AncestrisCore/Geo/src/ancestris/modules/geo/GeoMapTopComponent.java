@@ -142,6 +142,14 @@ public final class GeoMapTopComponent extends AncestrisTopComponent implements G
     }
 
     @Override
+    public void open() {
+        // Don't try to open if no connection.
+        if (isConnectionOn) {
+            super.open();
+        }
+    }
+
+    @Override
     public Image getImageIcon() {
         return ImageUtilities.loadImage(ICON_PATH, true);
     }

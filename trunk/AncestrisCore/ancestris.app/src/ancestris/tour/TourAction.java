@@ -443,6 +443,11 @@ public class TourAction  implements ActionListener {
     
     private boolean demoGeo() {
         TopComponent demo = getTopComponent("GeoMapTopComponent");
+        // Prevent to display Map if no internet connexion.
+        // Lead to unresponsive application
+        if (!demo.isOpened()) {
+            return false;
+        }
         String text = NbBundle.getMessage(getClass(), "demo.geo");
         Color bgcolor = new Color(0x00e3a8ec);
         Color fgcolor = Color.BLACK;
