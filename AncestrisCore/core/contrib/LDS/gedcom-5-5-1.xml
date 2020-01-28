@@ -140,7 +140,7 @@
             <PLAC default="0"/>
         </RELI>
         <CAST type="PropertySimpleValue" img="Caste" super="INDI:RELI"/>
-        <DSCR type="PropertyMultilineValue" img="Description" cardinality="0:M"/>
+        <DSCR type="PropertyMultilineValue" img="Description" super="INDI:RELI"/>
         <EDUC type="PropertyChoiceValue" img="Education" super="INDI:RELI"/>
         <IDNO type="PropertySimpleValue" img="IDNumber" super="INDI:RELI"/>
         <NATI type="PropertyChoiceValue" img="Nationality" super="INDI:RELI"/>
