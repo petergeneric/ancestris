@@ -340,6 +340,17 @@ public class SelectEntityWidget extends javax.swing.JPanel {
             } else {
                 txt = value != null ? value.toString() : "";
             }
+            
+            if (txt != null && !"".equals(txt)) {
+                StringBuilder sb = new StringBuilder();
+                sb.append("<html>");
+                String[] texte = txt.split("(?<=\\G.{50})");
+                for (String s : texte) {
+                    sb.append(s).append("<br>");
+                }
+                sb.append("</html>");
+                list.setToolTipText(sb.toString());
+            }
 
             return super.getListCellRendererComponent(list, txt, index, isSelected, cellHasFocus);
         }
