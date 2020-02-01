@@ -1,0 +1,229 @@
+#macro(testaff $v)
+	#set($isShown = 0)
+	#if ($v )
+		#set($isShown = 1)
+	#end
+#end 
+
+<html>
+
+<head>
+
+<style type="text/css">
+html {
+font-family: Verdana,Geneva,Arial,Helvetica,sans-serif;
+font-size: 10px;
+line-height: 1.0em;
+text-align: left;
+}
+.title {
+border-style: dotted;
+border-width: 1px;
+border-color: black;
+#background-color: #CEECF5;
+font-weight: bold;
+font-size: 12px;
+text-align: center;
+text-decoration: underline;
+}
+.underline_shadow {
+text-shadow: 2px 2px 8px orange;
+text-decoration: underline;
+}
+.italic {
+font-style: italic;
+font-size: 9px;
+}
+.version {
+font-style: italic;
+font-size: 6px;
+text-align: left;
+}
+
+
+.megr {
+text-align: left;
+font-style: normal;
+font-weight: normal;
+}
+.mital {
+text-align: left;
+font-style: normal;
+font-weight: bold;
+}
+.gauche {
+text-align: left;
+}
+</style><!-- ici finit l'ensemble des indications de presentation de la page web -------------->
+</head>
+
+<body>
+
+#set($famc=$INDI.Famc)
+#set($fams=$INDI.Fams)
+#set($fam=$fams)
+#set($will=$wills)
+#set($conjoint = $fams.getOtherSpouse())
+#set($child=$children)
+#set($famA=$fam.children.fams)
+#set($fratrie=$famc.children)
+#set($surnom=$INDI.getProperty("NAME:NICK"))
+#set($naissance=$INDI.getProperty("BIRT"))
+#set($bapteme=$INDI.getProperty("BAPM"))
+#set($bapt_CHR=$INDI.getProperty("CHR"))
+#set($deces=$INDI.getProperty("DEAT"))
+#set($inhumation=$INDI.getProperty("BURI"))
+#set($residence=$INDI.getProperty("RESI"))
+#set($profession=$INDI.getProperty("OCCU"))
+#set($version="DD_FM_FL_2018/08/12")
+
+
+<!----------------------------------- Titre de la page --------------------------->
+<TABLE width="100%" CELLSPACING="0">
+	<TBODY>
+		<TR>
+			<TD WIDTH="65%">
+                            <center>
+                            <span class="title"> $!INDI.getProperty("NAME:GIVN") $!INDI.getProperty("NAME:SURN")</span><br>($INDI.Id - Sosa: $!INDI.getSosaString())
+                            </center>
+                        </TD>
+			<TD WIDTH="35%" >
+                            #set($portrait=$INDI.getProperty("OBJE"))
+                            #if ($portrait)
+                                <center>
+                                <IMG height="100" width="$!INDI.getWidthForMedia(100)" SRC="$!INDI.getMediaFilePath()">
+                                </center>
+                            #end
+                        </TD>
+		</TR>
+	</TBODY>
+</TABLE>
+
+
+<!----------------------------- Zone de l'identite ---------------------------------------->
+
+#set($naissance=$INDI.getProperty("BIRT"))
+#if ($naissance) 
+  <br><span class="underline_shadow">$!INDI.getProperty("BIRT").getName()</span> : 
+  <span class="italic">$!INDI.getProperty("BIRT:DATE")</span><br>
+  <span class="italic">$!INDI.getProperty("BIRT:PLAC")</span>
+#end 
+
+#set($bapteme=$INDI.getProperty("BAPM"))
+#if ($bapteme)
+  <br><span class="underline_shadow">$!INDI.getProperty("BAPM").getName()</span> : 
+  <span class="italic">$!INDI.getProperty("BAPM:DATE")</span><br>
+  <span class="italic">$!INDI.getProperty("BAPM:PLAC")</span>
+#end
+#set($bapt_CHR=$INDI.getProperty("CHR"))
+#if ($bapt_CHR)
+  <br><span class="underline_shadow">$!INDI.getProperty("CHR").getName()</span> : 
+  <span class="italic">$!INDI.getProperty("CHR:DATE")</span><br>
+  <span class="italic">$!INDI.getProperty("CHR:PLAC")</span>
+#end
+<br>
+#set($deces=$INDI.getProperty("DEAT"))
+#if ($deces)
+  <br><span class="underline_shadow">$!INDI.getProperty("DEAT").getName()</span> : 
+  <span class="italic">$!INDI.getProperty("DEAT:DATE")</span><br>
+  <span class="italic">$!INDI.getProperty("DEAT:PLAC")</span> 
+#end
+
+#set($inhumation=$INDI.getProperty("BURI"))
+#if ($inhumation)
+  <br><span class="underline_shadow">$!INDI.getProperty("BURI").getName()</span> : 
+  <span class="italic">$!INDI.getProperty("BURI:DATE")</span><br>
+  <span class="italic">$!INDI.getProperty("BURI:PLAC")</span>
+#end 
+
+<br>
+
+<!-------------------------- Zone de l'adresse ----------------------------------->
+
+#set($residence=$INDI.getProperty("RESI"))
+#if ($residence)
+  #if($INDI.getProperties("RESI").size()>=2)
+    <br><span class="underline_shadow">$!INDI.getProperty("RESI").getName()</span> : 
+  #else
+    <br><span class="underline_shadow">$!INDI.getProperty("RESI").getName()</span> : 
+  #end
+  #set($adresse_code=$!resi.getProperty("ADDR:POST"))
+  <ul>
+  #foreach($resi in $INDI.getProperties("RESI"))
+    #if ($!resi.getProperty("ADDR"))
+      <li><span class="italic">$!resi.getProperty("ADDR"), $!resi.getProperty("ADDR:CITY"), ($!resi.getProperty("ADDR:POST"))</span><br>
+      <span class="italic">$!resi.Date</span></li>
+    #else
+      <li><span class="italic">$!resi.Place</span> <br> 
+      <span class="italic">$!resi.Date</span></li>
+    #end
+  #end
+  </ul>
+#end
+
+<!-------------------------- Zone de la profession ----------------------------------->
+
+
+#set($profession=$INDI.getProperty("OCCU"))
+#if ($profession)
+  #if($INDI.getProperties("OCCU").size()>=2)
+    <br><span class="underline_shadow">$!INDI.getProperty("OCCU").getName()</span> : 
+  #else
+    <br><span class="underline_shadow">$!INDI.getProperty("OCCU").getName()</span> : 
+  #end
+  <ul>
+  #foreach($occu in $INDI.getProperties("OCCU"))
+    <li>
+        <span class="italic">$!occu.Value
+        #if($!occu.Place != "")
+             - $!occu.Place</span><br>
+        #else
+             </span><br>
+        #end
+        #if($!occu.Date != "")
+             <span class="italic">$!occu.Date</span>
+        #end
+    </li>
+  #end
+  </ul>
+#end
+
+<!---------------------------------- Mariage ----------------------------------------------->
+
+#testaff($fams)
+#if ($isShown!=0)
+  #if(($fams.size()>=1) && ($fams[0].getProperty("MARR")))
+    <br><span class="underline_shadow">$fams[0].getProperty("MARR").getName()</span> :
+  #else
+    <br> 
+  #end
+    <ul>
+    #foreach ($fam in $fams)
+      #set($conjoint = $fam.getOtherSpouse())
+      #set($mariage=$fam.getProperty("MARR"))
+      #set($divorce=$fam.getProperty("DIV"))
+      #set($cm=$fam.getProperty("MARC"))
+      #set($naiss_conjoint=$conjoint.getProperty("BIRT"))
+      #set($dec_conjoint=$conjoint.getProperty("DEAT"))
+      <li>
+      #if (($mariage) && ($conjoint.Id))
+        $!conjoint.getProperty("NAME") ($conjoint.Id)</span><br>
+        <span class="italic">$!mariage.getProperty("DATE")</span> 
+        - <span class="italic">$!mariage.getProperty("PLAC")</span>
+      #end
+      #if ($divorce)	
+        <br><span class="underline_shadow">$!FAM.getProperty("DIV").getName()</span> : 
+        <span class="italic">$!divorce.Date</span> 
+        - <span class="italic">$!divorce.Place</span>
+      #end
+      </li>
+    #end
+    </ul>
+#end
+
+<p align="right"><span class="version">
+$version
+</span></p>
+
+</body>
+</html>

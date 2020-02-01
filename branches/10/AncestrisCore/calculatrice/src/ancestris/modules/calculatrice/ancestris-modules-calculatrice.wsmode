@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mode version="2.3">
+    <name unique="ancestris-modules-calculatrice"/>
+    <kind type="editor"/>
+    <state type="separated"/>
+    <bounds x="600" y="313" width="332" height="311"/>
+    <frame state="0"/>
+    <empty-behavior permanent="true"/>
+</mode>

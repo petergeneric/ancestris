@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!DOCTYPE Configuration PUBLIC "-//NetBeans IDE//DTD toolbar 1.1//EN" "http://www.netbeans.org/dtds/toolbar1_1.dtd">
+<Configuration>
+	<Row>
+		<Toolbar name="File" visible="true" draggable="true" align="left"/>
+		<Toolbar name="Clipboard" visible="true" draggable="true" align="left"/>
+		<Toolbar name="UndoRedo" visible="true" draggable="true" align="left"/>
+		<Toolbar name="Memory" visible="false" draggable="true" align="left"/>
+		<Toolbar name="GenealogyEditor" visible="false" draggable="true" align="left"/>
+		<Toolbar name="Nav" visible="true" draggable="true" align="right"/>
+		<Toolbar name="Help" visible="true" draggable="true" align="right"/>
+	</Row>
+</Configuration>

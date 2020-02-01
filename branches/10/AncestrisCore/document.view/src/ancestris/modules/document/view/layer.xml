@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="Window">
+            <file name="ancestris-modules-document-view-DocumentViewAction.instance">
+                <attr name="component" methodvalue="ancestris.modules.document.view.DocumentViewTopComponent.findInstance"/>
+                <attr name="displayName" bundlevalue="ancestris.modules.document.view.Bundle#CTL_DocumentViewAction"/>
+                <attr name="iconBase" stringvalue="ancestris/modules/document/view/View.png"/>
+                <attr name="instanceCreate" methodvalue="org.openide.windows.TopComponent.openAction"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Menu">
+        <folder name="Window">
+            <file name="DocumentViewAction.shadow">
+                <attr name="originalFile" stringvalue="Actions/Window/ancestris-modules-document-view-DocumentViewAction.instance"/>
+                <attr name="position" intvalue="300"/>
+            </file>
+        </folder>
+    </folder>
+    <folder name="Windows2">
+        <folder name="Components">
+            <file name="DocumentViewTopComponent.settings" url="DocumentViewTopComponentSettings.xml"/>
+        </folder>
+        <folder name="Modes">
+            <folder name="ancestris-output">
+                <file name="DocumentViewTopComponent.wstcref" url="DocumentViewTopComponentWstcref.xml"/>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="Trancestris" basedir=".">
+    <description>Builds the module suite Trancestris.</description>
+
+    <import file="nbproject/build-impl.xml"/>
+
+    <!--
+    <property name="tools.dir" value="nbproject" />
+    <property name="ant.contrib.jar" value="${tools.dir}/ant-contrib/ant-contrib.jar" />
+    
+        <taskdef resource="net/sf/antcontrib/antcontrib.properties">
+            <classpath>
+                <pathelement location="${ant.contrib.jar}"/>
+            </classpath>
+        </taskdef>
+    -->
+    <!--target name="build" depends="suite.build,build-bundles" description="Build all modules in the suite."/-->
+    
+    <target name="build-launchers" depends="suite.build-launchers">
+        <replace file="build/launcher/etc/${app.name}.conf">
+            <replacefilter token="/dev" value="/${app.version}" />
+            <replacefilter token="-J-Xms24m -J-Xmx64m" value="${run.args.extra}" />
+        </replace>
+    </target>
+    
+    <target name="build-zip" depends="suite.build-zip">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <zip destfile="${dist.dir}/${app.name}.zip" update="true">
+            <!--zipfileset dir="res/language/etc" prefix="${app.name}/etc"/-->
+            <zipfileset dir="${harness.dir}/../platform/core/locale" prefix="${app.name}/platform/core/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/ext/locale" prefix="${app.name}/platform/modules/ext/locale"/>
+            <!--zipfileset dir="res/language/platform/" prefix="${app.name}/platform/"/-->
+        </zip>
+    </target>
+
+    <target name="build-mac" depends="suite.build-mac">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
+        <copy todir="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}">
+            <fileset dir="${harness.dir}/.." includes="platform/core/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/lib/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/ext/locale/**"/>
+        </copy>
+        <!-- Note that file permissions will not be stored in the resulting zipfile.
+        so zip task is inappropriate to create a zip archive -->
+        <exec executable="zip" dir="${dist.dir}">
+            <arg value="-yrq"/>
+            <arg value="${app.name}-osx.zip"/>
+            <arg value="${app.name}.app"/>
+        </exec>
+    </target>
+    <!--target name="build-bundles" description="Builds the zip bundles for translators">
+        <property name="parent.dir" location=".."/>
+        <basename property="parent.dirName" file="${parent.dir}"/>
+        <basename property="current.dirName" file="${basedir}"/>
+        <echo message="${basedir}"/>
+        <property name="properties.dir" location="../../bundles/${parent.dirName}/${current.dirName}"/>
+        <copy verbose="true" todir="${properties.dir}">
+            <fileset dir="." casesensitive="yes">
+                <include name="branding/**/*.properties"/>
+            </fileset>
+            <mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" />
+        </copy>
+    </target-->
+</project>

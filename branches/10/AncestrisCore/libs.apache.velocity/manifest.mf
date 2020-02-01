@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+OpenIDE-Module: ancestris.libs.apache.velocity
+OpenIDE-Module-Localizing-Bundle: ancestris/libs/apache/velocity/Bundle.properties
+OpenIDE-Module-Specification-Version: 1.7.1
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="ancestris-tasks" basedir=".." >
+    <target name="-svn-check">
+        <exec executable="svn" failonerror="false"
+              outputproperty="buildversion" errorproperty="erroroutput">
+            <arg value="info"/>
+            <arg value="--xml"/>
+        </exec>
+        <condition property="svn-no-error">
+            <length string="${erroroutput}" length="0"/>
+        </condition>
+    </target>
+    <target name="-manifest-prep" depends="-svn-check,get-buildnumber-from-svn">
+        <property name="buildnumber" value="0"/>
+        <parsemanifest manifest="${manifest.mf}" attribute="OpenIDE-Module-Specification-Version" property="spec.version"/>
+        <tempfile property="manifest.mf-temp" destDir="build" suffix="MF"/>
+        <copy file="${manifest.mf}" tofile="${manifest.mf-temp}"/>
+        <manifest file="${manifest.mf-temp}" mode="update">
+            <attribute name="OpenIDE-Module-Specification-Version" value="${spec.version}.${buildnumber}"/>
+        </manifest>
+    </target>
+    <target name="get-buildnumber-from-svn" if="svn-no-error">
+        <xmlproperty>
+            <propertyresource name="buildversion"/>
+        </xmlproperty>
+        <property name="info.entry.commit(revision)" value="0" />
+        <property name="buildnumber" value="${info.entry.commit(revision)}" />
+    </target>
+    <target name="build-bundles" description="Builds the zip bundles for translators">
+        <property name="parent.dir" location=".."/>
+        <basename property="parent.dirName" file="${parent.dir}"/>
+        <basename property="current.dirName" file="${basedir}"/>
+        <property name="properties.dir" location="../../bundles/${parent.dirName}/${current.dirName}"/>
+        <copy verbose="true" todir="${properties.dir}">
+            <fileset dir="." casesensitive="yes">
+                <include name="build/classes/**/Bundle*.properties"/>
+            </fileset>
+            <mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" />
+        </copy>
+    </target>
+    <target name="jar" depends="init,compile,-manifest-prep,jar-prep,build-bundles" unless="is.jar.uptodate">
+        <copy file="${manifest.mf-temp}" tofile="/tmp/manifest"/>
+        <!-- XXX it seems that using <manifest> forces the JAR to be recreated each time -->
+        <!-- (presumably due to the variable OIDE-M-I-V) -->
+        <!-- so might have to use e.g. <manifest> task (created in build/ somewhere)? -->
+        <!-- Cf: http://issues.apache.org/bugzilla/show_bug.cgi?id=29085 -->
+        <!-- This task adds some or all of: -Public-Packages, -Friends, Class-Path, -IDE-Dependencies, -Module-Dependencies, -Specification-Version, -Implementation-Version, -Build-Version, AutoUpdate-Show-In-Client -->
+        <jarwithmoduleattributes jarfile="${cluster}/${module.jar}" compress="${build.package.compress}" index="${build.package.index}" manifest="${manifest.mf-temp}" stamp="${cluster}/.lastModified">
+            <fileset dir="${build.classes.dir}"/>
+        </jarwithmoduleattributes>
+    </target>
+</project>

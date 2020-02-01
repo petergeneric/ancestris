@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE index PUBLIC "-//Sun Microsystems Inc.//DTD JavaHelp Index Version 2.0//EN" "http://java.sun.com/products/javahelp/index_2_0.dtd">
+<index version="2.0">
+    <indexitem text="Ancestris - Hvad indeholder det" target="ancestris.app.about"/>
+    <indexitem text="Yderligere funktioner" target="ancestris.app.additional.features"/>
+    <indexitem text="Avanceret brug" target="ancestris.app.advanced"/>
+    <indexitem text="Hvordan får jeg hjælp" target="ancestris.app.aids"/>
+    <indexitem text="Første opsætning" target="ancestris.app.basic"/>
+    <indexitem text="Arkitektur - Lag" target="ancestris.app.blueprints"/>
+    <indexitem text="Gør dine data kompatible" target="ancestris.app.conform.genealogy"/>
+    <indexitem text="Grundlæggende brug" target="ancestris.app.discovering"/>
+    <indexitem text="Download Ancestris" target="ancestris.app.download"/>
+    <indexitem text="Brugerportal" target="ancestris.app.external.links"/>
+    <indexitem text="Gedcom specifikationer" target="ancestris.app.gedcom.standard"/>
+    <indexitem text="Gedcom explorer" target="ancestris.app.gedcoms.manager"/>
+    <indexitem text="Importer dit slægtstræ" target="ancestris.app.genealogy.import"/>
+    <indexitem text="Dit slægtstræ og Ancestris" target="ancestris.app.help.title"/>
+    <indexitem text="FAQ - Spørgsmål og svar" target="ancestris.app.import.issue"/>
+    <indexitem text="Et godt råd" target="ancestris.app.intro"/>
+    <indexitem text="Stedliste" target="ancestris.app.juridictions.list"/>
+    <indexitem text="Tilføj barn" target="ancestris.app.new.child"/>
+    <indexitem text="Opret den 1. person" target="ancestris.app.new.entity"/>
+    <indexitem text="Tilføj familie" target="ancestris.app.new.family"/>
+    <indexitem text="Start på mit slægtstræ" target="ancestris.app.new.genealogy"/>
+    <indexitem text="Tilføj forældre" target="ancestris.app.new.parent"/>
+    <indexitem text="Tilføj ægtefælle" target="ancestris.app.new.spouse"/>
+    <indexitem text="Migrer Ancestris" target="ancestris.app.nomade"/>
+    <indexitem text="Præferencer og 1. konfiguration" target="ancestris.app.options.menu1"/>
+    <indexitem text="Håndtering af steder" target="ancestris.app.place.management"/>
+    <indexitem text="Skriv et plugin" target="ancestris.app.plugins.development"/>
+    <indexitem text="Plugins - Oversigt" target="ancestris.app.plugins.liste"/>
+    <indexitem text="Plugins" target="ancestris.app.plugins"/>
+    <indexitem text="Kilder og henvisninger" target="ancestris.app.repo.source.management"/>
+    <indexitem text="Kronologisk visning" target="ancestris.app.view.chrono"/>
+    <indexitem text="GedCom editor" target="ancestris.app.view.editors.gedcom"/>
+    <indexitem text="Ancestris editor" target="ancestris.app.view.editors.ancestris"/>
+    <indexitem text="Entitets/enheds visning" target="ancestris.app.view.entity"/>
+    <indexitem text="Geografisk visning" target="ancestris.app.view.geo"/>
+    <indexitem text="Enkel navigator" target="ancestris.app.view.navigator"/>
+    <indexitem text="Lister og rapporter" target="ancestris.app.view.reports"/>
+    <indexitem text="Søge vinduet" target="ancestris.app.view.search"/>
+    <indexitem text="Tabel visning" target="ancestris.app.view.table"/>
+    <indexitem text="Slægtstræ visning" target="ancestris.app.view.tree"/>
+    <indexitem text="De forskellige visninger" target="ancestris.app.views"/>
+    <indexitem text="Håndtering af vinduer" target="ancestris.app.windows"/>
+</index>

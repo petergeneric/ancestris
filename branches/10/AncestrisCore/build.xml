@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- You may freely edit this file. See harness/README in the NetBeans platform -->
+<!-- for some information on what you could do (e.g. targets to override). -->
+<!-- If you delete this file and reopen the project it will be recreated. -->
+<project name="AncestrisCore" basedir="." default="build">
+    <description>Builds the module suite AncestrisCore.</description>
+    <import file="nbproject/build-impl.xml"/>
+    <property name="app.icon.icns" value="${basedir}/ancestris.icns"/>
+
+    <target name="build" depends="suite.build,build-bundles" description="Build all modules in the suite."/>
+
+    <target name="build-launchers" depends="-init">
+        <echo message=" "/>
+        <echo message="BUILDING ANCESTRIS DISTRIBUTION..." />
+        <fail unless="app.name">Must have set at least an application name ('app.name')</fail>
+
+        <pathconvert property="zip.platform.update.tracking">
+            <pathfileset>
+                <path refid="cluster.path.id"/>
+                <filename name="**/update_tracking/*.xml"/>
+            </pathfileset>
+        </pathconvert>
+
+        <selector id="zip.platform.included.files">
+            <custom classpath="${harness.dir}/tasks.jar" classname="org.netbeans.nbbuild.ModuleSelector">
+                <param name="excludeModules" value="${disabled.modules}"/>
+                <!-- XXX inc/exc clusters -->
+                <param name="includeClusters" value="${enabled.clusters}"/>
+                <param name="excludeClusters" value="${disabled.clusters}"/>
+                <param name="updateTrackingFiles" value="${zip.platform.update.tracking}"/>
+            </custom>
+        </selector>
+
+        <pathconvert property="zip.platform.clusters.duplicates" pathsep="&#10;">
+            <pathfileset>
+                <path refid="cluster.path.id"/>
+                <selector refid="zip.platform.included.files"/>
+            </pathfileset>
+            <chainedmapper>
+                <mapper type="regexp" from="(^.+)[/\\]config[/\\]Modules[/\\]" to="\1"/> <!-- #71849 -->
+                <filtermapper>
+                    <linecontainsregexp negate="true">
+                        <regexp pattern="update[/\\]backup[/\\]netbeans[/\\]?$"/>
+                    </linecontainsregexp>
+                </filtermapper>
+            </chainedmapper>
+        </pathconvert>
+        <tempfile property="zip.platform.clusters.duplicates.file" destdir="${basedir}/build" deleteonexit="true"/>
+        <echo file="${zip.platform.clusters.duplicates.file}" message="${zip.platform.clusters.duplicates}"/>
+
+        <union id="zip.platform.clusters"> <!-- union removes duplicates -->
+            <files includesfile="${zip.platform.clusters.duplicates.file}"/>
+        </union>
+        <pathconvert property="zip.platform.clusters.bare" pathsep="&#10;"> <!-- #71128: \n OK on Win but \r\n bad on Unix -->
+            <resources refid="zip.platform.clusters"/>
+            <chainedmapper>
+                <filtermapper>
+                    <linecontainsregexp negate="true">
+                        <regexp pattern="platform[0-9]*[/\\]?$"/>
+                    </linecontainsregexp>
+                </filtermapper>
+                <mapper type="regexp" from="[/\\]([^/\\]+)[/\\]?$" to="\1"/> <!-- #71849 -->
+            </chainedmapper>
+        </pathconvert>
+
+        <property name="build.launcher.dir" location="build/launcher"/>
+
+        <mkdir dir="${build.launcher.dir}/etc"/>
+        <!-- clean old launchers (platform could be changed) -->
+        <delete dir="${build.launcher.dir}/bin" failonerror="false"/>
+        <mkdir dir="${build.launcher.dir}/bin"/>
+
+        <!-- make sure correct launchers are present - for pre7 platform use old app.exe launchers -->
+        <pathconvert property="nbexec.dll.found" setonempty="false">
+            <pathfileset include="lib/nbexec.dll">
+                <path refid="cluster.path.id"/>
+            </pathfileset>
+        </pathconvert>
+        <condition property="app.exe.prefix" value="" else="pre7_">
+            <isset property="nbexec.dll.found"/>
+        </condition>
+        <copy file="${harness.dir}/launchers/${app.exe.prefix}app.exe" tofile="${build.launcher.dir}/bin/${app.name}.exe" overwrite="true"/>
+        <copy file="${harness.dir}/launchers/${app.exe.prefix}app64.exe" tofile="${build.launcher.dir}/bin/${app.name}64.exe" failonerror="false" overwrite="true"/>
+
+<!--        <copy file="${harness.dir}/launchers/app.sh" tofile="${build.launcher.dir}/bin/${app.name}"/>-->
+        <!-- overide app.sh to capitalize first letter in APPNAME for MAC OS -->
+        <copy file="nbproject/app.sh" tofile="${build.launcher.dir}/bin/${app.name}"/>
+        <copy file="nbproject/app.conf" tofile="${build.launcher.dir}/etc/${app.name}.conf">
+            <filterchain>
+                <replacestring from="$${branding.token}" to="${branding.token}"/>
+            </filterchain>
+        </copy>
+        <echo message="${app.name}" file="${build.launcher.dir}/etc/${app.name}.clusters"/>
+        <echo message="&#10;" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
+        <echo message="${zip.platform.clusters.bare}" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
+        <echo message="&#10;" file="${build.launcher.dir}/etc/${app.name}.clusters" append="true"/>
+
+    </target>
+    <target name="build-zip" depends="suite.build-zip">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <zip destfile="${dist.dir}/${app.name}.zip" update="true">
+          
+            <zipfileset dir="${harness.dir}/../platform/core/locale" prefix="${app.name}/platform/core/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/lib/locale" prefix="${app.name}/platform/lib/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/locale" prefix="${app.name}/platform/modules/locale"/>
+            <zipfileset dir="${harness.dir}/../platform/modules/ext/locale" prefix="${app.name}/platform/modules/ext/locale"/>
+            <!-- Add icons to bin dir-->
+            <mappedresources>
+                <fileset dir="branding/core/core.jar/org/netbeans/core/startup/" />
+                <globmapper from="frame*.gif" to="${app.name}/bin/ancestris*.gif"/>
+            </mappedresources>
+            <mappedresources>
+                <fileset dir="branding/core/core.jar/org/netbeans/core/startup/" />
+		<globmapper from="frame*.ico" to="${app.name}/bin/ancestris*.ico"/>
+            </mappedresources>
+            <mappedresources>
+                <fileset file="ancestris.icns" />
+                <globmapper from="ancestris.icns" to="${app.name}/bin/ancestris.icns"/>
+            </mappedresources>
+        </zip>
+    </target>
+
+    <target name="build-win-installer" depends="build-zip">
+        <echo message=" "/>
+        <echo message=" "/>
+        <echo message="BUILDING INSTALLER FOR WINDOWS..." />
+        <exec executable="svnversion" failonerror="false"
+              outputproperty="svnversion" errorproperty="svnerror">
+            <arg value="-n"/>
+        </exec>
+        <property name="inst.version" value="0.3-1_r${svnversion}"/>
+        <echo message="version = ${inst.version}" />
+        <property name="nbdist.dir" value="dist"/>
+        <property name="nbdist-app.dir" value="${nbdist.dir}/${app.name}"/>
+        <property name="izpack.dir" value="${dist.dir}/../../contrib-build/izpack"/>
+        <property name="izpack2exe.dir" value="${izpack.dir}/izpack2exe"/>
+        <property name="izpack-installer" value="install.jar"/>
+        <property name="nbdist-app-installer" value="install-${app.name}.exe"/>
+        <taskdef name="izpack" classpath="${izpack.dir}/lib/compiler.jar" classname="com.izforge.izpack.ant.IzPackTask"/>
+
+        <echo message="unzipping..." />
+        <unzip src="${nbdist.dir}/${app.name}.zip" dest="${nbdist.dir}"/>
+
+        <echo message="Copying..." />
+        <copy todir="${nbdist-app.dir}">
+            <fileset dir="installer/izpack" />
+        </copy>
+
+        <echo message="Setting variable names..." />
+        <replace file="${nbdist-app.dir}/izpack-install-script.xml">
+            <replacefilter token="$APP-NAME" value="Ancestris" />
+            <replacefilter token="$APP-VERSION" value="${inst.version}" />
+            <replacefilter token="$APP-PATH" value="${app.title}-${inst.version}" />
+        </replace>
+        <replace file="${nbdist-app.dir}/shortcutSpec.xml">
+            <replacefilter token="$APP-VERSION" value="${inst.version}" />
+        </replace>
+
+        <echo message="Compiling installer using IzPack..."/>
+        <izpack input="${basedir}/${nbdist-app.dir}/izpack-install-script.xml"
+                output="${basedir}/${nbdist-app.dir}/${izpack-installer}"
+                installerType="standard"
+                basedir="${basedir}/${nbdist-app.dir}"
+                izPackDir="${izpack.dir}/"/>
+
+        <echo message="Creating the release ${nbdist-app-installer} ..."/>
+        <exec dir="${izpack2exe.dir}" executable="python" >
+            <arg value="izpack2exe.py"/>
+            <arg value="--file=../../../AncestrisCore/${nbdist-app.dir}/${izpack-installer}"/>
+            <arg value="--output=../../../AncestrisCore/${nbdist.dir}/${nbdist-app-installer}"/>
+            <arg value="--no-upx"/>
+        </exec>
+
+        <echo message="Cleaning and finalizing release..." />
+        <delete dir="${nbdist-app.dir}"/>
+
+        <echo message=" "/>
+        <echo message="Release IzPack of Ancestris for Windows is ready: ${nbdist-app-installer}" />
+    </target>
+
+    <target name="build-mac" depends="suite.build-mac">
+        <!-- see: https://multilingual.dev.java.net/#How_to_integrate_localised_modules_from_NetBeans -->
+        <echo message="${app.name}: update zip-distribution with own stuff"/>
+        <!-- adaptation pour nb 6.9: on prend les fichiers directement dans le rep d'install -->
+        <copy todir="${dist.dir}/${app.name}.app/Contents/Resources/${app.name}">
+            <fileset dir="${harness.dir}/.." includes="platform/core/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/lib/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/locale/**"/>
+            <fileset dir="${harness.dir}/.." includes="platform/modules/ext/locale/**"/>
+        </copy>
+        <!-- Note that file permissions will not be stored in the resulting zipfile.
+            so zip task is inappropriate to create a zip archive
+        -->
+        <exec executable="zip" dir="${dist.dir}">
+            <arg value="-yrq"/>
+            <arg value="${app.name}-osx.zip"/>
+            <arg value="${app.name}.app"/>
+        </exec>
+    </target>
+    
+    <target name="build-bundles" description="Builds the zip bundles for translators">
+        <property name="parent.dir" location=".."/>
+        <basename property="current.dirName" file="${basedir}"/>
+        <property name="properties.dir" location="../bundles/${current.dirName}"/>
+        <copy verbose="true" todir="${properties.dir}">
+            <fileset dir="." casesensitive="yes">
+                <include name="branding/**/*.properties"/>
+            </fileset>
+            <!--mapper type="regexp" from="^build/classes/(.*\.properties)" to="src/\1" /-->
+        </copy>
+    </target>
+</project>

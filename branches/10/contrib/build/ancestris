@@ -1,0 +1,485 @@
+#!/bin/bash
+#
+#             ========================================================"
+#            |                                                        |"
+#            |  * * *                                                 |"
+#            |       Mon script de compilation : Francois Massonneau  |"
+#            |       Derniere mise a jour - Decembre 22, 2011         |"
+#            |                                                * * *   |"
+#            |                                                        |"
+#             ========================================================"
+
+
+
+if [[ $1 = "" ]] ; then
+  clear
+  echo ""
+  echo ""
+  echo "=================================================================="
+  echo "                                                                  "
+  echo "  Il faut lancer ce script avec un paramètre :                    "
+  echo "                                                                  "
+  echo "   - ancestris d : On met à jour et on compile Ancestris trunk    "
+  echo "                                                                  "
+  echo "   - ancestris r 0.6 : On met à jour et on compile Ancestris pour "
+  echo "                       la version 0.6 "
+  echo "                                                                  "
+  echo "   - ancestris t : On met à jour et on compile Trancestris"
+  echo "                                                                  "
+  echo "   - ancestris x : On fait un fichier Ancestris_Bundles.zip a par-"
+  echo "                   tir des fichiers Bundle de tous les repertoires"
+  echo "                                                                  "
+  echo "=================================================================="
+  echo ""
+  echo ""
+  exit 1
+fi
+
+## ----------------------------------------------------------------------
+##                    Quelques parametres a definir :
+## ----------------------------------------------------------------------
+
+# Des parametres generaux :
+export LANG="fr_FR.UTF-8"
+MY_HOME="/home/fm"
+SVN_DIRECTORY="$MY_HOME/svn"
+
+
+# Ajouts pour pouvoir faire un build de la release(branch) ou du dev(trunk)
+SVN_BASE_URL="http://arvernes.dyndns.org/fgenj"
+if [[ $1 = "d" ]] || [[ $1 = "x" ]] ; then
+VERSION="trunk"
+SVN_URL="$SVN_BASE_URL/$VERSION"
+SVN_ANCESTRIS_DIRECTORY="$SVN_DIRECTORY/ancestris"
+fi
+if [[ $1 = "r" ]] ; then
+VERSION="$2"
+SVN_URL="$SVN_BASE_URL/branches/$VERSION"
+SVN_ANCESTRIS_DIRECTORY="$SVN_DIRECTORY/ancestris_v.$VERSION"
+fi
+
+
+# Des parametres pour la compilation :
+ANCESTRIS_CORE="$SVN_ANCESTRIS_DIRECTORY/AncestrisCore"
+ANCESTRIS_EXTENSIONS="$SVN_ANCESTRIS_DIRECTORY/AncestrisExtensions"
+ANCESTRIS_SEMA="ancestris.sem"
+
+# Noms des fichiers qui sont crees - pas d'extension :
+program_name="ancestris"
+macos_program_name="ancestris-osx"
+windows_program_name="install-ancestris"
+
+
+ANCESTRIS_BASE_REPO="/var/www/default/files/ancestris/$VERSION"
+ANCESTRIS_CORE_REPO="$ANCESTRIS_BASE_REPO/core/"
+ANCESTRIS_EXTENSIONS_REPO="$ANCESTRIS_BASE_REPO/extensions/"
+
+
+
+# Des parametres pour la mise a jour des fichiers de ressources :
+DIR_LANGUAGE_PACKAGING="$MY_HOME/packaging/fichier_langues"
+
+
+
+## ---------------------------------------------------------------------
+## ---------------------------------------------------------------------
+
+
+
+if [[ $1 = "d" ]] || [[ $1 = "r" ]]; then
+    ## ----------------------------------------------------------------------
+    ## On donne la version de java qu'on utilise pour la compilation
+    ## ----------------------------------------------------------------------
+    echo ""
+    echo ""
+    echo "=================================================================="
+    echo ""
+    echo "==---- - - -> Version de java :"
+    echo `java -version`
+    echo ""
+    echo "------------------------------------------------------------------"
+    echo ""
+    echo ""
+    echo ""
+    read -t 2
+    
+    install -d $ANCESTRIS_CORE_REPO
+    install -d $ANCESTRIS_EXTENSIONS_REPO
+    install -d $SVN_ANCESTRIS_DIRECTORY
+    touch $SVN_ANCESTRIS_DIRECTORY/$ANCESTRIS_SEMA
+    
+    # ----------------------------------------------------------------------
+    # Doit-on reprendre le code d'Ancestris - si le semaphore est la, oui
+    # ----------------------------------------------------------------------
+    echo ""
+    echo "=================================================================="
+    echo ""
+    echo " ==---- - - -> Recuperation du nouveau code du depot svn"
+    echo ""
+    echo "------------------------------------------------------------------"
+    cd $SVN_ANCESTRIS_DIRECTORY
+    if [ -f $ANCESTRIS_SEMA ]; then
+      cd $SVN_DIRECTORY
+      svn co $SVN_URL $SVN_ANCESTRIS_DIRECTORY
+      echo ""
+      echo "------------------------------------------------------------------"
+      echo ""
+      echo "On attend un peu pour pouvoir voir ce qu'on a repris sur le svn"
+      echo "et s'assurer que la connection au depot a ete bonne."
+      echo ""
+      echo "------------------------------------------------------------------"
+      echo ""
+      read -t 2
+      else
+        clear
+        echo ""
+        echo "Le fichier semaphore $ANCESTRIS_SEMA n'est pas present,"
+        echo "on ne fait que compiler"
+        echo ""
+        read -t 2
+    fi
+    
+    
+    ## ----------------------------------------------------------------------
+    ## On compile le tout apres avoir tout efface pour qu'il ne reste rien de genant :
+    ## ----------------------------------------------------------------------
+    clear
+    echo ""
+    echo "=================================================================="
+    echo ""
+    echo " ==---- - - -> Construction du fichier .zip de Ancestris"
+    
+    ## On rentre dans AncestrisExtensions pour nettoyer
+    echo ""
+    echo "    - On rentre dans $ANCESTRIS_EXTENSIONS et on efface tout"
+    echo ""
+    read -t 1
+    cd $ANCESTRIS_EXTENSIONS
+    ant clean
+    #ant build
+    
+    ## On rentre dans AncestrisCore
+    clear
+    echo ""
+    echo "=================================================================="
+    echo ""
+    echo " ==---- - - -> Construction du fichier .zip de Ancestris"
+    echo ""
+    echo "    - On rentre dans $ANCESTRIS_CORE et on efface tout"
+    echo ""
+    read -t 1
+    cd $ANCESTRIS_CORE
+    ant clean
+    
+    echo "------------------------------------------------------------------"
+    # On fait l'archive zip :
+    ant build-zip
+    # On fait l'archive mac :
+    #$#ant build-mac
+    # On fait l'archive pour Windows :
+    #$#ant build-win-installer
+    
+    ## On rentre dans AncestrisExtensions pour faire les modules
+    cd $ANCESTRIS_EXTENSIONS
+    ant build
+    
+    ## On verifie que les fichiers sont bien faits :
+    ls -a -l $ANCESTRIS_CORE/dist/$program_name.zip
+    #$#ls -a -l $ANCESTRIS_CORE/dist/$macos_program_name.zip
+    #$#ls -a -l $ANCESTRIS_CORE/dist/$windows_program_name.exe
+    read -t 1
+    
+    
+    ## ----------------------------------------------------------------------
+    ## On fait les fichiers pour la mise a jour automatique :
+    ## ----------------------------------------------------------------------
+    echo ""
+    echo "------------------------------------------------------------------"
+    echo ""
+    echo " ==---- - - -> Voulez-vous generer les fichiers pour mise a jour  "
+    echo "               automatique ?                                      "
+    echo ""
+    echo "------------------------------------------------------------------"
+    echo -n "On repond o/N (Non par defaut) ? :"
+    read "faire_fichiers_distribution"
+    if test "$faire_fichiers_distribution" = "o" -o "$faire_fichiers_distribution" = "O" ; then
+      cd $ANCESTRIS_CORE;  
+      ant nbms
+      cd $ANCESTRIS_EXTENSIONS;  
+      ant nbms
+      
+      # ----------------------------------------------------------------------
+      # On met les fichiers de la distribution dans le bon repertoire pour la
+      # mise a jour automatique :
+      # ----------------------------------------------------------------------
+      echo ""
+      echo "------------------------------------------------------------------"
+      echo ""
+      echo " ==---- - - -> Voulez-vous copier les fichiers de la distribution "
+      echo "               pour la mise a jour automatique dans :             "
+      echo "               /var/www/default/files/ancestris/$VERSION ? "
+      echo ""
+      echo "------------------------------------------------------------------"
+      echo -n "On repond o/N (Non par defaut) ? :"
+      read "copie_ancestris_dans_var_www_default_files_ancestris"
+      if test "$copie_ancestris_dans_var_www_default_files_ancestris" = "o" -o "$copie_ancestris_dans_var_www_default_files_ancestris" = "O" ; then
+        
+        cp -r $ANCESTRIS_CORE/build/updates/* $ANCESTRIS_CORE_REPO
+        cp -r $ANCESTRIS_EXTENSIONS/build/updates/* $ANCESTRIS_EXTENSIONS_REPO
+        
+        else
+          clear
+          echo ""
+          echo "OK, on a choisi de ne pas copier les fichiers de la distribution"
+          echo "pour la mise a jour."
+          echo ""
+      fi
+      else
+        clear
+        echo ""
+        echo "OK, on a choisi de ne pas generer les fichiers pour la mise a jour."
+        echo ""
+    fi
+    
+    
+    ## ----------------------------------------------------------------------
+    ## On va copier l'archive zip si elle existe dans tmp
+    ## ----------------------------------------------------------------------
+    if [[ ! -d "$ANCESTRIS_CORE/dist" ]]; then
+      echo ""
+      echo "-----------------------------------------------------------------"
+      echo ""
+      echo " ==---- - - -> Le repertoire $ANCESTRIS_CORE/dist "
+      echo "               n'existe pas, donc il n'y a rien a faire.         "
+      echo ""
+      echo "-----------------------------------------------------------------"
+      read -t 2
+      else
+        cd $ANCESTRIS_CORE/dist
+        if [ -a $program_name.zip ]; then
+          echo ""
+          echo "-----------------------------------------------------------------"
+          echo ""
+          echo " ==---- - - -> Voulez-vous copier le fichier $program_name-$(date +"%Y%m%d").zip"
+          echo "               dans tmp/ ?"
+          echo ""
+          echo -n "On repond o/N (Non par defaut) ? :"
+          read "copie_ancestrisrapp_dans_tmp"
+          if test "$copie_ancestrisrapp_dans_tmp" = "o" -o "$copie_ancestrisrapp_dans_tmp" = "O" ; then
+            cp $program_name.zip $MY_HOME/tmp/$program_name-$(date +"%Y%m%d").zip
+            ls -a -l $MY_HOME/tmp/$program_name-$(date +"%Y%m%d").zip
+            cd $MY_HOME/tmp
+            rm -r -f ancestris
+            unzip $program_name-$(date +"%Y%m%d").zip
+            clear
+            echo "--------------------------------------------------------------------"
+            echo ""
+            echo "    - On a fini de copier ancestris.zip dans $MY_HOME/tmp"
+            echo "    - On l'a nomme $program_name-$(date +"%Y%m%d").zip"
+            echo "    - On a efface l'ancien repertoire ancestris/ dans $MY_HOME/tmp"
+            echo "    - On a decompresse le fichier $program_name-$(date +"%Y%m%d").zip dans $MY_HOME/tmp"
+            echo ""
+            echo ""
+            echo " ==---- - - -> Voulez-vous conserver le fichier $program_name-$(date +"%Y%m%d").zip"
+            echo "               dans tmp/ ?"
+            echo ""
+            echo -n "On repond o/N (Non par defaut) ? :"
+            read "conserver_ancestrisrapp_dans_tmp"
+            if test "$conserver_ancestrisrapp_dans_tmp" = "o" -o "$conserver_ancestrisrapp_dans_tmp" = "O" ; then
+              clear
+              echo "--------------------------------------------------------------------"
+              echo ""
+              echo "Et on a choisis de conserver dans le repertoire /tmp"
+              echo "le fichier $program_name-$(date +"%Y%m%d").zip"
+              echo ""
+              else
+                rm -f $program_name-$(date +"%Y%m%d").zip
+                clear
+                echo "--------------------------------------------------------------------"
+                echo ""
+                echo "Et on a choisis de supprimer dans le repertoire /tmp"
+                echo "le fichier $program_name-$(date +"%Y%m%d").zip"
+                echo ""
+            fi
+            else
+              clear
+              echo ""
+              echo "OK, on a choisi de ne rien copier dans le repertoire /tmp"
+              echo ""
+          fi
+          else
+            echo "-------------------------------------------------------------------------"
+            echo ""
+            echo "Attention : Le fichier $program_name-$(date +"%Y%m%d").zip n'existe pas."
+            echo "            On ne peut pas le copier vers le repertoire tmp"
+            echo ""
+            echo "-------------------------------------------------------------------------"
+        fi
+    fi
+    
+    ## ----------------------------------------------------------------------
+    ## On va copier l'archive mac si elle existe dans tmp
+    ## ----------------------------------------------------------------------
+    if [[ ! -d "$ANCESTRIS_CORE/dist" ]]; then
+      echo ""
+      echo "-----------------------------------------------------------------"
+      echo ""
+      echo " ==---- - - -> Le repertoire $ANCESTRIS_CORE/dist "
+      echo "               n'existe pas, donc il n'y a rien a faire.         "
+      echo ""
+      echo "-----------------------------------------------------------------"
+      read -t 2
+      else
+        cd $ANCESTRIS_CORE/dist
+        if [ -a $macos_program_name.zip ]; then
+          echo ""
+          echo "-----------------------------------------------------------------"
+          echo ""
+          echo " ==---- - - -> Voulez-vous copier le fichier $macos_program_name-$(date +"%Y%m%d").zip"
+          echo "               dans tmp/ ?"
+          echo ""
+          echo -n "On repond o/N (Non par defaut) ? :"
+          read "copie_ancestrisrapp_dans_tmp"
+          if test "$copie_ancestrisrapp_dans_tmp" = "o" -o "$copie_ancestrisrapp_dans_tmp" = "O" ; then
+            cp genjfrapp-osx.zip /home/fm/tmp/$macos_program_name-$(date +"%Y%m%d").zip
+            ls -a -l /home/fm/tmp/$macos_program_name-$(date +"%Y%m%d").zip
+            else
+              clear
+              echo ""
+              echo "OK, on a choisi de ne rien copier dans le repertoire /tmp"
+              echo ""
+          fi
+          else
+            echo "-------------------------------------------------------------------------"
+            echo ""
+            echo "Attention : Le fichier $macos_program_name-$(date +"%Y%m%d").zip n'existe pas."
+            echo "            On ne peut pas le copier vers le repertoire tmp"
+            echo ""
+            echo "-------------------------------------------------------------------------"
+        fi
+    fi
+    
+    ## ----------------------------------------------------------------------
+    ## On va copier le fichier .exe pour Windows dans tmp
+    ## ----------------------------------------------------------------------
+    if [[ ! -d "$ANCESTRIS_CORE/dist" ]]; then
+      echo ""
+      echo "-----------------------------------------------------------------"
+      echo ""
+      echo " ==---- - - -> Le repertoire $ANCESTRIS_CORE/dist "
+      echo "               n'existe pas, donc il n'y a rien a faire.         "
+      echo ""
+      echo "-----------------------------------------------------------------"
+      read -t 2
+      else
+        cd $ANCESTRIS_CORE/dist
+        if [ -a $windows_program_name.exe ]; then
+          echo ""
+          echo "-----------------------------------------------------------------"
+          echo ""
+          echo " ==---- - - -> Voulez-vous copier le fichier $windows_program_name.exe"
+          echo "               dans tmp/ ?"
+          echo ""
+          echo -n "On repond o/N (Non par defaut) ? :"
+          read "copie_ancestrisrapp_for_windows_dans_tmp"
+          if test "$copie_ancestrisrapp_for_windows_dans_tmp" = "o" -o "$copie_ancestrisrapp_for_windows_dans_tmp" = "O" ; then
+            cp $windows_program_name.exe /home/fm/tmp/$windows_program_name.exe
+            ls -a -l /home/fm/tmp/$windows_program_name.exe
+            else
+              clear
+              echo ""
+              echo "OK, on a choisi de ne rien copier dans le repertoire /tmp"
+              echo ""
+          fi
+          else
+          echo "-------------------------------------------------------------------------"
+          echo ""
+          echo "Attention : Le fichier $windows_program_name.exe n'existe pas."
+          echo "            On ne peut pas le copier vers le repertoire tmp"
+          echo ""
+          echo "-------------------------------------------------------------------------"
+        fi
+    fi
+    
+    
+    clear
+    echo "-----------------------------------------------------------------"
+    echo "                   C'est fini !!!!!!!!!                          "
+    echo "-----------------------------------------------------------------"
+    
+  exit 1
+  
+  
+  
+  # Trancestris - Parametre 't' en ligne de commande
+  # On met à jour le repertoire 'Tools' a partir du svn en ce concerne 
+  # l'editeur et on compile un zip et un exe
+  elif [[ $1 = "t" ]] ; then
+    svn co http://arvernes.dyndns.org/fgenj/trunk/Tools $SVN_ANCESTRIS_DIRECTORY/Tools
+    cd $SVN_ANCESTRIS_DIRECTORY/Tools/trancestris
+    ant clean
+    ant build-zip
+    cp -f $SVN_ANCESTRIS_DIRECTORY/Tools/trancestris/dist/trancestris.zip $MY_HOME/tmp
+    cd $MY_HOME/tmp
+    rm -r -f trancestris
+    unzip trancestris.zip
+    rm -f trancestris.zip
+    ls -al $SVN_ANCESTRIS_DIRECTORY/Tools/trancestris/dist
+    echo ""
+    echo "--------------------------------------------------------------------"
+    echo ""
+    echo "    - On copie trancestris.zip dans /home/fm/tmp"
+    echo "    - On efface l'ancien repertoire trancestris/ dans /home/fm/tmp"
+    echo "    - On decompresse le fichier trancestris.zip dans /home/fm/tmp"
+    echo "    - On efface le fichier trancestris.zip qui est dans /home/fm/tmp"
+    echo "  On a fini."
+    echo ""
+  exit 1
+  
+  
+  elif [[ $1 = "x" ]] ; then
+    cd $MY_HOME/packaging/fichier_langues
+    rm -f *.properties
+    cd $SVN_ANCESTRIS_DIRECTORY
+    echo ""
+    echo "Le repertoire ou nous sommes est $SVN_ANCESTRIS_DIRECTORY "
+    echo ""
+    read -t 2
+    # une commande permettrait d'automatiser ça. Il faut lancer les deux lignes car 
+    # dans branding, il n'y a pas de sous repertoire src, donc a la place je mets 
+    # branding, et je rajoute le parametre -u pour faire un update du fichier zip 
+    # pour avoir tout dans la meme archive.:
+    find -path '*/src/*Bundle*.properties' -exec zip -r Ancestris_Bundles.zip {} \;
+    find -path '*/branding/*Bundle*.properties' -exec zip -r -u Ancestris_Bundles.zip {} \;
+    
+    mv Ancestris_Bundle*.zip $MY_HOME/packaging/fichier_langues
+    cd $MY_HOME/packaging/fichier_langues
+    rm -f Ancestris_Bundle_*.zip
+    
+    ls -al $MY_HOME/packaging/fichier_langues
+  exit 1
+  
+  
+  elif [[ $1 = "uuuu" ]] ; then
+    echo "rien 2"
+  exit 1
+  
+  
+  else
+    echo ""
+    echo " -------------------------------------------------------------"
+    echo "|       Mauvais parametre. Ce parametre n'existe pas.         |"
+    echo " -------------------------------------------------------------"
+    echo ""
+  exit 1
+
+
+
+fi
+
+
+
+## =============================================================================
+##                                  Fin
+## =============================================================================
+
