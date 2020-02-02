@@ -358,8 +358,14 @@ public class PropertyReader {
 
                 // .. tag (?)
                 if (splitLine.length > 0) {
-                    tag = splitLine[current_token];
-                    current_token++;
+                    // try to get a tag if there is multiple spaces.
+                    while (current_token < splitLine.length) {
+                        tag = splitLine[current_token];
+                        current_token++;
+                        if (tag != null && !tag.isEmpty()) {
+                            break;
+                        }
+                    }
                 } else {
                     tag = "_TAG";
                 }
