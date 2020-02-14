@@ -31,7 +31,7 @@ import org.openide.util.NbPreferences;
  *
  * @author frederic
  */
-class GeoPlacesList implements GedcomMetaListener {
+public class GeoPlacesList implements GedcomMetaListener {
 
     private static final String NO_DATE = "01-01-1900"; 
     private static final String FORCE_REFRESH_DATE = "03-05-2015";  // date of last format change

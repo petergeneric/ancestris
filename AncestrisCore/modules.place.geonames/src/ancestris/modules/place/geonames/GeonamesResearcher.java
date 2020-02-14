@@ -38,7 +38,7 @@ public class GeonamesResearcher implements SearchPlace {
     private final static Toponym DEFAULT_TOPONYM = defaultToponym();
     private final static int DEFAULT_LAT = 45; // in the middle of the sea
     private final static int DEFAULT_LON = -4; // in the middle of the sea
-    
+
     private static final int MAX_ROWS = 100; // Maximum return by geonames.
 
     private final static Logger LOG = Logger.getLogger(GeonamesResearcher.class.getName(), null);
@@ -48,6 +48,8 @@ public class GeonamesResearcher implements SearchPlace {
     private final static String KEYMAP = "geonamesPlaceConversionMap";
 
     private final Map<String, PostalCode> tmpPostalCode = new HashMap<>();
+    
+    private boolean limitNotExceeded = true;
 
     public GeonamesResearcher() {
         if (RP == null) {
@@ -73,11 +75,11 @@ public class GeonamesResearcher implements SearchPlace {
      * thread and task is used when thread is finished
      */
     @Override
-    public void searchPlace(String place, String city, String code, final List<Place> placesList, final int maxResults, TaskListener taskListener) {
+    public boolean searchPlace(String place, String city, String code, final List<Place> placesList, final int maxResults, TaskListener taskListener) {
 
         final String searchedPlace = clean(place);
         if (searchedPlace.isEmpty()) {
-            return;
+            return true;
         }
         final String searchedCity;
         city = clean(city);
@@ -105,6 +107,8 @@ public class GeonamesResearcher implements SearchPlace {
         } else {
             placesList.addAll(doSearch(searchedPlace, searchedCity, searchedCode, maxResults));
         }
+        
+        return limitNotExceeded;
 
     }
 
@@ -139,7 +143,14 @@ public class GeonamesResearcher implements SearchPlace {
                 mPlacesList.add(defaultPlace());
             }
         } catch (Exception e) {
-            LOG.log(Level.SEVERE, "Error during geonames search.", e);
+            String message = e.getMessage();
+            if (message.contains("hourly limit")) {
+                DialogManager dm = DialogManager.create(NbBundle.getMessage(GeonamesResearcher.class, "TITL_ErrorLimit"), NbBundle.getMessage(GeonamesResearcher.class, "MESS_ErrorLimit"));
+                dm.show();
+                limitNotExceeded = false;
+            } else {
+                LOG.log(Level.SEVERE, "Error during geonames search.", e);
+            }
         }
 
         return mPlacesList;
@@ -169,8 +180,8 @@ public class GeonamesResearcher implements SearchPlace {
         final PostalCodeSearchCriteria pcsc = new PostalCodeSearchCriteria();
         pcsc.setPlaceName(placeName.getName());
         pcsc.setCountryCode(placeName.getCountryCode());
-        pcsc.setMaxRows(maxRows == 0 ? MAX_ROWS : Math.min(maxRows
-                , MAX_ROWS));
+        pcsc.setMaxRows(maxRows == 0 ? MAX_ROWS : Math.min(maxRows,
+                 MAX_ROWS));
         final PostalCode reference = new PostalCode();
         reference.setPlaceName(placeName.getName());
         reference.setCountryCode(placeName.getCountryCode());
