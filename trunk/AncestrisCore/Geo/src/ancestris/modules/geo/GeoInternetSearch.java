@@ -17,7 +17,6 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import javax.swing.JOptionPane;
 import org.netbeans.api.progress.ProgressHandle;
-import org.netbeans.api.progress.ProgressHandleFactory;
 import org.openide.awt.StatusDisplayer;
 import org.openide.util.Cancellable;
 import org.openide.util.NbBundle;
@@ -64,7 +63,7 @@ class GeoInternetSearch {
         // the progress bar
         String paramMsg = NbBundle.getMessage(GeoInternetSearch.class, force ? "TXT_SearchPlacesWeb" : "TXT_SearchPlacesLocal");
         String processMsg = NbBundle.getMessage(GeoInternetSearch.class, "TXT_SearchPlaces", placesProps.size(), paramMsg);
-        final ProgressHandle ph = ProgressHandleFactory.createHandle(processMsg, new Cancellable() {
+        final ProgressHandle ph = ProgressHandle.createHandle(processMsg, new Cancellable() {
             public boolean cancel() {
                 return handleCancel();
             }

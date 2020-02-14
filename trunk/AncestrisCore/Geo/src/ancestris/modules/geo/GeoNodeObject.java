@@ -59,28 +59,29 @@ public class GeoNodeObject {
     private final static String COLOR_UNKNOWN = "color='#ff2300'"; // red
     
     // Location elements used from and to gedcom
-    private GeonamesResearcher geonamesResearcher = new GeonamesResearcher();
+    private final GeonamesResearcher geonamesResearcher = new GeonamesResearcher();
     public Place defaultPlace = geonamesResearcher.defaultPlace();
-    private PropertyPlace place;
+    private final PropertyPlace place;
     private Double latitude = null;
     private Double longitude = null;
     
     // Technical location elements
     private int geo_type = GEO_UNKNOWN;
-    private String EMPTY_PLACE = NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
+    private final String EMPTY_PLACE = NbBundle.getMessage(GeoListTopComponent.class, "GeoEmpty");
     private Place toponym = null;                   // Local or internet match
     public  boolean isInError = false;              // In case error while searching
     private String placeDisplayFormat = "";         // Store display format
     private String placeKey = "";                   // Store place key (ex: for sorting)
     
     // For events, parent and list of events
-    private Property property;
-    private List<GeoNodeObject> events = new ArrayList<GeoNodeObject>();
+    private final Property property;
+    private List<GeoNodeObject> events = new ArrayList<>();
 
     // Technical listener
-    private List<PropertyChangeListener> listeners = Collections.synchronizedList(new LinkedList<PropertyChangeListener>());
+    private final List<PropertyChangeListener> listeners;
     
     public GeoNodeObject(GeoPlacesList gplOwner, PropertyPlace place, boolean avoidInternetSearch) {
+        listeners = Collections.synchronizedList(new LinkedList<>());
         this.gplOwner = gplOwner;
         this.place = place;
         this.placeDisplayFormat = gplOwner.getPlaceDisplayFormat(place);
@@ -93,13 +94,13 @@ public class GeoNodeObject {
     }
 
     public GeoNodeObject(GeoPlacesList gplOwner, Property event, PropertyPlace pp) {
+        listeners = Collections.synchronizedList(new LinkedList<>());
         this.isEvent = true;
         events = null;
         property = event;
         place = pp;
         this.gplOwner = gplOwner;
     }
-
     public void addPropertyChangeListener(PropertyChangeListener pcl) {
         listeners.add(pcl);
     }
@@ -120,9 +121,9 @@ public class GeoNodeObject {
      *                              false : always look on the Internet, regardless of whether it is found locally or not
      * @return
      */
-    public Place getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
+    public final Place getToponymFromPlace(PropertyPlace place, boolean avoidInternetSearch) {
 
-        List<Place> placeList = new ArrayList<Place>();
+        List<Place> placeList = new ArrayList<>();
         boolean foundLocally = false;
         String searchedPlace = place.getPlaceToLocalFormat();
         if (searchedPlace.isEmpty()) {
@@ -140,9 +141,10 @@ public class GeoNodeObject {
             foundLocally = !placeList.isEmpty();
         }
 
+        
         // Search on the internet for first instance, if not found locally
         if (!foundLocally) {
-            geonamesResearcher.searchPlace(searchedPlace, place.getNumericalJurisdictions(), place.getCity(), placeList, 1, null);
+            isInError = !geonamesResearcher.searchPlace(searchedPlace, place.getNumericalJurisdictions(), place.getCity(), placeList, 1, null);
         }
 
         // Remember for next time if found on the Internet and not locally
@@ -307,8 +309,7 @@ public class GeoNodeObject {
         if (topo == null) {
             return "0";
         }
-        Long pop = Long.getLong("0");
-        pop = topo.getPopulation();
+        final Long pop = topo.getPopulation();
         DecimalFormat format = new DecimalFormat("#,##0");
         return pop != null ? format.format(pop) : "0";
     }
@@ -323,13 +324,11 @@ public class GeoNodeObject {
     }
 
     public GeoNodeObject[] getFilteredEvents(GeoFilter filter) {
-        List<GeoNodeObject> list = new ArrayList<GeoNodeObject>();
+        List<GeoNodeObject> list = new ArrayList<>();
         if (events != null) {
-            for (GeoNodeObject event : events) {
-                if (filter.compliesEvent(event)) {     
-                    list.add(event);
-                }
-            }
+            events.stream().filter((event) -> (filter.compliesEvent(event))).forEachOrdered((event) -> {
+                list.add(event);
+            });
             Collections.sort(list, GeoListTopComponent.sortEvents);
             return list.toArray(new GeoNodeObject[list.size()]);
         }
@@ -338,10 +337,10 @@ public class GeoNodeObject {
 
     public List<PropertyPlace> getEventsPlaces() {
         if (events != null) {
-            List<PropertyPlace> propPlaces = new ArrayList<PropertyPlace>();
-            for (GeoNodeObject geoNodeObject : events) {
+            List<PropertyPlace> propPlaces = new ArrayList<>();
+            events.forEach((geoNodeObject) -> {
                 propPlaces.add(geoNodeObject.getPlace());
-            }
+            });
             return propPlaces;
         }
         return null;
@@ -355,7 +354,7 @@ public class GeoNodeObject {
     }
 
     public List<Indi> getIndis() {
-        List<Indi> indis = new ArrayList<Indi>();
+        List<Indi> indis = new ArrayList<>();
 
         Entity ent = property.getEntity();
         if (ent instanceof Indi) {
@@ -431,8 +430,8 @@ public class GeoNodeObject {
         }
         
         String[] str = {"nb individus", "patronyme le plus fréquent", "nb events", "births", "marriages", "deaths", "other events", "date min", "date max"};
-        HashSet<String> indiv = new HashSet<String>();
-        SortedMap<String, Integer> pat = new TreeMap<String, Integer>();
+        HashSet<String> indiv = new HashSet<>();
+        SortedMap<String, Integer> pat = new TreeMap<>();
         int dateMin = +99999;
         int dateMax = -99999;
         int eBirths = 0, eMarriages = 0, eDeaths = 0, eOther = 0;
@@ -453,7 +452,7 @@ public class GeoNodeObject {
                 eOther++;
             }
             // counts patronyms, for individuals or families
-            String patronym = "";
+            String patronym;
             if (ent instanceof Indi) {
                 patronym = ((Indi) ent).getLastName();
                 Integer nb = pat.get(patronym);
