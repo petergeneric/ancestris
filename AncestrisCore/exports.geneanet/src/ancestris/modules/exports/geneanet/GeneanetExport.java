@@ -93,7 +93,7 @@ public class GeneanetExport {
 
         // Open gedcom copy
         if (ok) {
-            Context context = openGedcomQuietly(FileUtil.toFileObject(exportFile));
+            Context context = openGedcomQuietly(FileUtil.toFileObject(exportFile), gedcom.getPassword());
             ok = context != null;
             if (ok) {
                 copyGedcom = context.getGedcom();
@@ -125,7 +125,7 @@ public class GeneanetExport {
         return ok;
     }
 
-    public Context openGedcomQuietly(final FileObject input) {
+    private Context openGedcomQuietly(final FileObject input, final String password) {
         if (input == null) {
             return null;
         }
@@ -136,7 +136,7 @@ public class GeneanetExport {
             GedcomReader reader = (GedcomReader) Spin.off(GedcomReaderFactory.createReader(origin, (GedcomReaderContext) Spin.over(new GedcomReaderContext() {
                 @Override
                 public String getPassword() {
-                    return "";
+                    return password;
                 }
 
                 @Override
