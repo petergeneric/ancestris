@@ -201,6 +201,7 @@ public class PropertyReader {
             //if (child instanceof PropertyName) {
             if (prevTag.equalsIgnoreCase("NAME")) {  // re bricolage...
                 child.setValue(prevValue);
+                readProperties(child, level, 0); //try to get de decrypt.
             }
 
             // 20060406 now link after children are setup - this makes a difference for

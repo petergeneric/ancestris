@@ -27,7 +27,7 @@ public abstract class PropertyCoordinate extends Property{
 
     @Override
     public boolean isValid() {
-        return coordinate != Double.NaN && (direction == '\0' || direction == getDirection(coordinate));
+        return !coordinate.isNaN() && (direction == '\0' || direction == getDirection(coordinate));
     }    
     
     /**
@@ -113,9 +113,6 @@ public abstract class PropertyCoordinate extends Property{
     public void setValue(String value) {
         this.value = value;
         coordinate = parseCoordinate(value);
-//        if (coordinate != Double.NaN){
-//            this.value = null;
-//        }
     }
     
     public Double getDoubleValue(){
