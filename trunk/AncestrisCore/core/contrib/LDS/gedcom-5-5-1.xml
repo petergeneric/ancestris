@@ -172,7 +172,7 @@
         <PROB img="Probate" super="INDI:GRAD"/>
         <WILL img="Will" super="INDI:GRAD"/>
         <RETI img="Retirement" super="INDI:GRAD"/>
-        <EVEN img="Event" super="INDI:GRAD">
+        <EVEN type="PropertySimpleValue" img="Event" super="INDI:GRAD">
             <TYPE default="1"/>
         </EVEN>
         ++++++++++++++++ LDS ++++++++++++++++++
@@ -250,7 +250,7 @@
         <DIVF img="DivorceFiled" super="FAM:ENGA"/>
         <DIV  img="Divorce" super="FAM:ENGA"/>
         <CENS img="Census" super="FAM:ENGA"/>
-        <EVEN img="Event" super="FAM:ENGA" cardinality="0:M">
+        <EVEN type="PropertySimpleValue" img="Event" super="INDI:EVEN" cardinality="0:M">
             <TYPE default="1" super="INDI:EVEN:TYPE"/>
         </EVEN>
         <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="FAM:ENGA"/>
