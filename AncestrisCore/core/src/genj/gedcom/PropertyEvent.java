@@ -31,6 +31,8 @@ public class PropertyEvent extends Property {
   
   /** whether the event is known to have happened */
   private boolean knownToHaveHappened;
+  
+  private String description;
 
   /**
    * need tag-argument constructor for all properties
@@ -73,6 +75,9 @@ public class PropertyEvent extends Property {
    * Returns the value of this property
    */
   public String getValue() {
+      if (description != null && !description.isEmpty()) {
+          return description;
+      }
     return knownToHaveHappened ? "Y" : "";
   }
 
@@ -80,6 +85,9 @@ public class PropertyEvent extends Property {
    * Returns the display value of this property
    */
   public String getDisplayValue() {
+      if (description != null && !description.isEmpty()) {
+          return description;
+      }
     return knownToHaveHappened ? resources.getString("prop.event.knwontohavehappened") : "";
   }
 
@@ -88,6 +96,7 @@ public class PropertyEvent extends Property {
    */
   public void setValue(String value) {
     setKnownToHaveHappened(value.toLowerCase().equals("y"));
+    description = value;
   }
   
   @Override
@@ -179,22 +188,6 @@ public class PropertyEvent extends Property {
     knownToHaveHappened = set;
     propagatePropertyChanged(this, old);
   }
-
-// Could do an automatic 'y' here but that would pollute
-// the gedcom data unnecessary, no?
-//  
-//  /**
-//   * @see genj.gedcom.Property#changeNotify(genj.gedcom.Property, int)
-//   */
-//  void changeNotify(Property prop, int status) {
-//    // continue upwards 
-//    super.changeNotify(prop, status);
-//    // update known state
-//    if (status!=Change.PDEL && prop instanceof PropertyDate) {
-//      if (((PropertyDate)prop).isValid()) setKnownToHaveHappened(true);
-//    }
-//    // done
-//  }
 
 
 } //PropertyEvent

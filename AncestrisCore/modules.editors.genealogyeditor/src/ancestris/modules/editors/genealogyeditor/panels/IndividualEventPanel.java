@@ -444,8 +444,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             associationEditorPanel.set((Indi) mRoot, mAssociation, mEvent);
 
             DialogManager.ADialog associationEditorDialog = new DialogManager.ADialog(
-                NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
-                associationEditorPanel);
+                    NbBundle.getMessage(AssociationEditorPanel.class, "AssociationEditorPanel.create.title"),
+                    associationEditorPanel);
             associationEditorDialog.setDialogId(AssociationEditorPanel.class.getName());
 
             if (associationEditorDialog.show() == DialogDescriptor.OK_OPTION) {
@@ -478,13 +478,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
         JButton OKButton = new JButton(NbBundle.getMessage(getClass(), "Button_Ok"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
-        Object[] options = new Object[] { OKButton, cancelButton };
+        Object[] options = new Object[]{OKButton, cancelButton};
         placeEditorPanel.setOKButton(OKButton);
         placeEditorPanel.set(gedcom, mPlace, false);  //mAdress not used
 
         ADialog eventEditorDialog = new ADialog(
-            NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
-            placeEditorPanel);
+                NbBundle.getMessage(getClass(), "PlaceEditorPanel.edit.title"),
+                placeEditorPanel);
         eventEditorDialog.setDialogId(PlaceEditorPanel.class.getName());
         eventEditorDialog.setOptions(options);
         Object o = eventEditorDialog.show();
@@ -504,10 +504,10 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 Exceptions.printStackTrace(ex);
             }
             mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-            //mAddress = mEvent.getProperty("ADDR", false);
+          
             placeChoiceWidget.setText(mPlace != null ? mPlace.getDisplayValue() : ""); // mAddress != null ? displayAddressValue(mAddress) : "");
-        changeSupport.fireChange();
-        placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
+            changeSupport.fireChange();
+            placeChoiceWidget.getTextEditor().getDocument().addDocumentListener(changeListner);
         } else {
             while (gedcom.getUndoNb() > undoNb && gedcom.canUndo()) {
                 gedcom.undoUnitOfWork(false);
@@ -550,7 +550,8 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     /**
      * Whether the bean has changed since first listener was attached
-     * @return 
+     *
+     * @return
      */
     public boolean hasChanged() {
         return mEventModified;
@@ -558,6 +559,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     /**
      * Listener
+     *
      * @param l
      */
     public void addChangeListener(ChangeListener l) {
@@ -566,6 +568,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
 
     /**
      * Listener
+     *
      * @param l
      */
     public void removeChangeListener(ChangeListener l) {
@@ -599,18 +602,26 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         if (mEvent.getTag().equals("EVEN") || mEvent.getTag().equals("FACT")) {
             // Event Name
             eventNameLabel.setVisible(true);
-            eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[] {})); // NOI18N
+            eventNameLabel.setText(MessageFormat.format(ResourceBundle.getBundle("ancestris/modules/editors/genealogyeditor/panels/Bundle").getString("IndividualEventPanel.eventNameLabel.text"), new Object[]{})); // NOI18N
             eventNameChoiceWidget.setVisible(true);
             eventNameChoiceWidget.setEditable(true);
             eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet("TYPE").getKeys(mEvent.getGedcom().getCollator()));
             Property eventType = mEvent.getProperty("TYPE", false);
+
             if (eventType != null) {
                 eventNameChoiceWidget.setText(eventType.getValue());
             } else {
                 eventNameChoiceWidget.setText("");
             }
+            if (mEvent.getGedcom().getGrammar().getVersion().equals(Grammar.GRAMMAR551)) {
+                eventDescriptorTextArea.setText(mEvent.getValue());
+                eventDescriptorTextArea.setVisible(true);
+            } else {
+                eventDescriptorTextArea.setText("");
+                eventDescriptorTextArea.setVisible(false);
 
-            eventCauseTextArea.setText(mEvent.getValue());
+            }
+
         } else if (mIndividualAttributesTags.contains(event.getTag()) && !event.getTag().equals("RESI")) {
             eventNameLabel.setVisible(true);
             eventNameLabel.setText(PropertyTag2Name.getTagName(mEvent.getTag()));
@@ -618,6 +629,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             eventNameChoiceWidget.setValues(mEvent.getGedcom().getReferenceSet(mEvent.getTag()).getKeys(mEvent.getGedcom().getCollator()));
             eventNameChoiceWidget.setText(mEvent.getValue());
             eventNameChoiceWidget.setEditable(true);
+            eventDescriptorTextArea.setVisible(true);
 
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
@@ -626,17 +638,12 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 eventDescriptorTextArea.setText("");
             }
 
-            Property eventCause = mEvent.getProperty("CAUS", false);
-            if (eventCause != null) {
-                eventCauseTextArea.setText(eventCause.getValue());
-            } else {
-                eventCauseTextArea.setText("");
-            }
         } else {
             // Event Name
             eventNameLabel.setVisible(false);
             eventNameChoiceWidget.setVisible(false);
             eventNameChoiceWidget.setText("");
+            eventDescriptorTextArea.setVisible(true);
 
             Property eventType = mEvent.getProperty("TYPE");
             if (eventType != null) {
@@ -645,12 +652,13 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 eventDescriptorTextArea.setText("");
             }
 
-            Property eventCause = mEvent.getProperty("CAUS", false);
-            if (eventCause != null) {
-                eventCauseTextArea.setText(eventCause.getValue());
-            } else {
-                eventCauseTextArea.setText("");
-            }
+        }
+
+        Property eventCause = mEvent.getProperty("CAUS", false);
+        if (eventCause != null) {
+            eventCauseTextArea.setText(eventCause.getValue());
+        } else {
+            eventCauseTextArea.setText("");
         }
 
         /*
@@ -663,21 +671,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
             privateRecordToggleButton.setSelected(false);
         }
 
-        final Property p =mEvent.getProperty("DATE",false);
-        mDate = (PropertyDate) (p instanceof PropertyDate?p:null);
-//        if (mDate == null) {
-//            try {
-//                mEvent.getGedcom().doUnitOfWork(new UnitOfWork() {
-//
-//                    @Override
-//                    public void perform(Gedcom gedcom) throws GedcomException {
-//                        mDate = (PropertyDate) mEvent.addProperty("DATE", "");
-//                    }
-//                }); // end of doUnitOfWork
-//            } catch (GedcomException ex) {
-//                Exceptions.printStackTrace(ex);
-//            }
-//        }
+        final Property p = mEvent.getProperty("DATE", false);
+        mDate = (PropertyDate) (p instanceof PropertyDate ? p : null);
+
         if (mDate == null) {
             aDateBean.setContext(mEvent, null);
         } else {
@@ -722,9 +718,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
         }
 
         mPlace = (PropertyPlace) mEvent.getProperty(PropertyPlace.TAG, false);
-        //mAddress = mEvent.getProperty("ADDR", false);
+     
         placeChoiceWidget.setValues(mRoot.getGedcom().getReferenceSet("PLAC").getKeys(mRoot.getGedcom().getCollator()));
-        if (mPlace != null) { // || mAddress != null) {
+        if (mPlace != null) { 
             placeChoiceWidget.setText(mPlace.getDisplayValue());
         } else {
             placeChoiceWidget.setText("");
@@ -786,9 +782,12 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                             mEvent.addProperty("TYPE", eventNameChoiceWidget.getText());
                         }
                     }
-                    if (mEventCauseModified) {
-                        mEventCauseModified = false;
-                        mEvent.setValue(eventCauseTextArea.getText().replaceAll("\n", " "));
+
+                    if (mEventTypeModified) {
+                        mEventTypeModified = false;
+                        if (mEvent.getGedcom().getGrammar().getVersion().equals(Grammar.GRAMMAR551)) {
+                            mEvent.setValue(eventDescriptorTextArea.getText());
+                        }
                     }
                 } else if (mIndividualAttributesTags.contains(mEvent.getTag())) {
                     if (mEventNameModified) {
@@ -804,20 +803,7 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                             mEvent.addProperty("TYPE", eventDescriptorTextArea.getText());
                         }
                     }
-                    if (mEventCauseModified) {
-                        mEventCauseModified = false;
-                        String causeText = eventCauseTextArea.getText().replaceAll("\n", " ");
-                        Property eventCause = mEvent.getProperty("CAUS", false);
-                        if (causeText.length() > 0) {
-                            if (eventCause == null) {
-                                mEvent.addProperty("CAUS", causeText);
-                            } else {
-                                eventCause.setValue(causeText);
-                            }
-                        } else if (eventCause != null) {
-                            mEvent.delProperty(eventCause);
-                        }
-                    }
+
                 } else {
                     if (mEventTypeModified) {
                         mEventTypeModified = false;
@@ -828,23 +814,9 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                             mEvent.addProperty("TYPE", eventDescriptorTextArea.getText());
                         }
                     }
-                    if (mEventCauseModified) {
-                        mEventCauseModified = false;
-                        String causeText = eventCauseTextArea.getText().replaceAll("\n", " ");
-                        Property eventCause = mEvent.getProperty("CAUS", false);
-                        if (causeText.length() > 0) {
-                            if (eventCause == null) {
-                                mEvent.addProperty("CAUS", causeText);
-                            } else {
-                                eventCause.setValue(causeText);
-                            }
-                        } else if (eventCause != null) {
-                            mEvent.delProperty(eventCause);
-                        }
-                    }
 
-                    final Property p =mEvent.getProperty("DATE",false);
-                    PropertyDate date = (PropertyDate) (p instanceof PropertyDate?p:null);
+                    final Property p = mEvent.getProperty("DATE", false);
+                    PropertyDate date = (PropertyDate) (p instanceof PropertyDate ? p : null);
                     if (date != null && date.isValid()) {
                         mEvent.setValue("");
                     } else {
@@ -854,6 +826,21 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                                 "(BIRT|CHR|DEAT|BURI|CREM|ADOP|BAPM|BARM|BASM|BLES|CHRA|CONF|FCOM|ORDN|NATU|EMIG|IMMI|CENS|PROB|WILL|GRAD|RETI)")) {
                             mEvent.setValue("y");
                         }
+                    }
+                }
+
+                if (mEventCauseModified) {
+                    mEventCauseModified = false;
+                    String causeText = eventCauseTextArea.getText().replaceAll("\n", " ");
+                    Property eventCause = mEvent.getProperty("CAUS", false);
+                    if (causeText.length() > 0) {
+                        if (eventCause == null) {
+                            mEvent.addProperty("CAUS", causeText);
+                        } else {
+                            eventCause.setValue(causeText);
+                        }
+                    } else if (eventCause != null) {
+                        mEvent.delProperty(eventCause);
                     }
                 }
 
@@ -909,35 +896,6 @@ public class IndividualEventPanel extends javax.swing.JPanel {
                 }
             }
         }
-    }
-
-    private String displayAddressValue(Property address) {
-        String addressValue = "";
-        addressValue = address.getDisplayValue();
-        if (addressValue.length() == 0) {
-            Property propertyAdr1 = address.getProperty("ADR1");
-            addressValue = (propertyAdr1 != null ? propertyAdr1.getValue() : "") + ", ";
-
-            Property propertyAdr2 = address.getProperty("ADR2");
-            addressValue += (propertyAdr2 != null ? propertyAdr2.getValue() : "") + ", ";
-
-            Property propertyAdr3 = address.getProperty("ADR3");
-            addressValue += (propertyAdr3 != null ? propertyAdr3.getValue() : "") + ", ";
-
-            Property propertyCity = address.getProperty("CITY");
-            addressValue += (propertyCity != null ? propertyCity.getValue() : "") + ", ";
-
-            Property propertyState = address.getProperty("STAE");
-            addressValue += (propertyState != null ? propertyState.getValue() : "") + ", ";
-
-            Property propertyPostalCode = address.getProperty("POST");
-            addressValue += (propertyPostalCode != null ? propertyPostalCode.getValue() : "") + ", ";
-
-            Property propertyCountry = address.getProperty("CTRY");
-            addressValue += (propertyCountry != null ? propertyCountry.getValue() : "");
-        }
-
-        return addressValue;
     }
 
     public class ChangeListner implements DocumentListener, ChangeListener, ActionListener {
