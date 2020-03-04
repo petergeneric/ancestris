@@ -287,10 +287,11 @@ public class MetaProperty implements Comparable<MetaProperty> {
       result = new PropertySimpleValue(getTag()); 
     }
     
-    final String escapedValue = value.replaceAll("@@","@");
+	if (value != null) {
+		final String escapedValue = value.replaceAll("@@","@");
     
-    result.setValue(escapedValue);
-    
+		result.setValue(escapedValue);
+    }
     // increate count
     isInstantiated = true;
 
