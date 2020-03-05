@@ -85,7 +85,7 @@ public class PropertyEvent extends Property {
    * Returns the display value of this property
    */
   public String getDisplayValue() {
-      if (description != null && !description.isEmpty()) {
+      if (description != null && !description.isEmpty() && !knownToHaveHappened) {
           return description;
       }
     return knownToHaveHappened ? resources.getString("prop.event.knwontohavehappened") : "";
@@ -186,6 +186,11 @@ public class PropertyEvent extends Property {
   public void setKnownToHaveHappened(boolean set) {
     String old = getValue();
     knownToHaveHappened = set;
+    if (set){
+        description="Y";
+    } else {
+        description ="";
+    }
     propagatePropertyChanged(this, old);
   }
 
