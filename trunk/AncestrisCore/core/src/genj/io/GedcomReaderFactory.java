@@ -41,6 +41,7 @@ import java.io.Reader;
 import java.nio.charset.Charset;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.util.Exceptions;
@@ -83,11 +84,9 @@ public class GedcomReaderFactory {
         private int entity = 0;
         private int state;
         private int length;
-        private String gedcomLine;
-        private ArrayList<LazyLink> lazyLinks = new ArrayList<LazyLink>();
+        private List<LazyLink> lazyLinks = new ArrayList<>();
         private String tempSubmitter;
         private boolean cancel = false;
-        private Object lock = new Object();
         private EntityReader reader;
         private MeteredInputStream meter;
         private Enigma enigma;
@@ -130,6 +129,7 @@ public class GedcomReaderFactory {
         /**
          * Thread-safe cancel of read()
          */
+        @Override
         public void cancelTrackable() {
             cancel = true;
         }
@@ -138,6 +138,7 @@ public class GedcomReaderFactory {
          * Returns progress of save in %
          * @return percent as 0 to 100
          */
+        @Override
         public int getProgress() {
 
             // reading right now?
@@ -152,6 +153,7 @@ public class GedcomReaderFactory {
         /**
          * Returns current read state as explanatory string
          */
+        @Override
         public String getState() {
             switch (state) {
                 case READHEADER:
@@ -180,6 +182,7 @@ public class GedcomReaderFactory {
          * @exception GedcomFormatException reading Gedcom-data brought up wrong format
          * @exception GedcomEncryptionException encountered encrypted property and password didn't match
          */
+        @Override
         public Gedcom read() throws GedcomEncryptionException, GedcomIOException, GedcomFormatException {
 
             // check state - we pass gedcom only once!
@@ -193,17 +196,16 @@ public class GedcomReaderFactory {
                 return gedcom;
             } catch (GedcomIOException gex) {
                 throw gex;
-            } catch (Throwable t) {
+            } catch (IOException t) {
                 // catch anything bubbling up here
-                LOG.log(Level.SEVERE, "unexpected throwable", t);
+                LOG.log(Level.SEVERE, "unexpected exception", t);
                 throw new GedcomIOException(t.toString(), reader.getLines());
             } finally {
                 // close in
                 try {
                     reader.in.close();
-                } catch (Throwable t) {
+                } catch (IOException t) {
                 }
-                ;
                 // allow gc to collect gedcom
                 lazyLinks.clear();
                 gedcom = null;
@@ -318,7 +320,7 @@ public class GedcomReaderFactory {
             //  1 SUBN '@'+gedcom.getSubmission().getId()+'@'
             //  1 GEDC
             //  2 VERS 5.5
-            //  2 FORM Lineage-Linked
+            //  2 FORM LINEAGE-LINKED
             //  1 CHAR encoding
             //  1 LANG language
             //  1 PLAC
@@ -334,7 +336,7 @@ public class GedcomReaderFactory {
             //      warnings.add(new Warning(0, RESOURCES.getString("read.warn.nosubmitter"), gedcom));
 
             // check 1 SOUR
-            String source = header.getPropertyValue("SOUR");
+            // String source = header.getPropertyValue("SOUR");
             // NM 20080329 - same here - GenJ doesn't care and is not going to write this on save anyways
             //    if (source.length()==0)
             //      warnings.add(new Warning(0, RESOURCES.getString("read.warn.nosourceid"), gedcom));
@@ -344,7 +346,8 @@ public class GedcomReaderFactory {
             // 2 VERSion and
             // 2 FORMat
             Property vers = header.getPropertyByPath("HEAD:GEDC:VERS");
-            if (vers == null || header.getPropertyByPath("HEAD:GEDC:FORM") == null) {
+             Property headForm = header.getPropertyByPath("HEAD:GEDC:FORM");
+            if (vers == null || headForm == null) {
                 context.handleWarning(0, RESOURCES.getString("read.warn.badgedc"), new Context(gedcom));
             } else {
                 String v = vers.getValue();
@@ -359,6 +362,10 @@ public class GedcomReaderFactory {
                     context.handleWarning(0, RESOURCES.getString("read.warn.badversion", v, gedcom.getGrammar().getVersion()), new Context(gedcom));
                     LOG.warning(s);
                 }
+            }
+            // Silently change case of Head:GEDC:FORM
+            if (!"LINEAGE-LINKED".equals(headForm.getValue())) {
+                headForm.setValue("LINEAGE-LINKED");
             }
 
 
@@ -415,17 +422,6 @@ public class GedcomReaderFactory {
 
             // get rid of it for now
 
-            // Remove all tags read an set to gedcom object
-//            header.delProperties("SOUR");
-//            header.delProperties("DEST");
-//            header.delProperties("DATE");
-//            header.delProperties("SUBM");
-//            header.delProperties("SUBN");
-//            header.delProperties("GEDC");
-//            header.delProperties("CHAR");
-//            header.delProperties("LANG");
-//            header.delProperties("PLAC");
-//            header.delProperties("FILE");
             // FIXME: Mark all header properties as readonly: they will 
             // not be editable in gedcom editor
             // TODO: add missing properties in gedcom grammar
@@ -433,9 +429,6 @@ public class GedcomReaderFactory {
                 recurseMarkRO(p);
             }
 
-// don't delete header as it may contain usefull information (eg Gedcom Description
-// as entered using new gedcom wizard
-//      gedcom.deleteEntity(header);
             // Done
             return true;
         }
@@ -496,7 +489,7 @@ public class GedcomReaderFactory {
                         context.handleWarning(getLines(), RESOURCES.getString("read.warn.recordnoid", Gedcom.getName(tag)), new Context(result));
                     }
 
-                    // preserve value for those who care
+                    // preserve valeur for those who care
                     result.setValue(value.replaceAll("@@","@"));
 
                     // continue into properties
@@ -516,6 +509,7 @@ public class GedcomReaderFactory {
             }
 
             /** override read to get a chance to decrypt values */
+            @Override
             protected void readProperties(Property prop, int currentLevel, int pos) throws IOException {
                 // let super do its thing
                 super.readProperties(prop, currentLevel, pos);
@@ -524,7 +518,7 @@ public class GedcomReaderFactory {
             }
 
             /**
-             * Decrypt a value if necessary
+             * Decrypt a valeur if necessary
              */
             private void decryptLazy(Property prop) throws GedcomIOException {
 
@@ -537,9 +531,9 @@ public class GedcomReaderFactory {
                     return;
                 }
 
-                // no need to do anything if not encrypted value
-                String value = prop.getValue();
-                if (!Enigma.isEncrypted(value)) {
+                // no need to do anything if not encrypted valeur
+                String valeur = prop.getValue();
+                if (!Enigma.isEncrypted(valeur)) {
                     return;
                 }
 
@@ -547,7 +541,7 @@ public class GedcomReaderFactory {
                 prop.setPrivate(true, false);
 
                 // no need to do anything for unknown password
-                if (gedcom.getPassword() == Gedcom.PASSWORD_UNKNOWN) {
+                if (Gedcom.PASSWORD_UNKNOWN.equals(gedcom.getPassword())) {
                     return;
                 }
 
@@ -567,7 +561,7 @@ public class GedcomReaderFactory {
                     // try it
                     try {
                         enigma = Enigma.getInstance(pwd);
-                        enigma.decrypt(value);
+                        enigma.decrypt(valeur);
                         gedcom.setPassword(pwd);
                     } catch (IOException e) {
                         enigma = null;
@@ -578,7 +572,7 @@ public class GedcomReaderFactory {
 
                 // have enigma - has to work now
                 try {
-                    prop.setValue(enigma.decrypt(value));
+                    prop.setValue(enigma.decrypt(valeur));
                 } catch (IOException e) {
                     throw new GedcomIOException(RESOURCES.getString("crypt.password.invalid"), lines);
                 }
@@ -587,12 +581,14 @@ public class GedcomReaderFactory {
             }
 
             /** keep track of xrefs - we're going to link them lazily afterwards */
+            @Override
             protected void link(PropertyXRef xref, int line) {
                 // keep as warning
                 lazyLinks.add(new LazyLink(xref, line));
             }
 
             /** keep track of empty lines */
+            @Override
             protected void trackEmptyLine() {
                 // care about empty lines before TRLR
                 if (!"TRLR".equals(tag)) {
@@ -601,11 +597,13 @@ public class GedcomReaderFactory {
             }
 
             /** keep track of bad levels */
+            @Override
             protected void trackBadLevel(int level, Property parent) {
                 context.handleWarning(getLines(), RESOURCES.getString("read.warn.badlevel", "" + level), new Context(parent));
             }
 
             /** keep track of bad properties */
+            @Override
             protected void trackBadProperty(Property property, String message) {
                 context.handleWarning(getLines(), message, new Context(property));
             }
@@ -628,10 +626,12 @@ public class GedcomReaderFactory {
 
     private static class DefaultContext implements GedcomReaderContext {
 
+        @Override
         public String getPassword() {
             return null;
         }
 
+        @Override
         public void handleWarning(int line, String warning, Context context) {
         }
     }

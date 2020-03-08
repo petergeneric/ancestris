@@ -271,7 +271,7 @@ public class GedcomWriter implements IGedcomWriter {
 
         prop = replaceProperties(header, "GEDC", "");
         prop.addProperty("VERS", gedcom.getGrammar().getVersion());
-        prop.addProperty("FORM", "Lineage-Linked");
+        prop.addProperty("FORM", "LINEAGE-LINKED");
 
         replaceProperties(header, "CHAR", gedcom.getEncoding());
 
