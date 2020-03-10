@@ -9,30 +9,27 @@ package ancestris.modules.webbook.creator;
 
 import ancestris.api.place.Place;
 import ancestris.api.place.PlaceFactory;
-import genj.gedcom.Indi;
-import genj.gedcom.Fam;
+import ancestris.core.pluginservice.PluginInterface;
+import ancestris.modules.webbook.WebBook;
+import ancestris.modules.webbook.WebBookParams;
 import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyDate;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.time.PointInTime;
-import genj.gedcom.GedcomException;
-
-import ancestris.core.pluginservice.PluginInterface;
-import ancestris.modules.webbook.WebBook;
-import ancestris.modules.webbook.WebBookParams;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
-
+import java.text.DecimalFormat;
+import java.util.HashSet;
 import java.util.List;
-import java.util.TreeMap;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
-
-import java.text.DecimalFormat;
+import java.util.TreeMap;
+import java.util.regex.Matcher;
 import org.openide.util.Lookup;
 
 /**
@@ -108,6 +105,8 @@ public class WebMap extends WebSection {
         }
 
         printOpenHTMLHead(out, "TXT_Map", this, true);
+        
+        out.println("<script src=\"./map-markers.js\" ></script>");
 
         // include javascript
         String javascriptDir = "js/";
@@ -182,7 +181,7 @@ public class WebMap extends WebSection {
     private void exportXMLData(File dir, Indi indi) {
 
         // Opens page
-        String fileStr = sectionPrefix + ".xml";
+        String fileStr = "map-markers.js";
         File file = wh.getFileForName(dir, fileStr);
         PrintWriter out = wh.getWriter(file, UTF8);
         if (out == null) {
@@ -535,32 +534,36 @@ public class WebMap extends WebSection {
      *  Does the export to XML
      */
     private void exportCitiesFlash(PrintWriter out) {
-        out.println("<ls>");
+        out.println("function getMarkers() {");
+        out.println("var obj = [");
+        
+        
 
         for (String city : citiesFlash.keySet()) {
             CityFlash cityFlash = citiesFlash.get(city);
             if (cityFlash != null && (wp.param_media_DispUnknownLoc.equals("1") || cityFlash.lng != -45 || cityFlash.lat != 30)) {
-                String line = "";
-                line += "<l ";
-                line += "x=\"" + cityFlash.lng + "\" ";
-                line += "y=\"" + cityFlash.lat + "\" ";
-                line += "s=\"" + cityFlash.size + "\" ";
-                line += "a=\"" + cityFlash.ancestor + "\" ";
-                line += "t=\"" + cityFlash.type + "\" ";
-                line += "d=\"" + cityFlash.density + "\" ";
-                line += "min=\"" + cityFlash.min + "\" ";
-                line += "max=\"" + cityFlash.max + "\" ";
-                line += "lkp=\"" + cityFlash.linkToPage + "\" ";
-                line += "lki=\"" + cityFlash.linkAnchor + "\" ";
-                line += "lko=\"" + htmlAnchorText(cityFlash.city) + "\" ";
-                line += "cty=\"" + cityFlash.city + "\" ";
-                line += ">";
+                StringBuilder line = new StringBuilder();
+                line.append("{\n ");
+                line.append("\"x\": \"").append(cityFlash.lng).append("\", \n ");
+                line.append("\"y\":\"").append(cityFlash.lat).append("\", \n ");
+                line.append("\"s\":\"").append(cityFlash.size).append("\", \n ");
+                line.append("\"a\":\"").append(cityFlash.ancestor).append("\", \n ");
+                line.append("\"t\":\"").append(cityFlash.type).append("\", \n ");
+                line.append("\"d\":\"").append(cityFlash.density).append("\", \n ");
+                line.append("\"min\":\"").append(cityFlash.min).append("\", \n ");
+                line.append("\"max\":\"").append(cityFlash.max).append("\", \n ");
+                line.append("\"lkp\":\"").append(cityFlash.linkToPage).append("\", \n ");
+                line.append("\"lki\":\"").append(cityFlash.linkAnchor).append("\", \n ");
+                line.append("\"lko\":\"").append(htmlAnchorText(cityFlash.city)).append("\", \n ");
+                line.append("\"cty\":\"").append(cityFlash.city).append("\", \n ");
+                line.append("\"text\":\"").append(cityFlash.text.replaceAll("\"",  Matcher.quoteReplacement("\\\""))).append("\" \n ");
+                line.append("},\n");
+                
                 out.println(line);
-                out.println(cityFlash.text);
-                out.println("</l>");
             }
         }
-        out.println("</ls>");
+        out.println("];");
+        out.println("return obj;\n}");
     }
 
     /**
