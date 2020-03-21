@@ -107,6 +107,9 @@ public abstract class Import implements ImportRunner {
     private boolean headerzone = false;
     private boolean grammarZone = false;
 
+    private boolean noteFound = false;
+    private boolean headNoteWritten = false;
+
     // Destination
     private final static int TAG_MISSING = 0;
     private final static int TAG_INVALID = 1;
@@ -126,6 +129,8 @@ public abstract class Import implements ImportRunner {
     private static HashMap<String, ImportEnt> hashSours;
     private static HashMap<String, ImportEnt> hashRepos;
     private static HashMap<String, ImportEnt> hashSubms;
+    // Get Ids related to Assossiations
+    private static HashMap<String, ImportEnt> hashAssos;
 
     /**
      * our files
@@ -401,9 +406,6 @@ public abstract class Import implements ImportRunner {
                 while (!cancel && input.getNextLine(true) != null) {
                     if ((input.getLevel() == 0) && (input.getTag().equals("HEAD"))) {
                         output.writeLine(input);
-                        output.writeLine(1, "NOTE", getImportComment());
-                        console.println(NbBundle.getMessage(Import.class, "Import.header"));
-                        nbChanges++;
                         continue;
                     }
                     if (process()) {
@@ -459,6 +461,7 @@ public abstract class Import implements ImportRunner {
         hashSours = new HashMap<>();
         hashRepos = new HashMap<>();
         hashSubms = new HashMap<>();
+        hashAssos = new HashMap<>();
     }
 
     /**
@@ -478,16 +481,16 @@ public abstract class Import implements ImportRunner {
         if ((input.getLevel() == 0) && input.getTag().equals("HEAD")) {
             headerzone = true;
         }
-        
+
         if (headerzone && (input.getLevel() == 1) && "GEDC".equals(input.getTag())) {
             grammarZone = true;
         }
-        
+
         if (headerzone && (input.getLevel() == 1) && "SOUR".equals(input.getTag())) {
             grammarZone = false;
         }
-        
-         if (headerzone && (input.getLevel() == 1) && "CHAR".equals(input.getTag())) {
+
+        if (headerzone && (input.getLevel() == 1) && "CHAR".equals(input.getTag())) {
             grammarZone = false;
         }
 
@@ -496,11 +499,16 @@ public abstract class Import implements ImportRunner {
             GEDCOM_VERSION = input.getValue();
         }
 
+        // Determine existing note
+        if (headerzone && "NOTE".equals(input.getTag())) {
+            noteFound = true;
+        }
+
         // Determine destination type : missing or invalid or correct
         if ((input.getLevel() == 1) && input.getTag().equals("DEST")) {
             String value = input.getValue();
             // Add ANY as valid value : ancestris set this value, 
-            // a file created buy ancestris and imported will create a modification
+            // a file created by ancestris and imported will create a modification
             // and define this tag as invalid.....
             if (value != null && (value.equals("ANSTFILE") || value.equals("TempleReady") || value.equals("ANY"))) {
                 destination_found = TAG_VALID;
@@ -564,6 +572,7 @@ public abstract class Import implements ImportRunner {
      * fixed on the fly
      */
     protected void finalise() throws IOException {
+        checkAssociationEntities();
         addMissingEntities();
         state = CONVERTGEDCOM;
         progress = 1;
@@ -610,7 +619,7 @@ public abstract class Import implements ImportRunner {
         memorizeProperty("WIFE", hashIndis);
         memorizeProperty("CHIL", hashIndis);
         memorizeProperty("ALIA", hashIndis);
-        memorizeProperty("ASSO", hashIndis);
+        memorizeAssociation();
 
         // Fams
         memorizeEntity("FAM", hashFams);
@@ -640,6 +649,19 @@ public abstract class Import implements ImportRunner {
         memorizeProperty("ANCI", hashSubms);
         memorizeProperty("DESI", hashSubms);
 
+    }
+
+    /**
+     * Add Entities whom ids where found in asso link but not found in Indis or
+     * Fams.
+     */
+    private void checkAssociationEntities() {
+        for (String k : hashAssos.keySet()) {
+            // Check if asso is related ot fam or indi. If id not found assume it's an indi.
+            if (!hashIndis.containsKey(k) && !hashFams.containsKey(k)) {
+                hashIndis.put(k, new ImportEnt());
+            }
+        }
     }
 
     private void addMissingEntities() throws IOException {
@@ -696,6 +718,27 @@ public abstract class Import implements ImportRunner {
     }
 
     public boolean processHeader() throws IOException {
+
+        // HEAD:NOTE management GEDCOM gives only one NOTE in header.
+        if (!headNoteWritten) {
+            if (noteFound) {
+                if ("NOTE".equals(input.getTag())) {
+                    output.writeLine(1, "NOTE", getImportComment());
+                    console.println(NbBundle.getMessage(Import.class, "Import.header"));
+                    nbChanges++;
+                    headNoteWritten = true;
+                    output.writeLine(2, "CONT", input.getValue());
+                    // Line written, next one.
+                    return true;
+                }
+            } else {
+                // Write the note
+                output.writeLine(1, "NOTE", getImportComment());
+                console.println(NbBundle.getMessage(Import.class, "Import.header"));
+                nbChanges++;
+                headNoteWritten = true;
+            }
+        }
 
         // DEST tag
         if (destination_found == TAG_MISSING) {
@@ -902,7 +945,7 @@ public abstract class Import implements ImportRunner {
                 if (!propName.isValid() || propName.hasWarning()) {
                     propName.fixNameValue();
                     hasErrors = true;
-                    console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", propName.getDisplayValue()));  
+                    console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", propName.getDisplayValue()));
                     nbChanges++;
                 }
             }
@@ -946,7 +989,7 @@ public abstract class Import implements ImportRunner {
             }
             if (!place.setJurisdictions(gedcom, locs)) {
                 hasErrors = true;
-                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", place.getDisplayValue()));  
+                console.println(NbBundle.getMessage(Import.class, "Import.fixInvalidValue", place.getDisplayValue()));
                 nbChanges++;
             }
         }
@@ -1089,11 +1132,22 @@ public abstract class Import implements ImportRunner {
 
     private void memorizeProperty(String tag, HashMap<String, ImportEnt> hashEntities) {
         // if begin with 2@ this is an escape and note a key
-        if (input.getTag().equals(tag) && input.getValue().startsWith("@") && input.getValue().endsWith("@")&& !input.getValue().startsWith("@@")) {
+        if (input.getTag().equals(tag) && input.getValue().startsWith("@") && input.getValue().endsWith("@") && !input.getValue().startsWith("@@")) {
             String value = input.getValue();
             value = value.substring(1, value.length() - 1);
             if (!hashEntities.containsKey(value)) {
                 hashEntities.put(value, new ImportEnt());
+            }
+        }
+    }
+
+    private void memorizeAssociation() {
+        // if begin with 2@ this is an escape and note a key
+        if (input.getTag().equals("ASSO") && input.getValue().startsWith("@") && input.getValue().endsWith("@") && !input.getValue().startsWith("@@")) {
+            String value = input.getValue();
+            value = value.substring(1, value.length() - 1);
+            if (!hashAssos.containsKey(value)) {
+                hashAssos.put(value, new ImportEnt());
             }
         }
     }
@@ -1110,7 +1164,7 @@ public abstract class Import implements ImportRunner {
             for (Property p : event.getProperties()) {
                 movePropertiesRecursively(p, host);
             }
-            console.println(NbBundle.getMessage(Import.class, "Import.reduceEvents", event.getTag() + " : " + entity.getId()));  
+            console.println(NbBundle.getMessage(Import.class, "Import.reduceEvents", event.getTag() + " : " + entity.getId()));
             nbChanges++;
             entity.delProperty(event);
         }
