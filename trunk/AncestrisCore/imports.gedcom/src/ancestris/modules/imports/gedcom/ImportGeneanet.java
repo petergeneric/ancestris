@@ -19,11 +19,16 @@ import ancestris.api.imports.Import;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_name;
 import static ancestris.modules.imports.gedcom.Bundle.importgeneanet_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
+import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Grammar;
 import genj.gedcom.Property;
+import genj.gedcom.PropertyAssociation;
 import genj.gedcom.PropertyFile;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import org.openide.util.NbBundle;
 import org.openide.util.lookup.ServiceProvider;
 
@@ -65,9 +70,60 @@ public class ImportGeneanet extends Import {
     public boolean fixGedcom(Gedcom gedcom) {
         boolean ret = super.fixGedcom(gedcom);
         ret |= super.convertAssociations(gedcom);
+        ret |= removeDoubleAssociations(gedcom);
         ret |= fixOther(gedcom);
         incrementProgress();
         return ret;
+    }
+    
+    /**
+     * Geneanet create association from indi to fam and fam to indi.
+     * This leads to duplicate association.
+     * @param gedcom The file to import.
+     * @return  true if errors occurs.
+     */
+    private boolean removeDoubleAssociations(Gedcom gedcom) {
+        List<Property> list = new ArrayList<>();
+        gedcom.getIndis().forEach((entity) -> {
+            getPropertiesRecursively(list, "ASSO", entity);
+        });
+        Map<String,PropertyAssociation> mapL = new HashMap<>();
+        for (Property prop : list) {
+            if (prop instanceof PropertyAssociation) {
+                PropertyAssociation pa = (PropertyAssociation) prop;
+                String origine = pa.getEntity().getId();
+                String destination = pa.getTargetEntity().getId();
+                String key = origine + " -;- " + destination;
+                // Same association already there.
+                // Remove asso not Ancestris style.
+                //
+                if (mapL.containsKey(key)) {
+                    PropertyAssociation po = mapL.get(key);
+                    Property relaO = po.getProperty("RELA", false);
+                    if (!relaO.getValue().contains("@")) {
+                        Entity ent = po.getEntity();
+                        ent.delProperty(po);
+                        mapL.remove(key);
+                        mapL.put(key, pa);
+                    } else {
+                        // New value not ancestris style.
+                        // Remove.
+                        Property relaA = pa.getProperty("RELA", false);
+                        if (!relaA.getValue().contains("@")) {
+                            Entity ent = pa.getEntity();
+                            ent.delProperty(pa);
+                        }
+                    }
+                } else {
+                    mapL.put(key, pa);
+                }
+                
+            } else {
+                System.out.println("Pas normal :" + prop);
+            }
+        }
+        
+        return true;
     }
 
     /**
