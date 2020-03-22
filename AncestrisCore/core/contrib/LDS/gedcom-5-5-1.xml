@@ -250,7 +250,7 @@
         <DIVF img="DivorceFiled" super="FAM:ENGA"/>
         <DIV  img="Divorce" super="FAM:ENGA"/>
         <CENS img="Census" super="FAM:ENGA"/>
-        <EVEN type="PropertySimpleValue" img="Event" super="INDI:EVEN" cardinality="0:M">
+        <EVEN type="PropertySimpleValue" img="Event" super="FAM:ENGA" cardinality="0:M">
             <TYPE default="1" super="INDI:EVEN:TYPE"/>
         </EVEN>
         <RESI cardinality="0:M" type="PropertySimpleReadOnly" img="Residency" super="FAM:ENGA"/>
