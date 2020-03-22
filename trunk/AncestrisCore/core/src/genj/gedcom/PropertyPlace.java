@@ -47,6 +47,16 @@ public class PropertyPlace extends PropertyChoiceValue {
     }
 
     /**
+     * Tells whether this place is valid
+     *
+     * @return <code>boolean</code> indicating validity (not empty or includes sub-tags)
+     */
+    @Override
+    public boolean isValid() {
+        return getValue().trim().length() != 0 || getNoOfProperties() != 0;
+    }
+
+    /**
      * Overridden - special trim
      */
     @Override
