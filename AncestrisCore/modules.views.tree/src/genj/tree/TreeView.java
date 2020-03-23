@@ -32,7 +32,9 @@ import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomDirectory.ContextNotFoundException;
 import ancestris.modules.views.tree.style.Style;
 import ancestris.modules.views.tree.style.TreeStyleManager;
+import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.SelectIndiOrFamPanel;
 import ancestris.view.ExplorerHelper;
 import ancestris.view.SelectionActionEvent;
 import ancestris.view.SelectionDispatcher;
@@ -51,6 +53,7 @@ import genj.renderer.ChooseBlueprintAction;
 import genj.renderer.DPI;
 import genj.renderer.RenderOptions;
 import genj.renderer.RenderSelectionHintKey;
+import genj.tree.Model.NextFamily;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ButtonHelper;
@@ -63,9 +66,6 @@ import genj.util.swing.ViewPortAdapter;
 import genj.util.swing.ViewPortOverview;
 import genj.view.ScreenshotAction;
 import genj.view.SettingsAction;
-import ancestris.swing.ToolBar;
-import ancestris.util.swing.SelectIndiOrFamPanel;
-import genj.tree.Model.NextFamily;
 import genj.view.View;
 import genj.view.ViewContext;
 import java.awt.Color;
@@ -1705,13 +1705,14 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
             // We need imput field to be long. DialogID does not work for InputLine
             // => trick : make string longer that 81 characteres to force dialog to display 2 lines
             text += "                                                                                 ".substring(text.length()); 
-            if (DialogManager.create(TITLE, text, name).show() == null) {
+            final String value = DialogManager.create(TITLE, text, name).show();
+            if ( value == null) {
                 return;
             } 
 
             
             // create it
-            model.addBookmark(new Bookmark(name, entity));
+            model.addBookmark(new Bookmark(value, entity));
 
             // save bookmarks
             {
