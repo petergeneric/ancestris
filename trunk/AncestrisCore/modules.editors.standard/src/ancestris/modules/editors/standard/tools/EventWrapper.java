@@ -597,7 +597,7 @@ public class EventWrapper {
 
             // Place (set place, and if empty, remove it)
             boolean noplace = false;
-            PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC");
+            PropertyPlace tmpPlace = (PropertyPlace) eventProperty.getProperty("PLAC", false);
             if (tmpPlace == null) { // there is no place tag in the gedcom for that event... 
                 String val = place.getValue().trim();
                 if (!val.isEmpty()) { // if new one not empty, add it
