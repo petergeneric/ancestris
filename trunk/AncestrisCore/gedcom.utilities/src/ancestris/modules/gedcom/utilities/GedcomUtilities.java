@@ -53,7 +53,7 @@ public class GedcomUtilities {
         Gedcom.REPO
     };
 
-        public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType) {
+        public static void deleteTags(Gedcom gedcom, String tagToRemove, int entityType, boolean emptyTagOnly) {
         LOG.log(Level.FINER, "deleting_tag {0}", tagToRemove);
 
         Collection<? extends Entity> entities;
@@ -71,6 +71,10 @@ public class GedcomUtilities {
             propsToDelete = getPropertiesRecursively(entity, tagToRemove);
             for (Iterator<Property> props = propsToDelete.iterator(); props.hasNext();) {
                 Property prop = props.next();
+                boolean isEmpty = prop.getValue().length() == 0 && prop.getNoOfProperties() == 0;
+                if (emptyTagOnly && !isEmpty) {
+                    continue;
+                }
                 if (prop != null) {
                     Property parent = prop.getParent();
                     if (parent != null) {
