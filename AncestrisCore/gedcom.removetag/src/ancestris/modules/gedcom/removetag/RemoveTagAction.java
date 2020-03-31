@@ -64,12 +64,13 @@ public final class RemoveTagAction extends AbstractAncestrisContextAction {
             if (DialogDisplayer.getDefault().notify(notifyDescriptor) == NotifyDescriptor.OK_OPTION) {
                 final String tag = removeTagPanel.getTag();
                 final int selectedentity = removeTagPanel.getSelectedEntityIndex();
+                final boolean emptyTagOnly = removeTagPanel.getSelectedEmptyTag();
                 try {
                     gedcom.doUnitOfWork(new UnitOfWork() {
 
                         @Override
                         public void perform(Gedcom gedcom) throws GedcomException {
-                            GedcomUtilities.deleteTags(gedcom, tag, selectedentity);
+                            GedcomUtilities.deleteTags(gedcom, tag, selectedentity, emptyTagOnly);
                         }
                     }); // end of doUnitOfWork
                 } catch (GedcomException ex) {

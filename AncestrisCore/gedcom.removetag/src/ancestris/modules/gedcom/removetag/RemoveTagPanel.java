@@ -43,6 +43,7 @@ public class RemoveTagPanel extends javax.swing.JPanel {
         initComponents();
         tagTextField.setText(modulePreferences.get("RemoveTagPanel.tag", "_XXXX"));
         selectedEntityComboBox.setSelectedIndex(modulePreferences.getInt("RemoveTagPanel.selectedEntity", 0));
+        jCheckBoxEmpty.setSelected(modulePreferences.getBoolean("RemoveTagPanel.emptyTag", false));
     }
 
     /** This method is called from within the constructor to
@@ -55,15 +56,19 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         tagTextField = new javax.swing.JTextField();
-        selectedEntityComboBox = new javax.swing.JComboBox<String>();
+        selectedEntityComboBox = new javax.swing.JComboBox<>();
         tagLabel = new javax.swing.JLabel();
         selectedEntityLabel = new javax.swing.JLabel();
+        jCheckBoxEmpty = new javax.swing.JCheckBox();
 
         selectedEntityComboBox.setModel(new javax.swing.DefaultComboBoxModel<String>(entityList));
 
         tagLabel.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.tagLabel.text")); // NOI18N
 
         selectedEntityLabel.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.selectedEntityLabel.text")); // NOI18N
+
+        jCheckBoxEmpty.setText(org.openide.util.NbBundle.getMessage(RemoveTagPanel.class, "RemoveTagPanel.jCheckBoxEmpty.text")); // NOI18N
+        jCheckBoxEmpty.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -77,6 +82,7 @@ public class RemoveTagPanel extends javax.swing.JPanel {
                 .addComponent(selectedEntityLabel)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(selectedEntityComboBox, 0, 165, Short.MAX_VALUE))
+            .addComponent(jCheckBoxEmpty, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -87,10 +93,13 @@ public class RemoveTagPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectedEntityComboBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(selectedEntityLabel)))
+                    .addComponent(selectedEntityLabel))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jCheckBoxEmpty))
         );
     }// </editor-fold>//GEN-END:initComponents
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JCheckBox jCheckBoxEmpty;
     private javax.swing.JComboBox<String> selectedEntityComboBox;
     private javax.swing.JLabel selectedEntityLabel;
     private javax.swing.JLabel tagLabel;
@@ -109,4 +118,10 @@ public class RemoveTagPanel extends javax.swing.JPanel {
     public Object getSelectedEntityItem() {
         modulePreferences.putInt("RemoveTagPanel.selectedEntity", selectedEntityComboBox.getSelectedIndex());
         return selectedEntityComboBox.getSelectedItem();
-    }}
+    }
+    
+    public boolean getSelectedEmptyTag() {
+        modulePreferences.putBoolean("RemoveTagPanel.emptyTag", jCheckBoxEmpty.isSelected());
+        return jCheckBoxEmpty.isSelected();
+    }
+}
