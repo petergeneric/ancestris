@@ -842,7 +842,7 @@ public class PropertyName extends Property {
 
         @Override
         public String getSortGroup(PropertyName p) {
-            return shortcut(p.getLastName().trim(), 1);
+            return shortcut(p.getDisplayValue().trim(), 1);
         }
 
         @Override
@@ -855,12 +855,13 @@ public class PropertyName extends Property {
             Collator c = p1.getGedcom().getCollator();
 
             // check last name initially
-            r = c.compare(p1.getLastName(), p2.getLastName());
-            if (r != 0) {
-                return r;
-            }
-            // advance to first name
-            return c.compare(p1.getFirstName(), p2.getFirstName());
+            r = c.compare(p1.getDisplayValue(), p2.getDisplayValue());
+            return r;
+//            if (r != 0) {
+//                return r;
+//            }
+//            // advance to first name
+//            return c.compare(p1.getFirstName(), p2.getFirstName());
         }
     }
 } //PropertyName
