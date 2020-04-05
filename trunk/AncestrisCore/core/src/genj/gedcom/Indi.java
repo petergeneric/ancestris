@@ -922,7 +922,7 @@ public class Indi extends Entity {
             if (name == null) {
                 return "";
             }
-            return shortcut(name.getLastName(), 1);
+            return shortcut(name.getDisplayValue(), 1);
 
         }
 
