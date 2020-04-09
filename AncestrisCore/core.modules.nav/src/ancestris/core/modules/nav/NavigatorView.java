@@ -246,7 +246,7 @@ public class NavigatorView extends View {
             setJumps(YSIBLING, current.getYoungerSiblings());
             setJumps(CHILD, current.getChildren());
             // update label
-            labelCurrent.setText(current.toString());
+            labelCurrent.setText("<html>"+current.toString()+"</html>");
             labelCurrent.setIcon(current.getImage(false));
 
             // update the self label/partner popup images
