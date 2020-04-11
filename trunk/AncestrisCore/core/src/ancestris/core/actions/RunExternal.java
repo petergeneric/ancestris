@@ -21,10 +21,13 @@ package ancestris.core.actions;
 
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
 import genj.util.Resources;
 import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.openide.awt.ActionID;
@@ -59,7 +62,10 @@ public class RunExternal extends AbstractAncestrisContextAction {
             file = null;
             for (Property prop : lkpInfo.allInstances()) {
                 if (prop instanceof PropertyFile) {
-                    file = ((PropertyFile) prop).getFile();
+                    InputSource is = ((PropertyFile) prop).getInput().orElse(null);
+                    if (is != null && is instanceof FileInput) {
+                        file = ((FileInput) is).getFile();
+                    }
                 }
             }
             super.resultChanged(ev);
@@ -93,7 +99,7 @@ public class RunExternal extends AbstractAncestrisContextAction {
         }
         try {
             Desktop.getDesktop().open(file);
-        } catch (Throwable t) {
+        } catch (IOException t) {
             Logger.getLogger("ancestris.edit.actions").log(Level.INFO, "can't open " + file, t);
         }
     }

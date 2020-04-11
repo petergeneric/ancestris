@@ -19,8 +19,9 @@
  */
 package genj.gedcom;
 
-import java.io.File;
+import genj.io.InputSource;
 import java.util.List;
+import java.util.Optional;
 
 
 /**
@@ -78,7 +79,7 @@ public class Media extends Entity {
   /**
    * Overriden - special case for file association
    */
-  public boolean addFile(File file) {
+  public boolean addFile(InputSource file) {
 
     // check for blob
     if (!getMetaProperty().allows("BLOB")) 
@@ -98,9 +99,15 @@ public class Media extends Entity {
   /**
    * Returns the file (if exists) for this OBJE
    */
-  public File getFile() {
+  public InputSource getFile() {
     Property file = getProperty("FILE", true);
-    return (file instanceof PropertyFile) ? ((PropertyFile)file).getFile() : null;    
+    if (file instanceof PropertyFile) {
+        Optional<InputSource> ois = ((PropertyFile)file).getInput();
+        if (ois.isPresent()) {
+            return ois.get();
+        } 
+    }
+    return null;
   }
   
   /**

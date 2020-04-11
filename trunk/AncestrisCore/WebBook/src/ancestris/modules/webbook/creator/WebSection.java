@@ -28,6 +28,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import org.apache.commons.io.FileUtils;
 
 /**
  * Ancestris
@@ -94,13 +95,13 @@ public class WebSection {
         A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P, Q, R, S, T, U, V, W, X, Y, Z;
     }
     //
-    public Map<String, String> linkForLetter = new TreeMap<String, String>();       // map is : letter to link
-    public Map<String, String> namePage = new TreeMap<String, String>();            // map is : lastname to link
-    public Map<String, String> personPage = new TreeMap<String, String>();          // map is : individualdetails to link
-    public Map<String, String> sourcePage = new TreeMap<String, String>();          // map is : source to link
-    public Map<Integer, String> mediaPage = new TreeMap<Integer, String>();         // map is : media to link
-    public Map<String, String> cityPage = new TreeMap<String, String>();            // map is : city to link
-    public Map<String, String> dayPage = new TreeMap<String, String>();             // map is : days to link
+    public Map<String, String> linkForLetter = new TreeMap<>();       // map is : letter to link
+    public Map<String, String> namePage = new TreeMap<>();            // map is : lastname to link
+    public Map<String, String> personPage = new TreeMap<>();          // map is : individualdetails to link
+    public Map<String, String> sourcePage = new TreeMap<>();          // map is : source to link
+    public Map<Integer, String> mediaPage = new TreeMap<>();         // map is : media to link
+    public Map<String, String> cityPage = new TreeMap<>();            // map is : city to link
+    public Map<String, String> dayPage = new TreeMap<>();             // map is : days to link
     //
     public String[] Months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
     //
@@ -141,7 +142,6 @@ public class WebSection {
         indexFile = "index" + this.sectionSuffix;
         //
         wh.log.write(sectionName);
-        return;
     }
 
     /**
@@ -171,7 +171,7 @@ public class WebSection {
     }
 
     public void create() {
-        return;
+        // Nothing to do.
     }
 
     public String formatFromSize(int nbIndis) {
@@ -214,7 +214,7 @@ public class WebSection {
      */
     private String getParentDir(WebSection section) {
         String path = (section == null || section.sectionDir == null) ? "" : ((section.sectionDir.length() == 0) ? "" : "..");
-        return (path == null) || (path.length() == 0) ? "" : path + SEP;
+        return (path.length() == 0) ? "" : path + SEP;
     }
 
     public void printOpenHTML(PrintWriter out) {
@@ -318,7 +318,7 @@ public class WebSection {
     public void printOpenHTMLBody(PrintWriter out, String title, WebSection section) {
 
         if (title != null) {
-            String titlePage = "";
+            String titlePage;
             if (title.length() == 0) {
                 titlePage = wp.param_title;
             } else {
@@ -469,40 +469,40 @@ public class WebSection {
      * Create popup email form html file
      */
     public void createPopupEmail(File file) {
-        PrintWriter out = wh.getWriter(file, UTF8);
-        out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
-        out.println("<html><head><title>" + trs("TXT_popupemail_title") + "</title>");
-        out.println("<link rel=\"StyleSheet\" href=\"../" + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
-        out.println("<script language='javascript'>");
-        out.println("var arrTemp=self.location.href.split(\"?\");");
-        out.println("var person = (arrTemp.length>0) ? \": \"+arrTemp[1] : \"\";");
-        out.println("</script>");
-        out.println("</head>");
-        out.println("<body bgcolor=\"#ffffff\" topmargin=\"10\" marginheight=\"10\" leftmargin=\"10\" marginwidth=\"10\">");
+        try (PrintWriter out = wh.getWriter(file, UTF8)) {
+            out.println("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\" />");
+            out.println("<html><head><title>" + trs("TXT_popupemail_title") + "</title>");
+            out.println("<link rel=\"StyleSheet\" href=\"../" + themeDir + SEP + styleFile + "\" type=\"text/css\"/>");
+            out.println("<script language='javascript'>");
+            out.println("var arrTemp=self.location.href.split(\"?\");");
+            out.println("var person = (arrTemp.length>0) ? \": \"+arrTemp[1] : \"\";");
+            out.println("</script>");
+            out.println("</head>");
+            out.println("<body bgcolor=\"#ffffff\" topmargin=\"10\" marginheight=\"10\" leftmargin=\"10\" marginwidth=\"10\">");
 
-        out.println("<div class=\"contreport\">");
-        out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_description")) + "</span></p>");
-        out.println("<p class=\"description\">" + htmlText(trs("TXT_emailform_info")) + "</p>");
-        out.println("</div>");
+            out.println("<div class=\"contreport\">");
+            out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_description")) + "</span></p>");
+            out.println("<p class=\"description\">" + htmlText(trs("TXT_emailform_info")) + "</p>");
+            out.println("</div>");
 
-        out.println("<div class=\"contreport\">");
-        out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_form")) + "</span></p>");
-        out.println("<p class=\"description\">");
-        out.println("  <script language='javascript'>");
-        out.println("  document.write( \"<form class='description' action='mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "\" + person + \"' method='post' enctype='text/plain' >\" );");
-        out.println("  </script>");
-        out.println("  " + htmlText(trs("TXT_emailform_name")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
-        out.println("  " + htmlText(trs("TXT_emailform_reason")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_reason")) + "\"><br /><br />");
-        out.println("  " + htmlText(trs("TXT_emailform_message")) + "&nbsp;<br />");
-        out.println("  <textarea name=\"" + htmlText(trs("TXT_emailform_message")) + "\" cols=77 rows=8 wrap=virtual></textarea><br /><br />");
-        out.println("  <center><input onclick='self.close();' type=\"submit\" value=\"" + htmlText(trs("TXT_emailform_send")) + "\">&nbsp;&nbsp;&nbsp;<input onclick='self.close();' type=\"reset\" value=\"" + htmlText(trs("TXT_emailform_cancel")) + "\"></center>");
-        out.println("  </form>");
-        out.println("</p>");
-        out.println("<div class=\"spacer\">" + SPACE + "</div>");
-        out.println("</div>");
+            out.println("<div class=\"contreport\">");
+            out.println("<p class=\"decal\"><br /><span class=\"gras\">" + htmlText(trs("TXT_emailform_form")) + "</span></p>");
+            out.println("<p class=\"description\">");
+            out.println("  <script language='javascript'>");
+            out.println("  document.write( \"<form class='description' action='mailto:" + wp.param_email + "?subject=" + trs("TXT_idx_email_subject") + "\" + person + \"' method='post' enctype='text/plain' >\" );");
+            out.println("  </script>");
+            out.println("  " + htmlText(trs("TXT_emailform_name")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_mynameis")) + "\"><br /><br />");
+            out.println("  " + htmlText(trs("TXT_emailform_reason")) + "&nbsp;<input type=\"text\" size=\"60\" name=\"" + htmlText(trs("TXT_emailform_reason")) + "\"><br /><br />");
+            out.println("  " + htmlText(trs("TXT_emailform_message")) + "&nbsp;<br />");
+            out.println("  <textarea name=\"" + htmlText(trs("TXT_emailform_message")) + "\" cols=77 rows=8 wrap=virtual></textarea><br /><br />");
+            out.println("  <center><input onclick='self.close();' type=\"submit\" value=\"" + htmlText(trs("TXT_emailform_send")) + "\">&nbsp;&nbsp;&nbsp;<input onclick='self.close();' type=\"reset\" value=\"" + htmlText(trs("TXT_emailform_cancel")) + "\"></center>");
+            out.println("  </form>");
+            out.println("</p>");
+            out.println("<div class=\"spacer\">" + SPACE + "</div>");
+            out.println("</div>");
 
-        out.println("</body></html>");
-        out.close();
+            out.println("</body></html>");
+        }
     }
 
     /**
@@ -525,6 +525,7 @@ public class WebSection {
      */
     public Comparator<String> sortLastnames = new Comparator<String>() {
 
+        @Override
         public int compare(String orig1, String orig2) {
             String name1 = htmlAnchorText(orig1);
             String name2 = htmlAnchorText(orig2);
@@ -549,6 +550,7 @@ public class WebSection {
     @SuppressWarnings("unchecked")
     public Comparator<Indi> sortIndividuals = new Comparator<Indi>() {
 
+        @Override
         public int compare(Indi indi1, Indi indi2) {
             int sort = sortLastnames.compare(wh.getLastName(indi1, DEFCHAR), wh.getLastName(indi2, DEFCHAR));
             if (sort == 0) {
@@ -569,15 +571,15 @@ public class WebSection {
         }
         String kw = "Généalogie, Genealogy, ancestors, ancêtres, descendance, famille, family tree";
         List<String> listnames = wh.getLastNames(DEFCHAR, sortLastnames);
-        SortedMap<Integer, String> volumePerName = new TreeMap<Integer, String>(new Comparator<Integer>() {
-
+        SortedMap<Integer, String> volumePerName = new TreeMap<>(new Comparator<Integer>() {
+            @Override
             public int compare(Integer i1, Integer i2) {
                 return (i2.compareTo(i1));
             }
         });
         Iterator<String> it = listnames.iterator();
         while (it.hasNext()) {
-            String key = it.next().toString();
+            String key = it.next();
             if (key.length() > 0) {
                 volumePerName.put((Integer) wh.getLastNameCount(key, DEFCHAR), key.trim().toLowerCase());
             }
@@ -601,7 +603,7 @@ public class WebSection {
      */
     public String htmlAnchorText(String anchor) {
         // trim and only AZaz-
-        String strInput = "";
+        String strInput;
         if (anchor == null) {
             return DEFCHAR;
         }
@@ -610,7 +612,7 @@ public class WebSection {
             return DEFCHAR;
         }
         char[] charInput = strInput.toCharArray();
-        StringBuffer strOutput = new StringBuffer(1000);
+        StringBuilder strOutput = new StringBuilder(1000);
         for (int i = 0; i < charInput.length; i++) {
             strOutput.append(wh.convertChar(charInput[i], true, DEFCHAR));
         }
@@ -714,15 +716,15 @@ public class WebSection {
 
         // Some strings to handle privacy
         String privDisplay = wh.getPrivDisplay();
-        String strClear = "";
-        String strHidden = "";
+        String strClear;
+        String strHidden;
 
         // Build name to display
         strClear = htmlText(getNameDisplay(indi, nameType, privDisplay, false));
         strHidden = htmlText(getNameDisplay(indi, nameType, privDisplay, true));
 
         // Build sosa
-        String sosaNb = "";
+        String sosaNb;
         if (sosa) {
             sosaNb = wh.getSosa(indi);
             if (sosaNb != null && sosaNb.length() != 0) {
@@ -749,9 +751,9 @@ public class WebSection {
     }
 
     private String getNameDisplay(Indi indi, int nameType, String privDisplay, boolean hidden) {
-        String name = "";
-        String lastname = "";
-        String firstname = "";
+        String name;
+        String lastname;
+        String firstname;
         if (hidden) {
             lastname = privDisplay;
             firstname = privDisplay;
@@ -794,7 +796,7 @@ public class WebSection {
         String strHidden = "";
 
         // Get date
-        String date = "";
+        String date;
         PropertyDate bdate = indi.getBirthDate();
         PropertyDate ddate = indi.getDeathDate();
         String birthdate = (bdate == null) ? "." : bdate.getDisplayValue();
@@ -829,17 +831,21 @@ public class WebSection {
 
         // Some strings to handle privacy
         String themeDirLink = buildLinkTheme(this, themeDir);
-        String strClear = "";
+        String strClear;
         String strHidden = "<img src='" + themeDirLink + "u.gif' alt='" + trs("alt_unknown") + "' />";
 
         // Build sex icon
-        int iSex = (indi == null) ? 0 : indi.getSex();
-        if (iSex == 1) {
-            strClear = "<img src='" + themeDirLink + "m.gif' alt='" + trs("alt_male") + "' />";
-        } else if (iSex == 2) {
-            strClear = "<img src='" + themeDirLink + "f.gif' alt='" + trs("alt_female") + "' />";
-        } else {
-            strClear = "<img src='" + themeDirLink + "u.gif' alt='" + trs("alt_unknown") + "' />";
+        int iSex = indi.getSex();
+        switch (iSex) {
+            case 1:
+                strClear = "<img src='" + themeDirLink + "m.gif' alt='" + trs("alt_male") + "' />";
+                break;
+            case 2:
+                strClear = "<img src='" + themeDirLink + "f.gif' alt='" + trs("alt_female") + "' />";
+                break;
+            default:
+                strClear = "<img src='" + themeDirLink + "u.gif' alt='" + trs("alt_unknown") + "' />";
+                break;
         }
 
         // Now handle privacy and PHP support
@@ -868,12 +874,16 @@ public class WebSection {
         String strClear = "";
         String strHidden = "unk";
 
-        if (indi.getSex() == 1) {
-            strClear += "hom";
-        } else if (indi.getSex() == 2) {
-            strClear += "fem";
-        } else {
-            strClear += "unk";
+        switch (indi.getSex()) {
+            case 1:
+                strClear += "hom";
+                break;
+            case 2:
+                strClear += "fem";
+                break;
+            default:
+                strClear += "unk";
+                break;
         }
 
         // Now handle privacy and PHP support
@@ -987,7 +997,7 @@ public class WebSection {
         // Get privacy string
         String privDisplay = wh.getPrivDisplay();
 
-        String ev[] = null;
+        String ev[];
         if (entity == null) {
             return null;
         }
@@ -998,9 +1008,9 @@ public class WebSection {
         } else {
             return null;
         }
-        List<String> list = new ArrayList<String>();
-        String description = "";
-        String date = "";
+        List<String> list = new ArrayList<>();
+        String description;
+        String date;
         for (int i = 0; i < ev.length; i++) {
             Property[] props = entity.getProperties(ev[i]);
             for (int j = 0; j < props.length; j++) {
@@ -1008,20 +1018,26 @@ public class WebSection {
                 Property p = props[j].getProperty("DATE");
                 PropertyDate pDate = (p instanceof PropertyDate ? (PropertyDate) p : null);
 
-                if (ev[i].equals("BIRT")) {
-                    date = "0-";
-                } else if (ev[i].equals("DEAT")) {
-                    date = "8-";
-                } else if (ev[i].equals("BURI") || ev[i].equals("CREM")) {
-                    date = "9-";
-                } else {
-                    date = "5-";
+                switch (ev[i]) {
+                    case "BIRT":
+                        date = "0-";
+                        break;
+                    case "DEAT":
+                        date = "8-";
+                        break;
+                    case "BURI":
+                    case "CREM":
+                        date = "9-";
+                        break;
+                    default:
+                        date = "5-";
+                        break;
                 }
 
                 if (pDate == null) {
                     date += "-";
                 } else {
-                    PointInTime pit = null;
+                    PointInTime pit;
                     try {
                         pit = pDate.getStart().getPointInTime(PointInTime.GREGORIAN);
                         date += "";
@@ -1195,8 +1211,8 @@ public class WebSection {
 
         // Returned string and other variables
         String str = "";
-        boolean isFileValid = (file != null) && (file.getFile() != null);
-        boolean isImage = isFileValid ? wh.isImage(file.getFile().getAbsolutePath()) : false;
+        boolean isFileValid = file.getInput().isPresent();
+        
         String miniPrefix = "mini_";
 
         // Some strings to handle privacy
@@ -1207,29 +1223,44 @@ public class WebSection {
 
         // Build filename
         String filename = wh.getCleanFileName(file.getValue(), DEFCHAR);
+        boolean isImage = isFileValid ? wh.isImage(filename) : false;
 
         // Copy file if required
         if (isFileValid && toBeCopied) {
             // Copy
-            try {
-                wh.copy(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + filename, useLink, false);
-            } catch (IOException e) {
-                wb.log.write(wb.log.ERROR, "wrapMedia - " + e.getMessage());
-            }
-            // Create mini
-            if (displayMin && isImage) {
-                wh.scaleImage(file.getFile().getAbsolutePath(), dir.getAbsolutePath() + File.separator + miniPrefix + filename, WIDTH_PICTURES, 0, 100, false);
+            if (file.isIsLocal()) {
+                try {
+                    wh.copy(file.getInput().get().getLocation(), dir.getAbsolutePath() + File.separator + filename, useLink, false);
+                } catch (IOException e) {
+                    wb.log.write(wb.log.ERROR, "wrapMedia - " + e.getMessage());
+                }
+                // Create mini
+                if (displayMin && isImage) {
+                    wh.scaleImage(file.getInput().get().getLocation(), dir.getAbsolutePath() + File.separator + miniPrefix + filename, WIDTH_PICTURES, 0, 100, false);
+                }
+            } else if (file.isIsRemote()) {
+                File tempFile = new File(System.getProperty("java.io.tmpdir") + File.separator + filename);
+                try {
+                    FileUtils.copyInputStreamToFile(file.getInput().get().open(), tempFile);
+                    wh.copy(tempFile.getAbsolutePath(), dir.getAbsolutePath() + File.separator + filename, useLink, false);
+                } catch (IOException e) {
+                    wb.log.write(wb.log.ERROR, "wrapMedia - " + e.getMessage());
+                }
+                // Create mini
+                if (displayMin && isImage) {
+                    wh.scaleImage(tempFile.getAbsolutePath(), dir.getAbsolutePath() + File.separator + miniPrefix + filename, WIDTH_PICTURES, 0, 100, false);
+                }
             }
         }
 
         // Build href link
         String hrefHidden = "";
-        String href = "";
+        String href;
         String quote = wh.isPrivate(file) && wp.param_PHP_Support.equals("1") ? "\\\"" : "\"";
         if (isFileValid) {
             if (popup) {
                 if (isImage) {
-                    href = "'javascript:popup(" + quote + filename + quote + "," + quote + wh.getImageSize(file.getFile().getAbsolutePath(), quote) + quote + ")'";
+                    href = "'javascript:popup(" + quote + filename + quote + "," + quote + wh.getImageSize(file.getInput().get().getLocation(), quote) + quote + ")'";
                     hrefHidden += "'javascript:popup(" + quote + buildLinkTheme(this, themeDir) + privMedia + quote + "," + quote + "120" + quote + "," + quote + "120" + quote + ")'";
                 } else {
                     href = "'javascript:popup(" + quote + filename + quote + "," + quote + DEFPOPUPWIDTH + quote + "," + quote + DEFPOPUPLENGTH + quote + ")'";
@@ -1244,7 +1275,7 @@ public class WebSection {
 
         // Build title
         String titleHidden = privDisplay;
-        String title = "";
+        String title;
         if (defaultTitle != null && !defaultTitle.trim().isEmpty()) {
             title = defaultTitle;
         } else {
@@ -1432,7 +1463,7 @@ public class WebSection {
     public String htmlText(String text, boolean convertTags) {
         // No accent, <, >, etc
         char[] charInput = text.toCharArray();
-        StringBuffer strOutput = new StringBuffer(1000);
+        StringBuilder strOutput = new StringBuilder(1000);
         for (int i = 0; i < charInput.length; i++) {
             switch (charInput[i]) {
                 // line breaks

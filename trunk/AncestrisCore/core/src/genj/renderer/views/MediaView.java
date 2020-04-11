@@ -77,7 +77,7 @@ public class MediaView extends MyView {
 
     @Override
     protected Dimension2D getPreferredSpan() {
-        Dimension2D size = getSize(getRoot(), getRenderer().getGraphics());
+        Dimension2D size = getSize(getRoot());
         if (getRenderer().isIsDebug() && size.getWidth() == 0 && size.getHeight() == 0) {
             return BROKEN.getSizeInPoints(get(getRenderer().getGraphics()));
         }
@@ -90,7 +90,7 @@ public class MediaView extends MyView {
         Rectangle r = allocation.getBounds();
 
         if (getRenderer().isIsDebug()) {
-            Dimension2D size = getSize(getRoot(), getRenderer().getGraphics());
+            Dimension2D size = getSize(getRoot());
             if (size.getWidth() == 0 && size.getHeight() == 0) {
                 BROKEN.paintIcon(g, r.x, r.y);
                 return;

@@ -7,10 +7,6 @@ package ancestris.reports;
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
  */
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.regex.Pattern;
-
 import genj.fo.Document;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
@@ -24,9 +20,11 @@ import genj.gedcom.PropertyName;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
+import genj.io.input.FileInput;
 import genj.report.Report;
-
-import javax.swing.ImageIcon;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -129,7 +127,7 @@ public class ReportSummaryOfRecords extends Report {
     Property[] files = ent.getProperties(PATH2IMAGES);
     for (int f=0;f<files.length && f<maxImagesPerRecord; f++) {
       PropertyFile file = (PropertyFile)files[f];
-      doc.addImage(file.getFile(),"");
+      doc.addImage(((FileInput) file.getInput().get()).getFile(),"");
     }
 
     // done

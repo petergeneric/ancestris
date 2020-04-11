@@ -6,17 +6,15 @@ import genj.gedcom.PropertyBlob;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
 import genj.gedcom.PropertyXRef;
+import genj.io.InputSource;
+import genj.renderer.MediaRenderer;
 import java.awt.Image;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
+import java.util.Optional;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -32,7 +30,7 @@ import org.openide.util.NbBundle;
 public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
 
     private final genj.util.swing.ImageIcon MINISTAR;
-    
+
     List<Property> multimediaObjectsRefList = new ArrayList<Property>();
     private final String[] columnsName = {
         "",
@@ -68,13 +66,13 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     if (multimediaObject instanceof Media && multimediaObject.getGedcom().getGrammar().getVersion().equals("5.5")) {
                         PropertyBlob propertyBlob = (PropertyBlob) multimediaObject.getProperty("BLOB", true);
                         if (propertyBlob != null) {
-                            ByteArrayInputStream bais = new ByteArrayInputStream(propertyBlob.getBlobData());
+                            Optional<BufferedImage> obi = MediaRenderer.getImage(propertyBlob.getInput().orElse(null));
 
-                            try {
-                                Image image = ImageIO.read(bais);
+                            if (obi.isPresent()) {
+                                Image image = obi.get();
                                 image = image.getScaledInstance(-1, 16, Image.SCALE_DEFAULT);
                                 return new ImageIcon(image);
-                            } catch (IOException ex) {
+                            } else {
                                 return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
                             }
                         } else {
@@ -83,28 +81,19 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     } else {
                         Property propertyfile = multimediaObject.getProperty("FILE", true);
                         if (propertyfile != null && propertyfile instanceof PropertyFile) {
-                            File multimediaFile = ((PropertyFile) propertyfile).getFile();
+                            InputSource multimediaFile = ((PropertyFile) propertyfile).getInput().orElse(null);
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
-                            if (multimediaFile != null && multimediaFile.exists()) {
-                                try {
-                                    Image image;
-                                    try {
-                                        image = ImageIO.read(multimediaFile);
-                                        if (image != null) {
-                                            image = image.getScaledInstance(-1, 16, image.SCALE_DEFAULT);
-                                        }
-                                    } catch (IOException ex) {
-                                        image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
+                            Optional<BufferedImage> obi = MediaRenderer.getImage(multimediaFile);
+                            if (obi.isPresent()) {
+                                Image image = obi.get();
+                                image = image.getScaledInstance(-1, 16, image.SCALE_DEFAULT);
+                                if (image != null) {
+                                    imageIcon = new ImageIcon(image);
+                                    if (row == 0) {
+                                        return new genj.util.swing.ImageIcon(imageIcon).getOverLayed(MINISTAR);
                                     }
-                                    if (image != null) {
-                                        imageIcon = new ImageIcon(image);
-                                        if (row == 0) {
-                                            return new genj.util.swing.ImageIcon(imageIcon).getOverLayed(MINISTAR);
-                                        }
-                                    }
-                                } catch (FileNotFoundException ex) {
-                                    Exceptions.printStackTrace(ex);
                                 }
+
                                 return imageIcon;
                             } else {
                                 return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
@@ -136,9 +125,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     if (multimediaObject instanceof PropertyMedia) {
                         Property propertyFile = ((PropertyMedia) multimediaObject).getTargetEntity().getProperty("FILE", true);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            File file = ((PropertyFile) propertyFile).getFile();
+                            InputSource file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             if (file != null) {
-                                return file.getAbsolutePath();
+                                return file.getLocation();
                             } else {
                                 return "";
                             }
@@ -148,9 +137,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
                     } else {
                         Property propertyFile = multimediaObject.getProperty("FILE", true);
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            File file = ((PropertyFile) propertyFile).getFile();
+                            InputSource file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             if (file != null) {
-                                return file.getAbsolutePath();
+                                return file.getLocation();
                             } else {
                                 return "";
                             }
@@ -225,9 +214,9 @@ public class MultiMediaObjectCitationsTableModel extends AbstractTableModel {
     protected ImageIcon createImageIcon(String path, String description) {
         return new ImageIcon(path, description);
     }
-    
+
     public int getRowOf(Property p) {
-        for (int row = 0 ; row < getRowCount() ; row++) {
+        for (int row = 0; row < getRowCount(); row++) {
             Property pList = getValueAt(row);
             if (pList instanceof PropertyXRef) {
                 pList = ((PropertyXRef) pList).getTargetEntity();

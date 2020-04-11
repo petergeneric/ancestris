@@ -153,7 +153,10 @@ public class ImportGeneanet extends Import {
                         String value = file.getValue();
                         String ext = "";
                         if (value.startsWith("http")) {
-                            ext = "web";
+                            ext = getExtension(value);
+                            if (ext == null || "".equals(ext)) {
+                                ext = "web";
+                            }
                         } else {
                             ext = getExtension(value);
                         }

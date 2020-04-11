@@ -13,6 +13,7 @@ package modules.editors.gedcomproperties.utils;
 
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.PropertyFile;
+import genj.io.input.FileInput;
 import genj.util.Registry;
 import java.awt.Color;
 import java.awt.Component;
@@ -40,9 +41,9 @@ public class SearchFilePanel extends javax.swing.JPanel {
     private String currentPath = "";
     private PathData pd = null;
 
-    private DefaultListModel filesModel = null;
+    private DefaultListModel<File> filesModel = null;
     private Set<String> filesNames = null;
-    private DefaultListModel pathsModel = null;
+    private DefaultListModel<String> pathsModel = null;
     
     private boolean isBusy = false;
 
@@ -320,7 +321,7 @@ public class SearchFilePanel extends javax.swing.JPanel {
     private void getFiles() {
         filesModel.clear();
         for (PropertyFile file : pd.getFiles()) {
-            File f = file.getFile();
+            File f = ((FileInput) file.getInput().get()).getFile();
             filesModel.addElement(f);
             filesNames.add(f.getName());
         }

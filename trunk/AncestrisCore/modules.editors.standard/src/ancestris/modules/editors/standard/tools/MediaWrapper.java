@@ -21,7 +21,8 @@ import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyMedia;
-import java.io.File;
+import genj.io.InputSource;
+import genj.renderer.MediaRenderer;
 import org.openide.util.Exceptions;
 
 
@@ -103,7 +104,7 @@ public class MediaWrapper {
     private boolean recordType = true;          // true if type of media is record, false if citation
     private Property hostingProperty = null;
     private Entity targetMedia = null;
-    private File file = null;
+    private InputSource inputSource = null;
     private String title = "";
     
     // Constructor for media linked 
@@ -119,17 +120,12 @@ public class MediaWrapper {
         this.targetMedia = entity;
         setInfoFromRecord(targetMedia);
     }
-
-    
     
     // Constructor for media directly within host entity
     public MediaWrapper(Property propertyObje) {
         this.hostingProperty = propertyObje;
         setInfoFromCitation(propertyObje);
     }
-
-
-    
 
     // Constructor for media added from media chooser
     public MediaWrapper(Media entity) {
@@ -140,20 +136,19 @@ public class MediaWrapper {
         setInfoFromRecord(entity);
     }
     
-    // Constructor from choose file
-    public MediaWrapper(File f) {
-        setFile(f);
-    }
-    
     // Constructor from change title
     public MediaWrapper(String title) {
         setTitle(title);
     }
 
     // Constructor from choose file/title
-    public MediaWrapper(File f, String title) {
-        setFile(f);
+    public MediaWrapper(InputSource f, String title) {
+        setInputSource(f);
         setTitle(title);
+    }
+    
+     public MediaWrapper(InputSource is) {
+        setInputSource(is);
     }
     
     
@@ -164,8 +159,6 @@ public class MediaWrapper {
     public void setHostingProperty(Property property) {
         this.hostingProperty = property;
     }
-
-    
     
     
     public void setInfoFromRecord(Property property) {
@@ -174,9 +167,10 @@ public class MediaWrapper {
         if (property == null) {
             return;
         }
+        
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
-            this.file = ((PropertyFile) mediaFile).getFile();
+            this.inputSource = MediaRenderer.getSource(mediaFile);
             Property mediaTitle = mediaFile.getProperty("TITL");
             if (mediaTitle != null) {
                 this.title = mediaTitle.getDisplayValue();
@@ -193,16 +187,13 @@ public class MediaWrapper {
         }
         Property mediaFile = property.getProperty("FILE", true);
         if (mediaFile != null && mediaFile instanceof PropertyFile) {
-            this.file = ((PropertyFile) mediaFile).getFile();
+             this.inputSource = MediaRenderer.getSource(mediaFile);
         }
         Property mediaTitle = property.getProperty("TITL");
         if (mediaTitle != null) {
             this.title = mediaTitle.getDisplayValue();
         }
     }
-    
-
-    
     
     
     /**
@@ -281,9 +272,9 @@ public class MediaWrapper {
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
-        if (this.file != null) {
-            ((PropertyFile) mediaFile).addFile(this.file);
-            extension= getExtension(this.file);
+        if (this.inputSource != null) {
+            ((PropertyFile) mediaFile).addFile(inputSource);
+            extension= getExtension(inputSource.getName());
         }
         
         // Put FORM
@@ -327,9 +318,10 @@ public class MediaWrapper {
         if (mediaFile == null) {
             mediaFile = property.addProperty("FILE", "");
         }
-        if (this.file != null) {
-            ((PropertyFile) mediaFile).addFile(this.file);
-            extension= getExtension(this.file);
+        
+        if (this.inputSource != null) {
+            ((PropertyFile) mediaFile).addFile(inputSource);
+            extension= getExtension(inputSource.getName());
         }
         
         // Put FORM
@@ -370,12 +362,12 @@ public class MediaWrapper {
     }
 
     
-    public File getFile() {
-        return file;
+    public InputSource getInputSource() {
+        return inputSource;
     }
-
-    public void setFile(File f) {
-        this.file = f;
+    
+    public void setInputSource(InputSource is) {
+        this.inputSource = is;
     }
 
     public String getTitle() {

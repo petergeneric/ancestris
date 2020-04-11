@@ -20,10 +20,10 @@
 package genj.gedcom;
 
 import ancestris.gedcom.privacy.PrivacyPolicy;
+import genj.io.InputSource;
 import genj.util.Resources;
 import genj.util.WordBuffer;
 import genj.util.swing.ImageIcon;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -149,11 +149,11 @@ public abstract class Property implements Comparable<Property> {
      *
      * @return success or not
      */
-    public boolean addFile(File file) {
+    public boolean addFile(InputSource file) {
         return addFile(file, "");
     }
 
-    public boolean addFile(File file, String title) {
+    public boolean addFile(InputSource file, String title) {
         // FILE not allowed here?
         if (!getMetaProperty().allows("FILE")) {
             // OBJE neither?
@@ -347,7 +347,7 @@ public abstract class Property implements Comparable<Property> {
 
         // keep child now
         if (children == null) {
-            children = new ArrayList<Property>();
+            children = new ArrayList<>();
         }
         children.add(pos, child);
 
@@ -1337,7 +1337,7 @@ public abstract class Property implements Comparable<Property> {
      */
     public static List<Property> normalize(List<? extends Property> properties) {
 
-        ArrayList<Property> result = new ArrayList<Property>(properties.size());
+        ArrayList<Property> result = new ArrayList<>(properties.size());
 
         for (Property prop : properties) {
             if (prop.isTransient()) {

@@ -35,7 +35,7 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.io.InputSource;
-import genj.io.InputSource.FileInput;
+import genj.io.input.FileInput;
 import genj.util.DefaultValueMap;
 import genj.util.Origin;
 import genj.util.Resources;
@@ -150,8 +150,8 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
         Property p = getProperty();
         if (nodes != null && p != null) {
             InputSource source = thumbs.getSelection();
-            if ((source instanceof InputSource.FileInput)) {
-                result.add(new RunExternal(((InputSource.FileInput) source).getFile()));
+            if ((source instanceof FileInput)) {
+                result.add(new RunExternal(((FileInput) source).getFile()));
             }
         }
         return result;
@@ -172,7 +172,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
       Media media = null;
       for (Property prop : propsNeedingOBJEs.get(source))  {
         if (inline)
-          prop.addFile(source.getFile(), source.getName());
+          prop.addFile(source, source.getName());
         else 
           prop.addMedia(media==null ? media=createMedia(gedcom, source) : media);
       }
@@ -203,7 +203,7 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     } catch (GedcomException e) {
       throw new Error("unexpected problem creating OBJE record", e);
     }
-    media.addFile(source.getFile());
+    media.addFile(source);
     media.setTitle(source.getName());
     // got it
     return media;
@@ -253,23 +253,23 @@ public class MediaBean extends PropertyBean implements AncestrisActionProvider{
     // a OBJE reference?
     if (OBJE instanceof PropertyXRef && ((PropertyXRef)OBJE).getTargetEntity() instanceof Media) {
       Media media = (Media)((PropertyXRef)OBJE).getTargetEntity();
-      File file = media.getFile();
+      InputSource file = media.getFile();
       if (file!=null){
-        currentOBJEs.get(InputSource.get(media.getTitle(), file)).add(OBJE);
+        currentOBJEs.get(file).add(OBJE);
         return;
       }
       PropertyBlob blob = media.getBlob();
       if (blob!=null) 
-        currentOBJEs.get(InputSource.get(media.getTitle(), blob.getBlobData())).add(OBJE);
+        currentOBJEs.get(blob.getInput()).add(OBJE);
       return;
     }
       
     // an inline OBJE|FILE?
     Property FILE = OBJE.getProperty("FILE");
     if (FILE instanceof PropertyFile) {
-      File file = ((PropertyFile)FILE).getFile();
+      InputSource file = ((PropertyFile)FILE).getInput().orElse(null);
       if (file!=null) 
-        currentOBJEs.get(InputSource.get(OBJE.getPropertyValue("TITL"), file)).add(OBJE);
+        currentOBJEs.get(file).add(OBJE);
     }
     
     // unusable OBJE

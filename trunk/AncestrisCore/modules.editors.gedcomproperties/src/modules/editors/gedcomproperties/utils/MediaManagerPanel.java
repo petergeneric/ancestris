@@ -13,6 +13,7 @@ package modules.editors.gedcomproperties.utils;
 
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.PropertyFile;
+import genj.io.InputSource;
 import genj.util.Registry;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -167,7 +168,7 @@ public class MediaManagerPanel extends javax.swing.JPanel {
         
         for (PropertyFile pFile : property2PathMap.keySet()) {
             // Build key from value and existence
-            File currentFile = pFile.getFile();
+            InputSource currentFile = pFile.getInput().orElse(null);
             if (currentFile == null) {
                 continue;
             }

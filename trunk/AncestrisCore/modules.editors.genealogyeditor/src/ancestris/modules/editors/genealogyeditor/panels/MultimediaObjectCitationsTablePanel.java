@@ -205,7 +205,7 @@ public class MultimediaObjectCitationsTablePanel extends javax.swing.JPanel {
             Property file = multiMediaObjectRef.getProperty("FILE", true);
             String objectName;
             if (file != null && file instanceof PropertyFile) {
-                objectName = ((PropertyFile) file).getFile().getAbsolutePath();
+                objectName = ((PropertyFile) file).getInput().get().getLocation();
             } else {
                 objectName = "";
             }

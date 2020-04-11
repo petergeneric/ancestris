@@ -14,11 +14,6 @@ package ancestris.renderer.velocity;
 import genj.gedcom.Entity;
 import genj.gedcom.Fam;
 import genj.gedcom.Indi;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -45,20 +40,6 @@ public class IndiWrapper extends EntityWrapper {
         return property.toString() + " " + birth + " " + death;
     }
 
-//    public String getString(String male, String female, String unknown) {
-//        if (((Indi) property).getSex() == PropertySex.MALE) {
-//            return male;
-//        }
-//        if (((Indi) property).getSex() == PropertySex.FEMALE) {
-//            return female;
-//        }
-//        return unknown;
-//    }
-//
-//    public String getString(String male, String female) {
-//        return getString(male, female, male);
-//    }
-
     public PropertyWrapper getFamc() {
         // Parents
         Fam famc = ((Indi) property).getFamilyWhereBiologicalChild();
@@ -79,27 +60,5 @@ public class IndiWrapper extends EntityWrapper {
     public String getSosaString() {
         return ((Indi) property).getSosaString();
     }
-
-    public String getMediaFilePath() {
-        File f = ((Indi) property).getMediaFile();
-        return f != null ? f.getAbsolutePath() : "";
-    }
-
-    public String getWidthForMedia(int height) {
-        File f = ((Indi) property).getMediaFile();
-        try {
-            BufferedImage image = ImageIO.read(new FileInputStream(f));
-            int w = image.getWidth(null);
-            int h = image.getHeight(null);
-            if (h != 0) {
-                return ""+ (int) (100 * w / h);
-            }
-            return "0";
-        } catch (IOException ex) {
-            //Logger.getLogger(IndiWrapper.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return f != null ? f.getAbsolutePath() : "";
-    }
-
     
 }

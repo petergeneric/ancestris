@@ -2,6 +2,8 @@ package ancestris.modules.commonAncestor;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.commonAncestor.graphics.IGraphicsRenderer;
+import ancestris.swing.ToolBar;
+import ancestris.util.swing.FileChooserBuilder;
 import ancestris.view.SelectionDispatcher;
 import genj.fo.Format;
 import genj.gedcom.Context;
@@ -11,8 +13,6 @@ import genj.report.ReportView;
 import genj.util.swing.EditorHyperlinkSupport;
 import genj.util.swing.ImageIcon;
 import genj.util.swing.SliderWidget;
-import ancestris.swing.ToolBar;
-import ancestris.util.swing.FileChooserBuilder;
 import java.awt.CardLayout;
 import java.awt.Cursor;
 import java.awt.Desktop;
@@ -268,7 +268,7 @@ public class PreviewView extends JPanel {
                 return;
             }
 
-            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file));
+            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file.getName()));
 
             
             

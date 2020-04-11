@@ -62,6 +62,7 @@ import genj.gedcom.PropertySex;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.TagPath;
+import genj.io.InputSource;
 import genj.util.ChangeSupport;
 import genj.util.Registry;
 import genj.util.Validator;
@@ -92,6 +93,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.DefaultComboBoxModel;
@@ -219,11 +221,11 @@ public class IndiPanel extends Editor implements DocumentListener {
             this.PHOTO_UNKNOWN = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/profile_unknown.png"));
             this.SOURCE_UNKNOWN = ImageIO.read(getClass().getResourceAsStream("/ancestris/modules/editors/standard/images/source_dummy.png"));
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Unable to load default images.", ex);
         }
         
         // Data
-        eventUsages = new HashMap<String, EventUsage>();
+        eventUsages = new HashMap<>();
         EventUsage.init(eventUsages);
         
         familyTop = new DefaultMutableTreeNode(new NodeWrapper(NodeWrapper.PARENTS, null));
@@ -2032,7 +2034,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else if (evt.getButton() == MouseEvent.BUTTON1 && ((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
             photoPanel.cropAndSave();
             EventWrapper event = getCurrentEvent();
-            event.eventMediaSet.get(event.eventMediaIndex).setFile(photoPanel.getFile());
+            event.eventMediaSet.get(event.eventMediaIndex).setInputSource(photoPanel.getInput());
             triggerChange();
         }
     }//GEN-LAST:event_mediaImagePanelMouseClicked
@@ -2050,7 +2052,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         } else if (evt.getButton() == MouseEvent.BUTTON1 && ((evt.getModifiers() & ActionEvent.CTRL_MASK) == ActionEvent.CTRL_MASK)) {
             imagePanel.cropAndSave();
             EventWrapper event = getCurrentEvent();
-            event.setSourceFile(imagePanel.getFile(), false);
+            event.setSourceFile(imagePanel.getInput(), false);
             triggerChange();
         }
     }//GEN-LAST:event_sourceImagePanelMouseClicked
@@ -3203,11 +3205,11 @@ public class IndiPanel extends Editor implements DocumentListener {
     
     private void setEventMedia(EventWrapper event, MediaWrapper media, int sex) {
         
-        File file = null;
+        InputSource is = null;
         String localTitle = "";
         
         if (media != null) {
-            file = media.getFile();
+            is = media.getInputSource();
             localTitle = media.getTitle();
         }
         
@@ -3217,8 +3219,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         textAreaPhotos.setEditable(true);
         
         // Image
-        if (file != null && file.exists()) {
-            photoPanel.setMedia(file, getSexImage(sex));
+        if (is != null) {
+            photoPanel.setMedia(is, getSexImage(sex));
             prefMediaEventButton.setEnabled(true);
         } else {
             // try to display main indi photo rather than default grey one
@@ -3227,8 +3229,8 @@ public class IndiPanel extends Editor implements DocumentListener {
                     && eventSet.get(0).eventMediaSet != null 
                     && !eventSet.get(0).eventMediaSet.isEmpty() 
                     && eventSet.get(0).eventMediaSet.get(0) != null 
-                    && eventSet.get(0).eventMediaSet.get(0).getFile() != null) {
-                File f0 = eventSet.get(0).eventMediaSet.get(0).getFile();
+                    && eventSet.get(0).eventMediaSet.get(0).getInputSource()!= null) {
+                InputSource f0 = eventSet.get(0).eventMediaSet.get(0).getInputSource();
                 photoPanel.setMedia(f0, getSexImage(sex));
                 localTitle = NbBundle.getMessage(getClass(), "IndiPanel.Photo_default");
                 textAreaPhotos.setFont(new Font("DejavVu sans", Font.ITALIC, 9));
@@ -3267,8 +3269,8 @@ public class IndiPanel extends Editor implements DocumentListener {
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
         JButton cancelButton = new JButton(NbBundle.getMessage(getClass(), "Button_Cancel"));
         Object[] options = new Object[] { mediaButton, fileButton, cancelButton };
-        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getFile() : null,
-                exists ? getImageFromFile(event.eventMediaSet.get(index).getFile(), getClass()) : getSexImage(getSex()),
+        MediaChooser mediaChooser = new MediaChooser(gedcom, exists ? event.eventMediaSet.get(index).getInputSource(): null,
+                exists ? getImageFromFile(event.eventMediaSet.get(index).getInputSource(), getClass()) : getSexImage(getSex()),
                 exists ? event.eventMediaSet.get(index).getTitle() : "",
                 exists ? event.eventMediaSet.get(index) : null, 
                 mediaButton, cancelButton, 
@@ -3277,7 +3279,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         int size = mediaChooser.getNbMedia();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle", size), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == mediaButton) {
-            File file = mediaChooser.getSelectedFile();
+            InputSource file = mediaChooser.getSelectedInput();
             String mediaTitle = mediaChooser.getSelectedTitle();
             if (mediaChooser.isSelectedEntityMedia()) {
                 Media entity = (Media) mediaChooser.getSelectedEntity();
@@ -3295,7 +3297,7 @@ public class IndiPanel extends Editor implements DocumentListener {
                 b = true;
             } else {
                 if (exists) {
-                    event.eventMediaSet.get(index).setFile(file);
+                    event.eventMediaSet.get(index).setInputSource(file);
                     event.eventMediaSet.get(index).setTitle(mediaTitle);
                     event.eventMediaIndex = index;
                 } else {
@@ -3334,11 +3336,12 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .setDefaultPreviewer()
                 .showOpenDialog();
         if (file != null) {
+            InputSource is = InputSource.get(file).get();
             if (exists) {
-                event.eventMediaSet.get(index).setFile(file);
+                event.eventMediaSet.get(index).setInputSource(is);
                 event.eventMediaIndex = index;
             } else {
-                MediaWrapper media = new MediaWrapper(file);
+                MediaWrapper media = new MediaWrapper(is);
                 event.eventMediaSet.add(media);
                 event.eventMediaIndex = event.eventMediaSet.size() - 1;
             }
@@ -3538,14 +3541,14 @@ public class IndiPanel extends Editor implements DocumentListener {
         boolean b = false;
         boolean exists = (event.eventSourceSet != null) && (!event.eventSourceSet.isEmpty()) && (index >= 0) && (index < event.eventSourceSet.size());
         MediaWrapper readMedia = null;
-        File f = null;
+        InputSource f = null;
         if (exists) { // source exists
             SourceWrapper source = event.eventSourceSet.get(event.eventSourceIndex);
             if (source.sourceMediaSet != null && !source.sourceMediaSet.isEmpty()) {
                 readMedia = source.sourceMediaSet.get(source.sourceMediaIndex);
             }
         }
-        f = (readMedia != null ? readMedia.getFile() : null);
+        f = (readMedia != null ? readMedia.getInputSource(): null);
         
         JButton mediaButton = new JButton(NbBundle.getMessage(getClass(), "Button_ChooseMedia"));
         JButton fileButton = new JButton(NbBundle.getMessage(getClass(), "Button_LookForFile"));
@@ -3561,7 +3564,7 @@ public class IndiPanel extends Editor implements DocumentListener {
         int size = mediaChooser.getNbMedia();
         Object o = DialogManager.create(NbBundle.getMessage(getClass(), "TITL_ChooseMediaTitle", size), mediaChooser).setMessageType(DialogManager.PLAIN_MESSAGE).setOptions(options).show();
         if (o == mediaButton) {
-            File file = mediaChooser.getSelectedFile();
+            InputSource file = mediaChooser.getSelectedInput();
             String mediaTitle = mediaChooser.getSelectedTitle();
             MediaWrapper media = null;
             if (mediaChooser.isSelectedEntityMedia()) {
@@ -3606,10 +3609,11 @@ public class IndiPanel extends Editor implements DocumentListener {
                 .setDefaultPreviewer()
                 .showOpenDialog();
         if (file != null) {
+            InputSource is = InputSource.get(file).get();
             if (exists) {
-                event.setSourceFile(file, addMedia);
+                event.setSourceFile(is, addMedia);
             } else {
-                event.addSourceFile(file);
+                event.addSourceFile(is);
             }
             triggerChange();
             b = true;

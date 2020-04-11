@@ -23,7 +23,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
-import java.io.File;
+import genj.io.InputSource;
 import java.io.IOException;
 import java.util.Stack;
 import java.util.logging.Level;
@@ -271,7 +271,7 @@ public class ImportRootsTrust extends Import {
                     prop = host.getProperty("TITL");
                     if (prop == null) {
                         PropertyFile filep = (PropertyFile) host;
-                        File file = filep.getFile();
+                        InputSource file = filep.getInput().orElse(null);
                         String title = file != null ? file.getName() : "";
                         int i = title.indexOf(".");
                         host.addProperty("TITL", i == -1 ? title : title.substring(0, i));

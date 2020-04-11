@@ -21,7 +21,7 @@ import genj.gedcom.PropertyRepository;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
-import java.io.File;
+import genj.io.InputSource;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -337,7 +337,7 @@ public class SourceWrapper {
     }
 
     // Constructor from choose File
-    public SourceWrapper(File f) {
+    public SourceWrapper(InputSource f) {
         setMediaFile(f, false);
     }
 
@@ -452,22 +452,23 @@ public class SourceWrapper {
         }
     }
 
-    public final void setMediaFile(File f, boolean addMedia) {
+    public final void setMediaFile(InputSource f, boolean addMedia) {
         if (sourceMediaSet == null) {
             resetMediaSet();
         }
         if (sourceMediaSet.isEmpty() || addMedia) {
             sourceMediaSet.add(new MediaWrapper(f));
         } else {
-            sourceMediaSet.get(sourceMediaIndex).setFile(f);
+            sourceMediaSet.get(sourceMediaIndex).setInputSource(f);
         }
     }
 
-    public File getMediaFile() {
+    public InputSource getMediaFile() {
         if (sourceMediaSet == null || sourceMediaSet.isEmpty()) {
             return null;
         }
-        return sourceMediaSet.get(sourceMediaIndex).getFile();
+        
+        return sourceMediaSet.get(sourceMediaIndex).getInputSource();
     }
 
     public String getRepoName() {

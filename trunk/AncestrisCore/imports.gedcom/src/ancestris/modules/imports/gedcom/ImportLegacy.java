@@ -18,8 +18,6 @@ import static ancestris.modules.imports.gedcom.Bundle.importlegacy_name;
 import static ancestris.modules.imports.gedcom.Bundle.importlegacy_note;
 import static ancestris.util.swing.FileChooserBuilder.getExtension;
 import genj.gedcom.Entity;
-import org.openide.util.lookup.ServiceProvider;
-import org.openide.util.NbBundle;
 import genj.gedcom.Gedcom;
 import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
@@ -27,13 +25,15 @@ import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyPlace;
 import genj.gedcom.PropertySource;
 import genj.gedcom.Source;
-import java.io.File;
+import genj.io.InputSource;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
+import org.openide.util.NbBundle;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
@@ -696,8 +696,8 @@ public class ImportLegacy extends Import {
                     prop = obje.getProperty("TITL");
                     if (prop == null && host instanceof PropertyFile) {
                         PropertyFile filep = (PropertyFile) host;
-                        File file = filep.getFile();
-                        String title = file != null ? file.getName() : "";
+                        InputSource is = filep.getInput().orElse(null);
+                        String title = is != null ? is.getName() : "";
                         int i = title.indexOf(".");
                         obje.addProperty("TITL", i == -1 ? title : title.substring(0, i));
                         hasErrors = true;

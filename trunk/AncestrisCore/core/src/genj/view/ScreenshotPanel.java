@@ -545,10 +545,10 @@ public class ScreenshotPanel extends javax.swing.JPanel {
                     h = (int) resY;
                 }
                 if (p.x >= image.getWidth()) {
-                    w = (int) (image.getWidth() - capture.x);
+                    w = (image.getWidth() - capture.x);
                 }
                 if (p.y >= image.getHeight()) {
-                    h = (int) (image.getHeight() - capture.y);
+                    h = (image.getHeight() - capture.y);
                 }
                 double sizeOfArea = w * h / factor / factor;
                 if (sizeOfArea < maxXY) { 

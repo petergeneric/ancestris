@@ -3,32 +3,32 @@
  *
  * Copyright (C) 1997 - 2002 Nils Meier <nils@meiers.net>
  *
- * This piece of code is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License as
- * published by the Free Software Foundation; either version 2 of the
- * License, or (at your option) any later version.
+ * This piece of code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License as published by the Free
+ * Software Foundation; either version 2 of the License, or (at your option) any
+ * later version.
  *
- * This code is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
+ * This code is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+ * A PARTICULAR PURPOSE. See the GNU General Public License for more details.
  *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
+ * You should have received a copy of the GNU General Public License along with
+ * this program; if not, write to the Free Software Foundation, Inc., 59 Temple
+ * Place, Suite 330, Boston, MA 02111-1307 USA
  */
 package genj.gedcom;
 
 import ancestris.core.TextOptions;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
+import genj.io.InputSource;
 import genj.util.swing.ImageIcon;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 /**
@@ -68,7 +68,7 @@ public class Indi extends Entity {
 
     /**
      * @return a PropertyDate corresponding to the INDI:BIRT:DATE property.
-     *         Return null if the property is unset.
+     * Return null if the property is unset.
      *
      */
     public PropertyDate getBirthDate() {
@@ -78,8 +78,8 @@ public class Indi extends Entity {
     /**
      * Calculate the INDI's Birthdate
      *
-     * @param create if false, return null when the property is unset.
-     *               If true, return an empty PropertyDate when the property is unset
+     * @param create if false, return null when the property is unset. If true,
+     * return an empty PropertyDate when the property is unset
      *
      * @return date or null unless create
      */
@@ -104,7 +104,7 @@ public class Indi extends Entity {
      * Calculate the death date of the Indi.
      *
      * @return a PropertyDate corresponding to the INDI:DEAT:DATE property.
-     *         Return null if the property is unset.
+     * Return null if the property is unset.
      */
     public PropertyDate getDeathDate() {
         return getDeathDate(false);
@@ -113,8 +113,8 @@ public class Indi extends Entity {
     /**
      * Calculate indi's death date.
      *
-     * @param create if false, return null when the property is unset.
-     *               If true, return an empty PropertyDate when the property is unset
+     * @param create if false, return null when the property is unset. If true,
+     * return an empty PropertyDate when the property is unset
      */
     public PropertyDate getDeathDate(boolean create) {
         PropertyDate date = (PropertyDate) getProperty(PATH_INDIDEATDATE);
@@ -135,22 +135,24 @@ public class Indi extends Entity {
 
     /**
      * Get brothers including unknown or not
+     *
      * @param includeUnknown
-     * @return 
+     * @return
      */
     public Indi[] getBrothers(boolean includeUnknown) {
         return getSiblings(PropertySex.MALE, includeUnknown);
     }
-    
+
     /**
      * Get sisters including unknown or not
+     *
      * @param includeUnknown
-     * @return 
+     * @return
      */
     public Indi[] getSisters(boolean includeUnknown) {
         return getSiblings(PropertySex.FEMALE, includeUnknown);
     }
-    
+
     private Indi[] getSiblings(int sex, boolean includeUnknown) {
         List<Indi> l = new ArrayList<Indi>();
         for (Indi i : getSiblings(false)) {
@@ -163,10 +165,7 @@ public class Indi extends Entity {
         l.toArray(result);
         return result;
     }
-    
-    
-    
-    
+
     /**
      * Calculate all siblings (biological)
      */
@@ -266,9 +265,9 @@ public class Indi extends Entity {
     }
 
     /**
-     * Calculate indi's partners. The number of partners can be
-     * smaller than the number of families this individual is
-     * part of because spouses in families don't have to be defined.
+     * Calculate indi's partners. The number of partners can be smaller than the
+     * number of families this individual is part of because spouses in families
+     * don't have to be defined.
      */
     public Indi[] getPartners() {
         // Look at all families and remember spouses
@@ -287,9 +286,9 @@ public class Indi extends Entity {
     }
 
     /**
-     * Calculate indi's parents. The number of partners can be
-     * smaller than the number of families this individual is
-     * child in because spouses in families don't have to be defined.
+     * Calculate indi's parents. The number of partners can be smaller than the
+     * number of families this individual is child in because spouses in
+     * families don't have to be defined.
      */
     public List<Indi> getParents() {
         List<Indi> parents = new ArrayList<Indi>(2);
@@ -361,7 +360,7 @@ public class Indi extends Entity {
     public Fam[] getFamiliesWhereSpouse() {
         return getFamiliesWhereSpouse(true);
     }
-    
+
     public Fam[] getFamiliesWhereSpouse(boolean sorted) {
         ArrayList<Fam> result = new ArrayList<Fam>(getNoOfProperties());
         for (int i = 0, j = getNoOfProperties(); i < j; i++) {
@@ -378,7 +377,8 @@ public class Indi extends Entity {
     }
 
     /**
-     * Returns the families in which the person is child (biological, foster, etc.)
+     * Returns the families in which the person is child (biological, foster,
+     * etc.)
      */
     public Fam[] getFamiliesWhereChild() {
 
@@ -444,7 +444,7 @@ public class Indi extends Entity {
         String[] firstNames = new String[ps.length];
         int i = 0;
         for (Property prop : ps) {
-            firstNames[i++] = ((PropertyName)prop).getFirstName();
+            firstNames[i++] = ((PropertyName) prop).getFirstName();
         }
         return firstNames;
     }
@@ -468,7 +468,7 @@ public class Indi extends Entity {
         String[] lastNames = new String[ps.length];
         int i = 0;
         for (Property prop : ps) {
-            lastNames[i++] = ((PropertyName)prop).getLastName();
+            lastNames[i++] = ((PropertyName) prop).getLastName();
         }
         return lastNames;
     }
@@ -502,9 +502,10 @@ public class Indi extends Entity {
         }
         return p.getDisplayValue();
     }
-    
+
     /**
      * Returns indi's name property.
+     *
      * @return The propertyName.
      */
     public PropertyName getNameProperty() {
@@ -696,7 +697,7 @@ public class Indi extends Entity {
         sb.append(')');
         return sb.toString();
     }
-    
+
     public String getCHRAsString() {
         PropertyDate p = (PropertyDate) getProperty(new TagPath("INDI:CHR:DATE"));
         if (p == null) {
@@ -709,28 +710,28 @@ public class Indi extends Entity {
 
     /**
      * Returns a user-readable indi title
-     * @return 
+     *
+     * @return
      */
     @Override
     public String getDisplayTitle() {
         return getDisplayTitle(true);
     }
-    
+
     public String getDisplayTitle(boolean showid) {
         String lastNames[] = getLastName().split(",");
         String firstNames[] = getFirstName().split(",");
         String lastname = lastNames.length > 0 ? lastNames[0] : "?";
         String firstname = firstNames.length > 0 ? firstNames[0] : "?";
-        
+
         String birthDate = getBirthAsString();
         if ("".equals(birthDate) && TextOptions.getInstance().isUseChr() && !"".equals(getCHRAsString())) {
             birthDate = TextOptions.getInstance().getBaptismSymbol() + getCHRAsString();
-        } 
-        
-        return (showid ? getId() + " - " : "") + firstname + " " + lastname + " (" + birthDate+ " - " + getDeathAsString() + ")";
+        }
+
+        return (showid ? getId() + " - " : "") + firstname + " " + lastname + " (" + birthDate + " - " + getDeathAsString() + ")";
     }
 
-    
     /**
      * list of indis to array
      */
@@ -839,20 +840,22 @@ public class Indi extends Entity {
     /**
      * Get first media file found for the indi
      */
-    public File getMediaFile() {
+    public InputSource getMediaFile() {
         Property obje = getProperty("OBJE");
         if (obje != null) {
             if (obje instanceof PropertyMedia) {
                 PropertyMedia pm = (PropertyMedia) obje;
                 Media media = (Media) pm.getTargetEntity();
                 if (media != null) {
-                    File file = media.getFile();
-                    return file;
+                    return media.getFile();
                 }
             } else {
                 PropertyFile file = (PropertyFile) obje.getProperty("FILE");
                 if (file != null) {
-                    return file.getFile();
+                    Optional<InputSource> ois = file.getInput();
+                    if (ois.isPresent()) {
+                        return ois.get();
+                    }
                 }
             }
         }
@@ -861,8 +864,9 @@ public class Indi extends Entity {
 
     /**
      * Get sosa number starting from SOSADABOVILLE, SOSA, DABOVILLE
+     *
      * @param validOnly
-     * @return 
+     * @return
      */
     public Property getSosa(boolean validOnly) {
         Property p = getProperty(Indi.TAG_SOSADABOVILLE, validOnly);
@@ -888,7 +892,6 @@ public class Indi extends Entity {
         return "";
     }
 
-    
     @Override
     public PropertyComparator2 getDisplayComparator() {
         return INDIComparator.getInstance();

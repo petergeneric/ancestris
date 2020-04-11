@@ -15,6 +15,8 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
 import genj.util.Registry;
 import java.awt.Dimension;
 import java.io.File;
@@ -89,10 +91,11 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                 
                 // Check existence
                 PropertyFile pFile = (PropertyFile) file;
-                File f = pFile.getFile();
-                if (f == null) {
+                InputSource is = pFile.getInput().orElse(null);
+                if (is == null) {
                     continue;
                 }
+                File f = ((FileInput) is).getFile();
                 String name = f.getName();
                 String path = value.substring(0, value.indexOf(name));
                 filesPaths.add(path);
@@ -283,10 +286,11 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                 PropertyFile pFile = (PropertyFile) file;
                 // Calc path
                 String value = file.getValue();
-                File f = pFile.getFile();
-                if (f == null) {
+                InputSource is = pFile.getInput().orElse(null);
+                if (is == null) {
                     continue;
                 }
+                File f = ((FileInput)is).getFile();
                 String name = f.getName();
                 String path = value.substring(0, value.indexOf(name));
                 property2PathMap.put(pFile, path);

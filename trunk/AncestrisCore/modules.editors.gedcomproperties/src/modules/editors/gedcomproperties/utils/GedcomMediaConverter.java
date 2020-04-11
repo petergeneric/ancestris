@@ -14,7 +14,7 @@ package modules.editors.gedcomproperties.utils;
 
 import genj.gedcom.Gedcom;
 import genj.gedcom.PropertyFile;
-import java.io.File;
+import genj.io.InputSource;
 import java.util.Map;
 import org.openide.util.NbBundle;
 
@@ -41,7 +41,7 @@ public class GedcomMediaConverter {
         
         for (PropertyFile pFile : property2PathMap.keySet()) {
             String oldValue = pFile.getValue();
-            File f = pFile.getFile();
+            InputSource f = pFile.getInput().orElse(null);
             if (f == null) {
                 continue;
             }

@@ -1,36 +1,55 @@
 package ancestris.modules.webbook.creator;
 
 import ancestris.gedcom.privacy.PrivacyPolicy;
-import genj.gedcom.Indi;
-import genj.gedcom.Fam;
-import genj.gedcom.Source;
-import genj.gedcom.Entity;
-import genj.gedcom.Gedcom;
-import genj.gedcom.Property;
-import genj.gedcom.PropertyPlace;
-import genj.gedcom.PropertyDate;
-import genj.gedcom.PropertyFile;
-import genj.gedcom.PropertySource;
-import genj.gedcom.time.PointInTime;
-import genj.gedcom.GedcomException;
-
-import java.io.*;
-
-
-import java.util.*;
-import java.util.List;
-
-import java.awt.*;
-import java.awt.image.BufferedImage;
-
 import ancestris.modules.webbook.Log;
 import ancestris.modules.webbook.WebBookParams;
 import ancestris.modules.webbook.transfer.FTPRegister;
+import genj.gedcom.Entity;
+import genj.gedcom.Fam;
+import genj.gedcom.Gedcom;
+import genj.gedcom.GedcomException;
+import genj.gedcom.Indi;
+import genj.gedcom.Property;
+import genj.gedcom.PropertyDate;
+import genj.gedcom.PropertyFile;
+import genj.gedcom.PropertyPlace;
+import genj.gedcom.PropertySource;
+import genj.gedcom.Source;
+import genj.gedcom.time.PointInTime;
+import genj.io.InputSource;
+import java.awt.Container;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.MediaTracker;
+import java.awt.RenderingHints;
+import java.awt.Toolkit;
+import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.math.BigInteger;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.Charset;
 import java.text.Normalizer;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import javax.imageio.ImageIO;
@@ -76,9 +95,9 @@ public class WebHelper {
     private boolean initCity = false;
     private SortedMap<String, Info> listOfDays = null;
     private boolean initDay = false;
-    private List<Ancestor> listOfAncestors = new ArrayList<Ancestor>();
+    private List<Ancestor> listOfAncestors = new ArrayList<>();
     private boolean initAncestors = false;
-    private Set<Indi> listOfCousins = new HashSet<Indi>();
+    private Set<Indi> listOfCousins = new HashSet<>();
     private boolean initCousins = false;
 
     /**
@@ -231,9 +250,17 @@ public class WebHelper {
 
         // Eliminate blank spaces
         String temp = str.replaceAll("\\s", "_");
+        
+        // Remove anything web parameters
+        int i = temp.indexOf('?');
+        if (i > 0){
+            temp = temp.substring(0, i);
+        }
 
         // Eliminate accents
         String cleanName = fileNameConvert(temp, defchar);
+        
+        
 
         return cleanName;
     }
@@ -244,7 +271,7 @@ public class WebHelper {
         }
         String text = filename.toLowerCase();
         char[] charInput = text.toCharArray();
-        StringBuffer strOutput = new StringBuffer(1000);
+        StringBuilder strOutput = new StringBuilder(1000);
         for (int i = 0; i < charInput.length; i++) {
             strOutput.append(convertChar(charInput[i], false, defchar));
         }
@@ -262,7 +289,7 @@ public class WebHelper {
                 String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
                 JarFile jar = new JarFile(URLDecoder.decode(jarPath, "UTF-8"));
                 Enumeration<JarEntry> entries = jar.entries(); //gives ALL entries in jar
-                Set<String> result = new HashSet<String>(); //avoid duplicates in case it is a subdirectory
+                Set<String> result = new HashSet<>(); //avoid duplicates in case it is a subdirectory
                 while (entries.hasMoreElements()) {
                     String name = entries.nextElement().getName();
                     if (name.startsWith(imagesDir)) { //filter according to the path
@@ -281,14 +308,14 @@ public class WebHelper {
                     copy(fromDir + fileName, toFile + fileName);
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             //e.printStackTrace();
             log.write(log.ERROR, "copyFiles - " + e.getMessage());
         }
     }
 
     public String convertChar(char c, boolean isAnchor, String defchar) {
-        String str = null;
+        String str;
         switch (c) {
             case 'à':
                 str = "a";
@@ -409,12 +436,12 @@ public class WebHelper {
     public void setPhotos(List<WebMedia.Photo> photos) {
         photosList = photos;
     }
-    
+
     /**
      * Get photos for an entity
      */
     public List<WebMedia.Photo> getPhoto(Entity entity) {
-        List<WebMedia.Photo> ret = new ArrayList<WebMedia.Photo>();
+        List<WebMedia.Photo> ret = new ArrayList<>();
         for (WebMedia.Photo photo : photosList) {
             if (photo.getEntity().equals(entity)) {
                 ret.add(photo);
@@ -422,33 +449,32 @@ public class WebHelper {
         }
         return ret;
     }
-    
-    
+
     /**
      * Get title of a media
      */
     public String getTitle(PropertyFile media, String defchar) {
         String str = "";
         // Get TITL in case of 5.5.1 OBJE record
-        Property ptitle = media.getProperty("TITL");  
+        Property ptitle = media.getProperty("TITL");
         if (ptitle != null) {
             str = ptitle.getDisplayValue().trim();
             if (!str.isEmpty()) {
                 return str;
             }
         }
-        
+
         // Else get TITL in case of link OBJE
-        ptitle = media.getParent().getProperty("TITL");  
+        ptitle = media.getParent().getProperty("TITL");
         if (ptitle != null) {
             str = ptitle.getDisplayValue().trim();
             if (!str.isEmpty()) {
                 return str;
             }
         }
-        
+
         // Else, use filename
-        File file = media.getFile();
+        InputSource file = media.getInput().orElse(null);
         if (file != null) {
             String filename = file.getName();
             return getCleanFileName(filename, defchar);
@@ -614,7 +640,6 @@ public class WebHelper {
         if (uploadRegister != null) {
             uploadRegister.update(to_file);
         }
-
 
     }
 
@@ -886,7 +911,7 @@ public class WebHelper {
         if (!initLastname) {
             initLastname = buildLastnamesList(gedcom, defchar, sortLastnames);
         }
-        return (List<String>) new ArrayList<String>((Collection) listOfLastnames.keySet());
+        return (List<String>) new ArrayList<>(listOfLastnames.keySet());
     }
 
     public int getTotalNamesCount() {
@@ -915,7 +940,7 @@ public class WebHelper {
 
     @SuppressWarnings("unchecked")
     private boolean buildLastnamesList(Gedcom gedcom, String defchar, Comparator<String> sortLastnames) {
-        listOfLastnames = new TreeMap<String, Integer>(sortLastnames);
+        listOfLastnames = new TreeMap<>(sortLastnames);
         List<Indi> indis = new ArrayList(gedcom.getEntities(Gedcom.INDI));
         for (Iterator<Indi> it = indis.iterator(); it.hasNext();) {
             Indi indi = it.next();
@@ -1088,7 +1113,7 @@ public class WebHelper {
     private boolean buildCitiesList(Gedcom gedcom, Comparator<String> sortStrings) {
 
         Collection<Entity> entities = gedcom.getEntities();
-        List<PropertyPlace> placesProps = new ArrayList<PropertyPlace>();
+        List<PropertyPlace> placesProps = new ArrayList<>();
         for (Iterator<Entity> it = entities.iterator(); it.hasNext();) {
             Entity ent = it.next();
             getPropertiesRecursively(ent, placesProps, PropertyPlace.class);
@@ -1126,7 +1151,7 @@ public class WebHelper {
     }
 
     @SuppressWarnings("unchecked")
-    public void getPropertiesRecursively(Property parent, List props, Class clazz) {
+    public <P extends Property> void getPropertiesRecursively(Property parent, List<P> props, Class clazz) {
         Property[] children = parent.getProperties();
         for (int c = 0; c < children.length; c++) {
             Property child = children[c];
@@ -1265,8 +1290,8 @@ public class WebHelper {
     /**
      * Recurse over a generation list up to the maximum number of generations
      *
-     * @param generation the current generation (sosa,indi) - the list of
-     * all individuals in that generation
+     * @param generation the current generation (sosa,indi) - the list of all
+     * individuals in that generation
      * @param gen the current generation
      */
     @SuppressWarnings("unchecked")

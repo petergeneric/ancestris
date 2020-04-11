@@ -211,7 +211,7 @@ public class NotesTablePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_deleteNoteButtonActionPerformed
 
     private void linkToNoteButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToNoteButtonActionPerformed
-        List<Note> notesList = new ArrayList<Note>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
+        List<Note> notesList = new ArrayList<>((Collection<Note>) mRoot.getGedcom().getEntities(Gedcom.NOTE));
 
         NotesTablePanel notesTablePanel = new NotesTablePanel();
         notesTablePanel.set(mRoot, notesList);

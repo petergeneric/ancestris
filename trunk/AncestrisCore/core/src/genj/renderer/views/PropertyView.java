@@ -194,7 +194,7 @@ public class PropertyView extends MyView {
 
     private TagPath createPath(String thePath) {
         try {
-            return new TagPath((String) thePath);
+            return new TagPath(thePath);
         } catch (IllegalArgumentException e) {
             if (LOG.isLoggable(Level.FINER)) {
                 LOG.log(Level.FINER, "got wrong path {0}", thePath);
@@ -399,7 +399,7 @@ public class PropertyView extends MyView {
             return getSize((MultiLineProperty) prop);
         }
         if (prop instanceof PropertyFile || prop instanceof PropertyBlob) {
-            return MediaRenderer.getSize(prop, getGraphics());
+            return MediaRenderer.getSize(prop);
         }
         return getSize(prop);
     }

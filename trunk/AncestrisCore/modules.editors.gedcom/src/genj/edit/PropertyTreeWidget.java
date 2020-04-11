@@ -31,6 +31,7 @@ import genj.gedcom.PropertyChange;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
 import genj.gedcom.UnitOfWork;
+import genj.io.InputSource;
 import genj.io.PropertyReader;
 import genj.io.PropertyTransferable;
 import genj.util.swing.HeadlessLabel;
@@ -533,7 +534,7 @@ public class PropertyTreeWidget extends DnDTree {
                 ged.doMuteUnitOfWork(new IOUnitOfWork() {
                     protected void performIO(Gedcom gedcom) throws IOException, UnsupportedFlavorException {
                         for (File file : (List<File>) transferable.getTransferData(DataFlavor.javaFileListFlavor)) {
-                            pparent.addFile(file);
+                            pparent.addFile(InputSource.get(file).orElse(null));
                         }
                     }
                 });
@@ -558,7 +559,7 @@ public class PropertyTreeWidget extends DnDTree {
                         for (StringTokenizer files = new StringTokenizer(string, "\n"); files.hasMoreTokens();) {
                             String file = files.nextToken().trim();
                             if (file.startsWith(UNIX_DND_FILE_PREFIX)) {
-                                pparent.addFile(new File(file.substring(UNIX_DND_FILE_PREFIX.length())));
+                                pparent.addFile(InputSource.get(new File(file.substring(UNIX_DND_FILE_PREFIX.length()))).orElse(null));
                             }
                         }
                     }

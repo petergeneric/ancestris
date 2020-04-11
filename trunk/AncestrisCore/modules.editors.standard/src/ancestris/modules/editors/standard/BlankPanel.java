@@ -26,9 +26,9 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import genj.io.InputSource;
 import genj.view.ViewContext;
 import java.awt.Component;
-import java.io.File;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import org.openide.util.NbBundle;
@@ -133,7 +133,7 @@ public class BlankPanel extends Editor {
                 displayName(null);
                 displayAddress(null);
                 displayNote(note.getValue());
-                displayMedia((File)null);
+                displayMedia((InputSource)null);
                 displaySource(entity);
                 
             } else if (entity instanceof Media) {
@@ -162,7 +162,7 @@ public class BlankPanel extends Editor {
                     displayAddress(null);
                 }
                 displayNote(entity);
-                displayMedia((File) null);
+                displayMedia((InputSource) null);
                 displaySource(null);
                 
             } else if (entity instanceof Source) {
@@ -414,7 +414,7 @@ public class BlankPanel extends Editor {
         
     }
 
-    private void displayMedia(File f) {
+    private void displayMedia(InputSource f) {
         if (f != null) {
             mediaImage.setIcon(getResizedIcon(new ImageIcon(getImageFromFile(f, getClass())), 238, 187));
         }
@@ -424,7 +424,7 @@ public class BlankPanel extends Editor {
 
     private void displayMedia(Entity entity) {
         Media media = (Media) getXRefFromEntity(entity, Media.class);
-        File f = null;
+        InputSource f = null;
         if (media != null) {
             f = media.getFile();
         }

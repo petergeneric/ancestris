@@ -21,17 +21,17 @@ package genj.report;
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.modules.document.view.HyperLinkTextDocumentView;
 import ancestris.modules.document.view.WidgetDocumentView;
+import ancestris.swing.ToolBar;
 import ancestris.util.swing.DialogManager;
+import ancestris.util.swing.FileChooserBuilder;
 import genj.common.ContextListWidget;
+import genj.fo.Format;
 import genj.gedcom.Context;
 import genj.gedcom.Entity;
 import genj.gedcom.Gedcom;
 import genj.util.Registry;
 import genj.util.Resources;
 import genj.util.swing.ImageIcon;
-import ancestris.swing.ToolBar;
-import ancestris.util.swing.FileChooserBuilder;
-import genj.fo.Format;
 import genj.view.View;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -417,7 +417,7 @@ public class ReportView extends View {
                     return;
                 }
                 
-                Format formatter = Format.getFormatFromExtension(fcb.getExtension(file));
+                Format formatter = Format.getFormatFromExtension(fcb.getExtension(file.getName()));
                 
 //                Registry foRegistry = Registry.get(getClass());
 //

@@ -1,7 +1,7 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.Media;
-import java.io.File;
+import genj.io.InputSource;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -38,9 +38,9 @@ public class MultiMediaObjectsTableModel extends AbstractTableModel {
         if (column == 0) {
             return media.getId();
         } else {
-            File file = media.getFile();
+            InputSource file = media.getFile();
             if (file != null) {
-                return file.getAbsolutePath();
+                return file.getLocation();
             } else {
                 return "";
             }

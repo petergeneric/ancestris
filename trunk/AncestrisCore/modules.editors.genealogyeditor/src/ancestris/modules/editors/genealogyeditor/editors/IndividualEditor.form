@@ -432,7 +432,7 @@
         <Container class="javax.swing.JPanel" name="familiesChildPanel">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Parents &amp; Sibling">
+              <JTabbedPaneConstraints tabName="Parents &amp; Siblings">
                 <Property name="tabTitle" type="java.lang.String" editor="org.netbeans.modules.i18n.form.FormI18nStringEditor">
                   <ResourceString bundle="ancestris/modules/editors/genealogyeditor/editors/Bundle.properties" key="IndividualEditor.familiesChildPanel.TabConstraints.tabTitle" replaceFormat="org.openide.util.NbBundle.getMessage({sourceFileName}.class, &quot;{key}&quot;)"/>
                 </Property>
