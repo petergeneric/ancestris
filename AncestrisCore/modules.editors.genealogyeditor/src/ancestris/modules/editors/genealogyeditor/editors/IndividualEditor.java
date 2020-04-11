@@ -2,17 +2,16 @@ package ancestris.modules.editors.genealogyeditor.editors;
 
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
-import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
 import ancestris.modules.editors.genealogyeditor.panels.FamiliesReferenceTreeTablePanel;
 import ancestris.modules.editors.genealogyeditor.panels.NamesTablePanel;
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -116,7 +115,7 @@ public final class IndividualEditor extends EntityEditor {
 //            add("FACT"); not defined in gedcom xml definition files
         }
     };
-    private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<String>(new String[]{});
+    private DefaultComboBoxModel<String> mEventsModel = new DefaultComboBoxModel<>(new String[]{});
     private NamesTablePanel namesTablePanel;
     private Registry registry = null;
 
@@ -534,7 +533,7 @@ public final class IndividualEditor extends EntityEditor {
             if (multiMediaObjectEditor.showPanel()) {
                 if (mMultiMediaObject instanceof Media) {
                     mIndividual.addMedia((Media) mMultiMediaObject);
-                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getFile() : null, mIndividual.getSex());
+                    boolean correct = imageBean.setImage(((PropertyFile) mMultiMediaObject.getProperty("FILE")) != null ? ((PropertyFile) mMultiMediaObject.getProperty("FILE")).getInput().get(): null, mIndividual.getSex());
                     if (!correct) {
                         String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
                         String text = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType.notSupported");
@@ -559,33 +558,6 @@ public final class IndividualEditor extends EntityEditor {
             }
         } else {
             for (Property multiMediaObject : mIndividual.getProperties("OBJE")) {
-//                String objetFormat = null;
-//                if (mIndividual.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
-//                    if (multiMediaObject instanceof PropertyMedia) {
-//                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getPropertyByPath(".:FILE:FORM");
-//                        if (propertyFormat != null) {
-//                            objetFormat = propertyFormat.getValue();
-//                        }
-//                    } else {
-//                        Property propertyFormat = multiMediaObject.getPropertyByPath(".:FILE:FORM");
-//                        if (propertyFormat != null) {
-//                            objetFormat = propertyFormat.getValue();
-//                        }
-//                    }
-//                } else {
-//                    if (multiMediaObject instanceof PropertyMedia) {
-//                        Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
-//                        if (propertyFormat != null) {
-//                            objetFormat = propertyFormat.getValue();
-//                        }
-//                    } else {
-//                        Property propertyFormat = multiMediaObject.getProperty("FORM");
-//                        if (propertyFormat != null) {
-//                            objetFormat = propertyFormat.getValue();
-//                        }
-//                    }
-//                }
-//
                 MultiMediaObjectEditor multiMediaObjectEditor = new MultiMediaObjectEditor();
                 multiMediaObjectEditor.setContext(new Context(multiMediaObject));
                 if (multiMediaObjectEditor.showPanel()) {
@@ -600,10 +572,10 @@ public final class IndividualEditor extends EntityEditor {
                     Property multimediaFile = multiMediaObject.getProperty("FILE", true);
                     boolean correct = false;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                        correct = imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
+                        correct = imageBean.setImage(((PropertyFile) multimediaFile).getInput().orElse(null), mIndividual.getSex());
                     } else {
                         PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                        correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
+                        correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getInput().get() : null, mIndividual.getSex());
                     }
                     if (!correct) {
                         String title = NbBundle.getMessage(ImageBean.class, "ImageBean.fileType");
@@ -680,7 +652,7 @@ public final class IndividualEditor extends EntityEditor {
                     }); // end of doUnitOfWork
 
                     if (mEvent != null) {
-                        ArrayList<Property> eventsProperties = new ArrayList<Property>();
+                        ArrayList<Property> eventsProperties = new ArrayList<>();
                         for (Property property : mIndividual.getProperties()) {
                             if (mIndividualEventsTags.contains(property.getTag())) {
                                 eventsProperties.add(property);
@@ -714,7 +686,7 @@ public final class IndividualEditor extends EntityEditor {
 
     private void sexBeanPanelStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sexBeanPanelStateChanged
         if (imageBean.isDefault()) {
-            imageBean.setImage((File)null, sexBeanPanel.getSelectedSex());
+            imageBean.setImage(null, sexBeanPanel.getSelectedSex());
         }
     }//GEN-LAST:event_sexBeanPanelStateChanged
 
@@ -1012,10 +984,10 @@ public final class IndividualEditor extends EntityEditor {
                     Property multimediaFile = multiMediaObject.getProperty("FILE", true);
                     boolean correct = true;
                     if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                        correct = imageBean.setImage(((PropertyFile) multimediaFile).getFile(), mIndividual.getSex());
+                        correct = imageBean.setImage(((PropertyFile) multimediaFile).getInput().orElse(null), mIndividual.getSex());
                     } else {
                         PropertyBlob propertyBlob = (PropertyBlob) multiMediaObject.getProperty("BLOB", true);
-                        correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, mIndividual.getSex());
+                        correct = imageBean.setImage(propertyBlob != null ? propertyBlob.getInput().get() : null, mIndividual.getSex());
                     }
                     found = true;
                     if (!correct) {
@@ -1027,7 +999,7 @@ public final class IndividualEditor extends EntityEditor {
                 }
             }
             if (found == false) {
-                imageBean.setImage((File) null, mIndividual.getSex());
+                imageBean.setImage(null, mIndividual.getSex());
             }
             
             multimediaObjectCitationsTablePanel.set(mIndividual, Arrays.asList(multiMediaObjects));

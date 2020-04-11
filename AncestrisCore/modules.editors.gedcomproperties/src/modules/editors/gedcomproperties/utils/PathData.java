@@ -53,7 +53,7 @@ public class PathData {
     public int getNbMedia() {
         Set<String> list = new TreeSet<String>();
         for (PropertyFile pf : files) {
-            list.add(pf.getFile().getName());
+            list.add(pf.getInput().get().getName());
         }
         return list.size();
     }

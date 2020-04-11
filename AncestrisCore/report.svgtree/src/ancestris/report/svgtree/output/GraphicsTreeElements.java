@@ -320,7 +320,7 @@ public class GraphicsTreeElements implements TreeElements {
         int imageWidth = 0;
         int imageHeight = indibox.height;
         if (draw_images) {
-            Dimension d = MediaRenderer.getSize(i, graphics);
+            Dimension d = MediaRenderer.getSize(i);
             if (d.width > 0 && d.height > 0) {
                 imageWidth = d.width * indibox.height / d.height;
             }
@@ -880,7 +880,7 @@ public class GraphicsTreeElements implements TreeElements {
 
         // Image
         if (draw_images) {
-            Dimension d = MediaRenderer.getSize(i, graphics);
+            Dimension d = MediaRenderer.getSize(i);
             if (d.width > 0 && d.height > 0) {
                 int newWidth = d.width * DEFAULT_INDIBOX_HEIGHT / d.height;
                 if (newWidth < MAX_IMAGE_WIDTH) {

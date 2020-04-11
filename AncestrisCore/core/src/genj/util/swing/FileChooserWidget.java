@@ -198,20 +198,23 @@ public class FileChooserWidget extends JPanel {
   }
   
   /**
-   * Get current file
+   * Get current file Name.
+   * Could be used for Remote value.
    */
-  public File getFile() {
+  public String getFile() {
     
     File file = new File(text.getText().trim());
     String name = file.getName();
+    if (file.exists()) {
     
     if (extensions!=null&&name.indexOf(".")<0&&extensions.indexOf(',')<0) {
       String ext = extensions.trim();
       if (name.length()>0&&!name.endsWith("."+ext))
         file = new File(file.getParentFile(), name+"."+ext);
     }
-    
-    return file;
+        return file.getAbsolutePath();
+    }
+    return text.getText().trim();
   }
   
   /** 
@@ -256,7 +259,7 @@ public class FileChooserWidget extends JPanel {
                     .setApproveText(AbstractAncestrisAction.TXT_OK)
                     .setParent(FileChooserWidget.this)
                     .setDefaultWorkingDirectory(new File(directory))
-                    .setSelectedFile(getFile());
+                    .setSelectedFile(new File(getFile()));
         
         if (open) {
             file = fcb.showOpenDialog();
@@ -279,7 +282,7 @@ public class FileChooserWidget extends JPanel {
       if (JFileChooser.SELECTED_FILE_CHANGED_PROPERTY.equals(evt.getPropertyName())) {
         File file = (File)evt.getNewValue();
         if (accessory instanceof ThumbnailWidget)
-          ((ThumbnailWidget)accessory).setSource(file!=null ? InputSource.get(file) : null);
+          ((ThumbnailWidget)accessory).setSource(file!=null ? InputSource.get(file).get() : null);
       }
     }
     

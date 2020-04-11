@@ -14,8 +14,8 @@ package ancestris.modules.document.view;
 
 import ancestris.core.actions.AbstractAncestrisAction;
 import ancestris.core.resources.Images;
-import ancestris.view.SelectionDispatcher;
 import ancestris.util.swing.FileChooserBuilder;
+import ancestris.view.SelectionDispatcher;
 import genj.fo.Document;
 import genj.fo.Format;
 import genj.fo.HTMLFormat;
@@ -140,7 +140,7 @@ public class FopDocumentView extends AbstractDocumentView {
             }
 
             // format and write
-            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file));
+            Format formatter = Format.getFormatFromExtension(fcb.getExtension(file.getName()));
             try {
                 file.getParentFile().mkdirs();
                 formatter.format(document, file);

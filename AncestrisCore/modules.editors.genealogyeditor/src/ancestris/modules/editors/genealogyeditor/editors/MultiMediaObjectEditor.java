@@ -2,6 +2,9 @@ package ancestris.modules.editors.genealogyeditor.editors;
 
 import ancestris.util.swing.FileChooserBuilder;
 import genj.gedcom.*;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
+import genj.io.input.URLInput;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
@@ -9,9 +12,12 @@ import java.awt.Desktop;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.openide.util.NbBundle;
 
 /**
@@ -19,11 +25,12 @@ import org.openide.util.NbBundle;
  * @author dominique
  */
 public class MultiMediaObjectEditor extends EntityEditor {
+    private static final Logger LOG = Logger.getLogger("ancestris.app");
 
     private Context context;
     private Property mRoot;
     private Property mMultiMediaObject;
-    private File mFile = null;
+    private InputSource mFile = null;
 
     /**
      * Creates new form MultiMediaObjectEditor
@@ -198,15 +205,24 @@ public class MultiMediaObjectEditor extends EntityEditor {
                 return;
             }
 
-            mFile = file;
+            mFile = InputSource.get(file).orElse(null);
             imageBean.setImage(mFile, PropertySex.UNKNOWN);
             changes.fireChangeEvent();
         }
-        if (evt.getButton() == MouseEvent.BUTTON3 && mFile != null && mFile.exists()) {
-            try {
-                Desktop.getDesktop().open(mFile);
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
+        if (evt.getButton() == MouseEvent.BUTTON3 && mFile != null) {
+            if (mFile instanceof FileInput) {
+                try {
+                    Desktop.getDesktop().open(((FileInput) mFile).getFile());
+                } catch (IOException ex) {
+                     LOG.log(Level.FINE, "Unable to open File", ex);
+                }
+            }
+            if (mFile instanceof URLInput) {
+                try {
+                    Desktop.getDesktop().browse(((URLInput) mFile).getURL().toURI());
+                } catch (URISyntaxException | IOException ex) {
+                    LOG.log(Level.FINE, "Unable to open File", ex);
+                }
             }
         }
 
@@ -305,12 +321,12 @@ public class MultiMediaObjectEditor extends EntityEditor {
 
             Property multimediaFile = mMultiMediaObject.getProperty("FILE", true);
             if (multimediaFile != null && multimediaFile instanceof PropertyFile) {
-                mFile = ((PropertyFile) multimediaFile).getFile();
+                mFile = ((PropertyFile) multimediaFile).getInput().orElse(null);
                 imageBean.setImage(mFile, PropertySex.UNKNOWN);
                 
             } else {
                 PropertyBlob propertyBlob = (PropertyBlob) mMultiMediaObject.getProperty("BLOB", true);
-                imageBean.setImage(propertyBlob != null ? propertyBlob.getBlobData() : (byte[]) null, PropertySex.UNKNOWN);
+                imageBean.setImage(propertyBlob != null ? propertyBlob.getInput().get() : null, PropertySex.UNKNOWN);
             }
 
             /*
@@ -325,12 +341,12 @@ public class MultiMediaObjectEditor extends EntityEditor {
         if (changes.hasChanged()) {
             
             if (mMultiMediaObject instanceof Media) {
-                if (mFile != null) {
+                if (mFile instanceof FileInput) {
                     ((Media) mMultiMediaObject).addFile(mFile);
                 }
                 ((Media) mMultiMediaObject).setTitle(multiMediaObjectTitleTextField.getText().isEmpty() ? ((mFile != null) ? mFile.getName() : "") : multiMediaObjectTitleTextField.getText());
             } else {
-                if (mFile != null) {
+                if (mFile instanceof FileInput) {
                     mMultiMediaObject.addFile(mFile);
                 }
                 Property propertyTitle = mMultiMediaObject.getProperty("TITL");

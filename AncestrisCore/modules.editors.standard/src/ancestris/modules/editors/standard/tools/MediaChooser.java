@@ -22,6 +22,10 @@ import genj.gedcom.Media;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.PropertyXRef;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
+import genj.io.input.URLInput;
+import genj.renderer.MediaRenderer;
 import genj.util.Registry;
 import java.awt.Component;
 import java.awt.Desktop;
@@ -31,16 +35,17 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
@@ -60,6 +65,8 @@ import org.openide.windows.WindowManager;
  * @author frederic
  */
 public class MediaChooser extends javax.swing.JPanel {
+    
+    private final static Logger LOG = Logger.getLogger("ancestris.app", null);
 
     private static int THUMB_WIDTH = 50;
     private static int THUMB_HEIGHT = 70;
@@ -68,11 +75,11 @@ public class MediaChooser extends javax.swing.JPanel {
     
     private Registry registry = null;
     private ThumbComparator thumbComparator = new ThumbComparator();
-    private TreeSet<MediaThumb> allMedia = new TreeSet<MediaThumb>(thumbComparator);
+    private TreeSet<MediaThumb> allMedia = new TreeSet<>(thumbComparator);
     private DefaultListModel filteredModel = new DefaultListModel();
     
     private Gedcom gedcom = null;
-    private File mainFile = null;
+    private InputSource mainInput = null;
     private MediaWrapper mainMedia = null;
     private Image mainImage = null;
     private Image scaledImage = null;
@@ -83,9 +90,9 @@ public class MediaChooser extends javax.swing.JPanel {
     /**
      * Creates new form MediaChooser
      */
-    public MediaChooser(Gedcom gedcom, File file, Image image, String title, MediaWrapper media, JButton okButton, JButton cancelButton, boolean sourceImages) {
+    public MediaChooser(Gedcom gedcom, InputSource is, Image image, String title, MediaWrapper media, JButton okButton, JButton cancelButton, boolean sourceImages) {
         this.gedcom = gedcom;
-        mainFile = file;
+        mainInput = is;
         mainMedia = media;
         mainImage = image;
         mainTitle = title;
@@ -337,7 +344,7 @@ public class MediaChooser extends javax.swing.JPanel {
             MediaThumb media = (MediaThumb) filteredModel.get(mediaList.getSelectedIndex());
             mainImage = media.getImage();
             mainTitle = media.title;
-            mainFile = media.file;
+            mainInput = media.inputSource;
             displayIconAndTitle(labelPhoto.getWidth(), labelPhoto.getHeight());
             okButton.setEnabled(true);
         } else {
@@ -356,11 +363,20 @@ public class MediaChooser extends javax.swing.JPanel {
     }//GEN-LAST:event_mediaListMouseClicked
 
     private void labelPhotoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_labelPhotoMouseClicked
-        if (evt.getButton() == MouseEvent.BUTTON1 && mainFile != null) {
-            try {
-                Desktop.getDesktop().open(mainFile);
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
+        if (evt.getButton() == MouseEvent.BUTTON1 && mainInput != null) {
+            if (mainInput instanceof FileInput) {
+                try {
+                    Desktop.getDesktop().open(((FileInput)mainInput).getFile());
+                } catch (IOException ex) {
+                LOG.log(Level.FINE, "Unable to open File", ex);
+                }
+            }
+            if (mainInput instanceof URLInput) {
+                try {
+                    Desktop.getDesktop().browse(((URLInput)mainInput).getURL().toURI());
+                } catch (URISyntaxException|IOException ex) {
+                LOG.log(Level.FINE, "Unable to open File", ex);
+                }
             }
         }
 
@@ -396,19 +412,15 @@ public class MediaChooser extends javax.swing.JPanel {
                     JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", ent.toString(true)));
                     menu.add(menuItem);
                     final Entity finalEntity = ent;
-                    menuItem.addActionListener(new ActionListener() {
-                        public void actionPerformed(ActionEvent ae) {
-                            edit(finalEntity);
-                        }
+                    menuItem.addActionListener((ActionEvent ae) -> {
+                        edit(finalEntity);
                     });
                 }
             } else if (!media.isMedia) {
                 JMenuItem menuItem = new JMenuItem(NbBundle.getMessage(getClass(), "EditEntity", entity.toString(true)));
                 menu.add(menuItem);
-                menuItem.addActionListener(new ActionListener() {
-                    public void actionPerformed(ActionEvent ae) {
-                        edit(entity);
-                    }
+                menuItem.addActionListener((ActionEvent ae) -> {
+                    edit(entity);
                 });
             }
             menu.show(mediaList, evt.getX(), evt.getY()); 
@@ -450,10 +462,10 @@ public class MediaChooser extends javax.swing.JPanel {
                 for (PropertyFile mediaFile : properties) {
                     boolean isSourceMedia = isSourceOnly(mediaFile);
                     if ((isSourceMedia && sourceImages) || (!isSourceMedia && !sourceImages)) {
-                        String title = "";
-                        File file = mediaFile.getFile();
+                        String title;
+                        InputSource is = MediaRenderer.getSource(mediaFile);
                         Property mediaTitle = mediaFile.getParent().getProperty("TITL");
-                        boolean flag = false;
+                        boolean flag;
                         if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
                             title = mediaTitle.getDisplayValue().trim();
                             flag = true;
@@ -461,7 +473,7 @@ public class MediaChooser extends javax.swing.JPanel {
                             title = entity.toString(false).trim();
                             flag = false;
                         }
-                        MediaThumb media = new MediaThumb(entity, file, title);
+                        MediaThumb media = new MediaThumb(entity, is, title);
                         media.setTrueTitle(flag);
                         allMedia.add(media);
                     }
@@ -477,12 +489,12 @@ public class MediaChooser extends javax.swing.JPanel {
             for (Media entity : entities) {
                 boolean isSourceMedia = isSourceOnly(entity);
                 if ((isSourceMedia && sourceImages) || (!isSourceMedia && !sourceImages)) {
-                    File file = null;
+                    InputSource is = null;
                     String title = "";
                     Property mediaFile = entity.getProperty("FILE", true);
                     boolean flag = false;
                     if (mediaFile != null && mediaFile instanceof PropertyFile) {
-                        file = ((PropertyFile) mediaFile).getFile();
+                        is = MediaRenderer.getSource(mediaFile);
                         Property mediaTitle = mediaFile.getProperty("TITL");
                         if (mediaTitle != null && !mediaTitle.getDisplayValue().trim().isEmpty()) {
                             title = mediaTitle.getDisplayValue().trim();
@@ -498,7 +510,7 @@ public class MediaChooser extends javax.swing.JPanel {
                             }
                         }
                     }
-                    MediaThumb media = new MediaThumb(entity, file, title);
+                    MediaThumb media = new MediaThumb(entity, is, title);
                     media.setTrueTitle(flag);
                     Entity[] ents = PropertyXRef.getReferences(entity);
                     media.setUnused(ents.length == 0);
@@ -533,9 +545,9 @@ public class MediaChooser extends javax.swing.JPanel {
         return media == null ? null : media.entity;
     }
 
-    public File getSelectedFile() {
+    public InputSource getSelectedInput() {
         MediaThumb media = getSelectedThumb();
-        return media == null ? null : media.file;
+        return media == null ? null : media.inputSource;
     }
 
     public String getSelectedTitle() {
@@ -580,12 +592,11 @@ public class MediaChooser extends javax.swing.JPanel {
     public int getNbMedia() {
         return allMedia.size();
     }
-
-  
     
     
     private static class ListEntryCellRenderer extends JLabel implements ListCellRenderer {
 
+        @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             MediaThumb entry = (MediaThumb) value;
 
@@ -623,47 +634,42 @@ public class MediaChooser extends javax.swing.JPanel {
             return this;
         }
     }
-
-
-    
-    
-    
     
     
     private class MediaThumb {
         
         public boolean isMedia = false;
         public Entity entity = null;
-        public File file = null;
+        public InputSource inputSource = null;
         public ImageIcon icon = null;
         public String title = "";
         public boolean isTrueTitle = true;
         public boolean isUnused = false;
         
-        public MediaThumb(Media entity, File file, String title) {
+        public MediaThumb(Media entity, InputSource is, String title) {
             this.isMedia = true;
             this.entity = entity;
-            this.file = file;
+            this.inputSource = is;
             this.title = title;
         }
 
-        private MediaThumb(Entity entity, File file, String title) {
+        private MediaThumb(Entity entity, InputSource is, String title) {
             this.isMedia = (entity instanceof Media);
             this.entity = entity;
-            this.file = file;
+            this.inputSource = is;
             this.title = title;
         }
         
         public Image getImage() {
-            return getImageFromFile(file, getClass());
+            return getImageFromFile(inputSource, getClass());
         }
         
         public void setIcon() {
-            icon = (file == null ? null : cacheIcon.get(file.getAbsolutePath()));
+            icon = (inputSource == null ? null : cacheIcon.get(inputSource.getLocation()));
             if (icon == null) {
-                icon = new ImageIcon(scaleImage(file , getClass(), THUMB_WIDTH, THUMB_HEIGHT));
-                if (file != null) {
-                    cacheIcon.put(file.getAbsolutePath(), icon);
+                icon = new ImageIcon(scaleImage(inputSource , getClass(), THUMB_WIDTH, THUMB_HEIGHT));
+                if (inputSource != null) {
+                    cacheIcon.put(inputSource.getLocation(), icon);
                 }
             }
         }
@@ -677,16 +683,14 @@ public class MediaChooser extends javax.swing.JPanel {
         }
     }
 
-
-
-    
     private class ThumbComparator implements Comparator<MediaThumb> {
 
+        @Override
         public int compare(MediaThumb o1, MediaThumb o2) {
-            File file1 = o1.file;
-            File file2 = o2.file;
-            String str1 = file1 != null ? file1.getAbsolutePath() : "";
-            String str2 = file2 != null ? file2.getAbsolutePath() : "";
+           InputSource is1 = o1.inputSource;
+           InputSource is2 = o2.inputSource;
+            String str1 = is1 != null ? is1.getName() : "";
+            String str2 = is2 != null ? is2.getName() : "";
             String id1 = o1.entity.getId();
             String id2 = o2.entity.getId();
             String total1 = o1.title.toLowerCase() + str1 + id1;

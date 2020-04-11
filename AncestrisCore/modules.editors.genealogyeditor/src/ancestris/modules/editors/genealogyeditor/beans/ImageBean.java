@@ -1,15 +1,16 @@
 package ancestris.modules.editors.genealogyeditor.beans;
 
+import genj.io.InputSource;
+import genj.renderer.MediaRenderer;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileInputStream;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
+import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import org.openide.util.Exceptions;
 
 /**
  *
@@ -17,7 +18,9 @@ import org.openide.util.Exceptions;
  */
 public class ImageBean extends javax.swing.JPanel {
 
-    private String[] genders = new String[] {"unknown", "male", "female"};
+    Logger LOG = Logger.getLogger("ancestris.app");
+
+    private String[] genders = new String[]{"unknown", "male", "female"};
     private boolean isDefault = true;
     private Image loadImage = null;
     private Image scaledImage = null;
@@ -31,7 +34,7 @@ public class ImageBean extends javax.swing.JPanel {
             loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[0] + ".png"));
             isDefault = true;
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            LOG.log(Level.INFO, "Unable to load default image.", ex);
         }
         initComponents();
     }
@@ -83,21 +86,19 @@ public class ImageBean extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-    public boolean setImage(File file, int defaultGender) {
+    public boolean setImage(InputSource is, int defaultGender) {
         boolean ret = true;
-        InputStream imageInputStream;
 
-        if (file != null && file.exists()) {
+        Optional<BufferedImage> obi = MediaRenderer.getImage(is);
+
+        if (obi.isPresent()) {
+            loadImage = obi.get();
             try {
-                imageInputStream = new FileInputStream(file);
-                loadImage = ImageIO.read(imageInputStream);
                 if (loadImage == null) {
-                    imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
-                    loadImage = ImageIO.read(imageInputStream);
+                    loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png"));
                     isDefault = true;
                     ret = false;
-                }
-                if (loadImage != null) {
+                } else {
                     if (getWidth() > 0 && getWidth() < getHeight()) {
                         scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
                     } else if (getHeight() > 0) {
@@ -106,59 +107,10 @@ public class ImageBean extends javax.swing.JPanel {
                     isDefault = false;
                 }
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                LOG.log(Level.INFO, "Unable to load default image.", ex);
                 ret = false;
             }
         } else {
-            imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png");
-            try {
-                loadImage = ImageIO.read(imageInputStream);
-                if (getWidth() > 0 && getWidth() < getHeight()) {
-                    scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
-                } else if (getHeight() > 0) {
-                    scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
-                }
-                isDefault = true;
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                ret = false;
-            }
-        }
-
-        repaint();
-        return ret;
-    }
-
-    public boolean setImage(byte[] imageData, int defaultGender) {
-        boolean ret = true;
-        isDefault = true;
-        InputStream imageInputStream;
-        
-        if (imageData != null) {
-            ByteArrayInputStream bais = new ByteArrayInputStream(imageData);
-
-            try {
-                loadImage = ImageIO.read(bais);
-                if (loadImage != null) {
-                    if (getWidth() > 0 && getWidth() < getHeight()) {
-                        scaledImage = loadImage.getScaledInstance(getWidth(), -1, Image.SCALE_DEFAULT);
-                    } else if (getHeight() > 0) {
-                        scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
-                    }
-                    isDefault = false;
-                } else {
-                    imageInputStream = ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/invalid_photo.png");
-                    loadImage = ImageIO.read(imageInputStream);
-                    ret = false;
-                }
-            } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
-                ret = false;
-            }
-        } 
-        
-        // fall back if imageData is null or loadimage is null
-        if (isDefault) {
             try {
                 loadImage = ImageIO.read(ImageBean.class.getResourceAsStream("/ancestris/modules/editors/genealogyeditor/resources/profile_" + genders[defaultGender] + ".png"));
                 if (getWidth() > 0 && getWidth() < getHeight()) {
@@ -166,8 +118,9 @@ public class ImageBean extends javax.swing.JPanel {
                 } else if (getHeight() > 0) {
                     scaledImage = loadImage.getScaledInstance(-1, getHeight(), Image.SCALE_DEFAULT);
                 }
+                isDefault = true;
             } catch (IOException ex) {
-                Exceptions.printStackTrace(ex);
+                LOG.log(Level.INFO, "Unable to load default image.", ex);
                 ret = false;
             }
         }
@@ -183,7 +136,7 @@ public class ImageBean extends javax.swing.JPanel {
             ((Graphics2D) g).drawImage(scaledImage, 0 + ((getWidth() - scaledImage.getWidth(this)) / 2), ((getHeight() - scaledImage.getHeight(this)) / 2), null);
         }
     }
-    
+
     public boolean isDefault() {
         return isDefault;
     }

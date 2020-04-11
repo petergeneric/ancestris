@@ -150,7 +150,7 @@ public class ReferenceSet<KEY,REF> {
     public void eraseAll() {
         //  private Map<KEY,Set<REF>> key2references = new HashMap<KEY,Set<REF>>();
         for (Iterator<Map.Entry<KEY, Set<REF>>> it = key2references.entrySet().iterator(); it.hasNext();) {
-            Set<REF> set = (Set<REF>) it.next().getValue();
+            Set<REF> set = it.next().getValue();
             for (Iterator<REF> it2 = set.iterator(); it2.hasNext();) {
                 it2.next();
                 it2.remove();

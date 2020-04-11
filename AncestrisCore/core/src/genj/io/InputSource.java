@@ -19,111 +19,74 @@
  */
 package genj.io;
 
-import java.io.ByteArrayInputStream;
+import genj.io.input.ByteInput;
+import genj.io.input.FileInput;
+import genj.io.input.URLInput;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.util.Optional;
 
 /**
  * Source of Input
  */
 public abstract class InputSource {
   
-  private String name;
+  private final String name;
+  private String location;
   
   protected InputSource(String name) {
     this.name = name;
   }
   
-  public String getName() {
+  public final String getName() {
     return name;
+  }
+  
+  public final String getLocation() {
+      return location;
+  }
+  
+  protected final void setLocation(String loc) {
+      this.location = loc;
   }
   
   public abstract InputStream open() throws IOException;
   
-  public static InputSource get(File file) {
+  public static Optional<InputSource> get(File file) {
+      if (file == null) {
+          return Optional.empty();
+      }
     return get(file.getName(), file);
   }
 
-  public static InputSource get(String name, File file) {
-    return new FileInput(name, file);
+  public static Optional<InputSource> get(String name, File file) {
+      if (file == null) {
+          return Optional.empty();
+      }
+    return Optional.of(new FileInput(name, file));
   }
   
-  public static InputSource get(String name, byte[] bytes) {
-    return new ByteInput(name, bytes);
+  public static Optional<InputSource> get(String name, byte[] bytes) {
+      if (bytes == null) {
+          return Optional.empty();
+      }
+    return Optional.of(new ByteInput(name, bytes));
   }
   
-  public static class FileInput extends InputSource {
-    
-    private File file;
-
-    public FileInput(File file) {
-      this(file.getName(), file);
-    }
-    public FileInput(String name, File file) {
-      super(name);
-      this.file = file;
-    }
-    
-    public File getFile() {
-      return file;
-    }
-    
-    @Override
-    public InputStream open() throws IOException {
-      return new FileInputStream(file);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-      if (!(obj instanceof FileInput))
-        return false;
-      FileInput that = (FileInput)obj;
-      return that.file.equals(this.file) && that.getName().equals(this.getName());
-    }
-    
-    @Override
-    public int hashCode() {
-      return file.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-      return "file name="+getName()+" file="+file.toString();
-    }
-    
+  public static Optional<InputSource> get(URL url) {
+      if (url == null) {
+          return Optional.empty();
+      }
+      return get(url.getFile(), url);
   }
   
-  public static class ByteInput extends InputSource {
-    
-    private byte[] bytes;
-
-    public ByteInput(String name, byte[] bytes) {
-      super(name);
-      this.bytes = bytes;
-    }
-    
-    @Override
-    public InputStream open() {
-      return new ByteArrayInputStream(bytes);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-      return obj instanceof ByteInput && ((ByteInput)obj).bytes.equals(bytes);
-    }
-    
-    @Override
-    public int hashCode() {
-      return bytes.hashCode();
-    }
-    
-    @Override
-    public String toString() {
-      return "byte array size="+bytes.length+" name="+getName();
-    }
-    
+  public static Optional<InputSource> get(String name, URL url) {
+      if (url == null) {
+          return Optional.empty();
+      }
+      return Optional.of(new URLInput(name, url));
   }
   
 }

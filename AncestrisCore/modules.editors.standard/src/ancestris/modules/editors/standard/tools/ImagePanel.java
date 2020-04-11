@@ -14,6 +14,9 @@ package ancestris.modules.editors.standard.tools;
 import ancestris.modules.editors.standard.IndiPanel;
 import static ancestris.modules.editors.standard.tools.Utils.getImageFromFile;
 import ancestris.util.swing.DialogManager;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
+import genj.io.input.URLInput;
 import genj.renderer.RenderSelectionHintKey;
 import genj.view.BigBufferedImage;
 import java.awt.Desktop;
@@ -25,6 +28,9 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import org.openide.util.NbBundle;
 import org.openide.windows.WindowManager;
@@ -35,24 +41,25 @@ import org.openide.windows.WindowManager;
  */
 public class ImagePanel extends javax.swing.JPanel {
 
+    private static final Logger LOG = Logger.getLogger("ancestris.app");
+
     private IndiPanel callingPanel = null;
     private BufferedImage IMG_DEFAULT = null;
-    
-    private static int default_width = 197, default_height = 140;
-    private static String CROPPED = "-cropped";
+
+    private static final int DEFAULT_WIDTH = 197, DEFAULT_HEIGHT = 140;
+    private static final String CROPPED = "-cropped";
     private BufferedImage image = null;
-    private File file = null;
-    
+    private InputSource inputSource = null;
+
     private int x, y;
     private static int startX, startY;
     private double sourceZoom;
     private boolean ready;
-    
-    private final static RenderingHints textRenderHints = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-    private final static RenderingHints imageRenderHints = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-    private final static RenderingHints renderHints = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-    
-    
+
+    private final static RenderingHints TEXT_RENDER_HINTS = new RenderingHints(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+    private final static RenderingHints IMAGE_RENDER_HINTS = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    private final static RenderingHints RENDER_HINTS = new RenderingHints(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+
     /**
      * Creates new form imagePanel
      */
@@ -66,15 +73,12 @@ public class ImagePanel extends javax.swing.JPanel {
         initComponents();
     }
 
-    public void setMedia(File file, BufferedImage defaultImage) {
-        this.file = file;
+    public void setMedia(InputSource is, BufferedImage defaultImage) {
+        this.inputSource = is;
         this.IMG_DEFAULT = defaultImage;
-        
-        if (file != null && file.exists()) {
-            image = getImageFromFile(file, getClass());
-        } else {
-            image = defaultImage;
-        }
+
+        image = getImageFromFile(inputSource, getClass());
+
         if (image == null) {
             return;
         }
@@ -116,16 +120,15 @@ public class ImagePanel extends javax.swing.JPanel {
 
     @Override
     public Dimension getPreferredSize() {
-        return new Dimension(default_width, default_height);
+        return new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
     }
 
     public static void applyRenderHints(Graphics2D g2d) {
-        g2d.setRenderingHints(textRenderHints);
-        g2d.setRenderingHints(imageRenderHints);
-        g2d.setRenderingHints(renderHints);
+        g2d.setRenderingHints(TEXT_RENDER_HINTS);
+        g2d.setRenderingHints(IMAGE_RENDER_HINTS);
+        g2d.setRenderingHints(RENDER_HINTS);
     }
 
-        
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -170,17 +173,35 @@ public class ImagePanel extends javax.swing.JPanel {
     private void formMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_formMouseClicked
         if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON1) {
             //nothing, let indiPanel manage that click
-        } else if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && file != null && file.exists()) {
-            try {
-                Desktop.getDesktop().open(file);
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
+        } else if (callingPanel != null && evt.getButton() == MouseEvent.BUTTON3 && inputSource != null) {
+            if (inputSource instanceof FileInput) {
+                try {
+                    Desktop.getDesktop().open(((FileInput) inputSource).getFile());
+                } catch (IOException ex) {
+                     LOG.log(Level.FINE, "Unable to open File", ex);
+                }
             }
-        } else if (callingPanel == null && evt.getButton() == MouseEvent.BUTTON1 && file != null && file.exists()) {
-            try {
-                Desktop.getDesktop().open(file);
-            } catch (IOException ex) {
-                //Exceptions.printStackTrace(ex);
+            if (inputSource instanceof URLInput) {
+                try {
+                    Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
+                } catch (URISyntaxException | IOException ex) {
+                    LOG.log(Level.FINE, "Unable to open File", ex);
+                }
+            }
+        } else if (callingPanel == null && evt.getButton() == MouseEvent.BUTTON1) {
+            if (inputSource instanceof FileInput) {
+                try {
+                    Desktop.getDesktop().open(((FileInput) inputSource).getFile());
+                } catch (IOException ex) {
+                     LOG.log(Level.FINE, "Unable to open File", ex);
+                }
+            }
+            if (inputSource instanceof URLInput) {
+                try {
+                    Desktop.getDesktop().browse(((URLInput) inputSource).getURL().toURI());
+                } catch (URISyntaxException | IOException ex) {
+                    LOG.log(Level.FINE, "Unable to open File", ex);
+                }
             }
         }
     }//GEN-LAST:event_formMouseClicked
@@ -218,14 +239,12 @@ public class ImagePanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
-
     public void redraw() {
-        setMedia(this.file, IMG_DEFAULT);
+        setMedia(this.inputSource, IMG_DEFAULT);
     }
 
-    
-    public File getFile() {
-        return file;
+    public InputSource getInput() {
+        return inputSource;
     }
 
     public BufferedImage getImage() {
@@ -245,21 +264,29 @@ public class ImagePanel extends javax.swing.JPanel {
 
             // Define new filename
             String ext = null;
-            String s = file.getName();
+            String s = inputSource.getName();
             int i = s.lastIndexOf('.');
             if (i > 0 && i < s.length() - 1) {
                 ext = s.substring(i + 1).toLowerCase();
             }
+            String filepath;
             String c = s.contains(CROPPED) ? "i" : CROPPED;  // only add "x" after the first cropped copy
-            String filepath = file.getParentFile().getAbsolutePath() + File.separator + s.substring(0, i) + c + "." + ext;
-            
+            File file = new File(inputSource.getLocation());
+            if (file.exists()) {
+                filepath = file.getParentFile().getAbsolutePath() + File.separator + s.substring(0, i) + c + "." + ext;
+            } else {
+                //TODO : Add default path when defined.
+                filepath = " ";
+
+            }
+
             // Save new file
             file = new File(filepath);
-            ImageIO.write(subImage, ext, file); 
-            setMedia(file, subImage);
-            DialogManager.create(NbBundle.getMessage(ImagePanel.class, "TITL_CroppedSuccessfully"), 
+            ImageIO.write(subImage, ext, file);
+            setMedia(InputSource.get(file).orElse(null), subImage);
+            DialogManager.create(NbBundle.getMessage(ImagePanel.class, "TITL_CroppedSuccessfully"),
                     NbBundle.getMessage(ImagePanel.class, "MSG_CroppedSuccessfully", file.getName())).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
-            
+
         } catch (Exception e) {
             DialogManager.create(NbBundle.getMessage(ImagePanel.class, "TITL_CannotSaveCopy"), e.getLocalizedMessage()).setMessageType(DialogManager.ERROR_MESSAGE).show();
         }

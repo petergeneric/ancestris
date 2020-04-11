@@ -1,16 +1,15 @@
 package ancestris.modules.editors.genealogyeditor.models;
 
 import genj.gedcom.PropertyFile;
+import genj.io.InputSource;
+import genj.renderer.MediaRenderer;
 import java.awt.Image;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
-import javax.imageio.ImageIO;
+import java.util.Optional;
 import javax.swing.ImageIcon;
 import javax.swing.table.AbstractTableModel;
-import org.openide.util.Exceptions;
 import org.openide.util.NbBundle;
 
 /**
@@ -25,7 +24,7 @@ import org.openide.util.NbBundle;
  */
 public class MultimediaFilesTableModel extends AbstractTableModel {
 
-    List<PropertyFile> multimediaFilesList = new ArrayList<PropertyFile>();
+    List<PropertyFile> multimediaFilesList = new ArrayList<>();
     private final String[] columnsName = {
         "",
         NbBundle.getMessage(MultimediaFilesTableModel.class, "MultimediaFilesTableModel.column.fileName.title"), //        "Image"
@@ -47,28 +46,24 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
     @Override
     public Object getValueAt(int row, int column) {
         if (row < multimediaFilesList.size()) {
-            File multimediaFile = multimediaFilesList.get(row).getFile();
+            InputSource multimediaFile = multimediaFilesList.get(row).getInput().orElse(null);
             if (multimediaFile != null) {
                 switch (column) {
                     case 0: {
-                        if (multimediaFile.exists()) {
+                        Optional<BufferedImage> obi = MediaRenderer.getImage(multimediaFile);
+                        if (obi.isPresent()) {
                             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/media.png"));
-                            try {
-                                Image image;
-                                try {
-                                    image = ImageIO.read(multimediaFile);
-                                    if (image != null) {
-                                        image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
-                                    }
-                                } catch (IOException ex) {
-                                    image = sun.awt.shell.ShellFolder.getShellFolder(multimediaFile).getIcon(true);
-                                }
-                                if (image != null) {
-                                    imageIcon = new ImageIcon(image);
-                                }
-                            } catch (FileNotFoundException ex) {
-                                Exceptions.printStackTrace(ex);
+
+                            Image image = obi.get();
+
+                            if (image != null) {
+                                image = image.getScaledInstance(-1, 32, image.SCALE_DEFAULT);
                             }
+
+                            if (image != null) {
+                                imageIcon = new ImageIcon(image);
+                            }
+
                             return imageIcon;
                         } else {
                             return new ImageIcon(getClass().getResource("/ancestris/modules/editors/genealogyeditor/resources/edit_delete.png"));
@@ -76,7 +71,7 @@ public class MultimediaFilesTableModel extends AbstractTableModel {
                     }
 
                     case 1: {
-                        return multimediaFile.getAbsolutePath();
+                        return multimediaFile.getLocation();
                     }
                     default:
                         return "";

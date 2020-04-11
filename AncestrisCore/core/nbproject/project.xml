@@ -255,9 +255,11 @@
                 <package>genj.gedcom.images</package>
                 <package>genj.gedcom.time</package>
                 <package>genj.io</package>
+                <package>genj.io.input</package>
                 <package>genj.option</package>
                 <package>genj.print</package>
                 <package>genj.renderer</package>
+                <package>genj.renderer.views</package>
                 <package>genj.util</package>
                 <package>genj.util.swing</package>
                 <package>genj.view</package>

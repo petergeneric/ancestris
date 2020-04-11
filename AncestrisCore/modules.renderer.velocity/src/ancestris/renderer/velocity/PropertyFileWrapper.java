@@ -25,7 +25,7 @@ public class PropertyFileWrapper extends PropertyWrapper {
 
     public String getAbsolutePath() {
         try {
-            return ((PropertyFile) property).getFile().getAbsolutePath();
+            return ((PropertyFile) property).getInput().get().getLocation();
         } catch (Exception e) {
             return null;
         }

@@ -36,6 +36,7 @@ import genj.gedcom.PropertyXRef;
 import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.Submitter;
+import genj.io.input.FileInput;
 import genj.option.OptionsWidget;
 import genj.report.Report;
 import genj.util.Resources;
@@ -1243,7 +1244,7 @@ public class ReportWebsite extends Report {
 
             int imgSize = 100;
             // Copy the file to dstDir
-            File srcFile = file.getFile();
+            File srcFile = ((FileInput)file.getInput().get()).getFile();
             if (srcFile != null) {
                 File objectDir = new File(destDir, addressToDir(object.getId()));
                 File dstFile = new File(objectDir, srcFile.getName());
@@ -1573,7 +1574,7 @@ public class ReportWebsite extends Report {
                             // For the gallery
                             if (makeGalleryImage) {
                                 File galleryImage = new File(currentObjectDir, "gallery.jpg");
-                                File dstFile = media.getFile();
+                                File dstFile = (((FileInput)media.getFile()).getFile());
                                 try {
                                     if (!galleryImage.exists() || dstFile.lastModified() > galleryImage.lastModified()) {
                                         makeThumb(dstFile, 50, 70, galleryImage);
@@ -1634,7 +1635,7 @@ public class ReportWebsite extends Report {
                     }
                     reportUnhandledProperties(file, new String[]{"FORM"});
                     // Copy the file to dstDir
-                    File srcFile = file.getFile();
+                    File srcFile = ((FileInput)file.getInput().get()).getFile();
                     if (srcFile != null) {
                         File dstFile = new File(currentObjectDir, srcFile.getName());
                         File thumbFile = new File(dstFile.getParentFile(), "thumb_" + dstFile.getName());

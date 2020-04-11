@@ -2,15 +2,15 @@ package ancestris.modules.editors.genealogyeditor.editors;
 
 import ancestris.modules.editors.genealogyeditor.AriesTopComponent;
 import ancestris.modules.editors.genealogyeditor.beans.ImageBean;
-import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.modules.editors.genealogyeditor.models.EventsListModel;
 import ancestris.modules.editors.genealogyeditor.panels.IndividualsTablePanel;
+import ancestris.modules.editors.genealogyeditor.utilities.PropertyTag2Name;
 import ancestris.util.swing.DialogManager;
 import genj.gedcom.*;
+import genj.io.InputSource;
 import genj.util.Registry;
 import genj.view.ViewContext;
 import java.awt.Component;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -714,12 +714,12 @@ public class FamilyEditor extends EntityEditor {
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
-                    File file = null;
+                    InputSource file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -728,7 +728,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -739,7 +739,7 @@ public class FamilyEditor extends EntityEditor {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
@@ -748,7 +748,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
 
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -823,12 +823,12 @@ public class FamilyEditor extends EntityEditor {
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
                 for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
-                    File file = null;
+                    InputSource file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -837,7 +837,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -848,7 +848,7 @@ public class FamilyEditor extends EntityEditor {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
@@ -857,7 +857,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
 
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -921,12 +921,12 @@ public class FamilyEditor extends EntityEditor {
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
-                    File file = null;
+                    InputSource file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -935,7 +935,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -946,7 +946,7 @@ public class FamilyEditor extends EntityEditor {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
@@ -955,7 +955,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
 
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -989,7 +989,7 @@ public class FamilyEditor extends EntityEditor {
 
     private void linkToWifeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_linkToWifeButtonActionPerformed
         IndividualsTablePanel individualsTablePanel = new IndividualsTablePanel();
-        List<Indi> individualsList = new ArrayList<Indi>();
+        List<Indi> individualsList = new ArrayList<>();
 
         for (Indi individual : mFamily.getGedcom().getIndis()) {
             if (individual.getSex() == PropertySex.FEMALE || individual.getSex() == PropertySex.UNKNOWN) {
@@ -1020,12 +1020,12 @@ public class FamilyEditor extends EntityEditor {
 
                 for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
-                    File file = null;
+                    InputSource file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -1034,7 +1034,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -1045,7 +1045,7 @@ public class FamilyEditor extends EntityEditor {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
@@ -1054,7 +1054,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
 
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -1097,12 +1097,12 @@ public class FamilyEditor extends EntityEditor {
             husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
             for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                 String objetFormat = null;
-                File file = null;
+                InputSource file = null;
                 if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
                         Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             Property propertyFormat = propertyFile.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -1111,7 +1111,7 @@ public class FamilyEditor extends EntityEditor {
                     } else {
                         Property propertyFile = multiMediaObject.getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             Property propertyFormat = propertyFile.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -1122,7 +1122,7 @@ public class FamilyEditor extends EntityEditor {
                     if (multiMediaObject instanceof PropertyMedia) {
                         Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                         }
                         Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                         if (propertyFormat != null) {
@@ -1131,7 +1131,7 @@ public class FamilyEditor extends EntityEditor {
                     } else {
                         Property propertyFile = multiMediaObject.getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                         }
 
                         Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -1157,7 +1157,6 @@ public class FamilyEditor extends EntityEditor {
 
     private void editWifeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_editWifeButtonActionPerformed
         Indi individual = mFamily.getWife();
-        Gedcom gedcom = mFamily.getGedcom();
         IndividualEditor individualEditor = new IndividualEditor();
         individualEditor.setContext(new Context(individual));
         if (individualEditor.showPanel()) {
@@ -1167,12 +1166,12 @@ public class FamilyEditor extends EntityEditor {
 
             for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                 String objetFormat = null;
-                File file = null;
+                InputSource file = null;
                 if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                     if (multiMediaObject instanceof PropertyMedia) {
                         Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             Property propertyFormat = propertyFile.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -1181,7 +1180,7 @@ public class FamilyEditor extends EntityEditor {
                     } else {
                         Property propertyFile = multiMediaObject.getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             Property propertyFormat = propertyFile.getProperty("FORM");
                             if (propertyFormat != null) {
                                 objetFormat = propertyFormat.getValue();
@@ -1192,7 +1191,7 @@ public class FamilyEditor extends EntityEditor {
                     if (multiMediaObject instanceof PropertyMedia) {
                         Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                         }
                         Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                         if (propertyFormat != null) {
@@ -1201,7 +1200,7 @@ public class FamilyEditor extends EntityEditor {
                     } else {
                         Property propertyFile = multiMediaObject.getProperty("FILE");
                         if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                            file = ((PropertyFile) propertyFile).getFile();
+                            file = ((PropertyFile) propertyFile).getInput().orElse(null);
                         }
 
                         Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -1245,7 +1244,7 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText("");
                 husbandBirthDateLabelDate.setText("");
                 husbandDeathDateLabelDate.setText("");
-                husbandImageBean.setImage((File) null, PropertySex.MALE);
+                husbandImageBean.setImage(null, PropertySex.MALE);
 
                 addHusbandButton.setVisible(true);
                 linkToHusbandButton.setVisible(true);
@@ -1277,7 +1276,7 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText("");
                 wifeBirthDateLabelDate.setText("");
                 wifeDeathDateLabelDate.setText("");
-                wifeImageBean.setImage((File) null, PropertySex.FEMALE);
+                wifeImageBean.setImage(null, PropertySex.FEMALE);
 
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
@@ -1549,16 +1548,16 @@ public class FamilyEditor extends EntityEditor {
                 husbandNameTextField.setText(" "+mHusband.getName());
                 husbandBirthDateLabelDate.setText(mHusband.getBirthAsString());
                 husbandDeathDateLabelDate.setText(mHusband.getDeathAsString());
-                File selectedFile = null;
+                InputSource selectedFile = null;
 
                 for (Property multiMediaObject : mHusband.getProperties("OBJE")) {
                     String objetFormat = null;
-                    File file = null;
+                    InputSource file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -1567,7 +1566,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -1578,7 +1577,7 @@ public class FamilyEditor extends EntityEditor {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
@@ -1587,7 +1586,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
 
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -1614,7 +1613,7 @@ public class FamilyEditor extends EntityEditor {
                 linkToHusbandButton.setVisible(true);
                 removeHusbandButton.setVisible(false);
                 editHusbandButton.setVisible(false);
-                husbandImageBean.setImage((File) null, PropertySex.MALE);
+                husbandImageBean.setImage(null, PropertySex.MALE);
             }
 
             /*
@@ -1625,16 +1624,16 @@ public class FamilyEditor extends EntityEditor {
                 wifeNameTextField.setText(" "+mWife.getName());
                 wifeBirthDateLabelDate.setText(mWife.getBirthAsString());
                 wifeDeathDateLabelDate.setText(mWife.getDeathAsString());
-                File selectedFile = null;
+                InputSource selectedFile = null;
 
                 for (Property multiMediaObject : mWife.getProperties("OBJE")) {
                     String objetFormat = null;
-                    File file = null;
+                    InputSource file = null;
                     if (mFamily.getGedcom().getGrammar().getVersion().equals("5.5.1")) {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -1643,7 +1642,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                                 Property propertyFormat = propertyFile.getProperty("FORM");
                                 if (propertyFormat != null) {
                                     objetFormat = propertyFormat.getValue();
@@ -1654,7 +1653,7 @@ public class FamilyEditor extends EntityEditor {
                         if (multiMediaObject instanceof PropertyMedia) {
                             Property propertyFile = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
                             Property propertyFormat = ((Media) ((PropertyMedia) multiMediaObject).getTargetEntity()).getProperty("FORM");
                             if (propertyFormat != null) {
@@ -1663,7 +1662,7 @@ public class FamilyEditor extends EntityEditor {
                         } else {
                             Property propertyFile = multiMediaObject.getProperty("FILE");
                             if (propertyFile != null && propertyFile instanceof PropertyFile) {
-                                file = ((PropertyFile) propertyFile).getFile();
+                                file = ((PropertyFile) propertyFile).getInput().orElse(null);
                             }
 
                             Property propertyFormat = multiMediaObject.getProperty("FORM");
@@ -1686,7 +1685,7 @@ public class FamilyEditor extends EntityEditor {
                 removeWifeButton.setVisible(true);
                 editWifeButton.setVisible(true);
             } else {
-                wifeImageBean.setImage((File) null, PropertySex.FEMALE);
+                wifeImageBean.setImage(null, PropertySex.FEMALE);
                 addWifeButton.setVisible(true);
                 linkToWifeButton.setVisible(true);
                 removeWifeButton.setVisible(false);

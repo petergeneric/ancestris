@@ -34,6 +34,7 @@ import genj.io.GedcomReaderContext;
 import genj.io.GedcomReaderFactory;
 import genj.io.GedcomWriter;
 import genj.io.IGedcomWriter;
+import genj.io.InputSource;
 import genj.util.Origin;
 import genj.util.Registry;
 import genj.util.Resources;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
@@ -303,23 +305,29 @@ public abstract class GedcomMgr {
                 if (filter.veto(mediaFile.getEntity()) || filter.veto(mediaFile)) {
                     continue;
                 }
-                File prevMediafile, newMediafile;
+                File newMediafile;
+                
+                InputSource prevMediafile = null;
                 String relPath = mediaFile.getValue();
                 Path p = Paths.get(relPath).normalize();
                 if (p.isAbsolute()) {
                     relPath = p.subpath(0, p.getNameCount() - 1).toString() + File.separator + p.getFileName(); // make absolute path relative
-                    prevMediafile = mediaFile.getFile();
+                    Optional<InputSource> ois = mediaFile.getInput();
+                    if (ois.isPresent()) {
+                        prevMediafile = ois.get();
+                    }   
                     mediaFile.setValue(relPath);
                 } else {
-                    prevMediafile = new File(prevDir + File.separator + relPath);
+                    prevMediafile = InputSource.get(new File(prevDir + File.separator + relPath)).get();
                 }
                 newMediafile = new File(newDir + File.separator + relPath);
 
                 // Now update mediafile value and copy file preserving file date
-                if (prevMediafile.exists()) {
-                    FileUtils.copyFile(prevMediafile, newMediafile, true);
+                if (prevMediafile != null) {
+                    
+                    FileUtils.copyInputStreamToFile(prevMediafile.open(), newMediafile);
                 } else {
-                    String fileErr = prevMediafile.getCanonicalPath();
+                    String fileErr = prevMediafile.getLocation();
                     String msg = RES.getString("save.options.files.medianotfound", fileErr, mediaFile.getEntity());
                     LOG.log(Level.FINER, "Failed to copy media : " + fileErr);
                     if (DialogManager.YES_OPTION != DialogManager.createYesNo(RES.getString("save.options.files"), msg).setMessageType(DialogManager.WARNING_MESSAGE).show()) {

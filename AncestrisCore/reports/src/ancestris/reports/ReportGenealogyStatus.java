@@ -2,6 +2,8 @@ package ancestris.reports;
 
 import genj.gedcom.*;
 import genj.gedcom.time.PointInTime;
+import genj.io.InputSource;
+import genj.io.input.FileInput;
 import genj.report.Report;
 import java.io.File;
 import java.math.BigInteger;
@@ -206,8 +208,8 @@ public class ReportGenealogyStatus extends Report {
                 }
             }
             for (PropertyFile file : ent.getProperties(PropertyFile.class)) {
-                if (file != null && file.getFile() != null) {
-                    gedcomFiles.add(file.getFile().getName());
+                if (file != null && file.getInput().orElse(null) != null) {
+                    gedcomFiles.add(file.getInput().get().getName());
                 }
             }
         }
@@ -813,7 +815,8 @@ public class ReportGenealogyStatus extends Report {
 
     private boolean isValidFile(Property fp) {
         if (fp != null && fp instanceof PropertyFile) {
-            File f = ((PropertyFile) fp).getFile();
+            InputSource is = ((PropertyFile) fp).getInput().orElse(null);
+            File f = ((FileInput) is).getFile();
             if (f != null && f.exists()) {
                 return true;
             } else {

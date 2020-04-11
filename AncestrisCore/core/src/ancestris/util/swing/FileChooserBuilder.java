@@ -11,7 +11,7 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  */
 
-/*
+ /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
  * Copyright 1997-2010 Oracle and/or its affiliates. All rights reserved.
@@ -62,11 +62,9 @@ package ancestris.util.swing;
  * <li/>Fix approve text (now if set, JFileCooser is of type Custom)
  * <li/>Add setParent API
  * <li/>Add 'overwrite' warning
- * 
+ *
  * </ul>
  */
-
-
 import ancestris.core.resources.Images;
 import genj.util.Registry;
 import java.awt.Component;
@@ -100,18 +98,20 @@ import javax.swing.filechooser.FileSystemView;
 import javax.swing.filechooser.FileView;
 import org.openide.filesystems.MIMEResolver;
 import org.openide.util.*;
+
 /**
- * Utility class for working with JFileChoosers.  In particular, remembering
- * the last-used directory for a given file is made transparent.  You pass an
- * ad-hoc string key to the constructor (the fully qualified name of the
- * calling class is good for uniqueness, and there is a constructor that takes
- * a <code>Class</code> object as an argument for this purpose).  That key is
- * used to look up the most recently-used directory from any previous invocations
- * with the same key.  This makes it easy to have your user interface
+ * Utility class for working with JFileChoosers. In particular, remembering the
+ * last-used directory for a given file is made transparent. You pass an ad-hoc
+ * string key to the constructor (the fully qualified name of the calling class
+ * is good for uniqueness, and there is a constructor that takes a
+ * <code>Class</code> object as an argument for this purpose). That key is used
+ * to look up the most recently-used directory from any previous invocations
+ * with the same key. This makes it easy to have your user interface
  * &ldquo;remember&rdquo; where the user keeps particular types of files, and
  * saves the user from having to navigate through the same set of directories
  * every time they need to locate a file from a particular place.
- * <p></p>
+ * <p>
+ * </p>
  * <code>FileChooserBuilder</code>'s methods each return <code>this</code>, so
  * it is possible to chain invocations to simplify setting up a file chooser.
  * Example usage:
@@ -126,25 +126,28 @@ import org.openide.util.*;
  *      if (toAdd != null) {
  *          //do something
  *      }
- *</pre>
- * <p></p>
- * Instances of this class are intended to be thrown away after use.  Typically
- * you create a builder, set it to create file choosers as you wish, then
- * use it to show a dialog or create a file chooser you then do something
- * with.
- * <p></p>
- * Supports the most common subset of JFileChooser functionality;  if you
- * need to do something exotic with a file chooser, you are probably better
- * off creating your own.
- * <p></p>
- * <b>Note:</b> If you use the constructor that takes a <code>Class</code> object,
- * please use <code>new FileChooserBuilder(MyClass.class)</code>, not
- * <code>new FileChooserBuilder(getClass())</code>.  This avoids unexpected
+ * </pre>
+ * <p>
+ * </p>
+ * Instances of this class are intended to be thrown away after use. Typically
+ * you create a builder, set it to create file choosers as you wish, then use it
+ * to show a dialog or create a file chooser you then do something with.
+ * <p>
+ * </p>
+ * Supports the most common subset of JFileChooser functionality; if you need to
+ * do something exotic with a file chooser, you are probably better off creating
+ * your own.
+ * <p>
+ * </p>
+ * <b>Note:</b> If you use the constructor that takes a <code>Class</code>
+ * object, please use <code>new FileChooserBuilder(MyClass.class)</code>, not
+ * <code>new FileChooserBuilder(getClass())</code>. This avoids unexpected
  * behavior in the case of subclassing.
  *
  * @author Tim Boudreau
  */
 public class FileChooserBuilder {
+
     private boolean dirsOnly;
     private BadgeProvider badger;
     private String title;
@@ -170,7 +173,7 @@ public class FileChooserBuilder {
     public static String[] imgExtensions = {"png", "jpg", "jpeg", "gif", "tiff", "bmp", "svg"};
     public static String[] sndExtensions = {"mp3", "wav", "ogg", "flac"};
     public static String[] vidExtensions = {"mp4", "flv", "ogg", "avi", "mov", "mpeg"};
-    public static String[] pdfExtensions = {"pdf", "ps" };
+    public static String[] pdfExtensions = {"pdf", "ps"};
     public static String[] txtExtensions = {"txt"};
     public static String[] docExtensions = {"txt", "doc", "odt"};
     public static String[] csvExtensions = {"csv"};
@@ -185,11 +188,12 @@ public class FileChooserBuilder {
     private static String DIMH = "dimH";
 
     private JFileChooser activeChooser = null;
-    
+
     /**
-     * Create a new FileChooserBuilder using the name of the passed class
-     * as the metadata for looking up a starting directory from previous
-     * application sessions or invocations.
+     * Create a new FileChooserBuilder using the name of the passed class as the
+     * metadata for looking up a starting directory from previous application
+     * sessions or invocations.
+     *
      * @param type A non-null class object, typically the calling class
      */
     public FileChooserBuilder(Class type) {
@@ -197,11 +201,11 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Create a new FileChooserBuilder.  The passed key is used as a key
-     * into NbPreferences to look up the directory the file chooser should
-     * initially be rooted on.
+     * Create a new FileChooserBuilder. The passed key is used as a key into
+     * NbPreferences to look up the directory the file chooser should initially
+     * be rooted on.
      *
-     * @param dirKey A non-null ad-hoc string.  If a FileChooser was previously
+     * @param dirKey A non-null ad-hoc string. If a FileChooser was previously
      * used with the same string as is passed, then the initial directory
      */
     public FileChooserBuilder(String dirKey) {
@@ -213,6 +217,7 @@ public class FileChooserBuilder {
     /**
      * Set whether or not any file choosers created by this builder will show
      * only directories.
+     *
      * @param val true if files should not be shown
      * @return this
      */
@@ -229,11 +234,11 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Provide an implementation of BadgeProvider which will "badge" the
-     * icons of some files.
+     * Provide an implementation of BadgeProvider which will "badge" the icons
+     * of some files.
      *
-     * @param provider A badge provider which will alter the icon of files
-     * or folders that may be of particular interest to the user
+     * @param provider A badge provider which will alter the icon of files or
+     * folders that may be of particular interest to the user
      * @return this
      */
     public FileChooserBuilder setBadgeProvider(BadgeProvider provider) {
@@ -243,6 +248,7 @@ public class FileChooserBuilder {
 
     /**
      * Provide a default implementation of badge provider.
+     *
      * @return this
      */
     public FileChooserBuilder setDefaultBadgeProvider() {
@@ -250,10 +256,10 @@ public class FileChooserBuilder {
         return this;
     }
 
-
     /**
-     * Provide an implementation of an image previewer which will show the
-     * image of a file when it is selected.
+     * Provide an implementation of an image previewer which will show the image
+     * of a file when it is selected.
+     *
      * @return this
      */
     public FileChooserBuilder setDefaultPreviewer() {
@@ -261,9 +267,9 @@ public class FileChooserBuilder {
         return this;
     }
 
-
     /**
      * Provide an implementation of an accessory.
+     *
      * @param accessory add accessory
      * @return this
      */
@@ -274,6 +280,7 @@ public class FileChooserBuilder {
 
     /**
      * Set the dialog title for any JFileChoosers created by this builder.
+     *
      * @param val A localized, human-readable title
      * @return this
      */
@@ -284,6 +291,7 @@ public class FileChooserBuilder {
 
     /**
      * Set default title
+     *
      * @return this
      */
     public FileChooserBuilder setDefaultTitle() {
@@ -292,8 +300,9 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Set the text on the OK button for any file chooser dialogs produced
-     * by this builder.
+     * Set the text on the OK button for any file chooser dialogs produced by
+     * this builder.
+     *
      * @param val A short, localized, human-readable string
      * @return this
      */
@@ -304,6 +313,7 @@ public class FileChooserBuilder {
 
     /**
      * Set the tooltip text on the OK button.
+     *
      * @param val A short, localized, human-readable string
      * @return this
      */
@@ -313,29 +323,32 @@ public class FileChooserBuilder {
     }
 
     private String defaultExtension = null;
-    
-    public FileChooserBuilder setDefaultExtension(String extension){
+
+    public FileChooserBuilder setDefaultExtension(String extension) {
         defaultExtension = extension;
         return this;
     }
 
     /**
      * Set a file filter which filters the list of selectable files.
+     *
      * @param filter
      * @return this
      */
-    public FileChooserBuilder setFileFilter (FileFilter filter) {
+    public FileChooserBuilder setFileFilter(FileFilter filter) {
         this.filter = filter;
         return this;
     }
 
     /**
      * Set a file filter from array of Formats
+     *
      * @param Format[]
      * @return this
      */
     private Map<String, String> formats = new HashMap<>();   // description, extension
-    public FileChooserBuilder setFileFilters (Map<String, String> formats) {
+
+    public FileChooserBuilder setFileFilters(Map<String, String> formats) {
         this.formats = formats;
         for (String key : formats.keySet()) {
             filters.add(new FileNameExtensionFilter(key, formats.get(key)));
@@ -344,11 +357,13 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Force filter to be only the file filter provided while file chooser is already open.
-     * @param filter A file filter 
+     * Force filter to be only the file filter provided while file chooser is
+     * already open.
+     *
+     * @param filter A file filter
      * @return this
      */
-    public FileChooserBuilder forceFileFilter (FileFilter filter) {
+    public FileChooserBuilder forceFileFilter(FileFilter filter) {
         if (activeChooser != null) {
             activeChooser.resetChoosableFileFilters();
             activeChooser.setFileFilter(filter);
@@ -358,16 +373,17 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Equivalent to calling <code>JFileChooser.addChoosableFileFilter(filter)</code>.
-     * Adds another file filter that can be displayed in the file filters combo
-     * box in the file chooser.
+     * Equivalent to calling
+     * <code>JFileChooser.addChoosableFileFilter(filter)</code>. Adds another
+     * file filter that can be displayed in the file filters combo box in the
+     * file chooser.
      *
      * @param filter The file filter to add
      * @return this
      * @since 7.26.0
      */
-    public FileChooserBuilder addFileFilter (FileFilter filter) {
-        filters.add (filter);
+    public FileChooserBuilder addFileFilter(FileFilter filter) {
+        filters.add(filter);
         return this;
     }
 
@@ -385,12 +401,12 @@ public class FileChooserBuilder {
     }
 
     /**
-     * Determines whether the <code>AcceptAll FileFilter</code> is used
-     * as an available choice in the choosable filter list.
-     * If false, the <code>AcceptAll</code> file filter is removed from
-     * the list of available file filters.
-     * If true, the <code>AcceptAll</code> file filter will become the
-     * the actively used file filter.
+     * Determines whether the <code>AcceptAll FileFilter</code> is used as an
+     * available choice in the choosable filter list. If false, the
+     * <code>AcceptAll</code> file filter is removed from the list of available
+     * file filters. If true, the <code>AcceptAll</code> file filter will become
+     * the the actively used file filter.
+     *
      * @param accept whether the <code>AcceptAll FileFilter</code> is used
      * @return this
      * @since 8.3
@@ -402,30 +418,34 @@ public class FileChooserBuilder {
 
     /**
      * Set the current directory which should be used <b>only if</b>
-     * a last-used directory cannot be found for the key string passed
-     * into this builder's constructor.
-     * @param dir A directory to root any created file choosers on if
-     * there is no stored path for this builder's key
+     * a last-used directory cannot be found for the key string passed into this
+     * builder's constructor.
+     *
+     * @param dir A directory to root any created file choosers on if there is
+     * no stored path for this builder's key
      * @return this
      */
-    public FileChooserBuilder setDefaultWorkingDirectory (File dir) {
+    public FileChooserBuilder setDefaultWorkingDirectory(File dir) {
         failoverDir = dir;
         return this;
     }
 
     /**
      * Set the current directory to the default report directory.
+     *
      * @return this
      */
-    public FileChooserBuilder setDefaultDirAsReportDirectory () {
+    public FileChooserBuilder setDefaultDirAsReportDirectory() {
         failoverDir = new File(Registry.get(genj.gedcom.GedcomOptions.class).get("reportDir", System.getProperty("user.home")));
         return this;
     }
 
     private boolean force = false;
+
     /**
      * Force use of the failover directory - i.e. ignore the directory key
      * passed in.
+     *
      * @param val
      * @return this
      */
@@ -436,29 +456,32 @@ public class FileChooserBuilder {
 
     /**
      * Set selected file.
+     *
      * @param selectedFile A file to select
      * @return this
      */
-    public FileChooserBuilder setSelectedFile (File selectedFile) {
+    public FileChooserBuilder setSelectedFile(File selectedFile) {
         this.selectedFile = selectedFile;
         return this;
     }
 
     /**
      * Force selected file while file chooser is already open.
-     * @param selectedFile A file to display in the file box 
+     *
+     * @param selectedFile A file to display in the file box
      * @return this
      */
-    public FileChooserBuilder forceSelectedFile (File selectedFile) {
+    public FileChooserBuilder forceSelectedFile(File selectedFile) {
         if (activeChooser != null) {
             activeChooser.setSelectedFile(selectedFile);
         }
         return this;
     }
-    
+
     /**
      * Enable file hiding in any created file choosers
-     * @param fileHiding Whether or not to hide files.  Default is no.
+     *
+     * @param fileHiding Whether or not to hide files. Default is no.
      * @return this
      */
     public FileChooserBuilder setFileHiding(boolean fileHiding) {
@@ -468,7 +491,9 @@ public class FileChooserBuilder {
 
     /**
      * Show/hide control buttons
-     * @param val Whether or not to show OK and Cancel buttons on certain UI. Default is true.
+     *
+     * @param val Whether or not to show OK and Cancel buttons on certain UI.
+     * Default is true.
      * @return this
      */
     public FileChooserBuilder setControlButtonsAreShown(boolean val) {
@@ -479,6 +504,7 @@ public class FileChooserBuilder {
     /**
      * Set the accessible description for any file choosers created by this
      * builder
+     *
      * @param aDescription The description
      * @return this
      */
@@ -488,19 +514,20 @@ public class FileChooserBuilder {
     }
 
     private Component parent = null;
+
     /**
      * @param parent
-     * @return 
+     * @return
      */
     public FileChooserBuilder setParent(Component parent) {
         this.parent = parent;
         return this;
     }
-    
-    
+
     /**
      * Create a JFileChooser that conforms to the parameters set in this
      * builder.
+     *
      * @return A file chooser
      */
     public JFileChooser createFileChooser() {
@@ -510,10 +537,6 @@ public class FileChooserBuilder {
         return result;
     }
 
-    
-    
-    
-    
     /**
      * Set a selection approver which can display an &quot;Overwrite file?&quot;
      * or similar dialog if necessary, when the user presses the accept button
@@ -524,18 +547,15 @@ public class FileChooserBuilder {
      * @return this
      * @since 7.26.0
      */
-    public FileChooserBuilder setSelectionApprover (SelectionApprover approver) {
+    public FileChooserBuilder setSelectionApprover(SelectionApprover approver) {
         this.approver = approver;
         return this;
     }
 
-    
-    
     ////////// SHOW-ERS //////////////////////////////
-    
-    
     /**
      * Show an open dialog that allows multiple selection.
+     *
      * @return An array of files, or null if the user cancelled the dialog
      */
     public File[] showMultiOpenDialog() {
@@ -555,15 +575,16 @@ public class FileChooserBuilder {
     /**
      * Show an open dialog with a file chooser set up according to the
      * parameters of this builder.
-     * @return A file if the user clicks the accept button and a file or
-     * folder was selected at the time the user clicked cancel.
+     *
+     * @return A file if the user clicks the accept button and a file or folder
+     * was selected at the time the user clicked cancel.
      */
     public File showOpenDialog() {
         JFileChooser chooser = createFileChooser();
-        if( Boolean.getBoolean("nb.native.filechooser") ) { //NOI18N
-            FileDialog fileDialog = createFileDialog( chooser.getCurrentDirectory() );
-            if( null != fileDialog ) {
-                return showFileDialog(fileDialog, FileDialog.LOAD );
+        if (Boolean.getBoolean("nb.native.filechooser")) { //NOI18N
+            FileDialog fileDialog = createFileDialog(chooser.getCurrentDirectory());
+            if (null != fileDialog) {
+                return showFileDialog(fileDialog, FileDialog.LOAD);
             }
         }
         chooser.setMultiSelectionEnabled(false);
@@ -585,8 +606,9 @@ public class FileChooserBuilder {
     /**
      * Show a save dialog with the file chooser set up according to the
      * parameters of this builder.
-     * @return A file if the user clicks the accept button and a file or
-     * folder was selected at the time the user clicked cancel.
+     *
+     * @return A file if the user clicks the accept button and a file or folder
+     * was selected at the time the user clicked cancel.
      */
     public File showSaveDialog() {
         return showSaveDialog(true);
@@ -594,10 +616,10 @@ public class FileChooserBuilder {
 
     public File showSaveDialog(boolean askForOverwrite) {
         JFileChooser chooser = createFileChooser();
-        if( Boolean.getBoolean("nb.native.filechooser") ) { //NOI18N
-            FileDialog fileDialog = createFileDialog( chooser.getCurrentDirectory() );
-            if( null != fileDialog ) {
-                return showFileDialog( fileDialog, FileDialog.SAVE );
+        if (Boolean.getBoolean("nb.native.filechooser")) { //NOI18N
+            FileDialog fileDialog = createFileDialog(chooser.getCurrentDirectory());
+            if (null != fileDialog) {
+                return showFileDialog(fileDialog, FileDialog.SAVE);
             }
         }
         File file = null;
@@ -605,56 +627,55 @@ public class FileChooserBuilder {
             file = chooser.getSelectedFile();
         }
         saveDialogSize(chooser);
-        if (file == null){
+        if (file == null) {
             return null;
         }
         // add filter extension if file has none
         if (file.getName().indexOf('.') == -1) {
             String extension = getExtensionFromFilter(chooser.getFileFilter());
             if (extension != null && !extension.isEmpty()) {
-               defaultExtension = extension;    
+                defaultExtension = extension;
             }
             if (defaultExtension != null && !defaultExtension.isEmpty()) {
-                file = new File(file.getAbsolutePath() + "."+defaultExtension);
+                file = new File(file.getAbsolutePath() + "." + defaultExtension);
             }
         }
         if (askForOverwrite && file.exists()) {
-                if (DialogManager.YES_OPTION != DialogManager.createYesNo(
-                                NbBundle.getMessage(FileChooserBuilder.class, "TITL_fileOverwrite"),
-                                NbBundle.getMessage(FileChooserBuilder.class, "MSG_fileOverwrite", file.getName())).
-                                setMessageType(DialogManager.WARNING_MESSAGE).show()) {
-                    file = null;
-                }
+            if (DialogManager.YES_OPTION != DialogManager.createYesNo(
+                    NbBundle.getMessage(FileChooserBuilder.class, "TITL_fileOverwrite"),
+                    NbBundle.getMessage(FileChooserBuilder.class, "MSG_fileOverwrite", file.getName())).
+                    setMessageType(DialogManager.WARNING_MESSAGE).show()) {
+                file = null;
             }
+        }
         return file;
     }
-    
-    
+
     ////////// public tools ////////////////////
-    
     /*
-     * Get the extension of a file.
+     * Get the extension of a file Name.
      */
-    public static String getExtension(File f) {
-        return getExtension(f.getName());
-    }
-    
     public static String getExtension(String s) {
         String ext = null;
         int i = s.lastIndexOf('.');
 
         if (i > 0 && i < s.length() - 1) {
             ext = s.substring(i + 1).toLowerCase();
+            // Remove potential parameters after name (URL name).
+            int j = ext.indexOf('?');
+            if (j > 0 && j <= ext.length()) {
+                ext = ext.substring(0, j);
+            }
         }
+
         return ext;
     }
-    
-    
+
     /*
      * Get the extension icon of a file.
      */
     public static Icon getIconFromFileExtension(File file) {
-        String extension = getExtension(file);
+        String extension = getExtension(file.getName());
         Icon icon = null;
 
         if (Arrays.asList(gedExtensions).contains(extension)) {
@@ -678,7 +699,6 @@ public class FileChooserBuilder {
         return icon;
     }
 
-    
     /*
      * Get the type extensions
      */
@@ -697,27 +717,27 @@ public class FileChooserBuilder {
     public static FileNameExtensionFilter getPdfFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_PDF"), pdfExtensions);
     }
-    
+
     public static FileNameExtensionFilter getHtmlFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_HTML"), htmExtensions);
     }
-    
+
     public static FileNameExtensionFilter getCSVFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_CSV"), csvExtensions);
     }
-     
+
     public static FileNameExtensionFilter getImageFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Images"), imgExtensions);
     }
-     
+
     public static FileNameExtensionFilter getSoundFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Sounds"), sndExtensions);
     }
-     
+
     public static FileNameExtensionFilter getVideoFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Videos"), vidExtensions);
     }
-     
+
     public static FileNameExtensionFilter getZipFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Zip"), zipExtensions);
     }
@@ -725,22 +745,19 @@ public class FileChooserBuilder {
     public static FileNameExtensionFilter getAlmanacFilter() {
         return new FileNameExtensionFilter(NbBundle.getMessage(FileChooserBuilder.class, "Filter_Almanac"), almExtensions);
     }
-     
-    
-    
-    
-    // Private methods //////////////////////////////////////////////////////////////////////////////////////
 
-    
-    
+    // Private methods //////////////////////////////////////////////////////////////////////////////////////
     /**
-     * Tries to find an appropriate component to parent the file chooser to
-     * when showing a dialog.
+     * Tries to find an appropriate component to parent the file chooser to when
+     * showing a dialog.
+     *
      * @return this
      */
     private Component findDialogParent() {
         // Force display in the center
-        if (true) return null;
+        if (true) {
+            return null;
+        }
         // Forget all that follows, this is a bit strange to thte user to see this window at different positions everytime the time
         Component parent = KeyboardFocusManager.getCurrentKeyboardFocusManager().getFocusOwner();
         if (parent == null) {
@@ -753,36 +770,34 @@ public class FileChooserBuilder {
         return parent;
     }
 
-    
-    
-    private File showFileDialog( FileDialog fileDialog, int mode ) {
+    private File showFileDialog(FileDialog fileDialog, int mode) {
         String oldFileDialogProp = System.getProperty("apple.awt.fileDialogForDirectories"); //NOI18N
-        if( dirsOnly ) {
+        if (dirsOnly) {
             System.setProperty("apple.awt.fileDialogForDirectories", "true"); //NOI18N
         }
-        fileDialog.setMode( mode );
+        fileDialog.setMode(mode);
         fileDialog.setVisible(true);
-        if( dirsOnly ) {
-            if( null != oldFileDialogProp ) {
+        if (dirsOnly) {
+            if (null != oldFileDialogProp) {
                 System.setProperty("apple.awt.fileDialogForDirectories", oldFileDialogProp); //NOI18N
             } else {
                 System.clearProperty("apple.awt.fileDialogForDirectories"); //NOI18N
             }
         }
-        if( fileDialog.getDirectory() != null && fileDialog.getFile() != null ) {
+        if (fileDialog.getDirectory() != null && fileDialog.getFile() != null) {
             String selFile = fileDialog.getFile();
-            File dir = new File( fileDialog.getDirectory() );
-            return new File( dir, selFile );
+            File dir = new File(fileDialog.getDirectory());
+            return new File(dir, selFile);
         }
         return null;
     }
-    
+
     private void prepareFileChooser(JFileChooser chooser) {
         setDialogSize(chooser);
-        
+
         chooser.setFileSelectionMode(dirsOnly ? JFileChooser.DIRECTORIES_ONLY
-                : filesOnly ? JFileChooser.FILES_ONLY :
-                JFileChooser.FILES_AND_DIRECTORIES);
+                : filesOnly ? JFileChooser.FILES_ONLY
+                        : JFileChooser.FILES_AND_DIRECTORIES);
         chooser.setFileHidingEnabled(fileHiding);  // default to !ancestris.core.CoreOptions.getInstance().getShowHidden()   ?
 
         chooser.setControlButtonsAreShown(controlButtonsShown);
@@ -824,17 +839,20 @@ public class FileChooserBuilder {
         if (approveTooltipText != null) {
             chooser.setApproveButtonToolTipText(approveTooltipText);
         }
-        
+
         activeChooser = chooser;
     }
 
-    private FileDialog createFileDialog( File currentDirectory ) {
-        if( badger != null )
+    private FileDialog createFileDialog(File currentDirectory) {
+        if (badger != null) {
             return null;
-        if( !Boolean.getBoolean("nb.native.filechooser") )
+        }
+        if (!Boolean.getBoolean("nb.native.filechooser")) {
             return null;
-        if( dirsOnly && !Utilities.isMac() )
+        }
+        if (dirsOnly && !Utilities.isMac()) {
             return null;
+        }
         Component parentComponent = findDialogParent();
         Frame parentFrame = (Frame) SwingUtilities.getAncestorOfClass(Frame.class, parentComponent);
 
@@ -842,13 +860,14 @@ public class FileChooserBuilder {
         if (title != null) {
             fileDialog.setTitle(title);
         }
-        if( null != currentDirectory )
+        if (null != currentDirectory) {
             fileDialog.setDirectory(currentDirectory.getAbsolutePath());
+        }
 //        fileDialog.setLocationRelativeTo(null); 
 //        fileDialog.setAlwaysOnTop(true);
         return fileDialog;
     }
-    
+
     private void setDialogSize(JFileChooser chooser) {
         int x = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMX, "-1"));
         int y = Integer.valueOf(NbPreferences.forModule(FileChooserBuilder.class).get(DIMY, "-1"));
@@ -859,7 +878,7 @@ public class FileChooserBuilder {
         }
         chooser.setPreferredSize(new Dimension(w, h));
     }
-    
+
     private void saveDialogSize(JFileChooser chooser) {
         int x = chooser.getLocation().x;
         int y = chooser.getLocation().y;
@@ -879,7 +898,7 @@ public class FileChooserBuilder {
             Component c = jc[i];
             if (c instanceof JButton) {
                 JButton j = (JButton) c;
-                if (j.getText()!= null && !j.getText().isEmpty()) {
+                if (j.getText() != null && !j.getText().isEmpty()) {
                     j.setToolTipText(null);
                 }
             } else if (c instanceof Container) {
@@ -926,55 +945,49 @@ public class FileChooserBuilder {
             "updateButtonToolTipText",
             "helpButtonToolTipText"
         };
-        
+
         for (String key : KEYS) {
-            UIManager.put("FileChooser."+key, NbBundle.getMessage(FileChooserBuilder.class, "FileChooser."+key));
+            UIManager.put("FileChooser." + key, NbBundle.getMessage(FileChooserBuilder.class, "FileChooser." + key));
         }
-        
+
     }
-    
-    
-    
-    
 
     /**
      * Object which can approve the selection (enabling the OK button or
-     * equivalent) in a JFileChooser.  Equivalent to overriding
+     * equivalent) in a JFileChooser. Equivalent to overriding
      * <code>JFileChooser.approveSelection()</code>
+     *
      * @since 7.26.0
      */
     public interface SelectionApprover {
+
         /**
-         * Approve the selection, enabling the dialog to be closed.  Called by
-         * the JFileChooser's <code>approveSelection()</code> method.  Use this
+         * Approve the selection, enabling the dialog to be closed. Called by
+         * the JFileChooser's <code>approveSelection()</code> method. Use this
          * interface if you want to, for example, show a dialog asking
          * &quot;Overwrite File X?&quot; or similar.
          *
          * @param selection The selected file(s) at the time the user presses
          * the Open, Save or OK button
-         * @return true if the selection is accepted, false if it is not and
-         * the dialog should not be closed
+         * @return true if the selection is accepted, false if it is not and the
+         * dialog should not be closed
          */
-        public boolean approve (File[] selection);
+        public boolean approve(File[] selection);
     }
 
-    
-    
-    
-    
     private static final class SavedDirFileChooser extends JFileChooser {
-        
+
         private final String dirKey;
         private final SelectionApprover approver;
-        
+
         SavedDirFileChooser(String dirKey, File failoverDir, boolean force, SelectionApprover approver) {
             this.dirKey = dirKey;
             this.approver = approver;
             if (force && failoverDir != null && failoverDir.exists() && failoverDir.isDirectory()) {
                 setCurrentDirectory(failoverDir);
             } else {
-                String path = DONT_STORE_DIRECTORIES ? null :
-                    NbPreferences.forModule(FileChooserBuilder.class).get(dirKey, null);
+                String path = DONT_STORE_DIRECTORIES ? null
+                        : NbPreferences.forModule(FileChooserBuilder.class).get(dirKey, null);
                 if (path != null) {
                     File f = new File(path);
                     if (f.exists() && f.isDirectory()) {
@@ -994,7 +1007,7 @@ public class FileChooserBuilder {
                 File[] selected = getSelectedFiles();
                 final File sf = getSelectedFile();
                 if ((selected == null || selected.length == 0) && sf != null) {
-                    selected = new File[] { sf };
+                    selected = new File[]{sf};
                 }
                 boolean approved = approver.approve(selected);
                 if (approved) {
@@ -1017,10 +1030,10 @@ public class FileChooserBuilder {
         @Override
         public int showSaveDialog(Component parent) throws HeadlessException {
             int result;
-            if (getApproveButtonText() == null){
+            if (getApproveButtonText() == null) {
                 result = super.showSaveDialog(parent);
             } else {
-                result = super.showDialog(parent,getApproveButtonText());
+                result = super.showDialog(parent, getApproveButtonText());
             }
             if (result == APPROVE_OPTION) {
                 saveCurrentDir();
@@ -1036,43 +1049,45 @@ public class FileChooserBuilder {
         }
     }
 
-    
-   
     //Can open this API later if there is a use-case
     interface IconProvider {
+
         public Icon getIcon(File file, Icon orig);
     }
 
     /**
      * Provides "badges" for icons that indicate files or folders of particular
      * interest to the user.
+     *
      * @see FileChooserBuilder#setBadgeProvider
      */
     public interface BadgeProvider {
+
         /**
-         *  Get the badge the passed file should use.  <b>Note:</b> this method
-         * is called for every visible file.  The negative test (deciding
+         * Get the badge the passed file should use.  <b>Note:</b> this method is
+         * called for every visible file. The negative test (deciding
          * <i>not</i> to badge a file) should be very, very fast and immediately
          * return null.
+         *
          * @param file The file in question
-         * @return an icon or null if no change to the appearance of the file
-         * is needed
+         * @return an icon or null if no change to the appearance of the file is
+         * needed
          */
         public Icon getBadge(File file);
 
         /**
-         * Get the x offset for badges produced by this provider.  This is
-         * the location of the badge icon relative to the real icon for the
-         * file.
-         * @return  a rightward pixel offset
+         * Get the x offset for badges produced by this provider. This is the
+         * location of the badge icon relative to the real icon for the file.
+         *
+         * @return a rightward pixel offset
          */
-            public int getXOffset();
+        public int getXOffset();
 
         /**
-         * Get the y offset for badges produced by this provider.  This is
-         * the location of the badge icon relative to the real icon for the
-         * file.
-         * @return  a downward pixel offset
+         * Get the y offset for badges produced by this provider. This is the
+         * location of the badge icon relative to the real icon for the file.
+         *
+         * @return a downward pixel offset
          */
         public int getYOffset();
     }
@@ -1156,7 +1171,6 @@ public class FileChooserBuilder {
         }
     }
 
-    
     /**
      * Image previewer as an option
      */
@@ -1188,7 +1202,7 @@ public class FileChooserBuilder {
      * Default badge provider as an option
      */
     private static final class DefaultBadgeProvider implements BadgeProvider {
-        
+
         public DefaultBadgeProvider() {
         }
 

@@ -25,6 +25,7 @@ import genj.gedcom.Property;
 import genj.gedcom.PropertyBlob;
 import genj.gedcom.PropertyFile;
 import genj.io.InputSource;
+import genj.io.input.FileInput;
 import genj.util.Origin;
 import genj.util.swing.FileChooserWidget;
 import genj.util.swing.ThumbnailWidget;
@@ -33,6 +34,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FilePermission;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.Action;
@@ -58,7 +61,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
       if (files.size()==1) {
         File file = files.get(0);
         chooser.setFile(file);
-        setSource(InputSource.get(file));
+        setSource(InputSource.get(file).orElse(null));
       }
     }
   };
@@ -75,7 +78,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
         preview.setSource(null);
         return;
       }
-      preview.setSource(InputSource.get(file));
+      preview.setSource(InputSource.get(file).orElse(null));
       
       // calculate relative
       String relative = getProperty().getGedcom().getOrigin().calcRelativeLocation(file.getAbsolutePath());
@@ -142,7 +145,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
       chooser.setFile(file.getValue());
 
       if (property.getValue().length()>0)
-        preview.setSource(InputSource.get(property.getGedcom().getOrigin().getFile(file.getValue())));
+        preview.setSource(((PropertyFile) property).getInput().orElse(null));
       
       // done
     }
@@ -157,7 +160,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
       chooser.setTemplate(true);
 
       // .. preview
-      preview.setSource(InputSource.get(blob.getPropertyName(), ((PropertyBlob)property).getBlobData() ));
+      preview.setSource(((PropertyBlob)property).getInput().orElse(null));
 
     }
       
@@ -170,17 +173,28 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
   protected void commitImpl(Property property) {
     
     // propagate
-    String value = chooser.getFile().toString();
+    String value = chooser.getFile();
+    
+    InputSource is;
+    File file = new File(value);
+    if (file.exists()) {
+        is = InputSource.get(file).orElse(null);
+    } else {
+        try {
+        is = InputSource.get(new URL(value)).orElse(null);
+        } catch (MalformedURLException mfue) {
+            is = null;
+        }
+    }
     
     if (property instanceof PropertyFile)
       ((PropertyFile)property).setValue(value, updateMeta.isSelected());
     
     if (property instanceof PropertyBlob) 
-      ((PropertyBlob)property).load(value, updateMeta.isSelected());
+      ((PropertyBlob)property).load(is, updateMeta.isSelected());
 
     // update preview
-    File file = getProperty().getGedcom().getOrigin().getFile(value);
-    preview.setSource(file!=null?InputSource.get(file):null);
+    preview.setSource(is);
     
     // done
   }
@@ -194,7 +208,7 @@ public class FileBean extends PropertyBean implements AncestrisActionProvider{
         if (nodes != null) {
             PropertyFile file = (PropertyFile) getProperty();
             if (file != null) {
-                result.add(new RunExternal(file.getFile()));
+                result.add(new RunExternal(((FileInput)file.getInput().get()).getFile()));
             }
         }
         return result;

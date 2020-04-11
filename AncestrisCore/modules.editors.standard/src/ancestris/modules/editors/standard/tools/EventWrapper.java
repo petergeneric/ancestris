@@ -32,7 +32,7 @@ import genj.gedcom.Repository;
 import genj.gedcom.Source;
 import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
-import java.io.File;
+import genj.io.InputSource;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -133,11 +133,6 @@ public class EventWrapper {
                 this.eventYear = tmpDate.getStart() == null ? "-" : "" + tmpDate.getStart().getYear();
             }
 
-            //
-            if (indi == null) {
-                return;
-            }
-
             // Age (for table (eventAge) and description (age) and value (ageAsDouble)
             calcAge(indi, property);
 
@@ -166,7 +161,7 @@ public class EventWrapper {
             eventMediaRemovedSet = null;
         }
         eventMediaSet = getEventMedia(eventProperty);
-        eventMediaRemovedSet = new ArrayList<MediaWrapper>();
+        eventMediaRemovedSet = new ArrayList<>();
         eventMediaIndex = 0;
 
         // Notes
@@ -179,7 +174,7 @@ public class EventWrapper {
             eventNoteRemovedSet = null;
         }
         eventNoteSet = getEventNotes(eventProperty);
-        eventNoteRemovedSet = new ArrayList<NoteWrapper>();
+        eventNoteRemovedSet = new ArrayList<>();
         eventNoteIndex = 0;
 
         // Sources - Media & Text & Repo
@@ -192,7 +187,7 @@ public class EventWrapper {
             eventSourceRemovedSet = null;
         }
         eventSourceSet = getEventSources(eventProperty);
-        eventSourceRemovedSet = new ArrayList<SourceWrapper>();
+        eventSourceRemovedSet = new ArrayList<>();
         eventSourceIndex = 0;
     }
 
@@ -303,7 +298,7 @@ public class EventWrapper {
     // MEDIA
     //
     private List<MediaWrapper> getEventMedia(Property event) {
-        List<MediaWrapper> ret = new ArrayList<MediaWrapper>();
+        List<MediaWrapper> ret = new ArrayList<>();
         if (event == null) {
             return ret;
         }
@@ -312,7 +307,7 @@ public class EventWrapper {
         Property[] mediaProps = event.getProperties("OBJE");
         for (Property prop : mediaProps) {
             if (prop != null) {
-                MediaWrapper media = null;
+                MediaWrapper media;
                 if (prop instanceof PropertyMedia) {
                     media = new MediaWrapper((Media) ((PropertyMedia) prop).getTargetEntity());
                     media.setHostingProperty(prop);
@@ -344,7 +339,7 @@ public class EventWrapper {
     // NOTES
     //
     private List<NoteWrapper> getEventNotes(Property event) {
-        List<NoteWrapper> ret = new ArrayList<NoteWrapper>();
+        List<NoteWrapper> ret = new ArrayList<>();
         if (event == null) {
             return ret;
         }
@@ -353,7 +348,7 @@ public class EventWrapper {
         Property[] noteProps = event.getProperties("NOTE");
         for (Property prop : noteProps) {
             if (prop != null && !prop.getDisplayValue().trim().isEmpty()) {
-                NoteWrapper note = null;
+                NoteWrapper note;
                 if (prop instanceof PropertyNote) {
                     note = new NoteWrapper((Note) ((PropertyNote) prop).getTargetEntity());
                     if (note != null) {
@@ -407,7 +402,7 @@ public class EventWrapper {
     // SOURCES
     //
     private List<SourceWrapper> getEventSources(Property event) {
-        List<SourceWrapper> ret = new ArrayList<SourceWrapper>();
+        List<SourceWrapper> ret = new ArrayList<>();
         if (event == null) {
             return ret;
         }
@@ -449,7 +444,7 @@ public class EventWrapper {
         return true;
     }
 
-    public boolean addSourceFile(File file) {
+    public boolean addSourceFile(InputSource file) {
         SourceWrapper source = new SourceWrapper(file);
         eventSourceSet.add(source);
         eventSourceIndex = eventSourceSet.size() - 1;
@@ -486,7 +481,7 @@ public class EventWrapper {
         return true;
     }
 
-    public boolean setSourceFile(File file, boolean addMedia) {
+    public boolean setSourceFile(InputSource file, boolean addMedia) {
         eventSourceSet.get(eventSourceIndex).setMediaFile(file, addMedia);
         return true;
     }
@@ -732,8 +727,8 @@ public class EventWrapper {
 
     private String getTimeOfEvent() {
 
-        Property time = eventProperty.getProperty("_TIME");
-        return time != null ? time.getDisplayValue() : "";
+        Property localTime = eventProperty.getProperty("_TIME");
+        return localTime != null ? localTime.getDisplayValue() : "";
     }
 
     private void createDummyProperty(Gedcom gedcom) {

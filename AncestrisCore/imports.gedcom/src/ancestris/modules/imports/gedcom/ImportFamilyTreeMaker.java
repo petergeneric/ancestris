@@ -23,7 +23,7 @@ import genj.gedcom.GedcomException;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
 import genj.gedcom.TagPath;
-import java.io.File;
+import genj.io.InputSource;
 import java.io.IOException;
 import java.util.Stack;
 import org.openide.util.NbBundle;
@@ -293,8 +293,8 @@ public class ImportFamilyTreeMaker extends Import {
                     prop = host.getProperty("TITL");
                     if (prop == null) {
                         PropertyFile filep = (PropertyFile) host;
-                        File file = filep.getFile();
-                        String title = file != null ? file.getName() : "";
+                        InputSource is = filep.getInput().orElse(null);
+                        String title = is != null ? is.getName() : "";
                         int i = title.indexOf(".");
                         host.addProperty("TITL", i == -1 ? title : title.substring(0, i));
                         hasErrors = true;
