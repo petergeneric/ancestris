@@ -98,7 +98,7 @@ public class PropertyFile extends Property {
         // we're checking the value for relative here because
         // in setValue() the parent might not be set yet so
         // getGedcom() wouldn't work there
-        if (forceRelative && isLocal) {
+        if (forceRelative) {
             Gedcom gedcom = getGedcom();
             if (gedcom != null) {
                 String relative = gedcom.getOrigin().calcRelativeLocation(file);
@@ -122,6 +122,9 @@ public class PropertyFile extends Property {
         forceRelative = true; // force recalc of relative path in the getValue()
 
         // Check if local or remote file
+        
+        Gedcom gedcom = getGedcom();
+       
         final File fichier = new File(value);
         if (fichier.exists()) {
             isLocal = true;
@@ -203,8 +206,12 @@ public class PropertyFile extends Property {
      * @return InputSource with the File.
      */
     public Optional<InputSource> getInput() {
-        if (isLocal) {
-            return InputSource.get(getFile());
+        final File fichier = getFile();
+        
+        if (fichier.exists()) {
+            isLocal = true;
+            isRemote = false;
+            return InputSource.get(fichier);
         }
         if (isRemote) {
             try {
