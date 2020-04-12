@@ -31,7 +31,7 @@ public class PathData {
     private List<PropertyFile> files = null;        // The actual property files in the gedcom file that are depending on this directory path
     
     public PathData(boolean found, boolean relative, PropertyFile pf, String newPath) {
-        files = new ArrayList<PropertyFile>();
+        files = new ArrayList<>();
         this.found = found;
         this.relative = relative;
         this.newPath = newPath;
@@ -51,9 +51,9 @@ public class PathData {
     }
 
     public int getNbMedia() {
-        Set<String> list = new TreeSet<String>();
+        Set<String> list = new TreeSet<>();
         for (PropertyFile pf : files) {
-            list.add(pf.getInput().get().getName());
+            list.add(pf.getValue());
         }
         return list.size();
     }

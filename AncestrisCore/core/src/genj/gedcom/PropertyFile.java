@@ -137,6 +137,7 @@ public class PropertyFile extends Property {
             } catch (MalformedURLException mfue) {
                 LOG.log(Level.FINE, "URL exception.", mfue);
                 isRemote = false;
+                isLocal = true;
             }
         }
 

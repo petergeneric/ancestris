@@ -15,8 +15,6 @@ import ancestris.util.swing.DialogManager;
 import genj.gedcom.Gedcom;
 import genj.gedcom.Property;
 import genj.gedcom.PropertyFile;
-import genj.io.InputSource;
-import genj.io.input.FileInput;
 import genj.util.Registry;
 import java.awt.Dimension;
 import java.io.File;
@@ -40,8 +38,6 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
     private final String winWidth = "gedcomProperties4Width";
     private final String winHeight = "gedcomProperties4Height";
 
-    private Gedcom gedcom;
-
     private Map<PropertyFile, String> property2PathMap = null;  // will store the remapping of the unfound files (and potentially the found ones)
     private List<? extends Property> filesList = null;
     private int differentMediaFiles = 0;
@@ -58,46 +54,44 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
     private int totalPathsUnfound = 0;
     private int absPathsUnfound = 0;
     private int relPathsUnfound = 0;
+    private int remotePathsFound = 0;
 
     public final static Pattern ABSOLUTE = Pattern.compile("([a-z]:).*|([A-Z]:).*|\\/.*|\\\\.*");
-      
-    
+
     /**
      * Creates new form GedcomPropertiesMediaFormatPanel
      */
     public GedcomPropertiesMediaFormatPanel(Gedcom gedcom) {
-        
-        this.gedcom = gedcom;
-        
+
         rootPath = gedcom.getOrigin().getFile().getParentFile().getAbsolutePath();
-        
-        filesFullnames = new TreeSet<String>();
-        filesPaths = new TreeSet<String>();
-        
+
+        filesFullnames = new TreeSet<>();
+        filesPaths = new TreeSet<>();
+
         filesList = gedcom.getPropertiesByClass(PropertyFile.class);
         initFilesMap();
-        
+
         // Calculate key figures and build map along the way
         totalMediaFiles = filesList.size();
         for (Property file : filesList) {
             if (file instanceof PropertyFile) {
-                
+
                 // Count new file value
                 String value = file.getValue();
                 if (filesFullnames.contains(value)) {
                     continue;
                 }
                 filesFullnames.add(value);
-                
+
                 // Check existence
                 PropertyFile pFile = (PropertyFile) file;
-                InputSource is = pFile.getInput().orElse(null);
-                if (is == null) {
+                if (pFile.isIsRemote()) {
+                    remotePathsFound ++;
                     continue;
                 }
-                File f = ((FileInput) is).getFile();
-                String name = f.getName();
-                String path = value.substring(0, value.indexOf(name));
+                              
+                File f = new File(value);
+                String path = value.substring(0, value.indexOf(f.getName()));
                 filesPaths.add(path);
                 if (f.exists()) {
                     totalPathsFound++;
@@ -120,15 +114,15 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
             unfoundColor = "'red'";
         }
         differentMediaFiles = filesFullnames.size();
-        
+
         model = new DefaultListModel();
         for (String str : filesPaths) {
             model.addElement(str);
         }
         nbOfPaths = filesPaths.size();
-        
+
         initComponents();
-        
+
         jLabel2.setVisible(false);
         jButton2.setVisible(false);
         if (totalMediaFiles == 0) {
@@ -139,7 +133,7 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
             jButton1.setEnabled(false);
             jList1.setEnabled(false);
         }
-        
+
         registry = Registry.get(getClass());
         this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
     }
@@ -184,7 +178,7 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel6, org.openide.util.NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jLabel6.text", totalPathsUnfound, relPathsUnfound, absPathsUnfound, unfoundColor));
 
-        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jButton1.text", differentMediaFiles));
+        org.openide.awt.Mnemonics.setLocalizedText(jButton1, org.openide.util.NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jButton1.text", differentMediaFiles - remotePathsFound));
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -202,7 +196,11 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
             }
         });
 
-        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jLabel7.text")); // NOI18N
+        org.openide.awt.Mnemonics.setLocalizedText(jLabel7, org.openide.util.NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jLabel7.text", remotePathsFound));
+        jLabel7.setMaximumSize(new java.awt.Dimension(77, 16));
+        jLabel7.setMinimumSize(new java.awt.Dimension(77, 16));
+        jLabel7.setName(""); // NOI18N
+        jLabel7.setPreferredSize(new java.awt.Dimension(77, 16));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -214,7 +212,6 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                     .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton2, javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jButton1, javax.swing.GroupLayout.Alignment.CENTER)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.CENTER, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.CENTER)
                     .addComponent(jLabel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
@@ -227,7 +224,8 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(jLabel7, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addContainerGap())
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -240,15 +238,15 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel6)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 18, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel4)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
-                .addGap(2, 2, 2)
-                .addComponent(jLabel7)
-                .addGap(1, 1, 1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
+                .addGap(37, 37, 37)
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel2)
@@ -280,20 +278,21 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
     }
 
     private void initFilesMap() {
-        property2PathMap = new HashMap<PropertyFile, String>();
+        property2PathMap = new HashMap<>();
         for (Property file : filesList) {
             if (file instanceof PropertyFile) {
                 PropertyFile pFile = (PropertyFile) file;
                 // Calc path
                 String value = file.getValue();
-                InputSource is = pFile.getInput().orElse(null);
-                if (is == null) {
+                if (pFile.isIsRemote()) {
                     continue;
                 }
-                File f = ((FileInput)is).getFile();
-                String name = f.getName();
-                String path = value.substring(0, value.indexOf(name));
-                property2PathMap.put(pFile, path);
+                if (pFile.isIsLocal()) {
+                    File f = new File(value);
+                    String name = f.getName();
+                    String path = value.substring(0, value.indexOf(name));
+                    property2PathMap.put(pFile, path);
+                }
             }
         }
     }
@@ -314,7 +313,7 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
 
     private void OpenMediaManager() {
         MediaManagerPanel panel = new MediaManagerPanel(rootPath, property2PathMap);
-        Object o = DialogManager.create(NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jButton1.text", differentMediaFiles), panel)
+        Object o = DialogManager.create(NbBundle.getMessage(GedcomPropertiesMediaFormatPanel.class, "GedcomPropertiesMediaFormatPanel.jButton1.text", differentMediaFiles - remotePathsFound), panel)
                 .setMessageType(DialogManager.PLAIN_MESSAGE).setOptionType(DialogManager.OK_CANCEL_OPTION).show();
         if (o == DialogManager.OK_OPTION) {
             // Update property2PathMap with rel flags
@@ -326,19 +325,15 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
         } else {
             // nothing
         }
-        
-    }
 
+    }
 
     public boolean isModified() {
         return jLabel2.isVisible();
     }
-    
+
     public Map<PropertyFile, String> getMediaMap() {
         return property2PathMap;
     }
-    
-    
-    
-    
+
 }
