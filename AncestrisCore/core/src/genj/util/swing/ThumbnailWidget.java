@@ -697,6 +697,7 @@ public class ThumbnailWidget extends JComponent {
         public Thumbnail(InputSource source) {
             this.source = source;
             image = new SoftReference<>(null);
+            validate();
         }
 
         String getName() {
@@ -763,7 +764,7 @@ public class ThumbnailWidget extends JComponent {
             g.drawImage(img, (int) sx, (int) sy, (int) (sx + sw), (int) (sy + sh), (int) dx, (int) dy, (int) (dx + dw), (int) (dy + dh), null);
         }
 
-        void validate() {
+        final void validate() {
 
             if (isValid()) {
                 return;
