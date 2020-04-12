@@ -57,7 +57,7 @@ public class SearchFilePanel extends javax.swing.JPanel {
         this.currentPath = currentPath;
 
         filesModel = new DefaultListModel();
-        filesNames = new TreeSet<String>();
+        filesNames = new TreeSet<>();
         pathsModel = new DefaultListModel();
         getFiles();
 
@@ -321,7 +321,7 @@ public class SearchFilePanel extends javax.swing.JPanel {
     private void getFiles() {
         filesModel.clear();
         for (PropertyFile file : pd.getFiles()) {
-            File f = ((FileInput) file.getInput().get()).getFile();
+            File f = file.getInput().isPresent()?((FileInput) file.getInput().get()).getFile() : new File(file.getValue());
             filesModel.addElement(f);
             filesNames.add(f.getName());
         }
