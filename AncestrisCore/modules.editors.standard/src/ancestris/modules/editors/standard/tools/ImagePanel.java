@@ -76,8 +76,12 @@ public class ImagePanel extends javax.swing.JPanel {
     public void setMedia(InputSource is, BufferedImage defaultImage) {
         this.inputSource = is;
         this.IMG_DEFAULT = defaultImage;
-
-        image = getImageFromFile(inputSource, getClass());
+        
+        if (is == null) {
+            image = IMG_DEFAULT;
+        } else {
+            image = getImageFromFile(inputSource, getClass());
+        }
 
         if (image == null) {
             return;
