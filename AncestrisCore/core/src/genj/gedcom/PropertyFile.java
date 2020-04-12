@@ -208,7 +208,7 @@ public class PropertyFile extends Property {
     public Optional<InputSource> getInput() {
         final File fichier = getFile();
         
-        if (fichier.exists()) {
+        if (fichier != null && fichier.exists()) {
             isLocal = true;
             isRemote = false;
             return InputSource.get(fichier);
