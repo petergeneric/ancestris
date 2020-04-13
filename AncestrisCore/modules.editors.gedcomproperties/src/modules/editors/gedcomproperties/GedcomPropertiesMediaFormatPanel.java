@@ -90,7 +90,7 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
                     continue;
                 }
                               
-                File f = new File(value);
+                File f = gedcom.getOrigin().getFile(value);
                 String path = value.substring(0, value.indexOf(f.getName()));
                 filesPaths.add(path);
                 if (f.exists()) {
