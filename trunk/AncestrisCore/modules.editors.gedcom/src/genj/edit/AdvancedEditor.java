@@ -674,13 +674,14 @@ import org.openide.windows.WindowManager;
 
         public Follow(PropertyXRef xref) {
             this.xref = xref;
-            setText(Gedcom.getName(xref.getTag()));
+            setText(Gedcom.getName(xref.getTargetEntity().getTag()));
             setImage(xref.getImage(false));
+            setTip(resources.getString("action.follow.tip", ""));
         }
 
         @Override
         public void actionPerformed(ActionEvent e) {
-            SelectionDispatcher.fireSelection(new Context(xref));
+            SelectionDispatcher.fireSelection(new Context(xref.getTargetEntity()));
         }
     }
 
