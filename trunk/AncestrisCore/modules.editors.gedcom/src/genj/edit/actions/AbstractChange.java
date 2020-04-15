@@ -88,7 +88,7 @@ public abstract class AbstractChange extends AbstractAncestrisContextAction {
         // prepare confirmation message for user
         String msg = getConfirmMessage();
         if (msg != null) {
-            String confirmButton = resources.getString("confirm.proceed", getText());
+            String confirmButton = resources.getString("confirm.proceed", getText().toLowerCase());
 
             // Recheck with the user
             int msgType = (this instanceof DelProperty) ? DialogManager.WARNING_MESSAGE : DialogManager.PLAIN_MESSAGE;
