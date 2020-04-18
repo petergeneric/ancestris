@@ -37,7 +37,6 @@ import genj.gedcom.TagPath;
 import genj.gedcom.time.Calendar;
 import genj.gedcom.time.PointInTime;
 import genj.util.swing.ImageIcon;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -1050,7 +1049,11 @@ import org.openide.windows.WindowManager;
             Property[] props = ent.getProperties();
             for (Property p : props) {
                 if (tags.contains(p.getTag())) {
+                    try {
                     createEventFromEntityEvent(ent, (PropertyEvent) p);
+                    } catch (ClassCastException e) {
+                        LOG.log(Level.INFO, "Unable to convert property : "+ p.toString() + " entity :"+ ent.getId(), e );
+                    }
                 }
             }
             if (Thread.currentThread().isInterrupted()) {
