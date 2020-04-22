@@ -24,6 +24,7 @@ import genj.gedcom.PropertyRelationship;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
+import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import org.openide.util.Exceptions;
 
@@ -331,44 +332,62 @@ public class AssoWrapper {
 
     /**
      * Update property of given tag:
-     * - if tag already exists with same value and same date, do nothing
-     * - if tag already exists with same value and different date, do nothing
-     * else:
-     * - if tag already exists with same value and no date, update date
-     * - if tag already exists with different value and same date, update value
-     * - if tag already exists with different value and different date, add tag
+     * - if new value is empty, nothing to do
+     * - if tag does not exist, has valid newValue and valid newDate, add it        : (a) ADD
+     * - if tag already exists with same value and same date, do nothing            : (b) -
+     * - if tag already exists with same value and different date, do nothing       : (c) -
+     * - if tag already exists with same value and no date, update oldDate          : (d) update DATE
+     * - if tag already exists with different value and same date, update oldValue  : (e) update VALUE
+     * - if tag already exists with different value and different date, add tag     : (f) ADD
      * @param property
      * @param tag
      * @param value
      * @param date 
      */
     private void updateProperty(Property property, String tag, String newValue, Property sourceEvent) {
-        PropertyDate sourceDate = sourceEvent != null ? (PropertyDate) sourceEvent.getProperty("DATE") : null;
-        String newDate = sourceDate != null ? sourceDate.getValue() : "";
-        String oldDate = "";
-        Property samePropFound = null;
         
-        // Look for best match property = same value & no date, or same date & different value
+        // Nothing to do if new value is empty
+        if (newValue.isEmpty()) {
+            return;
+        }
+        
+        PropertyDate sourceDate = sourceEvent != null ? (PropertyDate) sourceEvent.getProperty("DATE") : null;
+        String newDate = sourceDate != null ? sourceDate.getValue() : "";  // date of event if there is an event, null otherwise
+        String oldValue = "";
+        String oldDate = "";
+        boolean tagExists = false;          // true if tag found (b, c, d, e, f)
+        
+        // Look for existing property with same value
         Property[] props = property.getProperties(tag);
-        for (Property prop : props){
-            Property date = prop.getProperty("DATE");
-            oldDate = date != null ? date.getValue() : "";
-            if ((newValue.equals(prop.getValue()) && oldDate.isEmpty()) || (!newValue.equals(prop.getValue()) && newDate.equals(oldDate))) {
-                samePropFound = prop;
-                break;
+        for (Property prop : props) { // b, c, d, e, f
+            tagExists = true; 
+            oldValue = prop.getValue().trim();
+            PropertyDate pDate = (PropertyDate) prop.getProperty("DATE");
+            oldDate = pDate != null ? pDate.getValue() : "";
+            
+            // Checks and updates
+            if (newValue.equals(oldValue)) {   // b, c, d
+                if (oldDate.isEmpty() && !newDate.isEmpty()) { // d
+                    putProperty(prop, "DATE", newDate);
+                    pDate = (PropertyDate) prop.getProperty("DATE");
+                    pDate.setFormat(PropertyDate.BEFORE);
+                }
+                break; // done for b, c, d
+            } else {   // e, f
+                if (pDate != null && sourceDate != null && Delta.get(pDate.getStart(), sourceDate.getStart()).getDays() < 30) { // e
+                    prop.setValue(newValue);
+                    break;
+                } else { //f 
+                    tagExists = false; // same as a
+                }
             }
         }
         
-        // Now process match or no match
-        if (samePropFound != null) { // found
-            Utils.setDistinctValue(samePropFound, newValue);
-            putProperty(samePropFound, "DATE", newDate);
-        } else {
-            if (!newValue.isEmpty()) {
-                Property tagProp = property.addProperty(tag, newValue);
-                if (!newDate.isEmpty()) {
-                    tagProp.addProperty("DATE", newDate);
-                }
+        if (!tagExists) {  // a, f
+            Property tagProp = property.addProperty(tag, newValue);
+            if (!newDate.isEmpty()) {
+                PropertyDate pDate = (PropertyDate) tagProp.addProperty("DATE", newDate);
+                pDate.setFormat(PropertyDate.BEFORE);
             }
         }
         
