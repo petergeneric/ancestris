@@ -24,7 +24,6 @@ import genj.gedcom.PropertyRelationship;
 import genj.gedcom.PropertySex;
 import genj.gedcom.PropertyXRef;
 import genj.gedcom.TagPath;
-import genj.gedcom.time.Delta;
 import genj.gedcom.time.PointInTime;
 import org.openide.util.Exceptions;
 
@@ -374,9 +373,19 @@ public class AssoWrapper {
                 }
                 break; // done for b, c, d
             } else {   // e, f
-                if (pDate != null && sourceDate != null && Delta.get(pDate.getStart(), sourceDate.getStart()).getDays() < 30) { // e
-                    prop.setValue(newValue);
-                    break;
+                if (pDate != null && sourceDate != null) {
+                    int days = 32;
+                    try {
+                        days = pDate.getStart().getJulianDay() - sourceDate.getStart().getJulianDay();
+                        days = Math.abs(days);
+                    } catch (Exception e) {
+                    }
+                    if (days < 32) { // e
+                        prop.setValue(newValue);
+                        break;
+                    } else {
+                        tagExists = false; // same as a
+                    }
                 } else { //f 
                     tagExists = false; // same as a
                 }
