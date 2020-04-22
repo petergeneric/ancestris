@@ -35,9 +35,8 @@ import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.filesystems.FileUtil;
-import org.openide.util.Exceptions;
+import org.openide.util.Utilities;
 
 /**
  * An origin describes where a resource came from. This is normally
@@ -345,9 +344,9 @@ public abstract class Origin {
       if (!"file".equals(url.getProtocol()) && !"jar".equals(url.getProtocol()))
         return null;
             try {
-                return new File(url.toURI());
-            } catch (URISyntaxException ex) {
-                Exceptions.printStackTrace(ex);
+                return Utilities.toFile(url.toURI());
+            } catch (URISyntaxException | IllegalArgumentException ex) {
+                LOG.log(Level.INFO, "Unable to get Origin File.", ex);
                 return null;
             }
     }
