@@ -93,6 +93,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         placeTable.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                LOG.log(Level.FINE, "NB click = {0}", e.getClickCount());
                 if (e.getClickCount() == 1) {
                     JToolTip tooltip = new JToolTip();
                     tooltip.setTipText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.edit.tip"));
