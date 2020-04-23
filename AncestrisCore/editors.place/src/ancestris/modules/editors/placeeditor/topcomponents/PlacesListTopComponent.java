@@ -30,6 +30,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.netbeans.api.settings.ConvertAsProperties;
+import org.openide.awt.MouseUtils;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.util.ImageUtilities;
@@ -94,25 +95,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
             @Override
             public void mouseClicked(MouseEvent e) {
                 LOG.log(Level.FINE, "NB click = {0}", e.getClickCount());
-                if (e.getClickCount() == 1) {
-                    JToolTip tooltip = new JToolTip();
-                    tooltip.setTipText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.edit.tip"));
-                    PopupFactory popupFactory = PopupFactory.getSharedInstance();
-                    int x = e.getXOnScreen();
-                    int y = e.getYOnScreen();
-                    final Popup tooltipContainer = popupFactory.getPopup(e.getComponent(), tooltip, x, y);
-                    tooltipContainer.show();
-                    (new Thread(new Runnable() {
-                        public void run() {
-                            try {
-                                Thread.sleep(2000);
-                            } catch (InterruptedException ex) {
-                            }
-                            tooltipContainer.hide();
-                        }
-
-                    })).start();
-                } else if (e.getClickCount() == 2) {
+                if (MouseUtils.isDoubleClick(e)) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
                     placesEditor = new PlaceEditorPanel();
@@ -135,6 +118,25 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                             }
                         }
                     });
+                } else {
+                    JToolTip tooltip = new JToolTip();
+                    tooltip.setTipText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.edit.tip"));
+                    PopupFactory popupFactory = PopupFactory.getSharedInstance();
+                    int x = e.getXOnScreen();
+                    int y = e.getYOnScreen();
+                    final Popup tooltipContainer = popupFactory.getPopup(e.getComponent(), tooltip, x, y);
+                    tooltipContainer.show();
+                    (new Thread(new Runnable() {
+                        public void run() {
+                            try {
+                                Thread.sleep(2000);
+                            } catch (InterruptedException ex) {
+                            }
+                            tooltipContainer.hide();
+                        }
+
+                    })).start();
+                    
                 }
             }
         });
