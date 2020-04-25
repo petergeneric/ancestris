@@ -19,7 +19,6 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Comparator;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
@@ -163,7 +162,7 @@ public class MediaManagerPanel extends javax.swing.JPanel {
     // End of variables declaration//GEN-END:variables
 
     private Set<PathData> buildTable() {
-        Set<PathData> ret = new TreeSet<>(new PathDataComparator());
+        Set<PathData> ret = new TreeSet<>();
         
         for (PropertyFile pFile : property2PathMap.keySet()) {
             // Build key from value and existence
@@ -307,26 +306,4 @@ public class MediaManagerPanel extends javax.swing.JPanel {
             updatePathDataList(pd, panel.getNewPath(), rel);
         }
     }
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    private class PathDataComparator implements Comparator<PathData>{
-
-        public PathDataComparator() {
-        }
-
-        @Override
-        public int compare(PathData o1, PathData o2) {
-            return o1.getKey().compareTo(o2.getKey());
-        }
-    }
-
-    
 }
