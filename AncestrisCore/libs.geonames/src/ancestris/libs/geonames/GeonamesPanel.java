@@ -11,6 +11,8 @@
  */
 package ancestris.libs.geonames;
 
+import java.net.URL;
+import org.openide.awt.HtmlBrowser;
 import org.openide.util.NbBundle;
 
 final class GeonamesPanel extends javax.swing.JPanel {
@@ -33,11 +35,20 @@ final class GeonamesPanel extends javax.swing.JPanel {
 
         jLabel1 = new javax.swing.JLabel();
         jtUserName = new javax.swing.JTextField();
+        jButtonCreateGeoAccount = new javax.swing.JButton();
         jExplanation = new javax.swing.JLabel();
 
         org.openide.awt.Mnemonics.setLocalizedText(jLabel1, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jLabel1.text")); // NOI18N
 
         jtUserName.setText(org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jtUserName.text")); // NOI18N
+
+        org.openide.awt.Mnemonics.setLocalizedText(jButtonCreateGeoAccount, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jButtonCreateGeoAccount.text")); // NOI18N
+        jButtonCreateGeoAccount.setToolTipText(org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jButtonCreateGeoAccount.toolTipText")); // NOI18N
+        jButtonCreateGeoAccount.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonCreateGeoAccountActionPerformed(evt);
+            }
+        });
 
         org.openide.awt.Mnemonics.setLocalizedText(jExplanation, org.openide.util.NbBundle.getMessage(GeonamesPanel.class, "GeonamesPanel.jExplanation.text")); // NOI18N
 
@@ -51,9 +62,11 @@ final class GeonamesPanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, 143, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jButtonCreateGeoAccount))
                     .addComponent(jExplanation))
-                .addContainerGap(36, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -61,12 +74,22 @@ final class GeonamesPanel extends javax.swing.JPanel {
                 .addGap(16, 16, 16)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jtUserName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonCreateGeoAccount))
                 .addGap(19, 19, 19)
                 .addComponent(jExplanation)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButtonCreateGeoAccountActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateGeoAccountActionPerformed
+        try {
+            HtmlBrowser.URLDisplayer displayer = HtmlBrowser.URLDisplayer.getDefault();
+            if (displayer != null) {
+                displayer.showURLExternal(new URL("https://www.geonames.org/login"));
+            }
+        } catch (Exception e) {}
+    }//GEN-LAST:event_jButtonCreateGeoAccountActionPerformed
 
     void load() {
         jtUserName.setText(GeonamesOptions.getInstance().getUserName());
@@ -82,6 +105,7 @@ final class GeonamesPanel extends javax.swing.JPanel {
         return true;
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonCreateGeoAccount;
     private javax.swing.JLabel jExplanation;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JTextField jtUserName;
