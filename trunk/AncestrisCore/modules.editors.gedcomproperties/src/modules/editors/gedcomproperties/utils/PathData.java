@@ -22,7 +22,7 @@ import java.util.TreeSet;
  *
  * @author frederic
  */
-public class PathData {
+public class PathData implements Comparable<PathData> {
 
     public boolean found = true;                    // Found indicator for the files
     public int nbMedia = 0;                         // Nb of different media files in that set
@@ -56,6 +56,11 @@ public class PathData {
             list.add(pf.getValue());
         }
         return list.size();
+    }
+
+    @Override
+    public int compareTo(PathData o) {
+        return this.getKey().compareTo(o.getKey());
     }
     
 }
