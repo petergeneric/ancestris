@@ -137,6 +137,10 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
             jButton1.setEnabled(false);
             jList1.setEnabled(false);
         }
+        
+        if (remotePathsFound == 0) {
+            jButton3.setVisible(false);
+        }
 
         registry = Registry.get(getClass());
         this.setPreferredSize(new Dimension(registry.get(winWidth, this.getPreferredSize().width), registry.get(winHeight, this.getPreferredSize().height)));
