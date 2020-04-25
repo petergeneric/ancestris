@@ -1184,6 +1184,7 @@ public final class GraphTopComponent extends AncestrisTopComponent {
             updateSchemeNode();
         }
         manageLabels();
+        manageDisplayLabels();
     }
     
     private void updateSchemeNode() {
