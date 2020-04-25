@@ -52,9 +52,9 @@ public class RemoteMediaManagerPanel extends javax.swing.JPanel {
         this.setPreferredSize(new Dimension(registry.get("remoteMediaManagerPanelWidth", this.getPreferredSize().width), registry.get("remoteMediaManagerPanelHeight", this.getPreferredSize().height)));
 
         resizeColumn();
-        
+
     }
-    
+
     private void resizeColumn() {
         Dimension size = this.getPreferredSize();
 
@@ -254,6 +254,7 @@ public class RemoteMediaManagerPanel extends javax.swing.JPanel {
 
     private void downloadFiles() {
         Set<PathData> ok = new TreeSet<>();
+        long nbProperty = 0;
         for (PathData pd : paths) {
             if (pd.found) {
                 boolean done = false;
@@ -275,6 +276,7 @@ public class RemoteMediaManagerPanel extends javax.swing.JPanel {
                     if (newLocation.isPresent()) {
                         pf.addFile(newLocation.get());
                         modified = true;
+                        nbProperty++;
                     }
                 }
                 if (done) {
@@ -287,8 +289,11 @@ public class RemoteMediaManagerPanel extends javax.swing.JPanel {
         jTable1.setModel(rmtm);
         resizeColumn();
         jTable1.repaint();
+        DialogManager.create(NbBundle.getMessage(RemoteMediaManagerPanel.class, "RESULT_TITLE"), 
+                NbBundle.getMessage(RemoteMediaManagerPanel.class, "RESULT_MSG", ok.size(), jTextField1.getText(), nbProperty))
+                .setOptionType(DialogManager.OK_ONLY_OPTION).setMessageType(DialogManager.INFORMATION_MESSAGE).show();
     }
-    
+
     public boolean isMapModified() {
         return modified;
     }
