@@ -30,29 +30,30 @@ import org.openide.util.lookup.ServiceProvider;
 @ServiceProvider(service = Report.class)
 public class ReportGenealogyStatus extends Report {
 
+    // Public parameters displayed in options.
     public int maxNbOfAncestors = 512;        // limit to avoid displaying too many empty ancestors
     public boolean includeSiblings = true;    // true means we display siblings
     public String directoryParam = System.getProperty("user.home") + "<insert media directory name here>";       // default to home directory
     
     
-    private static String OUI = "1";          // information found, valid and complete
-    private static String APX = "~";          // tag found, information found, valid, but not complete (date is a range, place is not complete)
-    private static String NON = ".";          // tag found, but information not found or not complete or invalid (date is a range for instance)
-    private static String ERR = "#";          // information found but erroneous or missing and mandatory
-    private static String SEQ = "@";          // for family event MARR, indicates that kids appearance is not chronological
-    private static String FIL = "§";          // source media found but not transcripted in a text tag
-    private static String SPA = " ";          // space
-    private static String TAB = "\t";         // tab
+    private final static String OUI = "1";          // information found, valid and complete
+    private final static String APX = "~";          // tag found, information found, valid, but not complete (date is a range, place is not complete)
+    private final static String NON = ".";          // tag found, but information not found or not complete or invalid (date is a range for instance)
+    private final static String ERR = "#";          // information found but erroneous or missing and mandatory
+    private final static String SEQ = "@";          // for family event MARR, indicates that kids appearance is not chronological
+    private final static String FIL = "§";          // source media found but not transcripted in a text tag
+    private final static String SPA = " ";          // space
+    private final static String TAB = "\t";         // tab
     private int maxSosaLength = 5;            // size of max sosa number in characters
-    private static String MAXSTR = "                                                                           ";
+    private final static String MAXSTR = "                                                                           ";
     private String[] placeFormat = null;
     private int sizePlaces = 0;
-    private Map<BigInteger, Indi> sosaList = new TreeMap();                      // stores and retrieves individuals by sosa key sorted by sosa nbr
-    private Map<String, String> entMap = new TreeMap();                          // stores and retrieves unreferenced sources 
+    private final Map<BigInteger, Indi> sosaList = new TreeMap();                      // stores and retrieves individuals by sosa key sorted by sosa nbr
+    private final Map<String, String> entMap = new TreeMap();                          // stores and retrieves unreferenced sources 
     private int cntAnomaly = 0, // counter of errors
             cntOutOfSeq = 0,    // counter of out of sequence
             cntKnwnSrc = 0;     // counter of missing transcripted sources
-    private static int maxNbOfUnusedFiles = 100;
+    private final static int MAX_NB_OF_UNUSED_FILES = 100;
     private int nbOfUnusedFiles = 0;
     
     
@@ -274,7 +275,7 @@ public class ReportGenealogyStatus extends Report {
         if (directory.isDirectory()) {
             nbOfUnusedFiles = 0;
             checkDirectory(directory, gedcomFiles);
-            if (nbOfUnusedFiles > maxNbOfUnusedFiles) {
+            if (nbOfUnusedFiles > MAX_NB_OF_UNUSED_FILES) {
                 println(" ");
                 println("   " + NbBundle.getMessage(ReportGenealogyStatus.class, "TXT_maxnbofunusedfilesreached"));
             } else if (nbOfUnusedFiles == 0){
@@ -295,7 +296,7 @@ public class ReportGenealogyStatus extends Report {
      */
     private void headerLine() {
         String str = MAXSTR.substring(0, maxSosaLength-4);
-        println("Nb " + TAB + "Sosa" + str + SPA + "Gen" + TAB + "Id       " + SPA + "Med" + SPA + "Birt" + SPA + "Chr " + SPA + "Marr " + SPA + "Fam      " + TAB + "Occu" + SPA + "Deat" + TAB + "Name                                                   ");
+        println("Nb " + TAB + "Sosa" + str + TAB + "Gen" + TAB + "Id       " + TAB + "Med" + TAB + "Birt" + TAB + "Chr " + TAB + "Marr " + TAB + "Fam      " + TAB + "Occu" + TAB + "Deat" + TAB + "Name                                                   ");
         midLine();
     }
 
@@ -304,7 +305,7 @@ public class ReportGenealogyStatus extends Report {
      */
     private void midLine() {
         String str = MAXSTR.substring(0, maxSosaLength-4);
-        println("---" + TAB + "----" + str + SPA + "---" + TAB + "---------" + SPA + "---" + SPA + "----" + SPA + "----" + SPA + "---- " + SPA + "---------" + TAB + "----" + SPA + "----" + TAB + "------------------------------------------------------");
+        println("---" + TAB + "----" + str + TAB + "---" + TAB + "---------" + TAB + "---" + TAB + "----" + TAB + "----" + TAB + "---- " + TAB + "---------" + TAB + "----" + TAB + "----" + TAB + "------------------------------------------------------");
     }
 
     /**
@@ -312,7 +313,7 @@ public class ReportGenealogyStatus extends Report {
      */
     private String emptyLine() {
         String str = MAXSTR.substring(0, maxSosaLength-1);
-        return ".  " + TAB + "." + str + SPA + ".   " + TAB + ".        " + SPA + ".  " + SPA + ".   " + SPA + ".   " + SPA + ".    " + SPA + "         " + TAB + "    " + SPA + "    " + TAB + ".                                                     ";
+        return ".  " + TAB + "." + str + TAB + ".   " + TAB + ".        " + TAB + ".  " + TAB + ".   " + TAB + ".   " + TAB + ".    " + TAB + "         " + TAB + "    " + TAB + "    " + TAB + ".                                                     ";
     }
 
     /**
@@ -329,7 +330,7 @@ public class ReportGenealogyStatus extends Report {
         // Sosa nb
         String str = MAXSTR.substring(0, maxSosaLength-sosa.length());
         line += sosa + str;
-        line += SPA;
+        line += TAB;
 
         // Génération
         if (sosaNb == BigInteger.ZERO) {
@@ -343,27 +344,27 @@ public class ReportGenealogyStatus extends Report {
 
         // Id
         line += indi.getId() + "         ".substring(indi.getId().length());
-        line += SPA;
+        line += TAB;
 
         // Media
         line += getMedia(sosa, indi, "INDI:OBJE");
-        line += SPA;
+        line += TAB;
 
         // Birth
         line += getEvent(sosa, indi, "INDI:BIRT", true);
-        line += SPA;
+        line += TAB;
 
         // Christening
         line += getEvent(sosa, indi, "INDI:CHR", false);
-        line += SPA;
+        line += TAB;
 
         // Marriage
         line += getFamilies(sosa, indi, sosaNb.doubleValue() > 1); // family mandatory from parents and above
-        line += SPA;
+        line += TAB;
 
         // Occupation
         line += getMultipleEvent(sosa, indi, "OCCU");
-        line += SPA;
+        line += TAB;
 
         // Death
         line += getEvent(sosa, indi, "INDI:DEAT", sosaNb.doubleValue() > 15); // mandatory from great-great-grand-father and above
@@ -386,11 +387,7 @@ public class ReportGenealogyStatus extends Report {
         Property prop = ent.getPropertyByPath(tag);
         if (prop == null) {
             return mandatory ? err() + err() + err() + err() : "    ";
-        }
-
-        if (ent.getId().equals("I1216")) {
-            String debug = "DEBUG";
-        }        
+        }    
         
         // date
         line += isValidAndComplete(ent.getPropertyByPath(tag + ":DATE"), mandatory);
@@ -626,7 +623,7 @@ public class ReportGenealogyStatus extends Report {
         Fam[] families = indi.getFamiliesWhereSpouse();
 
         if (families == null || families.length == 0) {
-            return (mandatory ? err() + err() + err() + err() + SPA : "     ") + SPA + "         " + SPA;
+            return (mandatory ? err() + err() + err() + err() + SPA : "     ") + TAB + "         " + SPA;
         }
 
         Fam famFound = null;
@@ -648,13 +645,13 @@ public class ReportGenealogyStatus extends Report {
         if (famFound != null) {
             line += getEvent(sosa, famFound, "FAM:MARR", mandatory);
             line += checkKidsOrder(famFound);
-            line += SPA;
+            line += TAB;
             line += famFound.getId() + "         ".substring(famFound.getId().length());
             line += SPA;
             return line;
         }
 
-        return NON + NON + NON + NON + SPA + SPA + "         " + SPA;
+        return NON + NON + NON + NON + SPA + TAB + "         " + SPA;
     }
 
     /**
@@ -787,7 +784,7 @@ public class ReportGenealogyStatus extends Report {
      */
     private void checkDirectory(File directory, List<String> gedcomFiles) {
 
-        if (nbOfUnusedFiles > maxNbOfUnusedFiles) {
+        if (nbOfUnusedFiles > MAX_NB_OF_UNUSED_FILES) {
             return;
         }
 
@@ -803,7 +800,7 @@ public class ReportGenealogyStatus extends Report {
                 if (!gedcomFiles.contains(filename)) {
                     println("   " + files[i].toString());
                     nbOfUnusedFiles++;
-                    if (nbOfUnusedFiles > maxNbOfUnusedFiles) {
+                    if (nbOfUnusedFiles > MAX_NB_OF_UNUSED_FILES) {
                         return;
                     }
                 }
