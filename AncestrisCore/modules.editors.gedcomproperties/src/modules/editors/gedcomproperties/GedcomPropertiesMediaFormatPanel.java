@@ -81,7 +81,7 @@ public class GedcomPropertiesMediaFormatPanel extends javax.swing.JPanel impleme
 
                 // Count new file value
                 String value = file.getValue();
-                if (value == null || filesFullnames.contains(value)) {
+                if (value == null || value.isEmpty() || filesFullnames.contains(value)) {
                     continue;
                 }
                 filesFullnames.add(value);
