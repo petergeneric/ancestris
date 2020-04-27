@@ -508,7 +508,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         editorBar.add(jTextFielRecordNo);
 
         jButtonNext.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
-        jButtonNext.setToolTipText("Next"); // NOI18N
+        jButtonNext.setToolTipText(org.openide.util.NbBundle.getMessage(RelevePanel.class, "RelevePanel.jButtonNext.toolTipText")); // NOI18N
         jButtonNext.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonNext.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -830,7 +830,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
     public void showGedcomLink(boolean state) {
         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
         try {
-            dataManager.showGedcomLink(state);
+            dataManager.showGedcomLink(state, false);
         } catch (Exception ex) {
             ex.printStackTrace();
         }

@@ -46,6 +46,8 @@ public class AlignerFrame extends javax.swing.JFrame {
      * pour signaler sa fermeture
      */
     private AlignerFrame() {
+        setTitle(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerOptionsPanel.border.title"));
+        
         initComponents();
 
         ImageIcon icon = new ImageIcon(AlignerFrame.class.getResource("/ancestris/modules/releve/images/Releve.png"));

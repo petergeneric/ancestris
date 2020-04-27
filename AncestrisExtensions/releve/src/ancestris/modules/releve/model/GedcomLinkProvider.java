@@ -1,5 +1,6 @@
  package ancestris.modules.releve.model;
 
+import ancestris.modules.releve.RelevePanel;
 import ancestris.modules.releve.merge.MergeQuery;
 import static ancestris.modules.releve.merge.MergeQuery.isSameFirstName;
 import static ancestris.modules.releve.merge.MergeQuery.isSameLastName;
@@ -16,7 +17,9 @@ import genj.gedcom.TagPath;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import org.openide.util.Exceptions;
+import org.openide.util.NbBundle;
 
 /**
  * recherche les relevés correspondant à des évènements dans un fichier gedcom 
@@ -49,7 +52,7 @@ public class GedcomLinkProvider {
     static private final TagPath[] miscIndiTagPathList = {indiEvenDateTag, willDateTag};
     static private final TagPath[] miscFamTagPathList = {marbDateTag, marcDateTag, marlDateTag, evenDateTag};
     
-    public void init(final RecordModel recordModel, Gedcom gedcom, boolean showGedcomLink) {
+    public void init(final RecordModel recordModel, Gedcom gedcom, boolean showGedcomLink, boolean quiet) {
         this.gedcom = gedcom;
         this.showGedcomLink = showGedcomLink;
         
@@ -63,8 +66,9 @@ public class GedcomLinkProvider {
         ArrayList<IndiEntry> indiMisc = new ArrayList<IndiEntry>();
         ArrayList<FamEntry> famMarriage = new ArrayList<FamEntry>();
         ArrayList<FamEntry> famMisc = new ArrayList<FamEntry>();
-        
-        if (gedcom != null && showGedcomLink == true ) {            
+
+
+        if (gedcom != null && showGedcomLink) {            
             
             // Je classe  les relevés dans listes trièes par date 
             int rwoCount = recordModel.getRowCount();
@@ -93,6 +97,13 @@ public class GedcomLinkProvider {
             // j'affiche le resultat 
             recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
             
+            if (!quiet && gedcomLinkList.isEmpty()) {
+                JOptionPane.showConfirmDialog(null, NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.HighlightNone"), NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.title"), JOptionPane.PLAIN_MESSAGE);  
+                
+                
+            }
+            
+            
             // je trace le resultat
 //            for (GedcomLink link :gedcomLinkList.values() ) {
 //                System.out.println(link.getRecord().getType() + "; "
@@ -103,6 +114,9 @@ public class GedcomLinkProvider {
 //            }
 
         } else {
+            if (!quiet && showGedcomLink) {            
+                JOptionPane.showConfirmDialog(null, NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.HighlightNeedGedcom"), NbBundle.getMessage(RelevePanel.class, "GedcomLinkProvider.title"), JOptionPane.PLAIN_MESSAGE); 
+            }
             gedcomLinkList.clear();
             recordModel.fireRecordModelUpdated(0, recordModel.getRowCount() - 1);
         }

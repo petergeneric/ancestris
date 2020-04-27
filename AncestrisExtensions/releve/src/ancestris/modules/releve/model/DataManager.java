@@ -1,5 +1,6 @@
 package ancestris.modules.releve.model;
 
+import ancestris.core.pluginservice.AncestrisPlugin;
 import ancestris.gedcom.GedcomDirectory;
 import ancestris.gedcom.GedcomFileListener;
 import ancestris.modules.releve.file.FileBuffer;
@@ -10,12 +11,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbPreferences;
+import org.openide.util.lookup.ServiceProvider;
 
 /**
  *
  * @author Michel
  */
-public class DataManager implements PlaceManager, GedcomFileListener  {
+@ServiceProvider(service = ancestris.core.pluginservice.PluginInterface.class)
+public class DataManager extends AncestrisPlugin implements PlaceManager, GedcomFileListener  {
 
     private final RecordModel   dataModel = new RecordModel();
     private final CompletionProvider completionProvider  = new CompletionProvider();
@@ -36,6 +39,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     static boolean copyNotaryEnabled = true;
     // options de completion avec les données du fichier gedcom
     static boolean gedcomCompletion = true;
+    private boolean gedcomLinkState = false;
         
     public enum ModelType { MODEL_BIRTH, MODEL_MARRIAGE, DEATH, MISC, ALL }
 
@@ -463,7 +467,9 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
 
     @Override
     public void gedcomOpened(Gedcom gedcom) {
-        // rien à faire
+        if (gedcomCompletion) {
+            addGedcomCompletion(gedcom);
+        }
     }
 
     public final void setGedcomCompletion(boolean completion) {
@@ -501,7 +507,8 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
 
     void addGedcomCompletion(Gedcom gedcom) {
         completionGedcom = gedcom;
-        completionProvider.addGedcomCompletion(gedcom);        
+        completionProvider.addGedcomCompletion(gedcom);
+        showGedcomLink(gedcomLinkState, true);        
     }
 
     void removeGedcomCompletion() {
@@ -512,6 +519,7 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
             completionProvider.addRecord(record);
         }
         completionGedcom = null;
+        showGedcomLink(gedcomLinkState, true);        
     }
 
     
@@ -519,8 +527,9 @@ public class DataManager implements PlaceManager, GedcomFileListener  {
     // accesseurs gedcomToLink
     ///////////////////////////////////////////////////////////////////////////
 
-    public void showGedcomLink(boolean state) {
-        gedcomLinkProvider.init(dataModel, completionGedcom, state);        
+    public void showGedcomLink(boolean state, boolean quiet) {
+        gedcomLinkProvider.init(dataModel, completionGedcom, state, quiet);
+        gedcomLinkState = state;
     }
     
     public GedcomLink getGedcomLink(Record record) {

@@ -105,30 +105,54 @@ public class ImagePanel extends JPanel {
                 if (e.getClickCount() == 2 && !e.isConsumed()) {
                     e.consume();
                     
-                    // double clic : j'aligne l'image 
-                    CoordImage coords = convertPanelToImageCoords(e.getPoint());
-                    
-                    AffineTransform tx = new AffineTransform();
-                    tx.translate(alignCoords.x - coords.x , alignCoords.y - coords.y );
-
-                    AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
-                    image = op.filter(image, null); 
+                    // double clic : j'aligne l'image (FL : = translation de l'image depuis le point cliqué jusqu'au réticule => pourquoi ???)
+                    //CoordImage coords = convertPanelToImageCoords(e.getPoint());
+                    if (alignCoords != null) {
+                        AffineTransform tx = new AffineTransform();
+                        // tx.translate(alignCoords.x - coords.x, alignCoords.y - coords.y);
+                        tx.translate(-alignCoords.x, -alignCoords.y);
+                        AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+                        image = op.filter(image, null);
+                    }
                     
                     // je refraichis l'affichage
                     repaint();
+                    int     tmpCropX = imageCropRect.imageCoords.x, 
+                            tmpCropY = imageCropRect.imageCoords.y, 
+                            tmpCropW = imageCropRect.imageCoords.width, 
+                            tmpCropH = imageCropRect.imageCoords.height; 
                     
-                    final BufferedImage croppedImage = image.getSubimage(
-                            imageCropRect.imageCoords.x, imageCropRect.imageCoords.y, 
-                            imageCropRect.imageCoords.width, imageCropRect.imageCoords.height);
+                    if (tmpCropX < 0) {
+                        tmpCropX = 0;
+                    }
+                    if (tmpCropY < 0) {
+                        tmpCropY = 0;
+                    }
+                    if (tmpCropX + tmpCropW > image.getWidth()) {
+                        tmpCropW = Math.max(0, image.getWidth() - tmpCropX);
+                    }
+                    if (tmpCropY + tmpCropH > image.getHeight()) {
+                        tmpCropH = Math.max(0, image.getHeight() - tmpCropY);
+                    }
+                    
+                    try {
+                        final BufferedImage croppedImage = image.getSubimage(tmpCropX, tmpCropY, tmpCropW, tmpCropH);
 
-                    // je lance la sauvegarde de l'image dans un fichier
-                    java.awt.EventQueue.invokeLater(new Runnable() {
-                        @Override
-                        public void run() {
-                            coordinateListener.saveCurrentImage(croppedImage);
-                        }
-                    });
+                        // je lance la sauvegarde de l'image dans un fichier
+                        java.awt.EventQueue.invokeLater(new Runnable() {
+                            @Override
+                            public void run() {
+                                coordinateListener.saveCurrentImage(croppedImage);
+                            }
+                        });
 
+                    } catch (Exception ex) {
+//                        JOptionPane.showConfirmDialog(null, NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonLeft.cannotCroptMsg", 
+//                                imageCropRect.imageCoords.x, imageCropRect.imageCoords.width, 
+//                                imageCropRect.imageCoords.y, imageCropRect.imageCoords.height, 
+//                                image.getWidth(), image.getHeight()));
+
+                    }
                     
                 }
             }
@@ -141,9 +165,14 @@ public class ImagePanel extends JPanel {
 
                 if (SwingUtilities.isLeftMouseButton(e)) {
                 } else {
-                    // clic droit : je memorise la position d'alignement
-                    alignCoords = convertPanelToImageCoords(e.getPoint());
-                    coordinateListener.updateAlignCoordinates(alignCoords);
+                    // clic droit : je memorise la position d'alignement sauf s'il est déjà mémorisé, auquel cas je le remet à zéro
+                    if (alignCoords == null) {
+                        alignCoords = convertPanelToImageCoords(e.getPoint());
+                        coordinateListener.updateAlignCoordinates(alignCoords);
+                    } else {
+                        alignCoords = null;
+                        coordinateListener.updateAlignCoordinates(alignCoords);
+                    }
                     
                     // je refraichis l'affichage pour faire apparaitre le reticule sur le point sélectionné
                     repaint();
