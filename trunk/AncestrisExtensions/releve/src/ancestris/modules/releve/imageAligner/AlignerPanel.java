@@ -86,6 +86,8 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         if (outpuFile.exists()) {
             outputDirectory = outpuFile;
         }
+        
+        updateNameValue();
 
     }
 
@@ -181,7 +183,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jSplitPaneBrowser = new javax.swing.JSplitPane();
         jPanelFiles = new javax.swing.JPanel();
         jScrollPaneFiles = new javax.swing.JScrollPane();
-        listFiles = new javax.swing.JList<String>();
+        listFiles = new javax.swing.JList();
         jPanel4 = new javax.swing.JPanel();
         jPanelImageInfo = new javax.swing.JPanel();
         lbFileName = new javax.swing.JLabel();
@@ -194,6 +196,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jPanelButton.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         org.openide.awt.Mnemonics.setLocalizedText(btnFolder, org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.btnFolder.text")); // NOI18N
+        btnFolder.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.btnFolder.toolTipText")); // NOI18N
         btnFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFolderActionPerformed(evt);
@@ -213,7 +216,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jPanelButton.add(jButtonLeft);
 
         jButtonRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
-        jButtonRight.setToolTipText("Next"); // NOI18N
+        jButtonRight.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonRight.toolTipText")); // NOI18N
         jButtonRight.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonRight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -233,10 +236,12 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         jPanelButton.add(jTextFieldMouseCoords);
 
         jTextFieldAlignCoords.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldAlignCoords.text")); // NOI18N
+        jTextFieldAlignCoords.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldAlignCoords.toolTipText")); // NOI18N
         jTextFieldAlignCoords.setPreferredSize(new java.awt.Dimension(72, 20));
         jPanelButton.add(jTextFieldAlignCoords);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonOutputFolder, org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonOutputFolder.text")); // NOI18N
+        jButtonOutputFolder.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jButtonOutputFolder.toolTipText")); // NOI18N
         jButtonOutputFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonOutputFolderActionPerformed(evt);
@@ -244,8 +249,10 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         });
         jPanelButton.add(jButtonOutputFolder);
 
+        jTextFieldNameFormat.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldNameFormat.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameFormat.text")); // NOI18N
-        jTextFieldNameFormat.setPreferredSize(new java.awt.Dimension(52, 20));
+        jTextFieldNameFormat.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameFormat.toolTipText")); // NOI18N
+        jTextFieldNameFormat.setPreferredSize(new java.awt.Dimension(80, 20));
         jTextFieldNameFormat.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldNameFormatActionPerformed(evt);
@@ -260,6 +267,7 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
 
         jTextFieldNameIndex.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         jTextFieldNameIndex.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameIndex.text")); // NOI18N
+        jTextFieldNameIndex.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameIndex.toolTipText")); // NOI18N
         jTextFieldNameIndex.setPreferredSize(new java.awt.Dimension(32, 20));
         jTextFieldNameIndex.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -273,8 +281,16 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         });
         jPanelButton.add(jTextFieldNameIndex);
 
+        jTextFieldNameValue.setEditable(false);
+        jTextFieldNameValue.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         jTextFieldNameValue.setText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameValue.text")); // NOI18N
-        jTextFieldNameValue.setPreferredSize(new java.awt.Dimension(92, 20));
+        jTextFieldNameValue.setToolTipText(org.openide.util.NbBundle.getMessage(AlignerPanel.class, "AlignerPanel.jTextFieldNameValue.toolTipText")); // NOI18N
+        jTextFieldNameValue.setPreferredSize(new java.awt.Dimension(120, 20));
+        jTextFieldNameValue.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextFieldNameValueActionPerformed(evt);
+            }
+        });
         jPanelButton.add(jTextFieldNameValue);
 
         add(jPanelButton, java.awt.BorderLayout.NORTH);
@@ -376,6 +392,9 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
                 listFiles.setSelectedIndex(listFiles.getModel().getSize() - 1);
                 Toolkit.getDefaultToolkit().beep();
             }
+                        if (listFiles == null || listFiles.getSelectedValue() == null) {
+                return;
+            }
             String fileName = listFiles.getSelectedValue();
             showImage(fileName, false);
             jScrollPaneImage.getVerticalScrollBar().setValue(0);
@@ -395,6 +414,9 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
             } else {
                 listFiles.setSelectedIndex(0);
                 Toolkit.getDefaultToolkit().beep();
+            }
+            if (listFiles == null || listFiles.getSelectedValue() == null) {
+                return;
             }
             String fileName = listFiles.getSelectedValue();
             showImage(fileName, false);
@@ -453,12 +475,20 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
         updateNameValue();
     }//GEN-LAST:event_jTextFieldNameIndexKeyReleased
 
+    private void jTextFieldNameValueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldNameValueActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextFieldNameValueActionPerformed
+
     private void updateNameValue() {
-        
+
         if ( jTextFieldNameIndex.getText().isEmpty()) {
             jTextFieldNameValue.setText(String.format("%s-", jTextFieldNameFormat.getText())); 
         } else {
-            jTextFieldNameValue.setText(String.format("%s-%03d", jTextFieldNameFormat.getText(), Integer.parseInt(jTextFieldNameIndex.getText())));        
+            try {
+                jTextFieldNameValue.setText(String.format("%s-%03d", jTextFieldNameFormat.getText(), Integer.parseInt(jTextFieldNameIndex.getText())));        
+            } catch (Exception e) {
+                jTextFieldNameValue.setText(String.format("%s-", jTextFieldNameFormat.getText())); 
+            }
         }
     }
 
@@ -495,7 +525,11 @@ public class AlignerPanel extends javax.swing.JPanel implements ImagePanel.Coord
 
     @Override
     public void updateAlignCoordinates(ImagePanel.CoordImage coords) {
-        jTextFieldAlignCoords.setText(String.format("%d / %d", coords.x , coords.y));
+        if (coords != null) {
+            jTextFieldAlignCoords.setText(String.format("%d / %d", coords.x , coords.y));
+        } else {
+            jTextFieldAlignCoords.setText(" / ");
+        }
     }
 
     @Override

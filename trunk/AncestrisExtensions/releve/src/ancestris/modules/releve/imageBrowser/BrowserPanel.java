@@ -562,7 +562,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jSplitPaneBrowser = new javax.swing.JSplitPane();
         jPanelFiles = new javax.swing.JPanel();
         jScrollPaneFiles = new javax.swing.JScrollPane();
-        listFiles = new javax.swing.JList<String>();
+        listFiles = new javax.swing.JList();
         jPanel4 = new javax.swing.JPanel();
         jPanelImageInfo = new javax.swing.JPanel();
         lbFileName = new javax.swing.JLabel();
@@ -575,6 +575,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jPanelButton.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT));
 
         org.openide.awt.Mnemonics.setLocalizedText(btnFolder, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.btnFolder.text")); // NOI18N
+        btnFolder.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.btnFolder.toolTipText")); // NOI18N
         btnFolder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFolderActionPerformed(evt);
@@ -594,7 +595,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jPanelButton.add(jButtonLeft);
 
         jButtonRight.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Forward.png"))); // NOI18N
-        jButtonRight.setToolTipText("Next"); // NOI18N
+        jButtonRight.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonRight.toolTipText")); // NOI18N
         jButtonRight.setMargin(new java.awt.Insets(2, 4, 2, 4));
         jButtonRight.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -604,6 +605,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jPanelButton.add(jButtonRight);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonBottom, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonBottom.text")); // NOI18N
+        jButtonBottom.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonDown.toolTiptext")); // NOI18N
         jButtonBottom.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonBottomActionPerformed(evt);
@@ -612,6 +614,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jPanelButton.add(jButtonBottom);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonTop, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonTop.text")); // NOI18N
+        jButtonTop.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonTop.toolTiptext")); // NOI18N
         jButtonTop.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonTopActionPerformed(evt);
@@ -620,6 +623,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jPanelButton.add(jButtonTop);
 
         org.openide.awt.Mnemonics.setLocalizedText(jButtonAdjust, org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonAdjust.text")); // NOI18N
+        jButtonAdjust.setToolTipText(org.openide.util.NbBundle.getMessage(BrowserPanel.class, "BrowserPanel.jButtonAdjust.toolTiptext")); // NOI18N
         jButtonAdjust.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButtonAdjustActionPerformed(evt);
@@ -658,7 +662,7 @@ public class BrowserPanel extends javax.swing.JPanel {
         jPanelImageInfoLayout.setHorizontalGroup(
             jPanelImageInfoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelImageInfoLayout.createSequentialGroup()
-                .addComponent(lbFileName, javax.swing.GroupLayout.DEFAULT_SIZE, 233, Short.MAX_VALUE)
+                .addComponent(lbFileName, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanelImageInfoLayout.setVerticalGroup(
@@ -726,6 +730,9 @@ public class BrowserPanel extends javax.swing.JPanel {
                 listFiles.setSelectedIndex(listFiles.getModel().getSize() - 1);
                 Toolkit.getDefaultToolkit().beep();
             }
+            if (listFiles == null || listFiles.getSelectedValue() == null) {
+                return;
+            }
             String fileName = listFiles.getSelectedValue().toString();
             showImage(fileName, false);
             jScrollPaneImage.getVerticalScrollBar().setValue(0);
@@ -745,6 +752,9 @@ public class BrowserPanel extends javax.swing.JPanel {
             } else {
                 listFiles.setSelectedIndex(0);
                 Toolkit.getDefaultToolkit().beep();
+            }
+            if (listFiles == null || listFiles.getSelectedValue() == null) {
+                return;
             }
             String fileName = listFiles.getSelectedValue().toString();
             showImage(fileName, false);

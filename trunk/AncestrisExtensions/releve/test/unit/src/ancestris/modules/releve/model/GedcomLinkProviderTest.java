@@ -43,13 +43,13 @@ public class GedcomLinkProviderTest {
         m_recordModel.addRecord(record);
         
         GedcomLinkProvider instance = new GedcomLinkProvider();
-        instance.init(m_recordModel, m_gedcom, true);
+        instance.init(m_recordModel, m_gedcom, true, false);
                 
         GedcomLink gedcomLink = instance.getGedcomLink(record);
         assertNotNull("gedcomLink créé par init", gedcomLink);
         assertEquals("nom ", record.getFieldValue(Record.FieldType.indiFirstName), ((Indi)gedcomLink.getEntity()).getFirstName() );
 
-        instance.init(m_recordModel, m_gedcom, false);
+        instance.init(m_recordModel, m_gedcom, false, false);
         gedcomLink = instance.getGedcomLink(m_recordModel.getRecord(0));
         assertNull("gedcomLink supprimé", gedcomLink);        
     }
@@ -58,7 +58,7 @@ public class GedcomLinkProviderTest {
     public void testAddRecord() {
         Record record = TestUtility.getRecordBirthF2();        
         GedcomLinkProvider instance = new GedcomLinkProvider();
-        instance.init(m_recordModel, m_gedcom, true);
+        instance.init(m_recordModel, m_gedcom, true, false);
         
         instance.addRecord(record);
         
@@ -74,7 +74,7 @@ public class GedcomLinkProviderTest {
         GedcomLinkProvider instance = new GedcomLinkProvider();
         m_recordModel.addRecord(birthRecord);
         m_recordModel.addRecord(marriageRecord);
-        instance.init(m_recordModel, m_gedcom, true);
+        instance.init(m_recordModel, m_gedcom, true, false);
         
         assertNotNull("gedcomLink birthRecord créé ", instance.getGedcomLink(birthRecord));
         assertNotNull("gedcomLink marriageRecord créé", instance.getGedcomLink(marriageRecord));
@@ -95,7 +95,7 @@ public class GedcomLinkProviderTest {
         GedcomLinkProvider instance = new GedcomLinkProvider();
         m_recordModel.addRecord(birthRecord);
         m_recordModel.addRecord(marriageRecord);
-        instance.init(m_recordModel, m_gedcom, true);
+        instance.init(m_recordModel, m_gedcom, true, false);
         
         assertNotNull("gedcomLink birthRecord créé ", instance.getGedcomLink(birthRecord));
         assertNotNull("gedcomLink marriageRecord créé", instance.getGedcomLink(marriageRecord));

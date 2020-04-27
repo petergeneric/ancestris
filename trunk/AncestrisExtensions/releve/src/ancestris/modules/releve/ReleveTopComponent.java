@@ -106,6 +106,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         popup.add(menuItemSave);
         menuItemSaveAs.addActionListener(popupMouseHandler);
         popup.add(menuItemSaveAs);
+        menuItemDemoFile.addActionListener(popupMouseHandler);
+        menuItemDemoFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/demo.png")));
+        popup.add(menuItemDemoFile);
 
         // import , export
         popup.addSeparator();
@@ -122,22 +125,19 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         
         // statistics, demo, help
         popup.addSeparator();
-        menuItemStatistics.addActionListener(popupMouseHandler);
-        menuItemStatistics.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/statistics.png")));
-        popup.add(menuItemStatistics);
-        menuItemDemoFile.addActionListener(popupMouseHandler);
-        menuItemDemoFile.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/OpenFile.png")));
-        popup.add(menuItemDemoFile);
         menuItemAlignImage.addActionListener(popupMouseHandler);
         menuItemAlignImage.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/Camera.png")));
         popup.add(menuItemAlignImage);
+        menuItemStatistics.addActionListener(popupMouseHandler);
+        menuItemStatistics.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/statistics.png")));
+        popup.add(menuItemStatistics);
+        menuItemCheck.addActionListener(popupMouseHandler);
+        menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
+        popup.add(menuItemCheck);
         menuItemHelp.addActionListener(popupMouseHandler);
         menuItemHelp.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/information.png")));
         popup.add(menuItemHelp);
 
-        menuItemCheck.addActionListener(popupMouseHandler);
-        menuItemCheck.setIcon(new ImageIcon(getClass().getResource("/ancestris/modules/releve/images/check16.png")));
-        popup.add(menuItemCheck);
 
    }
      
@@ -243,6 +243,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
         // j'active le DnD pour les Treeview
         RecordDropTargetListener.addTreeViewListener();  
         
+        // Activate gedcomFileListener
+        AncestrisPlugin.register(dataManager);
+        
     }
 
     /**
@@ -309,9 +312,9 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
                 
         // j'arrete le listener des vues
         RecordDropTargetListener.removeTreeViewListener();
-        
-        //
-        AncestrisPlugin.unregister(this);
+
+        // Unregister GedcomFileListener
+        AncestrisPlugin.unregister(dataManager);
     }
 
     DataManager getDataManager() {
