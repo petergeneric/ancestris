@@ -30,7 +30,6 @@ import javax.swing.event.ChangeListener;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import org.netbeans.api.settings.ConvertAsProperties;
-import org.openide.awt.MouseUtils;
 import org.openide.awt.UndoRedo;
 import org.openide.explorer.ExplorerManager;
 import org.openide.util.ImageUtilities;
@@ -58,10 +57,9 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     private GedcomPlaceTableModel gedcomPlaceTableModel;
     private TableRowSorter<TableModel> placeTableSorter;
     private PlaceEditorPanel placesEditor = null;
-    
+
     private boolean isBusyCommitting = false;
     private UndoRedoListener undoRedoListener;
-    
 
     public PlacesListTopComponent() {
         super();
@@ -90,12 +88,12 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         gedcomPlaceTableModel = new GedcomPlaceTableModel(gedcom);
 
         initComponents();
-        
+
         placeTable.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mousePressed(MouseEvent e) {
                 LOG.log(Level.FINE, "NB click = {0}", e.getClickCount());
-                if (MouseUtils.isDoubleClick(e)) {
+                if (e.getClickCount() == 2) {
                     int rowIndex = placeTable.convertRowIndexToModel(placeTable.getSelectedRow());
                     final Set<PropertyPlace> propertyPlaces = ((GedcomPlaceTableModel) placeTable.getModel()).getValueAt(rowIndex);
                     placesEditor = new PlaceEditorPanel();
@@ -118,7 +116,8 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                             }
                         }
                     });
-                } else {
+                }
+                if (e.getClickCount() == 1) {
                     JToolTip tooltip = new JToolTip();
                     tooltip.setTipText(NbBundle.getMessage(getClass(), "PlacesListTopComponent.edit.tip"));
                     PopupFactory popupFactory = PopupFactory.getSharedInstance();
@@ -136,7 +135,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
                         }
 
                     })).start();
-                    
+
                 }
             }
         });
@@ -146,21 +145,20 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         if (!memoField.isEmpty()) {
             searchPlaceComboBox.setSelectedItem(memoField);
         }
-        
+
         placeTable.setID(gedcom, PlacesListTopComponent.class.getName(), searchPlaceComboBox.getSelectedIndex());
         placeTableSorter = placeTable.getSorter();
         updateGedcomPlaceTable();
-        
+
         WindowManager.getDefault().invokeWhenUIReady(new Runnable() {
             @Override
             public void run() {
                 filterGedcomPlaceTextField.requestFocusInWindow();
             }
         });
-        
+
         return true; // registers the AncestrisTopComponent name, tooltip and gedcom context as it continues the code within AncestrisTopComponent
     }
-
 
     private void updateGedcomPlaceTable() {
         gedcomPlaceTableModel.update();
@@ -306,7 +304,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         UndoRedo undoRedo = getUndoRedo();
         undoRedo.addChangeListener(undoRedoListener);
     }
-    
 
     @Override
     public void writeProperties(java.util.Properties p) {
@@ -323,7 +320,7 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
     }
 
     private boolean updateTable = false;
-    
+
     @Override
     public void gedcomEntityAdded(Gedcom gedcom, Entity entity) {
         if (!updateTable && !entity.getProperties(PropertyPlace.class).isEmpty()) {
@@ -384,8 +381,6 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         }
     }
 
-    
-
     private void commit() {
         // Is busy committing ?
         if (isBusyCommitting) {
@@ -426,5 +421,4 @@ public final class PlacesListTopComponent extends AncestrisTopComponent implemen
         gedcomPlaceTableModel.eraseModel();
     }
 
-    
 }
