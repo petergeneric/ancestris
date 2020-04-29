@@ -107,7 +107,7 @@ public class ReportGenealogyStatus extends Report {
                 sib = "0";
                 sosaList.put(bi, indi);
                 if (bi.toString().length() > maxSosaLength) {
-                    maxSosaLength = bi.toString().length() + 3;
+                    maxSosaLength = bi.toString().length() + 4;  // Space + minus + rest of 100 = 4
                 }
             }
         }
@@ -806,13 +806,15 @@ public class ReportGenealogyStatus extends Report {
                 }
             }
         }
-        return;
     }
     
 
     private boolean isValidFile(Property fp) {
         if (fp != null && fp instanceof PropertyFile) {
             InputSource is = ((PropertyFile) fp).getInput().orElse(null);
+            if (is == null) {
+                return false;
+            }
             File f = ((FileInput) is).getFile();
             if (f != null && f.exists()) {
                 return true;
