@@ -194,6 +194,25 @@ public class BrowserPanel extends javax.swing.JPanel {
         });
 
     }
+    
+    public void selectImage(final String city, final String cote, final String page) {
+
+        if (listFiles == null || (cote.trim().isEmpty() && page.trim().isEmpty())) {
+            // leave the current image selected to be selected (do not clear)
+            //imagePanel.showImage(null);
+            //lbFileName.setText("");
+            //listFiles.clearSelection();
+            return;
+        }
+
+        File imageFile = findImage(city, cote, page);
+        if (imageFile != null) {
+            listFiles.setSelectedValue(imageFile.getName(), true);
+            jScrollPaneImage.getVerticalScrollBar().setValue(0);
+            imagePanel.moveToLeft();
+            imagePanel.moveToTop();
+        }
+    }
 
     private File findImage(String city, String cote, String page) {
         // je determine si page contient seulement un numéro 

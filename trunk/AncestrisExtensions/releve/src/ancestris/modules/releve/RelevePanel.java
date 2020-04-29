@@ -583,6 +583,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
             // la table est vide
             selectRow(-1);
         }
+        menuCommandProvider.showImage();
     }//GEN-LAST:event_jButtonPreviousActionPerformed
 
     private void jButtonNextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonNextActionPerformed
@@ -600,6 +601,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
             // la table est vide
             selectRow(-1);
         }
+        menuCommandProvider.showImage();
 }//GEN-LAST:event_jButtonNextActionPerformed
 
     private void jButtonStandaloneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonStandaloneActionPerformed
@@ -616,6 +618,7 @@ public class RelevePanel extends javax.swing.JPanel implements ReleveTableListen
         if (standaloneMode == true) {
             // j'inverse la vibilite de la visionneuse d'image 
             menuCommandProvider.toggleBrowserVisible();
+            menuCommandProvider.showImage();
         }
     }//GEN-LAST:event_jButtonBrowserActionPerformed
 
