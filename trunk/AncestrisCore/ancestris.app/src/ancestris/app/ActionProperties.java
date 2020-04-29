@@ -18,11 +18,13 @@ import genj.gedcom.Context;
 import java.awt.event.ActionEvent;
 import java.util.Collection;
 import java.util.Iterator;
+import javax.swing.JFrame;
 import org.openide.awt.ActionID;
 import org.openide.awt.ActionReference;
 import org.openide.awt.ActionRegistration;
 import org.openide.util.Lookup;
 import org.openide.util.NbBundle;
+import org.openide.windows.WindowManager;
 
 @ActionID(
         category = "File",
@@ -55,6 +57,23 @@ public final class ActionProperties extends AbstractAncestrisContextAction {
     @Override
     protected void contextChanged() {
         setEnabled(!contextProperties.isEmpty());
+        
+        String gedcomName = "";
+        String title = NbBundle.getBundle("org/netbeans/core/windows/view/ui/Bundle").getString("CTL_MainWindow_Title");
+        Context localContext = getContext();
+        if (localContext != null) {
+            gedcomName = localContext.getGedcom().getFilePath();
+        }
+        if (!gedcomName.isEmpty()) {
+            title = gedcomName + " - " + title;
+        }
+        JFrame mainFrame = (JFrame) WindowManager.getDefault().getMainWindow();
+        mainFrame.setTitle(title);
+        
+        // Continue
+        super.contextChanged();
+        
+        
         super.contextChanged();
     }
 
