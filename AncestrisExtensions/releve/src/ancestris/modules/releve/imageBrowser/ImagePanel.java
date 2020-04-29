@@ -179,9 +179,14 @@ public class ImagePanel extends JPanel {
      */
     public void adjustAreaColor() {
         if (image != null) {
-            adjustImage = null;
-            mouseMode = MouseMode.SELECT;
-            setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            if (mouseMode == MouseMode.SELECT) {
+                mouseMode = MouseMode.MOVE;
+                setCursor(Cursor.getPredefinedCursor(Cursor.MOVE_CURSOR));
+            } else {
+                adjustImage = null;
+                mouseMode = MouseMode.SELECT;
+                setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            }
         } else {
             Toolkit.getDefaultToolkit().beep();
         } 
@@ -391,9 +396,32 @@ public class ImagePanel extends JPanel {
         Coords point1 = panelToImageCoords(new Point(x1, y1));
         Coords point2 = panelToImageCoords(new Point(x2, y2));
 
+        if (point1.x < 0) {
+            adjustX = originX;
+            point1.x = 0;
+        }
+        if (point1.y < 0) {
+            adjustY = originY;
+            point1.y = 0;
+        }
+
         int width = (int) (point2.x - point1.x) + 1;
         int height = (int) (point2.y - point1.y) + 1;
-        BufferedImage inputImage = image.getSubimage((int) point1.x, (int) point1.y, width, height);
+        
+        if (point1.x + width > image.getWidth()) {
+            width = image.getWidth() - (int) point1.x;
+        }
+        if (point1.y + height > image.getHeight()) {
+            height = image.getHeight() - (int) point1.y;
+        }
+        
+        BufferedImage inputImage = null;
+        try { // catch remaining outside raster exception
+            inputImage = image.getSubimage((int) point1.x, (int) point1.y, width, height);
+        } catch (Exception e) {
+            return;
+        }
+        
 
         // je convertis l'image en niveau de gris
         ColorConvertOp gray = new ColorConvertOp(ColorSpace.getInstance(ColorSpace.CS_GRAY), null);

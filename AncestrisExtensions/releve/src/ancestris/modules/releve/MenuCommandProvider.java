@@ -18,4 +18,5 @@ public interface MenuCommandProvider {
     public void setBrowserVisible(boolean visible);
     public void toggleBrowserVisible();
     public void setGedcomLinkSelected(boolean selected);
+    public void showImage();
 }

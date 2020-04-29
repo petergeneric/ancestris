@@ -1383,6 +1383,12 @@ public final class ReleveTopComponent extends TopComponent implements MenuComman
             standaloneEditor.toggleBrowserVisible();
         }
     }
+    @Override
+    public void showImage() {
+        if ( standaloneEditor != null) {
+            standaloneEditor.showImage(dataManager);
+        }
+    }
 
     
     

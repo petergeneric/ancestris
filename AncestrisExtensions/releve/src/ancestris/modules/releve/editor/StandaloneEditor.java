@@ -251,6 +251,38 @@ public class StandaloneEditor extends javax.swing.JFrame {
             }
         }
     }
+
+    /**
+     * show image
+     */
+    public void showImage(DataManager dataManager) {
+        if (browserVisible) {
+            int recordIndex;
+
+            switch (jTabbedPane1.getSelectedIndex()) {
+                case 0:
+                    recordIndex = panelBirth.getCurrentRecordIndex();
+                    break;
+                case 1:
+                    recordIndex = panelMarriage.getCurrentRecordIndex();
+                    break;
+                case 2:
+                    recordIndex = panelDeath.getCurrentRecordIndex();
+                    break;
+                case 3:
+                    recordIndex = panelMisc.getCurrentRecordIndex();
+                    break;
+                default:
+                    recordIndex = panelAll.getCurrentRecordIndex();
+                    break;
+
+            }
+            Record record = dataManager.getRecord(recordIndex);
+            browserPanel1.selectImage(dataManager.getCityName(), record.getFieldValue(FieldType.cote), record.getFieldValue(FieldType.freeComment));                
+        }
+    }
+
+
 //
 //    public void udpdateEditorVisibleField() {
 //        panelBirth.selectRecord(panelBirth.getCurrentRecordIndex());

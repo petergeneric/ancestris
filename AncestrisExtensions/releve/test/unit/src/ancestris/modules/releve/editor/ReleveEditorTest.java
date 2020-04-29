@@ -193,5 +193,10 @@ public class ReleveEditorTest {
         public void setGedcomLinkSelected(boolean selected) {
             
         }
+
+        @Override
+        public void showImage() {
+            
+        }
     }
 }
