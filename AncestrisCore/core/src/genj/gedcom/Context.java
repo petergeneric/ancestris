@@ -96,6 +96,7 @@ public class Context {
     // grab ents
     if (entities!=null)
       for (Entity e : entities) {
+        if (e == null) continue;  
         if (e.getGedcom()!=gedcom)
           throw new IllegalArgumentException("gedcom must be same");
         if (!this.entities.contains(e))
@@ -111,6 +112,7 @@ public class Context {
             this.entities.add((Entity)p);
         } else if (!this.properties.contains(p)) {
           Entity e = p.getEntity();
+          if (e == null) continue;  
           if (e.getGedcom()!=gedcom)
             throw new IllegalArgumentException("gedcom must be same");
           this.properties.add(p);
