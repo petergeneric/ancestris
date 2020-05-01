@@ -70,7 +70,7 @@ public class DocumentViewTopComponent extends TopComponent {
         super();
         associateLookup(tcLookup);
         setName(name);
-        setToolTipText(name);
+        setToolTipText(NbBundle.getMessage(DocumentViewTopComponent.class, "HINT_DocumentViewTopComponent"));
         setIcon(DOC_ICON);
         setFocusable(true);
         setLayout(new java.awt.BorderLayout());

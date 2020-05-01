@@ -50,4 +50,10 @@ public class EntityViewFactory implements ViewFactory {
     return EntityView.resources.getString("title");
   }
 
+  @Override
+  public String getTooltip() {
+    return EntityView.resources.getString("tooltip");
+  }
+
+  
 } //EntityViewFactory

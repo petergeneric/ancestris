@@ -492,9 +492,15 @@ public class AncestrisTopComponent extends TopComponent
         AncestrisPlugin.register(this);
 
         String gedcomName;
-        if ((getGedcom() != null) && ((gedcomName = getGedcom().getName()) != null)) {
+        if ((getGedcom() != null) && ((gedcomName = getGedcom().getDisplayName()) != null)) {
             setName(gedcomName);
-            setToolTipText(getToolTipText() + ": " + gedcomName);
+            String toolTip = getToolTipText(); // make sure we still have the gedcom name in case translation misses {0}.
+            if (!toolTip.contains("{0}")) {
+                toolTip += " - " + gedcomName; 
+            } else {
+                toolTip = toolTip.replace("{0}", gedcomName);
+            }
+            setToolTipText(toolTip);
         }
         // Modification du titre de la fenetre si undockee
         // voir ici: http://old.nabble.com/Look-and-feel-issues-td21583766.html

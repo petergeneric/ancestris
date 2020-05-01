@@ -129,6 +129,7 @@ public class TreeView extends View implements Filter, AncestrisActionProvider {
     protected final static Registry REGISTRY = Registry.get(TreeView.class);
     protected final static Resources RESOURCES = Resources.get(TreeView.class);
     protected final static String TITLE = RESOURCES.getString("title");
+    protected final static String TIP = RESOURCES.getString("tooltip");
     /** the units we use */
     private final Point2D DPMM;
     /** our model */

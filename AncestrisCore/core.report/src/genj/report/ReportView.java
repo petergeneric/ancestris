@@ -19,6 +19,7 @@
 package genj.report;
 
 import ancestris.core.actions.AbstractAncestrisAction;
+import ancestris.modules.document.view.DocumentViewTopComponent;
 import ancestris.modules.document.view.HyperLinkTextDocumentView;
 import ancestris.modules.document.view.WidgetDocumentView;
 import ancestris.swing.ToolBar;
@@ -129,7 +130,7 @@ public class ReportView extends View {
         output = new HyperLinkTextDocumentView(
                 new Context(gedcom),
                 report.getShortName(),
-                gedcom.getName() + ": " + report.getName());
+                NbBundle.getMessage(DocumentViewTopComponent.class, "HINT_DocumentResult", gedcom.getDisplayName(), report.getName()));
 
         if (report.getStartMethod(context) == null) {
             for (int i = 0; i < Gedcom.ENTITIES.length; i++) {

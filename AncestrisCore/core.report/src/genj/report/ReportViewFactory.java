@@ -56,4 +56,9 @@ public class ReportViewFactory implements ViewFactory {
     return Resources.get(this).getString("title");
   }
 
+  @Override
+  public String getTooltip() {
+    return Resources.get(this).getString("tooltip");
+  }
+  
 } //ReportViewFactory

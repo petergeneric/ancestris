@@ -62,9 +62,9 @@ import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import org.openide.filesystems.FileObject;
-import org.openide.filesystems.FileStateInvalidException;
 import org.openide.util.NbBundle;
 import static ancestris.welcome.ui.Bundle.*;
+import org.apache.commons.lang.WordUtils;
         
 /**
  * Panel showing all recent files as clickable buttons.
@@ -143,8 +143,9 @@ public class RecentFilesPanel extends JPanel implements Constants {
 
     private void addFile(JPanel panel, int row, final FileObject file) {
         ActionOpen action = new ActionOpen(file);
-        action.setText(file.getNameExt());
+        action.setText(getDisplayName(file.getNameExt()));
         ActionButton b;
+        String debug = getDisplayName(file.toURL().toString());
         b = new ActionButton(action, file.toURL().toString(), false, "RecentFile"); //NOI18N
         b.setFont(BUTTON_FONT);
         b.getAccessibleContext().setAccessibleName(b.getText());
@@ -180,4 +181,19 @@ public class RecentFilesPanel extends JPanel implements Constants {
         }
         
     }
+    
+        /**
+     * Returns the displayed name of the Gedcom file
+     * @return 
+     */
+    private String getDisplayName(String name) {
+        if (name == null || name.isEmpty()) {
+            return "";
+        }
+        name = name.replace("_", " ");
+        char[] delimiters = {' ', '-'};
+        return WordUtils.capitalize(name.substring(0, name.lastIndexOf(".") == -1 ? name.length() : name.lastIndexOf(".")), delimiters);
+    }
+
+
 }

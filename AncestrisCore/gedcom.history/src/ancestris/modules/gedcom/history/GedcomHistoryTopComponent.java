@@ -34,6 +34,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import org.netbeans.api.settings.ConvertAsProperties;
 import org.openide.modules.Places;
+import org.openide.util.ImageUtilities;
 import org.openide.util.Lookup;
 import org.openide.util.LookupEvent;
 import org.openide.util.LookupListener;
@@ -56,6 +57,7 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
     GedcomHistory gedcomHistory = null;
     GedcomHistoryTableModel historyTableModel = null;
     private Gedcom gedcom = null;
+    static final String ICON_PATH = "ancestris/modules/gedcom/history/DisplayHistoryIcon.png";
 
     @Override
     public void resultChanged(LookupEvent le) {
@@ -102,10 +104,10 @@ public final class GedcomHistoryTopComponent extends TopComponent implements Cha
                         this.gedcom = context.getGedcom();
                         this.historyTableModel = new GedcomHistoryTableModel(this.gedcomHistory, this.getGedcom());
                         initComponents();
-                        String text = NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent", gedcomHistory.getGedcomName());
-                        jLabel1.setText(text);
-                        setName(text);
-                        setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent"));
+                        setName(context.getGedcom().getDisplayName());
+                        setToolTipText(NbBundle.getMessage(this.getClass(), "HINT_GedcomHistoryTopComponent", context.getGedcom().getDisplayName()));
+                        setIcon(ImageUtilities.loadImage(ICON_PATH, true));
+                        jLabel1.setText(NbBundle.getMessage(this.getClass(), "CTL_GedcomHistoryTopComponent"));
                         gedcomHistoryTable.getSelectionModel().addListSelectionListener(new RowListener());
                     } else {
                         log.log(Level.FINE, "No history recorder found for {0}", gedcomName);

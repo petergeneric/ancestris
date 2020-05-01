@@ -85,8 +85,8 @@ public class PreviewTopComponent extends TopComponent implements AncestorListene
         this.context = context;
         this.samePanel = samePanel;
 
-        setName(context.getGedcom().getName());
-        setToolTipText(NbBundle.getMessage(CommonAncestorTopComponent.class, "HINT_PreviewTopComponent") + ": " + context.getGedcom().getName());
+        setName(context.getGedcom().getDisplayName());
+        setToolTipText(NbBundle.getMessage(CommonAncestorTopComponent.class, "HINT_PreviewTopComponent", context.getGedcom().getDisplayName()));
         registry = new genj.util.Registry(genj.util.Registry.get(PreviewTopComponent.class), getClass().getName());
 
         // create  layout

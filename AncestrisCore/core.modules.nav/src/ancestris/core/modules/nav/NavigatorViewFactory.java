@@ -55,5 +55,13 @@ public class NavigatorViewFactory implements ViewFactory {
   public String getTitle() {
     return NbBundle.getMessage(NavigatorViewFactory.class,"title");
   }
+  
+  
+  @Override
+  public String getTooltip() {
+    return NbBundle.getMessage(NavigatorViewFactory.class,"tooltip");
+  }
+
+  
 
 } //NavigatorViewFactory

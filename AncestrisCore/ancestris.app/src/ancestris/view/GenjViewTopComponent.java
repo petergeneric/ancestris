@@ -65,7 +65,7 @@ public abstract class GenjViewTopComponent extends AncestrisTopComponent
     @Override
     public void setToolTipText() {
         if (getViewFactory() != null) {
-            setToolTipText(getViewFactory().getTitle());
+            setToolTipText(getViewFactory().getTooltip());
         } else {
             super.setToolTipText();
         }

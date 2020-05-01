@@ -54,4 +54,8 @@ public class TableViewFactory implements ViewFactory {
     return Resources.get(this).getString("title");
   }
 
+  public String getTooltip() {
+    return Resources.get(this).getString("tooltip");
+  }
+
 } //TableViewFactory

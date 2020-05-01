@@ -32,10 +32,12 @@ import genj.view.ViewFactory;
 public class EditViewFactory implements ViewFactory {
   
   public final static String NAME = EditView.RESOURCES.getString("title");
+  public final static String TIP = EditView.RESOURCES.getString("tooltip");
     
   /**
    * @see genj.view.ViewFactory#createView(genj.gedcom.Gedcom, genj.util.Registry, java.awt.Frame)
    */
+  @Override
   public View createView() {
     return new EditView();
   }
@@ -43,6 +45,7 @@ public class EditViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getImage()
    */
+  @Override
   public ImageIcon getImage() {
     return Images.imgView;
   }
@@ -50,8 +53,13 @@ public class EditViewFactory implements ViewFactory {
   /**
    * @see genj.view.ViewFactory#getName(boolean)
    */
+  @Override
   public String getTitle() {
     return NAME;
   }
 
+  @Override
+  public String getTooltip() {
+    return TIP;
+  }
 } //EditViewFactory

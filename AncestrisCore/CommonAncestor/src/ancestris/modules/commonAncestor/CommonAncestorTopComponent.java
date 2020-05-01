@@ -92,8 +92,8 @@ public final class CommonAncestorTopComponent extends TopComponent implements Se
         super.componentOpened();
         if (context != null && context.getGedcom() != null) {
             // je mets a jour le titre de la fenetre
-            setName(context.getGedcom().getName());
-            setToolTipText(NbBundle.getMessage(CommonAncestorTopComponent.class, "HINT_CommonAncestorTopComponent") + ": " + context.getGedcom().getName());
+            setName(context.getGedcom().getDisplayName());
+            setToolTipText(NbBundle.getMessage(CommonAncestorTopComponent.class, "HINT_CommonAncestorTopComponent", context.getGedcom().getDisplayName()));
 
             // create my panel
             samePanel = new SamePanel();
