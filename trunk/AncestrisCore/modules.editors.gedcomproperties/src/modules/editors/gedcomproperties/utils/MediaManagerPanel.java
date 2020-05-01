@@ -169,12 +169,13 @@ public class MediaManagerPanel extends javax.swing.JPanel {
             if (pFile.isIsRemote()) {
                 continue;
             }
-            String name = pFile.getValue();
-            String newPath = property2PathMap.get(pFile);
-            boolean rel = !ABSOLUTE.matcher(newPath).matches();
-            File f = new File(rel ? rootPath + File.separator + newPath + name : newPath + name);
-            boolean found = f.exists();
-            String key = newPath + (found ? "1" : "0");
+            final File localFile = new File(pFile.getValue());
+            final String name = localFile.getName();
+            final String newPath = property2PathMap.get(pFile);
+            final boolean rel = !ABSOLUTE.matcher(newPath).matches();
+            final File f = new File(rel ? rootPath + File.separator + newPath + name : newPath + name);
+            final boolean found = f.exists();
+            final String key = newPath + (found ? "1" : "0");
 
             // Get corresponding PathData for key, and if exists, add file to it, otherwiose create pathdata altogether
             PathData pd = getPathData(ret, key);
